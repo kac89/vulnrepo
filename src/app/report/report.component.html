@@ -1,0 +1,277 @@
+<h1 class="mat-display-2">
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">fingerprint</mat-icon>{{report_info.report_name}}
+</h1>
+<!-- Report info -->
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>info</mat-icon>
+    </div>
+    <mat-card-title>Report information</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+
+      <div class="call-outs-container-details">
+
+          <div class="call-out-details">
+            <p>Report ID: {{report_info.report_id}}</p>
+            <p>Created: {{report_info.report_createdate | date:'medium'}}</p>
+            <p>{{decryptedReportDataChanged}}</p>
+          </div>
+        
+          <div *ngIf="decryptedReportDataChanged" class="call-out-details">
+            <p><button class="mat-elevation-z9" mat-raised-button color="primary"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
+              <button class="mat-elevation-z9" mat-raised-button color="accent"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share</button>
+              <button class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Get in ASCII</button></p>
+              <p><button mat-button color="accent" (click)="saveReportChanges()"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save report changes</button> Last save date: </p>
+          </div>
+
+        </div>
+
+  </mat-card-content>
+</mat-card>
+
+
+<div *ngIf="decryptedReportDataChanged">
+
+  <br>
+  <!-- Report details -->
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>settings</mat-icon>
+      </div>
+      <mat-card-title>Report details</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="equal-height-container">
+        <div class="first">
+
+            <mat-form-field appearance="outline" class="example-full-width">
+                <mat-label>Scope</mat-label>
+                <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope" value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
+                <mat-hint>hint</mat-hint>
+            </mat-form-field>
+
+        </div>
+
+        <div class="second">
+          <div class="second-a">
+
+              <mat-form-field appearance="outline" class="example-full-width">
+                  <mat-label>Report summary comment</mat-label>
+                  <textarea matInput rows="1"></textarea>
+              </mat-form-field>
+
+          </div>
+          <div class="second-b">
+
+            <div class="call-outs-container-report-details">
+              <div class="call-out-report-details">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker" placeholder="Research start date">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="call-out-report-details">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="pickerend" placeholder="Research end date">
+                  <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerend></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+
+  <br>
+  <!-- Issues list -->
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>bug_report</mat-icon>
+      </div>
+      <mat-card-title><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-accordion>
+
+        <mat-expansion-panel class="mat-elevation-z9" *ngFor="let dec_data of decryptedReportDataChanged.report_vulns"
+          (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{dec_data.severity}} {{dec_data.title}}
+            </mat-panel-title>
+            <mat-panel-description>
+              Currently I am {{panelOpenState ? 'open' : 'closed'}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="equal-height-container-issue">
+            <div class="first-issue">
+
+
+
+                <mat-form-field appearance="outline" class="example-full-width">
+                    <mat-label>Proof of Concept</mat-label>
+                    <textarea [(ngModel)]="dec_data.poc" matInput rows="6"></textarea>
+                </mat-form-field>
+
+            </div>
+          
+            <div class="second-issue">
+              <div class="second-a-issue"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat quisquam, veritatis ducimus</p></div>
+              <div class="second-b-issue"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat quisquam, veritatis ducimus</p></div>
+            </div>
+          </div>
+
+
+          
+          <mat-action-row>
+            <button mat-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE</button>
+            
+          </mat-action-row>
+        </mat-expansion-panel>
+
+      </mat-accordion>
+
+      <br>
+
+      <div class="banner">
+        <div class="center-me"><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="addissue()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button></div>
+      </div>
+    </mat-card-content>
+
+  </mat-card>
+
+  <br>
+  <!-- Stats -->
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>bar_chart</mat-icon>
+      </div>
+      <mat-card-title>Statistics</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="call-outs-container-report-stats">
+        <div class="call-out-report-stats">
+          <table mat-table [dataSource]="dataSourceforseverity" class="mat-elevation-z8">
+
+            <!-- Severity Column -->
+            <ng-container matColumnDef="severity">
+              <th mat-header-cell *matHeaderCellDef> Severity </th>
+              <td mat-cell *matCellDef="let element"> {{element.severity}} </td>
+            </ng-container>
+
+            <!-- Count Column -->
+            <ng-container matColumnDef="count">
+              <th mat-header-cell *matHeaderCellDef> Number </th>
+              <td mat-cell *matCellDef="let element"> {{element.count}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedSeverityColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedSeverityColumns;"></tr>
+          </table>
+        </div>
+
+        <div class="call-out-report-stats">
+          <div style="display: block">
+            <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [colors]="chartcolors" [chartType]="pieChartType" (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <br>
+
+    </mat-card-content>
+  </mat-card>
+
+  <br>
+  <!-- Researcher -->
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>face</mat-icon>
+      </div>
+      <mat-card-title>About Researcher</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="call-outs-container-researcher">
+        <div class="call-out-researcher">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Name" value="">
+            <mat-icon matSuffix>person_pin</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="call-out-researcher">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="E-mail" value="">
+            <mat-icon matSuffix>email</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="call-out-researcher">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Social links" value="">
+            <mat-icon matSuffix>share</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="call-out-researcher">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Website" value="">
+            <mat-icon matSuffix>public</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <br>
+  <!-- changelog -->
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>change_history</mat-icon>
+      </div>
+      <mat-card-title>Changelogs V.{{decryptedReportDataChanged?.report_version}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="decryptedReportDataChanged.report_changelog" class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.date | date:'medium'}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <br><br>
+
+</div>

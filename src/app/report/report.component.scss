@@ -1,0 +1,147 @@
+/* sixth example */
+.equal-height-container {
+    min-width: 150px;
+    margin: 0 auto;
+    display: flex;
+  }
+  
+  .first {
+    padding: 20px;
+    flex: 1;
+  }
+  
+  .second {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .second-a {
+    flex: 1;
+  }
+  
+  .second-b {
+    flex: 1;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }
+
+  .banner {
+    min-width: 150px;
+    display: flex;
+  }
+  
+  .center-me {
+    margin: auto;
+  }
+
+  table {
+    width: 100%;
+  }
+
+
+  .call-outs-container-researcher {
+    max-width: 1400px;
+    margin: 0px auto 0 auto;
+  }
+  
+  .call-out-researcher {
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 900px) {
+    .call-outs-container-researcher {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .call-outs-container-report-stats {
+    max-width: 1400px;
+    margin: 0px auto 0 auto;
+  }
+  
+  .call-out-report-stats {
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 350px;
+  }
+
+  @media (min-width: 900px) {
+    .call-outs-container-report-stats {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+
+  .call-out:nth-child(1) {}
+  .call-out:nth-child(2) {}
+
+  .call-outs-container-report-details {
+    max-width: 1400px;
+    margin: 0px auto 0 auto;
+  }
+  
+  .call-out-report-details {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 900px) {
+    .call-outs-container-report-details {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+
+
+  .equal-height-container-issue {
+    margin: 0 auto;
+    display: flex;
+  }
+  
+  .first-issue {
+    padding: 20px;
+    flex: 2;
+  }
+  
+  .second-issue {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .second-a-issue {
+    flex: 1;
+  }
+  
+  .second-b-issue {
+    flex: 1;
+  }
+
+
+  .call-outs-container-details {
+    max-width: 1400px;
+    margin: 0px auto 0 auto;
+  }
+  
+  .call-out-details {
+    box-sizing: border-box;
+    flex-basis: 40%;
+  }
+  
+  @media (min-width: 600px) {
+    .call-outs-container-details {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  

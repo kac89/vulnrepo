@@ -1,0 +1,31 @@
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.call-outs-container {
+    max-width: 1400px;
+    margin: 0 auto 0 auto;
+  }
+  
+  .call-out {
+    padding: 0;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    flex-basis: 30%;
+  }
+
+  @media (min-width: 900px) {
+    .call-outs-container {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  
+  .call-out:nth-child(1) {}
+  .call-out:nth-child(2) {}
+  .call-out:nth-child(3) {}
+

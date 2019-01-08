@@ -1,0 +1,28 @@
+<h1 class="mat-display-2">
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add</mat-icon> Create new report
+</h1>
+
+<mat-card>
+
+  <form class="example-form">
+
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Report title" #title value="">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Set report password" #pass [type]="hide ? 'password' : 'text'">
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value)">Save</button>
+
+    <a routerLink="/my-reports" href="/my-reports" mat-raised-button color="primary">
+      Cancel
+    </a>
+
+
+  </form>
+
+</mat-card>

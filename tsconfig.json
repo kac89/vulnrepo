@@ -1,0 +1,22 @@
+{
+  "compileOnSave": false,
+  // "include": ["node_modules/angular2-indexeddb/*.ts", "node_modules/angular2-indexeddb/angular2-indexeddb.js", "src/**/*.ts"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  }
+}

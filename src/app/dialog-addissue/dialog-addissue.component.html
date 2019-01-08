@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Add Issue</h1>
+<div mat-dialog-content>
+
+  <div class="example-form">
+      <mat-form-field class="example-full-width">
+        <input type="text" matInput placeholder="XSS, SQL, RCE vulnerability" aria-label="Number" [formControl]="myControl" #issue [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
+              {{option.title}}
+            </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button cdkFocusInitial color="accent" (click)="addIssue(issue.value)">Add</button>
+  <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+</div>

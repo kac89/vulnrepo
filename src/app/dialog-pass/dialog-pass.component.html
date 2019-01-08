@@ -1,0 +1,23 @@
+
+<h1 class="mat-display">
+    <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report
+</h1>
+
+
+<div md-dialog-content>
+
+  <form class="example-form">
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Report password" #pass (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </mat-form-field>
+    <p>{{msg}}</p>
+  </form>
+
+</div>
+<br>
+<div md-dialog-actions>
+    <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)">Confirm</button>
+    <button mat-flat-button color="primary" (click)="cancel()">Cancel</button>
+</div>

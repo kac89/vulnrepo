@@ -1,0 +1,128 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+
+@import '~@angular/material/theming';
+@include mat-core();
+
+
+
+
+$primary: mat-palette($mat-grey, 900);
+$accent:  mat-palette($mat-green, A200, A100, A400);
+$warn:    mat-palette($mat-red, 900);
+$dark-theme:   mat-dark-theme($primary, $accent, $warn);
+
+@include angular-material-theme($dark-theme);
+
+
+
+body, html{
+  height: 100vh;
+}
+body{
+  margin: 0;
+  color: white;
+  background-color:#000;
+  overflow-y: hidden;
+}
+
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto 0 auto;
+  padding: 30px;
+}
+
+.mat-drawer-container {
+  background-color:#000;
+  color: white;
+}
+
+
+.column-layout {
+  max-width: 1200px;
+  margin: 40px auto 0 auto;
+  line-height: 1.65;
+  padding: 20px 50px;
+  display: flex;
+}
+
+.main-column {
+  flex: 3;
+  order: 1;
+}
+
+.sidebar-one {
+  flex: 1;
+  order: 2;
+}
+
+.sidebar-two {
+  flex: 1;
+  order: 3;
+}
+
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox. 
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+.vertical-align-middle { 
+  vertical-align: middle; 
+}
+
+.padding-bottom-3 {
+  padding-bottom: 3px;
+}
+
+
+.app-toolbar {
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}
+
+
+
+///mat-button routerLinkActive
+.active-link {
+  color: mat-color($accent) !important;
+}
+
+
+mat-icon.size-45 {
+  font-size: 45px;
+  height: 45px;
+  width: 45px;
+}
+
+
+//footer
+#outer {
+  width: 100%;
+  text-align: center;
+}
+
+#inner {
+  display: inline-block;
+}
+
+
+
+
+.example-icon {
+  padding: 0 14px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+
+

@@ -1,0 +1,50 @@
+<div class="call-outs-container">
+  <div class="call-out">
+    <h1 class="mat-display-2">
+      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">list_alt</mat-icon> My Reports
+    </h1>
+  </div>
+
+  <div class="call-out">
+
+      <a routerLink="/new-report" href="/new-report" mat-raised-button color="accent">
+        <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Create new report
+      </a>
+      
+      <a routerLink="/import-report" href="/import-report" mat-raised-button color="primary">
+        <mat-icon class="vertical-align-middle padding-bottom-3">import_export</mat-icon> Import report
+      </a>
+
+  </div>
+</div>
+
+
+<mat-card>
+
+
+  <table mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="report_name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+      <td mat-cell *matCellDef="let element"> <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/" href="#">{{element.report_name}}</a> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="report_createdate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Create Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.report_createdate | date:'medium'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="settings">
+      <th mat-header-cell *matHeaderCellDef> Settings </th>
+      <td mat-cell *matCellDef="let element"><button mat-icon-button color="warn" (click)="removeReport(element)">
+          <mat-icon aria-label="Example icon-button with a heart icon">delete_forever</mat-icon>
+        </button></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;  "></tr>
+  </table>
+<br>
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+
+</mat-card>

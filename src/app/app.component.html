@@ -1,0 +1,80 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>
+      <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon> Vulnerability Report Generator &
+      Repository
+    </span>
+    <div *ngIf="show_status" class="title-center">
+
+      <div *ngIf="enc_status">
+        <mat-icon class="vertical-align-middle padding-bottom-3 decrypted-color" matSuffix>no_encryption</mat-icon> Report is decrypted.
+      </div>
+      <div *ngIf="!enc_status"><mat-icon class="vertical-align-middle padding-bottom-3 encrypted-color" matSuffix>lock</mat-icon> Report is encrypted.</div>
+
+    </div>
+    
+    <span class="example-fill-remaining-space" *ngIf="!show_status"></span>
+
+    <div fxShow="true" fxHide.lt-md="true">
+      <a routerLink="/home" routerLinkActive="active-link" href="/home" mat-button>
+        <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon>
+        Home
+      </a>
+      <a routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-button>
+        <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon>
+        My Reports
+      </a>
+      <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-button>
+        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
+        Settings
+      </a>
+      <a routerLink="/about" routerLinkActive="active-link" href="/about" mat-button>
+        <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
+        About
+      </a>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container fxFlexFill>
+  <mat-sidenav #sidenav>
+    <mat-nav-list>
+      <a routerLink="/home" routerLinkActive="active-link" href="/home" mat-list-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon>
+        Home
+      </a>
+      <a routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-list-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon>
+        My Reports
+      </a>
+      <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-list-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
+        Settings
+      </a>
+      <a routerLink="/about" routerLinkActive="active-link" href="/about" mat-list-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
+        About
+      </a>
+      <a (click)="sidenav.toggle()" mat-list-item>
+        <mat-icon>close</mat-icon> Close
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content fxFlexFill>
+
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+
+    <div id="outer">
+      <div id="inner">
+        <mat-icon class="vertical-align-middle padding-bottom-3">copyright</mat-icon> Copyright 2018
+      </div>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
