@@ -46,7 +46,38 @@ export class DialogAddissueComponent implements OnInit {
   }
 
   addIssue(data) {
-    this.dialogRef.close(data);
+
+    for (const key in this.options) {
+      if (this.options.hasOwnProperty(key)) {
+
+        if (this.options[key].title === data) {
+          console.log('found');
+          this.dialogRef.close(this.options[key]);
+          break;
+
+        } else if (Number(key) + 1 === this.options.length) {
+
+          const today: number = Date.now();
+
+          const def = {
+            title: data,
+            poc: '',
+            files: [],
+            desc: '',
+            severity: '',
+            ref: '',
+            cvss: '',
+            cve: '',
+            date: today
+          };
+          this.dialogRef.close(def);
+        }
+
+
+      }
+    }
+
+
   }
 
   displayFn(template?: Vulns): string | undefined {

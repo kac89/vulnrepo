@@ -126,3 +126,13 @@ mat-icon.size-45 {
 
 
 
+.mat-card-header-text{
+  width: 100% !important;
+}
+
+.example-custom-placeholder {
+  background: rgb(41, 41, 41);
+  border: dotted 3px rgb(43, 42, 42);
+  min-height: 50px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

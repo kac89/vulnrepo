@@ -43,7 +43,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { IndexeddbService } from './indexeddb.service';
 import {MatChipsModule} from '@angular/material/chips';
 import { HttpModule } from '@angular/http';
-
+import {MatSelectModule} from '@angular/material/select';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,9 @@ import { HttpModule } from '@angular/http';
     MatAutocompleteModule,
     MatSlideToggleModule,
     MatChipsModule,
-    HttpModule
+    HttpModule,
+    MatSelectModule,
+    DragDropModule
   ],
   providers: [MessageService, IndexeddbService],
   entryComponents: [DialogPassComponent, DialogAddissueComponent],

@@ -6,7 +6,6 @@
   }
   
   .first {
-    padding: 20px;
     flex: 1;
   }
   
@@ -14,6 +13,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding-left: 10px;
   }
   
   .second-a {
@@ -90,7 +90,6 @@
   }
   
   .call-out-report-details {
-    padding: 20px;
     box-sizing: border-box;
   }
 
@@ -109,7 +108,6 @@
   }
   
   .first-issue {
-    padding: 20px;
     flex: 2;
   }
   
@@ -117,6 +115,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding-left: 10px;
   }
   
   .second-a-issue {
@@ -145,3 +144,83 @@
     }
   }
   
+
+  .equal-height-container-issue2 {
+    margin: 0 auto;
+    display: flex;
+  }
+  
+  .first-issue2 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .second-issue2 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+  }
+  
+  .second-a-issue2 {
+    flex: 1;
+  }
+  
+  .second-b-issue2 {
+    flex: 1;
+  }
+
+
+  ///////////////////////////
+
+  .label {
+    color: white;
+    display: inline-block;
+    font-family: verdana, sans-serif;
+    padding: 4px;
+  }
+  /*critical*/
+  .critical {
+    border-color: #FF0039;
+    background-color: #FF0039;
+  }
+  /*high*/
+  .high {
+    border-color: #FF7518;
+    background-color: #FF7518;
+  } 
+  /*medium*/
+  .medium {
+    color: #000;
+    border-color: #F9EE06; 
+    background-color: #F9EE06;
+  } 
+  /*low*/
+  .low {
+    border-color: #3FB618; 
+    background-color: #3FB618;
+  } 
+  /*information*/
+  .info {
+    border-color: #2780E3; 
+    background-color: #2780E3;
+  } 
+
+
+  .card-container-right{
+    display: inline;
+    float: right;
+    font-size: 12px;
+  }
+  
+  .card-container-left{
+    display: inline;
+  }
+
+.mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+    display: inline;
+}
+.mat-expansion-panel-header-description {
+  margin-top: 6px;
+}

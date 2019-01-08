@@ -68,7 +68,7 @@
 
             <div class="call-outs-container-report-details">
               <div class="call-out-report-details">
-                <mat-form-field>
+                <mat-form-field class="example-full-width">
                   <input matInput [matDatepicker]="picker" placeholder="Research start date">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
@@ -76,7 +76,7 @@
               </div>
 
               <div class="call-out-report-details">
-                <mat-form-field>
+                <mat-form-field class="example-full-width">
                   <input matInput [matDatepicker]="pickerend" placeholder="Research end date">
                   <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
                   <mat-datepicker #pickerend></mat-datepicker>
@@ -99,25 +99,28 @@
       <div mat-card-avatar>
         <mat-icon>bug_report</mat-icon>
       </div>
-      <mat-card-title><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span></mat-card-title>
+      <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span></mat-card-title>
+      <mat-card-title class="card-container-right"><mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by:<button (click)="sortbycvss()" mat-button>CVSS</button></mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-accordion>
+      <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)">
 
         <mat-expansion-panel class="mat-elevation-z9" *ngFor="let dec_data of decryptedReportDataChanged.report_vulns"
-          (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-          <mat-expansion-panel-header>
+          (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag>
+
+          
+          <mat-expansion-panel-header cdkDragHandle>
             <mat-panel-title>
-                {{dec_data.severity}} {{dec_data.title}}
+                <span class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>&nbsp;&nbsp;{{dec_data.title}}
             </mat-panel-title>
             <mat-panel-description>
-              Currently I am {{panelOpenState ? 'open' : 'closed'}}
+              {{dec_data.cve}}
             </mat-panel-description>
           </mat-expansion-panel-header>
+          <mat-expansion-panel-header class="example-custom-placeholder" *cdkDragPlaceholder></mat-expansion-panel-header>
           <div class="equal-height-container-issue">
+            
             <div class="first-issue">
-
-
 
                 <mat-form-field appearance="outline" class="example-full-width">
                     <mat-label>Proof of Concept</mat-label>
@@ -127,13 +130,61 @@
             </div>
           
             <div class="second-issue">
-              <div class="second-a-issue"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat quisquam, veritatis ducimus</p></div>
-              <div class="second-b-issue"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat quisquam, veritatis ducimus</p></div>
+              <div class="second-a-issue">
+                  <mat-form-field class="example-full-width">
+                      <input matInput [matDatepicker]="picker" placeholder="Issue find date">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+              </div>
+              <div class="second-b-issue">
+                  <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity" (ngModelChange)="doStats()">
+                        <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
+                          {{sev.severity}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+              </div>
             </div>
+
           </div>
 
+          <div class="equal-height-container-issue2">
+              <div class="first-issue2">
+                  <mat-form-field appearance="outline" class="example-full-width">
+                      <mat-label>Description</mat-label>
+                      <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
+                  </mat-form-field>
+              </div>
+            
+              <div class="second-issue2">
+                <div class="second-a-issue2">
+                    <mat-form-field appearance="outline" class="example-full-width">
+                        <mat-label>References</mat-label>
+                        <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="second-b-issue2">
 
-          
+                    <div class="call-outs-container-report-details">
+
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
+                          </mat-form-field>
+
+                          &nbsp;
+
+                          <mat-form-field class="example-full-width">
+                              <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
+                            </mat-form-field>
+
+                      </div>
+
+                </div>
+              </div>
+            </div>
+          <button mat-fab color="primary">Upload</button>
           <mat-action-row>
             <button mat-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE</button>
             
@@ -168,7 +219,7 @@
             <!-- Severity Column -->
             <ng-container matColumnDef="severity">
               <th mat-header-cell *matHeaderCellDef> Severity </th>
-              <td mat-cell *matCellDef="let element"> {{element.severity}} </td>
+              <td mat-cell *matCellDef="let element"> <span class="label {{element.severity | lowercase}}">{{element.severity}}</span> </td>
             </ng-container>
 
             <!-- Count Column -->
@@ -209,7 +260,7 @@
       <div class="call-outs-container-researcher">
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Name" value="">
+            <input matInput placeholder="Name" [(ngModel)]="decryptedReportDataChanged.researcher.reportername" value="{{decryptedReportDataChanged.researcher.reportername}}">
             <mat-icon matSuffix>person_pin</mat-icon>
           </mat-form-field>
         </div>
@@ -223,14 +274,14 @@
 
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Social links" value="">
+            <input matInput placeholder="Social links" [(ngModel)]="decryptedReportDataChanged.researcher.reportersocial" value="{{decryptedReportDataChanged.researcher.reportersocial}}">
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Website" value="">
+            <input matInput placeholder="Website" [(ngModel)]="decryptedReportDataChanged.researcher.reporterwww" value="{{decryptedReportDataChanged.researcher.reporterwww}}">
             <mat-icon matSuffix>public</mat-icon>
           </mat-form-field>
         </div>
@@ -272,6 +323,11 @@
     </mat-card-content>
   </mat-card>
 
-  <br><br>
-
+  <br>
+  <div id="outer">
+    <div id="inner">
+      <mat-icon class="vertical-align-middle padding-bottom-3">copyright</mat-icon> Copyright 2018
+    </div>
+  </div>
+  <br>
 </div>

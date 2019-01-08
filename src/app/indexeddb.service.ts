@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 
 import { MessageService } from './message.service';
 import { MatDialog } from '@angular/material';
-import { DialogAddissueComponent } from './dialog-addissue/dialog-addissue.component';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable({
@@ -277,20 +276,6 @@ export class IndexeddbService {
 
   updateEncStatus(message: any) {
     this.decryptstatusObs.next(message);
-  }
-
-  addIssue() {
-    console.log('Add issue');
-
-    const dialogRef = this.dialog.open(DialogAddissueComponent, {
-      width: '350px',
-      data: { name: 'test' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(result);
-    });
   }
 
 
