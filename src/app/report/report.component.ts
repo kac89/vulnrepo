@@ -162,8 +162,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   addissue() {
 
-    // this.indexeddbService.addIssue();
-
     console.log('Add issue');
 
     const dialogRef = this.dialog.open(DialogAddissueComponent, {
