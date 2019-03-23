@@ -379,12 +379,12 @@ export class IndexeddbService {
     try {
         // Encrypt
         const ciphertext = Crypto.AES.encrypt(JSON.stringify(data), pass);
-        const today: number = Date.now();
+        const now: number = Date.now();
         const to_update = {
           report_id: reportid,
           report_name: reportname,
           report_createdate: reportcreatedate,
-          report_lastupdate: today,
+          report_lastupdate: now,
           encrypted_data: ciphertext.toString()
         };
 

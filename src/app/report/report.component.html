@@ -49,7 +49,7 @@
             <mat-form-field appearance="outline" class="example-full-width">
                 <mat-label>Scope</mat-label>
                 <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope" value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-                <mat-hint>hint</mat-hint>
+               <!-- <mat-hint>hint</mat-hint> --> 
             </mat-form-field>
 
         </div>
@@ -66,9 +66,10 @@
           <div class="second-b">
 
             <div class="call-outs-container-report-details">
+
               <div class="call-out-report-details">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="picker" placeholder="Research start date">
+                  <input matInput [matDatepicker]="picker" placeholder="Research start date" [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -76,7 +77,7 @@
 
               <div class="call-out-report-details">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="pickerend" placeholder="Research end date">
+                  <input matInput [matDatepicker]="pickerend" placeholder="Research end date" [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest">
                   <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
                   <mat-datepicker #pickerend></mat-datepicker>
                 </mat-form-field>
@@ -131,7 +132,7 @@
             <div class="second-issue">
               <div class="second-a-issue">
                   <mat-form-field class="example-full-width">
-                      <input matInput [matDatepicker]="picker" placeholder="Issue find date">
+                      <input matInput [matDatepicker]="picker" placeholder="Date of finding issue" [(ngModel)]="dec_data.date">
                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                       <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>

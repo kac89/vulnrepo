@@ -179,8 +179,12 @@ export class ReportComponent implements OnInit, OnDestroy {
       console.log(result);
 
       if (result !== undefined) {
-        this.decryptedReportDataChanged.report_vulns.push(result);
-        this.doStats();
+
+        if (result.title !== '') {
+          this.decryptedReportDataChanged.report_vulns.push(result);
+          this.doStats();
+        }
+
       }
 
     });

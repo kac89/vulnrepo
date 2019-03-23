@@ -45,6 +45,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import { HttpModule } from '@angular/http';
 import {MatSelectModule} from '@angular/material/select';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {DatePipe} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatSelectModule,
     DragDropModule
   ],
-  providers: [MessageService, IndexeddbService],
+  providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent],
   exports: [],
   bootstrap: [AppComponent]

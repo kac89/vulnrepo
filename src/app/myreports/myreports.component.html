@@ -22,7 +22,7 @@
 <mat-card>
 
 
-  <table mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
+  <table *ngIf="list != 0" mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
 
     <ng-container matColumnDef="report_name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
@@ -42,9 +42,10 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;  "></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-<br>
-  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+  <br *ngIf="list != 0">
+  <mat-paginator *ngIf="list != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
 
+  <p *ngIf="list == 0">Your reports list is empty :-( </p>
 </mat-card>

@@ -90,7 +90,8 @@
   }
   
   .call-out-report-details {
-    box-sizing: border-box;
+    flex: auto;
+    padding-right: 5px;
   }
 
   @media (min-width: 900px) {
