@@ -388,7 +388,7 @@ export class IndexeddbService {
           encrypted_data: ciphertext.toString()
         };
 
-        this.updatereportDB(reportorder, to_update).then(data => {});
+        this.updatereportDB(reportorder, to_update).then();
 
     } catch (except) {
       console.log(except);
