@@ -31,7 +31,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   dialogRef: MatDialogRef<DialogPassComponent>;
   displayedColumns: string[] = ['position', 'name'];
   report_id: string;
-  report_info = '';
+  report_info: any;
+  reportdesc = '';
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   subscription: Subscription;
@@ -72,7 +73,14 @@ export class ReportComponent implements OnInit, OnDestroy {
 
         console.log('Report exist: OK');
         this.report_info = data;
-        setTimeout(_ => this.openDialog(data)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
+        this.reportdesc = data;
+        // check if pass in sessionStorage
+        if (sessionStorage.getItem(data.report_id) !== null) {
+          const pass = sessionStorage.getItem(data.report_id);
+          this.indexeddbService.decrypt(pass, data.report_id).then(returned => { });
+        } else {
+          setTimeout(_ => this.openDialog(data)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
+        }
 
       } else {
         console.log('Report exist: FAIL');
@@ -119,7 +127,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The pass dialog was closed');
     });
 
   }
@@ -161,9 +169,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   addissue() {
-
     console.log('Add issue');
-
     const dialogRef = this.dialog.open(DialogAddissueComponent, {
       width: '350px'
     });
@@ -185,8 +191,14 @@ export class ReportComponent implements OnInit, OnDestroy {
     moveItemInArray(this.decryptedReportDataChanged.report_vulns, event.previousIndex, event.currentIndex);
   }
 
-  saveReportChanges() {
-    console.log(this.decryptedReportDataChanged);
+  saveReportChanges(report_id: any) {
+    const pass = sessionStorage.getItem(report_id);
+    this.indexeddbService.getkeybyReportID(report_id).then(data => {
+      if (data) {
+        // tslint:disable-next-line:max-line-length
+        this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key);
+      }
+    });
   }
 
   sortbycvss() {

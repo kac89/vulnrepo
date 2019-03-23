@@ -14,14 +14,14 @@ export class DialogPassComponent implements OnInit {
   msg: string;
   constructor(public router: Router, private indexeddbService: IndexeddbService,
     public dialogRef: MatDialogRef<DialogPassComponent>,
-    @Inject(MAT_DIALOG_DATA) public data) {}
+    @Inject(MAT_DIALOG_DATA) public data) {
+    }
 
   cancel(): void {
     this.dialogRef.close();
     this.router.navigate(['/my-reports']);
   }
   ngOnInit() {
-
   }
 
   onKeydown(event, pass: string, report_id: string) {
@@ -37,7 +37,7 @@ export class DialogPassComponent implements OnInit {
 
       console.log(`Returned: ${returned}`);
       if (returned) {
-        this.dialogRef.close();
+        this.dialogRef.close({ data: pass });
       } else {
         this.msg = 'Wrong password :(';
       }

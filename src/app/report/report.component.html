@@ -1,5 +1,5 @@
 <h1 class="mat-display-2">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">fingerprint</mat-icon>{{report_info.report_name}}
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">fingerprint</mat-icon>{{reportdesc.report_name}}
 </h1>
 <!-- Report info -->
 <mat-card>
@@ -14,16 +14,15 @@
       <div class="call-outs-container-details">
 
           <div class="call-out-details">
-            <p>Report ID: {{report_info.report_id}}</p>
-            <p>Created: {{report_info.report_createdate | date:'medium'}}</p>
-            <p>{{decryptedReportDataChanged}}</p>
+            <p>Report ID: {{reportdesc.report_id}}</p>
+            <p>Created: {{reportdesc.report_createdate | date:'medium'}}</p>
+            <p style="margin: auto;" *ngIf="decryptedReportDataChanged"><button mat-button color="accent" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all report changes!</button>Last save: <i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></p>
           </div>
         
           <div *ngIf="decryptedReportDataChanged" class="call-out-details">
             <p><button class="mat-elevation-z9" mat-raised-button color="primary"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
               <button class="mat-elevation-z9" mat-raised-button color="accent"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share</button>
               <button class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Get in ASCII</button></p>
-              <p><button mat-button color="accent" (click)="saveReportChanges()"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save report changes</button> Last save date: </p>
           </div>
 
         </div>
@@ -54,13 +53,13 @@
             </mat-form-field>
 
         </div>
-
+        
         <div class="second">
           <div class="second-a">
 
               <mat-form-field appearance="outline" class="example-full-width">
                   <mat-label>Report summary comment</mat-label>
-                  <textarea matInput rows="1"></textarea>
+                  <textarea matInput rows="1" [(ngModel)]="decryptedReportDataChanged.report_summary" value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
               </mat-form-field>
 
           </div>
@@ -100,7 +99,7 @@
         <mat-icon>bug_report</mat-icon>
       </div>
       <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span></mat-card-title>
-      <mat-card-title class="card-container-right"><mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by:<button (click)="sortbycvss()" mat-button>CVSS</button></mat-card-title>
+      <mat-card-title class="card-container-right"><button mat-button><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues</button> <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by:<button (click)="sortbycvss()" mat-button>CVSS</button></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)">
@@ -326,7 +325,7 @@
   <br>
   <div id="outer">
     <div id="inner">
-      <mat-icon class="vertical-align-middle padding-bottom-3">copyright</mat-icon> Copyright 2018
+      <mat-icon class="vertical-align-middle padding-bottom-3">copyright</mat-icon> Copyright 2019
     </div>
   </div>
   <br>

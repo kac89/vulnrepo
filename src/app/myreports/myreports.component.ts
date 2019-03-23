@@ -27,19 +27,24 @@ export class MyreportsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getallreports();
+  }
 
+  getallreports() {
     this.indexeddbService.getReports().then(data => {
       this.dataSource = new MatTableDataSource(data);
       console.log(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
-
   }
 
-
   removeReport(element: any) {
-    this.indexeddbService.deleteReport(element);
+    this.indexeddbService.deleteReport(element).then(data => {
+        if (data) {
+          this.getallreports();
+        }
+    });
   }
 
 

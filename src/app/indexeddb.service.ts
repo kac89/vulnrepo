@@ -86,40 +86,47 @@ export class IndexeddbService {
 
       } else {
 
+
+
+//        report_vulns: [
+//          {
+//            title: '[XSS] Cross site scripting vulnerability',
+//            poc: '',
+//            files: [],
+//            desc: 'desc',
+//            severity: 'Medium',
+//            ref: 'https://www.owasp.org/',
+//            cvss: '4.3',
+//            cve: '',
+//            date: today
+//          },
+//          {
+//            title: '[XSS] DOM',
+//            poc: '',
+//            files: [],
+//            desc: 'desc',
+//            severity: 'Medium',
+//            ref: 'https://www.owasp.org/',
+//            cvss: '4.3',
+//            cve: '',
+//            date: today
+//          }
+//        ],
+
+
+
         const today: number = Date.now();
         const empty_vulns = {
-          report_vulns: [
-            {
-              title: '[XSS] Cross site scripting vulnerability',
-              poc: '',
-              files: [],
-              desc: 'desc',
-              severity: 'Medium',
-              ref: 'https://www.owasp.org/',
-              cvss: '4.3',
-              cve: '',
-              date: today
-            },
-            {
-              title: '[XSS] DOM',
-              poc: '',
-              files: [],
-              desc: 'desc',
-              severity: 'Medium',
-              ref: 'https://www.owasp.org/',
-              cvss: '4.3',
-              cve: '',
-              date: today
-            }
-          ],
+          report_vulns: [],
           report_scope: '',
+          report_summary: '',
           report_changelog: [
             {
               date: today,
               desc: 'Create report: \"' + title + '\".'
             }
           ],
-          report_version: 0,
+          report_version: 1,
           report_metadata: {
             starttest: '',
             endtest: '',
@@ -174,31 +181,37 @@ export class IndexeddbService {
   }
 
   deleteReport(item: any) {
+    return new Promise<any>((resolve, reject) => {
 
-    console.log(item);
+      this.getkeybyReportID(item.report_id).then(data => {
+        if (data) {
 
-    // indexeddb communication
-    const indexedDB = window.indexedDB;
-    const open = indexedDB.open('vulnrepo-db', 1);
+            // indexeddb communication
+            const indexedDB = window.indexedDB;
+            const open = indexedDB.open('vulnrepo-db', 1);
 
-    open.onupgradeneeded = function () {
-      const db = open.result;
-      db.createObjectStore('reports', { autoIncrement: true });
-    };
+            open.onupgradeneeded = function () {
+              const db = open.result;
+              db.createObjectStore('reports', { autoIncrement: true });
+            };
 
-    open.onsuccess = function () {
-      const db = open.result;
-      const tx = db.transaction('reports', 'readwrite');
-      const store = tx.objectStore('reports');
+            open.onsuccess = function () {
+              const db = open.result;
+              const tx = db.transaction('reports', 'readwrite');
+              const store = tx.objectStore('reports');
 
-      store.delete(item);
+              store.delete(data.key);
 
-      tx.oncomplete = function () {
-        db.close();
-      };
-    };
+              tx.oncomplete = function () {
+                db.close();
+                resolve(true);
+              };
+            };
 
 
+        }
+      });
+    });
   }
 
 
@@ -236,11 +249,6 @@ export class IndexeddbService {
     });
   }
 
-
-
-
-
-
   decrypt(pass: string, report_id: string): Promise<any> {
     return this.checkifreportexist(report_id).then(data => {
       if (data) {
@@ -261,6 +269,9 @@ export class IndexeddbService {
       const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
       console.log('Deecrypted data:');
       console.log(decryptedData);
+      if (decryptedData) {
+        sessionStorage.setItem(data.report_id, pass);
+      }
       this.updateEncStatus(true);
       this.messageService.sendDecrypted(decryptedData);
       return true;
@@ -276,6 +287,113 @@ export class IndexeddbService {
 
   updateEncStatus(message: any) {
     this.decryptstatusObs.next(message);
+  }
+
+  getkeybyReportID(reportid) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports', 'readwrite');
+        const store = tx.objectStore('reports');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.openCursor();
+
+        request.onsuccess = function (evt) {
+
+          const cursor = request.result;
+          if (cursor) {
+              const key = cursor.primaryKey;
+              const value = cursor.value.report_id;
+
+              if (reportid === value) {
+                const finded = {key, value};
+                resolve(finded);
+              }
+
+              cursor.continue();
+          } else {
+              // no more results
+
+          }
+
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+
+  updatereportDB(key, value) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports', 'readwrite');
+        const store = tx.objectStore('reports');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.put(value, key);
+
+        request.onsuccess = function (evt) {
+          resolve(request.result);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+  prepareupdatereport(data: any, pass: string, reportid: any, reportname: any, reportcreatedate: any, reportorder: any) {
+
+    try {
+        // Encrypt
+        const ciphertext = Crypto.AES.encrypt(JSON.stringify(data), pass);
+        const today: number = Date.now();
+        const to_update = {
+          report_id: reportid,
+          report_name: reportname,
+          report_createdate: reportcreatedate,
+          report_lastupdate: today,
+          encrypted_data: ciphertext.toString()
+        };
+
+        this.updatereportDB(reportorder, to_update).then(data => {});
+
+    } catch (except) {
+      console.log(except);
+    }
+
   }
 
 
