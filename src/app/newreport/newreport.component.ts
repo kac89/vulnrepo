@@ -10,6 +10,7 @@ import { IndexeddbService } from '../indexeddb.service';
 export class NewreportComponent implements OnInit {
 
   hide = true;
+  alert: string;
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -25,10 +26,14 @@ export class NewreportComponent implements OnInit {
 
   }
 
-  addnewReport(title: string, pass: string) {
-    this.indexeddbService.addnewReport(title, pass);
+  addnewReport(title: string, pass: string, pass2: string) {
+
+    if (pass === pass2) {
+      this.indexeddbService.addnewReport(title, pass);
+    } else {
+      this.alert = 'The given passwords do not match. Try again.';
+    }
+
   }
-
-
 
 }
