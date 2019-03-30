@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Import issues from:</h1>
+<div mat-dialog-content>
+  Tenable Nessus (CSV)
+  <div class="form-group">
+    <input cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
+</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button  color="primary" (click)="cancel()">Cancel</button>
+</div>

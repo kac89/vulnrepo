@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { KeyValueDiffers, KeyValueChangeRecord } from '@angular/core';
+import { DialogImportComponent } from '../dialog-import/dialog-import.component';
+
 
 @Component({
   selector: 'app-report',
@@ -191,6 +193,35 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
+  import_issues() {
+    console.log('Import issues');
+    const dialogRef = this.dialog.open(DialogImportComponent, {
+      width: '350px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+
+      if (result !== undefined) {
+
+
+        result.forEach(eachObj => {
+
+          if (eachObj.title !== '' && eachObj.title !== undefined) {
+            this.decryptedReportDataChanged.report_vulns.push(eachObj);
+            this.doStats();
+          }
+
+        });
+
+
+      }
+
+    });
+
+  }
+
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.decryptedReportDataChanged.report_vulns, event.previousIndex, event.currentIndex);
   }
@@ -206,16 +237,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   sortbycvss() {
-
-    this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => {
-      if (a.cvss > b.cvss) {
-        return -1;
-      } else if (b.cvss > a.cvss) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+    this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);
 
   }
 
