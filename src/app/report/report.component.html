@@ -114,7 +114,7 @@
                 <span class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>&nbsp;&nbsp;{{dec_data.title}}
             </mat-panel-title>
             <mat-panel-description>
-              {{dec_data.cve}}
+              {{ (dec_data.cve.length>40)? (dec_data.cve | slice:0:40)+'..':(dec_data.cve) }}
             </mat-panel-description>
           </mat-expansion-panel-header>
           <mat-expansion-panel-header class="example-custom-placeholder" *cdkDragPlaceholder></mat-expansion-panel-header>
@@ -196,7 +196,7 @@
       <br>
 
       <div class="banner">
-        <div class="center-me"><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="addissue()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button></div>
+        <div class="center-me"><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="addissue()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add custom issue</button></div>
       </div>
     </mat-card-content>
 
@@ -204,7 +204,7 @@
 
   <br>
   <!-- Stats -->
-  <mat-card>
+  <mat-card *ngIf="decryptedReportDataChanged.report_vulns.length !== 0">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>bar_chart</mat-icon>
@@ -323,10 +323,5 @@
   </mat-card>
 
   <br>
-  <div id="outer">
-    <div id="inner">
-      <mat-icon class="vertical-align-middle padding-bottom-3">copyright</mat-icon> Copyright 2019
-    </div>
-  </div>
   <br>
 </div>

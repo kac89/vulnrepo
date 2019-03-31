@@ -68,28 +68,87 @@ export class DialogImportComponent implements OnInit {
 
       const tarr = [];
       for (let j = 0; j < headers.length; j++) {
-        tarr.push(data[j]);
+            tarr.push(data[j]);
       }
 
       lines.push(tarr);
 
     }
     this.parsedCsv = lines;
+    console.log(this.parsedCsv);
+
+
 
     function unique(array, propertyName) {
       return array.filter((e, i) => array.findIndex(a => a[propertyName] === e[propertyName]) === i);
     }
+    // const parsedCsv = unique(this.parsedCsv, 0);
 
-    const parsedCsv = unique(this.parsedCsv, 0);
+    function group_issues(array) {
+
+      const ret = [];
+      array.forEach((item, index) => {
+        // console.log(item); // 1, 2, 3
+        // console.log(index); // 0, 1, 2
+
+          ret.forEach((retit, retindex) => {
+
+            if (retit[0] === item[0]) {
+
+              if (retit[1] !== '') {
+                  retit[1] = retit[1] + ',' + item[1];
+              }
+              if (retit[4] !== item[4]) {
+
+                if (retit[4] !== '') {
+
+
+                  const doesContains = retit[4].match(item[4]);
+
+                  if (doesContains !== null) {
+
+                  } else {
+                    if (item[6] === '0') {
+                      retit[4] = retit[4] + '\n' + item[4];
+                    } else {
+                      retit[4] = retit[4] + '\n' + item[5] + '://' + item[4] + ':' + item[6];
+                    }
+                  }
+
+                }
+
+              }
+
+            }
+
+          });
+
+
+          if (item[6] === '0') {
+            item[4] = item[4];
+          } else {
+            item[4] = item[5] + '://' + item[4] + ':' + item[6];
+          }
+
+            ret.push(item);
+
+      });
+      console.log(ret);
+      return ret;
+    }
+
+
+    const parsedCsv2 = group_issues(this.parsedCsv);
+    const parsedCsv = unique(parsedCsv2, 0);
     const date = new Date();
     const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = parsedCsv.map((res, key) => {
 
       const def = {
         title: res[7],
-        poc: res[9],
+        poc: res[4],
         files: [],
-        desc: res[8],
+        desc: res[8] + '\n\n' + res[9],
         severity: res[3],
         ref: res[11],
         cvss: res[2],
@@ -102,7 +161,6 @@ export class DialogImportComponent implements OnInit {
 
     info.splice(info.length - 1, 1);
     info.splice(0, 1);
-
     this.dialogRef.close(info);
 
   }
