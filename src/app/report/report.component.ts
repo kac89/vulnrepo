@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -11,7 +11,8 @@ import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { KeyValueDiffers, KeyValueChangeRecord } from '@angular/core';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
-
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 
 @Component({
   selector: 'app-report',
@@ -31,10 +32,19 @@ export class ReportComponent implements OnInit, OnDestroy {
   public pieChartType = 'pie';
 
   dialogRef: MatDialogRef<DialogPassComponent>;
-  displayedColumns: string[] = ['position', 'name'];
+  displayedColumns: string[] = ['date', 'desc', 'settings'];
+  dataSource = new MatTableDataSource();
+  listchangelog: any[];
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+
   report_id: string;
   report_info: any;
+  lastsavereportdata = '';
   reportdesc = '';
+  savemsg = '';
+  report_decryption_in_progress: boolean;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   subscription: Subscription;
@@ -60,6 +70,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
       this.decryptedReportDataChanged = this.decryptedReportData;
+
       this.doStats();
     });
 
@@ -78,8 +89,15 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.reportdesc = data;
         // check if pass in sessionStorage
         if (sessionStorage.getItem(data.report_id) !== null) {
+          this.report_decryption_in_progress = true;
           const pass = sessionStorage.getItem(data.report_id);
-          this.indexeddbService.decrypt(pass, data.report_id).then(returned => { });
+          this.indexeddbService.decrypt(pass, data.report_id).then(returned => {
+
+            if (returned) {
+              this.report_decryption_in_progress = false;
+            }
+
+           });
         } else {
           setTimeout(_ => this.openDialog(data)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
         }
@@ -90,6 +108,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
 
     });
+
   }
 
   // tslint:disable-next-line:use-life-cycle-interface
@@ -164,9 +183,12 @@ export class ReportComponent implements OnInit, OnDestroy {
       { severity: 'Info', count: info.length }
     ];
 
-
     this.pieChartData = [critical.length, high.length, medium.length, low.length, info.length];
 
+    this.listchangelog = this.decryptedReportData.report_changelog;
+    this.dataSource = new MatTableDataSource(this.decryptedReportData.report_changelog);
+    setTimeout(() => this.dataSource.sort = this.sort);
+    setTimeout(() => this.dataSource.paginator = this.paginator);
 
   }
 
@@ -181,12 +203,11 @@ export class ReportComponent implements OnInit, OnDestroy {
       console.log(result);
 
       if (result !== undefined) {
-
         if (result.title !== '') {
           this.decryptedReportDataChanged.report_vulns.push(result);
+          this.addtochangelog('Create issue: ' + result.title);
           this.doStats();
         }
-
       }
 
     });
@@ -204,18 +225,16 @@ export class ReportComponent implements OnInit, OnDestroy {
       console.log(result);
 
       if (result !== undefined) {
-
-
         result.forEach(eachObj => {
 
           if (eachObj.title !== '' && eachObj.title !== undefined) {
             this.decryptedReportDataChanged.report_vulns.push(eachObj);
-            this.doStats();
+            this.addtochangelog('Create issue: ' + eachObj.title);
           }
 
         });
 
-
+        this.doStats();
       }
 
     });
@@ -227,24 +246,141 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   saveReportChanges(report_id: any) {
+    this.savemsg = '';
     const pass = sessionStorage.getItem(report_id);
+
+    // update report
+    this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+    this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
         // tslint:disable-next-line:max-line-length
-        this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key);
+        this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
+          if (retu) {
+            this.savemsg = 'All changes saved successfully!';
+            this.lastsavereportdata = retu;
+            this.doStats();
+          }
+        });
+
       }
     });
   }
 
   sortbycvss() {
     this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);
+  }
+
+
+  editreporttitle(item) {
+    console.log(item);
+
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      width: '350px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+
+    });
 
   }
 
+
+  editissuetitle(item) {
+    console.log(item);
+
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      width: '350px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+
+    });
+  }
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
   }
+
+
+  addtochangelog(item) {
+    const today: number = Date.now();
+    const add_changelog = {
+        date: today,
+        desc: item
+      };
+
+    this.decryptedReportDataChanged.report_changelog.push(add_changelog);
+    this.doStats();
+  }
+  removefromchangelog(item) {
+    console.log(item);
+    const remo = 'changelog';
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      width: '350px',
+      data: [{remo}, {item}],
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+      const index: number = this.decryptedReportDataChanged.report_changelog.indexOf(result);
+
+      if (index !== -1) {
+          this.decryptedReportDataChanged.report_changelog.splice(index, 1);
+          this.doStats();
+      }
+    });
+  }
+
+
+  removeIssiue(item) {
+    console.log(item);
+    const remo = 'remove';
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      width: '350px',
+      data: [{remo}, {item}],
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+
+      const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(result);
+
+      if (index !== -1) {
+          this.decryptedReportDataChanged.report_vulns.splice(index, 1);
+          this.addtochangelog('Remove issue: ' + result.title);
+          this.doStats();
+      }
+
+    });
+  }
+
+
+
+  shareReport(item) {
+
+    const enc = btoa(JSON.stringify(item));
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(enc));
+    element.setAttribute('download', item.report_name + ' (vulnrepo.com).txt');
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
+
 
 }
 

@@ -41,7 +41,7 @@
         "desc": "A buffer overflow condition exists when a program attempts to put more data in a buffer than it can hold or when a program attempts to put data in a memory area past a buffer. In this case, a buffer is a sequential section of memory allocated to contain anything from a character string to an array of integers. Writing outside the bounds of a block of allocated memory can corrupt data, crash the program, or cause the execution of malicious code.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Buffer_Overflow",
-        "cvss": "9.0-10",
+        "cvss": "9.0",
         "cve": ""
     },
     {
@@ -59,7 +59,7 @@
         "desc": "Remote File Include (RFI) is an attack technique used to exploit 'dynamic file include' mechanisms in web applications. When web applications take user input (URL, parameter value, etc.) and pass them into file include commands, the web application might be tricked into including remote files with malicious code.\n\nAlmost all web application frameworks support file inclusion. File inclusion is mainly used for packaging common code into separate files that are later referenced by main application modules. When a web application references an include file, the code in this file may be executed implicitly or explicitly by calling specific procedures. If the choice of module to load is based on elements from the HTTP request, the web application might be vulnerable to RFI.",
         "severity": "Critical",
         "ref": "http://cwe.mitre.org/data/definitions/98.html",
-        "cvss": "7.0-9.0",
+        "cvss": "7.0",
         "cve": ""
     },
     {
@@ -68,7 +68,7 @@
         "desc": "SQL Injection is an attack technique used to exploit applications that construct SQL statements from user-supplied input. When successful, the attacker is able to change the logic of SQL statements executed against the database.\n\nStructured Query Language (SQL) is a specialized programming language for sending queries to databases. The SQL programming language is both an ANSI and an ISO standard, though many database products supporting SQL do so with proprietary extensions to the standard language. Applications often use user-supplied data to create SQL statements. If an application fails to properly construct SQL statements it is possible for an attacker to alter the statement structure and execute unplanned and potentially hostile commands. When such commands are executed, they do so under the context of the user specified by the application executing the statement. This capability allows attackers to gain control of all database resources accessible by that user, up to and including the ability to execute commands on the hosting system.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/SQL_Injection",
-        "cvss": "6.0-9.0",
+        "cvss": "8.0",
         "cve": ""
     },
     {
@@ -77,7 +77,7 @@
         "desc": "Blind SQL (Structured Query Language) injection is a type of SQL Injection attack that asks the database true or false questions and determines the answer based on the applications response. This attack is often used when the web application is configured to show generic error messages, but has not mitigated the code that is vulnerable to SQL injection. When an attacker exploits SQL injection, sometimes the web application displays error messages from the database complaining that the SQL Query's syntax is incorrect. Blind SQL injection is nearly identical to normal SQL Injection, the only difference being the way the data is retrieved from the database. When the database does not output data to the web page, an attacker is forced to steal data by asking the database a series of true or false questions. This makes exploiting the SQL Injection vulnerability more difficult, but not impossible.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Blind_SQL_Injection",
-        "cvss": "6.0-9.0",
+        "cvss": "8.0",
         "cve": ""
     },
     {
@@ -86,7 +86,7 @@
         "desc": "File resources are accessed using references constructed from user-supplied data, allowing a malicious user to access files outside the web root that were not intended to be exposed.",
         "severity": "Medium",
         "ref": "https://www.owasp.org/index.php/Path_Traversal\nhttp://projects.webappsec.org/w/page/13246952/Path Traversal\nhttp://cwe.mitre.org/data/definitions/22.html",
-        "cvss": "4.0-9.0",
+        "cvss": "4.0",
         "cve": ""
     },	
     {
@@ -113,7 +113,7 @@
         "desc": "This technique takes advantage of a feature of XML to build documents dynamically at the time of processing. An XML message can either provide data explicitly or by pointing to an URI where the data exists. In the attack technique, external entities may replace the entity value with malicious data, alternate referrals or may compromise the security of the data the server/XML application has access to.",
         "severity": "Critical",
         "ref": "http://www.securiteam.com/securitynews/6D0100A5PU.html\nhttps://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing",
-        "cvss": "8",
+        "cvss": "9",
         "cve": ""
     },	
     {
@@ -149,7 +149,7 @@
         "desc": "User-controlled data is used as a template engine's template, allowing attackers to access the template context and in some cases inject and run arbitrary code in the application server. Template engines are used to render content using dynamic data. This context data is normally controlled by the user and formatted by the template to generate web pages, emails and the like. Template engines allow powerful language expressions to be used in templates in order to render dynamic content, by processing the context data with code constructs such as conditionals, loops, etc. If an attacker is able to control the template to be rendered, they will be able to inject expressions that will expose context data or even run arbitrary commands on the server.",
         "severity": "High",
         "ref": "http://blog.portswigger.net/2015/08/server-side-template-injection.html",
-        "cvss": "6-9",
+        "cvss": "7.5",
         "cve": ""
     },
     {
@@ -158,7 +158,7 @@
         "desc": "Code Injection is the general term for attack types which consist of injecting code that is then interpreted/executed by the application. This type of attack exploits poor handling of untrusted data.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Code_Injection\nhttps://en.wikipedia.org/wiki/Arbitrary_code_execution",
-        "cvss": "8-10",
+        "cvss": "10",
         "cve": ""
     },
     {
@@ -167,7 +167,7 @@
         "desc": "Remote code execution can be best described as an action which involves an attacker executing code remotely using system vulnerabilities. Such code can run from a remote server, which means that the attack can originate from anywhere around the world giving the attacker access to the PC. Once a hacker gains access to a system, they’ll be able to make changes within the target computer.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Code_Injection",
-        "cvss": "8-10",
+        "cvss": "10",
         "cve": ""
     },
     {
@@ -176,7 +176,7 @@
         "desc": "CWE-434 describes: “Unrestricted Upload of File with Dangerous Type” a system with this weakness may authenticate the upload function but fail to verify or restrict the file to the type intended by the software developer. For example uploading a malware executable instead of a picture file to a photograph sharing website.",
         "severity": "High",
         "ref": "https://cwe.mitre.org/data/definitions/434.html\nhttps://www.owasp.org/index.php/Unrestricted_File_Upload",
-        "cvss": "6-10",
+        "cvss": "6",
         "cve": ""
     }    
 ]

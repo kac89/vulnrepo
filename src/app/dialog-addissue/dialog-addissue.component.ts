@@ -39,7 +39,10 @@ export class DialogAddissueComponent implements OnInit {
 
   }
 
-
+  private _filter(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
 
   ngOnInit() {
 
@@ -112,9 +115,6 @@ export class DialogAddissueComponent implements OnInit {
     return template ? template.title : undefined;
   }
 
-  private _filter(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) === 0);
-  }
+
 
 }

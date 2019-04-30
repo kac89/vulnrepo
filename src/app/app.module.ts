@@ -47,6 +47,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {DatePipe} from '@angular/common';
 import { DialogImportComponent } from './dialog-import/dialog-import.component';
+import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { DialogImportComponent } from './dialog-import/dialog-import.component';
     ReportComponent,
     DialogPassComponent,
     DialogAddissueComponent,
-    DialogImportComponent
+    DialogImportComponent,
+    DialogEditComponent
   ],
   imports: [
     BrowserModule,
@@ -95,7 +97,7 @@ import { DialogImportComponent } from './dialog-import/dialog-import.component';
     DragDropModule
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
-  entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent],
+  entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent, DialogEditComponent],
   exports: [],
   bootstrap: [AppComponent]
 })

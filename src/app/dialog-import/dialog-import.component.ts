@@ -11,6 +11,8 @@ import { FormControl } from '@angular/forms';
 export class DialogImportComponent implements OnInit {
   csvContent: string;
   parsedCsv: any[];
+  public show_input = true;
+  public please_wait = false;
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
 
@@ -34,6 +36,9 @@ export class DialogImportComponent implements OnInit {
        console.log("Type: " + files[0].type);
        console.log("Size: " + files[0].size + " bytes");
        */
+
+      this.show_input = false;
+      this.please_wait = true;
 
       const fileToRead = files[0];
 

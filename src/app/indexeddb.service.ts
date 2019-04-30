@@ -126,7 +126,7 @@ export class IndexeddbService {
               desc: 'Create report: \"' + title + '\".'
             }
           ],
-          report_version: 1,
+          report_version: 0,
           report_metadata: {
             starttest: '',
             endtest: '',
@@ -360,7 +360,7 @@ export class IndexeddbService {
         const request = store.put(value, key);
 
         request.onsuccess = function (evt) {
-          resolve(request.result);
+          resolve('encrypted:ok');
         };
 
         tx.oncomplete = function () {
@@ -375,8 +375,8 @@ export class IndexeddbService {
   }
 
   prepareupdatereport(data: any, pass: string, reportid: any, reportname: any, reportcreatedate: any, reportorder: any) {
-
-    try {
+    return new Promise<any>((resolve, reject) => {
+      try {
         // Encrypt
         const ciphertext = Crypto.AES.encrypt(JSON.stringify(data), pass);
         const now: number = Date.now();
@@ -388,13 +388,18 @@ export class IndexeddbService {
           encrypted_data: ciphertext.toString()
         };
 
-        this.updatereportDB(reportorder, to_update).then();
+
+        this.updatereportDB(reportorder, to_update).then(retu => {
+          if (retu === 'encrypted:ok') {
+              resolve(now);
+          }
+        });
 
     } catch (except) {
       console.log(except);
     }
 
+    });
+
   }
-
-
 }

@@ -2,7 +2,8 @@
 <div mat-dialog-content>
   Tenable Nessus (CSV)
   <div class="form-group">
-    <input cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
+    <input *ngIf="show_input" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
+    <p *ngIf="please_wait">Please wait...</p>
 </div>
 </div>
 <div mat-dialog-actions>

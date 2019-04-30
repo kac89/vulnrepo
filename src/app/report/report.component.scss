@@ -225,3 +225,17 @@
 .mat-expansion-panel-header-description {
   margin-top: 6px;
 }
+
+
+.valign-center {
+  display: inline-block;
+  vertical-align: text-top;
+  align-items: start;
+  color: #fff;
+}
+
+.valign-issues-center {
+  display: inline-block;
+  vertical-align: middle;
+  color: #fff;
+}

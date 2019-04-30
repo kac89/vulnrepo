@@ -34,7 +34,6 @@ export class MyreportsComponent implements OnInit {
   getallreports() {
     this.indexeddbService.getReports().then(data => {
       this.dataSource = new MatTableDataSource(data);
-      console.log(data);
       this.list = data;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
