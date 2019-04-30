@@ -419,7 +419,7 @@ report_ascii_vulns += report_ascii_vulns = '\
 # Severity: ' + value.severity + '\n\
 # Find Date: ' + value.date + '\n\
 # CVSS: ' + value.cvss + '\n\
-# CVE: ' + value.cve + '\n\
+# CVE: ' + addNewlines(value.cve) + '\n\
 \n\
 # Description: \n\
 ' + addNewlines(value.desc) + '\n\

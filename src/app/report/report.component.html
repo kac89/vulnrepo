@@ -22,7 +22,7 @@
           </div>
         
           <div *ngIf="decryptedReportDataChanged" class="call-out-details">
-              <p><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share securely</button> <button mat-button color="accent" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all / Release version!</button><br><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''"><br>{{savemsg}}<br>Last save: <i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></span><span *ngIf="lastsavereportdata !== ''"><br>{{savemsg}}<br>Last save: <i>{{lastsavereportdata | date: 'medium'}}</i></span></p>
+              <p><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted</button> <button mat-button color="accent" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all / Release version!</button><br><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''"><br>{{savemsg}}<br>Last save: <i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></span><span *ngIf="lastsavereportdata !== ''"><br>{{savemsg}}<br>Last save: <i>{{lastsavereportdata | date: 'medium'}}</i></span></p>
           </div>
 
         </div>
