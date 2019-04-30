@@ -17,12 +17,12 @@
             <p>Report ID: {{reportdesc.report_id}}</p>
             <p>Created: {{reportdesc.report_createdate | date:'medium'}}</p>
             <p *ngIf="decryptedReportDataChanged"><button class="mat-elevation-z9" mat-raised-button color="primary"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
-              <button class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Get in ASCII</button></p>
+              <button class="mat-elevation-z9" (click)="downloadASCII(decryptedReportDataChanged,report_info)" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Get in ASCII</button></p>
             <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...</p>
           </div>
         
           <div *ngIf="decryptedReportDataChanged" class="call-out-details">
-              <p><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share</button> <button mat-button color="accent" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all / Release version!</button><br><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''"><br>{{savemsg}}<br>Last save: <i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></span><span *ngIf="lastsavereportdata !== ''"><br>{{savemsg}}<br>Last save: <i>{{lastsavereportdata | date: 'medium'}}</i></span></p>
+              <p><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share securely</button> <button mat-button color="accent" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all / Release version!</button><br><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''"><br>{{savemsg}}<br>Last save: <i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></span><span *ngIf="lastsavereportdata !== ''"><br>{{savemsg}}<br>Last save: <i>{{lastsavereportdata | date: 'medium'}}</i></span></p>
           </div>
 
         </div>
