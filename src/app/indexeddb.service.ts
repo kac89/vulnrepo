@@ -260,9 +260,6 @@ export class IndexeddbService {
 
   decodeAES(data: any, pass: string) {
 
-    console.log(data);
-    console.log(pass);
-
     try {
       // Decrypt
       const bytes = Crypto.AES.decrypt(data.encrypted_data.toString(), pass);
@@ -402,4 +399,33 @@ export class IndexeddbService {
     });
 
   }
+
+
+
+  downloadEncryptedReport(report_id) {
+
+    this.checkifreportexist(report_id).then(data => {
+      if (data) {
+        console.log(data);
+        const enc = btoa(JSON.stringify(data));
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(enc));
+        element.setAttribute('download', data.report_name + ' (vulnrepo.com).txt');
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+
+      }
+
+    });
+
+
+  }
+
+
+
+
+
+
 }

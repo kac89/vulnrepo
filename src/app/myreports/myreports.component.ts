@@ -40,6 +40,12 @@ export class MyreportsComponent implements OnInit {
     });
   }
 
+
+shareReport(report_id) {
+
+  this.indexeddbService.downloadEncryptedReport(report_id);
+
+}
   removeReport(element: any) {
     this.indexeddbService.deleteReport(element).then(data => {
         if (data) {
