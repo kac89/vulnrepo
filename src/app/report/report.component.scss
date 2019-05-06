@@ -81,6 +81,35 @@
   }
 
 
+
+  .call-outs-container-download {
+    max-width: 1400px;
+    margin: 0px auto 0 auto;
+  }
+  
+  .call-out-download {
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .call-out-download2 {
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    border-left-style: dotted;
+    border-width: 0.09em;
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+  @media (min-width: 900px) {
+    .call-outs-container-download {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+
   .call-out:nth-child(1) {}
   .call-out:nth-child(2) {}
 

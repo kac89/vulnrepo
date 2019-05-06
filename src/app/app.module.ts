@@ -48,6 +48,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {DatePipe} from '@angular/common';
 import { DialogImportComponent } from './dialog-import/dialog-import.component';
 import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
+import { ImportReportComponent } from './import-report/import-report.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
     DialogPassComponent,
     DialogAddissueComponent,
     DialogImportComponent,
-    DialogEditComponent
+    DialogEditComponent,
+    ImportReportComponent
   ],
   imports: [
     BrowserModule,

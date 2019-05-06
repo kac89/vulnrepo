@@ -16,13 +16,12 @@
           <div class="call-out-details">
             <p>Report ID: {{reportdesc.report_id}}</p>
             <p>Created: {{reportdesc.report_createdate | date:'medium'}}</p>
-            <p *ngIf="decryptedReportDataChanged"><button class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
-              &nbsp;&nbsp;<button (click)="downloadASCII(decryptedReportDataChanged,report_info)" mat-button color="accent"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Download ASCII</button></p>
+            <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged.report_version}}</b></p>
             <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...</p>
           </div>
         
           <div *ngIf="decryptedReportDataChanged" class="call-out-details">
-              <p><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all / Release version!</button><br><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''"><br>{{savemsg}}<br>Last save: <i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></span><span *ngIf="lastsavereportdata !== ''"><br>{{savemsg}}<br>Last save: <i>{{lastsavereportdata | date: 'medium'}}</i></span></p>
+              <p><button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes: release version!</button><br><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''"><br>{{savemsg}}<br>Last save: <i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></span><span *ngIf="lastsavereportdata !== ''"><br>{{savemsg}}<br>Last save: <i>{{lastsavereportdata | date: 'medium'}}</i></span></p>
           </div>
 
         </div>
@@ -99,7 +98,7 @@
         <mat-icon>bug_report</mat-icon>
       </div>
       <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span></mat-card-title>
-      <mat-card-title class="card-container-right"><button mat-button (click)="import_issues()"><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues</button><button mat-button (click)="export_issues()"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues</button>   <button (click)="sortbycvss()" color="accent" mat-button><mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS</button></mat-card-title>
+      <mat-card-title class="card-container-right"><button mat-button (click)="import_issues()"><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues</button><button mat-button (click)="export_issues()"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues</button>&nbsp;&nbsp;<button (click)="sortbycvss()" color="accent" mat-button><mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS</button></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
@@ -297,7 +296,7 @@
       <div mat-card-avatar>
         <mat-icon>change_history</mat-icon>
       </div>
-      <mat-card-title>Changelogs V.{{decryptedReportDataChanged?.report_version}}</mat-card-title>
+      <mat-card-title>Changelogs</mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
@@ -331,6 +330,28 @@
       
     </mat-card-content>
   </mat-card>
+  <br>
+  <!-- Download -->
+  <mat-card *ngIf="decryptedReportDataChanged">
+      <mat-card-header>
+        <div mat-card-avatar>
+          <mat-icon>cloud_download</mat-icon>
+        </div>
+        <mat-card-title>Download</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="call-outs-container-download">
+            <div class="call-out-download">
+                <mat-icon class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
+                  &nbsp;&nbsp;<button (click)="downloadASCII(decryptedReportDataChanged,report_info)" mat-button color="accent"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Download ASCII</button>
+              </div>
+
+              <div class="call-out-download2">
+                  <mat-icon class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Download encrypted / Share encrypted</button>&nbsp;&nbsp;
+                </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
   <br>
   <br>

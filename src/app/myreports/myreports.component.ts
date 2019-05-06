@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator, MatDialog, MatDialogRef } from '@angular/material';
 import { IndexeddbService } from '../indexeddb.service';
+import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 
 export interface MyReportElement {
   report_name: string;
@@ -15,7 +16,7 @@ export interface MyReportElement {
   styleUrls: ['./myreports.component.scss']
 })
 export class MyreportsComponent implements OnInit {
-
+  dialogRef: MatDialogRef<DialogEditComponent>;
   reportlist: string[];
   displayedColumns: string[] = ['report_name', 'report_createdate', 'settings'];
   dataSource = new MatTableDataSource();
@@ -23,7 +24,7 @@ export class MyreportsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private indexeddbService: IndexeddbService) {
+  constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService) {
 
   }
 
@@ -46,12 +47,26 @@ shareReport(report_id) {
   this.indexeddbService.downloadEncryptedReport(report_id);
 
 }
-  removeReport(element: any) {
-    this.indexeddbService.deleteReport(element).then(data => {
-        if (data) {
-          this.getallreports();
-        }
+  removeReport(item) {
+    const remo = 'removereport';
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      width: '400px',
+      data: [{ remo }, { item }],
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+          this.indexeddbService.deleteReport(item).then(data => {
+              if (data) {
+                this.getallreports();
+              }
+          });
+      }
+
+    });
+
+
+
   }
 
 

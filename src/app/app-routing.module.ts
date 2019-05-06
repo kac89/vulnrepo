@@ -8,6 +8,7 @@ import { MyreportsComponent } from './myreports/myreports.component';
 import { SettingsComponent } from './settings/settings.component';
 import { NewreportComponent } from './newreport/newreport.component';
 import { ReportComponent } from './report/report.component';
+import { ImportReportComponent } from './import-report/import-report.component';
 
 const routes: Routes = [{
   path: 'home',
@@ -32,6 +33,10 @@ const routes: Routes = [{
 {
   path: 'settings',
   component: SettingsComponent
+},
+{
+  path: 'import-report',
+  component: ImportReportComponent
 },
 {
   path: '',

@@ -1,0 +1,19 @@
+<h1 class="mat-display-2">
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon> Import report
+</h1>
+
+<mat-card>
+  <p>Import from a clipboard</p>
+  <mat-form-field appearance="outline" class="example-full-width">
+    <mat-label>Paste from the clipboard</mat-label>
+    <textarea matInput rows="6" [(ngModel)]="pastefromclipboard" class="form-control z-depth-1"></textarea>
+  </mat-form-field>
+
+  <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="primary">Import</button>
+
+</mat-card>
+<br>
+<mat-card>
+  <p>Import from file</p>
+  <input cdkFocusInitial type="file" accept=".*" (change)="onFileSelect($event.target)" name="myfiles" multiple>
+</mat-card>

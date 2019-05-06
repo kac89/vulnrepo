@@ -2,6 +2,7 @@
 <h1 *ngIf="col2" mat-dialog-title>Edit issue title</h1>
 <h1 *ngIf="col3" mat-dialog-title>Remove issue:</h1>
 <h1 *ngIf="col4" mat-dialog-title>Remove event from changelog:</h1>
+<h1 *ngIf="col5" mat-dialog-title>Remove report:</h1>
 
 <div mat-dialog-content >
   <div class="example-form">
@@ -16,9 +17,10 @@
 
       <h3 *ngIf="col3">{{data[1].item.title}}</h3>
       <h3 *ngIf="col4">{{data[1].item.desc}}</h3>
+      <h3 *ngIf="col5">{{data[1].item.report_name}}</h3>
     </div>
 </div>
 
 <div mat-dialog-actions>
-    <button *ngIf="col4" mat-raised-button color="warn" (click)="removechangelog(data[1].item)">Remove</button> <button *ngIf="col3" mat-raised-button color="warn" (click)="removeissue(data[1].item)">Remove</button> <button mat-raised-button color="primary" (click)="cancel()">Close</button>
+    <button *ngIf="col5" mat-raised-button color="warn" (click)="removeReport(data[1].item)">Remove</button> <button *ngIf="col4" mat-raised-button color="warn" (click)="removechangelog(data[1].item)">Remove</button> <button *ngIf="col3" mat-raised-button color="warn" (click)="removeissue(data[1].item)">Remove</button> <button mat-raised-button color="primary" (click)="cancel()">Close</button>
 </div>
