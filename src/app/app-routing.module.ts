@@ -12,30 +12,37 @@ import { ImportReportComponent } from './import-report/import-report.component';
 
 const routes: Routes = [{
   path: 'home',
+  pathMatch: 'full',
   component: HomeComponent
 },
 {
   path: 'about',
+  pathMatch: 'full',
   component: AboutComponent
 },
 {
   path: 'my-reports',
+  pathMatch: 'full',
   component: MyreportsComponent
 },
 {
   path: 'new-report',
+  pathMatch: 'full',
   component: NewreportComponent
 },
 {
   path: 'report/:report_id',
+  pathMatch: 'full',
   component: ReportComponent
 },
 {
   path: 'settings',
+  pathMatch: 'full',
   component: SettingsComponent
 },
 {
   path: 'import-report',
+  pathMatch: 'full',
   component: ImportReportComponent
 },
 {

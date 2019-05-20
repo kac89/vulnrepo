@@ -166,7 +166,13 @@
     box-sizing: border-box;
     flex-basis: 40%;
   }
-  
+  .call-out-details2 {
+    box-sizing: border-box;
+    flex-basis: 40%;
+    text-align: center;
+  }
+
+
   @media (min-width: 600px) {
     .call-outs-container-details {
       display: flex;
