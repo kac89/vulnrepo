@@ -195,7 +195,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   addissue() {
     console.log('Add issue');
     const dialogRef = this.dialog.open(DialogAddissueComponent, {
-      width: '350px'
+      width: '450px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -449,7 +449,7 @@ report_ascii_vulns += report_ascii_vulns = '\
     const report_html = `
     <html>
     <head>
-
+    <meta charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="https://bootswatch.com/4/cosmo/bootstrap.min.css">
     <style>
     @import "compass/css3";
@@ -461,6 +461,41 @@ report_ascii_vulns += report_ascii_vulns = '\
       margin: 20 10 20 10;
     }
     .pagebreak { page-break-before: always; }
+
+
+    .label {
+      color: white;
+      display: inline-block;
+      font-family: verdana, sans-serif;
+      padding: 4px;
+    }
+    /*critical*/
+    .critical {
+      border-color: #FF0039;
+      background-color: #FF0039;
+    }
+    /*high*/
+    .high {
+      border-color: #FF7518;
+      background-color: #FF7518;
+    }
+    /*medium*/
+    .medium {
+      color: #000;
+      border-color: #F9EE06;
+      background-color: #F9EE06;
+    }
+    /*low*/
+    .low {
+      border-color: #3FB618;
+      background-color: #3FB618;
+    }
+    /*information*/
+    .info {
+      border-color: #2780E3;
+      background-color: #2780E3;
+    }
+
     </style>
     </head>
     <body class="container">
@@ -491,13 +526,11 @@ const intro = ' \
 
     let tableofcontentlist = '';
     report_data.report_vulns.forEach((item, index) => {
-      console.log(item); // 9, 2, 5
-      console.log(index); // 0, 1, 2
 
       tableofcontentlist = tableofcontentlist + ' \
       <li class="list-group-item d-flex justify-content-between align-items-center"> \
         <a href="#' + index + '">' + escapeHtml(item.title) + '</a> \
-        <span class="badge badge-primary badge-pill">14</span> \
+        <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
       </li>';
 
     });
@@ -509,25 +542,34 @@ const intro = ' \
     <br>';
     const tableofcontent = tableofcontent_one + tableofcontentlist + tableofcontent_1;
 
+
+
+    // advanced text
+    const advtext = '<h3>Statistics and Risk</h3> \
+    <p>Some Text</p><div class="pagebreak"></div><br>';
+
+
+
+
     let issues = '';
     report_data.report_vulns.forEach((item, index) => {
-      console.log(item); // 9, 2, 5
-      console.log(index); // 0, 1, 2
-
       issues = issues + ' \
+      <h4 id="' + index + '"> \
+      <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
+      ' + escapeHtml(item.title) + '</h4><br> \
       <div class="row"> \
-        <h4 id="' + index + '"><span class="label btn-medium">' + escapeHtml(item.severity) + '</span> ' + escapeHtml(item.title) + '</h4> \
         <dl> \
           <dt>Vulnerability description</dt> \
-          <dd>' + escapeHtml(item.desc) + '</dd> \
+          <dd>' + escapeHtml(item.desc) + '</dd><br> \
           <dt>Proof of Concept</dt> \
         <dd> \
           <pre>' + escapeHtml(item.poc) + '</pre> \
         </dd> \
+        <dt>References</dt> \
+        <dd>' + escapeHtml(item.ref) + '</dd><br> \
         </dl> \
       </div>';
     });
-
 
     issues = issues + '<div class="pagebreak"></div>';
 
@@ -537,7 +579,7 @@ const intro = ' \
     </html>
     `;
 
-    const download_report_complete = report_html + intro + tableofcontent + issues + report_html_end;
+    const download_report_complete = report_html + intro + tableofcontent + advtext + issues + report_html_end;
 
     // download HTML report
     const element = document.createElement('a');

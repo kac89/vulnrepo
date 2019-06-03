@@ -1,19 +1,46 @@
 [
     {
-        "title": "[XSS] Cross site scripting vulnerability",
+        "title": "[XSS] Stored cross-site scripting",
         "poc": "",
-        "desc": "Cross-Site Scripting (XSS) attacks are a type of injection, in which malicious scripts are injected into otherwise benign and trusted web sites. XSS attacks occur when an attacker uses a web application to send malicious code, generally in the form of a browser side script, to a different end user. Flaws that allow these attacks to succeed are quite widespread and occur anywhere a web application uses input from a user within the output it generates without validating or encoding it. An attacker can use XSS to send a malicious script to an unsuspecting user. The end users browser has no way to know that the script should not be trusted, and will execute the script. Because it thinks the script came from a trusted source, the malicious script can access any cookies, session tokens, or other sensitive information retained by the browser and used with that site. These scripts can even rewrite the content of the HTML page.",
+        "desc": "Stored cross-site scripting (also known as second-order or persistent XSS) arises when an application receives data from an untrusted source and includes that data within its later HTTP responses in an unsafe way.",
         "severity": "Medium",
-        "ref": "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)\nhttps://en.wikipedia.org/wiki/Cross-site_scripting",
+        "ref": "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)\nhttps://en.wikipedia.org/wiki/Cross-site_scripting\nhttps://portswigger.net/web-security/cross-site-scripting/stored",
         "cvss": "4.3",
         "cve": ""
     },
     {
-        "title": "[XSS] DOM-based",
+        "title": "[XSS] Reflected cross-site scripting",
+        "poc": "",
+        "desc": "Reflected cross-site scripting (or XSS) arises when an application receives data in an HTTP request and includes that data within the immediate response in an unsafe way.",
+        "severity": "Medium",
+        "ref": "https://portswigger.net/web-security/cross-site-scripting/reflected",
+        "cvss": "4",
+        "cve": ""
+    },
+    {
+        "title": "[XSS] DOM-based cross-site scripting",
         "poc": "",
         "desc": "DOM Based XSS (or as it is called in some texts, “type-0 XSS”) is an XSS attack wherein the attack payload is executed as a result of modifying the DOM “environment” in the victim’s browser used by the original client side script, so that the client side code runs in an “unexpected” manner. That is, the page itself (the HTTP response that is) does not change, but the client side code contained in the page executes differently due to the malicious modifications that have occurred in the DOM environment.",
         "severity": "Medium",
-        "ref": "https://www.owasp.org/index.php/DOM_Based_XSS",
+        "ref": "https://www.owasp.org/index.php/DOM_Based_XSS\nhttps://portswigger.net/web-security/cross-site-scripting/dom-based",
+        "cvss": "4",
+        "cve": ""
+    },
+    {
+        "title": "[XSS] Cross-site scripting (reflected DOM-based)",
+        "poc": "",
+        "desc": "Reflected DOM-based vulnerabilities arise when data is copied from a request and echoed into the application's immediate response within a part of the DOM that is then processed in an unsafe way by a client-side script. An attacker can leverage the reflection to control a part of the response (for example, a JavaScript string) that can be used to trigger the DOM-based vulnerability.\nDOM-based cross-site scripting arises when a script writes controllable data into the HTML document in an unsafe way. An attacker may be able to use the vulnerability to construct a URL that, if visited by another application user, will cause JavaScript code supplied by the attacker to execute within the user's browser in the context of that user's session with the application.",
+        "severity": "Medium",
+        "ref": "https://portswigger.net/kb/issues/00200311_cross-site-scripting-reflected-dom-based",
+        "cvss": "4",
+        "cve": ""
+    },
+    {
+        "title": "[XSS] Cross-site scripting (stored DOM-based)",
+        "poc": "",
+        "desc": "Stored DOM-based vulnerabilities arise when user input is stored and later embedded into a response within a part of the DOM that is then processed in an unsafe way by a client-side script. An attacker can leverage the data storage to control a part of the response (for example, a JavaScript string) that can be used to trigger the DOM-based vulnerability.\nDOM-based cross-site scripting arises when a script writes controllable data into the HTML document in an unsafe way. An attacker may be able to use the vulnerability to construct a URL that, if visited by another application user, will cause JavaScript code supplied by the attacker to execute within the user's browser in the context of that user's session with the application.",
+        "severity": "Medium",
+        "ref": "https://portswigger.net/kb/issues/00200312_cross-site-scripting-stored-dom-based",
         "cvss": "4",
         "cve": ""
     },    
@@ -178,7 +205,70 @@
         "ref": "https://cwe.mitre.org/data/definitions/434.html\nhttps://www.owasp.org/index.php/Unrestricted_File_Upload",
         "cvss": "6",
         "cve": ""
-    }    
+    },
+    {
+        "title": "OS command injection",
+        "poc": "",
+        "desc": "OS command injection (also known as shell injection) is a web security vulnerability that allows an attacker to execute arbitrary operating system (OS) commands on the server that is running an application, and typically fully compromise the application and all its data. Very often, an attacker can leverage an OS command injection vulnerability to compromise other parts of the hosting infrastructure, exploiting trust relationships to pivot the attack to other systems within the organization.",
+        "severity": "High",
+        "ref": "https://portswigger.net/web-security/os-command-injection",
+        "cvss": "8",
+        "cve": ""
+    },
+    {
+        "title": "Cleartext submission of password",
+        "poc": "",
+        "desc": "Some applications transmit passwords over unencrypted connections, making them vulnerable to interception. To exploit this vulnerability, an attacker must be suitably positioned to eavesdrop on the victim's network traffic. This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure.",
+        "severity": "High",
+        "ref": "https://portswigger.net/kb/issues/00300100_cleartext-submission-of-password",
+        "cvss": "8",
+        "cve": ""
+    },
+    {
+        "title": "Credit card numbers disclosed",
+        "poc": "",
+        "desc": "Applications sometimes disclose sensitive financial information such as credit card numbers. Responses containing credit card numbers may not represent any security vulnerability - for example, a number may belong to the logged-in user to whom it is displayed. If a credit card number is identified during a security assessment it should be verified, then application logic reviewed to identify whether its disclosure within the application is necessary and appropriate.",
+        "severity": "Info",
+        "ref": "https://portswigger.net/kb/issues/00600500_credit-card-numbers-disclosed\nhttps://cwe.mitre.org/data/definitions/200.html",
+        "cvss": "8",
+        "cve": ""
+    },
+    {
+        "title": "Strict transport security not enforced",
+        "poc": "",
+        "desc": "The application fails to prevent users from connecting to it over unencrypted connections. An attacker able to modify a legitimate user's network traffic could bypass the application's use of SSL/TLS encryption, and use the application as a platform for attacks against its users. This attack is performed by rewriting HTTPS links as HTTP, so that if a targeted user follows a link to the site from an HTTP page, their browser never attempts to use an encrypted connection. The sslstrip tool automates this process.\nTo exploit this vulnerability, an attacker must be suitably positioned to intercept and modify the victim's network traffic.This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure.",
+        "severity": "Low",
+        "ref": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security\nhttps://moxie.org/software/sslstrip/\nhttps://hstspreload.org/\nhttps://cwe.mitre.org/data/definitions/523.html",
+        "cvss": "3",
+        "cve": ""
+    },
+    {
+        "title": "Unencrypted communications",
+        "poc": "",
+        "desc": "The application allows users to connect to it over unencrypted connections. An attacker suitably positioned to view a legitimate user's network traffic could record and monitor their interactions with the application and obtain any information the user supplies. Furthermore, an attacker able to modify traffic could use the application as a platform for attacks against its users and third-party websites. Unencrypted connections have been exploited by ISPs and governments to track users, and to inject adverts and malicious JavaScript. Due to these concerns, web browser vendors are planning to visually flag unencrypted connections as hazardous.\nTo exploit this vulnerability, an attacker must be suitably positioned to eavesdrop on the victim's network traffic. This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure.\nPlease note that using a mixture of encrypted and unencrypted communications is an ineffective defense against active attackers, because they can easily remove references to encrypted resources when these references are transmitted over an unencrypted connection.",
+        "severity": "Low",
+        "ref": "https://www.chromium.org/Home/chromium-security/marking-http-as-non-secure\nhttps://wiki.mozilla.org/Security/Server_Side_TLS\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security",
+        "cvss": "3",
+        "cve": ""
+    },
+    {
+        "title": "Directory listing",
+        "poc": "",
+        "desc": "Web servers can be configured to automatically list the contents of directories that do not have an index page present. This can aid an attacker by enabling them to quickly identify the resources at a given path, and proceed directly to analyzing and attacking those resources. It particularly increases the exposure of sensitive files within the directory that are not intended to be accessible to users, such as temporary files and crash dumps.\nDirectory listings themselves do not necessarily constitute a security vulnerability. Any sensitive resources within the web root should in any case be properly access-controlled, and should not be accessible by an unauthorized party who happens to know or guess the URL. Even when directory listings are disabled, an attacker may guess the location of sensitive files using automated tools.",
+        "severity": "Info",
+        "ref": "https://cwe.mitre.org/data/definitions/538.html\nhttps://cwe.mitre.org/data/definitions/548.html",
+        "cvss": "1",
+        "cve": ""
+    },
+    {
+        "title": "Source code disclosure",
+        "poc": "",
+        "desc": "Source code intended to be kept server-side can sometimes end up being disclosed to users. Such code may contain sensitive information such as database passwords and secret keys, which may help malicious users formulate attacks against the application.",
+        "severity": "Low",
+        "ref": "https://cwe.mitre.org/data/definitions/18.html\nhttps://cwe.mitre.org/data/definitions/200.html\nhttps://cwe.mitre.org/data/definitions/388.html\nhttps://cwe.mitre.org/data/definitions/540.html\nhttps://cwe.mitre.org/data/definitions/541.html\nhttps://cwe.mitre.org/data/definitions/615.html",
+        "cvss": "1",
+        "cve": ""
+    }
 ]
 
 

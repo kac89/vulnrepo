@@ -49,6 +49,7 @@ import {DatePipe} from '@angular/common';
 import { DialogImportComponent } from './dialog-import/dialog-import.component';
 import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
 import { ImportReportComponent } from './import-report/import-report.component';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { ImportReportComponent } from './import-report/import-report.component';
     MatIconModule,
     MatToolbarModule,
     MatCardModule,
+    MatGridListModule,
     MatListModule,
     MatTableModule,
     MatSortModule,

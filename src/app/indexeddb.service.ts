@@ -88,30 +88,30 @@ export class IndexeddbService {
 
 
 
-//        report_vulns: [
-//          {
-//            title: '[XSS] Cross site scripting vulnerability',
-//            poc: '',
-//            files: [],
-//            desc: 'desc',
-//            severity: 'Medium',
-//            ref: 'https://www.owasp.org/',
-//            cvss: '4.3',
-//            cve: '',
-//            date: today
-//          },
-//          {
-//            title: '[XSS] DOM',
-//            poc: '',
-//            files: [],
-//            desc: 'desc',
-//            severity: 'Medium',
-//            ref: 'https://www.owasp.org/',
-//            cvss: '4.3',
-//            cve: '',
-//            date: today
-//          }
-//        ],
+        //        report_vulns: [
+        //          {
+        //            title: '[XSS] Cross site scripting vulnerability',
+        //            poc: '',
+        //            files: [],
+        //            desc: 'desc',
+        //            severity: 'Medium',
+        //            ref: 'https://www.owasp.org/',
+        //            cvss: '4.3',
+        //            cve: '',
+        //            date: today
+        //          },
+        //          {
+        //            title: '[XSS] DOM',
+        //            poc: '',
+        //            files: [],
+        //            desc: 'desc',
+        //            severity: 'Medium',
+        //            ref: 'https://www.owasp.org/',
+        //            cvss: '4.3',
+        //            cve: '',
+        //            date: today
+        //          }
+        //        ],
 
 
 
@@ -180,57 +180,57 @@ export class IndexeddbService {
 
   }
 
-importReport(data) {
-        data = JSON.parse(data);
-        // indexeddb communication
-        const indexedDB = window.indexedDB;
-        const open = indexedDB.open('vulnrepo-db', 1);
+  importReport(data) {
+    data = JSON.parse(data);
+    // indexeddb communication
+    const indexedDB = window.indexedDB;
+    const open = indexedDB.open('vulnrepo-db', 1);
 
-        open.onupgradeneeded = function () {
-          const db = open.result;
-          db.createObjectStore('reports', { autoIncrement: true });
-        };
-
-        open.onsuccess = function () {
-          const db = open.result;
-          const tx = db.transaction('reports', 'readwrite');
-          const store = tx.objectStore('reports');
-
-          store.put(data);
-
-          tx.oncomplete = function () {
-            db.close();
-          };
-        };
-
-        this.router.navigate(['/my-reports']);
-
-}
-
-importReportfromfile(data) {
-  data = JSON.parse(data);
-  // indexeddb communication
-  const indexedDB = window.indexedDB;
-  const open = indexedDB.open('vulnrepo-db', 1);
-
-  open.onupgradeneeded = function () {
-    const db = open.result;
-    db.createObjectStore('reports', { autoIncrement: true });
-  };
-
-  open.onsuccess = function () {
-    const db = open.result;
-    const tx = db.transaction('reports', 'readwrite');
-    const store = tx.objectStore('reports');
-
-    store.put(data);
-
-    tx.oncomplete = function () {
-      db.close();
+    open.onupgradeneeded = function () {
+      const db = open.result;
+      db.createObjectStore('reports', { autoIncrement: true });
     };
-  };
 
-}
+    open.onsuccess = function () {
+      const db = open.result;
+      const tx = db.transaction('reports', 'readwrite');
+      const store = tx.objectStore('reports');
+
+      store.put(data);
+
+      tx.oncomplete = function () {
+        db.close();
+      };
+    };
+
+    this.router.navigate(['/my-reports']);
+
+  }
+
+  importReportfromfile(data) {
+    data = JSON.parse(data);
+    // indexeddb communication
+    const indexedDB = window.indexedDB;
+    const open = indexedDB.open('vulnrepo-db', 1);
+
+    open.onupgradeneeded = function () {
+      const db = open.result;
+      db.createObjectStore('reports', { autoIncrement: true });
+    };
+
+    open.onsuccess = function () {
+      const db = open.result;
+      const tx = db.transaction('reports', 'readwrite');
+      const store = tx.objectStore('reports');
+
+      store.put(data);
+
+      tx.oncomplete = function () {
+        db.close();
+      };
+    };
+
+  }
 
   deleteReport(item: any) {
     return new Promise<any>((resolve, reject) => {
@@ -238,27 +238,27 @@ importReportfromfile(data) {
       this.getkeybyReportID(item.report_id).then(data => {
         if (data) {
 
-            // indexeddb communication
-            const indexedDB = window.indexedDB;
-            const open = indexedDB.open('vulnrepo-db', 1);
+          // indexeddb communication
+          const indexedDB = window.indexedDB;
+          const open = indexedDB.open('vulnrepo-db', 1);
 
-            open.onupgradeneeded = function () {
-              const db = open.result;
-              db.createObjectStore('reports', { autoIncrement: true });
+          open.onupgradeneeded = function () {
+            const db = open.result;
+            db.createObjectStore('reports', { autoIncrement: true });
+          };
+
+          open.onsuccess = function () {
+            const db = open.result;
+            const tx = db.transaction('reports', 'readwrite');
+            const store = tx.objectStore('reports');
+
+            store.delete(data.key);
+
+            tx.oncomplete = function () {
+              db.close();
+              resolve(true);
             };
-
-            open.onsuccess = function () {
-              const db = open.result;
-              const tx = db.transaction('reports', 'readwrite');
-              const store = tx.objectStore('reports');
-
-              store.delete(data.key);
-
-              tx.oncomplete = function () {
-                db.close();
-                resolve(true);
-              };
-            };
+          };
 
 
         }
@@ -361,17 +361,17 @@ importReportfromfile(data) {
 
           const cursor = request.result;
           if (cursor) {
-              const key = cursor.primaryKey;
-              const value = cursor.value.report_id;
+            const key = cursor.primaryKey;
+            const value = cursor.value.report_id;
 
-              if (reportid === value) {
-                const finded = {key, value};
-                resolve(finded);
-              }
+            if (reportid === value) {
+              const finded = { key, value };
+              resolve(finded);
+            }
 
-              cursor.continue();
+            cursor.continue();
           } else {
-              // no more results
+            // no more results
 
           }
 
@@ -440,13 +440,13 @@ importReportfromfile(data) {
 
         this.updatereportDB(reportorder, to_update).then(retu => {
           if (retu === 'encrypted:ok') {
-              resolve(now);
+            resolve(now);
           }
         });
 
-    } catch (except) {
-      console.log(except);
-    }
+      } catch (except) {
+        console.log(except);
+      }
 
     });
 
@@ -473,6 +473,97 @@ importReportfromfile(data) {
     });
 
 
+  }
+
+
+
+
+  getSettings() {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-settings', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('settings', { autoIncrement: true });
+      };
+      open.onerror = function(event) {
+        console.log('txn failed', event);
+      };
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('settings', 'readwrite');
+        const store = tx.objectStore('settings');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.openCursor();
+        const ret: any[] = new Array();
+
+        request.onsuccess = function (evt) {
+
+
+          const cursor = request.result;
+          if (cursor) {
+            const key = cursor.primaryKey;
+            const value = cursor.value;
+            const finded = { key, value };
+
+            ret.push(finded);
+            cursor.continue();
+          } else {
+            // no more results
+            resolve(ret);
+          }
+
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+
+  advHTMLSaveSettings(key, item) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-settings', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('settings', { autoIncrement: true });
+      };
+      open.onerror = function(event) {
+        console.log('txn failed', event);
+      };
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction(['settings'], 'readwrite');
+        const store = tx.objectStore('settings');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.put(item, key);
+
+        request.onsuccess = function (evt) {
+          resolve(request.result);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
   }
 
 

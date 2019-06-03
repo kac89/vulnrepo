@@ -1,7 +1,29 @@
 <h1 class="mat-display-2">
-    <mat-icon class="vertical-align-middle padding-bottom-3 size-45">settings</mat-icon> Settings
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">settings</mat-icon> Settings
 </h1>
 
-<mat-card>
-    <p>Settings here</p>
-</mat-card>
+<div class="row">
+  <mat-card class="column">
+    <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="advHTMLchanged()">
+      Advanced HTML Report
+    </mat-slide-toggle>
+
+    <p *ngIf="hide">
+      Report logo:<br>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <input matInput placeholder="Report image URL" #logo value="{{ advlogo }}">
+      </mat-form-field>
+
+      <br><br>Custom HTML content:<br>
+      <mat-form-field appearance="outline" class="example-full-width">
+        <textarea matInput placeholder="HTML content" #htmlcontent value="{{ advhtml }}">{{ advhtml }}</textarea>
+      </mat-form-field>
+      <br><br>
+      <button mat-raised-button color="accent" (click)="saveadvHTML(logo.value, htmlcontent.value)">Save
+        changes</button> {{info}}
+    </p>
+
+  </mat-card>
+
+  <!--<mat-card class="column"></mat-card>-->
+</div>

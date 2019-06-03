@@ -15,6 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
   show_status: any;
   enc_status: any;
   subscription: Subscription;
+  rok: any;
 
   constructor(public route: ActivatedRoute, public router: Router, private indexeddbService: IndexeddbService) {
 
@@ -36,6 +37,11 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+
+    const d = new Date();
+    const n = d.getFullYear();
+    this.rok = n;
 
   }
 
