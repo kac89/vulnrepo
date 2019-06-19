@@ -3,6 +3,36 @@
 </h1>
 
 <div class="row">
+
+  <mat-card class="column">
+    <h3>
+      Settings configuration backup
+    </h3>
+    <p><b>Import:</b></p>
+    <input cdkFocusInitial type="file" accept=".*" (change)="restoreConfiguration($event.target)" name="myfiles">
+    <br>
+    <p><b>Export:</b></p>
+    <button mat-raised-button color="primary" (click)="exportconfiguration()">Export all configuration settings</button>
+  </mat-card>
+
+  <mat-card class="column">
+    <h3>
+      Backup / Restore "My Reports"
+    </h3>
+    <p><b>Import:</b></p>
+    <input cdkFocusInitial type="file" accept=".*" (change)="restoreMyReports($event.target)" name="myfiles">
+    <br>
+    <p><b>Export:</b></p>
+    <button mat-raised-button color="primary" (click)="dumpallmyreports()">Dump all my reports</button>
+  </mat-card>
+
+
+
+</div>
+
+
+<div class="row">
+
   <mat-card class="column">
     <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="advHTMLchanged()">
       Advanced HTML Report
@@ -24,6 +54,14 @@
     </p>
 
   </mat-card>
+  
+  <mat-card class="column">
+    <mat-slide-toggle [(ngModel)]="wipechecked" class="example-margin" [color]="color" (change)="wipeDatachanged()">
+      Wipe saved data! (My Reports & Settings)
+    </mat-slide-toggle>
+    <p *ngIf="wipehide">Are you sure wipe out all data?<br>
+      <button mat-raised-button color="accent" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}</p>
+  </mat-card>
+<!--<mat-card class="column"></mat-card>-->
 
-  <!--<mat-card class="column"></mat-card>-->
 </div>
