@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IndexeddbService } from '../indexeddb.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -17,7 +18,7 @@ export class SettingsComponent implements OnInit {
   advhtml: any;
   advlogo: any;
   settings: any;
-  constructor(private indexeddbService: IndexeddbService) { }
+  constructor(public router: Router, private indexeddbService: IndexeddbService) { }
 
   ngOnInit() {
 
@@ -124,28 +125,37 @@ export class SettingsComponent implements OnInit {
 
   }
 
+  parseandrestorereports(array) {
 
+    const parsed = JSON.parse(array);
+
+    for (let _i = 0; _i < parsed.length; _i++) {
+        const num = parsed[_i];
+        this.indexeddbService.importReportfromfileSettings(num);
+
+        if (_i + 1 === parsed.length) {
+          this.router.navigate(['/my-reports']);
+        }
+    }
+
+
+  }
 
   restoreMyReports(input: HTMLInputElement) {
 
     const files = input.files;
-
     if (files && files.length) {
       /*
        console.log("Filename: " + files[0].name);
        console.log("Type: " + files[0].type);
        console.log("Size: " + files[0].size + " bytes");
        */
-
-
       const fileToRead = files[0];
       const fileReader = new FileReader();
-
-
       fileReader.onload = (e) => {
-        console.log(fileReader.result);
-      };
+       this.parseandrestorereports(fileReader.result);
 
+      };
       fileReader.readAsText(fileToRead, 'UTF-8');
     }
 
@@ -173,6 +183,27 @@ export class SettingsComponent implements OnInit {
 
   }
 
+  parseandrestoresettings(data) {
+
+    const parsed = JSON.parse(data);
+    console.log(parsed);
+
+    for (let _i = 0; _i < parsed.length; _i++) {
+      const num = parsed[_i];
+
+      this.indexeddbService.advHTMLSaveSettings(num.key, num.value).then();
+
+      if (_i + 1 === parsed.length) {
+        this.router.navigate(['/home']);
+      }
+
+
+    }
+
+
+  }
+
+
   restoreConfiguration(input: HTMLInputElement) {
 
     const files = input.files;
@@ -184,13 +215,11 @@ export class SettingsComponent implements OnInit {
        console.log("Size: " + files[0].size + " bytes");
        */
 
-
       const fileToRead = files[0];
       const fileReader = new FileReader();
 
-
       fileReader.onload = (e) => {
-        console.log(fileReader.result);
+        this.parseandrestoresettings(fileReader.result);
       };
 
       fileReader.readAsText(fileToRead, 'UTF-8');

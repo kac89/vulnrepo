@@ -232,6 +232,33 @@ export class IndexeddbService {
 
   }
 
+
+  importReportfromfileSettings(data) {
+
+    // indexeddb communication
+    const indexedDB = window.indexedDB;
+    const open = indexedDB.open('vulnrepo-db', 1);
+
+    open.onupgradeneeded = function () {
+      const db = open.result;
+      db.createObjectStore('reports', { autoIncrement: true });
+    };
+
+    open.onsuccess = function () {
+      const db = open.result;
+      const tx = db.transaction('reports', 'readwrite');
+      const store = tx.objectStore('reports');
+
+      store.put(data);
+
+      tx.oncomplete = function () {
+        db.close();
+      };
+    };
+
+  }
+
+
   deleteReport(item: any) {
     return new Promise<any>((resolve, reject) => {
 

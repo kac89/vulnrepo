@@ -46,7 +46,7 @@ export class DialogAddissueComponent implements OnInit {
 
   ngOnInit() {
 
-    this.http.get('/assets/vulns.json?v=' + new Date()).subscribe(res => {
+    this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
       this.options = res.json();
     });
 
