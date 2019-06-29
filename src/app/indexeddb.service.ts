@@ -135,7 +135,8 @@ export class IndexeddbService {
           researcher: {
             reportername: '',
             reportersocial: '',
-            reporterwww: ''
+            reporterwww: '',
+            reporteremail: ''
           }
         };
 

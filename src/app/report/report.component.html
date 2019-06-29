@@ -267,7 +267,7 @@
 
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="E-mail" value="">
+            <input matInput placeholder="E-mail" [(ngModel)]="decryptedReportDataChanged.researcher.reporteremail" value="{{decryptedReportDataChanged.researcher.reporteremail}}">
             <mat-icon matSuffix>email</mat-icon>
           </mat-form-field>
         </div>
