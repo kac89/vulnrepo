@@ -129,8 +129,7 @@ export class IndexeddbService {
           report_version: 0,
           report_metadata: {
             starttest: '',
-            endtest: '',
-            reportlogo: ''
+            endtest: ''
           },
           researcher: {
             reportername: '',

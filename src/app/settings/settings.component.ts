@@ -15,8 +15,10 @@ export class SettingsComponent implements OnInit {
   wipechecked = false;
   wipehide = false;
   wipemsg = '';
+  uploadlogoprev = '';
   advhtml: any;
   advlogo: any;
+  advlogo_saved: any;
   settings: any;
   constructor(public router: Router, private indexeddbService: IndexeddbService) { }
 
@@ -35,6 +37,7 @@ export class SettingsComponent implements OnInit {
               this.advhtml = eachObj['value'];
             } else if (eachObj['key'] === 'advlogo') {
               this.advlogo = eachObj['value'];
+              this.advlogo_saved = eachObj['value'];
             }
 
           }, this);
@@ -85,10 +88,10 @@ export class SettingsComponent implements OnInit {
 
   }
 
-  saveadvHTML(logo, htmlcontent) {
+  saveadvHTML(htmlcontent) {
 
     const keys: string[] = new Array('advenabled', 'advlogo', 'advhtml');
-    const item: string[] = new Array(this.hide, logo, htmlcontent);
+    const item: string[] = new Array(this.hide, this.advlogo, htmlcontent);
 
     for (let i = 0; i < keys.length; i++) {
       this.indexeddbService.advHTMLSaveSettings(keys[i], item[i]).then(data => {
@@ -223,6 +226,33 @@ export class SettingsComponent implements OnInit {
       };
 
       fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+
+  parselogo(data) {
+    const linkprev = 'data:image/png;base64,' + btoa(data);
+    this.uploadlogoprev = '<img src="' + linkprev + '" width="300px">';
+    this.advlogo = linkprev;
+  }
+
+  importlogo(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      /*
+       console.log("Filename: " + files[0].name);
+       console.log("Type: " + files[0].type);
+       console.log("Size: " + files[0].size + " bytes");
+       */
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+       this.parselogo(fileReader.result);
+
+      };
+      fileReader.readAsBinaryString(fileToRead);
     }
 
   }

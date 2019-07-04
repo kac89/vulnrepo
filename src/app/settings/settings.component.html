@@ -37,21 +37,22 @@
     <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="advHTMLchanged()">
       Advanced HTML Report
     </mat-slide-toggle>
-
-    <p *ngIf="hide">
-      Report logo:<br>
-      <mat-form-field appearance="outline" class="example-full-width">
-        <input matInput placeholder="Report image URL" #logo value="{{ advlogo }}">
-      </mat-form-field>
-
-      <br><br>Custom HTML content:<br>
+    
+    <div *ngIf="hide">
+      <br>Report logo:<br>
+      <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="300px">
+      <div [innerHTML]="uploadlogoprev"></div>
+      <br>
+      <input cdkFocusInitial type="file" accept=".*" (change)="importlogo($event.target)" name="myfiles">
+      <br>
+      <br><br>Custom HTML content (unsafe):<br>
       <mat-form-field appearance="outline" class="example-full-width">
         <textarea matInput placeholder="HTML content" #htmlcontent value="{{ advhtml }}">{{ advhtml }}</textarea>
       </mat-form-field>
       <br><br>
-      <button mat-raised-button color="accent" (click)="saveadvHTML(logo.value, htmlcontent.value)">Save
+      <button mat-raised-button color="accent" (click)="saveadvHTML(htmlcontent.value)">Save
         changes</button> {{info}}
-    </p>
+      </div>
 
   </mat-card>
   

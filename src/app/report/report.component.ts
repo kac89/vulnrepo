@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { IndexeddbService } from '../indexeddb.service';
@@ -38,11 +38,13 @@ export class ReportComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-
+  advhtml = '';
+  report_css: any;
   report_id: string;
   report_info: any;
   lastsavereportdata = '';
   reportdesc: any;
+  settings: any;
   savemsg = '';
   report_decryption_in_progress: boolean;
   decryptedReportData: any;
@@ -61,6 +63,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
+    private http: Http,
     private indexeddbService: IndexeddbService,
     public router: Router,
     private messageService: MessageService,
@@ -109,6 +112,23 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     });
 
+    // get settings
+
+    this.indexeddbService.getSettings().then(data => {
+      if (data) {
+        console.log(data);
+        this.settings = data;
+      } else {
+        console.log('Settings read error');
+      }
+
+    });
+
+
+    // get css style
+    this.http.get('/assets/bootstrap.min.css').subscribe(res => {
+      this.report_css = res['_body'];
+    });
   }
 
   // tslint:disable-next-line:use-life-cycle-interface
@@ -384,8 +404,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 const report_ascii_head = '######################################################\n\
 # Report Title: ' + addNewlines(metadata.report_name) + '\
 # Report ID: ' + metadata.report_id + '\n\
-# Create Date: ' + metadata.report_createdate + '\n\
-# Last Update: ' + metadata.report_lastupdate + '\n\
+# Create Date: ' + new Date (metadata.report_createdate).toLocaleString() + '\n\
+# Last Update: ' + new Date (metadata.report_lastupdate).toLocaleString() + '\n\
 #####\n\
 # Author: ' + report_details.researcher.reportername + '\n\
 # WWW: ' + report_details.researcher.reporterwww + '\n\
@@ -436,7 +456,8 @@ report_ascii_vulns += report_ascii_vulns = '\
   DownloadHTML(report_data, report_metadata) {
     console.log(report_data);
     console.log(report_metadata);
-
+    console.log(this.settings);
+    console.log(this.report_css);
     function escapeHtml(unsafe) {
       return unsafe.toString()
            .replace(/&/g, '&amp;')
@@ -446,12 +467,27 @@ report_ascii_vulns += report_ascii_vulns = '\
            .replace(/'/g, '&#039;');
    }
 
-    const report_html = `
+   function parse_newline(text) {
+    return text.toString().replace(/(?:\r\n|\r|\n)/g, '<br>');
+ }
+
+
+ function parse_links(text) {
+  const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  return text.replace(urlRegex, function(url) {
+      return '<a target="_blank" href="' + url + '">' + url + '</a>';
+  });
+}
+
+    let report_html = `
     <html>
     <head>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/4/cosmo/bootstrap.min.css">
     <style>
+
+    ` + this.report_css + `
+
+
     @import "compass/css3";
     * {
       padding: 0;
@@ -496,21 +532,91 @@ report_ascii_vulns += report_ascii_vulns = '\
       background-color: #2780E3;
     }
 
+    @media print {
+      pre {
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+    }
+
     </style>
     </head>
     <body class="container">
-    <br><br>
-    <center><img src="https://static.antyweb.pl/uploads/2016/10/payu_logo_solid_lime_rgb-1420x670.jpg" width="800px"></center>
-    <br><br> `;
+    <br><br>`;
 
-const intro = ' \
+
+
+
+    this.settings.forEach(function (eachObj) {
+      console.log(eachObj);
+      if (eachObj['key'] === 'advenabled') {
+        if (eachObj['value'] === true) {
+
+          this.settings.forEach(function (eachObj2) {
+            if (eachObj2['key'] === 'advlogo') {
+              const advlogo = eachObj2['value'];
+              if (advlogo !== '') {
+                const er = '<center><img src="' + advlogo + '" width="800px"></center><br><br>';
+                report_html = report_html + er;
+              }
+
+            } else if (eachObj2['key'] === 'advhtml') {
+              const advhtml = eachObj2['value'];
+              if (advhtml !== '') {
+                this.advhtml = advhtml;
+              }
+
+            }
+
+          }, this);
+
+
+        }
+
+      }
+
+    }, this);
+
+
+
+
+
+let intro = ' \
     <div id="row"> \
     <center> \
       <div class="card border-light mb-3" style="max-width: 30rem;"> \
         <div class="card-header">Security Report</div> \
         <div class="card-body"> \
         <h4 class="card-title">' + escapeHtml(report_metadata.report_name) + '</h4> \
-        <p class="card-text">Report Version: V.' + escapeHtml(report_data.report_version) + '</p> \
+        <p class="card-text">Report Version: ' + escapeHtml(report_data.report_version) + '</p> \
+        <p class="card-text">Report ID: ' + escapeHtml(report_metadata.report_id) + '</p>';
+
+        if (report_data.report_metadata.starttest !== '') {
+          // tslint:disable-next-line:max-line-length
+          const cond0 = '<p class="card-text">Date: ' + escapeHtml(new Date (report_data.report_metadata.starttest).toLocaleString()) + ' - ' + escapeHtml(new Date (report_data.report_metadata.endtest).toLocaleString()) + '</p>';
+          intro = intro + cond0;
+        }
+
+        if (report_data.researcher.reportername !== '') {
+          const cond1 = '<p class="card-text">Author: ' + escapeHtml(report_data.researcher.reportername) + '</p>';
+          intro = intro + cond1;
+        }
+        if (report_data.researcher.reporteremail !== '') {
+          const cond2 = '<p class="card-text">E-Mail: ' + escapeHtml(report_data.researcher.reporteremail) + '</p>';
+          intro = intro + cond2;
+        }
+        if (report_data.researcher.reportersocial !== '') {
+          // tslint:disable-next-line:max-line-length
+          const cond3 = '<p class="card-text">Social: ' + parse_links(parse_newline(escapeHtml(report_data.researcher.reportersocial))) + '</p>';
+          intro = intro + cond3;
+        }
+        if (report_data.researcher.reporterwww !== '') {
+          const cond4 = '<p class="card-text">WWW: ' + parse_links(parse_newline(escapeHtml(report_data.researcher.reporterwww))) + '</p>';
+          intro = intro + cond4;
+        }
+
+         const cond5 = ' \
         </div> \
       </div> \
     </center> \
@@ -518,13 +624,22 @@ const intro = ' \
     <br> \
     <div class="pagebreak"></div> \
     <br>';
+    intro = intro + cond5;
 
     const tableofcontent_one = ' \
     <div id="row"> \
     <h3>Table of contents</h3> \
     <ul class="list-group">';
 
-    let tableofcontentlist = '';
+    let tableofcontentlist = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
+                                  <a href="#Scope">Scope</a> \
+                              </li> \
+                              <li class="list-group-item d-flex justify-content-between align-items-center"> \
+                                  <a href="#Statistics and Risk">Statistics and Risk</a> \
+                              </li> \
+                              <li class="list-group-item d-flex justify-content-between align-items-center"> \
+                                  <a href="#Issues">Issues</a> \
+                              </li>';
     report_data.report_vulns.forEach((item, index) => {
 
       tableofcontentlist = tableofcontentlist + ' \
@@ -535,56 +650,212 @@ const intro = ' \
 
     });
 
-    const tableofcontent_1 = '</ul> \
+
+    let summarycomment = '';
+    if (report_data.report_summary !== '') {
+      summarycomment = summarycomment = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
+      <a href="#Report summary comment">Report summary comment</a> \
+  </li>';
+    }
+
+    const tableofcontent_1 = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
+        <a href="#Changelog">Changelog</a> \
+    </li> \
+    </ul> \
     </div> \
     <br> \
     <div class="pagebreak"></div> \
-    <br>';
-    const tableofcontent = tableofcontent_one + tableofcontentlist + tableofcontent_1;
+    <br><br>';
+    const tableofcontent = tableofcontent_one + tableofcontentlist + summarycomment + tableofcontent_1;
+
+    const critical = report_data.report_vulns.filter(function (el) {
+      return (el.severity === 'Critical');
+    });
+
+    const high = report_data.report_vulns.filter(function (el) {
+      return (el.severity === 'High');
+    });
+
+    const medium = report_data.report_vulns.filter(function (el) {
+      return (el.severity === 'Medium');
+    });
+
+    const low = report_data.report_vulns.filter(function (el) {
+      return (el.severity === 'Low');
+    });
+
+    const info = report_data.report_vulns.filter(function (el) {
+      return (el.severity === 'Info');
+    });
+
+    const stats = '<table class="table table-hover"> \
+    <thead> \
+      <tr> \
+        <th>Severity</th> \
+        <th>Number</th> \
+      </tr> \
+    </thead> \
+    <tbody> \
+      <tr> \
+        <td><span class="label Critical">Critical</span></td> \
+        <td>' + critical.length + '</td> \
+      </tr> \
+    <tr> \
+        <td><span class="label High">High</span></td> \
+        <td>' + high.length + '</td> \
+      </tr> \
+    <tr> \
+        <td><span class="label Medium">Medium</span></td> \
+        <td>' + medium.length + '</td> \
+      </tr> \
+    <tr> \
+        <td><span class="label Low">Low</span></td> \
+        <td>' + low.length + '</td> \
+      </tr> \
+    <tr> \
+        <td><span class="label Info">Info</span></td> \
+        <td>' + info.length + '</td> \
+      </tr> \
+    </tbody> \
+  </table>';
 
 
+const risktable = '<table class="table table-hover"> \
+<thead> \
+  <tr> \
+    <th colspan="5" class="text-center">Overall Risk Severity</th> \
+  </tr> \
+</thead> \
+<tbody> \
+  <tr> \
+    <td rowspan="4" class="text-center"><b>Impact</b></td> \
+  <td class="text-center" style="color: #EB7F30;"><b>HIGH</b></td> \
+  <td class="text-center"><span style="width: 100%;" class="label Medium">Medium</span></td> \
+  <td class="text-center"><span style="width: 100%;" class="label High">High</span></td> \
+  <td class="text-center"><span style="width: 100%;" class="label Critical">Critical</span></td> \
+  </tr> \
+  <tr> \
+  <td class="text-center" style="color: #FFFB01;"><b>MEDIUM</b></td> \
+  <td class="text-center"><span style="width: 100%;" class="label Low">Low</span></td> \
+  <td class="text-center"><span style="width: 100%;" class="label Medium">Medium</span></td> \
+  <td class="text-center"><span style="width: 100%;" class="label High">High</span></td> \
+  </tr> \
+  <tr> \
+  <td class="text-center" style="color: #91D054;"><b>LOW</b></td> \
+  <td class="text-center"><span style="width: 100%;" class="label Info">Info</span></td> \
+  <td class="text-center"><span style="width: 100%;" class="label Low">Low</span></td> \
+  <td class="text-center"><span style="width: 100%;" class="label Medium">Medium</span></td> \
+  </tr> \
+  <tr> \
+    <td>&nbsp;</td> \
+  <td class="text-center" style="color: #91D054;"><b>LOW</b></td> \
+  <td class="text-center" style="color: #FFFB01;"><b>MEDIUM</b></td> \
+  <td class="text-center" style="color: #EB7F30;"><b>HIGH</b></td> \
+  </tr> \
+</tbody> \
+<tfoot> \
+  <tr> \
+    <td>&nbsp;</td> \
+  <td colspan="4" class="text-center"><b>Likelihood</b></td> \
+  </tr> \
+</tfoot> \
+</table>';
 
     // advanced text
-    const advtext = '<h3>Statistics and Risk</h3> \
-    <p>Some Text</p><div class="pagebreak"></div><br>';
+    let projscope = '<h3 id="Scope">Scope</h3><p>' + parse_newline(escapeHtml(report_data.report_scope)) + '</p>';
+
+    if (this.advhtml !== '') {
+      projscope = projscope + '<br>' + this.advhtml + '<br>';
+    }
+
+    const statsandrisk = '<h3 id="Statistics and Risk">Statistics and Risk</h3> \
+    <p>' + stats + '</p><br>  \
+    <p>The risk of application security vulnerabilities discovered during an assessment will be rated according to a custom-tailored version the <a target="_blank" href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology">OWASP Risk Rating Methodology</a>. \
+    Risk severity is determined based on the estimated technical and business impact of the vulnerability, and on the estimated likelihood of the vulnerability being exploited:<br><br> \
+    ' + risktable + '<br>Our Risk rating is based on this calculation: <b>Risk = Likelihood * Impact</b>.</p><div class="pagebreak"></div><br>';
+
+    const advtext = projscope + statsandrisk;
 
 
-
-
-    let issues = '';
+    let issues = '<p><center><h3 id="Issues">Issues</h3></center></p>';
     report_data.report_vulns.forEach((item, index) => {
       issues = issues + ' \
       <h4 id="' + index + '"> \
       <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
-      ' + escapeHtml(item.title) + '</h4><br> \
+      ' + escapeHtml(item.title) + '</h4> \
       <div class="row"> \
         <dl> \
           <dt>Vulnerability description</dt> \
-          <dd>' + escapeHtml(item.desc) + '</dd><br> \
-          <dt>Proof of Concept</dt> \
-        <dd> \
-          <pre>' + escapeHtml(item.poc) + '</pre> \
-        </dd> \
-        <dt>References</dt> \
-        <dd>' + escapeHtml(item.ref) + '</dd><br> \
-        </dl> \
-      </div>';
+          <dd>' + escapeHtml(item.desc) + '</dd><br>';
+
+          if (item.poc !== '') {
+            const ewe = ' \
+            <dt>Proof of Concept</dt> \
+            <dd> \
+              <pre>' + escapeHtml(item.poc) + '</pre> \
+            </dd><br>';
+            issues = issues + ewe;
+          }
+
+          if (item.ref !== '') {
+            const eweref = ' \
+            <dt>References</dt> \
+            <dd>' + parse_links(parse_newline(escapeHtml(item.ref))) + '</dd><br>';
+            issues = issues + eweref;
+          }
+
+
+          const enderw = '</dl></div>';
+          issues = issues + enderw;
+
     });
 
     issues = issues + '<div class="pagebreak"></div>';
 
-    const report_html_end = `
+    let summarycomment_value = '';
+    if (report_data.report_summary !== '') {
+      // tslint:disable-next-line:max-line-length
+      summarycomment_value = summarycomment_value = '<h3 id="Report summary comment">Report summary comment</h3><p>' + parse_newline(escapeHtml(report_data.report_summary)) + '</p><br>';
+    }
+
+let changeloghtml = summarycomment_value + '<h3 id="Changelog">Changelog</h3> \
+<p><table class="table table-hover"> \
+<thead> \
+  <tr> \
+    <th>Date</th> \
+  <th>Description</th> \
+  </tr> \
+</thead> \
+<tbody>';
+
+
+report_data.report_changelog.forEach((item, index) => {
+
+changeloghtml = changeloghtml + '<tr> \
+<td>' + escapeHtml(new Date (item.date).toLocaleString()) + '</td> \
+<td>' + escapeHtml(item.desc) + '</td> \
+</tr>';
+
+});
+
+
+
+
+changeloghtml = changeloghtml + '</tbody></table></p>';
+
+
+    const report_html_end = `<div class="pagebreak"></div>
     <p>Generated by <a href="https://vulnrepo.com/">VULNRΞPO</a></p>
     </body>
     </html>
     `;
 
-    const download_report_complete = report_html + intro + tableofcontent + advtext + issues + report_html_end;
+    const download_report_complete = report_html + intro + tableofcontent + advtext + issues + changeloghtml + report_html_end;
 
     // download HTML report
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(download_report_complete));
-    element.setAttribute('download', report_metadata.report_name + ' HTML (vulnrepo.com).html');
+    element.setAttribute('download', report_metadata.report_name + ' ' + report_metadata.report_id + ' HTML (vulnrepo.com).html');
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();

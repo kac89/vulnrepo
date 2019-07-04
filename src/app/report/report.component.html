@@ -184,7 +184,7 @@
             </div>
 
           <mat-action-row align="end">
-              <button mat-fab color="primary">Upload</button>
+              <!--<button mat-fab color="primary">Upload</button>-->
               <div fxFlex></div>
             <button mat-button color="warn" (click)="removeIssiue(dec_data)"><mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE</button>
             
@@ -214,7 +214,7 @@
     <mat-card-content>
       <div class="call-outs-container-report-stats">
         <div class="call-out-report-stats">
-          <table mat-table [dataSource]="dataSourceforseverity" class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSourceforseverity" id="stats" class="mat-elevation-z8">
 
             <!-- Severity Column -->
             <ng-container matColumnDef="severity">
@@ -343,11 +343,11 @@
         <div class="call-outs-container-download">
             <div class="call-out-download">
                 <mat-icon class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;<button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
-                  &nbsp;&nbsp;<button (click)="downloadASCII(decryptedReportDataChanged,report_info)" mat-button color="accent"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Download ASCII</button>
+                  &nbsp;&nbsp;<button (click)="downloadASCII(decryptedReportDataChanged,report_info)" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Download ASCII</button>
               </div>
 
               <div class="call-out-download2">
-                  <mat-icon class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Download encrypted / Share encrypted</button>&nbsp;&nbsp;
+                  <mat-icon class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted (Editable version)</button>&nbsp;&nbsp;
                 </div>
         </div>
       </mat-card-content>
