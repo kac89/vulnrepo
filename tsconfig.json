@@ -1,6 +1,5 @@
 {
   "compileOnSave": false,
-  // "include": ["node_modules/angular2-indexeddb/*.ts", "node_modules/angular2-indexeddb/angular2-indexeddb.js", "src/**/*.ts"],
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
