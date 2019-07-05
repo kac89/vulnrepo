@@ -79,7 +79,7 @@ export class DialogImportComponent implements OnInit {
 
     }
     this.parsedCsv = lines;
-    console.log(this.parsedCsv);
+    // console.log(this.parsedCsv);
 
 
 
@@ -137,7 +137,7 @@ export class DialogImportComponent implements OnInit {
             ret.push(item);
 
       });
-      console.log(ret);
+      // console.log(ret);
       return ret;
     }
 

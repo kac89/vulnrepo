@@ -189,7 +189,7 @@ export class SettingsComponent implements OnInit {
   parseandrestoresettings(data) {
 
     const parsed = JSON.parse(data);
-    console.log(parsed);
+    // console.log(parsed);
 
     for (let _i = 0; _i < parsed.length; _i++) {
       const num = parsed[_i];
