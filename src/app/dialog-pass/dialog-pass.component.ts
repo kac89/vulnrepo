@@ -38,7 +38,7 @@ export class DialogPassComponent implements OnInit {
       if (returned) {
         this.dialogRef.close({ data: pass });
       } else {
-        this.msg = 'Wrong password :(';
+        this.msg = 'Wrong security key :(';
       }
 
   });
