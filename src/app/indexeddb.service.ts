@@ -343,8 +343,8 @@ export class IndexeddbService {
       // Decrypt
       const bytes = Crypto.AES.decrypt(data.encrypted_data.toString(), pass);
       const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
-      console.log('Deecrypted data:');
-      console.log(decryptedData);
+      // console.log('Deecrypted data:');
+      // console.log(decryptedData);
       if (decryptedData) {
         sessionStorage.setItem(data.report_id, pass);
       }
@@ -485,7 +485,7 @@ export class IndexeddbService {
 
     this.checkifreportexist(report_id).then(data => {
       if (data) {
-        console.log(data);
+        // console.log(data);
         const enc = btoa(JSON.stringify(data));
         const element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(enc));
