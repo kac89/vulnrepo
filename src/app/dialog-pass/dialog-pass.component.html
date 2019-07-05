@@ -9,7 +9,7 @@
   <form class="example-form">
 
     <mat-form-field class="example-full-width">
-      <input matInput placeholder="Report key" #pass (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
+      <input matInput placeholder="Report security key" #pass (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
     <p>{{msg}}</p>
