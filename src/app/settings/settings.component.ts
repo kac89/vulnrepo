@@ -26,10 +26,10 @@ export class SettingsComponent implements OnInit {
 
     this.indexeddbService.getSettings().then(data => {
       if (data) {
-        console.log(data);
+        // console.log(data);
 
           data.forEach(function (eachObj) {
-            console.log(eachObj);
+            // console.log(eachObj);
             if (eachObj['key'] === 'advenabled') {
               this.checked = eachObj['value'];
               this.advHTMLchanged();

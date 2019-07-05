@@ -26,7 +26,6 @@ export class DialogPassComponent implements OnInit {
 
   onKeydown(event, pass: string, report_id: string) {
     if (event.key === 'Enter') {
-      console.log(event);
       this.decrypt(pass, report_id);
     }
   }
@@ -35,7 +34,7 @@ export class DialogPassComponent implements OnInit {
     this.msg = 'Report is decrypted please wait...';
     this.indexeddbService.decrypt(pass, report_id).then(returned => {
 
-      console.log(`Returned: ${returned}`);
+      // console.log(`Returned: ${returned}`);
       if (returned) {
         this.dialogRef.close({ data: pass });
       } else {

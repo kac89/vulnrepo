@@ -69,7 +69,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private _differs: KeyValueDiffers) {
 
-    console.log(route);
+    // console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
       this.decryptedReportDataChanged = this.decryptedReportData;
@@ -116,7 +116,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     this.indexeddbService.getSettings().then(data => {
       if (data) {
-        console.log(data);
+        // console.log(data);
         this.settings = data;
       } else {
         console.log('Settings read error');
@@ -135,28 +135,28 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngDoCheck() {
     const change = this._differ.diff(this.decryptedReportDataChanged);
     if (change) {
-      console.log('Changes detected!');
+      // console.log('Changes detected!');
       change.forEachChangedItem((record: KeyValueChangeRecord<any, any>) => {
-        console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
+        // console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
       });
 
       change.forEachRemovedItem((record: KeyValueChangeRecord<any, any>) => {
-        console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
+        // console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
       });
 
       change.forEachAddedItem((record: KeyValueChangeRecord<any, any>) => {
-        console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
+        // console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
       });
     }
   }
 
   // events
   public chartClicked(e: any): void {
-    console.log(e);
+    // console.log(e);
   }
 
   public chartHovered(e: any): void {
-    console.log(e);
+    // console.log(e);
   }
 
   openDialog(data: any): void {
@@ -220,7 +220,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
+      // console.log(result);
 
       if (result !== undefined) {
         if (result.title !== '') {
@@ -242,7 +242,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
+      // console.log(result);
 
       if (result !== undefined) {
         result.forEach(eachObj => {
@@ -294,7 +294,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
   editreporttitle(item) {
-    console.log(item);
+    // console.log(item);
 
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
@@ -303,7 +303,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
+      // console.log(result);
 
     });
 
@@ -311,7 +311,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
   editissuetitle(item) {
-    console.log(item);
+    // console.log(item);
 
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
@@ -320,7 +320,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
+      // console.log(result);
 
     });
   }
@@ -341,7 +341,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.doStats();
   }
   removefromchangelog(item) {
-    console.log(item);
+    // console.log(item);
     const remo = 'changelog';
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
@@ -350,7 +350,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
+      // console.log(result);
       const index: number = this.decryptedReportDataChanged.report_changelog.indexOf(result);
 
       if (index !== -1) {
@@ -362,7 +362,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
   removeIssiue(item) {
-    console.log(item);
+    // console.log(item);
     const remo = 'remove';
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
@@ -371,7 +371,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
+      // console.log(result);
 
       const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(result);
 
@@ -488,10 +488,10 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
   DownloadHTML(report_data, report_metadata) {
-    console.log(report_data);
-    console.log(report_metadata);
-    console.log(this.settings);
-    console.log(this.report_css);
+    // console.log(report_data);
+    // console.log(report_metadata);
+    // console.log(this.settings);
+    // console.log(this.report_css);
     function escapeHtml(unsafe) {
       return unsafe.toString()
         .replace(/&/g, '&amp;')
@@ -583,7 +583,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
     this.settings.forEach(function (eachObj) {
-      console.log(eachObj);
+      // console.log(eachObj);
       if (eachObj['key'] === 'advenabled') {
         if (eachObj['value'] === true) {
 

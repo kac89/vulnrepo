@@ -47,7 +47,7 @@ export class ImportReportComponent implements OnInit {
         this.indexeddbService.importReportfromfile(decodedData);
 
         if (files.length === ile) {
-          console.log('koniec plikow');
+          console.log('files end');
           this.router.navigate(['/my-reports']);
         }
 
