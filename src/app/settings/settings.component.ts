@@ -112,13 +112,15 @@ export class SettingsComponent implements OnInit {
     this.indexeddbService.getReports().then(data => {
       if (data) {
         // download dump
-        const element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + JSON.stringify(data));
-        element.setAttribute('download', 'Dumped My Reports (vulnrepo.com).txt');
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
+        const blob = new Blob([JSON.stringify(data)], { type: 'text/plain' });
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'Dumped My Reports (vulnrepo.com).txt');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
       } else {
         console.log('DB read error');

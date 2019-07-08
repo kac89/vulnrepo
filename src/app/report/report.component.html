@@ -43,7 +43,6 @@
     <mat-card-content>
       <div class="equal-height-container">
         <div class="first">
-
             <mat-form-field appearance="outline" class="example-full-width">
                 <mat-label>Scope</mat-label>
                 <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope" value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
@@ -54,7 +53,6 @@
         
         <div class="second">
           <div class="second-a">
-
               <mat-form-field appearance="outline" class="example-full-width">
                   <mat-label>Report summary comment</mat-label>
                   <textarea matInput rows="1" [(ngModel)]="decryptedReportDataChanged.report_summary" value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
@@ -64,7 +62,6 @@
           <div class="second-b">
 
             <div class="call-outs-container-report-details">
-
               <div class="call-out-report-details">
                 <mat-form-field class="example-full-width">
                   <input matInput [matDatepicker]="picker" placeholder="Research start date" [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
@@ -184,11 +181,34 @@
             </div>
 
           <mat-action-row align="end">
-              <!--<button mat-fab color="primary">Upload</button>-->
+
+
+              <button mat-fab (click)="fileuploadInput.click()" color="primary">
+                <i class="material-icons">attach_file</i>
+                  <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)" style="display:none;">
+              </button>
+
+
               <div fxFlex></div>
             <button mat-button color="warn" (click)="removeIssiue(dec_data)"><mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE</button>
             
           </mat-action-row>
+          
+          <div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="10px">
+            <div *ngFor="let key of dec_data.files">
+          
+              <div *ngIf="key.type.includes('image')" class="mat-elevation-z4">
+                <img [src]="key.data" title="{{key.title}}" width="200px"><br>
+                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a><a [routerLink]="" (click)="removeAttach(key, dec_data)"><mat-icon>delete_forever</mat-icon></a>
+              </div>
+              <div *ngIf="!key.type.includes('image')" class="mat-elevation-z4">
+                <img src="/assets/file.png" title="{{key.title}}" width="80px" height="100px"><br>
+                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a><a [routerLink]="" (click)="removeAttach(key, dec_data)"><mat-icon>delete_forever</mat-icon></a>
+              </div>
+            </div>
+          </div>
+
+
         </mat-expansion-panel>
 
       </mat-accordion>

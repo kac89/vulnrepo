@@ -487,13 +487,16 @@ export class IndexeddbService {
       if (data) {
         // console.log(data);
         const enc = btoa(JSON.stringify(data));
-        const element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(enc));
-        element.setAttribute('download', data.report_name + ' (vulnrepo.com) encrypted.txt');
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
+        const blob = new Blob([encodeURIComponent(enc)], { type: 'text/plain' });
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', data.report_name + ' (vulnrepo.com) encrypted.txt');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
 
       }
 

@@ -266,7 +266,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   saveReportChanges(report_id: any) {
-    this.savemsg = '';
+    this.savemsg = 'Please wait, report is encrypted...';
     const pass = sessionStorage.getItem(report_id);
 
     // update report
@@ -574,6 +574,11 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
     }
 
+    pre {
+      white-space: pre-wrap;
+      word-break: keep-all;
+    }
+
     </style>
     </head>
     <body class="container">
@@ -820,6 +825,14 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     const advtext = projscope + statsandrisk;
 
+    function addNewlines(str) {
+      let result = '';
+      while (str.length > 0) {
+        result += str.substring(0, 100) + '<br>';
+        str = str.substring(100);
+      }
+      return result;
+    }
 
     let issues = '<p><center><h3 id="Issues">Issues</h3></center></p>';
     report_data.report_vulns.forEach((item, index) => {
@@ -832,13 +845,28 @@ export class ReportComponent implements OnInit, OnDestroy {
           <dt>Vulnerability description</dt> \
           <dd>' + escapeHtml(item.desc) + '</dd><br>';
 
-      if (item.poc !== '') {
+      if (item.poc !== '' || item.files.length !== 0) {
         const ewe = ' \
             <dt>Proof of Concept</dt> \
             <dd> \
-              <pre>' + escapeHtml(item.poc) + '</pre> \
-            </dd><br>';
-        issues = issues + ewe;
+              <pre>' + escapeHtml(item.poc) + '</pre>';
+
+        let fil = '';
+        item.files.forEach((ite, ind) => {
+
+          if (ite.type.includes('image')) {
+            fil = fil + '<img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" width="800px"><br><br>';
+          } else if (ite.type.includes('text')) {
+            const byteString = atob(ite.data.split(',')[1]);
+            fil = fil + '' + escapeHtml(ite.title) + '<br><pre>' + addNewlines(byteString) + '</pre><br><br>';
+          } else {
+            fil = fil + '';
+          }
+
+        });
+
+           const ewe2 = '</dd><br>';
+        issues = issues + ewe + fil + ewe2;
       }
 
       if (item.ref !== '') {
@@ -897,22 +925,100 @@ export class ReportComponent implements OnInit, OnDestroy {
     const download_report_complete = report_html + intro + tableofcontent + advtext + issues + changeloghtml + report_html_end;
 
     // download HTML report
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(download_report_complete));
-    element.setAttribute('download', report_metadata.report_name + ' ' + report_metadata.report_id + ' HTML (vulnrepo.com).html');
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
 
-
-
+    const blob = new Blob([download_report_complete], { type: 'text/html' });
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', report_metadata.report_name + ' ' + report_metadata.report_id + ' HTML (vulnrepo.com).html');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
   }
 
 
+  proccessUpload(data, name, type, dec_data) {
+
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+    const today: number = Date.now();
+
+    function escapeHtml(unsafe) {
+      return unsafe.toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    const linkprev = data;
+    // tslint:disable-next-line:max-line-length
+    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': escapeHtml(name), 'type': escapeHtml(type), 'date': today });
+
+  }
+
+  uploadAttach(input: HTMLInputElement, dec_data) {
+
+    const files = input.files;
+    if (files && files.length) {
+      console.log('Type: ' + files[0].type);
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+
+        this.proccessUpload(fileReader.result, files[0].name, files[0].type, dec_data);
+
+      };
+      fileReader.readAsDataURL(fileToRead);
+    }
+
+  }
+
+  downloadAttach(data, name) {
+
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    const byteString = atob(data.split(',')[1]);
+
+    // separate out the mime component
+    const mimeString = data.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to an ArrayBuffer
+    const ab = new ArrayBuffer(byteString.length);
+
+    // create a view into the buffer
+    const ia = new Uint8Array(ab);
+
+    // set the bytes of the buffer to the correct values
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    // write the ArrayBuffer to a blob, and you're done
+    const blob = new Blob([ab], { type: mimeString });
+
+    const fileName = name;
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+  }
 
 
+  removeAttach(data, dec_data) {
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+    const ind: number = this.decryptedReportDataChanged.report_vulns[index].files.indexOf(data);
+    if (ind !== -1) {
+      this.decryptedReportDataChanged.report_vulns[index].files.splice(ind, 1);
+    }
+  }
 
 }
 
