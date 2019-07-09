@@ -197,11 +197,11 @@
           <div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="10px">
             <div *ngFor="let key of dec_data.files">
           
-              <div *ngIf="key.type.includes('image')" class="mat-elevation-z4">
+              <div *ngIf="key.type.includes('image')" class="mat-elevation-z4" style="padding: 5px; text-align: center;">
                 <img [src]="key.data" title="{{key.title}}" width="200px"><br>
                   <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a><a [routerLink]="" (click)="removeAttach(key, dec_data)"><mat-icon>delete_forever</mat-icon></a>
               </div>
-              <div *ngIf="!key.type.includes('image')" class="mat-elevation-z4">
+              <div *ngIf="!key.type.includes('image')" class="mat-elevation-z4" style="padding: 5px; text-align: center;">
                 <img src="/assets/file.png" title="{{key.title}}" width="80px" height="100px"><br>
                   <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a><a [routerLink]="" (click)="removeAttach(key, dec_data)"><mat-icon>delete_forever</mat-icon></a>
               </div>
