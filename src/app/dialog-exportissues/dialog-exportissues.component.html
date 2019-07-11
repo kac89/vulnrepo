@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>Export issues to:<button style="float: right;" mat-raised-button  color="primary" (click)="cancel()">Cancel</button></h1>
+<div mat-dialog-content>
+
+
+    <mat-tab-group>
+        <mat-tab label="Atlassian JIRA"><br>
+
+          <mat-form-field class="example-full-width">
+              <input cdkFocusInitial matInput placeholder="Jira URL*" #jira_c_url value="">
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+              <input matInput placeholder="Project key*" #jira_c_key value="">
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+              <input matInput placeholder="User e-mail/login*" #jira_c_email value="">
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+              <input matInput placeholder="Ticket label" #jira_c_label value="">
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+              <textarea matInput value="{{fields_prop}}" #jira_workflow placeholder="WorkFlow fields*"></textarea>
+              <mat-hint>You can customize all fields params.</mat-hint>
+          </mat-form-field>
+
+          <br><br>
+          <button style="float: left;" mat-raised-button  color="accent" (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value)">Generate cURL request</button>
+
+          <br><br>
+            <div *ngIf="curlhide">
+                <p>Download data.json file and in the same folder run curl:</p>
+                <pre style="white-space:pre-wrap;">{{curlcmd}}</pre>
+                <p>cURL should prompt to enter your user password on jira.</p>
+            </div>
+        </mat-tab>
+
+      </mat-tab-group>
+
+</div>

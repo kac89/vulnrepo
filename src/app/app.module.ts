@@ -50,6 +50,8 @@ import { DialogImportComponent } from './dialog-import/dialog-import.component';
 import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
 import { ImportReportComponent } from './import-report/import-report.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { DialogExportissuesComponent } from './dialog-exportissues/dialog-exportissues.component';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     DialogAddissueComponent,
     DialogImportComponent,
     DialogEditComponent,
-    ImportReportComponent
+    ImportReportComponent,
+    DialogExportissuesComponent
   ],
   imports: [
     BrowserModule,
@@ -98,10 +101,11 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatChipsModule,
     HttpModule,
     MatSelectModule,
-    DragDropModule
+    DragDropModule,
+    MatTabsModule
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
-  entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent, DialogEditComponent],
+  entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent, DialogEditComponent, DialogExportissuesComponent],
   exports: [],
   bootstrap: [AppComponent]
 })

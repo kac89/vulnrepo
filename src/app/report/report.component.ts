@@ -13,6 +13,7 @@ import { KeyValueDiffers, KeyValueChangeRecord } from '@angular/core';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
+import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-exportissues.component';
 
 @Component({
   selector: 'app-report',
@@ -256,6 +257,21 @@ export class ReportComponent implements OnInit, OnDestroy {
 
         this.doStats();
       }
+
+    });
+
+  }
+
+  export_issues(item) {
+    console.log('Export issues');
+    const dialogRef = this.dialog.open(DialogExportissuesComponent, {
+      width: '500px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
 
     });
 

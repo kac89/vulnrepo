@@ -1,11 +1,17 @@
 <h1 mat-dialog-title>Import issues from:</h1>
 <div mat-dialog-content>
-  Tenable Nessus (CSV)
-  <div class="form-group">
-    <input *ngIf="show_input" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
-    <p *ngIf="please_wait">Please wait...</p>
-</div>
+
+  <mat-tab-group>
+    <mat-tab label="Tenable Nessus (CSV)"><br>
+      <div class="form-group">
+        <input *ngIf="show_input" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
+        <p *ngIf="please_wait">Please wait...</p>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <br>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button  color="primary" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>
