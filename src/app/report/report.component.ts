@@ -238,7 +238,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   import_issues() {
     console.log('Import issues');
     const dialogRef = this.dialog.open(DialogImportComponent, {
-      width: '350px'
+      width: '500px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
