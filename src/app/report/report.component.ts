@@ -14,7 +14,7 @@ import { DialogImportComponent } from '../dialog-import/dialog-import.component'
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-exportissues.component';
-
+import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -343,6 +343,46 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
+  }
+
+  addchangelog() {
+    const dialogRef = this.dialog.open(DialogChangelogComponent, {
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+
+      // console.log(result);
+      if (result !== undefined) {
+        this.decryptedReportDataChanged.report_changelog.push(result);
+        this.doStats();
+      }
+
+    });
+  }
+
+
+  editchangelog(item) {
+    const dialogRef = this.dialog.open(DialogChangelogComponent, {
+      width: '500px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // console.log(result);
+
+      if (result) {
+        const index: number = this.decryptedReportDataChanged.report_changelog.indexOf(result.origi);
+
+        if (index !== -1) {
+          this.decryptedReportDataChanged.report_changelog[index] = {date: result.date, desc: result.desc};
+          this.doStats();
+        }
+      }
+
+    });
   }
 
 

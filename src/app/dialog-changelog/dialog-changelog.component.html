@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Changelog add</h1>
+<div mat-dialog-content>
+
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Event date" #edate value="{{ (data ? data.date : today) | date:'medium' }}">
+      </mat-form-field>
+    
+      <mat-form-field class="example-full-width">
+        <textarea matInput placeholder="Leave a comment" #edesc value="{{data?.desc}}"></textarea>
+      </mat-form-field>
+
+</div>
+
+<div mat-dialog-actions>
+  <button *ngIf="!data" mat-raised-button cdkFocusInitial color="accent" (click)="addChangelog(edate.value, edesc.value)">Add</button>
+  <button *ngIf="data" mat-raised-button cdkFocusInitial color="accent" (click)="editChangelog(edate.value, edesc.value, data)">Edit</button>
+  &nbsp;
+  <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+</div>
