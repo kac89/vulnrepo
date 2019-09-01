@@ -491,7 +491,7 @@ export class IndexeddbService {
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', data.report_name + ' (vulnrepo.com) encrypted.txt');
+        link.setAttribute('download', data.report_name + ' ' + report_id + ' (vulnrepo.com) encrypted.txt');
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();

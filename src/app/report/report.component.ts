@@ -15,11 +15,13 @@ import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-exportissues.component';
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
+
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']
 })
+
 export class ReportComponent implements OnInit, OnDestroy {
 
   // Pie
@@ -530,7 +532,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     // download ascii report
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(report_ascii));
-    element.setAttribute('download', metadata.report_name + ' ASCII (vulnrepo.com).txt');
+    element.setAttribute('download', metadata.report_name + ' ' + metadata.report_id + ' ASCII (vulnrepo.com).txt');
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
