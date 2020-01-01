@@ -1,6 +1,8 @@
 # VulnrepoApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.21.
+Angular CLI: 8.3.21
+Node: 12.14.0
+Angular: 8.2.14
 
 ## Development server
 
