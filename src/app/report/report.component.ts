@@ -49,7 +49,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   report_info: any;
   lastsavereportdata = '';
   reportdesc: any;
-  settings: any;
+
   savemsg = '';
   report_decryption_in_progress: boolean;
   decryptedReportData: any;
@@ -65,6 +65,10 @@ export class ReportComponent implements OnInit, OnDestroy {
   ];
   // $scope.filteredCritical = $filter('filter')($scope.groups, { severity: 'Critical' }).length;
 
+  uploadlogoprev = '';
+  adv_html: any;
+  advlogo: any;
+  advlogo_saved: any;
 
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
@@ -78,6 +82,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
       this.decryptedReportDataChanged = this.decryptedReportData;
+      this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
+      this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo;
 
       this.doStats();
     });
@@ -113,18 +119,6 @@ export class ReportComponent implements OnInit, OnDestroy {
       } else {
         console.log('Report exist: FAIL');
         this.router.navigate(['/my-reports']);
-      }
-
-    });
-
-    // get settings
-
-    this.indexeddbService.getSettings().then(data => {
-      if (data) {
-        // console.log(data);
-        this.settings = data;
-      } else {
-        console.log('Settings read error');
       }
 
     });
@@ -550,7 +544,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   DownloadHTML(report_data, report_metadata) {
     // console.log(report_data);
     // console.log(report_metadata);
-    // console.log(this.settings);
+
     // console.log(this.report_css);
     function escapeHtml(unsafe) {
       return unsafe.toString()
@@ -644,41 +638,17 @@ export class ReportComponent implements OnInit, OnDestroy {
     <body class="container">
     <br><br>`;
 
+// report settings
+    const advlogo = report_data.report_settings.report_logo;
+    if (advlogo !== '') {
+      const er = '<center><img src="' + advlogo + '" width="800px"></center><br><br>';
+      report_html = report_html + er;
+    }
 
-
-
-    this.settings.forEach(function (eachObj) {
-      // console.log(eachObj);
-      if (eachObj['key'] === 'advenabled') {
-        if (eachObj['value'] === true) {
-
-          this.settings.forEach(function (eachObj2) {
-            if (eachObj2['key'] === 'advlogo') {
-              const advlogo = eachObj2['value'];
-              if (advlogo !== '') {
-                const er = '<center><img src="' + advlogo + '" width="800px"></center><br><br>';
-                report_html = report_html + er;
-              }
-
-            } else if (eachObj2['key'] === 'advhtml') {
-              const advhtml = eachObj2['value'];
-              if (advhtml !== '') {
-                this.advhtml = advhtml;
-              }
-
-            }
-
-          }, this);
-
-
-        }
-
-      }
-
-    }, this);
-
-
-
+    const advhtml = report_data.report_settings.report_html;
+    if (advhtml !== '') {
+      this.advhtml = advhtml;
+    }
 
 
     let intro = ' \
@@ -1078,6 +1048,42 @@ export class ReportComponent implements OnInit, OnDestroy {
     if (ind !== -1) {
       this.decryptedReportDataChanged.report_vulns[index].files.splice(ind, 1);
     }
+  }
+
+
+  parselogo(data) {
+    const linkprev = 'data:image/png;base64,' + btoa(data);
+    this.uploadlogoprev = '<img src="' + linkprev + '" width="100px">';
+    this.advlogo = linkprev;
+    this.decryptedReportDataChanged.report_settings.report_logo = this.advlogo;
+  }
+
+  clearlogo() {
+    this.decryptedReportDataChanged.report_settings.report_logo = '';
+    this.uploadlogoprev = '';
+    this.advlogo = '';
+    this.advlogo_saved = '';
+    console.log('Logo cleared!');
+  }
+
+  importlogo(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      /*
+       console.log("Filename: " + files[0].name);
+       console.log("Type: " + files[0].type);
+       console.log("Size: " + files[0].size + " bytes");
+       */
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+       this.parselogo(fileReader.result);
+
+      };
+      fileReader.readAsBinaryString(fileToRead);
+    }
+
   }
 
 }

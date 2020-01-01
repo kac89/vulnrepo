@@ -354,6 +354,43 @@
     </mat-card-content>
   </mat-card>
   <br>
+
+  <!-- Report Settings -->
+  <mat-card *ngIf="decryptedReportDataChanged">
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>description</mat-icon>
+      </div>
+      <mat-card-title>HTML Report Settings</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row" fxLayout.xs="column">
+
+        <div fxFlex="50%;" fxFlex.xs="80%">
+          <mat-card-content>
+            Report logo:<br>
+            <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved" mat-icon-button color="warn" (click)="clearlogo()"><mat-icon>delete_forever</mat-icon></button>
+            <div [innerHTML]="uploadlogoprev"></div>
+            <br>
+            <input cdkFocusInitial type="file" accept=".*" (change)="importlogo($event.target)" name="myfiles">
+          </mat-card-content>
+        </div>
+    
+        <div fxFlex="50%;" fxFlex.xs="80%">
+          <mat-card-content>
+            Custom HTML content (<span style="color: red"><b>unsafe</b></span>):<br>
+            <mat-form-field appearance="outline" class="example-full-width">
+              <textarea rows="5" matInput placeholder="HTML content" [(ngModel)]="decryptedReportDataChanged.report_settings.report_html" value="{{decryptedReportDataChanged.report_settings.report_html}}"></textarea>
+              <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
+            </mat-form-field>
+          </mat-card-content>
+        </div>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br>
+
   <!-- Download -->
   <mat-card *ngIf="decryptedReportDataChanged">
       <mat-card-header>

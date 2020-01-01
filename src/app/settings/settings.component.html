@@ -6,17 +6,6 @@
 
   <mat-card class="column">
     <h3>
-      Settings configuration backup
-    </h3>
-    <p><b>Import:</b></p>
-    <input cdkFocusInitial type="file" accept=".*" (change)="restoreConfiguration($event.target)" name="myfiles">
-    <br>
-    <p><b>Export:</b></p>
-    <button mat-raised-button color="primary" (click)="exportconfiguration()">Export all configuration settings</button>
-  </mat-card>
-
-  <mat-card class="column">
-    <h3>
       Backup / Restore "My Reports"
     </h3>
     <p><b>Import:</b></p>
@@ -26,37 +15,6 @@
     <button mat-raised-button color="primary" (click)="dumpallmyreports()">Dump all my reports</button>
   </mat-card>
 
-
-
-</div>
-
-
-<div class="row">
-
-  <mat-card class="column">
-    <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="advHTMLchanged()">
-      Advanced HTML Report
-    </mat-slide-toggle>
-    
-    <div *ngIf="hide">
-      <br>Report logo:<br>
-      <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="300px">
-      <div [innerHTML]="uploadlogoprev"></div>
-      <br>
-      <input cdkFocusInitial type="file" accept=".*" (change)="importlogo($event.target)" name="myfiles">
-      <br>
-      <br><br>Custom HTML content (<span style="color: red"><b>unsafe</b></span>):<br>
-      <mat-form-field appearance="outline" class="example-full-width">
-        <textarea matInput placeholder="HTML content" #htmlcontent value="{{ advhtml }}">{{ advhtml }}</textarea>
-        <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
-      </mat-form-field>
-      <br><br>
-      <button mat-raised-button color="accent" (click)="saveadvHTML(htmlcontent.value)">Save
-        changes</button> {{info}}
-      </div>
-
-  </mat-card>
-  
   <mat-card class="column">
     <mat-slide-toggle [(ngModel)]="wipechecked" class="example-margin" [color]="color" (change)="wipeDatachanged()">
       Delete saved data! (My Reports & Settings)
@@ -64,6 +22,6 @@
     <div *ngIf="wipehide"><p>Are you sure you want to delete all data, is <span style="color: red"><b>irreversible decision</b></span>!?<br><br>
       <button mat-raised-button color="accent" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}</p></div>
   </mat-card>
-<!--<mat-card class="column"></mat-card>-->
 
 </div>
+

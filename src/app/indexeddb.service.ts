@@ -136,6 +136,10 @@ export class IndexeddbService {
             reportersocial: '',
             reporterwww: '',
             reporteremail: ''
+          },
+          report_settings: {
+            report_html: '',
+            report_logo: ''
           }
         };
 
@@ -504,100 +508,6 @@ export class IndexeddbService {
 
 
   }
-
-
-
-
-  getSettings() {
-    return new Promise<any>((resolve, reject) => {
-
-      const indexedDB = window.indexedDB;
-      const open = indexedDB.open('vulnrepo-settings', 1);
-
-      open.onupgradeneeded = function () {
-        const db = open.result;
-        db.createObjectStore('settings', { autoIncrement: true });
-      };
-      open.onerror = function(event) {
-        console.log('txn failed', event);
-      };
-      open.onsuccess = function () {
-        const db = open.result;
-        const tx = db.transaction('settings', 'readwrite');
-        const store = tx.objectStore('settings');
-
-        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
-        const request = store.openCursor();
-        const ret: any[] = new Array();
-
-        request.onsuccess = function (evt) {
-
-
-          const cursor = request.result;
-          if (cursor) {
-            const key = cursor.primaryKey;
-            const value = cursor.value;
-            const finded = { key, value };
-
-            ret.push(finded);
-            cursor.continue();
-          } else {
-            // no more results
-            resolve(ret);
-          }
-
-        };
-
-        tx.oncomplete = function () {
-          db.close();
-        };
-        request.onerror = function (e) {
-          reject(e);
-        };
-      };
-
-    });
-  }
-
-
-  advHTMLSaveSettings(key, item) {
-    return new Promise<any>((resolve, reject) => {
-
-      const indexedDB = window.indexedDB;
-      const open = indexedDB.open('vulnrepo-settings', 1);
-
-      open.onupgradeneeded = function () {
-        const db = open.result;
-        db.createObjectStore('settings', { autoIncrement: true });
-      };
-      open.onerror = function(event) {
-        console.log('txn failed', event);
-      };
-      open.onsuccess = function () {
-        const db = open.result;
-        const tx = db.transaction(['settings'], 'readwrite');
-        const store = tx.objectStore('settings');
-
-        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
-        const request = store.put(item, key);
-
-        request.onsuccess = function (evt) {
-          resolve(request.result);
-        };
-
-        tx.oncomplete = function () {
-          db.close();
-        };
-        request.onerror = function (e) {
-          reject(e);
-        };
-      };
-
-    });
-  }
-
-
-
 
 
 
