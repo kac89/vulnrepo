@@ -114,6 +114,16 @@ export class IndexeddbService {
         //        ],
 
 
+        const testststs = `<h3>Methodology and Standards</h3>
+        <ul>
+          <li>OSTTMM(Open Source Security Testing Methodology Manual)</li>
+          <li>OWASP(Open Web Application Security Project)</li>
+          <li>ISSAF(Information Systems Security Assessment Framework)</li>
+          <li>WASC-TC(Web Application Security Consortium Threat Classification)</li>
+          <li>PTF(Penetration Testing Framework)</li>
+          <li>OISSG(Information Systems Security Assessment Framework)</li>
+          <li>NIST SP800-115(Technical Guide to Information Security Testing and Assessment)</li>
+        </ul>`;
 
         const today: number = Date.now();
         const empty_vulns = {
@@ -138,7 +148,7 @@ export class IndexeddbService {
             reporteremail: ''
           },
           report_settings: {
-            report_html: '',
+            report_html: testststs,
             report_logo: ''
           }
         };
