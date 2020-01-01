@@ -9,7 +9,8 @@ import { HomeComponent } from './home/home.component';
 
 import { Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCheckboxModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -34,7 +35,7 @@ import { DialogPassComponent } from './dialog-pass/dialog-pass.component';
 import { MessageService } from './message.service';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ChartsModule } from 'ng2-charts';
 import { DialogAddissueComponent } from './dialog-addissue/dialog-addissue.component';
 import {MatBadgeModule} from '@angular/material/badge';

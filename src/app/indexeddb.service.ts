@@ -5,7 +5,7 @@ import * as Crypto from 'crypto-js';
 import { Observable } from 'rxjs';
 
 import { MessageService } from './message.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable({

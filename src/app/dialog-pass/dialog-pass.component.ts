@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Inject, Injectable } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { IndexeddbService } from '../indexeddb.service';
 

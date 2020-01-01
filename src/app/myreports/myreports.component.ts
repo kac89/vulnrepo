@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator, MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { IndexeddbService } from '../indexeddb.service';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 
@@ -21,8 +24,8 @@ export class MyreportsComponent implements OnInit {
   displayedColumns: string[] = ['report_name', 'report_createdate', 'settings'];
   dataSource = new MatTableDataSource();
   list: any;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService) {
 

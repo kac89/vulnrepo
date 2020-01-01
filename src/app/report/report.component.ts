@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
 import { DialogPassComponent } from '../dialog-pass/dialog-pass.component';
 import { DialogAddissueComponent } from '../dialog-addissue/dialog-addissue.component';
@@ -11,7 +11,9 @@ import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { KeyValueDiffers, KeyValueChangeRecord } from '@angular/core';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-exportissues.component';
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
@@ -38,8 +40,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['date', 'desc', 'settings'];
   dataSource = new MatTableDataSource();
   listchangelog: any[];
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   advhtml = '';
   report_css: any;
