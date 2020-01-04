@@ -84,7 +84,7 @@
         "title": "[RFI] Remote File Inclusion",
         "poc": "",
         "desc": "Remote File Include (RFI) is an attack technique used to exploit 'dynamic file include' mechanisms in web applications. When web applications take user input (URL, parameter value, etc.) and pass them into file include commands, the web application might be tricked into including remote files with malicious code.\n\nAlmost all web application frameworks support file inclusion. File inclusion is mainly used for packaging common code into separate files that are later referenced by main application modules. When a web application references an include file, the code in this file may be executed implicitly or explicitly by calling specific procedures. If the choice of module to load is based on elements from the HTTP request, the web application might be vulnerable to RFI.",
-        "severity": "Critical",
+        "severity": "High",
         "ref": "http://cwe.mitre.org/data/definitions/98.html",
         "cvss": "7.0",
         "cve": ""
@@ -156,7 +156,7 @@
         "title": "OpenSSL Heartbleed",
         "poc": "",
         "desc": "The Heartbleed Bug is a serious vulnerability in the popular OpenSSL cryptographic software library. This weakness allows stealing the information protected, under normal conditions, by the SSL/TLS encryption used to secure the Internet. SSL/TLS provides communication security and privacy over the Internet for applications such as web, email, instant messaging (IM) and some virtual private networks (VPNs). The Heartbleed bug allows anyone on the Internet to read the memory of the systems protected by the vulnerable versions of the OpenSSL software. This compromises the secret keys used to identify the service providers and to encrypt the traffic, the names and passwords of the users and the actual content. This allows attackers to eavesdrop on communications, steal data directly from the services and users and to impersonate services and users.",
-        "severity": "Critical",
+        "severity": "High",
         "ref": "http://heartbleed.com/",
         "cvss": "7.5",
         "cve": "CVE-2014-0160"
@@ -230,7 +230,7 @@
         "desc": "Applications sometimes disclose sensitive financial information such as credit card numbers. Responses containing credit card numbers may not represent any security vulnerability - for example, a number may belong to the logged-in user to whom it is displayed. If a credit card number is identified during a security assessment it should be verified, then application logic reviewed to identify whether its disclosure within the application is necessary and appropriate.",
         "severity": "Info",
         "ref": "https://portswigger.net/kb/issues/00600500_credit-card-numbers-disclosed\nhttps://cwe.mitre.org/data/definitions/200.html",
-        "cvss": "8",
+        "cvss": "0",
         "cve": ""
     },
     {
@@ -284,7 +284,7 @@
         "desc": "The remote service accepts connections encrypted using TLS 1.0. TLS 1.0 has a number of cryptographic design flaws. Modern implementations of TLS 1.0 mitigate these problems, but newer versions of TLS like 1.1 and 1.2 are designed against these flaws and should be used whenever possible. PCI DSS v3.2 requires that TLS 1.0 be disabled entirely by June 30, 2018, except for POS POI terminals (and the SSL/TLS termination points to which they connect) that can be verified as not being susceptible to any known exploits.",
         "severity": "Low",
         "ref": "https://www.tenable.com/plugins/nessus/104743",
-        "cvss": "",
+        "cvss": "1",
         "cve": ""
     }
 ]

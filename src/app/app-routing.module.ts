@@ -9,6 +9,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { NewreportComponent } from './newreport/newreport.component';
 import { ReportComponent } from './report/report.component';
 import { ImportReportComponent } from './import-report/import-report.component';
+import { VulnListComponent } from './vuln-list/vuln-list.component';
 
 const routes: Routes = [{
   path: 'home',
@@ -49,6 +50,11 @@ const routes: Routes = [{
   path: '',
   redirectTo: '/home',
   pathMatch: 'full'
+},
+{
+  path: 'vuln-list',
+  pathMatch: 'full',
+  component: VulnListComponent
 },
 {
   path: '**',

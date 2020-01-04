@@ -28,7 +28,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import 'hammerjs';
+
 import { ReportComponent } from './report/report.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogPassComponent } from './dialog-pass/dialog-pass.component';
@@ -54,6 +54,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { DialogExportissuesComponent } from './dialog-exportissues/dialog-exportissues.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { DialogChangelogComponent } from './dialog-changelog/dialog-changelog.component';
+import { VulnListComponent } from './vuln-list/vuln-list.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { DialogChangelogComponent } from './dialog-changelog/dialog-changelog.co
     DialogEditComponent,
     ImportReportComponent,
     DialogExportissuesComponent,
-    DialogChangelogComponent
+    DialogChangelogComponent,
+    VulnListComponent
   ],
   imports: [
     BrowserModule,
