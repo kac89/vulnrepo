@@ -28,6 +28,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import 'hammerjs';
 
 import { ReportComponent } from './report/report.component';
 import { MatDialogModule } from '@angular/material/dialog';

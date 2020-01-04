@@ -22,7 +22,7 @@ export class VulnListComponent implements OnInit {
   ngOnInit() {
 
     this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-console.log(res.json());
+
       this.dataSource = new MatTableDataSource(res.json());
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
