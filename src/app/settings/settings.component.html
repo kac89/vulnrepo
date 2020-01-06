@@ -19,9 +19,11 @@
     <mat-slide-toggle [(ngModel)]="wipechecked" class="example-margin" [color]="color" (change)="wipeDatachanged()">
       Delete saved data! (My Reports)
     </mat-slide-toggle>
-    <div *ngIf="wipehide"><p>Are you sure you want to delete all data, is <span style="color: red"><b>irreversible decision</b></span>!?<br><br>
-      <button mat-raised-button color="accent" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}</p></div>
+    <div *ngIf="wipehide">
+      <p>Are you sure you want to delete all data, is <span style="color: red"><b>irreversible
+            decision</b></span>!?<br><br>
+        <button mat-raised-button color="accent" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}</p>
+    </div>
   </mat-card>
 
 </div>
-
