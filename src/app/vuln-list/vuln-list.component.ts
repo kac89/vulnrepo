@@ -13,6 +13,7 @@ export class VulnListComponent implements OnInit {
 
   displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve'];
   dataSource = new MatTableDataSource();
+  getvulnlistStatus = '';
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -20,13 +21,13 @@ export class VulnListComponent implements OnInit {
   constructor(private http: Http) { }
 
   ngOnInit() {
-
+    this.getvulnlistStatus = 'Loading...';
     this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
 
       this.dataSource = new MatTableDataSource(res.json());
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
-
+      this.getvulnlistStatus = '';
 
     });
 

@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 export interface Vulns {
   title: string;
@@ -28,7 +29,8 @@ export class DialogAddissueComponent implements OnInit {
   err_msg: string;
 
 
-  constructor(public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: Http, private datePipe: DatePipe) {
+  constructor(public router: Router,
+    public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: Http, private datePipe: DatePipe) {
 
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
@@ -50,6 +52,11 @@ export class DialogAddissueComponent implements OnInit {
       this.options = res.json();
     });
 
+  }
+
+  redir(): void {
+    this.dialogRef.close();
+    this.router.navigate(['/vuln-list']);
   }
 
   cancel(): void {

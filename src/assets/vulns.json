@@ -68,7 +68,7 @@
         "desc": "A buffer overflow condition exists when a program attempts to put more data in a buffer than it can hold or when a program attempts to put data in a memory area past a buffer. In this case, a buffer is a sequential section of memory allocated to contain anything from a character string to an array of integers. Writing outside the bounds of a block of allocated memory can corrupt data, crash the program, or cause the execution of malicious code.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Buffer_Overflow",
-        "cvss": "9.0",
+        "cvss": "9",
         "cve": ""
     },
     {
@@ -86,7 +86,7 @@
         "desc": "Remote File Include (RFI) is an attack technique used to exploit 'dynamic file include' mechanisms in web applications. When web applications take user input (URL, parameter value, etc.) and pass them into file include commands, the web application might be tricked into including remote files with malicious code.\n\nAlmost all web application frameworks support file inclusion. File inclusion is mainly used for packaging common code into separate files that are later referenced by main application modules. When a web application references an include file, the code in this file may be executed implicitly or explicitly by calling specific procedures. If the choice of module to load is based on elements from the HTTP request, the web application might be vulnerable to RFI.",
         "severity": "High",
         "ref": "http://cwe.mitre.org/data/definitions/98.html",
-        "cvss": "7.0",
+        "cvss": "7",
         "cve": ""
     },
     {
@@ -95,7 +95,7 @@
         "desc": "SQL Injection is an attack technique used to exploit applications that construct SQL statements from user-supplied input. When successful, the attacker is able to change the logic of SQL statements executed against the database.\n\nStructured Query Language (SQL) is a specialized programming language for sending queries to databases. The SQL programming language is both an ANSI and an ISO standard, though many database products supporting SQL do so with proprietary extensions to the standard language. Applications often use user-supplied data to create SQL statements. If an application fails to properly construct SQL statements it is possible for an attacker to alter the statement structure and execute unplanned and potentially hostile commands. When such commands are executed, they do so under the context of the user specified by the application executing the statement. This capability allows attackers to gain control of all database resources accessible by that user, up to and including the ability to execute commands on the hosting system.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/SQL_Injection",
-        "cvss": "8.0",
+        "cvss": "8",
         "cve": ""
     },
     {
@@ -104,7 +104,7 @@
         "desc": "Blind SQL (Structured Query Language) injection is a type of SQL Injection attack that asks the database true or false questions and determines the answer based on the applications response. This attack is often used when the web application is configured to show generic error messages, but has not mitigated the code that is vulnerable to SQL injection. When an attacker exploits SQL injection, sometimes the web application displays error messages from the database complaining that the SQL Query's syntax is incorrect. Blind SQL injection is nearly identical to normal SQL Injection, the only difference being the way the data is retrieved from the database. When the database does not output data to the web page, an attacker is forced to steal data by asking the database a series of true or false questions. This makes exploiting the SQL Injection vulnerability more difficult, but not impossible.",
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Blind_SQL_Injection",
-        "cvss": "8.0",
+        "cvss": "8",
         "cve": ""
     },
     {
@@ -113,7 +113,7 @@
         "desc": "File resources are accessed using references constructed from user-supplied data, allowing a malicious user to access files outside the web root that were not intended to be exposed.",
         "severity": "Medium",
         "ref": "https://www.owasp.org/index.php/Path_Traversal\nhttp://projects.webappsec.org/w/page/13246952/Path Traversal\nhttp://cwe.mitre.org/data/definitions/22.html",
-        "cvss": "4.0",
+        "cvss": "4",
         "cve": ""
     },	
     {
@@ -275,7 +275,7 @@
         "desc": "The remote service accepts connections encrypted using SSL 2.0 and/or SSL 3.0. These versions of SSL are affected by several cryptographic flaws, including: - An insecure padding scheme with CBC ciphers. - Insecure session renegotiation and resumption schemes. An attacker can exploit these flaws to conduct man-in-the-middle attacks or to decrypt communications between the affected service and clients. Although SSL/TLS has a secure means for choosing the highest supported version of the protocol (so that these versions will be used only if the client or server support nothing better), many web browsers implement this in an unsafe way that allows an attacker to downgrade a connection (such as in POODLE). Therefore, it is recommended that these protocols be disabled entirely. NIST has determined that SSL 3.0 is no longer acceptable for secure communications. As of the date of enforcement found in PCI DSS v3.1, any version of SSL will not meet the PCI SSC's definition of 'strong cryptography'.",
         "severity": "High",
         "ref": "https://www.tenable.com/plugins/nessus/20007",
-        "cvss": "7.1",
+        "cvss": "4.3",
         "cve": ""
     },
     {
