@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 })
 export class DialogChangekeyComponent implements OnInit {
   alert: string;
+  hide = true;
 
   constructor(public dialogRef: MatDialogRef<DialogChangekeyComponent>) { }
 
