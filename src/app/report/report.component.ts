@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { KeyValueDiffers, KeyValueChangeRecord } from '@angular/core';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,6 +16,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-exportissues.component';
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
+import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
 
 @Component({
   selector: 'app-report',
@@ -32,7 +32,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     backgroundColor: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
   }];
 
-  private _differ: any;
+
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
 
@@ -75,8 +75,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     private http: Http,
     private indexeddbService: IndexeddbService,
     public router: Router,
-    private messageService: MessageService,
-    private _differs: KeyValueDiffers) {
+    private messageService: MessageService) {
 
     // console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
@@ -88,7 +87,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.doStats();
     });
 
-    this._differ = _differs.find({}).create();
+
   }
 
   ngOnInit() {
@@ -128,25 +127,6 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.http.get('/assets/bootstrap.min.css').subscribe(res => {
       this.report_css = res['_body'];
     });
-  }
-
-  // tslint:disable-next-line:use-life-cycle-interface
-  ngDoCheck() {
-    const change = this._differ.diff(this.decryptedReportDataChanged);
-    if (change) {
-      // console.log('Changes detected!');
-      change.forEachChangedItem((record: KeyValueChangeRecord<any, any>) => {
-        // console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
-      });
-
-      change.forEachRemovedItem((record: KeyValueChangeRecord<any, any>) => {
-        // console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
-      });
-
-      change.forEachAddedItem((record: KeyValueChangeRecord<any, any>) => {
-        // console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue);
-      });
-    }
   }
 
   // events
@@ -219,7 +199,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // console.log(result);
 
       if (result !== undefined) {
         if (result.title !== '') {
@@ -241,7 +220,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // console.log(result);
 
       if (result !== undefined) {
         result.forEach(eachObj => {
@@ -308,7 +286,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
   editreporttitle(item) {
-    // console.log(item);
 
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
@@ -317,16 +294,54 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // console.log(result);
+    });
+
+  }
+
+  changesecuritykey(report_id: string) {
+
+    const dialogRef = this.dialog.open(DialogChangekeyComponent, {
+      width: '450px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+
+      if (result) {
+        this.updateSecKey(report_id, result);
+      }
 
     });
 
   }
 
+  updateSecKey(report_id, pass) {
+
+    this.savemsg = 'Please wait, report is encrypted...';
+    sessionStorage.setItem(report_id, pass);
+
+    // update report
+    this.addtochangelog('Change report security key');
+    this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+    this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+
+    this.indexeddbService.getkeybyReportID(report_id).then(data => {
+      if (data) {
+        // tslint:disable-next-line:max-line-length
+        this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
+          if (retu) {
+            this.savemsg = 'All changes saved successfully!';
+            this.lastsavereportdata = retu;
+            this.doStats();
+          }
+        });
+
+      }
+    });
+
+  }
 
   editissuetitle(item) {
-    // console.log(item);
-
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
       data: item
@@ -334,8 +349,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // console.log(result);
-
     });
   }
   ngOnDestroy() {
@@ -562,6 +575,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     function parse_links(text) {
       const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      // tslint:disable-next-line:no-shadowed-variable
       return text.replace(urlRegex, function (url) {
         return '<a target="_blank" href="' + url + '">' + url + '</a>';
       });

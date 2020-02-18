@@ -34,28 +34,29 @@ import { ReportComponent } from './report/report.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogPassComponent } from './dialog-pass/dialog-pass.component';
 import { MessageService } from './message.service';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ChartsModule } from 'ng2-charts';
 import { DialogAddissueComponent } from './dialog-addissue/dialog-addissue.component';
-import {MatBadgeModule} from '@angular/material/badge';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { IndexeddbService } from './indexeddb.service';
-import {MatChipsModule} from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { HttpModule } from '@angular/http';
-import {MatSelectModule} from '@angular/material/select';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import {DatePipe} from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DatePipe } from '@angular/common';
 import { DialogImportComponent } from './dialog-import/dialog-import.component';
 import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
 import { ImportReportComponent } from './import-report/import-report.component';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { DialogExportissuesComponent } from './dialog-exportissues/dialog-exportissues.component';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { DialogChangelogComponent } from './dialog-changelog/dialog-changelog.component';
 import { VulnListComponent } from './vuln-list/vuln-list.component';
+import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { VulnListComponent } from './vuln-list/vuln-list.component';
     ImportReportComponent,
     DialogExportissuesComponent,
     DialogChangelogComponent,
-    VulnListComponent
+    VulnListComponent,
+    DialogChangekeyComponent
   ],
   imports: [
     BrowserModule,
@@ -112,7 +114,7 @@ import { VulnListComponent } from './vuln-list/vuln-list.component';
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,
-    DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent],
+    DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent],
   exports: [],
   bootstrap: [AppComponent]
 })

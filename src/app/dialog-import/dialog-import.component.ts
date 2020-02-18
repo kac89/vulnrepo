@@ -86,14 +86,11 @@ export class DialogImportComponent implements OnInit {
     function unique(array, propertyName) {
       return array.filter((e, i) => array.findIndex(a => a[propertyName] === e[propertyName]) === i);
     }
-    // const parsedCsv = unique(this.parsedCsv, 0);
 
     function group_issues(array) {
 
       const ret = [];
       array.forEach((item, index) => {
-        // console.log(item); // 1, 2, 3
-        // console.log(index); // 0, 1, 2
 
           ret.forEach((retit, retindex) => {
 
@@ -137,7 +134,7 @@ export class DialogImportComponent implements OnInit {
             ret.push(item);
 
       });
-      // console.log(ret);
+
       return ret;
     }
 

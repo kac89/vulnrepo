@@ -12,7 +12,7 @@
       <input matInput placeholder="Report security key" #pass (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
-    <p>{{msg}}</p>
+    <p><b><font color="red">{{msg}}</font></b></p>
   </form>
 
 </div>

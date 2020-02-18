@@ -1,0 +1,22 @@
+<h1 mat-dialog-title><mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report security key</h1>
+
+    <form class="example-form">
+  
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Set report security key" #pass [type]="hide ? 'password' : 'text'">
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </mat-form-field>
+  
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Re-enter report security key" #pass2 [type]="hide ? 'password' : 'text'">
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </mat-form-field>
+
+      <p>Remember report security key, losing it you will lose access to the report!</p>
+      <p><font color="red">{{alert}}</font></p>
+
+      <button mat-raised-button color="accent" (click)="changeseckey(pass.value, pass2.value)">Set new security key</button>
+      &nbsp;
+      <button mat-raised-button color="primary" (click)="cancel()">Close</button>
+  
+    </form>

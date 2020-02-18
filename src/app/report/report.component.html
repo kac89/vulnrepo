@@ -17,11 +17,12 @@
             <p>Report ID: {{reportdesc?.report_id}}</p>
             <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
             <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b></p>
+            <p *ngIf="decryptedReportDataChanged"><a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)" class="active-link"><mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key</a></p>
             <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...</p>
           </div>
         
           <div *ngIf="decryptedReportDataChanged" class="call-out-details2">
-              <p><button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes: release version!</button><br><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''"><br>{{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b></span><span *ngIf="lastsavereportdata !== ''"><br>{{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b></span></p>
+              <p><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''">{{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b></span><span *ngIf="lastsavereportdata !== ''">{{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b></span><br><br><button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes/Release version!</button></p>
           </div>
 
         </div>

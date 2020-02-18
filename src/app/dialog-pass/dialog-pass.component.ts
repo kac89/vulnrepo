@@ -12,6 +12,7 @@ import { IndexeddbService } from '../indexeddb.service';
 export class DialogPassComponent implements OnInit {
   hide = true;
   msg: string;
+
   constructor(public router: Router, private indexeddbService: IndexeddbService,
     public dialogRef: MatDialogRef<DialogPassComponent>,
     @Inject(MAT_DIALOG_DATA) public data) {
