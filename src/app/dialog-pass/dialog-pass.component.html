@@ -12,7 +12,8 @@
       <input matInput placeholder="Report security key" #pass (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
-    <p><b><font color="red">{{msg}}</font></b></p>
+    <p *ngIf="error != ''"><b><font color="red"><mat-icon class="vertical-align-middle size-45">warning</mat-icon> {{error}}</font></b></p>
+    <p *ngIf="msg != ''"><b><font color="green"><mat-icon class="vertical-align-middle size-45">sync</mat-icon> {{msg}}</font></b></p>
   </form>
 
 </div>
