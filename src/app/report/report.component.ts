@@ -17,6 +17,9 @@ import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-exportissues.component';
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
 import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
+import { MatCheckboxChange } from '@angular/material';
+import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
+
 
 @Component({
   selector: 'app-report',
@@ -49,7 +52,10 @@ export class ReportComponent implements OnInit, OnDestroy {
   report_info: any;
   lastsavereportdata = '';
   reportdesc: any;
-
+  selecteditem = false;
+  selecteditems = [];
+  selected3 = [];
+  pok = 0;
   savemsg = '';
   report_decryption_in_progress: boolean;
   decryptedReportData: any;
@@ -85,6 +91,15 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo;
 
       this.doStats();
+
+
+      let i = 0;
+      do {
+        this.selected3.push(false);
+        i++;
+      }
+      while (i < this.decryptedReportDataChanged.report_vulns.length);
+
     });
 
 
@@ -137,6 +152,67 @@ export class ReportComponent implements OnInit, OnDestroy {
   public chartHovered(e: any): void {
     // console.log(e);
   }
+
+  toggle() {
+
+    if (this.selected3.indexOf(true) !== -1) {
+      this.pok = 1;
+    } else {
+      this.pok = 0;
+    }
+
+  }
+
+  selectall() {
+    this.selecteditems = [];
+    this.selected3 = [];
+
+    let i = 0;
+    do {
+      this.selected3.push(true);
+      i++;
+    }
+    while (i < this.decryptedReportDataChanged.report_vulns.length);
+
+  }
+
+  deselectall() {
+    this.selecteditems = [];
+    this.selected3 = [];
+    this.pok = 0;
+    let i = 0;
+    do {
+      this.selected3.push(false);
+      i++;
+    }
+    while (i < this.decryptedReportDataChanged.report_vulns.length);
+
+  }
+
+  removeSelecteditems(array) {
+
+    const dialogRef = this.dialog.open(DialogRemoveitemsComponent, {
+      width: '400px',
+      data: { sel: array, orig: this.decryptedReportDataChanged.report_vulns }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result) {
+        result.forEach(eachObj => {
+          const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(eachObj);
+          if (index !== -1) {
+            this.decryptedReportDataChanged.report_vulns.splice(index, 1);
+            this.addtochangelog('Remove issue: ' + eachObj.title);
+          }
+        });
+        this.deselectall();
+        this.doStats();
+      }
+    });
+
+  }
+
 
   openDialog(data: any): void {
 
@@ -255,6 +331,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.decryptedReportDataChanged.report_vulns, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.selecteditems, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.selected3, event.previousIndex, event.currentIndex);
   }
 
   saveReportChanges(report_id: any) {
@@ -281,6 +359,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   sortbycvss() {
+    this.deselectall();
     this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);
   }
 
@@ -388,7 +467,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         const index: number = this.decryptedReportDataChanged.report_changelog.indexOf(result.origi);
 
         if (index !== -1) {
-          this.decryptedReportDataChanged.report_changelog[index] = {date: result.date, desc: result.desc};
+          this.decryptedReportDataChanged.report_changelog[index] = { date: result.date, desc: result.desc };
           this.doStats();
         }
       }
@@ -652,7 +731,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     <body class="container">
     <br><br>`;
 
-// report settings
+    // report settings
     const advlogo = report_data.report_settings.report_logo;
     if (advlogo !== '') {
       const er = '<center><img src="' + advlogo + '" width="800px"></center><br><br>';
@@ -909,7 +988,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
         });
 
-           const ewe2 = '</dd><br>';
+        const ewe2 = '</dd><br>';
         issues = issues + ewe + fil + ewe2;
       }
 
@@ -1092,7 +1171,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       const fileToRead = files[0];
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
-       this.parselogo(fileReader.result);
+        this.parselogo(fileReader.result);
 
       };
       fileReader.readAsBinaryString(fileToRead);

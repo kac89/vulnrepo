@@ -57,6 +57,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DialogChangelogComponent } from './dialog-changelog/dialog-changelog.component';
 import { VulnListComponent } from './vuln-list/vuln-list.component';
 import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.component';
+import { DialogRemoveitemsComponent } from './dialog-removeitems/dialog-removeitems.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.co
     DialogExportissuesComponent,
     DialogChangelogComponent,
     VulnListComponent,
-    DialogChangekeyComponent
+    DialogChangekeyComponent,
+    DialogRemoveitemsComponent
   ],
   imports: [
     BrowserModule,
@@ -114,7 +116,7 @@ import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.co
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,
-    DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent],
+    DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent, DialogRemoveitemsComponent],
   exports: [],
   bootstrap: [AppComponent]
 })
