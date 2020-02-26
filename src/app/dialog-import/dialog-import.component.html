@@ -8,6 +8,13 @@
         <p *ngIf="please_wait">Please wait...</p>
       </div>
     </mat-tab>
+
+    <mat-tab label="Burp Suite (XML)"><br>
+      <div class="form-group">
+        <input *ngIf="burpshow_input" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
+        <p *ngIf="burpplease_wait">Please wait...</p>
+      </div>
+    </mat-tab>
   </mat-tab-group>
 
   <br>

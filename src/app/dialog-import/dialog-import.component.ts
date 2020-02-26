@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
+import * as xml2js from 'xml2js';
 
 @Component({
   selector: 'app-dialog-import',
@@ -10,8 +11,11 @@ import { DatePipe } from '@angular/common';
 export class DialogImportComponent implements OnInit {
   csvContent: string;
   parsedCsv: any[];
+  xmltojson: any[];
   public show_input = true;
   public please_wait = false;
+  public burpshow_input = true;
+  public burpplease_wait = false;
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
 
@@ -72,16 +76,13 @@ export class DialogImportComponent implements OnInit {
 
       const tarr = [];
       for (let j = 0; j < headers.length; j++) {
-            tarr.push(data[j]);
+        tarr.push(data[j]);
       }
 
       lines.push(tarr);
 
     }
     this.parsedCsv = lines;
-    // console.log(this.parsedCsv);
-
-
 
     function unique(array, propertyName) {
       return array.filter((e, i) => array.findIndex(a => a[propertyName] === e[propertyName]) === i);
@@ -92,46 +93,46 @@ export class DialogImportComponent implements OnInit {
       const ret = [];
       array.forEach((item, index) => {
 
-          ret.forEach((retit, retindex) => {
+        ret.forEach((retit, retindex) => {
 
-            if (retit[0] === item[0]) {
+          if (retit[0] === item[0]) {
 
-              if (retit[1] !== '') {
-                  retit[1] = retit[1] + ',' + item[1];
-              }
-              if (retit[4] !== item[4]) {
+            if (retit[1] !== '') {
+              retit[1] = retit[1] + ',' + item[1];
+            }
+            if (retit[4] !== item[4]) {
 
-                if (retit[4] !== '') {
+              if (retit[4] !== '') {
 
 
-                  const doesContains = retit[4].match(item[4]);
+                const doesContains = retit[4].match(item[4]);
 
-                  if (doesContains !== null) {
+                if (doesContains !== null) {
 
+                } else {
+                  if (item[6] === '0') {
+                    retit[4] = retit[4] + '\n' + item[4];
                   } else {
-                    if (item[6] === '0') {
-                      retit[4] = retit[4] + '\n' + item[4];
-                    } else {
-                      retit[4] = retit[4] + '\n' + item[5] + '://' + item[4] + ':' + item[6];
-                    }
+                    retit[4] = retit[4] + '\n' + item[5] + '://' + item[4] + ':' + item[6];
                   }
-
                 }
 
               }
 
             }
 
-          });
-
-
-          if (item[6] === '0') {
-            item[4] = item[4];
-          } else {
-            item[4] = item[5] + '://' + item[4] + ':' + item[6];
           }
 
-            ret.push(item);
+        });
+
+
+        if (item[6] === '0') {
+          item[4] = item[4];
+        } else {
+          item[4] = item[5] + '://' + item[4] + ':' + item[6];
+        }
+
+        ret.push(item);
 
       });
 
@@ -165,4 +166,105 @@ export class DialogImportComponent implements OnInit {
     this.dialogRef.close(info);
 
   }
+
+
+  burponFileSelect(input: HTMLInputElement) {
+    const files = input.files;
+    if (files && files.length) {
+      this.burpshow_input = false;
+      this.burpplease_wait = true;
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+      fileReader.onload = (e) => {
+        this.parseBurp(fileReader.result);
+      };
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+  }
+
+
+
+  parseBurp(xml) {
+
+    function unique(array) {
+      return array.filter((e, i) => array.findIndex(a => a.type[0] === e.type[0]) === i);
+    }
+
+    function setcvss(severity) {
+
+      let cvss = 0;
+      if (severity === 'High') {
+        cvss = 8;
+      } else if (severity === 'Medium') {
+        cvss = 5;
+      } else if (severity === 'Low') {
+        cvss = 2;
+      } else if (severity === 'Info') {
+        cvss = 0;
+      }
+
+      return cvss;
+    }
+
+    this.xmltojson = [];
+    const parser = new xml2js.Parser({ strict: true, trim: true });
+    parser.parseString(xml, (err, result) => {
+      this.xmltojson = result.issues.issue;
+    });
+
+
+    const parsedxml = unique(this.xmltojson);
+
+    const date = new Date();
+    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+
+    const info = parsedxml.map((res, key) => {
+
+
+      let item = '';
+      if (res.vulnerabilityClassifications !== undefined) {
+              item = res.vulnerabilityClassifications[0].replace(/<[^>]*>/g, '');
+      } else {
+              item = '';
+      }
+
+      let itempoc = '';
+      if (res.issueDetail !== undefined) {
+        itempoc = res.issueDetail[0].replace(/<[^>]*>/g, '');
+      } else {
+        itempoc = '';
+      }
+
+      let itemrem = '';
+      if (res.remediationBackground !== undefined) {
+        itemrem = res.remediationBackground[0].replace(/<[^>]*>/g, '');
+      } else {
+        itemrem = '';
+      }
+
+      if (res.severity[0] === 'Information') {
+        res.severity[0] = 'Info';
+      }
+
+      const def = {
+        title: res.name[0],
+        poc: itempoc + '\n\n' + res.host[0]._ + ' ' + res.host[0].$.ip,
+        files: [],
+        desc: res.issueBackground[0].replace(/<[^>]*>/g, '') + '\n\n' + itemrem,
+        severity: res.severity[0],
+        ref: item,
+        cvss: setcvss(res.severity[0]),
+        cve: '',
+        date: today
+      };
+
+      return def;
+    });
+
+
+    this.dialogRef.close(info);
+
+  }
+
 }
