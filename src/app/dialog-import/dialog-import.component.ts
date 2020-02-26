@@ -187,8 +187,12 @@ export class DialogImportComponent implements OnInit {
 
   parseBurp(xml) {
 
-    function unique(array) {
-      return array.filter((e, i) => array.findIndex(a => a.type[0] === e.type[0]) === i);
+    function returnhost(host, path) {
+      let ret = '';
+      const info2 = host.map((res, key) => {
+        ret = ret + res.$.ip + ' ' + res._ + path[key] + '\n';
+      });
+      return ret;
     }
 
     function setcvss(severity) {
@@ -214,19 +218,33 @@ export class DialogImportComponent implements OnInit {
     });
 
 
-    const parsedxml = unique(this.xmltojson);
+    const emp = [];
+
+    const info2 = this.xmltojson.map((res, key) => {
+
+      if (!emp.find(x => x.type[0] == res.type[0])) {
+        emp.push(res);
+      } else {
+        const index = emp.findIndex(x => x.type[0] === res.type[0]);
+
+        emp[index].location.push(res.location[0]);
+        emp[index].path.push(res.path[0]);
+        emp[index].host.push(res.host[0]);
+
+      }
+
+
+    });
 
     const date = new Date();
     const today = this.datePipe.transform(date, 'yyyy-MM-dd');
-
-    const info = parsedxml.map((res, key) => {
-
+    const info = emp.map((res, key) => {
 
       let item = '';
       if (res.vulnerabilityClassifications !== undefined) {
-              item = res.vulnerabilityClassifications[0].replace(/<[^>]*>/g, '');
+        item = res.vulnerabilityClassifications[0].replace(/<[^>]*>/g, '');
       } else {
-              item = '';
+        item = '';
       }
 
       let itempoc = '';
@@ -249,7 +267,7 @@ export class DialogImportComponent implements OnInit {
 
       const def = {
         title: res.name[0],
-        poc: itempoc + '\n\n' + res.host[0]._ + ' ' + res.host[0].$.ip,
+        poc: itempoc + '\n\n' + returnhost(res.host, res.path),
         files: [],
         desc: res.issueBackground[0].replace(/<[^>]*>/g, '') + '\n\n' + itemrem,
         severity: res.severity[0],
