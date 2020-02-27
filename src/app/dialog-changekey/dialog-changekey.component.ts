@@ -17,11 +17,18 @@ export class DialogChangekeyComponent implements OnInit {
 
   changeseckey(pass: string, pass2: string) {
 
-    if (pass === pass2) {
-      this.dialogRef.close(pass);
+    if ((pass.length >= 8) && (pass2.length >= 8)) {
+
+      if (pass === pass2) {
+        this.dialogRef.close(pass);
+      } else {
+        this.alert = 'The given passwords do not match. Try again.';
+      }
+
     } else {
-      this.alert = 'The given passwords do not match. Try again.';
+      this.alert = 'Security key is too weak. Try again.';
     }
+
 
   }
 
