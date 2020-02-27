@@ -189,7 +189,7 @@ export class DialogImportComponent implements OnInit {
 
     function returnhost(host, path) {
       let ret = '';
-      const info2 = host.map((res, key) => {
+      host.map((res, key) => {
         ret = ret + res.$.ip + ' ' + res._ + path[key] + '\n';
       });
       return ret;
@@ -222,7 +222,7 @@ export class DialogImportComponent implements OnInit {
 
     const info2 = this.xmltojson.map((res, key) => {
 
-      if (!emp.find(x => x.type[0] == res.type[0])) {
+      if (!emp.find(x => x.type[0] === res.type[0])) {
         emp.push(res);
       } else {
         const index = emp.findIndex(x => x.type[0] === res.type[0]);
