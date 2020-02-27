@@ -28,10 +28,22 @@ export class NewreportComponent implements OnInit {
 
   addnewReport(title: string, pass: string, pass2: string) {
 
-    if (pass === pass2) {
-      this.indexeddbService.addnewReport(title, pass);
+    if (title.length >= 1) {
+
+      if ((pass.length >= 8) && (pass2.length >= 8)) {
+
+        if (pass === pass2) {
+          this.indexeddbService.addnewReport(title, pass);
+        } else {
+          this.alert = 'The given security keys do not match. Try again.';
+        }
+
+      } else {
+        this.alert = 'Security key is too weak. Try again.';
+      }
+
     } else {
-      this.alert = 'The given passwords do not match. Try again.';
+      this.alert = 'Title is empty!';
     }
 
   }

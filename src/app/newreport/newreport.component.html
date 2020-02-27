@@ -6,22 +6,23 @@
 
   <form class="example-form">
 
+    <p><b><font color="red">{{alert}}</font></b></p>
 
     <mat-form-field class="example-full-width">
       <input matInput placeholder="Report title" #title value="">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-      <input matInput placeholder="Set report security key" #pass [type]="hide ? 'password' : 'text'">
+      <input matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-      <input matInput placeholder="Re-enter report security key" #pass2 [type]="hide ? 'password' : 'text'">
+      <input matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
     <p>Remember report security key, losing it you will lose access to the report!</p>
-    <p>{{alert}}</p>
+    
     <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value,pass2.value)">Save</button>
     &nbsp;
     <a routerLink="/my-reports" href="/my-reports" mat-raised-button color="primary">
