@@ -1,7 +1,7 @@
 <h1 class="mat-display-2">
   <mat-icon class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon> Import report
 </h1>
-<h2>Be careful of what source you are importing data from!</h2>
+
 <mat-card>
   <p>Import from a clipboard</p>
   <mat-form-field appearance="outline" class="example-full-width">
@@ -9,7 +9,8 @@
     <textarea matInput rows="6" [(ngModel)]="pastefromclipboard" class="form-control z-depth-1"></textarea>
   </mat-form-field>
 
-  <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="primary">Import</button>
+  <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="accent">Import</button>&nbsp;
+  <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 
 </mat-card>
 <br>

@@ -722,9 +722,11 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     pre {
       white-space: pre-wrap;
-      word-break: break-word;
     }
 
+    .strbreak {
+      word-break: break-word;
+    }
     </style>
     </head>
     <body class="container">
@@ -965,22 +967,23 @@ export class ReportComponent implements OnInit, OnDestroy {
       <div class="row"> \
         <dl> \
           <dt>Vulnerability description</dt> \
-          <dd>' + escapeHtml(item.desc) + '</dd><br>';
+          <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
 
       if (item.poc !== '' || item.files.length !== 0) {
         const ewe = ' \
             <dt>Proof of Concept</dt> \
-            <dd> \
+            <dd class="strbreak"> \
               <pre>' + escapeHtml(item.poc) + '</pre>';
 
         let fil = '';
         item.files.forEach((ite, ind) => {
 
           if (ite.type.includes('image')) {
-            fil = fil + '<img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" width="800px"><br><br>';
+            // tslint:disable-next-line:max-line-length
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b><br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
           } else if (ite.type.includes('text')) {
             const byteString = atob(ite.data.split(',')[1]);
-            fil = fil + '' + escapeHtml(ite.title) + '<br><pre>' + addNewlines(byteString) + '</pre><br><br>';
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b><br><pre>' + escapeHtml(byteString) + '</pre><br><br>';
           } else {
             fil = fil + '';
           }
@@ -994,7 +997,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (item.ref !== '') {
         const eweref = ' \
             <dt>References</dt> \
-            <dd>' + parse_links(parse_newline(escapeHtml(item.ref))) + '</dd><br>';
+            <dd class="strbreak">' + parse_links(parse_newline(escapeHtml(item.ref))) + '</dd><br>';
         issues = issues + eweref;
       }
 
