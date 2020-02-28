@@ -1,6 +1,5 @@
-<h1 mat-dialog-title>Export issues to:<button style="float: right;" mat-raised-button  color="primary" (click)="cancel()">Cancel</button></h1>
+<h1 mat-dialog-title>Export issues to:</h1>
 <div mat-dialog-content>
-
 
     <mat-tab-group>
         <mat-tab label="Atlassian JIRA"><br>
@@ -27,13 +26,14 @@
           </mat-form-field>
 
           <br><br><br>
-          <button style="float: left;" mat-raised-button  color="accent" (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value)">Generate cURL request</button>
+          <button mat-raised-button color="accent" (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value)">Generate cURL request</button>&nbsp;
+          <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 
           <br><br>
             <div *ngIf="curlhide">
                 <p>Download data.json file and in the same folder run curl:</p>
                 <pre style="white-space:pre-wrap;">{{curlcmd}}</pre>
-                <p>cURL should prompt to enter your user password on jira.</p>
+                <p>cURL should prompt to enter your user password to jira.</p>
             </div>
         </mat-tab>
 

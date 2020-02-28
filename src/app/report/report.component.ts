@@ -300,7 +300,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (result !== undefined) {
         result.forEach(eachObj => {
 
-          if (eachObj.title !== '' && eachObj.title !== undefined) {
+          if (eachObj.title !== '' && eachObj.title !== undefined && eachObj.cvss !== 'Active') {
             this.decryptedReportDataChanged.report_vulns.push(eachObj);
             this.addtochangelog('Create issue: ' + eachObj.title);
           }
@@ -539,16 +539,24 @@ export class ReportComponent implements OnInit, OnDestroy {
   downloadASCII(report_details, metadata) {
 
     function addNewlines(str) {
-      let result = '';
-      while (str.length > 0) {
-        result += str.substring(0, 100) + '\n';
-        str = str.substring(100);
-      }
-      return result;
+      return stringDivider(str, 100, '\n');
     }
 
+    function stringDivider(str, width, spaceReplacer) {
+      if (str.length > width) {
+          let p = width;
+          for (; p > 0 && str[p] !== ' '; p--) {}
+          if (p > 0) {
+            const left = str.substring(0, p);
+            const right = str.substring(p + 1);
+              return left + spaceReplacer + stringDivider(right, width, spaceReplacer);
+          }
+      }
+      return str;
+  }
+
     let report_ascii_head = '######################################################\n\
-# Report Title: ' + addNewlines(metadata.report_name) + '\
+# Report Title: ' + metadata.report_name + '\n\
 # Report ID: ' + metadata.report_id + '\n\
 # Create Date: ' + new Date(metadata.report_createdate).toLocaleString() + '\n\
 # Last Update: ' + new Date(metadata.report_lastupdate).toLocaleString() + '\n\
@@ -581,11 +589,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     let report_ascii_vulns = '';
     report_details.report_vulns.forEach(function (value, key) {
 
-      report_ascii_vulns += report_ascii_vulns = '\
-' + Number(key + 1) + '. ' + addNewlines(value.title);
+      report_ascii_vulns += report_ascii_vulns = '\n-> ' + Number(key + 1) + '. ' + value.title;
 
       if (value.severity !== '') {
-        report_ascii_vulns = report_ascii_vulns + '# Severity: ' + value.severity + '\n';
+        report_ascii_vulns = report_ascii_vulns + '\n# Severity: ' + value.severity + '\n';
       }
 
       if (value.date !== '') {
@@ -600,8 +607,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         report_ascii_vulns = report_ascii_vulns + '# CVE: ' + addNewlines(value.cve) + '\n';
       }
 
-      report_ascii_vulns = report_ascii_vulns + '# Description: \n\
-' + addNewlines(value.desc) + '\n';
+      report_ascii_vulns = report_ascii_vulns + '# Description: \n' + addNewlines(value.desc) + '\n';
 
       if (value.poc !== '') {
         report_ascii_vulns = report_ascii_vulns + '# PoC: \n' + addNewlines(value.poc) + '\n';
@@ -629,15 +635,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
 
-
-
-
-
   DownloadHTML(report_data, report_metadata) {
-    // console.log(report_data);
-    // console.log(report_metadata);
 
-    // console.log(this.report_css);
     function escapeHtml(unsafe) {
       return unsafe.toString()
         .replace(/&/g, '&amp;')
@@ -723,7 +722,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     pre {
       white-space: pre-wrap;
-      word-break: keep-all;
+      word-break: break-word;
     }
 
     </style>
