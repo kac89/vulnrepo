@@ -44,7 +44,7 @@
     <mat-card-content>
       <div class="equal-height-container">
         <div class="first">
-            <mat-form-field appearance="outline" class="example-full-width">
+            <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Scope</mat-label>
                 <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope" value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
                <!-- <mat-hint>hint</mat-hint> --> 
@@ -54,7 +54,7 @@
         
         <div class="second">
           <div class="second-a">
-              <mat-form-field appearance="outline" class="example-full-width">
+              <mat-form-field appearance="outline" class="example-full-width" color="accent">
                   <mat-label>Report summary comment</mat-label>
                   <textarea matInput rows="1" [(ngModel)]="decryptedReportDataChanged.report_summary" value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
               </mat-form-field>
@@ -64,7 +64,7 @@
 
             <div class="call-outs-container-report-details">
               <div class="call-out-report-details">
-                <mat-form-field class="example-full-width">
+                <mat-form-field class="example-full-width" color="accent">
                   <input matInput [matDatepicker]="picker" placeholder="Research start date" [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
@@ -72,7 +72,7 @@
               </div>
 
               <div class="call-out-report-details">
-                <mat-form-field class="example-full-width">
+                <mat-form-field class="example-full-width" color="accent">
                   <input matInput [matDatepicker]="pickerend" placeholder="Research end date" [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest">
                   <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
                   <mat-datepicker #pickerend></mat-datepicker>
@@ -118,7 +118,7 @@
             
             <div class="first-issue">
 
-                <mat-form-field appearance="outline" class="example-full-width">
+                <mat-form-field appearance="outline" class="example-full-width" color="accent">
                     <mat-label>Proof of Concept</mat-label>
                     <textarea [(ngModel)]="dec_data.poc" matInput rows="6"></textarea>
                 </mat-form-field>
@@ -127,14 +127,14 @@
           
             <div class="second-issue">
               <div class="second-a-issue">
-                  <mat-form-field class="example-full-width">
+                  <mat-form-field class="example-full-width" color="accent">
                       <input matInput [matDatepicker]="picker" placeholder="Find date" [(ngModel)]="dec_data.date">
                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                       <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
               </div>
               <div class="second-b-issue">
-                  <mat-form-field class="example-full-width">
+                  <mat-form-field class="example-full-width" color="accent">
                       <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity" (ngModelChange)="doStats()">
                         <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
                           {{sev.severity}}
@@ -148,7 +148,7 @@
 
           <div class="equal-height-container-issue2">
               <div class="first-issue2">
-                  <mat-form-field appearance="outline" class="example-full-width">
+                  <mat-form-field appearance="outline" class="example-full-width" color="accent">
                       <mat-label>Description</mat-label>
                       <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
                   </mat-form-field>
@@ -156,7 +156,7 @@
             
               <div class="second-issue2">
                 <div class="second-a-issue2">
-                    <mat-form-field appearance="outline" class="example-full-width">
+                    <mat-form-field appearance="outline" class="example-full-width" color="accent">
                         <mat-label>References</mat-label>
                         <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
                     </mat-form-field>
@@ -165,13 +165,13 @@
 
                     <div class="call-outs-container-report-details">
 
-                        <mat-form-field class="example-full-width">
+                        <mat-form-field class="example-full-width" color="accent">
                             <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
                           </mat-form-field>
 
                           &nbsp;
 
-                          <mat-form-field class="example-full-width">
+                          <mat-form-field class="example-full-width" color="accent">
                               <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
                             </mat-form-field>
 
@@ -279,28 +279,28 @@
     <mat-card-content>
       <div class="call-outs-container-researcher">
         <div class="call-out-researcher">
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="Name" [(ngModel)]="decryptedReportDataChanged.researcher.reportername" value="{{decryptedReportDataChanged.researcher.reportername}}">
             <mat-icon matSuffix>person_pin</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="call-out-researcher">
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="E-mail" [(ngModel)]="decryptedReportDataChanged.researcher.reporteremail" value="{{decryptedReportDataChanged.researcher.reporteremail}}">
             <mat-icon matSuffix>email</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="call-out-researcher">
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="Social links" [(ngModel)]="decryptedReportDataChanged.researcher.reportersocial" value="{{decryptedReportDataChanged.researcher.reportersocial}}">
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="call-out-researcher">
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="Website" [(ngModel)]="decryptedReportDataChanged.researcher.reporterwww" value="{{decryptedReportDataChanged.researcher.reporterwww}}">
             <mat-icon matSuffix>public</mat-icon>
           </mat-form-field>
@@ -380,7 +380,7 @@
         <div fxFlex="50%;" fxFlex.xs="80%">
           <mat-card-content>
             Custom HTML content (<span style="color: red"><b>unsafe</b></span>):<br>
-            <mat-form-field appearance="outline" class="example-full-width">
+            <mat-form-field appearance="outline" class="example-full-width" color="accent">
               <textarea rows="5" matInput placeholder="HTML content" [(ngModel)]="decryptedReportDataChanged.report_settings.report_html" value="{{decryptedReportDataChanged.report_settings.report_html}}"></textarea>
               <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
             </mat-form-field>
@@ -408,7 +408,7 @@
               </div>
 
               <div class="call-out-download2">
-                  <mat-icon class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted (Editable vulnrepo version)</button>&nbsp;&nbsp;
+                  <mat-icon class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted</button>&nbsp;&nbsp;
                 </div>
         </div>
       </mat-card-content>

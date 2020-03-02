@@ -7,11 +7,11 @@
 <div mat-dialog-content >
   <div class="example-form">
 
-      <mat-form-field *ngIf="col1" class="example-full-width">
+      <mat-form-field *ngIf="col1" class="example-full-width" color="accent">
         <input type="text" matInput [ngModel]="data?.report_name" (ngModelChange)="data.report_name=$event">
       </mat-form-field>
 
-      <mat-form-field *ngIf="col2" class="example-full-width">
+      <mat-form-field *ngIf="col2" class="example-full-width" color="accent">
         <input type="text" matInput [ngModel]="data?.title" (ngModelChange)="data.title=$event">
       </mat-form-field>
 

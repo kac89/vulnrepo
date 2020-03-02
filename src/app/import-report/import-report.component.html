@@ -4,7 +4,7 @@
 
 <mat-card>
   <p>Import from a clipboard</p>
-  <mat-form-field appearance="outline" class="example-full-width">
+  <mat-form-field appearance="outline" class="example-full-width" color="accent">
     <mat-label>Paste from the clipboard</mat-label>
     <textarea matInput rows="6" [(ngModel)]="pastefromclipboard" class="form-control z-depth-1"></textarea>
   </mat-form-field>
@@ -18,3 +18,6 @@
   <p>Import from file</p>
   <input cdkFocusInitial type="file" accept=".*" (change)="onFileSelect($event.target)" name="myfiles" multiple>
 </mat-card>
+
+
+

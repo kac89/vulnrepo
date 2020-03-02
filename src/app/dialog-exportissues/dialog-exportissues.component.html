@@ -4,23 +4,23 @@
     <mat-tab-group>
         <mat-tab label="Atlassian JIRA"><br>
 
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
               <input cdkFocusInitial matInput placeholder="Jira URL*" #jira_c_url value="">
           </mat-form-field>
 
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
               <input matInput placeholder="Project key*" #jira_c_key value="">
           </mat-form-field>
 
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
               <input matInput placeholder="User e-mail/login*" #jira_c_email value="">
           </mat-form-field>
 
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
               <input matInput placeholder="Ticket label" #jira_c_label value="">
           </mat-form-field>
 
-          <mat-form-field class="example-full-width">
+          <mat-form-field class="example-full-width" color="accent">
               <textarea matInput value="{{fields_prop}}" #jira_workflow placeholder="WorkFlow fields*"></textarea>
               <mat-hint>You can customize all fields params. Variables: $key, $title, $desc, $poc, $ref, $severity, $label</mat-hint>
           </mat-form-field>

@@ -1,11 +1,11 @@
 <h1 mat-dialog-title>Changelog <span *ngIf="!data">add</span><span *ngIf="data">edit</span></h1>
 <div mat-dialog-content>
 
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="example-full-width" color="accent">
         <input matInput placeholder="Event date" #edate value="{{ (data ? data.date : today) | date:'medium' }}">
       </mat-form-field>
     
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="example-full-width" color="accent">
         <textarea matInput placeholder="Leave a comment" #edesc value="{{data?.desc}}"></textarea>
       </mat-form-field>
 

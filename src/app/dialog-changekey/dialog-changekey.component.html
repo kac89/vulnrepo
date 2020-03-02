@@ -2,12 +2,12 @@
 
     <form class="example-form">
   
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="example-full-width" color="accent">
         <input matInput placeholder="Set report security key" #pass [type]="hide ? 'password' : 'text'">
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </mat-form-field>
   
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="example-full-width" color="accent">
         <input matInput placeholder="Re-enter report security key" #pass2 [type]="hide ? 'password' : 'text'">
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </mat-form-field>

@@ -2,7 +2,7 @@
 <div mat-dialog-content>
 
   <div class="example-form">
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="example-full-width" color="accent">
         <input type="text" matInput placeholder="e.g: XSS, SQL, RCE vulnerability or custom issue" aria-label="Number" [formControl]="myControl" #issue [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
