@@ -16,6 +16,8 @@ export class DialogImportComponent implements OnInit {
   public please_wait = false;
   public burpshow_input = true;
   public burpplease_wait = false;
+  public openvas9show_input = true;
+  public openvas9please_wait = false;
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
 
@@ -283,6 +285,72 @@ export class DialogImportComponent implements OnInit {
 
     this.dialogRef.close(info);
 
+  }
+
+  openvas9onFileSelect(input: HTMLInputElement) {
+    const files = input.files;
+    if (files && files.length) {
+      this.openvas9show_input = false;
+      this.openvas9please_wait = true;
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+      fileReader.onload = (e) => {
+        this.parseOpenvas9(fileReader.result);
+      };
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+  }
+
+  parseOpenvas9(xml) {
+
+    this.xmltojson = [];
+    const parser = new xml2js.Parser({ strict: true, trim: true });
+
+    parser.parseString(xml, (err, result) => {
+      if (result.report !== undefined) {
+        if (result.report.report) {
+          this.xmltojson = result.report.report;
+        }
+      } else {
+        if (result.get_results_response !== undefined) {
+          this.parseOpenvasxml(result.get_results_response.result);
+        }
+      }
+    });
+
+    this.xmltojson.forEach((myObject, index) => {
+      if (myObject.results) {
+        myObject.results.forEach((myarrdeep, index) => {
+          this.parseOpenvasxml(myarrdeep.result);
+        });
+      }
+    });
+
+  }
+
+  parseOpenvasxml(xml) {
+
+    const date = new Date();
+    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+    const info = xml.map((res, key) => {
+
+      const def = {
+        title: res.name,
+        poc: res.port[0] + '\n\n' + res.host[0]._,
+        files: [],
+        desc: res.description,
+        severity: res.threat[0],
+        ref: res.nvt[0].xref[0],
+        cvss: res.severity[0],
+        cve: '',
+        date: today
+      };
+
+      return def;
+    });
+
+    this.dialogRef.close(info);
   }
 
 }

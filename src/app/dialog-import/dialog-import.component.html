@@ -2,12 +2,6 @@
 <div mat-dialog-content>
 
   <mat-tab-group>
-    <mat-tab label="Tenable Nessus (CSV)"><br>
-      <div class="form-group">
-        <input *ngIf="show_input" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
-        <p *ngIf="please_wait">Please wait...</p>
-      </div>
-    </mat-tab>
 
     <mat-tab label="Burp Suite (XML)"><br>
       <div class="form-group">
@@ -15,6 +9,23 @@
         <p *ngIf="burpplease_wait">Please wait...</p>
       </div>
     </mat-tab>
+
+    <mat-tab label="OpenVAS 9 (XML)"><br>
+      <div class="form-group">
+        <input *ngIf="openvas9show_input" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
+        <p *ngIf="openvas9please_wait">Please wait...</p>
+      </div>
+    </mat-tab>
+
+
+    <mat-tab label="Tenable Nessus (CSV)"><br>
+      <div class="form-group">
+        <input *ngIf="show_input" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
+        <p *ngIf="please_wait">Please wait...</p>
+      </div>
+    </mat-tab>
+
+
   </mat-tab-group>
 
   <br><button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
