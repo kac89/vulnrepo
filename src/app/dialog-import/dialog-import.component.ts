@@ -485,6 +485,13 @@ export class DialogImportComponent implements OnInit {
 
       res[3] = getSafe(() => res[3], '0');
 
+      if (res[7] === undefined) {
+        res[7] = '';
+      }
+      if (res[5] === undefined) {
+        res[5] = '';
+      }
+
       const def = {
         title: res[0],
         poc: out_ip,
