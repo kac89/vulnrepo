@@ -3,12 +3,19 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { DatePipe } from '@angular/common';
 import * as xml2js from 'xml2js';
 
+interface Importsource {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-dialog-import',
   templateUrl: './dialog-import.component.html',
   styleUrls: ['./dialog-import.component.scss']
 })
 export class DialogImportComponent implements OnInit {
+  selected = '';
+  selected_source = '';
   csvContent: string;
   parsedCsv: any[];
   xmltojson: any[];
@@ -18,6 +25,16 @@ export class DialogImportComponent implements OnInit {
   public burpplease_wait = false;
   public openvas9show_input = true;
   public openvas9please_wait = false;
+  public nessusxmlshow_input = true;
+  public nessusxmlplease_wait = false;
+
+
+  sour: Importsource[] = [
+    { value: 'burp', viewValue: 'Burp Suite (.XML)' },
+    { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
+    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
+    { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' }
+  ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
 
@@ -25,23 +42,13 @@ export class DialogImportComponent implements OnInit {
   }
 
   onFileLoad(fileLoadedEvent) {
-
-
   }
 
 
   onFileSelect(input: HTMLInputElement) {
 
     const files = input.files;
-    // let content = this.csvContent;
-
     if (files && files.length) {
-      /*
-       console.log("Filename: " + files[0].name);
-       console.log("Type: " + files[0].type);
-       console.log("Size: " + files[0].size + " bytes");
-       */
-
       this.show_input = false;
       this.please_wait = true;
 
@@ -52,7 +59,6 @@ export class DialogImportComponent implements OnInit {
 
 
       fileReader.onload = (e) => {
-        // console.log(fileReader.result);
         this.parseNessus(fileReader.result);
       };
 
@@ -321,7 +327,7 @@ export class DialogImportComponent implements OnInit {
 
     this.xmltojson.forEach((myObject, index) => {
       if (myObject.results) {
-        myObject.results.forEach((myarrdeep, index) => {
+        myObject.results.forEach((myarrdeep) => {
           this.parseOpenvasxml(myarrdeep.result);
         });
       }
@@ -352,5 +358,152 @@ export class DialogImportComponent implements OnInit {
 
     this.dialogRef.close(info);
   }
+
+
+
+
+
+
+  nessusxmlonFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.nessusxmlshow_input = false;
+      this.nessusxmlplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parseNessusxml(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parseNessusxml(xml) {
+
+    function getSafe(fn, defaultVal) {
+      try {
+          return fn();
+      } catch (e) {
+          return defaultVal;
+      }
+  }
+
+    this.xmltojson = [];
+    const issues = [];
+    const parser = new xml2js.Parser({ strict: true, trim: true });
+
+    parser.parseString(xml, (err, result) => {
+      this.xmltojson = result.NessusClientData_v2.Report;
+    });
+
+    this.xmltojson.forEach((myObject, index) => {
+      if (myObject.ReportHost) {
+        myObject.ReportHost.forEach((myarrdeep) => {
+
+          myarrdeep.ReportItem.forEach((itemissue) => {
+
+              // tslint:disable-next-line:max-line-length
+              type MyArrayType = Array<{ ip: string, port: string, protocol: string, hostfqdn: string, hostname: string, pluginout: string }>;
+              const arr: MyArrayType = [
+                // tslint:disable-next-line:max-line-length
+                { ip: myarrdeep.$.name, port: itemissue.$.port, protocol: itemissue.$.protocol, hostfqdn: getSafe(() => myarrdeep.HostProperties[0].tag[2]._, ''), hostname: getSafe(() => myarrdeep.HostProperties[0].tag[14]._, ''), pluginout: itemissue.plugin_output }
+              ];
+
+            if (myarrdeep.HostProperties[0].tag[2]._) {
+
+            }
+
+
+
+            // tslint:disable-next-line:max-line-length
+            issues.push([itemissue.$.pluginName, itemissue.$.pluginID, arr, itemissue.cvss_base_score, itemissue.solution, itemissue.description, itemissue.cve, itemissue.see_also, itemissue.risk_factor]);
+          });
+
+        });
+      }
+    });
+
+
+    const uniq_items = [];
+    issues.forEach((myissues, index) => {
+
+      if (!uniq_items.some((item) => item[1] === myissues[1])) {
+        uniq_items.push(myissues);
+      } else {
+        const ind = uniq_items.findIndex(x => x[1] === myissues[1]);
+        uniq_items[ind][2].push(myissues[2]);
+      }
+
+    });
+
+    const date = new Date();
+    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+    const info = uniq_items.map((res, key) => {
+
+      if (res[8].toString() === 'Information') {
+        res[8] = 'Info';
+      }
+      if (res[8].toString() === 'None') {
+        res[8] = 'Info';
+        res[3] = '0';
+      }
+
+      let out_ip = '';
+      res[2].forEach((myObject, index) => {
+
+        if (myObject.ip !== undefined) {
+          // console.log(myObject.hostfqdn);
+          let port = '';
+          if (myObject.port.toString() === '0') {
+            port = '';
+          } else {
+            port = 'Port: ' + myObject.protocol + '/' + myObject.port;
+          }
+
+          out_ip = out_ip + '===\n' + myObject.ip + '\n' + myObject.hostname + '\n' + port + '\n\n' + myObject.pluginout + '\n\n';
+        } else {
+
+          let port = '';
+          if (myObject[0].port.toString() === '0') {
+            port = '';
+          } else {
+            port = 'Port: ' + myObject[0].protocol + '/' + myObject[0].port;
+          }
+
+          // tslint:disable-next-line:max-line-length
+          out_ip = out_ip + '===\n' + myObject[0].ip + '\n' + myObject[0].hostname + '\n' + port + '\n\n' + myObject[0].pluginout + '\n\n';
+        }
+
+      });
+
+      res[3] = getSafe(() => res[3], '0');
+
+      const def = {
+        title: res[0],
+        poc: out_ip,
+        files: [],
+        desc: res[5],
+        severity: res[8].toString(),
+        ref: res[7],
+        cvss: res[3],
+        cve: '',
+        date: today
+      };
+
+      return def;
+    });
+
+    this.dialogRef.close(info);
+
+
+  }
+
 
 }

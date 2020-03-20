@@ -1,32 +1,26 @@
 <h1 mat-dialog-title>Import issues from:</h1>
 <div mat-dialog-content>
 
-  <mat-tab-group>
+    <mat-form-field color="accent">
+      <mat-label>Select source</mat-label>
+      <mat-select [(value)]="selected_source" >
+        <mat-option *ngFor="let Importsource of sour" [value]="Importsource.value">
+          {{Importsource.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>&nbsp;&nbsp;&nbsp;
 
-    <mat-tab label="Burp Suite (XML)"><br>
-      <div class="form-group">
-        <input *ngIf="burpshow_input" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
-        <p *ngIf="burpplease_wait">Please wait...</p>
-      </div>
-    </mat-tab>
+      <input *ngIf="selected_source == 'burp'" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
+      <p *ngIf="burpplease_wait">Please wait...</p>
 
-    <mat-tab label="OpenVAS 9 (XML)"><br>
-      <div class="form-group">
-        <input *ngIf="openvas9show_input" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
-        <p *ngIf="openvas9please_wait">Please wait...</p>
-      </div>
-    </mat-tab>
+      <input *ngIf="selected_source == 'openvas'" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
+      <p *ngIf="openvas9please_wait">Please wait...</p>
 
+      <input *ngIf="selected_source == 'nessus'" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
+      <p *ngIf="please_wait">Please wait...</p>
 
-    <mat-tab label="Tenable Nessus (CSV)"><br>
-      <div class="form-group">
-        <input *ngIf="show_input" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
-        <p *ngIf="please_wait">Please wait...</p>
-      </div>
-    </mat-tab>
-
-
-  </mat-tab-group>
+      <input *ngIf="selected_source == 'nessus_xml'" cdkFocusInitial type="file" accept=".nessus" (change)="nessusxmlonFileSelect($event.target)" name="myfile">
+      <p *ngIf="nessusxmlplease_wait">Please wait...</p>
 
   <br><button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>
