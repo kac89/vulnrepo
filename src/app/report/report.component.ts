@@ -711,19 +711,6 @@ export class ReportComponent implements OnInit, OnDestroy {
       border-color: #2780E3;
       background-color: #2780E3;
     }
-
-    @media print {
-      pre {
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-      }
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-
     .strbreak {
       word-break: break-word;
     }
@@ -973,7 +960,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         const ewe = ' \
             <dt>Proof of Concept</dt> \
             <dd class="strbreak"> \
-              <pre>' + escapeHtml(item.poc) + '</pre>';
+            <div style="white-space: pre-wrap;">' + escapeHtml(item.poc) + '</div>';
 
         let fil = '';
         item.files.forEach((ite, ind) => {
