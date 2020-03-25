@@ -43,9 +43,6 @@ export class DialogExportissuesComponent implements OnInit {
 
   jiraCloudExport(jira_c_url, jira_c_key, jira_c_email, jira_c_label, workflow) {
 
-
-
-
     function sevret(text) {
       let ret = 0;
 
@@ -80,8 +77,8 @@ export class DialogExportissuesComponent implements OnInit {
         .replace('$key', jira_c_key)
         .replace('$title', item.title)
         .replace('$desc', item.desc)
-        .replace('$poc', item.poc.replace(/\n/g, '\\n'))
-        .replace('$ref', item.ref.replace(/\n/g, '\\n'))
+        .replace('$poc', item.poc.toString().replace(/\n/g, '\\n'))
+        .replace('$ref', item.ref.toString().replace(/\n/g, '\\n'))
         .replace('$severity', sevret(item.severity))
         .replace('$label', jira_c_label);
 
