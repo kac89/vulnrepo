@@ -133,10 +133,7 @@ export class DialogImportComponent implements OnInit {
 
         });
 
-
-        if (item[6] === '0') {
-         // item[4] = item[4];
-        } else {
+        if (item[6] !== '0') {
           item[4] = item[5] + '://' + item[4] + ':' + item[6];
         }
 
