@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import * as xml2js from 'xml2js';
 
@@ -135,7 +135,7 @@ export class DialogImportComponent implements OnInit {
 
 
         if (item[6] === '0') {
-          item[4] = item[4];
+         // item[4] = item[4];
         } else {
           item[4] = item[5] + '://' + item[4] + ':' + item[6];
         }
@@ -228,7 +228,7 @@ export class DialogImportComponent implements OnInit {
 
     const emp = [];
 
-    const info2 = this.xmltojson.map((res, key) => {
+    this.xmltojson.map((res, key) => {
 
       if (!emp.find(x => x.type[0] === res.type[0])) {
         emp.push(res);

@@ -36,8 +36,8 @@ export class SettingsComponent implements OnInit {
 
   wipealldata() {
 
-    const remove_settings = indexedDB.deleteDatabase('vulnrepo-settings');
-    const remove_myreports = indexedDB.deleteDatabase('vulnrepo-db');
+    indexedDB.deleteDatabase('vulnrepo-settings');
+    indexedDB.deleteDatabase('vulnrepo-db');
 
     this.wipemsg = 'Deleted database successfully!';
 

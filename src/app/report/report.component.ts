@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Http } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
@@ -17,7 +17,6 @@ import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-exportissues.component';
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
 import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
-import { MatCheckboxChange } from '@angular/material';
 import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
 
 
@@ -935,15 +934,6 @@ export class ReportComponent implements OnInit, OnDestroy {
     ' + risktable + '<br>Our Risk rating is based on this calculation: <b>Risk = Likelihood * Impact</b>.</p><div class="pagebreak"></div><br>';
 
     const advtext = projscope + statsandrisk;
-
-    function addNewlines(str) {
-      let result = '';
-      while (str.length > 0) {
-        result += str.substring(0, 100) + '<br>';
-        str = str.substring(100);
-      }
-      return result;
-    }
 
     let issues = '<p><center><h3 id="Issues">Issues</h3></center></p>';
     report_data.report_vulns.forEach((item, index) => {
