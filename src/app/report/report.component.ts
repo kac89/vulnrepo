@@ -812,7 +812,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     let summarycomment = '';
     if (report_data.report_summary !== '') {
-      summarycomment = summarycomment = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
+      summarycomment = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
       <a href="#Report summary comment">Report summary comment</a> \
   </li>';
     }
@@ -978,10 +978,8 @@ export class ReportComponent implements OnInit, OnDestroy {
         issues = issues + eweref;
       }
 
-
       const enderw = '</dl></div>';
       issues = issues + enderw;
-
     });
 
     issues = issues + '<div class="pagebreak"></div>';
@@ -989,7 +987,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     let summarycomment_value = '';
     if (report_data.report_summary !== '') {
       // tslint:disable-next-line:max-line-length
-      summarycomment_value = summarycomment_value = '<h3 id="Report summary comment">Report summary comment</h3><p>' + parse_newline(escapeHtml(report_data.report_summary)) + '</p><br>';
+      summarycomment_value = '<h3 id="Report summary comment">Report summary comment</h3><p>' + parse_newline(escapeHtml(report_data.report_summary)) + '</p><br>';
     }
 
     let changeloghtml = summarycomment_value + '<h3 id="Changelog">Changelog</h3> \
