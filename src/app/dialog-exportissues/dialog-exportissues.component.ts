@@ -73,11 +73,23 @@ export class DialogExportissuesComponent implements OnInit {
 
       let myStr = workflow;
 
+      let des = item.desc.toString().replace(/(\\)/g, '\\\\').replace(/\n/g, '\\n').replace(/"/g, '').replace(/[\x00-\x1F\x7F-\x9F]/g, '');
+      if (des.length > 4000) {
+        des = des.substring(0, 4000);
+        des = des + '[truncate]';
+      }
+
+      let po = item.poc.toString().replace(/(\\)/g, '\\\\').replace(/\n/g, '\\n').replace(/"/g, '').replace(/[\x00-\x1F\x7F-\x9F]/g, '');
+      if (po.length > 4000) {
+        po = po.substring(0, 4000);
+        po = po + '[truncate]';
+      }
+
       myStr = myStr
         .replace('$key', jira_c_key)
-        .replace('$title', item.title)
-        .replace('$desc', item.desc)
-        .replace('$poc', item.poc.toString().replace(/\n/g, '\\n'))
+        .replace('$title', item.title.toString())
+        .replace('$desc', des)
+        .replace('$poc', po)
         .replace('$ref', item.ref.toString().replace(/\n/g, '\\n'))
         .replace('$severity', sevret(item.severity))
         .replace('$label', jira_c_label);
