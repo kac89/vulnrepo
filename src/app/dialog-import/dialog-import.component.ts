@@ -416,9 +416,6 @@ export class DialogImportComponent implements OnInit {
             if (myarrdeep.HostProperties[0].tag[2]._) {
 
             }
-
-
-
             // tslint:disable-next-line:max-line-length
             issues.push([itemissue.$.pluginName, itemissue.$.pluginID, arr, itemissue.cvss_base_score, itemissue.solution, itemissue.description, itemissue.cve, itemissue.see_also, itemissue.risk_factor]);
           });
@@ -452,7 +449,8 @@ export class DialogImportComponent implements OnInit {
         res[3] = '0';
       }
 
-      let out_ip = '';
+
+      let out_hosts = 'IP List:\n\n';
       res[2].forEach((myObject, index) => {
 
         if (myObject.ip !== undefined) {
@@ -464,6 +462,49 @@ export class DialogImportComponent implements OnInit {
             port = 'Port: ' + myObject.protocol + '/' + myObject.port;
           }
 
+          if (myObject.hostname.toString() === 'true') {
+            myObject.hostname = '';
+          }
+
+          out_hosts = out_hosts + myObject.ip + ' ' + myObject.hostname + ' ' + port + '\n';
+        } else {
+
+          let port = '';
+          if (myObject[0].port.toString() === '0') {
+            port = '';
+          } else {
+            port = 'Port: ' + myObject[0].protocol + '/' + myObject[0].port;
+          }
+          if (myObject[0].hostname.toString() === 'true') {
+            myObject[0].hostname = '';
+          }
+
+          // tslint:disable-next-line:max-line-length
+          out_hosts = out_hosts + myObject[0].ip + ' ' + myObject[0].hostname + ' ' + port + '\n';
+        }
+
+      });
+
+
+      let out_ip = '\nOutput:\n';
+      res[2].forEach((myObject, index) => {
+
+        if (myObject.ip !== undefined) {
+          // console.log(myObject.hostfqdn);
+          let port = '';
+          if (myObject.port.toString() === '0') {
+            port = '';
+          } else {
+            port = 'Port: ' + myObject.protocol + '/' + myObject.port;
+          }
+
+          if (myObject.hostname.toString() === 'true') {
+            myObject.hostname = '';
+          }
+          if (myObject.pluginout === undefined) {
+            myObject.pluginout = '';
+          }
+
           out_ip = out_ip + '===\n' + myObject.ip + '\n' + myObject.hostname + '\n' + port + '\n\n' + myObject.pluginout + '\n\n';
         } else {
 
@@ -472,6 +513,13 @@ export class DialogImportComponent implements OnInit {
             port = '';
           } else {
             port = 'Port: ' + myObject[0].protocol + '/' + myObject[0].port;
+          }
+
+          if (myObject[0].hostname.toString() === 'true') {
+            myObject[0].hostname = '';
+          }
+          if (myObject[0].pluginout === undefined) {
+            myObject[0].pluginout = '';
           }
 
           // tslint:disable-next-line:max-line-length
@@ -491,7 +539,7 @@ export class DialogImportComponent implements OnInit {
 
       const def = {
         title: res[0],
-        poc: out_ip,
+        poc: out_hosts + out_ip,
         files: [],
         desc: res[5],
         severity: res[8].toString(),
