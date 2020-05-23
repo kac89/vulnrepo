@@ -286,8 +286,50 @@
         "ref": "https://www.tenable.com/plugins/nessus/104743",
         "cvss": "1",
         "cve": ""
+    },
+    {
+        "title": "Subdomain takeover",
+        "poc": "",
+        "desc": "Subdomain takeover attacks are a class of security issues where an attacker is able to seize control of an organization's subdomain via cloud services like AWS or Azure. They commonly happen when web projects are ended but the subdomain DNS entries are not fully shut down. The best defense against subdomain takeover is to remove unused DNS entries. Ideally, organizations should also regularly monitor and test where each subdomain is being used. Indirect subdomain takeovers can be prevented by regularly monitoring the presence of all web resources and making sure that no invalid web resources are referenced from webpages.",
+        "severity": "High",
+        "ref": "https://www.hackerone.com/blog/Guide-Subdomain-Takeovers",
+        "cvss": "7",
+        "cve": ""
+    },
+    {
+        "title": "Improper Authentication",
+        "poc": "",
+        "desc": "When an actor claims to have a given identity, the software does not prove or insufficiently proves that the claim is correct.",
+        "severity": "Medium",
+        "ref": "https://cwe.mitre.org/data/definitions/287.html",
+        "cvss": "5",
+        "cve": ""
+    },
+    {
+        "title": "Privilege Escalation",
+        "poc": "",
+        "desc": "Privilege escalation is the result of actions that allows an adversary to obtain a higher level of permissions on a system or network. Certain tools or actions require a higher level of privilege to work and are likely necessary at many points throughout an operation.",
+        "severity": "High",
+        "ref": "https://attack.mitre.org/tactics/TA0004/",
+        "cvss": "7",
+        "cve": ""
+    },
+    {
+        "title": "Code Injection",
+        "poc": "",
+        "desc": "Code Injection is the general term for attack types which consist of injecting code that is then interpreted/executed by the application. This type of attack exploits poor handling of untrusted data. These types of attacks are usually made possible due to a lack of proper input/output data validation, for example: allowed characters (standard regular expressions classes or custom), data format, or amount of expected data.",
+        "severity": "High",
+        "ref": "https://owasp.org/index.php/Code_Injection",
+        "cvss": "8",
+        "cve": ""
+    },
+    {
+        "title": "[IDOR] Insecure Direct Object Reference",
+        "poc": "",
+        "desc": "Insecure Direct Object References occur when an application provides direct access to objects based on user-supplied input. As a result of this vulnerability attackers can bypass authorization and access resources in the system directly, for example database records or files.",
+        "severity": "Medium",
+        "ref": "https://wiki.owasp.org/index.php/Testing_for_Insecure_Direct_Object_References_(OTG-AUTHZ-004)\nhttps://portswigger.net/web-security/access-control/idor",
+        "cvss": "5",
+        "cve": ""
     }
 ]
-
-
-
