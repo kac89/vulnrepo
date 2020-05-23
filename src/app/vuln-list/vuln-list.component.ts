@@ -14,6 +14,7 @@ export class VulnListComponent implements OnInit {
   displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve'];
   dataSource = new MatTableDataSource();
   getvulnlistStatus = '';
+  countvulns = 0;
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -25,6 +26,7 @@ export class VulnListComponent implements OnInit {
     this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
 
       this.dataSource = new MatTableDataSource(res.json());
+      this.countvulns = res.json();
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.getvulnlistStatus = '';
