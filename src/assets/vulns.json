@@ -180,7 +180,7 @@
         "cve": ""
     },
     {
-        "title": "[ACE] Arbitrary Code Execution",
+        "title": "Code injection",
         "poc": "",
         "desc": "Code Injection is the general term for attack types which consist of injecting code that is then interpreted/executed by the application. This type of attack exploits poor handling of untrusted data.",
         "severity": "Critical",
@@ -312,15 +312,6 @@
         "severity": "High",
         "ref": "https://attack.mitre.org/tactics/TA0004/",
         "cvss": "7",
-        "cve": ""
-    },
-    {
-        "title": "Code Injection",
-        "poc": "",
-        "desc": "Code Injection is the general term for attack types which consist of injecting code that is then interpreted/executed by the application. This type of attack exploits poor handling of untrusted data. These types of attacks are usually made possible due to a lack of proper input/output data validation, for example: allowed characters (standard regular expressions classes or custom), data format, or amount of expected data.",
-        "severity": "High",
-        "ref": "https://owasp.org/index.php/Code_Injection",
-        "cvss": "8",
         "cve": ""
     },
     {
