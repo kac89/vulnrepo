@@ -14,7 +14,7 @@ export class VulnListComponent implements OnInit {
   displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve'];
   dataSource = new MatTableDataSource();
   getvulnlistStatus = '';
-  countvulns = 0;
+  countvulns = [];
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
