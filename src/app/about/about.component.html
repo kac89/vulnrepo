@@ -2,8 +2,6 @@
   <mat-icon class="vertical-align-middle padding-bottom-3 size-45">info</mat-icon> About
 </h1>
 
-<p fxLayoutAlign="center center"><iframe width="560" height="280" src="https://www.youtube-nocookie.com/embed/D6vmd4WhWFk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
-
 <mat-card>
   <h2>Information</h2>
   <p>VULNRΞPO is in beta version I apologize if something does not work. The project idea based on my experience of participating in bug bounty programs and in performing penetration tests.</p>
@@ -15,6 +13,15 @@
   <h2>FAQ</h2>
 
   <mat-accordion>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Short tool guide!
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p><iframe width="560" height="280" src="https://www.youtube-nocookie.com/embed/D6vmd4WhWFk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+    </mat-expansion-panel>
 
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -60,6 +67,16 @@
       </mat-expansion-panel-header>
       <p>Download HTML report, open and use 'print to pdf' feature in your browser (ctrl+p): <a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Chrome</a>/<a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">FireFox</a>.</p>
     </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          What is the difference between the file with the (.VULN) & (.VULNR) extension?
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>(.VULN) - File contains only issues.</p>
+      <p>(.VULNR) - File contains full report details e.g.: issues, metadata, author etc...</p>
+    </mat-expansion-panel>  
 
   </mat-accordion>
   
