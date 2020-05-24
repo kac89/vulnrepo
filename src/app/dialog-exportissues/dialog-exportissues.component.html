@@ -9,7 +9,7 @@
             <form class="example-form">
                 <p>Exported file will be encrypted by default:</p>
                 <mat-form-field class="example-full-width" color="accent">
-                  <input matInput placeholder="Set report security key" #pass [type]="hide ? 'password' : 'text'">
+                  <input matInput cdkFocusInitial placeholder="Set report security key" #pass [type]="hide ? 'password' : 'text'">
                   <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </mat-form-field>
             
@@ -18,7 +18,7 @@
                   <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </mat-form-field>
           
-                <button *ngIf="pass.value != '' && pass2.value != '' && pass.value == pass2.value" mat-raised-button color="accent" (click)="vulnrepojsonexport(pass.value,pass2.value)" cdkFocusInitial>Export issues to JSON</button>
+                <button *ngIf="pass.value != '' && pass2.value != '' && pass.value == pass2.value" mat-raised-button color="accent" (click)="vulnrepojsonexport(pass.value,pass2.value)" cdkFocusInitial>Secure issues export</button>
                 &nbsp;
                 <button mat-raised-button color="primary" (click)="cancel()">Close</button>
             
