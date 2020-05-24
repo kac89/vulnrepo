@@ -96,7 +96,7 @@
         <mat-icon>bug_report</mat-icon>
       </div>
       <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span></mat-card-title>
-      <mat-card-title class="card-container-right"><button mat-button (click)="import_issues()"><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues</button><button mat-button (click)="export_issues(decryptedReportDataChanged.report_vulns)"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues</button>&nbsp;&nbsp;<button (click)="sortbycvss()" color="accent" mat-button><mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS</button></mat-card-title>
+      <mat-card-title class="card-container-right"><button mat-button (click)="import_issues()"><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues</button><button *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button (click)="export_issues(decryptedReportDataChanged.report_vulns)"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues</button>&nbsp;&nbsp;<button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" (click)="sortbycvss()" color="accent" mat-button><mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS</button></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
@@ -117,12 +117,10 @@
           <div class="equal-height-container-issue">
             
             <div class="first-issue">
-
                 <mat-form-field appearance="outline" class="example-full-width" color="accent">
                     <mat-label>Proof of Concept</mat-label>
                     <textarea [(ngModel)]="dec_data.poc" matInput rows="6"></textarea>
                 </mat-form-field>
-
             </div>
           
             <div class="second-issue">
@@ -184,7 +182,7 @@
           <mat-action-row align="end">
 
 
-              <button mat-fab (click)="fileuploadInput.click()" color="primary">
+              <button mat-fab (click)="fileuploadInput.click()" color="primary" title="Upload file">
                 <i class="material-icons">attach_file</i>
                   <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)" style="display:none;">
               </button>
@@ -200,11 +198,11 @@
           
               <div *ngIf="key.type.includes('image')" class="mat-elevation-z4" style="padding: 5px; text-align: center;">
                 <img [src]="key.data" title="{{key.title}}" width="200px"><br>
-                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)"><mat-icon style="color: red">delete_forever</mat-icon></a>
+                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)" title="Remove file"><mat-icon style="color: red">delete_forever</mat-icon></a>
               </div>
               <div *ngIf="!key.type.includes('image')" class="mat-elevation-z4" style="padding: 5px; text-align: center;">
                 <img src="/assets/file.png" title="{{key.title}}" width="80px" height="100px"><br>
-                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)"><mat-icon style="color: red">delete_forever</mat-icon></a>
+                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)" title="Remove file"><mat-icon style="color: red">delete_forever</mat-icon></a>
               </div>
             </div>
           </div>
@@ -335,10 +333,10 @@
             <ng-container matColumnDef="settings">
               <th mat-header-cell *matHeaderCellDef> Settings </th>
               <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" (click)="editchangelog(element)">
+                <button mat-icon-button color="primary" (click)="editchangelog(element)" title="Edit event">
                 <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
               </button> 
-              <button mat-icon-button color="warn" (click)="removefromchangelog(element)">
+              <button mat-icon-button color="warn" (click)="removefromchangelog(element)" title="Remove event">
                   <mat-icon>delete_forever</mat-icon>
                 </button>
               </td>
@@ -403,12 +401,12 @@
       <mat-card-content>
         <div class="call-outs-container-download">
             <div class="call-out-download">
-                <mat-icon class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;<button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
+                <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;<button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
                   &nbsp;&nbsp;<button (click)="downloadASCII(decryptedReportDataChanged,report_info)" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Download ASCII</button>
               </div>
 
               <div class="call-out-download2">
-                  <mat-icon class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)" title="Secure share"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted</button>&nbsp;&nbsp;
+                  <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted</button>&nbsp;&nbsp;
                 </div>
         </div>
       </mat-card-content>

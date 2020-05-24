@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import * as Crypto from 'crypto-js';
 
 @Component({
   selector: 'app-dialog-exportissues',
@@ -13,7 +13,7 @@ export class DialogExportissuesComponent implements OnInit {
   issues: any;
   curlhide = false;
   curlcmd = '';
-
+  hide = true;
   fields_prop = `
   "project": {
     "key": "$key"
@@ -138,6 +138,28 @@ curl \
 ` + jira_c_url + `/rest/api/2/issue/bulk`;
 
     this.curlhide = true;
+
+  }
+
+
+  vulnrepojsonexport(pass, pass2) {
+
+
+    if (pass === pass2) {
+
+      const json = JSON.stringify(this.data);
+      // Encrypt
+      const ciphertext = Crypto.AES.encrypt(json, pass);
+
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));
+      element.setAttribute('download', 'Vulnrepo issues export.vuln');
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+
 
   }
 

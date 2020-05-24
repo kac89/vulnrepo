@@ -37,8 +37,8 @@
     <ng-container matColumnDef="settings">
       <th mat-header-cell *matHeaderCellDef> Settings </th>
       <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="accent" (click)="shareReport(element.report_id)"><mat-icon>cloud_download</mat-icon></button>
-          <button mat-icon-button color="warn" (click)="removeReport(element)"><mat-icon>delete_forever</mat-icon></button>
+          <button mat-icon-button color="accent" (click)="shareReport(element.report_id)" title="Download report"><mat-icon>cloud_download</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="removeReport(element)" title="Remove report"><mat-icon>delete_forever</mat-icon></button>
       </td>
     </ng-container>
 

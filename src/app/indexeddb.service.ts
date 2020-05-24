@@ -499,18 +499,16 @@ export class IndexeddbService {
 
     this.checkifreportexist(report_id).then(data => {
       if (data) {
-        // console.log(data);
         const enc = btoa(JSON.stringify(data));
         const blob = new Blob([encodeURIComponent(enc)], { type: 'text/plain' });
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', data.report_name + ' ' + report_id + ' (vulnrepo.com) encrypted.txt');
+        link.setAttribute('download', data.report_name + ' ' + report_id + ' (vulnrepo.com).vulnr');
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
 
       }
 

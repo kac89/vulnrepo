@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import * as xml2js from 'xml2js';
+import * as Crypto from 'crypto-js';
 
 interface Importsource {
   value: string;
@@ -27,9 +28,13 @@ export class DialogImportComponent implements OnInit {
   public openvas9please_wait = false;
   public nessusxmlshow_input = true;
   public nessusxmlplease_wait = false;
-
-
+  public vulnrepojsonshow_input = true;
+  public vulnrepojsonplease_wait = false;
+  public vulnrepowrongpass = false;
+  file: any;
+  hide = true;
   sour: Importsource[] = [
+    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)' },
     { value: 'burp', viewValue: 'Burp Suite (.XML)' },
     { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
     { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
@@ -43,7 +48,6 @@ export class DialogImportComponent implements OnInit {
 
   onFileLoad(fileLoadedEvent) {
   }
-
 
   onFileSelect(input: HTMLInputElement) {
 
@@ -553,7 +557,38 @@ export class DialogImportComponent implements OnInit {
     });
 
     this.dialogRef.close(info);
+  }
 
+  fileChanged(e) {
+    this.file = e.target.files[0];
+  }
+
+  startUpload(pass) {
+    this.vulnrepojsonshow_input = false;
+    this.vulnrepojsonplease_wait = true;
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      this.vulnrepojson(fileReader.result, pass);
+    };
+    fileReader.readAsText(this.file, 'UTF-8');
+
+  }
+
+  vulnrepojson(json, pass) {
+
+      try {
+        // Decrypt
+        const bytes = Crypto.AES.decrypt(json.toString(), pass);
+        const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
+
+        if (decryptedData) {
+          this.dialogRef.close(decryptedData);
+        }
+
+      } catch (except) {
+        this.vulnrepojsonplease_wait = false;
+        this.vulnrepowrongpass = true;
+      }
 
   }
 

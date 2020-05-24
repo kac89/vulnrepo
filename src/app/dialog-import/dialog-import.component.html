@@ -10,6 +10,19 @@
       </mat-select>
     </mat-form-field>&nbsp;&nbsp;&nbsp;
 
+    <span *ngIf="selected_source == 'vulnrepojson'">
+      <br>
+      <mat-form-field class="example-full-width" color="accent">
+        <input matInput placeholder="File security key" #pass [type]="hide ? 'password' : 'text'">
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </mat-form-field>
+      <p><input cdkFocusInitial type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
+      <p *ngIf="vulnrepojsonplease_wait">Please wait...</p>
+      <p *ngIf="vulnrepowrongpass"><font color="red"><b>Wrong security key!!!</b></font></p>
+      <br>
+      <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+    </span>
+
       <input *ngIf="selected_source == 'burp'" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
       <p *ngIf="burpplease_wait">Please wait...</p>
 
@@ -22,5 +35,5 @@
       <input *ngIf="selected_source == 'nessus_xml'" cdkFocusInitial type="file" accept=".nessus" (change)="nessusxmlonFileSelect($event.target)" name="myfile">
       <p *ngIf="nessusxmlplease_wait">Please wait...</p>
 
-  <br><button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+  <br><button *ngIf="selected_source != 'vulnrepojson'" mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>
