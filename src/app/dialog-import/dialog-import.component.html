@@ -13,10 +13,10 @@
     <span *ngIf="selected_source == 'vulnrepojson'">
       <br>
       <mat-form-field class="example-full-width" color="accent">
-        <input matInput placeholder="File security key" #pass [type]="hide ? 'password' : 'text'">
+        <input cdkFocusInitial matInput placeholder="File security key" #pass [type]="hide ? 'password' : 'text'">
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </mat-form-field>
-      <p><input cdkFocusInitial type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
+      <p><input type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
       <p *ngIf="vulnrepojsonplease_wait">Please wait...</p>
       <p *ngIf="vulnrepowrongpass"><font color="red"><b>Wrong security key!!!</b></font></p>
       <br>

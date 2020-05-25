@@ -22,7 +22,25 @@
           </div>
         
           <div *ngIf="decryptedReportDataChanged" class="call-out-details2">
-              <p><span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''">{{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b></span><span *ngIf="lastsavereportdata !== ''">{{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b></span><br><br><button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes/Release version!</button></p>
+            
+            <p>
+              <span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''">
+                {{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
+              </span>
+              <span *ngIf="lastsavereportdata !== ''">
+                {{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
+              </span>
+              <span *ngIf="lastsavereportdata == '' && reportdesc?.report_lastupdate == ''">
+                <br>
+              </span>
+            </p>
+
+            <p>
+              <button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)">
+                <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes and release version!
+              </button>
+            </p>
+
           </div>
 
         </div>
