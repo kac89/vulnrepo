@@ -22,6 +22,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    if (!window.indexedDB) {
+      console.log('Your browser doesn\'t support a stable version of IndexedDB.');
+    }
+    if (!window.sessionStorage) {
+      console.log('Your browser doesn\'t support a stable version of sessionStorage.');
+    }
+
     this.subscription = this.indexeddbService.getstatusencryption().subscribe(value => {
       this.enc_status = value;
     });
