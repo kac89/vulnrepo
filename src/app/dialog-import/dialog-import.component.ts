@@ -564,13 +564,16 @@ export class DialogImportComponent implements OnInit {
   }
 
   startUpload(pass) {
-    this.vulnrepojsonshow_input = false;
-    this.vulnrepojsonplease_wait = true;
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      this.vulnrepojson(fileReader.result, pass);
-    };
-    fileReader.readAsText(this.file, 'UTF-8');
+
+    if (pass !== '' && this.file) {
+      this.vulnrepojsonshow_input = false;
+      this.vulnrepojsonplease_wait = true;
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        this.vulnrepojson(fileReader.result, pass);
+      };
+      fileReader.readAsText(this.file, 'UTF-8');
+    }
 
   }
 
