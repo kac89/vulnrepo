@@ -3,25 +3,34 @@
 </h1>
 
 <mat-card>
-  <h2>Information</h2>
-  <p>VULNRΞPO is in beta version I apologize if something does not work. The project idea based on my experience of participating in bug bounty programs and in performing penetration tests.</p>
 
-  <b>Contributors</b>
-  <p>If you would like to support the project just let me know on twitter or github.</p>
+  <div class="row">
+    <div class="column">
+      <div class="w-100">
 
-  <br><br>
+        <p>VULNRΞPO is in beta version I apologize if something does not work. The project idea based on my experience
+          of participating in bug bounty programs and in performing penetration tests.</p>
+
+        <b>Contributors</b>
+        <p>If you would like to support the project just let me know on twitter or github.</p>
+
+        <b>Contact</b>
+        <p><a class="active-link" mat-button target="_blank" href="https://twitter.com/vulnrepo">twitter.com/vulnrepo</a> <a
+            class="active-link" mat-button target="_blank"
+            href="https://github.com/kac89/vulnrepo">github.com/kac89/vulnrepo</a></p>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="w-100">
+        <iframe width="450" height="220" src="https://www.youtube-nocookie.com/embed/D6vmd4WhWFk" frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
   <h2>FAQ</h2>
-
   <mat-accordion>
-
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          [Video] Short tool guide!
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <p><iframe width="560" height="280" src="https://www.youtube-nocookie.com/embed/D6vmd4WhWFk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
-    </mat-expansion-panel>
 
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -38,7 +47,8 @@
           How reports are stored?
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <p>All data are stored in browser (on local machine, nothing is send outside) using indexeddb and SessionStorage, reports by default are encrypted in AES.</p>
+      <p>All data are stored in browser (on local machine, nothing is send outside) using indexeddb and SessionStorage,
+        reports by default are encrypted in AES.</p>
     </mat-expansion-panel>
 
     <mat-expansion-panel>
@@ -47,7 +57,8 @@
           How to restore my encrypted report if I forgot my security key?
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <p>Use bruteforce method or better remember the security key, otherwise there is no other option to decrypt data.</p>
+      <p>Use bruteforce method or better remember the security key, otherwise there is no other option to decrypt data.
+      </p>
     </mat-expansion-panel>
 
     <mat-expansion-panel>
@@ -57,7 +68,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <p>If you able to decrypt report where security key you want to change, yes!.</p>
-    </mat-expansion-panel>  
+    </mat-expansion-panel>
 
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -65,7 +76,10 @@
           How to create PDF report?
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <p>Download HTML report, open and use 'print to pdf' feature in your browser (ctrl+p): <a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Chrome</a>/<a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">FireFox</a>.</p>
+      <p>Download HTML report, open and use 'print to pdf' feature in your browser (ctrl+p): <a target="_blank"
+          class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Chrome</a>/<a
+          target="_blank" class="active-link"
+          href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">FireFox</a>.</p>
     </mat-expansion-panel>
 
     <mat-expansion-panel>
@@ -76,15 +90,11 @@
       </mat-expansion-panel-header>
       <p>(.VULN) - File contains only issues.</p>
       <p>(.VULNR) - File contains full report details e.g.: issues, metadata, author etc...</p>
-    </mat-expansion-panel>  
+    </mat-expansion-panel>
 
   </mat-accordion>
-  
-  <br><br>
 
-
-  <b>Contact</b><br>
-  <p><a class="active-link" mat-button target="_blank" href="https://twitter.com/vulnrepo">twitter.com/vulnrepo</a> <a class="active-link" mat-button target="_blank" href="https://github.com/kac89/vulnrepo">github.com/kac89/vulnrepo</a></p>
+  <br>
 
 
 </mat-card>

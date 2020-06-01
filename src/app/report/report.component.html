@@ -419,12 +419,23 @@
       <mat-card-content>
         <div class="call-outs-container-download">
             <div class="call-out-download">
-                <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;<button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML</button>
-                  &nbsp;&nbsp;<button (click)="downloadASCII(decryptedReportDataChanged,report_info)" mat-raised-button color="warn"><mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon> Download ASCII</button>
+                <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;
+                <button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn">
+                  <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
+                </button>
+                  &nbsp;&nbsp;
+                  <button (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn">
+                    <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
+                     Download TEXT
+                    </button>
               </div>
 
               <div class="call-out-download2">
-                  <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;<button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted</button>&nbsp;&nbsp;
+                  <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;
+                  <button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)">
+                    <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
+                  </button>
+                  &nbsp;&nbsp;
                 </div>
         </div>
       </mat-card-content>
