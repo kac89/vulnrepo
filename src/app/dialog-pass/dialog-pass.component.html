@@ -20,9 +20,8 @@
       </b>
     </p>
     <p *ngIf="msg != ''">
-      <b>
-        <mat-spinner color="accent" [diameter]="25"></mat-spinner> {{msg}}
-      </b>
+      <b>{{msg}}</b><br>
+      <mat-spinner color="accent" mode="determinate" value="75" [diameter]="25"></mat-spinner>
     </p>
   </form>
 
