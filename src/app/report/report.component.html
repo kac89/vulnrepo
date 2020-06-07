@@ -14,33 +14,24 @@
   </mat-card-header>
   <mat-card-content>
 
-    <div class="call-outs-container-details">
+    <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-      <div class="call-out-details">
+      <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
         <p>Report ID: {{reportdesc?.report_id}}</p>
         <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
-        <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
-        </p>
-        <p *ngIf="decryptedReportDataChanged"><a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)"
-            class="active-link">
-            <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
-          </a></p>
+        <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b></p>
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...</p>
       </div>
+  
+      <div *ngIf="decryptedReportDataChanged" style="text-align: center;" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-      <div *ngIf="decryptedReportDataChanged" class="call-out-details2">
-
-        <p>
           <span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''">
             {{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
           </span>
           <span *ngIf="lastsavereportdata !== ''">
             {{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
           </span>
-          <span *ngIf="lastsavereportdata == '' && reportdesc?.report_lastupdate == ''">
-            <br>
-          </span>
-        </p>
+
 
         <p>
           <button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)">
@@ -48,10 +39,10 @@
             version!
           </button>
         </p>
-
       </div>
-
+  
     </div>
+
 
   </mat-card-content>
 </mat-card>
@@ -68,52 +59,62 @@
       <mat-card-title>Report details</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="equal-height-container">
-        <div class="first">
+
+      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
           <mat-form-field appearance="outline" class="example-full-width" color="accent">
             <mat-label>Scope</mat-label>
             <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
               value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
             <!-- <mat-hint>hint</mat-hint> -->
           </mat-form-field>
-
         </div>
+    
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-        <div class="second">
-          <div class="second-a">
-            <mat-form-field appearance="outline" class="example-full-width" color="accent">
-              <mat-label>Report summary comment</mat-label>
-              <textarea matInput rows="1" [(ngModel)]="decryptedReportDataChanged.report_summary"
-                value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
-            </mat-form-field>
+          <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-          </div>
-          <div class="second-b">
-
-            <div class="call-outs-container-report-details">
-              <div class="call-out-report-details">
-                <mat-form-field class="example-full-width" color="accent">
-                  <input matInput [matDatepicker]="picker" placeholder="Research start date"
-                    [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
+              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                  <mat-label>Report summary comment</mat-label>
+                  <textarea matInput rows="1" [(ngModel)]="decryptedReportDataChanged.report_summary"
+                    value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
                 </mat-form-field>
               </div>
+          
+              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-              <div class="call-out-report-details">
-                <mat-form-field class="example-full-width" color="accent">
-                  <input matInput [matDatepicker]="pickerend" placeholder="Research end date"
-                    [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest">
-                  <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerend></mat-datepicker>
-                </mat-form-field>
+                <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+                  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                    <mat-form-field class="example-full-width" color="accent">
+                      <input matInput [matDatepicker]="picker" placeholder="Research start date"
+                        [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+              
+                  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                    <mat-form-field class="example-full-width" color="accent">
+                      <input matInput [matDatepicker]="pickerend" placeholder="Research end date"
+                        [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest">
+                      <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerend></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+              
               </div>
 
-            </div>
-
+              </div>
+        
           </div>
+
         </div>
+    
       </div>
+
     </mat-card-content>
   </mat-card>
 
@@ -159,73 +160,85 @@
               {{ (dec_data.cve.length>40)? (dec_data.cve | slice:0:40)+'..':(dec_data.cve) }}
             </mat-panel-description>
           </mat-expansion-panel-header>
-          <mat-expansion-panel-header class="example-custom-placeholder" *cdkDragPlaceholder>
-          </mat-expansion-panel-header>
-          <div class="equal-height-container-issue">
+          <mat-expansion-panel-header *cdkDragPlaceholder></mat-expansion-panel-header>
 
-            <div class="first-issue">
+          <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+            <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
                 <textarea [(ngModel)]="dec_data.poc" matInput rows="6"></textarea>
               </mat-form-field>
             </div>
+        
+            <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
 
-            <div class="second-issue">
-              <div class="second-a-issue">
-                <mat-form-field class="example-full-width" color="accent">
-                  <input matInput [matDatepicker]="picker" placeholder="Find date" [(ngModel)]="dec_data.date">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <div class="second-b-issue">
-                <mat-form-field class="example-full-width" color="accent">
-                  <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
-                    (ngModelChange)="doStats()">
-                    <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
-                      {{sev.severity}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
+
+              <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                  <mat-form-field class="example-full-width" color="accent">
+                    <input matInput [matDatepicker]="picker" placeholder="Find date" [(ngModel)]="dec_data.date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+            
+                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                  <mat-form-field class="example-full-width" color="accent">
+                    <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
+                      (ngModelChange)="doStats()">
+                      <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
+                        {{sev.severity}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+            
             </div>
 
+            </div>
+        
+        </div>
+
+        <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+            <mat-form-field appearance="outline" class="example-full-width" color="accent">
+              <mat-label>Description</mat-label>
+              <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
+            </mat-form-field>
           </div>
+      
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-          <div class="equal-height-container-issue2">
-            <div class="first-issue2">
-              <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <mat-label>Description</mat-label>
-                <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
-              </mat-form-field>
-            </div>
+            <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-            <div class="second-issue2">
-              <div class="second-a-issue2">
+              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <mat-form-field appearance="outline" class="example-full-width" color="accent">
                   <mat-label>References</mat-label>
                   <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
                 </mat-form-field>
               </div>
-              <div class="second-b-issue2">
-
-                <div class="call-outs-container-report-details">
-
-                  <mat-form-field class="example-full-width" color="accent">
-                    <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
-                  </mat-form-field>
-
-                  &nbsp;
-
-                  <mat-form-field class="example-full-width" color="accent">
-                    <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
-                  </mat-form-field>
-
-                </div>
-
+          
+              <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                <mat-form-field class="example-full-width" color="accent">
+                  <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
+                </mat-form-field>
               </div>
-            </div>
+
+              <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                <mat-form-field class="example-full-width" color="accent">
+                  <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
+                </mat-form-field>
+              </div>
+          
           </div>
+
+          </div>
+      
+      </div>
+
 
           <mat-action-row align="end">
 
@@ -299,8 +312,10 @@
       <mat-card-title>Statistics</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="call-outs-container-report-stats">
-        <div class="call-out-report-stats">
+
+      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+        <div fxFlex="50%" fxFlex.sm="40%" fxFlex.xs="100%">
           <table mat-table [dataSource]="dataSourceforseverity" id="stats" class="mat-elevation-z8">
 
             <!-- Severity Column -->
@@ -320,18 +335,16 @@
             <tr mat-row *matRowDef="let row; columns: displayedSeverityColumns;"></tr>
           </table>
         </div>
-
-        <div class="call-out-report-stats">
+    
+        <div fxFlex="50%" fxFlex.sm="60%" fxFlex.xs="100%">
           <div style="display: block">
             <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [colors]="chartcolors"
               [chartType]="pieChartType" (chartHover)="chartHovered($event)"
               (chartClick)="chartClicked($event)"></canvas>
           </div>
         </div>
-
-      </div>
-
-
+    
+    </div>
 
     </mat-card-content>
   </mat-card>
@@ -346,8 +359,9 @@
       <mat-card-title>Researcher</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="call-outs-container-researcher">
-        <div class="call-out-researcher">
+
+      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="Name" [(ngModel)]="decryptedReportDataChanged.researcher.reportername"
               value="{{decryptedReportDataChanged.researcher.reportername}}">
@@ -355,15 +369,15 @@
           </mat-form-field>
         </div>
 
-        <div class="call-out-researcher">
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="E-mail" [(ngModel)]="decryptedReportDataChanged.researcher.reporteremail"
               value="{{decryptedReportDataChanged.researcher.reporteremail}}">
             <mat-icon matSuffix>email</mat-icon>
           </mat-form-field>
         </div>
-
-        <div class="call-out-researcher">
+        
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="Social links"
               [(ngModel)]="decryptedReportDataChanged.researcher.reportersocial"
@@ -371,8 +385,8 @@
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
         </div>
-
-        <div class="call-out-researcher">
+        
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="Website" [(ngModel)]="decryptedReportDataChanged.researcher.reporterwww"
               value="{{decryptedReportDataChanged.researcher.reporterwww}}">
@@ -380,7 +394,11 @@
           </mat-form-field>
         </div>
       </div>
+
     </mat-card-content>
+
+
+
   </mat-card>
 
   <br>
@@ -423,8 +441,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
 
-      <div fxLayout="row" fxLayoutGap="10">
-        <div fxFlex="50%">
+      <div fxLayout="row wrap" fxLayoutGap="10">
+        <div fxFlex="30%" fxFlex.sm="20%" fxFlex.xs="10%">
 
           <div *ngIf="listchangelog == 0">
             <p>Your changelog list is empty :-( </p>
@@ -438,7 +456,7 @@
           </p>
         </div>
 
-        <div fxFlex="50%" *ngIf="listchangelog != 0">
+        <div fxFlex="70%" fxFlex.sm="80%" fxFlex.xs="90%" *ngIf="listchangelog != 0">
           <p>
             <mat-paginator [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
           </p>
@@ -456,27 +474,43 @@
       <div mat-card-avatar>
         <mat-icon>description</mat-icon>
       </div>
-      <mat-card-title>HTML Report Settings</mat-card-title>
+      <mat-card-title>Report Settings</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayout.xs="column">
 
-        <div fxFlex="50%;" fxFlex.xs="80%">
+        <div fxFlex="50%;" fxFlex.sm="40%" fxFlex.xs="20%">
           <mat-card-content>
-            Report logo:<br>
-            <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
-              mat-icon-button color="warn" (click)="clearlogo()">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-            <div [innerHTML]="uploadlogoprev"></div>
-            <br>
-            <input cdkFocusInitial type="file" accept=".*" (change)="importlogo($event.target)" name="myfiles">
+
+            <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+              <div fxFlex="100%" *ngIf="decryptedReportDataChanged" fxFlex.sm="100%" fxFlex.xs="100%">
+                <p><b>1. Report access:</b></p>
+                  <a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)"
+                  class="active-link">
+                  <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
+                </a>
+              </div>
+
+              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                <b>2. Report logo:</b><br>
+                <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
+                  mat-icon-button color="warn" (click)="clearlogo()">
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+                <div [innerHTML]="uploadlogoprev"></div>
+                <br>
+                <input cdkFocusInitial type="file" accept=".*" (change)="importlogo($event.target)" name="myfiles">
+              </div>
+          
+          </div>
+
           </mat-card-content>
         </div>
 
-        <div fxFlex="50%;" fxFlex.xs="80%">
+        <div fxFlex="50%;" fxFlex.sm="60%" fxFlex.xs="80%">
           <mat-card-content>
-            Custom HTML content (<span style="color: red"><b>unsafe</b></span>):<br>
+            <b>3. Custom HTML content (<span style="color: red"><b>unsafe</b></span>):</b><br>
             <mat-form-field appearance="outline" class="example-full-width" color="accent">
               <textarea rows="5" matInput placeholder="HTML content"
                 [(ngModel)]="decryptedReportDataChanged.report_settings.report_html"
@@ -501,32 +535,41 @@
       <mat-card-title>Download</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="call-outs-container-download">
-        <div class="call-out-download">
-          <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>
-          &nbsp;
-          <button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
-            mat-raised-button color="warn">
-            <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
-          </button>
-          &nbsp;&nbsp;
-          <button (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
-            mat-raised-button color="warn">
-            <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
-            Download TEXT
-          </button>
-        </div>
 
-        <div class="call-out-download2">
-          <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption
-          </mat-icon>&nbsp;
+      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+        <div fxFlex="50%" fxFlex.sm="80%" fxFlex.xs="100%">
+
+          <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;
+
           <button class="mat-elevation-z9" mat-raised-button color="accent"
             (click)="shareReport(report_info.report_id)">
             <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
           </button>
-          &nbsp;&nbsp;
-        </div>
+
       </div>
+
+        <div fxFlex="50%" fxFlex.sm="80%" fxFlex.xs="100%">
+
+            <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;
+
+            <button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
+              mat-raised-button color="warn">
+              <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
+            </button>
+            &nbsp;&nbsp;
+            <button (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
+              mat-raised-button color="warn">
+              <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
+              Download TEXT
+            </button>
+
+        </div>
+
+
+
+      </div>
+
     </mat-card-content>
   </mat-card>
 
