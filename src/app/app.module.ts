@@ -58,7 +58,8 @@ import { DialogChangelogComponent } from './dialog-changelog/dialog-changelog.co
 import { VulnListComponent } from './vuln-list/vuln-list.component';
 import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from './dialog-removeitems/dialog-removeitems.component';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatSelectModule,
     DragDropModule,
     MatTabsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatMenuModule
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,

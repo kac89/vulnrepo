@@ -28,20 +28,23 @@
         My Reports
       </a>
 
-      <a routerLink="/vuln-list" routerLinkActive="active-link" href="/vuln-list" mat-button>
-        <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
-        Vuln List
-      </a>
-
-      <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-button>
-        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
-        Settings
-      </a>
-
-      <a routerLink="/about" routerLinkActive="active-link" href="/about" mat-button>
-        <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
-        About
-      </a>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <a routerLink="/vuln-list" routerLinkActive="active-link" href="/vuln-list" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
+          Vuln List
+        </a>
+        <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
+          Settings
+        </a>
+        <a routerLink="/about" routerLinkActive="active-link" href="/about" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
+          About
+        </a>
+      </mat-menu>
 
       <a target="_blank" href="https://github.com/kac89/vulnrepo" title="Download source code from github.com" mat-button>
         <img src="./assets/github.png" height="22px">
