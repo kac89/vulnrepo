@@ -21,9 +21,7 @@
     </p>
     <p *ngIf="msg != ''">
       <b>
-        <font color="#69f0ae">
-          <mat-icon class="vertical-align-middle size-45">sync</mat-icon> {{msg}}
-        </font>
+        <mat-spinner color="accent" [diameter]="25"></mat-spinner> {{msg}}
       </b>
     </p>
   </form>
