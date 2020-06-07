@@ -1,5 +1,8 @@
 <h1 class="mat-display-2">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">fingerprint</mat-icon>{{reportdesc?.report_name}} <a *ngIf="decryptedReportDataChanged" title="Edit report name" [routerLink]="" (click)="editreporttitle(reportdesc)"><mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon></a>
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">fingerprint</mat-icon>{{reportdesc?.report_name}} <a
+    *ngIf="decryptedReportDataChanged" title="Edit report name" [routerLink]="" (click)="editreporttitle(reportdesc)">
+    <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
+  </a>
 </h1>
 <!-- Report info -->
 <mat-card>
@@ -11,39 +14,44 @@
   </mat-card-header>
   <mat-card-content>
 
-      <div class="call-outs-container-details">
+    <div class="call-outs-container-details">
 
-          <div class="call-out-details">
-            <p>Report ID: {{reportdesc?.report_id}}</p>
-            <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
-            <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b></p>
-            <p *ngIf="decryptedReportDataChanged"><a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)" class="active-link"><mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key</a></p>
-            <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...</p>
-          </div>
-        
-          <div *ngIf="decryptedReportDataChanged" class="call-out-details2">
-            
-            <p>
-              <span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''">
-                {{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
-              </span>
-              <span *ngIf="lastsavereportdata !== ''">
-                {{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
-              </span>
-              <span *ngIf="lastsavereportdata == '' && reportdesc?.report_lastupdate == ''">
-                <br>
-              </span>
-            </p>
+      <div class="call-out-details">
+        <p>Report ID: {{reportdesc?.report_id}}</p>
+        <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
+        <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
+        </p>
+        <p *ngIf="decryptedReportDataChanged"><a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)"
+            class="active-link">
+            <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
+          </a></p>
+        <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...</p>
+      </div>
 
-            <p>
-              <button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)">
-                <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes and release version!
-              </button>
-            </p>
+      <div *ngIf="decryptedReportDataChanged" class="call-out-details2">
 
-          </div>
+        <p>
+          <span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''">
+            {{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
+          </span>
+          <span *ngIf="lastsavereportdata !== ''">
+            {{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
+          </span>
+          <span *ngIf="lastsavereportdata == '' && reportdesc?.report_lastupdate == ''">
+            <br>
+          </span>
+        </p>
 
-        </div>
+        <p>
+          <button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)">
+            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes and release
+            version!
+          </button>
+        </p>
+
+      </div>
+
+    </div>
 
   </mat-card-content>
 </mat-card>
@@ -62,20 +70,22 @@
     <mat-card-content>
       <div class="equal-height-container">
         <div class="first">
-            <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <mat-label>Scope</mat-label>
-                <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope" value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-               <!-- <mat-hint>hint</mat-hint> --> 
-            </mat-form-field>
+          <mat-form-field appearance="outline" class="example-full-width" color="accent">
+            <mat-label>Scope</mat-label>
+            <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
+              value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
+            <!-- <mat-hint>hint</mat-hint> -->
+          </mat-form-field>
 
         </div>
-        
+
         <div class="second">
           <div class="second-a">
-              <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                  <mat-label>Report summary comment</mat-label>
-                  <textarea matInput rows="1" [(ngModel)]="decryptedReportDataChanged.report_summary" value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
-              </mat-form-field>
+            <mat-form-field appearance="outline" class="example-full-width" color="accent">
+              <mat-label>Report summary comment</mat-label>
+              <textarea matInput rows="1" [(ngModel)]="decryptedReportDataChanged.report_summary"
+                value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
+            </mat-form-field>
 
           </div>
           <div class="second-b">
@@ -83,7 +93,8 @@
             <div class="call-outs-container-report-details">
               <div class="call-out-report-details">
                 <mat-form-field class="example-full-width" color="accent">
-                  <input matInput [matDatepicker]="picker" placeholder="Research start date" [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
+                  <input matInput [matDatepicker]="picker" placeholder="Research start date"
+                    [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -91,7 +102,8 @@
 
               <div class="call-out-report-details">
                 <mat-form-field class="example-full-width" color="accent">
-                  <input matInput [matDatepicker]="pickerend" placeholder="Research end date" [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest">
+                  <input matInput [matDatepicker]="pickerend" placeholder="Research end date"
+                    [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest">
                   <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
                   <mat-datepicker #pickerend></mat-datepicker>
                 </mat-form-field>
@@ -113,114 +125,147 @@
       <div mat-card-avatar>
         <mat-icon>bug_report</mat-icon>
       </div>
-      <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span></mat-card-title>
-      <mat-card-title class="card-container-right"><button mat-button (click)="import_issues()"><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues</button><button *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button (click)="export_issues(decryptedReportDataChanged.report_vulns)"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues</button>&nbsp;&nbsp;<button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" (click)="sortbycvss()" color="accent" mat-button><mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS</button></mat-card-title>
+      <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}"
+          matBadgeOverlap="false">Issues</span></mat-card-title>
+      <mat-card-title class="card-container-right"><button mat-button (click)="import_issues()">
+          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
+        </button><button *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
+          (click)="export_issues(decryptedReportDataChanged.report_vulns)">
+          <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
+        </button>&nbsp;&nbsp;<button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" (click)="sortbycvss()"
+          color="accent" mat-button>
+          <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS
+        </button></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
 
-        <mat-expansion-panel class="mat-elevation-z9" *ngFor="let dec_data of decryptedReportDataChanged.report_vulns; let i=index"
-          (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag>
+        <mat-expansion-panel class="mat-elevation-z9"
+          *ngFor="let dec_data of decryptedReportDataChanged.report_vulns; let i=index" (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false" cdkDrag>
 
-          
+
           <mat-expansion-panel-header cdkDragHandle>
             <mat-panel-title>
-              <mat-checkbox [(ngModel)]="selected3[i]" (change)="toggle()" (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;<span class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>&nbsp;&nbsp;{{dec_data.title}} <a *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="" (click)="editissuetitle(dec_data);$event.stopPropagation();"><mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon></a>
+              <mat-checkbox [(ngModel)]="selected3[i]" (change)="toggle()" (click)="$event.stopPropagation()">
+              </mat-checkbox>&nbsp;&nbsp;<span
+                class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>&nbsp;&nbsp;{{dec_data.title}}
+              <a *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]=""
+                (click)="editissuetitle(dec_data);$event.stopPropagation();">
+                <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
+              </a>
             </mat-panel-title>
             <mat-panel-description>
               {{ (dec_data.cve.length>40)? (dec_data.cve | slice:0:40)+'..':(dec_data.cve) }}
             </mat-panel-description>
           </mat-expansion-panel-header>
-          <mat-expansion-panel-header class="example-custom-placeholder" *cdkDragPlaceholder></mat-expansion-panel-header>
+          <mat-expansion-panel-header class="example-custom-placeholder" *cdkDragPlaceholder>
+          </mat-expansion-panel-header>
           <div class="equal-height-container-issue">
-            
+
             <div class="first-issue">
-                <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                    <mat-label>Proof of Concept</mat-label>
-                    <textarea [(ngModel)]="dec_data.poc" matInput rows="6"></textarea>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                <mat-label>Proof of Concept</mat-label>
+                <textarea [(ngModel)]="dec_data.poc" matInput rows="6"></textarea>
+              </mat-form-field>
             </div>
-          
+
             <div class="second-issue">
               <div class="second-a-issue">
-                  <mat-form-field class="example-full-width" color="accent">
-                      <input matInput [matDatepicker]="picker" placeholder="Find date" [(ngModel)]="dec_data.date">
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
+                <mat-form-field class="example-full-width" color="accent">
+                  <input matInput [matDatepicker]="picker" placeholder="Find date" [(ngModel)]="dec_data.date">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
               </div>
               <div class="second-b-issue">
-                  <mat-form-field class="example-full-width" color="accent">
-                      <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity" (ngModelChange)="doStats()">
-                        <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
-                          {{sev.severity}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
+                <mat-form-field class="example-full-width" color="accent">
+                  <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
+                    (ngModelChange)="doStats()">
+                    <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
+                      {{sev.severity}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
             </div>
 
           </div>
 
           <div class="equal-height-container-issue2">
-              <div class="first-issue2">
-                  <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                      <mat-label>Description</mat-label>
-                      <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
-                  </mat-form-field>
+            <div class="first-issue2">
+              <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                <mat-label>Description</mat-label>
+                <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="second-issue2">
+              <div class="second-a-issue2">
+                <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                  <mat-label>References</mat-label>
+                  <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
+                </mat-form-field>
               </div>
-            
-              <div class="second-issue2">
-                <div class="second-a-issue2">
-                    <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                        <mat-label>References</mat-label>
-                        <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
-                    </mat-form-field>
-                </div>
-                <div class="second-b-issue2">
+              <div class="second-b-issue2">
 
-                    <div class="call-outs-container-report-details">
+                <div class="call-outs-container-report-details">
 
-                        <mat-form-field class="example-full-width" color="accent">
-                            <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
-                          </mat-form-field>
+                  <mat-form-field class="example-full-width" color="accent">
+                    <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
+                  </mat-form-field>
 
-                          &nbsp;
+                  &nbsp;
 
-                          <mat-form-field class="example-full-width" color="accent">
-                              <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
-                            </mat-form-field>
-
-                      </div>
+                  <mat-form-field class="example-full-width" color="accent">
+                    <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
+                  </mat-form-field>
 
                 </div>
+
               </div>
             </div>
+          </div>
 
           <mat-action-row align="end">
 
 
-              <button mat-fab (click)="fileuploadInput.click()" color="primary" title="Upload file">
-                <i class="material-icons">attach_file</i>
-                  <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)" style="display:none;">
-              </button>
+            <button mat-fab (click)="fileuploadInput.click()" color="primary" title="Upload file">
+              <i class="material-icons">attach_file</i>
+              <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)"
+                style="display:none;">
+            </button>
 
 
-              <div fxFlex></div>
-            <button mat-button color="warn" (click)="removeIssiue(dec_data)"><mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE</button>
-            
+            <div fxFlex></div>
+            <button mat-button color="warn" (click)="removeIssiue(dec_data)">
+              <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE
+            </button>
+
           </mat-action-row>
-          
+
           <div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="10px">
             <div *ngFor="let key of dec_data.files">
-          
-              <div *ngIf="key.type.includes('image')" class="mat-elevation-z4" style="padding: 5px; text-align: center;">
+
+              <div *ngIf="key.type.includes('image')" class="mat-elevation-z4"
+                style="padding: 5px; text-align: center;">
                 <img [src]="key.data" title="{{key.title}}" width="200px"><br>
-                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)" title="Remove file"><mat-icon style="color: red">delete_forever</mat-icon></a>
+                <a [routerLink]="" (click)="downloadAttach(key.data, key.title)">
+                  <mat-hint>{{key.title}}</mat-hint>
+                </a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)"
+                  title="Remove file">
+                  <mat-icon style="color: red">delete_forever</mat-icon>
+                </a>
               </div>
-              <div *ngIf="!key.type.includes('image')" class="mat-elevation-z4" style="padding: 5px; text-align: center;">
+              <div *ngIf="!key.type.includes('image')" class="mat-elevation-z4"
+                style="padding: 5px; text-align: center;">
                 <img src="/assets/file.png" title="{{key.title}}" width="80px" height="100px"><br>
-                  <a [routerLink]="" (click)="downloadAttach(key.data, key.title)"><mat-hint>{{key.title}}</mat-hint></a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)" title="Remove file"><mat-icon style="color: red">delete_forever</mat-icon></a>
+                <a [routerLink]="" (click)="downloadAttach(key.data, key.title)">
+                  <mat-hint>{{key.title}}</mat-hint>
+                </a>&nbsp;<a style="float: right;" [routerLink]="" (click)="removeAttach(key, dec_data)"
+                  title="Remove file">
+                  <mat-icon style="color: red">delete_forever</mat-icon>
+                </a>
               </div>
             </div>
           </div>
@@ -229,10 +274,16 @@
 
       </mat-accordion>
       <br>
-      <div *ngIf="pok == 1"><a class="active-link" [routerLink]="" (click)="selectall()">Select all</a> / <a class="active-link" [routerLink]="" (click)="deselectall()">Unselect all</a>&nbsp;<button title="Remove selected items" mat-icon-button color="warn" (click)="removeSelecteditems(selected3)"><mat-icon>delete_forever</mat-icon></button></div>
+      <div *ngIf="pok == 1"><a class="active-link" [routerLink]="" (click)="selectall()">Select all</a> / <a
+          class="active-link" [routerLink]="" (click)="deselectall()">Unselect all</a>&nbsp;<button
+          title="Remove selected items" mat-icon-button color="warn" (click)="removeSelecteditems(selected3)">
+          <mat-icon>delete_forever</mat-icon>
+        </button></div>
 
       <div class="banner">
-        <div class="center-me"><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="addissue()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add custom issue</button></div>
+        <div class="center-me"><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="addissue()">
+            <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add custom issue
+          </button></div>
       </div>
     </mat-card-content>
 
@@ -255,7 +306,8 @@
             <!-- Severity Column -->
             <ng-container matColumnDef="severity">
               <th mat-header-cell *matHeaderCellDef> Severity </th>
-              <td mat-cell *matCellDef="let element"> <span class="label {{element.severity | lowercase}}">{{element.severity}}</span> </td>
+              <td mat-cell *matCellDef="let element"> <span
+                  class="label {{element.severity | lowercase}}">{{element.severity}}</span> </td>
             </ng-container>
 
             <!-- Count Column -->
@@ -271,7 +323,8 @@
 
         <div class="call-out-report-stats">
           <div style="display: block">
-            <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [colors]="chartcolors" [chartType]="pieChartType" (chartHover)="chartHovered($event)"
+            <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [colors]="chartcolors"
+              [chartType]="pieChartType" (chartHover)="chartHovered($event)"
               (chartClick)="chartClicked($event)"></canvas>
           </div>
         </div>
@@ -296,28 +349,33 @@
       <div class="call-outs-container-researcher">
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Name" [(ngModel)]="decryptedReportDataChanged.researcher.reportername" value="{{decryptedReportDataChanged.researcher.reportername}}">
+            <input matInput placeholder="Name" [(ngModel)]="decryptedReportDataChanged.researcher.reportername"
+              value="{{decryptedReportDataChanged.researcher.reportername}}">
             <mat-icon matSuffix>person_pin</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="E-mail" [(ngModel)]="decryptedReportDataChanged.researcher.reporteremail" value="{{decryptedReportDataChanged.researcher.reporteremail}}">
+            <input matInput placeholder="E-mail" [(ngModel)]="decryptedReportDataChanged.researcher.reporteremail"
+              value="{{decryptedReportDataChanged.researcher.reporteremail}}">
             <mat-icon matSuffix>email</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Social links" [(ngModel)]="decryptedReportDataChanged.researcher.reportersocial" value="{{decryptedReportDataChanged.researcher.reportersocial}}">
+            <input matInput placeholder="Social links"
+              [(ngModel)]="decryptedReportDataChanged.researcher.reportersocial"
+              value="{{decryptedReportDataChanged.researcher.reportersocial}}">
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
         </div>
 
         <div class="call-out-researcher">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Website" [(ngModel)]="decryptedReportDataChanged.researcher.reporterwww" value="{{decryptedReportDataChanged.researcher.reporterwww}}">
+            <input matInput placeholder="Website" [(ngModel)]="decryptedReportDataChanged.researcher.reporterwww"
+              value="{{decryptedReportDataChanged.researcher.reporterwww}}">
             <mat-icon matSuffix>public</mat-icon>
           </mat-form-field>
         </div>
@@ -336,56 +394,56 @@
     </mat-card-header>
     <mat-card-content>
 
-      <table *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort matSortActive="date" matSortDirection="desc" class="mat-elevation-z8">
+      <table *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort matSortActive="date"
+        matSortDirection="desc" class="mat-elevation-z8">
 
-            <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-              <td mat-cell *matCellDef="let element"> {{element.date | date:'medium'}} </td>
-            </ng-container>
-    
-            <ng-container matColumnDef="desc">
-              <th mat-header-cell *matHeaderCellDef> Description </th>
-              <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
-            </ng-container>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.date | date:'medium'}} </td>
+        </ng-container>
 
-            <ng-container matColumnDef="settings">
-              <th mat-header-cell *matHeaderCellDef> Settings </th>
-              <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" (click)="editchangelog(element)" title="Edit event">
-                <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
-              </button> 
-              <button mat-icon-button color="warn" (click)="removefromchangelog(element)" title="Remove event">
-                  <mat-icon>delete_forever</mat-icon>
-                </button>
-              </td>
-            </ng-container>
+        <ng-container matColumnDef="desc">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="settings">
+          <th mat-header-cell *matHeaderCellDef> Settings </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="editchangelog(element)" title="Edit event">
+              <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="removefromchangelog(element)" title="Remove event">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
 
-      <div class="row" *ngIf="listchangelog != 0">
+      <div fxLayout="row" fxLayoutGap="10">
+        <div fxFlex="50%">
 
-        <br>
-        <div class="column" style="height: 76px; position: relative">
+          <div *ngIf="listchangelog == 0">
+            <p>Your changelog list is empty :-( </p>
+          </div>
 
-          <button [routerLink]="" style="position: absolute; top: 50%; transform: translate(0, -50%)" (click)="addchangelog()" mat-raised-button color="primary" title="Add event to changelog">
-            <mat-icon class="vertical-align-middle padding-bottom-3 size-12">add</mat-icon> Add
-          </button>
-
+          <p>
+            <button [routerLink]="" (click)="addchangelog()" mat-raised-button color="primary"
+              title="Add event to changelog">
+              <mat-icon class="vertical-align-middle padding-bottom-3 size-12">add</mat-icon> Add
+            </button>
+          </p>
         </div>
-        <div class="column">
-          <mat-paginator *ngIf="listchangelog != 0" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
-        </div>
-      </div>
 
-      <div *ngIf="listchangelog == 0">
-        <p>Your changelog list is empty :-( </p>
-        <p>
-          <button [routerLink]="" (click)="addchangelog()" mat-raised-button color="primary" title="Add event to changelog">
-            <mat-icon class="vertical-align-middle padding-bottom-3 size-12">add</mat-icon> Add
-          </button>
-        </p>
+        <div fxFlex="50%" *ngIf="listchangelog != 0">
+          <p>
+            <mat-paginator [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
+          </p>
+        </div>
+
       </div>
 
     </mat-card-content>
@@ -406,19 +464,25 @@
         <div fxFlex="50%;" fxFlex.xs="80%">
           <mat-card-content>
             Report logo:<br>
-            <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved" mat-icon-button color="warn" (click)="clearlogo()"><mat-icon>delete_forever</mat-icon></button>
+            <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
+              mat-icon-button color="warn" (click)="clearlogo()">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
             <div [innerHTML]="uploadlogoprev"></div>
             <br>
             <input cdkFocusInitial type="file" accept=".*" (change)="importlogo($event.target)" name="myfiles">
           </mat-card-content>
         </div>
-    
+
         <div fxFlex="50%;" fxFlex.xs="80%">
           <mat-card-content>
             Custom HTML content (<span style="color: red"><b>unsafe</b></span>):<br>
             <mat-form-field appearance="outline" class="example-full-width" color="accent">
-              <textarea rows="5" matInput placeholder="HTML content" [(ngModel)]="decryptedReportDataChanged.report_settings.report_html" value="{{decryptedReportDataChanged.report_settings.report_html}}"></textarea>
-              <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
+              <textarea rows="5" matInput placeholder="HTML content"
+                [(ngModel)]="decryptedReportDataChanged.report_settings.report_html"
+                value="{{decryptedReportDataChanged.report_settings.report_html}}"></textarea>
+              <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.
+              </mat-hint>
             </mat-form-field>
           </mat-card-content>
         </div>
@@ -430,36 +494,41 @@
 
   <!-- Download -->
   <mat-card *ngIf="decryptedReportDataChanged">
-      <mat-card-header>
-        <div mat-card-avatar>
-          <mat-icon>cloud_download</mat-icon>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>cloud_download</mat-icon>
+      </div>
+      <mat-card-title>Download</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="call-outs-container-download">
+        <div class="call-out-download">
+          <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>
+          &nbsp;
+          <button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
+            mat-raised-button color="warn">
+            <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
+          </button>
+          &nbsp;&nbsp;
+          <button (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
+            mat-raised-button color="warn">
+            <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
+            Download TEXT
+          </button>
         </div>
-        <mat-card-title>Download</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="call-outs-container-download">
-            <div class="call-out-download">
-                <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;
-                <button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn">
-                  <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
-                </button>
-                  &nbsp;&nbsp;
-                  <button (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9" mat-raised-button color="warn">
-                    <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
-                     Download TEXT
-                    </button>
-              </div>
 
-              <div class="call-out-download2">
-                  <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;
-                  <button class="mat-elevation-z9" mat-raised-button color="accent" (click)="shareReport(report_info.report_id)">
-                    <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
-                  </button>
-                  &nbsp;&nbsp;
-                </div>
+        <div class="call-out-download2">
+          <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption
+          </mat-icon>&nbsp;
+          <button class="mat-elevation-z9" mat-raised-button color="accent"
+            (click)="shareReport(report_info.report_id)">
+            <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
+          </button>
+          &nbsp;&nbsp;
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
   <br>
   <br>
