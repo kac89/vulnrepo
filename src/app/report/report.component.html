@@ -332,7 +332,7 @@
       <div mat-card-avatar>
         <mat-icon>change_history</mat-icon>
       </div>
-      <mat-card-title>Changelog  <a [routerLink]="" (click)="addchangelog()" class="active-link" title="Add event to changelog"><mat-icon class="vertical-align-middle padding-bottom-3 size-12">add</mat-icon></a></mat-card-title>
+      <mat-card-title>Changelog</mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
@@ -363,11 +363,31 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <br *ngIf="listchangelog != 0">
-      <mat-paginator *ngIf="listchangelog != 0" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
-    
-      <p *ngIf="listchangelog == 0">Your changelog changelog list is empty :-( </p>
-      
+
+      <div class="row" *ngIf="listchangelog != 0">
+
+        <br>
+        <div class="column" style="height: 76px; position: relative">
+
+          <button [routerLink]="" style="position: absolute; top: 50%; transform: translate(0, -50%)" (click)="addchangelog()" mat-raised-button color="primary" title="Add event to changelog">
+            <mat-icon class="vertical-align-middle padding-bottom-3 size-12">add</mat-icon> Add
+          </button>
+
+        </div>
+        <div class="column">
+          <mat-paginator *ngIf="listchangelog != 0" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+
+      <div *ngIf="listchangelog == 0">
+        <p>Your changelog list is empty :-( </p>
+        <p>
+          <button [routerLink]="" (click)="addchangelog()" mat-raised-button color="primary" title="Add event to changelog">
+            <mat-icon class="vertical-align-middle padding-bottom-3 size-12">add</mat-icon> Add
+          </button>
+        </p>
+      </div>
+
     </mat-card-content>
   </mat-card>
   <br>
