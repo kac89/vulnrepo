@@ -32,9 +32,18 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
+
+        <a routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Create new report
+        </a>
+
+        <a routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">import_export</mat-icon> Import report
+        </a>
+
         <a routerLink="/vuln-list" routerLinkActive="active-link" href="/vuln-list" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
-          Vuln List
+          Vulnerability List
         </a>
         <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
