@@ -32,11 +32,9 @@
             {{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
           </span>
 
-
         <p>
           <button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)">
-            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes and release
-            version!
+            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes and release version!
           </button>
         </p>
       </div>
@@ -128,15 +126,33 @@
       </div>
       <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}"
           matBadgeOverlap="false">Issues</span></mat-card-title>
-      <mat-card-title class="card-container-right"><button mat-button (click)="import_issues()">
-          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
-        </button><button *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
-          (click)="export_issues(decryptedReportDataChanged.report_vulns)">
-          <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
-        </button>&nbsp;&nbsp;<button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" (click)="sortbycvss()"
-          color="accent" mat-button>
-          <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS
-        </button></mat-card-title>
+      <mat-card-title class="card-container-right">
+
+        <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+          <div fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="100%">
+            <button style="width: 100%;" mat-button (click)="import_issues()">
+              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
+            </button>
+          </div>
+      
+          <div fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="100%">
+            <button style="width: 100%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
+            (click)="export_issues(decryptedReportDataChanged.report_vulns)">
+            <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
+          </button>
+          </div>
+      
+          <div fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="100%">
+            <button style="width: 100%;" *ngIf="decryptedReportDataChanged.report_vulns.length > 1" (click)="sortbycvss()"
+              color="accent" mat-button>
+              <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS
+            </button>
+          </div>
+      
+      </div>
+
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
@@ -479,23 +495,22 @@
     <mat-card-content>
       <div fxLayout="row" fxLayout.xs="column">
 
-        <div fxFlex="50%;" fxFlex.sm="40%" fxFlex.xs="20%">
+        <div fxFlex="40%;" fxFlex.sm="40%" fxFlex.xs="40%">
           <mat-card-content>
 
             <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-              <div fxFlex="100%" *ngIf="decryptedReportDataChanged" fxFlex.sm="100%" fxFlex.xs="100%">
+              <div fxFlex="65%" *ngIf="decryptedReportDataChanged" fxFlex.sm="80%" fxFlex.xs="100%">
                 <p><b>1. Report access:</b></p>
-                  <a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)"
-                  class="active-link">
-                  <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
-                </a>
+                <button style="width: 100%;" [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)" mat-raised-button color="primary" title="Add event to changelog">
+                  <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change securty key
+                </button>
               </div>
 
               <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <b>2. Report logo:</b><br>
                 <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
-                  mat-icon-button color="warn" (click)="clearlogo()">
+                  mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo">
                   <mat-icon>delete_forever</mat-icon>
                 </button>
                 <div [innerHTML]="uploadlogoprev"></div>
@@ -508,7 +523,7 @@
           </mat-card-content>
         </div>
 
-        <div fxFlex="50%;" fxFlex.sm="60%" fxFlex.xs="80%">
+        <div fxFlex="60%;" fxFlex.sm="100%" fxFlex.xs="100%">
           <mat-card-content>
             <b>3. Custom HTML content (<span style="color: red"><b>unsafe</b></span>):</b><br>
             <mat-form-field appearance="outline" class="example-full-width" color="accent">
@@ -538,31 +553,52 @@
 
       <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-        <div fxFlex="50%" fxFlex.sm="80%" fxFlex.xs="100%">
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-          <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>&nbsp;
+          <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-          <button class="mat-elevation-z9" mat-raised-button color="accent"
-            (click)="shareReport(report_info.report_id)">
-            <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
-          </button>
+            <div fxFlex="7%" fxFlex.sm="7%" fxFlex.xs="7%">
+              <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon>
+            </div>
+        
+            <div fxFlex="60%" fxFlex.sm="80%" fxFlex.xs="100%">
+              <button style="width: 100%;" class="mat-elevation-z9" mat-raised-button color="accent"
+              (click)="shareReport(report_info.report_id)">
+              <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
+            </button>
+            </div>
+        
+        </div>
+
 
       </div>
 
-        <div fxFlex="50%" fxFlex.sm="80%" fxFlex.xs="100%">
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-            <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>&nbsp;
+            <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-            <button (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
-              mat-raised-button color="warn">
-              <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
-            </button>
-            &nbsp;&nbsp;
-            <button (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
-              mat-raised-button color="warn">
-              <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
-              Download TEXT
-            </button>
+              <div fxFlex="7%" fxFlex.sm="7%" fxFlex.xs="7%">
+                <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>
+              </div>
+
+              <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+                <button style="width: 100%;" (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
+                mat-raised-button color="warn">
+                <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
+              </button>
+              </div>
+          
+              <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+                <button style="width: 100%;" (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
+                mat-raised-button color="warn">
+                <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
+                Download TEXT
+              </button>
+              </div>
+          
+          </div>
+
+
 
         </div>
 
