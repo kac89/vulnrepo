@@ -130,20 +130,20 @@
 
         <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-          <div fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="100%">
+          <div fxFlex.xs="100%">
             <button style="width: 100%;" mat-button (click)="import_issues()">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
             </button>
           </div>
       
-          <div fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="100%">
+          <div fxFlex.xs="100%">
             <button style="width: 100%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
             (click)="export_issues(decryptedReportDataChanged.report_vulns)">
             <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
           </button>
           </div>
       
-          <div fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="100%">
+          <div fxFlex.xs="100%">
             <button style="width: 100%;" *ngIf="decryptedReportDataChanged.report_vulns.length > 1" (click)="sortbycvss()"
               color="accent" mat-button>
               <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by: CVSS
