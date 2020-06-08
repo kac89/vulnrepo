@@ -11,6 +11,7 @@ export interface MyReportElement {
   report_id: string;
   report_createdate: number;
   encrypted_data: string;
+  report_lastupdate: number;
 }
 
 @Component({
@@ -21,7 +22,7 @@ export interface MyReportElement {
 export class MyreportsComponent implements OnInit {
   dialogRef: MatDialogRef<DialogEditComponent>;
   reportlist: string[];
-  displayedColumns: string[] = ['report_name', 'report_createdate', 'settings'];
+  displayedColumns: string[] = ['report_name', 'report_createdate', 'report_lastupdate', 'settings'];
   dataSource = new MatTableDataSource();
   list: any;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -44,12 +45,10 @@ export class MyreportsComponent implements OnInit {
     });
   }
 
+  shareReport(report_id) {
+    this.indexeddbService.downloadEncryptedReport(report_id);
+  }
 
-shareReport(report_id) {
-
-  this.indexeddbService.downloadEncryptedReport(report_id);
-
-}
   removeReport(item) {
     const remo = 'removereport';
     const dialogRef = this.dialog.open(DialogEditComponent, {
@@ -59,16 +58,14 @@ shareReport(report_id) {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-          this.indexeddbService.deleteReport(item).then(data => {
-              if (data) {
-                this.getallreports();
-              }
-          });
+        this.indexeddbService.deleteReport(item).then(data => {
+          if (data) {
+            this.getallreports();
+          }
+        });
       }
 
     });
-
-
 
   }
 

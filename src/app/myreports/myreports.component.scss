@@ -6,26 +6,15 @@ th.mat-sort-header-sorted {
   color: black;
 }
 
-.call-outs-container {
-    max-width: 1400px;
-    margin: 0 auto 0 auto;
-  }
-  
-  .call-out {
-    padding: 0;
-    box-sizing: border-box;
-    margin-bottom: 0;
-    flex-basis: 30%;
-  }
-
-  @media (min-width: 900px) {
-    .call-outs-container {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-  
-  .call-out:nth-child(1) {}
-  .call-out:nth-child(2) {}
-  .call-out:nth-child(3) {}
-
+.mat-header-cell:first-child,.mat-cell:first-child{
+  flex:70%;
+}
+.mat-header-cell:nth-child(2),.mat-cell:nth-child(2){
+  flex:30%;
+}
+.mat-header-cell:nth-child(3),.mat-cell:nth-child(3){
+  flex:30%;
+}
+.mat-header-cell:last-child,.mat-cell:last-child{
+  flex:20%
+}

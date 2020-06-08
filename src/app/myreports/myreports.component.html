@@ -1,50 +1,67 @@
-<div class="call-outs-container">
-  <div class="call-out">
+
+<div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
     <h1 class="mat-display-2">
       <mat-icon class="vertical-align-middle padding-bottom-3 size-45">list_alt</mat-icon> My Reports
     </h1>
   </div>
 
-  <div class="call-out">
+  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-      <a routerLink="/new-report" href="/new-report" mat-raised-button color="accent">
-        <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Create new report
-      </a>
-      &nbsp;
-      <a routerLink="/import-report" href="/import-report" mat-raised-button color="primary">
-        <mat-icon class="vertical-align-middle padding-bottom-3">import_export</mat-icon> Import report
-      </a>
+    <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
+
+      <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
+        <a style="width: 100%;" routerLink="/new-report" href="/new-report" mat-raised-button color="accent">
+          <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Create new report
+        </a>
+      </div>
+  
+      <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
+        <a style="width: 100%;" routerLink="/import-report" href="/import-report" mat-raised-button color="primary">
+          <mat-icon class="vertical-align-middle padding-bottom-3">import_export</mat-icon> Import report
+        </a>
+      </div>
+  
+  </div>
 
   </div>
+
 </div>
 
-
+<br>
 <mat-card>
 
 
-  <table *ngIf="list != 0" mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
+  <mat-table *ngIf="list != 0" mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
 
     <ng-container matColumnDef="report_name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
-      <td mat-cell *matCellDef="let element"> <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/" href="#">{{element.report_name}}</a> </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75'"> Title </mat-header-cell>
+      <mat-cell *matCellDef="let element" [ngClass]="'w-75'"> <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/" href="#">{{element.report_name}}</a> </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="report_createdate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Create Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.report_createdate | date:'medium'}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75 th-right'"> Create Date </mat-header-cell>
+      <mat-cell *matCellDef="let element" [ngClass]="'w-75 th-right'"> {{element.report_createdate | date:'medium'}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="report_lastupdate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Last Update </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.report_lastupdate | date:'medium'}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="settings">
-      <th mat-header-cell *matHeaderCellDef> Settings </th>
-      <td mat-cell *matCellDef="let element">
+      <mat-header-cell *matHeaderCellDef class="mat-column-2"> Settings </mat-header-cell>
+      <mat-cell *matCellDef="let element">
           <button mat-icon-button color="accent" (click)="shareReport(element.report_id)" title="Download report"><mat-icon>cloud_download</mat-icon></button>
           <button mat-icon-button color="warn" (click)="removeReport(element)" title="Remove report"><mat-icon>delete_forever</mat-icon></button>
-      </td>
+      </mat-cell>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  
   <br *ngIf="list != 0">
   <mat-paginator *ngIf="list != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
 
