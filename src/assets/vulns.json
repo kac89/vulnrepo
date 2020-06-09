@@ -348,6 +348,7 @@
         "severity": "High",
         "ref": "https://medium.com/mobile-penetration-testing/13-insecure-input-validation-part-3-595b1439cd07",
         "cvss": "7",
+        "cve": ""
     },
     {
         "title": "Insecure Deserialization",
