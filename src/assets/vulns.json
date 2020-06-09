@@ -348,6 +348,14 @@
         "severity": "High",
         "ref": "https://medium.com/mobile-penetration-testing/13-insecure-input-validation-part-3-595b1439cd07",
         "cvss": "7",
+    },
+    {
+        "title": "Insecure Deserialization",
+        "poc": "",
+        "desc": "Insecure deserialization often leads to remote code execution. Even if deserialization flaws do not result in remote code execution, they can be used to perform attacks, including replay attacks, injection attacks, and privilege escalation attacks.",
+        "severity": "Medium",
+        "ref": "https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A8-Insecure_Deserialization",
+        "cvss": "5",
         "cve": ""
     }
 ]
