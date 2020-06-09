@@ -347,7 +347,7 @@
         "desc": "Insecure Input Validation allows an attacker to modify or manipulate user-supplied input, which can cause SQL injections, cross-site scripting (XSS) vulnerabilities if the mobile application does not adequately sanitize user input.",
         "severity": "High",
         "ref": "https://medium.com/mobile-penetration-testing/13-insecure-input-validation-part-3-595b1439cd07",
-        "cvss": "7",
+        "cvss": "7"
     },
     {
         "title": "Insecure Deserialization",
