@@ -313,5 +313,41 @@
         "ref": "https://wiki.owasp.org/index.php/Testing_for_Insecure_Direct_Object_References_(OTG-AUTHZ-004)\nhttps://portswigger.net/web-security/access-control/idor",
         "cvss": "5",
         "cve": ""
+    },
+    {
+        "title": "[Mobile] Insecure Logging",
+        "poc": "",
+        "desc": "Insecure Insecure Logging vulnerabilities occur when development teams assume that users or malware will not have access to a mobile device’s filesystem and subsequent sensitive information in data-stores on the device. Filesystems are easily accessible.",
+        "severity": "High",
+        "ref": "https://medium.com/mobile-penetration-testing/01-insecure-logging-a41c41a8e648",
+        "cvss": "7",
+        "cve": ""
+    },
+    {
+        "title": "[Mobile] Hard Coding Issues",
+        "poc": "",
+        "desc": "Hard Coding Issues occurs when a developer inadvertently places sensitive information or data in a location on the mobile device that is easily accessible by other apps on the device.",
+        "severity": "High",
+        "ref": "https://medium.com/mobile-penetration-testing/02-hard-coding-issues-fa795c8294c4",
+        "cvss": "7",
+        "cve": ""
+    },
+    {
+        "title": "[Mobile] Access Control Issues",
+        "poc": "",
+        "desc": "Poor or missing access control schemes allow an adversary to execute functionality they should not be entitled to using an authenticated but lower-privilege user of the mobile app.",
+        "severity": "High",
+        "ref": "https://medium.com/mobile-penetration-testing/access-control-92e88578d8b6",
+        "cvss": "7",
+        "cve": ""
+    },
+    {
+        "title": "[Mobile] Insecure Input Validation",
+        "poc": "",
+        "desc": "Insecure Input Validation allows an attacker to modify or manipulate user-supplied input, which can cause SQL injections, cross-site scripting (XSS) vulnerabilities if the mobile application does not adequately sanitize user input.",
+        "severity": "High",
+        "ref": "https://medium.com/mobile-penetration-testing/13-insecure-input-validation-part-3-595b1439cd07",
+        "cvss": "7",
+        "cve": ""
     }
 ]
