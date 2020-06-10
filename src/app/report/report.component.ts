@@ -931,13 +931,13 @@ export class ReportComponent implements OnInit, OnDestroy {
       `;
       return table;
     };
-    const scopemarked = marked(escapeHtml(report_data.report_scope), { renderer: renderer });
+    const scopemarked = marked(report_data.report_scope, { renderer: renderer });
 
     // advanced text
     let projscope = '<h3 id="Scope">Scope</h3><p>' + scopemarked + '</p>';
 
     if (this.advhtml !== '') {
-      const reportHTMLmarked = marked(escapeHtml(this.advhtml), { renderer: renderer });
+      const reportHTMLmarked = marked(this.advhtml, { renderer: renderer });
       projscope = projscope + '<br>' + reportHTMLmarked + '<br>';
     }
 
