@@ -65,7 +65,7 @@
             <mat-label>Scope</mat-label>
             <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
               value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-            <!-- <mat-hint>hint</mat-hint> -->
+            <mat-hint>You can use Markdown or HTML</mat-hint>
           </mat-form-field>
         </div>
     
@@ -525,7 +525,7 @@
 
         <div fxFlex="60%;" fxFlex.sm="100%" fxFlex.xs="100%">
           <mat-card-content>
-            <b>3. Custom HTML content (<span style="color: red"><b>unsafe</b></span>):</b><br>
+            <b>3. Custom content (You can use Markdown or HTML):</b><br>
             <mat-form-field appearance="outline" class="example-full-width" color="accent">
               <textarea rows="5" matInput placeholder="HTML content"
                 [(ngModel)]="decryptedReportDataChanged.report_settings.report_html"
