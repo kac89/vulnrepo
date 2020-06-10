@@ -29,6 +29,7 @@
     "crypto-js": "^3.3.0",
     "gulp-clone": "^2.0.1",
     "hammerjs": "^2.0.8",
+    "marked": "^1.1.0",
     "material-design-icons": "^3.0.1",
     "ng2-charts": "^2.3.2",
     "rxjs": "^6.5.5",

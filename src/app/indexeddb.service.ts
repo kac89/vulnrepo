@@ -114,16 +114,16 @@ export class IndexeddbService {
         //        ],
 
 
-        const testststs = `<h3>Methodology and Standards</h3>
-        <ul>
-          <li>OSTTMM(Open Source Security Testing Methodology Manual)</li>
-          <li>OWASP(Open Web Application Security Project)</li>
-          <li>ISSAF(Information Systems Security Assessment Framework)</li>
-          <li>WASC-TC(Web Application Security Consortium Threat Classification)</li>
-          <li>PTF(Penetration Testing Framework)</li>
-          <li>OISSG(Information Systems Security Assessment Framework)</li>
-          <li>NIST SP800-115(Technical Guide to Information Security Testing and Assessment)</li>
-        </ul>`;
+        const testststs = `## Methodology and Standards:
+
+* OSTTMM(Open Source Security Testing Methodology Manual)
+* OWASP(Open Web Application Security Project)
+* ISSAF(Information Systems Security Assessment Framework)
+* WASC-TC(Web Application Security Consortium Threat Classification)
+* PTF(Penetration Testing Framework)
+* OISSG(Information Systems Security Assessment Framework)
+* NIST SP800-115(Technical Guide to Information Security Testing and Assessment)
+`;
 
         const today: number = Date.now();
         const empty_vulns = {

@@ -18,7 +18,7 @@ import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-expor
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
 import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
-
+import marked from 'marked';
 
 @Component({
   selector: 'app-report',
@@ -920,11 +920,25 @@ export class ReportComponent implements OnInit, OnDestroy {
 </tfoot> \
 </table>';
 
+    // add Markdown rendering
+    const renderer = new marked.Renderer();
+    renderer.table = function(header, body) {
+      const table = `
+          <table class="table">
+              <thead>${header}</thead>
+              <tbody>${body}</tbody>
+          </table>
+      `;
+      return table;
+    };
+    const scopemarked = marked(escapeHtml(report_data.report_scope), { renderer: renderer });
+
     // advanced text
-    let projscope = '<h3 id="Scope">Scope</h3><p>' + parse_newline(escapeHtml(report_data.report_scope)) + '</p>';
+    let projscope = '<h3 id="Scope">Scope</h3><p>' + scopemarked + '</p>';
 
     if (this.advhtml !== '') {
-      projscope = projscope + '<br>' + this.advhtml + '<br>';
+      const reportHTMLmarked = marked(escapeHtml(this.advhtml), { renderer: renderer });
+      projscope = projscope + '<br>' + reportHTMLmarked + '<br>';
     }
 
     const statsandrisk = '<h3 id="Statistics and Risk">Statistics and Risk</h3> \
