@@ -72,6 +72,7 @@
       <mat-header-cell *matHeaderCellDef class="mat-column-2"> Settings </mat-header-cell>
       <mat-cell *matCellDef="let element">
           <button mat-icon-button color="accent" (click)="shareReport(element.report_id)" title="Download report"><mat-icon>cloud_download</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="removeReport(element)" title="Remove report"><mat-icon>delete_forever</mat-icon></button>
       </mat-cell>
     </ng-container>
 

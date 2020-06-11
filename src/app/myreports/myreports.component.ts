@@ -96,33 +96,10 @@ export class MyreportsComponent implements OnInit {
     }
 
     removeSelecteditems() {
-
       if (this.selection.selected.length > 0) {
-
-
         this.selection.selected.forEach( (item) => {
-
-          const remo = 'removereport';
-          const dialogRef = this.dialog.open(DialogEditComponent, {
-            width: '400px',
-            data: [{ remo }, { item }],
-          });
-
-          dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-              this.indexeddbService.deleteReport(result).then(data => {
-                if (data) {
-                  this.getallreports();
-                }
-              });
-            }
-
-          });
-
-
-      });
-
-
+            this.removeReport(item);
+        });
       }
 
     }
