@@ -1,8 +1,7 @@
 <h1 class="mat-display">
     <mat-icon class="vertical-align-middle size-45">add_circle_outline</mat-icon> CVSS v3.1 calculator
     <div fxFlex></div>
-    <div *ngIf="basescore || basescore == '0'"><span class="label {{severity | lowercase}}">{{severity}}
-            {{basescore}}</span></div>
+    <div *ngIf="show"><span class="label {{severity | lowercase}}">{{severity}} {{basescore}}</span></div>
 </h1>
 <mat-dialog-content>
     <div fxLayout="row wrap" fxLayoutGap="10px grid">
