@@ -7,14 +7,17 @@ th.mat-sort-header-sorted {
 }
 
 .mat-header-cell:first-child,.mat-cell:first-child{
-  flex:70%;
+  flex:5%;
 }
 .mat-header-cell:nth-child(2),.mat-cell:nth-child(2){
-  flex:30%;
+  flex:70%;
 }
 .mat-header-cell:nth-child(3),.mat-cell:nth-child(3){
-  flex:30%;
+  flex:25%;
+}
+.mat-header-cell:nth-child(4),.mat-cell:nth-child(4){
+  flex:25%;
 }
 .mat-header-cell:last-child,.mat-cell:last-child{
-  flex:20%
+  flex:15%
 }
