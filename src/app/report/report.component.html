@@ -240,6 +240,7 @@
               <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
                 <mat-form-field class="example-full-width" color="accent">
                   <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
+                  <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent" matSuffix><mat-icon matSuffix>add_circle_outline</mat-icon> CVSS calculator</button>
                 </mat-form-field>
               </div>
 

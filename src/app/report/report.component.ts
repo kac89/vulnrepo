@@ -18,6 +18,7 @@ import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-expor
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
 import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
+import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import marked from 'marked';
 
 @Component({
@@ -208,6 +209,21 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.deselectall();
         this.doStats();
       }
+    });
+
+  }
+
+
+  openDialogCVSS(data: any): void {
+
+    const dialogRef = this.dialog.open(DialogCvssComponent, {
+      width: '800px',
+      disableClose: false,
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The pass dialog was closed');
     });
 
   }
