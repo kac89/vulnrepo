@@ -60,6 +60,8 @@ import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.co
 import { DialogRemoveitemsComponent } from './dialog-removeitems/dialog-removeitems.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { DialogCvssComponent } from './dialog-cvss/dialog-cvss.component';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,8 @@ import { MatMenuModule } from '@angular/material/menu';
     DialogChangelogComponent,
     VulnListComponent,
     DialogChangekeyComponent,
-    DialogRemoveitemsComponent
+    DialogRemoveitemsComponent,
+    DialogCvssComponent
   ],
   imports: [
     BrowserModule,
@@ -116,11 +119,13 @@ import { MatMenuModule } from '@angular/material/menu';
     DragDropModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatRadioModule
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,
-    DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent, DialogRemoveitemsComponent],
+    DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent,
+    DialogRemoveitemsComponent, DialogCvssComponent],
   exports: [],
   bootstrap: [AppComponent]
 })

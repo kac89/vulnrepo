@@ -1,0 +1,53 @@
+.example-full-width {
+    width: 100%;
+  }
+  .example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+
+
+  .label {
+    color: white;
+    display: inline-block;
+    font-family: verdana, sans-serif;
+    padding: 4px;
+  }
+  /*critical*/
+  .critical {
+    border-color: #FF0039;
+    background-color: #FF0039;
+  }
+  /*high*/
+  .high {
+    border-color: #FF7518;
+    background-color: #FF7518;
+  } 
+  /*medium*/
+  .medium {
+    color: #000;
+    border-color: #F9EE06; 
+    background-color: #F9EE06;
+  } 
+  /*low*/
+  .low {
+    border-color: #3FB618; 
+    background-color: #3FB618;
+  } 
+  /*information*/
+  .info {
+    border-color: #2780E3; 
+    background-color: #2780E3;
+  } 
+  
