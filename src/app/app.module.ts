@@ -28,8 +28,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import 'hammerjs';
-
 import { ReportComponent } from './report/report.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogPassComponent } from './dialog-pass/dialog-pass.component';
@@ -62,6 +60,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { DialogCvssComponent } from './dialog-cvss/dialog-cvss.component';
 import { MatRadioModule } from '@angular/material/radio';
+import { HammerModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -120,7 +119,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatTabsModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    MatRadioModule
+    MatRadioModule,
+    HammerModule
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,

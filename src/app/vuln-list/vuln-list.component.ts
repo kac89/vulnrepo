@@ -16,8 +16,8 @@ export class VulnListComponent implements OnInit {
   getvulnlistStatus = '';
   countvulns = [];
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private http: Http) { }
 
