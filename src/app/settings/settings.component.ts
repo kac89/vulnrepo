@@ -16,6 +16,8 @@ export class SettingsComponent implements OnInit {
   wipehide = false;
   wipemsg = '';
 
+
+
   constructor(public router: Router, private indexeddbService: IndexeddbService) { }
 
   ngOnInit() {
