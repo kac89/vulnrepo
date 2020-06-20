@@ -1,21 +1,39 @@
-<h1 mat-dialog-title>Add Issue (<a class="active-link" href="/vuln-list" routerLink="/vuln-list" (click)="redir()">Vulnerability List</a>)</h1>
+<h1 mat-dialog-title>Add Issue from: 
+<mat-form-field appearance="outline" color="accent" style="width: 150px; font-size:11px;">
+  <mat-label>Source</mat-label>
+  <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
+    <mat-option value="VULNREPO">VULNRΞPO</mat-option>
+    <mat-option value="CVE">CVE (ONLINE DB)</mat-option>
+  </mat-select>
+</mat-form-field>
+</h1>
 <div mat-dialog-content>
 
-  <div class="example-form">
-      <mat-form-field class="example-full-width" color="accent">
-        <input type="text" matInput placeholder="e.g: XSS, SQL, RCE vulnerability or custom issue" aria-label="Number" [formControl]="myControl" #issue [matAutocomplete]="auto">
+  <div *ngIf="sourceSelect == 'VULNREPO'" class="example-form">
+      <mat-form-field class="example-form" color="accent" appearance="outline">
+        <mat-label>Issue title</mat-label>
+        <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="myControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
               {{option.title}}
             </mat-option>
           </mat-autocomplete>
       </mat-form-field>
-    </div>
-
+      <span fxLayoutAlign="flex-end"><a class="active-link" href="/vuln-list" routerLink="/vuln-list" (click)="redir()">Vulnerability List</a></span>
+  </div>
+  
+  <div *ngIf="sourceSelect == 'CVE'" class="example-form">
+    <mat-form-field class="example-form" color="accent" appearance="outline">
+      <mat-label>CVE</mat-label>
+      <input type="text" matInput placeholder="e.g.: CVE-2016-0077" [formControl]="mycve">
+    </mat-form-field>
+</div>
+<div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
     {{err_msg}}
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button cdkFocusInitial color="accent" (click)="addIssue(issue.value)">Add</button>
+  <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()">Add Issue</button>
+  <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()">Add from CVE</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>

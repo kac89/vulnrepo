@@ -61,6 +61,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { DialogCvssComponent } from './dialog-cvss/dialog-cvss.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { HammerModule } from '@angular/platform-browser';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { DialogCveComponent } from './dialog-cve/dialog-cve.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +84,8 @@ import { HammerModule } from '@angular/platform-browser';
     VulnListComponent,
     DialogChangekeyComponent,
     DialogRemoveitemsComponent,
-    DialogCvssComponent
+    DialogCvssComponent,
+    DialogCveComponent
   ],
   imports: [
     BrowserModule,
@@ -120,7 +123,8 @@ import { HammerModule } from '@angular/platform-browser';
     MatProgressSpinnerModule,
     MatMenuModule,
     MatRadioModule,
-    HammerModule
+    HammerModule,
+    MatProgressBarModule
   ],
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,

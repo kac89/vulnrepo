@@ -19,6 +19,7 @@ import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.c
 import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
+import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import marked from 'marked';
 
 @Component({
@@ -223,7 +224,22 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The pass dialog was closed');
+      console.log('The dialog was closed');
+    });
+
+  }
+
+
+  openDialogCVE(data: any): void {
+
+    const dialogRef = this.dialog.open(DialogCveComponent, {
+      width: '500px',
+      disableClose: false,
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
     });
 
   }
