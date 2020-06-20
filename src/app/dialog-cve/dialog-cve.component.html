@@ -1,0 +1,37 @@
+<h1 class="mat-display">
+    <mat-icon class="vertical-align-middle size-45">explore</mat-icon> CVE Info (Online DB)
+</h1>
+<mat-dialog-content>
+
+    <mat-form-field class="example-full-width" color="accent" appearance="outline">
+        <mat-label>CVE</mat-label>
+        <input matInput placeholder="e.g.: CVE-2017-0144" [formControl]="mycve">
+    </mat-form-field>
+
+    <div *ngIf="results">
+
+        <p *ngIf="results?.Published"><b>Published:</b> {{ results?.Published }}</p>
+        <p *ngIf="results?.Published"><b>Modified:</b> {{ results?.Modified }}</p>
+        <p *ngIf="results?.cwe"><b>CWE:</b> {{ results?.cwe }}</p>
+        <p *ngIf="results?.summary"><b>Summary:</b> {{ results?.summary }}</p>
+
+        <mat-form-field class="example-full-width" color="accent" appearance="outline">
+            <mat-label>Source data (JSON):</mat-label>
+            <textarea matInput>{{ results | json }}</textarea>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="show">
+        Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+    </div>
+    {{err_msg}}
+</mat-dialog-content>
+<mat-dialog-actions align="start">
+
+    <button mat-raised-button color="accent" (click)="searchCVE()">
+        <mat-icon matSuffix>explore</mat-icon> Search CVE Info
+    </button>
+    &nbsp;
+    <button mat-flat-button color="primary" mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

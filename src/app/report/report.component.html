@@ -247,6 +247,7 @@
               <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
                 <mat-form-field class="example-full-width" color="accent">
                   <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
+                  <button mat-button (click)="openDialogCVE(dec_data.cve)" style="line-height: 25px;" color="accent" matSuffix><mat-icon matSuffix>explore</mat-icon> CVE Info</button>
                 </mat-form-field>
               </div>
           
