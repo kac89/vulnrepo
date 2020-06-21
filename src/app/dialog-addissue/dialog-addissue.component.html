@@ -34,6 +34,7 @@
           </mat-option>
         </mat-autocomplete>
     </mat-form-field>
+    <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://cwe.mitre.org/data/index.html">cwe.mitre.org</a></span>
 </div>
 
 
@@ -42,13 +43,14 @@
       <mat-label>CVE</mat-label>
       <input type="text" matInput placeholder="e.g.: CVE-2016-0077" [formControl]="mycve">
     </mat-form-field>
+    <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://cve.circl.lu/">cve.circl.lu</a></span>
 </div>
 <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
     {{err_msg}}
 </div>
 <div mat-dialog-actions>
   <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()">Add Issue</button>
-  <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()">Add Issue</button>
+  <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()">Add from CWE</button>
   <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()">Add from CVE</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
