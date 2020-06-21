@@ -25,9 +25,12 @@ export interface Vulns {
 })
 export class DialogAddissueComponent implements OnInit {
   myControl = new FormControl();
+  myControl2 = new FormControl();
   mycve = new FormControl();
   options: Vulns[] = [];
+  cwe: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
+  filteredOptionsCWE: Observable<Vulns[]>;
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
@@ -43,17 +46,31 @@ export class DialogAddissueComponent implements OnInit {
         map(title => title ? this._filter(title) : this.options.slice())
       );
 
+      this.filteredOptionsCWE = this.myControl2.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filter2(title) : this.cwe.slice())
+      );
+
   }
 
   private _filter(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
     return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
-
+  private _filter2(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.cwe.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
   ngOnInit() {
 
     this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
       this.options = res.json();
+    });
+
+    this.http.get('/assets/CWE.json?v=' + + new Date()).subscribe(res => {
+      this.cwe = res.json();
     });
 
   }
@@ -109,6 +126,42 @@ export class DialogAddissueComponent implements OnInit {
             this.dialogRef.close(def);
           }
 
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
+  }
+
+
+  addIssueCWE() {
+    const data = this.myControl2.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.cwe) {
+        if (this.cwe.hasOwnProperty(key)) {
+
+          if (this.cwe[key].title === data) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: this.cwe[key].title,
+              poc: this.cwe[key].poc,
+              files: [],
+              desc: this.cwe[key].desc,
+              severity: this.cwe[key].severity,
+              ref: this.cwe[key].ref,
+              cvss: this.cwe[key].cvss,
+              cve: this.cwe[key].cve,
+              date: today + ''
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.err_msg = 'Can\'t find ' + data;
+          }
 
         }
       }
