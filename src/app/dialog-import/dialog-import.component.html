@@ -17,23 +17,23 @@
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </mat-form-field>
       <p><input type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
-      <p *ngIf="vulnrepojsonplease_wait">Please wait...</p>
+      <p *ngIf="vulnrepojsonplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
       <p *ngIf="vulnrepowrongpass"><font color="red"><b>Wrong security key!!!</b></font></p>
       <br>
       <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
     </span>
 
       <input *ngIf="selected_source == 'burp'" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
-      <p *ngIf="burpplease_wait">Please wait...</p>
+      <p *ngIf="burpplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
       <input *ngIf="selected_source == 'openvas'" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
-      <p *ngIf="openvas9please_wait">Please wait...</p>
+      <p *ngIf="openvas9please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
       <input *ngIf="selected_source == 'nessus'" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
-      <p *ngIf="please_wait">Please wait...</p>
+      <p *ngIf="please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
       <input *ngIf="selected_source == 'nessus_xml'" cdkFocusInitial type="file" accept=".nessus" (change)="nessusxmlonFileSelect($event.target)" name="myfile">
-      <p *ngIf="nessusxmlplease_wait">Please wait...</p>
+      <p *ngIf="nessusxmlplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
   <br><button *ngIf="selected_source != 'vulnrepojson'" mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>
