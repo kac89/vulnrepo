@@ -56,7 +56,6 @@ import { DialogChangelogComponent } from './dialog-changelog/dialog-changelog.co
 import { VulnListComponent } from './vuln-list/vuln-list.component';
 import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from './dialog-removeitems/dialog-removeitems.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { DialogCvssComponent } from './dialog-cvss/dialog-cvss.component';
 import { MatRadioModule } from '@angular/material/radio';
@@ -120,7 +119,6 @@ import { DialogCveComponent } from './dialog-cve/dialog-cve.component';
     MatSelectModule,
     DragDropModule,
     MatTabsModule,
-    MatProgressSpinnerModule,
     MatMenuModule,
     MatRadioModule,
     HammerModule,
