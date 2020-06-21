@@ -48,7 +48,7 @@
 </div>
 <div mat-dialog-actions>
   <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()">Add Issue</button>
-  <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()">Add Issue</button>
+  <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()">Add from CWE</button>
   <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()">Add from CVE</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
