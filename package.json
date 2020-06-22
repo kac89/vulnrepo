@@ -28,6 +28,7 @@
     "core-js": "^3.6.5",
     "crypto-js": "^3.3.0",
     "gulp-clone": "^2.0.1",
+    "js-sha256": "^0.9.0",
     "marked": "^1.1.0",
     "material-design-icons": "^3.0.1",
     "ng2-charts": "^2.3.2",
@@ -40,8 +41,8 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.8",
-    "@angular/cli": "^9.1.8",
+    "@angular-devkit/build-angular": "~0.901.9",
+    "@angular/cli": "^9.1.9",
     "@angular/compiler-cli": "^10.0.0-rc.6",
     "@angular/language-service": "^10.0.0-rc.6",
     "@types/jasmine": "^3.5.10",

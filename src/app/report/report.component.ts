@@ -21,6 +21,7 @@ import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removei
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import marked from 'marked';
+import { sha256 } from 'js-sha256';
 
 @Component({
   selector: 'app-report',
@@ -1001,14 +1002,21 @@ export class ReportComponent implements OnInit, OnDestroy {
         let fil = '';
         item.files.forEach((ite, ind) => {
 
+
+          let shac = '';
+          if (ite.sha256checksum) {
+            shac = '<br><small>(SHA256 File Checksum: ' + ite.sha256checksum + ')</small>';
+          }
+
           if (ite.type.includes('image')) {
             // tslint:disable-next-line:max-line-length
-            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b><br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
-          } else if (ite.type.includes('text')) {
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + shac + '<br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
+          } else if (ite.type === 'text/plain') {
             const byteString = atob(ite.data.split(',')[1]);
-            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b><br><pre>' + escapeHtml(byteString) + '</pre><br><br>';
+            // tslint:disable-next-line:max-line-length
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + shac + '<br><b>[file content]:</b><pre>' + escapeHtml(byteString) + '</pre><br><br>';
           } else {
-            fil = fil + '';
+            fil = fil + '<b>Attachment: <a href="' + ite.data + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + shac + '<br><br>';
           }
 
         });
@@ -1084,8 +1092,19 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
+  checksumfile(dataurl, files, dec_data) {
+    let file_sha2 = '';
+    // sha256 file checksum
+    const reader = new FileReader();
+    reader.onloadend = (e) => {
+      file_sha2 = sha256(reader.result);
+      this.proccessUpload(dataurl, files[0].name, files[0].type, files[0].size, file_sha2, dec_data);
+    };
+    reader.readAsArrayBuffer(files[0]);
 
-  proccessUpload(data, name, type, dec_data) {
+  }
+
+  proccessUpload(data, name, type, size, sha256check, dec_data) {
 
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
     const today: number = Date.now();
@@ -1101,7 +1120,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     const linkprev = data;
     // tslint:disable-next-line:max-line-length
-    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': escapeHtml(name), 'type': escapeHtml(type), 'date': today });
+    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': escapeHtml(name), 'type': escapeHtml(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
 
   }
 
@@ -1109,15 +1128,13 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     const files = input.files;
     if (files && files.length) {
-      console.log('Type: ' + files[0].type);
       const fileToRead = files[0];
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
-
-        this.proccessUpload(fileReader.result, files[0].name, files[0].type, dec_data);
-
+        this.checksumfile(fileReader.result, files, dec_data);
       };
       fileReader.readAsDataURL(fileToRead);
+
     }
 
   }
