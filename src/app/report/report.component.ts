@@ -60,6 +60,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   pok = 0;
   savemsg = '';
   report_decryption_in_progress: boolean;
+  upload_in_progress = false;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   subscription: Subscription;
@@ -1123,6 +1124,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         .replace(/'/g, '&#039;');
     }
 
+    this.upload_in_progress = false;
     const linkprev = data;
     // tslint:disable-next-line:max-line-length
     this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': escapeHtml(name), 'type': escapeHtml(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
@@ -1133,6 +1135,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     const files = input.files;
     if (files && files.length) {
+      this.upload_in_progress = true;
       const fileToRead = files[0];
       const fileReader = new FileReader();
       fileReader.onload = (e) => {

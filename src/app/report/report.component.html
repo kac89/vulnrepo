@@ -267,8 +267,12 @@
                 style="display:none;">
             </button>
 
+            <div fxFlex></div>
+
+            <span align="start" *ngIf="upload_in_progress">Upload please wait...<mat-progress-bar style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></span>
 
             <div fxFlex></div>
+            
             <button mat-button color="warn" (click)="removeIssiue(dec_data)">
               <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE
             </button>
