@@ -1008,15 +1008,20 @@ export class ReportComponent implements OnInit, OnDestroy {
             shac = '<br><small>(SHA256 File Checksum: ' + ite.sha256checksum + ')</small>';
           }
 
+          let fsize = '';
+          if (ite.size) {
+            fsize = '&nbsp;<small>(Size: ' + ite.size + ' bytes)</small>';
+          }
+
           if (ite.type.includes('image')) {
             // tslint:disable-next-line:max-line-length
-            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + shac + '<br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
           } else if (ite.type === 'text/plain') {
             const byteString = atob(ite.data.split(',')[1]);
             // tslint:disable-next-line:max-line-length
-            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + shac + '<br><b>[file content]:</b><pre>' + escapeHtml(byteString) + '</pre><br><br>';
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><b>[file content]:</b><pre>' + escapeHtml(byteString) + '</pre><br><br>';
           } else {
-            fil = fil + '<b>Attachment: <a href="' + ite.data + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + shac + '<br><br>';
+            fil = fil + '<b>Attachment: <a href="' + ite.data + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + fsize + shac + '<br><br>';
           }
 
         });
