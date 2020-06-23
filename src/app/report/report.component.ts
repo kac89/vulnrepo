@@ -747,6 +747,9 @@ export class ReportComponent implements OnInit, OnDestroy {
     .strbreak {
       word-break: break-word;
     }
+    ul {
+      list-style-position: inside;
+    }
     </style>
     </head>
     <body class="container">
@@ -986,10 +989,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     let issues = '<p><center><h3 id="Issues">Issues</h3></center></p>';
     report_data.report_vulns.forEach((item, index) => {
       issues = issues + ' \
+      <div class="row"> \
       <h4 id="' + index + '"> \
       <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
       ' + escapeHtml(item.title) + '</h4> \
-      <div class="row"> \
         <dl> \
           <dt>Vulnerability description</dt> \
           <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
