@@ -261,6 +261,17 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
+  addtablescope(): void {
+
+    this.decryptedReportDataChanged.report_scope = this.decryptedReportDataChanged.report_scope + ' \
+IP   | hostname | role | comments\n\
+------|--------------|-------|---------------\n\
+127.0.0.1 | locahost.localdomain | PROD | client asked to test this one with care\n\
+255.255.255.255 | N/A | DMZ | test you can go do whatever you want on it\n\
+';
+
+  }
+
   doStats() {
 
     const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
