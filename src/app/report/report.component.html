@@ -65,7 +65,7 @@
             <mat-label>Scope</mat-label>
             <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
               value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-            <mat-hint>You can use Markdown or HTML.</mat-hint>
+            <mat-hint>You can use Markdown or HTML. <a class="active-link" href="javascript:void(0);" (click)="addtablescope()" title="Add table to scope.">[T]</a></mat-hint>
           </mat-form-field>
         </div>
     

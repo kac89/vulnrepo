@@ -261,6 +261,17 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
+  addtablescope(): void {
+
+    this.decryptedReportDataChanged.report_scope = this.decryptedReportDataChanged.report_scope + ' \
+IP   | hostname | role | comments\n\
+------|--------------|-------|---------------\n\
+127.0.0.1 | locahost.localdomain | PROD | client asked to test this one with care\n\
+255.255.255.255 | N/A | DMZ | test you can go do whatever you want on it\n\
+';
+
+  }
+
   doStats() {
 
     const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
@@ -747,6 +758,9 @@ export class ReportComponent implements OnInit, OnDestroy {
     .strbreak {
       word-break: break-word;
     }
+    ul {
+      list-style-position: inside;
+    }
     </style>
     </head>
     <body class="container">
@@ -986,10 +1000,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     let issues = '<p><center><h3 id="Issues">Issues</h3></center></p>';
     report_data.report_vulns.forEach((item, index) => {
       issues = issues + ' \
+      <div class="row"> \
       <h4 id="' + index + '"> \
       <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
       ' + escapeHtml(item.title) + '</h4> \
-      <div class="row"> \
         <dl> \
           <dt>Vulnerability description</dt> \
           <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
