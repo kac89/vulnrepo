@@ -2,6 +2,7 @@
 
 VULNRΞPO - Vulnerability Report Generator & Repository - Check online: https://vulnrepo.com/
 
+Video walkthrough:  
 [![Guide](https://img.youtube.com/vi/D6vmd4WhWFk/0.jpg)](https://www.youtube.com/watch?v=D6vmd4WhWFk)
 
 Environment:
@@ -39,3 +40,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/kac89/vulnrepo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kac89/vulnrepo/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/kac89/vulnrepo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kac89/vulnrepo/context:javascript)
+
+## Licencing
+
+VULNRΞPO is released under the [Apache 2.0 Licence](https://www.apache.org/licenses/LICENSE-2.0)
