@@ -60,6 +60,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   pok = 0;
   savemsg = '';
   report_decryption_in_progress: boolean;
+  report_encryption_in_progress: boolean;
   upload_in_progress = false;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
@@ -380,6 +381,7 @@ IP   | hostname | role | comments\n\
   }
 
   saveReportChanges(report_id: any) {
+    this.report_encryption_in_progress = true;
     this.savemsg = 'Please wait, report is encrypted...';
     const pass = sessionStorage.getItem(report_id);
 
@@ -392,6 +394,7 @@ IP   | hostname | role | comments\n\
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
           if (retu) {
+            this.report_encryption_in_progress = false;
             this.savemsg = 'All changes saved successfully!';
             this.lastsavereportdata = retu;
             this.doStats();
@@ -816,7 +819,7 @@ IP   | hostname | role | comments\n\
       intro = intro + cond3;
     }
     if (report_data.researcher.reporterwww !== '') {
-      const cond4 = '<p class="card-text">WWW: ' + parse_links(parse_newline(escapeHtml(report_data.researcher.reporterwww))) + '</p>';
+      const cond4 = '<p class="card-text">' + parse_links(parse_newline(escapeHtml(report_data.researcher.reporterwww))) + '</p>';
       intro = intro + cond4;
     }
 

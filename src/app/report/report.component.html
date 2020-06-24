@@ -21,6 +21,7 @@
         <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b></p>
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
+        <p *ngIf="report_encryption_in_progress">Report is encrypted please wait...<mat-progress-bar style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
       </div>
   
       <div *ngIf="decryptedReportDataChanged" style="text-align: center;" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
@@ -52,7 +53,7 @@
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>settings</mat-icon>
+        <mat-icon>description</mat-icon>
       </div>
       <mat-card-title>Report details</mat-card-title>
     </mat-card-header>
@@ -65,7 +66,7 @@
             <mat-label>Scope</mat-label>
             <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
               value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-            <mat-hint>You can use Markdown or HTML. <a class="active-link" href="javascript:void(0);" (click)="addtablescope()" title="Add table to scope.">[T]</a></mat-hint>
+            <mat-hint>You can use Markdown or HTML. <a class="active-link" href="javascript:void(0);" (click)="addtablescope()" title="Insert table to scope.">[T]</a></mat-hint>
           </mat-form-field>
         </div>
     
@@ -329,7 +330,7 @@
   <mat-card *ngIf="decryptedReportDataChanged.report_vulns.length !== 0">
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>bar_chart</mat-icon>
+        <mat-icon>insert_chart</mat-icon>
       </div>
       <mat-card-title>Statistics</mat-card-title>
     </mat-card-header>
@@ -431,13 +432,19 @@
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>change_history</mat-icon>
+        <mat-icon>track_changes</mat-icon>
       </div>
-      <mat-card-title>Changelog</mat-card-title>
+      <mat-card-title style="display: flex">Changelog
+        &nbsp;
+        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="changelogmenu"><mat-icon>more_vert</mat-icon></button>
+        <mat-menu #changelogmenu="matMenu">
+          <a [routerLink]="" (click)="addchangelog()" class="active-link" title="Add event to changelog" mat-menu-item><mat-icon class="vertical-align-middle">add</mat-icon> Add event to changelog</a>
+        </mat-menu>
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
-      <table *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort matSortActive="date"
+      <table *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" class="changelogTab" matSort matSortActive="date"
         matSortDirection="desc" class="mat-elevation-z8">
 
         <ng-container matColumnDef="date">
@@ -473,12 +480,6 @@
             <p>Your changelog list is empty :-( </p>
           </div>
 
-          <p>
-            <button [routerLink]="" (click)="addchangelog()" mat-raised-button color="primary"
-              title="Add event to changelog">
-              <mat-icon class="vertical-align-middle padding-bottom-3 size-12">add</mat-icon> Add
-            </button>
-          </p>
         </div>
 
         <div fxFlex="70%" fxFlex.sm="80%" fxFlex.xs="90%" *ngIf="listchangelog != 0">
@@ -497,52 +498,49 @@
   <mat-card *ngIf="decryptedReportDataChanged">
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>description</mat-icon>
+        <mat-icon>settings</mat-icon>
       </div>
-      <mat-card-title>Report Settings</mat-card-title>
+      <mat-card-title style="display: flex">Report Settings 
+        &nbsp;
+        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="Settingsmenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #Settingsmenu="matMenu">
+            <a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)" class="active-link" title="Change report security key" mat-menu-item>
+              <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
+            </a>
+        </mat-menu>
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayout.xs="column">
 
-        <div fxFlex="40%;" fxFlex.sm="40%" fxFlex.xs="40%">
-          <mat-card-content>
+        <div fxFlex="40%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-            <div fxLayout="row wrap" fxLayoutGap="10px grid">
+            <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
+            mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+          <div [innerHTML]="uploadlogoprev"></div>
 
-              <div fxFlex="65%" *ngIf="decryptedReportDataChanged" fxFlex.sm="80%" fxFlex.xs="100%">
-                <p><b>1. Report access:</b></p>
-                <button style="width: 100%;" [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)" mat-raised-button color="primary" title="Add event to changelog">
-                  <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change securty key
-                </button>
-              </div>
+          <button mat-flat-button (click)="fileuploadInput.click()" color="primary" title="Upload report logo">
+            <i class="material-icons">attach_file</i> HTML Report logo
+            <input type="file" #fileuploadInput id="file" accept=".*" (change)="importlogo($event.target)" name="myfiles" style="display:none;">
+          </button>
 
-              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <b>2. Report logo:</b><br>
-                <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
-                  mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo">
-                  <mat-icon>delete_forever</mat-icon>
-                </button>
-                <div [innerHTML]="uploadlogoprev"></div>
-                <br>
-                <input cdkFocusInitial type="file" accept=".*" (change)="importlogo($event.target)" name="myfiles">
-              </div>
-          
-          </div>
 
-          </mat-card-content>
         </div>
 
-        <div fxFlex="60%;" fxFlex.sm="100%" fxFlex.xs="100%">
-          <mat-card-content>
-            <b>3. Custom content (You can use Markdown or HTML):</b><br>
+        <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
+
             <mat-form-field appearance="outline" class="example-full-width" color="accent">
+              <mat-label>Custom content</mat-label>
               <textarea rows="5" matInput placeholder="HTML content"
                 [(ngModel)]="decryptedReportDataChanged.report_settings.report_html"
                 value="{{decryptedReportDataChanged.report_settings.report_html}}"></textarea>
-              <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.
-              </mat-hint>
+              <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf. You can use Markdown or HTML.</mat-hint>
             </mat-form-field>
-          </mat-card-content>
+
         </div>
 
       </div>

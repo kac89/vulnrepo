@@ -78,4 +78,19 @@ table {
   color: #fff;
 }
 
+.mat-column-date {
+  min-width: 120px;
+}
+
+.mat-column-desc {
+  min-width: 90%;
+}
+
+.mat-column-settings {
+  text-align: right;
+  justify-content: flex-end;
+  min-width: 80px;
+  max-width: 100px;
+}
+
 
