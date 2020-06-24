@@ -816,7 +816,7 @@ IP   | hostname | role | comments\n\
       intro = intro + cond3;
     }
     if (report_data.researcher.reporterwww !== '') {
-      const cond4 = '<p class="card-text">WWW: ' + parse_links(parse_newline(escapeHtml(report_data.researcher.reporterwww))) + '</p>';
+      const cond4 = '<p class="card-text">' + parse_links(parse_newline(escapeHtml(report_data.researcher.reporterwww))) + '</p>';
       intro = intro + cond4;
     }
 

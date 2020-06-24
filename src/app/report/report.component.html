@@ -52,7 +52,7 @@
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>settings</mat-icon>
+        <mat-icon>description</mat-icon>
       </div>
       <mat-card-title>Report details</mat-card-title>
     </mat-card-header>
@@ -65,7 +65,7 @@
             <mat-label>Scope</mat-label>
             <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
               value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-            <mat-hint>You can use Markdown or HTML. <a class="active-link" href="javascript:void(0);" (click)="addtablescope()" title="Add table to scope.">[T]</a></mat-hint>
+            <mat-hint>You can use Markdown or HTML. <a class="active-link" href="javascript:void(0);" (click)="addtablescope()" title="Insert table to scope.">[T]</a></mat-hint>
           </mat-form-field>
         </div>
     
@@ -329,7 +329,7 @@
   <mat-card *ngIf="decryptedReportDataChanged.report_vulns.length !== 0">
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>bar_chart</mat-icon>
+        <mat-icon>insert_chart</mat-icon>
       </div>
       <mat-card-title>Statistics</mat-card-title>
     </mat-card-header>
@@ -431,7 +431,7 @@
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>change_history</mat-icon>
+        <mat-icon>track_changes</mat-icon>
       </div>
       <mat-card-title>Changelog</mat-card-title>
     </mat-card-header>
@@ -497,7 +497,7 @@
   <mat-card *ngIf="decryptedReportDataChanged">
     <mat-card-header>
       <div mat-card-avatar>
-        <mat-icon>description</mat-icon>
+        <mat-icon>settings</mat-icon>
       </div>
       <mat-card-title>Report Settings</mat-card-title>
     </mat-card-header>
