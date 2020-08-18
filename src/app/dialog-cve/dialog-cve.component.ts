@@ -13,8 +13,6 @@ export class DialogCveComponent implements OnInit {
   show = false;
   results: any;
   mycve = new FormControl();
-  responsive = true;
-  cols = 3;
 
   constructor(private apiService: ApiService,
     public dialogRef: MatDialogRef<DialogCveComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
