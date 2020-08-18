@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 import { MessageService } from './message.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
