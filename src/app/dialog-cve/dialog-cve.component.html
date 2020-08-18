@@ -10,10 +10,29 @@
 
     <div *ngIf="results">
 
-        <p *ngIf="results?.Published"><b>Published:</b> {{ results?.Published }}</p>
-        <p *ngIf="results?.Published"><b>Modified:</b> {{ results?.Modified }}</p>
-        <p *ngIf="results?.cwe"><b>CWE:</b> {{ results?.cwe }}</p>
+        <div style="width: 100%;" fxLayout.xs="column" fxLayoutGap="10px" ngClass.gt-xs="ml-10">
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.Published" fxFlex><b>Published:</b><br>{{ results?.Published }}</div>
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.Modified" fxFlex><b>Modified:</b><br>{{ results?.Modified }}</div>
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.assigner" fxFlex><b>Assigner:</b><br>{{ results?.assigner }}</div>
+        </div>
+        
         <p *ngIf="results?.summary"><b>Summary:</b> {{ results?.summary }}</p>
+        <p>
+            <mat-chip-list>
+                <mat-chip *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip>
+                <mat-chip *ngIf="results?.cwe">{{ results?.cwe }}</mat-chip>
+
+                <div *ngFor="let item of results?.references">
+                    <a target="_blank" href="{{ item }}">
+                        <mat-chip>{{ item }}</mat-chip>
+                    </a>
+                </div>
+
+            </mat-chip-list>
+        </p>
+
+
+
 
         <mat-form-field class="example-full-width" color="accent" appearance="outline">
             <mat-label>Source data (JSON):</mat-label>
@@ -28,7 +47,6 @@
     {{err_msg}}
 </mat-dialog-content>
 <mat-dialog-actions align="start">
-
     <button mat-raised-button color="accent" (click)="searchCVE()">
         <mat-icon matSuffix>explore</mat-icon> Search CVE Info
     </button>
