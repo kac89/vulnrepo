@@ -23,7 +23,7 @@
                 <mat-chip *ngIf="results?.cwe">{{ results?.cwe }}</mat-chip>
 
                 <div *ngFor="let item of results?.references">
-                    <a target="_blank" href="{{ item }}">
+                    <a target="_blank" rel="noopener noreferrer" href="{{ item }}">
                         <mat-chip>{{ item }}</mat-chip>
                     </a>
                 </div>
