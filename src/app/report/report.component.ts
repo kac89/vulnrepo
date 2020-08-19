@@ -315,7 +315,7 @@ IP   | hostname | role | comments\n\
   addissue() {
     console.log('Add issue');
     const dialogRef = this.dialog.open(DialogAddissueComponent, {
-      width: '450px'
+      width: '600px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
