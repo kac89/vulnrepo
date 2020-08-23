@@ -73,7 +73,6 @@ export class ReportComponent implements OnInit, OnDestroy {
     { severity: 'Low', count: 0 },
     { severity: 'Info', count: 0 }
   ];
-  // $scope.filteredCritical = $filter('filter')($scope.groups, { severity: 'Critical' }).length;
 
   uploadlogoprev = '';
   adv_html: any;
@@ -227,7 +226,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The CVSS dialog was closed');
     });
 
   }
@@ -242,7 +241,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The CVE dialog was closed');
     });
 
   }
@@ -257,7 +256,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The pass dialog was closed');
+      console.log('The security key dialog was closed');
     });
 
   }
@@ -265,10 +264,22 @@ export class ReportComponent implements OnInit, OnDestroy {
   addtablescope(): void {
 
     this.decryptedReportDataChanged.report_scope = this.decryptedReportDataChanged.report_scope + ' \
+\n\
 IP   | hostname | role | comments\n\
 ------|--------------|-------|---------------\n\
 127.0.0.1 | locahost.localdomain | PROD | client asked to test this one with care\n\
 255.255.255.255 | N/A | DMZ | test you can go do whatever you want on it\n\
+';
+
+  }
+
+  addcodescope(): void {
+
+    this.decryptedReportDataChanged.report_scope = this.decryptedReportDataChanged.report_scope + ' \
+\n\
+```\n\
+Sample code here\n\
+```\n\
 ';
 
   }

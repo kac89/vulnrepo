@@ -66,7 +66,10 @@
             <mat-label>Scope</mat-label>
             <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
               value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-            <mat-hint>You can use Markdown or HTML. <a class="active-link" href="javascript:void(0);" (click)="addtablescope()" title="Insert table to scope.">[T]</a></mat-hint>
+            <mat-hint>You can use Markdown or HTML. 
+              <a class="active-link" href="javascript:void(0);" (click)="addtablescope()" title="Insert table to scope.">[T]</a>&nbsp;
+              <a class="active-link" href="javascript:void(0);" (click)="addcodescope()" title="Insert code to scope.">[C]</a>
+            </mat-hint>
           </mat-form-field>
         </div>
     
@@ -125,8 +128,9 @@
       <div mat-card-avatar>
         <mat-icon>bug_report</mat-icon>
       </div>
-      <mat-card-title class="card-container-left"><span matBadge="{{decryptedReportDataChanged.report_vulns.length}}"
-          matBadgeOverlap="false">Issues</span></mat-card-title>
+      <mat-card-title class="card-container-left">
+        <span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span>
+      </mat-card-title>
       <mat-card-title class="card-container-right">
 
         <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
@@ -248,7 +252,7 @@
               <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
                 <mat-form-field class="example-full-width" color="accent">
                   <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
-                  <button mat-button (click)="openDialogCVE(dec_data.cve)" style="line-height: 25px;" color="accent" matSuffix><mat-icon matSuffix>explore</mat-icon> CVE Info</button>
+                  <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent" matSuffix><mat-icon matSuffix>explore</mat-icon> CVE Info</button>
                 </mat-form-field>
               </div>
           

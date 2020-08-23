@@ -48,8 +48,15 @@
 </mat-dialog-content>
 <mat-dialog-actions align="start">
     <button mat-raised-button color="accent" (click)="searchCVE()">
-        <mat-icon matSuffix>explore</mat-icon> Search CVE Info
+        <mat-icon matSuffix>explore</mat-icon> Search CVE 
     </button>
     &nbsp;
+
+    <div *ngIf="results">
+        <button mat-raised-button color="accent" (click)="saveCVE()">
+            <mat-icon matSuffix>save</mat-icon> Save & close
+        </button>&nbsp;
+    </div>
+
     <button mat-flat-button color="primary" mat-dialog-close>Cancel</button>
 </mat-dialog-actions>
