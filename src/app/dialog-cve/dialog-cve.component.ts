@@ -16,7 +16,7 @@ export class DialogCveComponent implements OnInit {
 
   constructor(private apiService: ApiService,
     public dialogRef: MatDialogRef<DialogCveComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.mycve.setValue(this.data);
+        this.mycve.setValue(this.data.cve);
      }
 
   ngOnInit(): void {
@@ -61,5 +61,13 @@ export class DialogCveComponent implements OnInit {
     }
 
   }
+
+
+  saveCVE() {
+    const cve = this.mycve.value;
+    this.data.cve = cve.toUpperCase();
+    this.dialogRef.close(this.data);
+  }
+
 
 }

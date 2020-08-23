@@ -174,10 +174,7 @@ export class DialogCvssComponent implements OnInit {
 
     }
 
-
   }
-
-
 
   save(cvss: number, severity: string) {
     this.data.cvss = cvss;
