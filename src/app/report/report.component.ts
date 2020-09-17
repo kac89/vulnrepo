@@ -859,7 +859,7 @@ Sample code here\n\
                                   <a href="#Statistics and Risk">Statistics and Risk</a> \
                               </li> \
                               <li class="list-group-item d-flex justify-content-between align-items-center"> \
-                                  <a href="#Issues">Issues</a> \
+                                  <a href="#Issues">Issues (' + report_data.report_vulns.length + ')</a> \
                               </li>';
     report_data.report_vulns.forEach((item, index) => {
 
@@ -1011,7 +1011,7 @@ Sample code here\n\
 
     const advtext = projscope + statsandrisk;
 
-    let issues = '<p><center><h3 id="Issues">Issues</h3></center></p>';
+    let issues = '<p><center><h3 id="Issues">Issues (' + report_data.report_vulns.length + ')</h3></center></p>';
     report_data.report_vulns.forEach((item, index) => {
       issues = issues + ' \
       <div class="row"> \
