@@ -529,9 +529,8 @@
 
           <button mat-flat-button (click)="fileuploadInput.click()" color="primary" title="Upload report logo">
             <i class="material-icons">attach_file</i> HTML Report logo
-            <input type="file" #fileuploadInput id="file" accept=".*" (change)="importlogo($event.target)" name="myfiles" style="display:none;">
+            <input type="file" #fileuploadInput id="file" accept="image/*" (change)="importlogo($event.target)" name="myfiles" style="display:none;">
           </button>
-
 
         </div>
 
