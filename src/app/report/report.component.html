@@ -384,43 +384,55 @@
       <div mat-card-avatar>
         <mat-icon>face</mat-icon>
       </div>
-      <mat-card-title>Researcher</mat-card-title>
+      <mat-card-title>Researcher&nbsp;
+        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="researchermenu"><mat-icon>more_vert</mat-icon></button>
+        <mat-menu #researchermenu="matMenu">
+          <a [routerLink]="" (click)="addresearcher()" class="active-link" title="Add new researcher" mat-menu-item><mat-icon class="vertical-align-middle">add</mat-icon> Add researcher</a>
+        </mat-menu>
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
-      <div fxLayout="row wrap" fxLayoutGap="10px grid">
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+      <div *ngFor="let researchers of decryptedReportDataChanged.researcher" fxLayout="row wrap" fxLayoutGap="10px grid">
+        <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Name" [(ngModel)]="decryptedReportDataChanged.researcher.reportername"
-              value="{{decryptedReportDataChanged.researcher.reportername}}">
+            <input matInput placeholder="Name" [(ngModel)]="researchers.reportername"
+              value="{{researchers.reportername}}">
             <mat-icon matSuffix>person_pin</mat-icon>
           </mat-form-field>
         </div>
 
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+        <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="E-mail" [(ngModel)]="decryptedReportDataChanged.researcher.reporteremail"
-              value="{{decryptedReportDataChanged.researcher.reporteremail}}">
+            <input matInput placeholder="E-mail" [(ngModel)]="researchers.reporteremail"
+              value="{{researchers.reporteremail}}">
             <mat-icon matSuffix>email</mat-icon>
           </mat-form-field>
         </div>
         
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+        <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
           <mat-form-field class="example-full-width" color="accent">
             <input matInput placeholder="Social links"
-              [(ngModel)]="decryptedReportDataChanged.researcher.reportersocial"
-              value="{{decryptedReportDataChanged.researcher.reportersocial}}">
+              [(ngModel)]="researchers.reportersocial"
+              value="{{researchers.reportersocial}}">
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
         </div>
         
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+        <div fxFlex="24%" fxFlex.sm="44%" fxFlex.xs="94%">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Website" [(ngModel)]="decryptedReportDataChanged.researcher.reporterwww"
-              value="{{decryptedReportDataChanged.researcher.reporterwww}}">
+            <input matInput placeholder="Website" [(ngModel)]="researchers.reporterwww"
+              value="{{researchers.reporterwww}}">
             <mat-icon matSuffix>public</mat-icon>
           </mat-form-field>
         </div>
+
+        <div fxFlex="4%" fxFlex.sm="4%" fxFlex.xs="4%">
+          <button mat-icon-button color="warn" (click)="removeresearcher(researchers)" title="Remove researcher">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </div>
+
       </div>
 
     </mat-card-content>

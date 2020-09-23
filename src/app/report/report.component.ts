@@ -402,6 +402,7 @@ Sample code here\n\
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
+        console.log(this.decryptedReportDataChanged);
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
           if (retu) {
@@ -493,6 +494,31 @@ Sample code here\n\
     this.subscription.unsubscribe();
   }
 
+  addresearcher() {
+
+    const add = {
+      reportername: '',
+      reportersocial: '',
+      reporterwww: '',
+      reporteremail: ''
+    };
+
+    this.decryptedReportDataChanged.researcher.push(add);
+
+  }
+
+  removeresearcher(item) {
+
+    const index: number = this.decryptedReportDataChanged.researcher.indexOf(item);
+
+    if (index !== -1) {
+      this.decryptedReportDataChanged.researcher.splice(index, 1);
+      this.addtochangelog('Remove researcher');
+    }
+
+  }
+
+
   addchangelog() {
     const dialogRef = this.dialog.open(DialogChangelogComponent, {
       width: '500px'
@@ -501,7 +527,6 @@ Sample code here\n\
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
 
-      // console.log(result);
       if (result !== undefined) {
         this.decryptedReportDataChanged.report_changelog.push(result);
         this.doStats();
@@ -519,7 +544,6 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // console.log(result);
 
       if (result) {
         const index: number = this.decryptedReportDataChanged.report_changelog.indexOf(result.origi);
@@ -545,7 +569,6 @@ Sample code here\n\
     this.doStats();
   }
   removefromchangelog(item) {
-    // console.log(item);
     const remo = 'changelog';
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
@@ -554,7 +577,7 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // console.log(result);
+
       const index: number = this.decryptedReportDataChanged.report_changelog.indexOf(result);
 
       if (index !== -1) {
@@ -566,7 +589,6 @@ Sample code here\n\
 
 
   removeIssiue(item) {
-    // console.log(item);
     const remo = 'remove';
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '350px',
@@ -575,7 +597,6 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // console.log(result);
 
       const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(result);
 
@@ -602,39 +623,48 @@ Sample code here\n\
 
     function stringDivider(str, width, spaceReplacer) {
       if (str.length > width) {
-          let p = width;
-          for (; p > 0 && str[p] !== ' '; p--) {}
-          if (p > 0) {
-            const left = str.substring(0, p);
-            const right = str.substring(p + 1);
-              return left + spaceReplacer + stringDivider(right, width, spaceReplacer);
-          }
+        let p = width;
+        for (; p > 0 && str[p] !== ' '; p--) { }
+        if (p > 0) {
+          const left = str.substring(0, p);
+          const right = str.substring(p + 1);
+          return left + spaceReplacer + stringDivider(right, width, spaceReplacer);
+        }
       }
       return str;
-  }
+    }
 
     let report_ascii_head = '######################################################\n\
 # Report Title: ' + metadata.report_name + '\n\
 # Report ID: ' + metadata.report_id + '\n\
 # Create Date: ' + new Date(metadata.report_createdate).toLocaleString() + '\n\
-# Last Update: ' + new Date(metadata.report_lastupdate).toLocaleString() + '\n\
-#####\n';
+# Last Update: ' + new Date(metadata.report_lastupdate).toLocaleString() + '\n';
 
-    if (report_details.researcher.reportername !== '') {
-      report_ascii_head = report_ascii_head + '# Author: ' + report_details.researcher.reportername + '\n';
-    }
+    if (report_details.researcher.length > 0) {
 
-    if (report_details.researcher.reporterwww !== '') {
-      report_ascii_head = report_ascii_head + '# WWW: ' + report_details.researcher.reporterwww + '\n';
-    }
+      report_ascii_head = report_ascii_head + '#####\n# Author: \n';
 
-    if (report_details.researcher.reportersocial !== '') {
-      report_ascii_head = report_ascii_head + '# Social: ' + report_details.researcher.reportersocial + '\n';
-    }
+      report_details.researcher.forEach(function (value, key) {
 
-    // tslint:disable-next-line:max-line-length
-    if (report_details.researcher.reportername !== '' || report_details.researcher.reporterwww !== '' || report_details.researcher.reportersocial !== '') {
-      report_ascii_head = report_ascii_head + '#####\n';
+        if (value.reportername !== '') {
+          report_ascii_head = report_ascii_head + '# ' + value.reportername + '';
+        }
+
+        if (value.reporteremail !== '') {
+          report_ascii_head = report_ascii_head + ' - E-mail: ' + value.reporteremail + '';
+        }
+
+        if (value.reportersocial !== '') {
+          report_ascii_head = report_ascii_head + ' - Social: ' + value.reportersocial + '';
+        }
+
+        if (value.reporterwww !== '') {
+          report_ascii_head = report_ascii_head + ' - WWW: ' + value.reporterwww + '';
+        }
+
+        report_ascii_head = report_ascii_head + '\n';
+      }, this);
+
     }
 
     if (report_details.report_scope !== '') {
@@ -816,24 +846,6 @@ Sample code here\n\
       intro = intro + cond0;
     }
 
-    if (report_data.researcher.reportername !== '') {
-      const cond1 = '<p class="card-text">Author: ' + escapeHtml(report_data.researcher.reportername) + '</p>';
-      intro = intro + cond1;
-    }
-    if (report_data.researcher.reporteremail !== '') {
-      const cond2 = '<p class="card-text">E-Mail: ' + escapeHtml(report_data.researcher.reporteremail) + '</p>';
-      intro = intro + cond2;
-    }
-    if (report_data.researcher.reportersocial !== '') {
-      // tslint:disable-next-line:max-line-length
-      const cond3 = '<p class="card-text">Social: ' + parse_links(parse_newline(escapeHtml(report_data.researcher.reportersocial))) + '</p>';
-      intro = intro + cond3;
-    }
-    if (report_data.researcher.reporterwww !== '') {
-      const cond4 = '<p class="card-text">' + parse_links(parse_newline(escapeHtml(report_data.researcher.reporterwww))) + '</p>';
-      intro = intro + cond4;
-    }
-
     const cond5 = ' \
         </div> \
       </div> \
@@ -879,6 +891,13 @@ Sample code here\n\
   </li>';
     }
 
+    let authors = '';
+    if (report_data.researcher.length > 0) {
+      authors = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
+      <a href="#Report authors">Report authors</a> \
+  </li>';
+    }
+
     const tableofcontent_1 = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
         <a href="#Changelog">Changelog</a> \
     </li> \
@@ -887,7 +906,7 @@ Sample code here\n\
     <br> \
     <div class="pagebreak"></div> \
     <br><br>';
-    const tableofcontent = tableofcontent_one + tableofcontentlist + summarycomment + tableofcontent_1;
+    const tableofcontent = tableofcontent_one + tableofcontentlist + summarycomment + authors + tableofcontent_1;
 
     const critical = report_data.report_vulns.filter(function (el) {
       return (el.severity === 'Critical');
@@ -984,7 +1003,7 @@ Sample code here\n\
 
     // add Markdown rendering
     const renderer = new marked.Renderer();
-    renderer.table = function(header, body) {
+    renderer.table = function (header, body) {
       const table = `
           <table class="table">
               <thead>${header}</thead>
@@ -1078,6 +1097,52 @@ Sample code here\n\
       summarycomment_value = '<h3 id="Report summary comment">Report summary comment</h3><p>' + parse_newline(escapeHtml(report_data.report_summary)) + '</p><br>';
     }
 
+
+    let authors_value = '';
+    if (report_data.researcher.length > 0) {
+
+
+
+      let aut = '';
+
+      report_data.researcher.forEach((ite, ind) => {
+
+        if (ite.reportername !== '') {
+          aut = aut + '<tr> \
+          <td>' + ite.reportername + '</td> \
+          <td>' + ite.reporteremail + '</td> \
+          <td>' + ite.reportersocial + '</td> \
+          <td>' + ite.reporterwww + '</td> \
+        </tr>';
+        }
+      });
+
+
+
+
+      const authtab = ' \
+<table class="table table-hover"> \
+  <thead> \
+    <tr> \
+      <th scope="col">Name</th> \
+      <th scope="col">E-mail</th> \
+      <th scope="col">Social links</th> \
+      <th scope="col">Website</th> \
+    </tr> \
+  </thead> \
+  <tbody> \
+' + aut + ' \
+  </tbody> \
+</table> \
+';
+
+
+      // tslint:disable-next-line:max-line-length
+      authors_value = '<h3 id="Report authors">Report authors</h3><p>' + authtab + '</p><br>';
+    }
+
+
+
     let changeloghtml = summarycomment_value + '<h3 id="Changelog">Changelog</h3> \
 <p><table class="table table-hover"> \
 <thead> \
@@ -1110,7 +1175,8 @@ Sample code here\n\
     </html>
     `;
 
-    const download_report_complete = report_html + intro + tableofcontent + advtext + issues + changeloghtml + report_html_end;
+    // tslint:disable-next-line:max-line-length
+    const download_report_complete = report_html + intro + tableofcontent + advtext + issues + authors_value + changeloghtml + report_html_end;
 
     // download HTML report
 
