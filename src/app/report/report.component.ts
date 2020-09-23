@@ -513,7 +513,6 @@ Sample code here\n\
 
     if (index !== -1) {
       this.decryptedReportDataChanged.researcher.splice(index, 1);
-      this.addtochangelog('Remove researcher');
     }
 
   }
