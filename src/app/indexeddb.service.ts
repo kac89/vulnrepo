@@ -141,12 +141,14 @@ export class IndexeddbService {
             starttest: '',
             endtest: ''
           },
-          researcher: {
+          researcher: [
+            {
             reportername: '',
             reportersocial: '',
             reporterwww: '',
             reporteremail: ''
-          },
+            }
+          ],
           report_settings: {
             report_html: testststs,
             report_logo: ''
