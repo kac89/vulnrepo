@@ -84,8 +84,7 @@
   <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
     <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-      <div *ngIf="list != 0 && selection.selected.length > 0">
-        &nbsp;&nbsp;&nbsp;
+      <div *ngIf="list != 0 && selection.selected.length > 0" style="padding: 20px 0px 0px 20px;">
         <button title="Remove selected items" mat-icon-button color="warn" (click)="removeSelecteditems()">
         <mat-icon>delete_forever</mat-icon> Remove selected
       </button>
