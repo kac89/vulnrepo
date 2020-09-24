@@ -1089,7 +1089,6 @@ Sample code here\n\
             fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
           } else if (ite.type === 'video/mp4' || ite.type === 'video/ogg' || ite.type === 'video/webm') {
             if (this.embedvid === true) {
-              const byteString = atob(ite.data.split(',')[1]);
               // tslint:disable-next-line:max-line-length
               fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><video width="100%" height="600" controls><source src="' + ite.data + '" type="' + escapeHtml(ite.type) + '">Your browser does not support the video tag.</video><br><br>';
             }
