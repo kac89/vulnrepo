@@ -17,8 +17,8 @@
     <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
       <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-        <p>Report ID: {{reportdesc?.report_id}}</p>
         <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
+        <p>Report ID: {{reportdesc?.report_id}}</p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b></p>
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
         <p *ngIf="report_encryption_in_progress">Report is encrypted please wait...<mat-progress-bar style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
@@ -527,9 +527,9 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row" fxLayout.xs="column">
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
-        <div fxFlex="40%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <div fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
 
             <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
             mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo">
@@ -543,6 +543,16 @@
           </button>
 
         </div>
+
+        <div fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+          HTML theme:<br>
+          <mat-radio-group color="accent" (change)="themechange($event)">
+            <p><mat-radio-button name="one" [checked]="true" value="1">White (default)</mat-radio-button></p>
+            <p><mat-radio-button name="two" value="2">Dark</mat-radio-button></p>
+          </mat-radio-group>
+
+      </div>
 
         <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
 
