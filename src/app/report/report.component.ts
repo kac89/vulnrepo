@@ -721,6 +721,20 @@ Sample code here\n\
 
   }
 
+  themechange(event) {
+
+    let theme = '';
+    if (event.value === '2') {
+      theme = '_dark';
+    } else {
+      theme = '';
+    }
+
+    this.http.get('/assets/bootstrap' + theme + '.min.css').subscribe(res3 => {
+      this.report_css = res3['_body'];
+    });
+
+  }
 
   DownloadHTML(report_data, report_metadata) {
 
@@ -1108,10 +1122,10 @@ Sample code here\n\
 
         if (ite.reportername !== '') {
           aut = aut + '<tr> \
-          <td>' + ite.reportername + '</td> \
-          <td>' + ite.reporteremail + '</td> \
-          <td>' + ite.reportersocial + '</td> \
-          <td>' + ite.reporterwww + '</td> \
+          <td>' + escapeHtml(ite.reportername) + '</td> \
+          <td>' + escapeHtml(ite.reporteremail) + '</td> \
+          <td>' + parse_links(escapeHtml(ite.reportersocial)) + '</td> \
+          <td>' + parse_links(escapeHtml(ite.reporterwww)) + '</td> \
         </tr>';
         }
       });

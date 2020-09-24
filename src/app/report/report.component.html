@@ -527,9 +527,9 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row" fxLayout.xs="column">
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
-        <div fxFlex="40%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <div fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
 
             <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
             mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo">
@@ -543,6 +543,16 @@
           </button>
 
         </div>
+
+        <div fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+          HTML theme:<br>
+          <mat-radio-group color="accent" (change)="themechange($event)">
+            <p><mat-radio-button name="one" [checked]="true" value="1">White (default)</mat-radio-button></p>
+            <p><mat-radio-button name="two" value="2">Dark</mat-radio-button></p>
+          </mat-radio-group>
+
+      </div>
 
         <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
 
