@@ -550,7 +550,8 @@
           <mat-radio-group color="accent" (change)="themechange($event)">
             <p><mat-radio-button name="one" [checked]="true" value="1">White (default)</mat-radio-button></p>
             <p><mat-radio-button name="two" value="2">Dark</mat-radio-button></p>
-          </mat-radio-group>
+          </mat-radio-group><br>
+          <mat-checkbox [checked]="embedvid" (change)="embedVideo($event)" >Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
 
       </div>
 

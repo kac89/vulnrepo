@@ -49,6 +49,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   advhtml = '';
+  embedvid = true;
   report_css: any;
   report_id: string;
   report_info: any;
@@ -736,6 +737,15 @@ Sample code here\n\
 
   }
 
+  embedVideo(event) {
+    if (event.checked === false) {
+      this.embedvid = false;
+    }
+    if (event.checked === true) {
+      this.embedvid = true;
+    }
+  }
+
   DownloadHTML(report_data, report_metadata) {
 
     function escapeHtml(unsafe) {
@@ -1077,6 +1087,15 @@ Sample code here\n\
           if (ite.type.includes('image')) {
             // tslint:disable-next-line:max-line-length
             fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
+          } else if (ite.type === 'video/mp4' || ite.type === 'video/ogg' || ite.type === 'video/webm') {
+            if (this.embedvid === true) {
+              const byteString = atob(ite.data.split(',')[1]);
+              // tslint:disable-next-line:max-line-length
+              fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><video width="100%" height="600" controls><source src="' + ite.data + '" type="' + escapeHtml(ite.type) + '">Your browser does not support the video tag.</video><br><br>';
+            }
+            if (this.embedvid === false) {
+              fil = fil + '<b>Attachment: <a href="' + ite.data + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + fsize + shac + '<br><br>';
+            }
           } else if (ite.type === 'text/plain') {
             const byteString = atob(ite.data.split(',')[1]);
             // tslint:disable-next-line:max-line-length
