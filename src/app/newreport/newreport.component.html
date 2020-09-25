@@ -27,7 +27,7 @@
       <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center center">
         <div style="width: 100%">
 
-          <p *ngIf="str != ''">Strength validation: {{str}}.</p>
+          <p *ngIf="str != ''" fxLayoutAlign="center">Strength validation: {{str}}.</p>
           <mat-progress-bar *ngIf="str != ''" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
           <p fxLayoutAlign="center">
             <a class="active-link" [routerLink]="" (click)="generatePassword()"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">lock</mat-icon> Generate strong key!</a>
