@@ -33,8 +33,7 @@ export class SeckeyValidatorService {
       numberOfElements = /.*[0-9].*/.test(password) ? ++numberOfElements : numberOfElements;      // Numbers
       numberOfElements = /[^a-zA-Z0-9]/.test(password) ? ++numberOfElements : numberOfElements;   // Special characters (inc. space)
 
-      let currentPasswordStrength = PasswordCheckStrength.Short;
-
+      let currentPasswordStrength: any;
       if (password === null || password.length < SeckeyValidatorService.MinimumLength) {
           currentPasswordStrength = PasswordCheckStrength.Short;
       } else if (this.isPasswordCommon(password) === true) {
