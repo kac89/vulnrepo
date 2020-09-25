@@ -9,15 +9,38 @@
       <input matInput placeholder="Report title (e.g: External penetration testing report)" #title value="">
     </mat-form-field>
 
-    <mat-form-field class="example-full-width" color="accent">
-      <input matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
-      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </mat-form-field>
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
-    <mat-form-field class="example-full-width" color="accent">
-      <input matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'">
-      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </mat-form-field>
+      <md-card fxFlex="50%" fxFlex.xs="100%">
+        <mat-form-field class="example-full-width" color="accent">
+          <input [(ngModel)]="inppass" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
+          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" color="accent">
+          <input [(ngModel)]="inppass2" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
+          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+
+      </md-card>
+
+      <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center center">
+        <div style="width: 100%">
+
+          <p *ngIf="str != ''">Strength validation: {{str}}.</p>
+          <mat-progress-bar *ngIf="str != ''" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
+          <p fxLayoutAlign="center">
+            <a class="active-link" [routerLink]="" (click)="generatePassword()"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">lock</mat-icon> Generate strong key!</a>
+          </p>
+
+        </div>
+
+      </md-card>
+
+
+
+    </div>
+
     <p><mat-icon class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> Do not lose your security key or access to the report will be impossible!</p>
     <p *ngIf="alert"><b><font color="red">{{alert}}</font></b></p>
     <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value,pass2.value)">Save</button>
