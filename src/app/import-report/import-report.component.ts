@@ -15,10 +15,6 @@ export class ImportReportComponent implements OnInit {
   ngOnInit() {
   }
 
-  cancel(): void {
-    this.router.navigate(['/my-reports']);
-  }
-
   importfromclipboard(item) {
     if (item !== '') {
 
