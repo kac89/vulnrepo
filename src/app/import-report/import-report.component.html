@@ -1,5 +1,5 @@
 <h1 class="mat-display-2">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon> Import report
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">playlist_add</mat-icon> Import report
 </h1>
 
 <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
@@ -18,7 +18,7 @@
         <mat-label>Paste from the clipboard</mat-label>
         <textarea matInput rows="6" [(ngModel)]="pastefromclipboard" class="form-control z-depth-1"></textarea>
       </mat-form-field>
-      <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="accent">Import</button>
+      <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="accent"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">playlist_add</mat-icon> Import</button>
     </mat-card>
   </div>
 
