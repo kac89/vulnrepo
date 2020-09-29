@@ -2,29 +2,32 @@
   <mat-icon class="vertical-align-middle padding-bottom-3 size-45">settings</mat-icon> Settings
 </h1>
 
-<div class="row">
+<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
-  <mat-card class="column">
-    <h3>
-      Backup / Restore "My Reports"
-    </h3>
-    <p><b>Import:</b></p>
-    <input cdkFocusInitial type="file" accept=".*" (change)="restoreMyReports($event.target)" name="myfiles">
-    <br>
-    <p><b>Export:</b></p>
-    <button mat-raised-button color="primary" (click)="dumpallmyreports()">Dump all my reports</button>
-  </mat-card>
-
-  <mat-card class="column">
-    <mat-slide-toggle [(ngModel)]="wipechecked" class="example-margin" [color]="color" (change)="wipeDatachanged()">
-      Delete saved data! (My Reports)
-    </mat-slide-toggle>
-    <div *ngIf="wipehide">
-      <p>Are you sure you want to delete all data, is <span style="color: red"><b>irreversible
-            decision</b></span>!?<br><br>
-        <button mat-raised-button color="warn" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}</p>
-    </div>
-  </mat-card>
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <mat-card>
+      <h3>
+        Backup / Restore "My Reports"
+      </h3>
+      <p><b>Import:</b></p>
+      <input cdkFocusInitial type="file" accept=".*" (change)="restoreMyReports($event.target)" name="myfiles">
+      <br>
+      <p><b>Export:</b></p>
+      <button mat-raised-button color="primary" (click)="dumpallmyreports()">Dump all my reports</button>
+    </mat-card>
+  </div>
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <mat-card>
+      <mat-slide-toggle [(ngModel)]="wipechecked" class="example-margin" [color]="color" (change)="wipeDatachanged()">
+        Delete saved data! (My Reports)
+      </mat-slide-toggle>
+      <div *ngIf="wipehide">
+        <p>Are you sure you want to delete all data, is <span style="color: red"><b>irreversible
+              decision</b></span>!?<br><br>
+          <button mat-raised-button color="warn" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}</p>
+      </div>
+    </mat-card>
+  </div>
 
 </div>
 
