@@ -2,23 +2,24 @@
   <mat-icon class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon> Import report
 </h1>
 
-<mat-card>
-  <p><b style="color: red;">Be sure that you import data from a reliable source!</b></p>
-  <p>Import from a clipboard</p>
-  <mat-form-field appearance="outline" class="example-full-width" color="accent">
-    <mat-label>Paste from the clipboard</mat-label>
-    <textarea matInput rows="6" [(ngModel)]="pastefromclipboard" class="form-control z-depth-1"></textarea>
-  </mat-form-field>
+<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
-  <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="accent">Import</button>&nbsp;
-  <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <mat-card>
+      <p>Import from file (.VULNR)</p>
+      <input cdkFocusInitial type="file" accept=".vulnr" (change)="onFileSelect($event.target)" name="myfiles" multiple>
+    </mat-card>
+  </div>
 
-</mat-card>
-<br>
-<mat-card>
-  <p>Import from file (.VULNR)</p>
-  <input cdkFocusInitial type="file" accept=".vulnr" (change)="onFileSelect($event.target)" name="myfiles" multiple>
-</mat-card>
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <mat-card>
+      <p>Import from a clipboard</p>
+      <mat-form-field appearance="outline" class="example-full-width" color="accent">
+        <mat-label>Paste from the clipboard</mat-label>
+        <textarea matInput rows="6" [(ngModel)]="pastefromclipboard" class="form-control z-depth-1"></textarea>
+      </mat-form-field>
+      <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="accent">Import</button>
+    </mat-card>
+  </div>
 
-
-
+</div>
