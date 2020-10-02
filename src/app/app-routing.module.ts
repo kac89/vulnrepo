@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AboutComponent } from './about/about.component';
-import { NotfoundComponent } from './notfound/notfound.component';
+import { FaqComponent } from './faq/faq.component';
 import { HomeComponent } from './home/home.component';
 import { MyreportsComponent } from './myreports/myreports.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -17,9 +16,9 @@ const routes: Routes = [{
   component: HomeComponent
 },
 {
-  path: 'about',
+  path: 'faq',
   pathMatch: 'full',
-  component: AboutComponent
+  component: FaqComponent
 },
 {
   path: 'my-reports',
@@ -58,7 +57,7 @@ const routes: Routes = [{
 },
 {
   path: '**',
-  component: NotfoundComponent
+  component: HomeComponent
 }];
 
 @NgModule({
