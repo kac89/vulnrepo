@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AboutComponent } from './about/about.component';
-import { NotfoundComponent } from './notfound/notfound.component';
 import { HomeComponent } from './home/home.component';
 
 import { Router } from '@angular/router';
@@ -62,12 +60,11 @@ import { MatRadioModule } from '@angular/material/radio';
 import { HammerModule } from '@angular/platform-browser';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogCveComponent } from './dialog-cve/dialog-cve.component';
+import { FaqComponent } from './faq/faq.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AboutComponent,
-    NotfoundComponent,
     HomeComponent,
     MyreportsComponent,
     SettingsComponent,
@@ -84,7 +81,8 @@ import { DialogCveComponent } from './dialog-cve/dialog-cve.component';
     DialogChangekeyComponent,
     DialogRemoveitemsComponent,
     DialogCvssComponent,
-    DialogCveComponent
+    DialogCveComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,
