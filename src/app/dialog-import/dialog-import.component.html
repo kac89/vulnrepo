@@ -26,6 +26,9 @@
       <input *ngIf="selected_source == 'burp'" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
       <p *ngIf="burpplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
+      <input *ngIf="selected_source == 'nmap'" cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile">
+      <p *ngIf="nmapplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+
       <input *ngIf="selected_source == 'openvas'" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
       <p *ngIf="openvas9please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 

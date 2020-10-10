@@ -31,11 +31,16 @@ export class DialogImportComponent implements OnInit {
   public vulnrepojsonshow_input = true;
   public vulnrepojsonplease_wait = false;
   public vulnrepowrongpass = false;
+  public nmapshow_input = true;
+  public nmapplease_wait = false;
+  public nmapwrongpass = false;
+
   file: any;
   hide = true;
   sour: Importsource[] = [
     { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)' },
     { value: 'burp', viewValue: 'Burp Suite (.XML)' },
+    { value: 'nmap', viewValue: 'Nmap (.XML)' },
     { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
     { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
     { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' }
@@ -458,7 +463,6 @@ export class DialogImportComponent implements OnInit {
       res[2].forEach((myObject, index) => {
 
         if (myObject.ip !== undefined) {
-          // console.log(myObject.hostfqdn);
           let port = '';
           if (myObject.port.toString() === '0') {
             port = '';
@@ -494,7 +498,6 @@ export class DialogImportComponent implements OnInit {
       res[2].forEach((myObject, index) => {
 
         if (myObject.ip !== undefined) {
-          // console.log(myObject.hostfqdn);
           let port = '';
           if (myObject.port.toString() === '0') {
             port = '';
@@ -595,5 +598,126 @@ export class DialogImportComponent implements OnInit {
 
   }
 
+  nmaponFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.show_input = false;
+      this.please_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+
+      fileReader.onload = (e) => {
+        this.parseNmap(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parseNmap(xml) {
+
+    let json = '';
+    let hosts = [];
+    const parser = new xml2js.Parser({ strict: true, trim: true });
+
+    parser.parseString(xml, (err, result) => {
+      json = result.nmaprun;
+      hosts = result.nmaprun.host;
+    });
+
+    const date = new Date();
+    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+    const info = hosts.map((res, key) => {
+      let addre = '';
+      if (res.address[0]['$'].addr !== undefined) {
+        addre = res.address[0]['$'].addr + ' ';
+      } else {
+        addre = '';
+      }
+
+      let hostt = '';
+      if (res.hostnames[0].hostname[0]['$'].name !== undefined) {
+        hostt = ' - ' + res.hostnames[0].hostname[0]['$'].name;
+      } else {
+        hostt = '';
+      }
+
+      let cmd = '';
+      if (json['$'].args !== undefined) {
+        cmd = 'Execute: ' + json['$'].args + '\n\n';
+      }
+
+      let status = '';
+      let ipstat = '';
+      if (res.status[0]['$'].state !== undefined) {
+        // tslint:disable-next-line:max-line-length
+        status = 'Status: ' + res.status[0]['$'].state + '\nReason: ' + res.status[0]['$'].reason + '\nReason TTL: ' + res.status[0]['$'].reason_ttl + '\n';
+        ipstat = ' (' + res.status[0]['$'].state + ')';
+      }
+
+      let ports = 'Open ports:\n';
+      if (res.ports[0].port !== undefined) {
+        res.ports[0].port.forEach((myObject, index) => {
+          let service = '';
+          let service_name = '';
+          if (myObject.service[0]['$'].name !== undefined) {
+            service_name = myObject.service[0]['$'].name;
+          }
+          let service_product = '';
+          if (myObject.service[0]['$'].product !== undefined) {
+            service_product = myObject.service[0]['$'].product;
+          }
+          service = service_name + ' - ' + service_product;
+          ports = ports + myObject['$'].protocol + '/' + myObject['$'].portid + ' - ' + service + '\n';
+        });
+
+      }
+
+      let filteredports = '';
+      if (res.ports[0].extraports !== undefined) {
+        const title = '\nFiltered ports:\n';
+        res.ports[0].extraports.forEach((myObject, index) => {
+          filteredports = myObject['$'].state + '/' + myObject['$'].count + '\n';
+        });
+        filteredports = title + filteredports;
+      }
+
+
+      let osdetect = '';
+      if (res.os[0].osmatch !== undefined) {
+        const title = '\n====================\nOS detection:\n';
+        res.os[0].osmatch.forEach((myObject, index) => {
+          osdetect = osdetect + myObject['$'].name + ' - ' + myObject['$'].accuracy + '% \n';
+        });
+        osdetect = title + osdetect;
+      }
+
+      const pocc = ports + filteredports + osdetect + '';
+      const descc = cmd + status + '';
+
+      const def = {
+        title: 'Nmap scan for: ' + addre + hostt + ipstat,
+        poc: pocc,
+        files: [],
+        desc: descc,
+        severity: 'Info',
+        ref: 'https://nmap.org/',
+        cvss: '',
+        cve: '',
+        date: today
+      };
+
+      return def;
+    });
+
+    this.dialogRef.close(info);
+
+  }
 
 }
