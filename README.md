@@ -17,7 +17,7 @@ Node: 14.8.0
  - Use custom issues templates!
     - The use of templates greatly speeds up the work for pentester or security auditor. Import CVE or CWE data also possible.
  - Import issues from security scanners
-    - Supported import from: Nessus, Burp, OpenVAS. After importing, easily manage and edit vulnerabilities.
+    - Supported import from: Nmap, Nessus, Burp, OpenVAS. After importing, easily manage and edit vulnerabilities.
  - TXT & HTML & PDF
     - You can download report in TXT, HTML formats!. If you need PDF just 'print as PDF' html report.
  - Attachments
