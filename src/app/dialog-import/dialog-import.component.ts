@@ -42,8 +42,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'burp', viewValue: 'Burp Suite (.XML)' },
     { value: 'nmap', viewValue: 'Nmap (.XML)' },
     { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
-    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
-    { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' }
+    { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' },
+    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
@@ -657,7 +657,7 @@ export class DialogImportComponent implements OnInit {
       let ipstat = '';
       if (res.status[0]['$'].state !== undefined) {
         // tslint:disable-next-line:max-line-length
-        status = 'Status: ' + res.status[0]['$'].state + '\nReason: ' + res.status[0]['$'].reason + '\nReason TTL: ' + res.status[0]['$'].reason_ttl + '\n';
+        status = 'IP: ' + res.address[0]['$'].addr + '\nStatus: ' + res.status[0]['$'].state + '\nReason: ' + res.status[0]['$'].reason + '\nReason TTL: ' + res.status[0]['$'].reason_ttl + '\n';
         ipstat = ' (' + res.status[0]['$'].state + ')';
       }
 
