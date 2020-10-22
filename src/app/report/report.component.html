@@ -474,12 +474,13 @@
         <ng-container matColumnDef="settings">
           <th mat-header-cell *matHeaderCellDef> Settings </th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button color="primary" (click)="editchangelog(element)" title="Edit event">
-              <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="removefromchangelog(element)" title="Remove event">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
+
+            <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="changelogsettings"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #changelogsettings="matMenu">
+              <a [routerLink]="" (click)="editchangelog(element)" class="active-link" title="Edit event" mat-menu-item><mat-icon class="vertical-align-middle">edit</mat-icon> Edit event</a>
+              <a [routerLink]="" (click)="removefromchangelog(element)" class="active-link" title="Remove report" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove report</a>
+            </mat-menu>
+
           </td>
         </ng-container>
 

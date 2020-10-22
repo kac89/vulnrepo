@@ -10,14 +10,16 @@ th.mat-sort-header-sorted {
   flex:5%;
 }
 .mat-header-cell:nth-child(2),.mat-cell:nth-child(2){
-  flex:70%;
+  flex:75%;
 }
 .mat-header-cell:nth-child(3),.mat-cell:nth-child(3){
-  flex:25%;
+  flex:20%;
 }
 .mat-header-cell:nth-child(4),.mat-cell:nth-child(4){
-  flex:25%;
+  flex:20%;
 }
 .mat-header-cell:last-child,.mat-cell:last-child{
-  flex:15%
+  flex:5%;
+  text-align: right;
+  justify-content: flex-end;
 }

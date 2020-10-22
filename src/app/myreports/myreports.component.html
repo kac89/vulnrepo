@@ -70,8 +70,11 @@
     <ng-container matColumnDef="settings">
       <mat-header-cell *matHeaderCellDef class="mat-column-2"> Settings </mat-header-cell>
       <mat-cell *matCellDef="let element">
-          <button mat-icon-button color="accent" (click)="shareReport(element.report_id)" title="Download report"><mat-icon>cloud_download</mat-icon></button>
-          <button mat-icon-button color="warn" (click)="removeReport(element)" title="Remove report"><mat-icon>delete_forever</mat-icon></button>
+        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="myreportssettings"><mat-icon>more_vert</mat-icon></button>
+        <mat-menu #myreportssettings="matMenu">
+          <a [routerLink]="" (click)="shareReport(element.report_id)" class="active-link" title="Download report" mat-menu-item><mat-icon class="vertical-align-middle">cloud_download</mat-icon> Download report</a>
+          <a [routerLink]="" (click)="removeReport(element)" class="active-link" title="Remove report" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove report</a>
+        </mat-menu>
       </mat-cell>
     </ng-container>
 
