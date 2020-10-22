@@ -478,7 +478,7 @@
             <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="changelogsettings"><mat-icon>more_vert</mat-icon></button>
             <mat-menu #changelogsettings="matMenu">
               <a [routerLink]="" (click)="editchangelog(element)" class="active-link" title="Edit event" mat-menu-item><mat-icon class="vertical-align-middle">edit</mat-icon> Edit event</a>
-              <a [routerLink]="" (click)="removefromchangelog(element)" class="active-link" title="Remove report" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove report</a>
+              <a [routerLink]="" (click)="removefromchangelog(element)" class="active-link" title="Remove event" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove event</a>
             </mat-menu>
 
           </td>
