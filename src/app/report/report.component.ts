@@ -228,6 +228,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The CVSS dialog was closed');
+      this.doStats();
     });
 
   }
