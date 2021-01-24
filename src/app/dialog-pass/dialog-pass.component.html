@@ -13,10 +13,8 @@
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
     <p *ngIf="error != ''">
-      <b>
-        <font color="red">
+      <b style="color: red">
           <mat-icon class="vertical-align-middle size-45">warning</mat-icon> {{error}}
-        </font>
       </b>
     </p>
     <div *ngIf="msg != ''">

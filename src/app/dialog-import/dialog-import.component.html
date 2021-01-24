@@ -18,7 +18,7 @@
       </mat-form-field>
       <p><input type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
       <p *ngIf="vulnrepojsonplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      <p *ngIf="vulnrepowrongpass"><font color="red"><b>Wrong security key!!!</b></font></p>
+      <p *ngIf="vulnrepowrongpass"><b style="color: red">Wrong security key!!!</b></p>
       <br>
       <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
     </span>

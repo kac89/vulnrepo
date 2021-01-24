@@ -69,7 +69,7 @@ export class DialogAddissueComponent implements OnInit {
       this.options = res.json();
     });
 
-    this.http.get('/assets/CWE.json?v=' + + new Date()).subscribe(res => {
+    this.http.get('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
       this.cwe = res.json();
     });
 
