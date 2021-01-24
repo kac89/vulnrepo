@@ -50,7 +50,7 @@ export class DialogAddissueComponent implements OnInit {
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filter2(title) : this.cwe.slice())
+        map(title => title ? this._filterCWE(title) : this.cwe.slice())
       );
 
   }
@@ -59,7 +59,7 @@ export class DialogAddissueComponent implements OnInit {
     const filterValue = name.toLowerCase();
     return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
-  private _filter2(name: string): Vulns[] {
+  private _filterCWE(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
     return this.cwe.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
