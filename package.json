@@ -31,7 +31,7 @@
     "events": "^3.2.0",
     "gulp-clone": "^2.0.1",
     "js-sha256": "^0.9.0",
-    "marked": "^1.1.1",
+    "marked": "^2.0.0",
     "material-design-icons": "^3.0.1",
     "ng2-charts": "^2.3.3",
     "rxjs": "^6.6.2",
