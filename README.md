@@ -6,8 +6,8 @@ Video walkthrough:
 [![Guide](https://img.youtube.com/vi/D6vmd4WhWFk/0.jpg)](https://www.youtube.com/watch?v=D6vmd4WhWFk)
 
 Environment:
-Angular CLI: 10.0.6
-Angular: 10
+Angular CLI: 11
+Angular: 11
 Node: 14.8.0
 
 ## Features
