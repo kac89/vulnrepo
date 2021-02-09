@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DialogPassComponent } from './dialog-pass.component';
 
@@ -6,7 +6,7 @@ describe('DialogPassComponent', () => {
   let component: DialogPassComponent;
   let fixture: ComponentFixture<DialogPassComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DialogPassComponent ]
     })

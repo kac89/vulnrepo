@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DialogChangekeyComponent } from './dialog-changekey.component';
 
@@ -6,7 +6,7 @@ describe('DialogChangekeyComponent', () => {
   let component: DialogChangekeyComponent;
   let fixture: ComponentFixture<DialogChangekeyComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DialogChangekeyComponent ]
     })

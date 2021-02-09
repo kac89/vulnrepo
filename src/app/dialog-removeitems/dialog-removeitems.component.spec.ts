@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DialogRemoveitemsComponent } from './dialog-removeitems.component';
 
@@ -6,7 +6,7 @@ describe('DialogRemoveitemsComponent', () => {
   let component: DialogRemoveitemsComponent;
   let fixture: ComponentFixture<DialogRemoveitemsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DialogRemoveitemsComponent ]
     })
