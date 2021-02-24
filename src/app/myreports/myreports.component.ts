@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IndexeddbService } from '../indexeddb.service';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
 import {SelectionModel} from '@angular/cdk/collections';
+import { v4 as uuid } from 'uuid';
 
 export interface MyReportElement {
   select: any;
@@ -69,6 +70,20 @@ export class MyreportsComponent implements OnInit {
         });
       }
 
+    });
+
+  }
+
+
+  cloneReport(item) {
+
+    item.report_name = 'Clone of ' + item.report_name;
+    item.report_id = uuid();
+
+    this.indexeddbService.cloneReportadd(item).then(data => {
+      if (data) {
+        this.getallreports();
+      }
     });
 
   }

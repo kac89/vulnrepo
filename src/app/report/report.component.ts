@@ -270,7 +270,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 \n\
 IP   | hostname | role | comments\n\
 ------|--------------|-------|---------------\n\
-127.0.0.1 | locahost.localdomain | PROD | client asked to test this one with care\n\
+127.0.0.1 | localhost.localdomain | PROD | client asked to test this one with care\n\
 255.255.255.255 | N/A | DMZ | test you can go do whatever you want on it\n\
 ';
 
