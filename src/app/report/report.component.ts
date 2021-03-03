@@ -867,12 +867,12 @@ Sample code here\n\
         <p class="card-text">Report Version: ' + escapeHtml(report_data.report_version) + '</p> \
         <p class="card-text">Report ID: ' + escapeHtml(report_metadata.report_id) + '</p>';
 
-    if (report_data.report_metadata.starttest !== '') {
+    if (report_data.report_metadata.starttest !== '' && report_data.report_metadata.endtest !== '') {
 
       const stringToSplit = new Date(report_data.report_metadata.starttest).toLocaleString();
       const x = stringToSplit.split(',');
 
-      const stringToSplit2 = new Date(report_data.report_metadata.starttest).toLocaleString();
+      const stringToSplit2 = new Date(report_data.report_metadata.endtest).toLocaleString();
       const y = stringToSplit2.split(',');
 
       // tslint:disable-next-line:max-line-length
