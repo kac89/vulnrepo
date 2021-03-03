@@ -553,6 +553,7 @@
             <p><mat-radio-button name="two" value="2">Dark</mat-radio-button></p>
           </mat-radio-group><br>
           <mat-checkbox [checked]="embedvid" (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox><br>
+          <mat-checkbox [checked]="changelog_page" (change)="removechangelogpage($event)">Remove changelog</mat-checkbox><br>
           <mat-checkbox [checked]="last_page" (change)="removeGeninfo($event)">Remove last page (gen. info)</mat-checkbox>
 
       </div>

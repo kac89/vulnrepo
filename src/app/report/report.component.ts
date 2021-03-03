@@ -51,6 +51,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   advhtml = '';
   embedvid = true;
   last_page = false;
+  changelog_page = false;
   report_css: any;
   report_id: string;
   report_info: any;
@@ -757,6 +758,15 @@ Sample code here\n\
     }
   }
 
+  removechangelogpage(event) {
+    if (event.checked === false) {
+      this.changelog_page = false;
+    }
+    if (event.checked === true) {
+      this.changelog_page = true;
+    }
+  }
+
   DownloadHTML(report_data, report_metadata) {
 
     function escapeHtml(unsafe) {
@@ -932,15 +942,20 @@ Sample code here\n\
   </li>';
     }
 
-    const tableofcontent_1 = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
-        <a href="#Changelog">Changelog</a> \
-    </li> \
+    let tableofcontent_1 = '';
+    if (this.changelog_page === false) {
+      tableofcontent_1 = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
+      <a href="#Changelog">Changelog</a> \
+  </li>';
+    }
+
+    const endtable = ' \
     </ul> \
     </div> \
     <br> \
     <div class="pagebreak"></div> \
     <br><br>';
-    const tableofcontent = tableofcontent_one + tableofcontentlist + summarycomment + authors + tableofcontent_1;
+    const tableofcontent = tableofcontent_one + tableofcontentlist + summarycomment + authors + tableofcontent_1 + endtable;
 
     const critical = report_data.report_vulns.filter(function (el) {
       return (el.severity === 'Critical');
@@ -1184,28 +1199,29 @@ Sample code here\n\
     }
 
 
+    let changeloghtml = '';
+    if (this.changelog_page === false) {
 
-    let changeloghtml = summarycomment_value + '<h3 id="Changelog">Changelog</h3> \
-<p><table class="table table-hover"> \
-<thead> \
-  <tr> \
-    <th>Date</th> \
-  <th>Description</th> \
-  </tr> \
-</thead> \
-<tbody>';
+      changeloghtml = summarycomment_value + '<h3 id="Changelog">Changelog</h3> \
+      <p><table class="table table-hover"> \
+      <thead> \
+        <tr> \
+          <th>Date</th> \
+        <th>Description</th> \
+        </tr> \
+      </thead> \
+      <tbody>';
 
+          report_data.report_changelog.forEach((item, index) => {
 
-    report_data.report_changelog.forEach((item, index) => {
+            changeloghtml = changeloghtml + '<tr> \
+      <td>' + escapeHtml(new Date(item.date).toLocaleString()) + '</td> \
+      <td>' + escapeHtml(item.desc) + '</td> \
+      </tr>';
+          });
+          changeloghtml = changeloghtml + '</tbody></table></p>';
 
-      changeloghtml = changeloghtml + '<tr> \
-<td>' + escapeHtml(new Date(item.date).toLocaleString()) + '</td> \
-<td>' + escapeHtml(item.desc) + '</td> \
-</tr>';
-
-    });
-
-    changeloghtml = changeloghtml + '</tbody></table></p>';
+    }
 
     let report_gen_info = '';
     if (this.last_page === false) {
