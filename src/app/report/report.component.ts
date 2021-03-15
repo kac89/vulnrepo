@@ -76,6 +76,12 @@ export class ReportComponent implements OnInit, OnDestroy {
     { severity: 'Low', count: 0 },
     { severity: 'Info', count: 0 }
   ];
+  issueStatus = [
+    { status: 'Open (Waiting for review)', value: 1},
+    { status: 'Fix In Progress', value: 2},
+    { status: 'Fixed', value: 3},
+    { status: 'Won\'t Fix', value: 4}
+  ];
 
   uploadlogoprev = '';
   adv_html: any;
@@ -767,7 +773,7 @@ Sample code here\n\
     }
   }
 
-  DownloadHTML(report_data, report_metadata) {
+  DownloadHTML(report_data, report_metadata, issueStatus) {
 
     function escapeHtml(unsafe) {
       return unsafe.toString()
@@ -782,6 +788,12 @@ Sample code here\n\
       return text.toString().replace(/(?:\r\n|\r|\n)/g, '<br>');
     }
 
+    function statusDesc(status) {
+      const ret = issueStatus.filter(function (el) {
+        return (el.value === status);
+      });
+      return ret[0].status;
+    }
 
     function parse_links(text) {
       const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -1081,14 +1093,26 @@ Sample code here\n\
 
     let issues = '<p><center><h3 id="Issues">Issues (' + report_data.report_vulns.length + ')</h3></center></p>';
     report_data.report_vulns.forEach((item, index) => {
+
+
+      let issstatus = '';
+      if (item.status) {
+        issstatus = '<dt>Issue status:</dt> \
+        <dd>' + statusDesc(item.status) + '</dd><br>';
+      }
+
+
+      const desc = '<dt>Vulnerability description</dt> \
+        <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
+
       issues = issues + ' \
       <div class="row"> \
       <h4 id="' + index + '"> \
       <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
       ' + escapeHtml(item.title) + '</h4> \
-        <dl> \
-          <dt>Vulnerability description</dt> \
-          <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
+        <dl>' + issstatus + desc;
+
+
 
       if (item.poc !== '' || item.files.length !== 0) {
         const ewe = ' \

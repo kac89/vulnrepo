@@ -178,8 +178,24 @@
               </a>
             </mat-panel-title>
             <mat-panel-description>
-              {{ (dec_data.cve.length>40)? (dec_data.cve | slice:0:40)+'..':(dec_data.cve) }}
+              {{ (dec_data.cve.length>30) ? (dec_data.cve | slice:0:30)+'..':(dec_data.cve) }}
             </mat-panel-description>
+
+            <mat-panel-description *ngIf="dec_data?.status" fxLayoutAlign="end">
+              <div *ngIf="dec_data?.status === 1">
+                <mat-icon style="color:red" title="Issue status: Open (Waiting for review)" class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon>
+              </div>
+              <div *ngIf="dec_data?.status === 2">
+                <mat-icon style="color:yellow" title="Issue status: Fix In Progress" class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon>
+              </div>
+              <div *ngIf="dec_data?.status === 3">
+                <mat-icon style="color:green" title="Issue status: Fixed" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+              </div>
+              <div *ngIf="dec_data?.status === 4">
+                <mat-icon style="color:green" title="Issue status: Won't Fix" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+              </div>
+            </mat-panel-description>
+
           </mat-expansion-panel-header>
           <mat-expansion-panel-header *cdkDragPlaceholder></mat-expansion-panel-header>
 
@@ -188,7 +204,7 @@
             <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
-                <textarea [(ngModel)]="dec_data.poc" matInput rows="6"></textarea>
+                <textarea [(ngModel)]="dec_data.poc" matInput rows="8"></textarea>
               </mat-form-field>
             </div>
         
@@ -196,6 +212,16 @@
 
 
               <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                  <mat-form-field class="example-full-width" color="accent">
+                    <mat-select placeholder="Issue status" [(value)]="dec_data.status" [ngModel]="dec_data.status" (ngModelChange)="doStats()">
+                      <mat-option *ngFor="let issuestat of issueStatus" [value]="issuestat.value">
+                        {{issuestat.status}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
 
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
@@ -207,8 +233,7 @@
             
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
-                    <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
-                      (ngModelChange)="doStats()">
+                    <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity" (ngModelChange)="doStats()">
                       <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
                         {{sev.severity}}
                       </mat-option>
@@ -616,7 +641,7 @@
               </div>
 
               <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
-                <button style="width: 100%;" (click)="DownloadHTML(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
+                <button style="width: 100%;" (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)" class="mat-elevation-z9"
                 mat-raised-button color="warn">
                 <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
               </button>
