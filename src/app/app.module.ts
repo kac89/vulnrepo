@@ -61,6 +61,7 @@ import { HammerModule } from '@angular/platform-browser';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogCveComponent } from './dialog-cve/dialog-cve.component';
 import { FaqComponent } from './faq/faq.component';
+import { DialogCustomcontentComponent } from './dialog-customcontent/dialog-customcontent.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { FaqComponent } from './faq/faq.component';
     DialogRemoveitemsComponent,
     DialogCvssComponent,
     DialogCveComponent,
-    FaqComponent
+    FaqComponent,
+    DialogCustomcontentComponent
   ],
   imports: [
     BrowserModule,
@@ -125,7 +127,7 @@ import { FaqComponent } from './faq/faq.component';
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,
     DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent,
-    DialogRemoveitemsComponent, DialogCvssComponent],
+    DialogRemoveitemsComponent, DialogCvssComponent, DialogCustomcontentComponent],
   exports: [],
   bootstrap: [AppComponent]
 })

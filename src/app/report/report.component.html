@@ -192,7 +192,7 @@
                 <mat-icon style="color:green" title="Issue status: Fixed" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
               </div>
               <div *ngIf="dec_data?.status === 4">
-                <mat-icon style="color:green" title="Issue status: Won't Fix" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+                <mat-icon style="color:grey" title="Issue status: Won't Fix" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
               </div>
             </mat-panel-description>
 
@@ -549,13 +549,16 @@
             <a [routerLink]="" (click)="changesecuritykey(reportdesc.report_id)" class="active-link" title="Change report security key" mat-menu-item>
               <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
             </a>
+            <a [routerLink]="" (click)="addCustomcontent(decryptedReportDataChanged)" class="active-link" title="Add custom content to report" mat-menu-item>
+              <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add custom content to report
+            </a>
         </mat-menu>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
-        <div fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
 
             <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px"><button *ngIf="advlogo_saved"
             mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo">
@@ -570,29 +573,22 @@
 
         </div>
 
-        <div fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
-
+        <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
           HTML theme:<br>
           <mat-radio-group color="accent" (change)="themechange($event)">
             <p><mat-radio-button name="one" [checked]="true" value="1">White (default)</mat-radio-button></p>
             <p><mat-radio-button name="two" value="2">Dark</mat-radio-button></p>
-          </mat-radio-group><br>
+          </mat-radio-group>
+        </div>
+
+        <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
           <mat-checkbox [checked]="embedvid" (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox><br>
+        </div>
+
+        <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
+          <mat-checkbox [checked]="remove_researchers" (change)="removeResearchers($event)">Remove researcher</mat-checkbox><br>
           <mat-checkbox [checked]="changelog_page" (change)="removechangelogpage($event)">Remove changelog</mat-checkbox><br>
           <mat-checkbox [checked]="last_page" (change)="removeGeninfo($event)">Remove last page (gen. info)</mat-checkbox>
-
-      </div>
-
-        <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-            <mat-form-field appearance="outline" class="example-full-width" color="accent">
-              <mat-label>Custom content</mat-label>
-              <textarea rows="6" matInput placeholder="HTML content"
-                [(ngModel)]="decryptedReportDataChanged.report_settings.report_html"
-                value="{{decryptedReportDataChanged.report_settings.report_html}}"></textarea>
-              <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf. You can use Markdown or HTML.</mat-hint>
-            </mat-form-field>
-
         </div>
 
       </div>

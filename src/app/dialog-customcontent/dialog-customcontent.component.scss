@@ -1,0 +1,13 @@
+.example-full-width {
+    width: 100%;
+  }
+
+  .fixActionRow {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .spacer {
+    flex-grow: 1;
+  }
