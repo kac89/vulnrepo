@@ -12,7 +12,7 @@
     </div>
     <mat-card-title style="display: flex">Report information
       &nbsp;
-      <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="reportsetting">
+      <button *ngIf="decryptedReportDataChanged" mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="reportsetting">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #reportsetting="matMenu">
