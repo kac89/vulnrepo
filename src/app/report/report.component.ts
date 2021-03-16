@@ -20,6 +20,7 @@ import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.c
 import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
+import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
 import marked from 'marked';
 import { sha256 } from 'js-sha256';
 
@@ -51,6 +52,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   advhtml = '';
   embedvid = true;
   last_page = false;
+  remove_researchers = false;
   changelog_page = false;
   report_css: any;
   report_id: string;
@@ -432,6 +434,19 @@ Sample code here\n\
     this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);
   }
 
+  addCustomcontent(item) {
+
+    const dialogRef = this.dialog.open(DialogCustomcontentComponent, {
+      width: '550px',
+      height: '450px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
+  }
 
   editreporttitle(item) {
 
@@ -773,6 +788,15 @@ Sample code here\n\
     }
   }
 
+  removeResearchers(event) {
+    if (event.checked === false) {
+      this.remove_researchers = false;
+    }
+    if (event.checked === true) {
+      this.remove_researchers = true;
+    }
+  }
+
   DownloadHTML(report_data, report_metadata, issueStatus) {
 
     function escapeHtml(unsafe) {
@@ -948,10 +972,12 @@ Sample code here\n\
     }
 
     let authors = '';
-    if (report_data.researcher.length > 0) {
-      authors = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
-      <a href="#Report authors">Report authors</a> \
-  </li>';
+    if (this.remove_researchers === false) {
+      if (report_data.researcher.length > 0) {
+        authors = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
+        <a href="#Report authors">Report authors</a> \
+    </li>';
+      }
     }
 
     let tableofcontent_1 = '';
@@ -1181,45 +1207,41 @@ Sample code here\n\
 
     let authors_value = '';
     if (report_data.researcher.length > 0) {
+      if (this.remove_researchers === false) {
 
+        let aut = '';
+        report_data.researcher.forEach((ite, ind) => {
+          if (ite.reportername !== '') {
+            aut = aut + '<tr> \
+            <td>' + escapeHtml(ite.reportername) + '</td> \
+            <td>' + escapeHtml(ite.reporteremail) + '</td> \
+            <td>' + parse_links(escapeHtml(ite.reportersocial)) + '</td> \
+            <td>' + parse_links(escapeHtml(ite.reporterwww)) + '</td> \
+          </tr>';
+          }
+        });
 
+        const authtab = ' \
+  <table class="table table-hover"> \
+    <thead> \
+      <tr> \
+        <th scope="col">Name</th> \
+        <th scope="col">E-mail</th> \
+        <th scope="col">Social links</th> \
+        <th scope="col">Website</th> \
+      </tr> \
+    </thead> \
+    <tbody> \
+  ' + aut + ' \
+    </tbody> \
+  </table> \
+  ';
 
-      let aut = '';
+        // tslint:disable-next-line:max-line-length
+        authors_value = '<h3 id="Report authors">Report authors</h3><p>' + authtab + '</p><br>';
 
-      report_data.researcher.forEach((ite, ind) => {
+      }
 
-        if (ite.reportername !== '') {
-          aut = aut + '<tr> \
-          <td>' + escapeHtml(ite.reportername) + '</td> \
-          <td>' + escapeHtml(ite.reporteremail) + '</td> \
-          <td>' + parse_links(escapeHtml(ite.reportersocial)) + '</td> \
-          <td>' + parse_links(escapeHtml(ite.reporterwww)) + '</td> \
-        </tr>';
-        }
-      });
-
-
-
-
-      const authtab = ' \
-<table class="table table-hover"> \
-  <thead> \
-    <tr> \
-      <th scope="col">Name</th> \
-      <th scope="col">E-mail</th> \
-      <th scope="col">Social links</th> \
-      <th scope="col">Website</th> \
-    </tr> \
-  </thead> \
-  <tbody> \
-' + aut + ' \
-  </tbody> \
-</table> \
-';
-
-
-      // tslint:disable-next-line:max-line-length
-      authors_value = '<h3 id="Report authors">Report authors</h3><p>' + authtab + '</p><br>';
     }
 
 
