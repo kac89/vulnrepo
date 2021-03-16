@@ -116,7 +116,7 @@ export class IndexeddbService {
         //        ],
 
 
-        const testststs = `### Methodology and Standards:
+        const defaultContent = `### Methodology and Standards:
 
 * OSTTMM(Open Source Security Testing Methodology Manual)
 * OWASP(Open Web Application Security Project)
@@ -152,7 +152,7 @@ export class IndexeddbService {
             }
           ],
           report_settings: {
-            report_html: testststs,
+            report_html: defaultContent,
             report_logo: ''
           }
         };

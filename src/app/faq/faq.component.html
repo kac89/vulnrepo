@@ -42,7 +42,7 @@
             4. Can I change report security key?
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <p>If you able to decrypt report where security key you want to change, yes!.</p>
+        <p>If you able to decrypt report where security key you want to change: yes!.</p>
       </mat-expansion-panel>
   
       <mat-expansion-panel>
@@ -75,7 +75,21 @@
         <p>(.VULN) - File contains only issues.</p>
         <p>(.VULNR) - File contains full report details e.g.: issues, metadata, author etc...</p>
       </mat-expansion-panel>
-  
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            8. What is the issue status?
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Issue status is information for the researcher and information in the report about issue current status of review/fixing/if issue still exist.</p>
+        <p>
+          <mat-icon style="color:red" title="Issue status: Open (Waiting for review)" class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon> - Open (Waiting for review)<br>
+          <mat-icon style="color:yellow" title="Issue status: Fix In Progress" class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon> - Fix In Progress<br>
+          <mat-icon style="color:green" title="Issue status: Fixed" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Fixed<br>
+          <mat-icon style="color:grey" title="Issue status: Won't Fix" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Won't Fix
+        </p>
+      </mat-expansion-panel>
     </mat-accordion>
   
     <br>
