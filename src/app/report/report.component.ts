@@ -53,6 +53,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   embedvid = true;
   last_page = false;
   remove_researchers = false;
+  remove_issuestatus = false;
   changelog_page = false;
   report_css: any;
   report_id: string;
@@ -797,6 +798,15 @@ Sample code here\n\
     }
   }
 
+  removeIssuestatus(event) {
+    if (event.checked === false) {
+      this.remove_issuestatus = false;
+    }
+    if (event.checked === true) {
+      this.remove_issuestatus = true;
+    }
+  }
+
   DownloadHTML(report_data, report_metadata, issueStatus) {
 
     function escapeHtml(unsafe) {
@@ -1122,11 +1132,12 @@ Sample code here\n\
 
 
       let issstatus = '';
-      if (item.status) {
-        issstatus = '<dt>Issue status:</dt> \
-        <dd>' + statusDesc(item.status) + '</dd><br>';
+      if (this.remove_issuestatus === false) {
+        if (item.status) {
+          issstatus = '<dt>Issue status:</dt> \
+          <dd>' + statusDesc(item.status) + '</dd><br>';
+        }
       }
-
 
       const desc = '<dt>Vulnerability description</dt> \
         <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
