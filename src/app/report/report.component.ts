@@ -383,6 +383,38 @@ Sample code here\n\
 
   }
 
+  export_by_severity(exportitem, severity) {
+
+    const bySeverity = exportitem.filter(item => item.severity === severity);
+
+    console.log('Export issues');
+    const dialogRef = this.dialog.open(DialogExportissuesComponent, {
+      width: '500px',
+      data: bySeverity
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
+  }
+
+
+
+  export_selected_issues(array, original) {
+    console.log('Export issues');
+    const dialogRef = this.dialog.open(DialogExportissuesComponent, {
+      width: '500px',
+      data: { sel: array, orig: original }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+
+    });
+
+  }
+
   export_issues(item) {
     console.log('Export issues');
     const dialogRef = this.dialog.open(DialogExportissuesComponent, {
@@ -392,8 +424,6 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
-
     });
 
   }
