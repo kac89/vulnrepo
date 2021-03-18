@@ -154,10 +154,35 @@
           </div>
       
           <div fxFlex.xs="100%">
-            <button style="width: 100%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
+
+            <mat-button-toggle-group>
+              <mat-button-toggle class="split-button-1">
+
+                <button style="width: 80%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
             (click)="export_issues(decryptedReportDataChanged.report_vulns)">
-            <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
-          </button>
+            <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues</button>
+
+              </mat-button-toggle>
+
+              <mat-button-toggle [matMenuTriggerFor]="dropdownMenuOne">
+
+                <button class="exportbutton" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button><mat-icon>arrow_drop_down</mat-icon></button>
+
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+            
+            <mat-menu #dropdownMenuOne="matMenu">
+              <button mat-menu-item (click)="export_selected_issues(selected3, decryptedReportDataChanged.report_vulns)">Export selected</button>
+              <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
+            </mat-menu>
+
+            <mat-menu #bysev="matMenu">
+              <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Critical')">Critical</button>
+              <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'High')">High</button>
+              <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Medium')">Medium</button>
+              <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
+              <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
+            </mat-menu>
           </div>
       
           <div fxFlex.xs="100%">
