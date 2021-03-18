@@ -387,32 +387,36 @@ Sample code here\n\
 
     const bySeverity = exportitem.filter(item => item.severity === severity);
 
-    console.log('Export issues');
-    const dialogRef = this.dialog.open(DialogExportissuesComponent, {
-      width: '500px',
-      data: bySeverity
-    });
+    if (bySeverity.length > 0) {
+      console.log('Export issues');
+      const dialogRef = this.dialog.open(DialogExportissuesComponent, {
+        width: '500px',
+        data: bySeverity
+      });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
-
+    }
   }
 
 
 
   export_selected_issues(array, original) {
-    console.log('Export issues');
-    const dialogRef = this.dialog.open(DialogExportissuesComponent, {
-      width: '500px',
-      data: { sel: array, orig: original }
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    const item1 = array.find(i => i === true);
 
-    });
+    if (item1) {
+      console.log('Export issues');
+      const dialogRef = this.dialog.open(DialogExportissuesComponent, {
+        width: '500px',
+        data: { sel: array, orig: original }
+      });
 
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+    }
   }
 
   export_issues(item) {
