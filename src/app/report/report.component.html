@@ -205,7 +205,7 @@
 
 
           <mat-expansion-panel-header cdkDragHandle>
-            <mat-panel-title>
+            <mat-panel-title style="margin-top: auto;">
               <mat-checkbox [(ngModel)]="selected3[i]" (change)="toggle()" (click)="$event.stopPropagation()">
               </mat-checkbox>&nbsp;&nbsp;<span
                 class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>&nbsp;&nbsp;{{dec_data.title}}
@@ -214,7 +214,7 @@
                 <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
               </a>
             </mat-panel-title>
-            <mat-panel-description>
+            <mat-panel-description fxLayoutAlign="center center">
               {{ (dec_data.cve.length>30) ? (dec_data.cve | slice:0:30)+'..':(dec_data.cve) }}
             </mat-panel-description>
 
