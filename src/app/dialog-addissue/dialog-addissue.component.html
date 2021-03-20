@@ -5,6 +5,8 @@
     <mat-option value="VULNREPO">VULNRΞPO</mat-option>
     <mat-option value="CWE">CWE Research Concepts</mat-option>
     <mat-option value="CVE">CVE (ONLINE DB)</mat-option>
+    <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+    <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
   </mat-select>
 </mat-form-field>
 </h1>
@@ -45,6 +47,33 @@
     </mat-form-field>
     <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://cve.circl.lu/">cve.circl.lu</a></span>
 </div>
+
+<div *ngIf="sourceSelect == 'MMOBILE'" class="example-form">
+  <mat-form-field class="example-form" color="accent" appearance="outline">
+    <mat-label>ATT&CK Mobile</mat-label>
+    <input cdkFocusInitial type="text" matInput placeholder="e.g.: Application Discovery" [formControl]="mymobilemitre" [matAutocomplete]="auto3">
+    <mat-autocomplete #auto3="matAutocomplete">
+        <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitremobile | async" [value]="option.title">
+          {{option.title}}
+        </mat-option>
+      </mat-autocomplete>
+  </mat-form-field>
+  <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></span>
+</div>
+
+<div *ngIf="sourceSelect == 'MENTERPRISE'" class="example-form">
+  <mat-form-field class="example-form" color="accent" appearance="outline">
+    <mat-label>ATT&CK Enterprise</mat-label>
+    <input cdkFocusInitial type="text" matInput placeholder="e.g.: DNS Server" [formControl]="myenterprisemitre" [matAutocomplete]="auto4">
+    <mat-autocomplete #auto4="matAutocomplete">
+        <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitreenterprise | async" [value]="option.title">
+          {{option.title}}
+        </mat-option>
+      </mat-autocomplete>
+  </mat-form-field>
+  <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></span>
+</div>
+
 <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
     {{err_msg}}
 </div>
@@ -52,6 +81,8 @@
   <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()">Add Issue</button>
   <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()">Add from CWE</button>
   <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()">Add from CVE</button>
+  <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()">Add from ATT&CK Mobile</button>
+  <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent" (click)="addattackEnterprise()">Add from ATT&CK Enterprise</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>

@@ -27,10 +27,16 @@ export class DialogAddissueComponent implements OnInit {
   myControl = new FormControl();
   myControl2 = new FormControl();
   mycve = new FormControl();
+  mymobilemitre = new FormControl();
+  myenterprisemitre = new FormControl();
   options: Vulns[] = [];
   cwe: Vulns[] = [];
+  mitremobile: Vulns[] = [];
+  mitreenterprise: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
   filteredOptionsCWE: Observable<Vulns[]>;
+  filteredOptionsmitremobile: Observable<Vulns[]>;
+  filteredOptionsmitreenterprise: Observable<Vulns[]>;
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
@@ -53,6 +59,20 @@ export class DialogAddissueComponent implements OnInit {
         map(title => title ? this._filterCWE(title) : this.cwe.slice())
       );
 
+      this.filteredOptionsmitremobile = this.mymobilemitre.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filtermitremobile(title) : this.mitremobile.slice())
+      );
+
+      this.filteredOptionsmitreenterprise = this.myenterprisemitre.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filtermitreenterprise(title) : this.mitreenterprise.slice())
+      );
+
   }
 
   private _filter(name: string): Vulns[] {
@@ -63,6 +83,17 @@ export class DialogAddissueComponent implements OnInit {
     const filterValue = name.toLowerCase();
     return this.cwe.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
+
+  private _filtermitremobile(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.mitremobile.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
+  private _filtermitreenterprise(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.mitreenterprise.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
   ngOnInit() {
 
     this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
@@ -71,6 +102,14 @@ export class DialogAddissueComponent implements OnInit {
 
     this.http.get('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
       this.cwe = res.json();
+    });
+
+    this.http.get('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
+      this.mitremobile = res.json();
+    });
+
+    this.http.get('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
+      this.mitreenterprise = res.json();
     });
 
   }
@@ -314,6 +353,82 @@ export class DialogAddissueComponent implements OnInit {
       this.show = false;
       this.err_msg = 'Empty field?.';
     }
+
+  }
+
+  addattackMobile() {
+
+    const data = this.mymobilemitre.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.mitremobile) {
+        if (this.mitremobile.hasOwnProperty(key)) {
+
+          if (this.mitremobile[key].title === data) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: this.mitremobile[key].title,
+              poc: this.mitremobile[key].poc,
+              files: [],
+              desc: this.mitremobile[key].desc,
+              severity: this.mitremobile[key].severity,
+              status: 1,
+              ref: this.mitremobile[key].ref,
+              cvss: this.mitremobile[key].cvss,
+              cve: this.mitremobile[key].cve,
+              date: today + ''
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.err_msg = 'Can\'t find ' + data;
+          }
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
+
+  }
+
+  addattackEnterprise() {
+
+    const data = this.myenterprisemitre.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.mitreenterprise) {
+        if (this.mitreenterprise.hasOwnProperty(key)) {
+
+          if (this.mitreenterprise[key].title === data) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: this.mitreenterprise[key].title,
+              poc: this.mitreenterprise[key].poc,
+              files: [],
+              desc: this.mitreenterprise[key].desc,
+              severity: this.mitreenterprise[key].severity,
+              status: 1,
+              ref: this.mitreenterprise[key].ref,
+              cvss: this.mitreenterprise[key].cvss,
+              cve: this.mitreenterprise[key].cve,
+              date: today + ''
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.err_msg = 'Can\'t find ' + data;
+          }
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
 
   }
 
