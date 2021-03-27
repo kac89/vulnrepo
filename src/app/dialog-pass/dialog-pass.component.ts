@@ -13,6 +13,7 @@ export class DialogPassComponent implements OnInit {
   hide = true;
   msg = '';
   error = '';
+  forgot = false;
 
   constructor(public router: Router, private indexeddbService: IndexeddbService,
     public dialogRef: MatDialogRef<DialogPassComponent>,
@@ -37,20 +38,21 @@ export class DialogPassComponent implements OnInit {
     this.msg = 'Report is decrypted please wait...';
 
     this.indexeddbService.decrypt(pass, report_id).then(returned => {
-
-      // console.log(`Returned: ${returned}`);
       if (returned) {
         this.dialogRef.close({ data: pass });
       } else {
         this.msg = '';
         this.error = 'Incorrect security key';
+        this.forgot = true;
       }
 
   });
 
-
-
   }
 
+  redir(): void {
+    this.dialogRef.close();
+    this.router.navigate(['/faq']);
+  }
 
 }

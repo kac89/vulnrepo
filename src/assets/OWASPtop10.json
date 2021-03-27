@@ -1,0 +1,92 @@
+[
+    {
+        "title": "A1: Injection",
+        "poc": "",
+        "desc": "An application is vulnerable to attack when: * User-supplied data is not validated, filtered, or sanitized by the application. * Dynamic queries or non-parameterized calls without context-aware escaping are used directly in the interpreter. * Hostile data is used within object-relational mapping (ORM) search parameters to extract additional, sensitive records. * Hostile data is directly used or concatenated, such that the SQL or command contains both structure and hostile data in dynamic queries, commands, or stored procedures. Some of the more common injections are SQL, NoSQL, OS command, Object Relational Mapping (ORM), LDAP, and Expression Language (EL) or Object Graph Navigation Library (OGNL) injection. The concept is identical among all interpreters. Source code review is the best method of detecting if applications are vulnerable to injections, closely followed by thorough automated testing of all parameters, headers, URL, cookies, JSON, SOAP, and XML data inputs. Organizations can include static source (SAST) and dynamic application test (DAST) tools into the CI/CD pipeline to identify newly introduced injection flaws prior to production deployment.",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A1_2017-Injection\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A2: Broken Authentication",
+        "poc": "",
+        "desc": "The prevalence of broken authentication is widespread due to the design and implementation of most identity and access controls. Session management is the bedrock of authentication and access controls, and is present in all stateful applications. Attackers can detect broken authentication using manual means and exploit them using automated tools with password lists and dictionary attacks. Confirmation of the user’s identity, authentication, and session management are critical to protect against authentication-related attacks. There may be authentication weaknesses if the application: * Permits automated attacks such as credential stuffing, where the attacker has a list of valid usernames and passwords. * Permits brute force or other automated attacks. * Permits default, weak, or well-known passwords, such as “Password1” or “admin/admin“. * Uses weak or ineffective credential recovery and forgot-password processes, such as “knowledge-based answers”, which cannot be made safe. * Uses plain text, encrypted, or weakly hashed passwords (see A3:2017-Sensitive Data Exposure). * Has missing or ineffective multi-factor authentication. * Exposes Session IDs in the URL (e.g., URL rewriting). * Does not rotate Session IDs after successful login. * Does not properly invalidate Session IDs. User sessions or authentication tokens (particularly single sign-on (SSO) tokens) aren’t properly invalidated during logout or a period of inactivity.",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A2_2017-Broken_Authentication\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A3: Sensitive Data Exposure",
+        "poc": "",
+        "desc": "Over the last few years, this has been the most common impactful attack. The most common flaw is simply not encrypting sensitive data. When crypto is employed, weak key generation and management, and weak algorithm, protocol and cipher usage is common, particularly for weak password hashing storage techniques. For data in transit, server-side weaknesses are mainly easy to detect, but hard for data at rest. The first thing is to determine the protection needs of data in transit and at rest. For example, passwords, credit card numbers, health records, personal information and business secrets require extra protection, particularly if that data falls under privacy laws, e.g. EU’s General Data Protection Regulation (GDPR), or regulations, e.g. financial data protection such as PCI Data Security Standard (PCI DSS). For all such data: * Is any data transmitted in clear text? This concerns protocols such as HTTP, SMTP, and FTP. External internet traffic is especially dangerous. Verify all internal traffic e.g. between load balancers, web servers, or back-end systems. * Are any old or weak cryptographic algorithms used either by default or in older code? * Are default crypto keys in use, weak crypto keys generated or re-used, or is proper key management or rotation missing? * Is encryption not enforced, e.g. are any user agent (browser) security directives or headers missing? * Does the user agent (e.g. app, mail client) not verify if the received server certificate is valid?",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A4: XML External Entities (XXE)",
+        "poc": "",
+        "desc": "By default, many older XML processors allow specification of an external entity, a URI that is dereferenced and evaluated during XML processing. SAST tools can discover this issue by inspecting dependencies and configuration. DAST tools require additional manual steps to detect and exploit this issue. Manual testers need to be trained in how to test for XXE, as it not commonly tested as of 2017. Applications and in particular XML-based web services or downstream integrations might be vulnerable to attack if: * The application accepts XML directly or XML uploads, especially from untrusted sources, or inserts untrusted data into XML documents, which is then parsed by an XML processor. * Any of the XML processors in the application or SOAP based web services has document type definitions (DTDs) enabled. As the exact mechanism for disabling DTD processing varies by processor, it is good practice to consult a reference such as the OWASP Cheat Sheet ‘XXE Prevention’. * If the application uses SAML for identity processing within federated security or single sign on (SSO) purposes. SAML uses XML for identity assertions, and may be vulnerable. * If the application uses SOAP prior to version 1.2, it is likely susceptible to XXE attacks if XML entities are being passed to the SOAP framework. Being vulnerable to XXE attacks likely means that the application is vulnerable to denial of service attacks including the Billion Laughs attack.",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A4_2017-XML_External_Entities_(XXE)\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A5: Broken Access Control",
+        "poc": "",
+        "desc": "Access control weaknesses are common due to the lack of automated detection, and lack of effective functional testing by application developers. Access control detection is not typically amenable to automated static or dynamic testing. Manual testing is the best way to detect missing or ineffective access control, including HTTP method (GET vs PUT, etc), controller, direct object references, etc. Access control enforces policy such that users cannot act outside of their intended permissions. Failures typically lead to unauthorized information disclosure, modification or destruction of all data, or performing a business function outside of the limits of the user. Common access control vulnerabilities include: * Bypassing access control checks by modifying the URL, internal application state, or the HTML page, or simply using a custom API attack tool. * Allowing the primary key to be changed to another’s users record, permitting viewing or editing someone else’s account. * Elevation of privilege. Acting as a user without being logged in, or acting as an admin when logged in as a user. * Metadata manipulation, such as replaying or tampering with a JSON Web Token (JWT) access control token or a cookie or hidden field manipulated to elevate privileges, or abusing JWT invalidation. * CORS misconfiguration allows unauthorized API access. * Force browsing to authenticated pages as an unauthenticated user or to privileged pages as a standard user. Accessing API with missing access controls for POST, PUT and DELETE.",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A6: Security Misconfiguration",
+        "poc": "",
+        "desc": "Security misconfiguration can happen at any level of an application stack, including the network services, platform, web server, application server, database, frameworks, custom code, and pre-installed virtual machines, containers, or storage. Automated scanners are useful for detecting misconfigurations, use of default accounts or configurations, unnecessary services, legacy options, etc. The application might be vulnerable if the application is: * Missing appropriate security hardening across any part of the application stack, or improperly configured permissions on cloud services. * Unnecessary features are enabled or installed (e.g. unnecessary ports, services, pages, accounts, or privileges). * Default accounts and their passwords still enabled and unchanged. * Error handling reveals stack traces or other overly informative error messages to users. * For upgraded systems, latest security features are disabled or not configured securely. * The security settings in the application servers, application frameworks (e.g. Struts, Spring, ASP.NET), libraries, databases, etc. not set to secure values. * The server does not send security headers or directives or they are not set to secure values. * The software is out of date or vulnerable (see A9:2017-Using Components with Known Vulnerabilities). Without a concerted, repeatable application security configuration process, systems are at a higher risk.",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A7: Cross-Site Scripting (XSS)",
+        "poc": "",
+        "desc": "XSS is the second most prevalent issue in the OWASP Top 10, and is found in around two thirds of all applications. Automated tools can find some XSS problems automatically, particularly in mature technologies such as PHP, J2EE / JSP, and ASP.NET. There are three forms of XSS, usually targeting users’ browsers: * Reflected XSS: The application or API includes unvalidated and unescaped user input as part of HTML output. A successful attack can allow the attacker to execute arbitrary HTML and JavaScript in the victim’s browser. Typically the user will need to interact with some malicious link that points to an attacker-controlled page, such as malicious watering hole websites, advertisements, or similar. * Stored XSS: The application or API stores unsanitized user input that is viewed at a later time by another user or an administrator. Stored XSS is often considered a high or critical risk. * DOM XSS: JavaScript frameworks, single-page applications, and APIs that dynamically include attacker-controllable data to a page are vulnerable to DOM XSS. Ideally, the application would not send attacker-controllable data to unsafe JavaScript APIs. Typical XSS attacks include session stealing, account takeover, MFA bypass, DOM node replacement or defacement (such as trojan login panels), attacks against the user’s browser such as malicious software downloads, key logging, and other client-side attacks.",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS)\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A8: Insecure Deserialization",
+        "poc": "",
+        "desc": "This issue is included in the Top 10 based on an industry survey and not on quantifiable data. Some tools can discover deserialization flaws, but human assistance is frequently needed to validate the problem. It is expected that prevalence data for deserialization flaws will increase as tooling is developed to help identify and address it. Applications and APIs will be vulnerable if they deserialize hostile or tampered objects supplied by an attacker. This can result in two primary types of attacks: * Object and data structure related attacks where the attacker modifies application logic or achieves arbitrary remote code execution if there are classes available to the application that can change behavior during or after deserialization. * Typical data tampering attacks such as access-control-related attacks where existing data structures are used but the content is changed. Serialization may be used in applications for: * Remote- and inter-process communication (RPC/IPC) * Wire protocols, web services, message brokers * Caching/Persistence * Databases, cache servers, file systems * HTTP cookies, HTML form parameters, API authentication tokens",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A8_2017-Insecure_Deserialization\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A9: Using Components with Known Vulnerabilities",
+        "poc": "",
+        "desc": "Prevalence of this issue is very widespread. Component-heavy development patterns can lead to development teams not even understanding which components they use in their application or API, much less keeping them up to date. Some scanners such as retire.js help in detection, but determining exploitability requires additional effort. You are likely vulnerable: * If you do not know the versions of all components you use (both client-side and server-side). This includes components you directly use as well as nested dependencies. * If software is vulnerable, unsupported, or out of date. This includes the OS, web/application server, database management system (DBMS), applications, APIs and all components, runtime environments, and libraries. * If you do not scan for vulnerabilities regularly and subscribe to security bulletins related to the components you use. * If you do not fix or upgrade the underlying platform, frameworks, and dependencies in a risk-based, timely fashion. This commonly happens in environments when patching is a monthly or quarterly task under change control, which leaves organizations open to many days or months of unnecessary exposure to fixed vulnerabilities. * If software developers do not test the compatibility of updated, upgraded, or patched libraries. * If you do not secure the components’ configurations (see A6:2017-Security Misconfiguration).",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A9_2017-Using_Components_with_Known_Vulnerabilities\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    },
+    {
+        "title": "A10: Insufficient Logging & Monitoring",
+        "poc": "",
+        "desc": "This issue is included in the Top 10 based on an industry survey. One strategy for determining if you have sufficient monitoring is to examine the logs following penetration testing. The testers’ actions should be recorded sufficiently to understand what damages they may have inflicted. Insufficient logging, detection, monitoring and active response occurs any time: * Auditable events, such as logins, failed logins, and high-value transactions are not logged. * Warnings and errors generate no, inadequate, or unclear log messages. * Logs of applications and APIs are not monitored for suspicious activity. * Logs are only stored locally. * Appropriate alerting thresholds and response escalation processes are not in place or effective. * Penetration testing and scans by DAST tools (such as OWASP ZAP) do not trigger alerts. * The application is unable to detect, escalate, or alert for active attacks in real time or near real time. You are vulnerable to information leakage if you make logging and alerting events visible to a user or an attacker (see A3:2017-Sensitive Data Exposure).",
+        "severity": "High",
+        "ref": "https://owasp.org/www-project-top-ten/2017/A10_2017-Insufficient_Logging%2526Monitoring\nhttps://owasp.org/www-project-top-ten/",
+        "cvss": "6",
+        "cve": ""
+    }
+]
