@@ -12,11 +12,20 @@
       <input matInput placeholder="Report security key" #pass (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </mat-form-field>
-    <p *ngIf="error != ''">
-      <b style="color: red">
-          <mat-icon class="vertical-align-middle size-45">warning</mat-icon> {{error}}
-      </b>
-    </p>
+
+    <div class="example-full-width" fxLayout="row" fxLayoutGap="10px grid">
+      <div fxFlex="65%" fxLayoutAlign="flex-start center">
+        <p *ngIf="error != ''">
+          <span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">warning</mat-icon> {{error}}</span><br>
+        </p>
+      </div>
+      <div fxFlex="35%" fxLayoutAlign="flex-end center">
+        <div *ngIf="forgot">
+          <a class="active-link" href="/faq" routerLink="/faq" (click)="redir()">Forgot your key?</a>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf="msg != ''">
       <p>{{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
     </div>
@@ -25,7 +34,9 @@
 </div>
 <br>
 <div md-dialog-actions>
+  <div>
     <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)">Confirm</button>
     &nbsp;
     <button mat-flat-button color="primary" (click)="cancel()">Cancel</button>
+  </div>
 </div>

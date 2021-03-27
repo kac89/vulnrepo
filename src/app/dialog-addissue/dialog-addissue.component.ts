@@ -18,6 +18,21 @@ export interface Vulns {
   severity: string;
 }
 
+export interface PCI {
+  maincategory: string;
+  items: Array<PCIRequirments>;
+}
+
+export interface PCIRequirments {
+  title: string;
+  testing: Array<PCITesting>;
+  guidance: string;
+}
+
+export interface PCITesting {
+  title: string;
+}
+
 @Component({
   selector: 'app-dialog-addissue',
   templateUrl: './dialog-addissue.component.html',
@@ -29,14 +44,20 @@ export class DialogAddissueComponent implements OnInit {
   mycve = new FormControl();
   mymobilemitre = new FormControl();
   myenterprisemitre = new FormControl();
+  myPCI = new FormControl();
+  myOWASP = new FormControl();
   options: Vulns[] = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];
   mitreenterprise: Vulns[] = [];
+  pcidssv3: any;
+  owasptop: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
   filteredOptionsCWE: Observable<Vulns[]>;
   filteredOptionsmitremobile: Observable<Vulns[]>;
   filteredOptionsmitreenterprise: Observable<Vulns[]>;
+  filteredOptionsPCIDSS: Observable<string[]>;
+  filteredOptionsOWASPtop: Observable<Vulns[]>;
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
@@ -52,25 +73,38 @@ export class DialogAddissueComponent implements OnInit {
         map(title => title ? this._filter(title) : this.options.slice())
       );
 
-      this.filteredOptionsCWE = this.myControl2.valueChanges
+    this.filteredOptionsCWE = this.myControl2.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filterCWE(title) : this.cwe.slice())
       );
 
-      this.filteredOptionsmitremobile = this.mymobilemitre.valueChanges
+    this.filteredOptionsmitremobile = this.mymobilemitre.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filtermitremobile(title) : this.mitremobile.slice())
       );
 
-      this.filteredOptionsmitreenterprise = this.myenterprisemitre.valueChanges
+    this.filteredOptionsmitreenterprise = this.myenterprisemitre.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filtermitreenterprise(title) : this.mitreenterprise.slice())
+      );
+
+    this.filteredOptionsPCIDSS = this.myPCI.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterPCI(value))
+      );
+
+      this.filteredOptionsOWASPtop = this.myOWASP.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filterOWASP(title) : this.owasptop.slice())
       );
 
   }
@@ -94,6 +128,27 @@ export class DialogAddissueComponent implements OnInit {
     return this.mitreenterprise.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
+  ////////////
+  private _filterPCI(value: string): string[] {
+    if (value) {
+      return this.pcidssv3
+        .map(group => ({ maincategory: group.maincategory, items: this._filt3r(group.items, value) }))
+        .filter(group => group.items.length > 0);
+    }
+    return this.pcidssv3;
+  }
+
+  private _filt3r(opt, value: string): string[] {
+    const filterValue = value.toString().toLowerCase();
+    return opt.filter(item => item.title.toString().toLowerCase().indexOf(filterValue) >= 0);
+  }
+  ////////////
+
+  private _filterOWASP(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.owasptop.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
   ngOnInit() {
 
     this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
@@ -110,6 +165,14 @@ export class DialogAddissueComponent implements OnInit {
 
     this.http.get('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
       this.mitreenterprise = res.json();
+    });
+
+    this.http.get('/assets/pcidssv3.2.1.json?v=' + + new Date()).subscribe(res => {
+      this.pcidssv3 = res.json();
+    });
+
+    this.http.get('/assets/OWASPtop10.json?v=' + + new Date()).subscribe(res => {
+      this.owasptop = res.json();
     });
 
   }
@@ -431,5 +494,104 @@ export class DialogAddissueComponent implements OnInit {
 
 
   }
+
+
+
+  addPCIDSS() {
+    const data = this.myPCI.value;
+    if (data !== '' && data !== null) {
+
+      for (const key in this.pcidssv3) {
+
+        if (this.pcidssv3.hasOwnProperty(key)) {
+
+          for (const ile in this.pcidssv3[key].items) {
+
+            if (this.pcidssv3[key].items[ile].title === data) {
+
+              let tytul = this.pcidssv3[key].items[ile].title;
+
+               tytul = tytul.split(':')[0];
+
+              if (tytul.length >= 100) {
+                tytul = tytul.substring(0, 100);
+                tytul = tytul + '...';
+              }
+
+              let il = '';
+              this.pcidssv3[key].items[ile].testing.forEach(item => {
+                il = il + item.title + '\n\n';
+              });
+
+              const date = new Date();
+              const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+              const def = {
+                title: tytul,
+                poc: 'Testing:\n\n' + il + '\nGuidance:\n\n' + this.pcidssv3[key].items[ile].guidance,
+                files: [],
+                // tslint:disable-next-line:max-line-length
+                desc: this.pcidssv3[key].items[ile].title,
+                severity: 'Info',
+                status: 1,
+                ref: 'https://www.pcisecuritystandards.org/\nhttps://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf',
+                cvss: '',
+                cve: '',
+                date: today + ''
+              };
+              this.dialogRef.close(def);
+              break;
+
+            } else {
+              this.err_msg = 'Can\'t find ' + data;
+            }
+
+          }
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
+
+  }
+
+
+  addOWASPtop() {
+    const data = this.myOWASP.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.owasptop) {
+        if (this.owasptop.hasOwnProperty(key)) {
+
+          if (this.owasptop[key].title === data) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: this.owasptop[key].title,
+              poc: this.owasptop[key].poc,
+              files: [],
+              desc: this.owasptop[key].desc,
+              severity: this.owasptop[key].severity,
+              status: 1,
+              ref: this.owasptop[key].ref,
+              cvss: this.owasptop[key].cvss,
+              cve: this.owasptop[key].cve,
+              date: today + ''
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.err_msg = 'Can\'t find ' + data;
+          }
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
+  }
+
 
 }

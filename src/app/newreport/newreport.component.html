@@ -37,12 +37,10 @@
 
       </md-card>
 
-
-
     </div>
 
     <p><mat-icon style="color: red" class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> Do not lose your security key! cause access to the report will be impossible!</p>
-    <p *ngIf="alert"><b style="color: red">{{alert}}</b></p>
+    <p *ngIf="alert"><br><span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">error</mat-icon> {{alert}}</span><br></p><br>
     <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value,pass2.value)"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">save</mat-icon> Save</button>
 
   </mat-card>

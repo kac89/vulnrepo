@@ -3,10 +3,12 @@
   <mat-label>Source</mat-label>
   <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
     <mat-option value="VULNREPO">VULNRΞPO</mat-option>
-    <mat-option value="CWE">CWE Research Concepts</mat-option>
     <mat-option value="CVE">CVE (ONLINE DB)</mat-option>
+    <mat-option value="CWE">CWE Research Concepts</mat-option>
     <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
     <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+    <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
+    <mat-option value="OWASPTOP">OWASP Top 10 Web Application Security Risks</mat-option>
   </mat-select>
 </mat-form-field>
 </h1>
@@ -22,7 +24,7 @@
             </mat-option>
           </mat-autocomplete>
       </mat-form-field>
-      <span fxLayoutAlign="flex-end"><a class="active-link" href="/vuln-list" routerLink="/vuln-list" (click)="redir()">Vulnerability List</a></span>
+      <span fxLayoutAlign="flex-end"><small><a class="active-link" href="/vuln-list" routerLink="/vuln-list" (click)="redir()">Vulnerability List</a></small></span>
   </div>
   
 
@@ -36,16 +38,16 @@
           </mat-option>
         </mat-autocomplete>
     </mat-form-field>
-    <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://cwe.mitre.org/data/index.html">cwe.mitre.org</a></span>
+    <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://cwe.mitre.org/data/index.html">cwe.mitre.org</a></small></span>
 </div>
 
 
   <div *ngIf="sourceSelect == 'CVE'" class="example-form">
     <mat-form-field class="example-form" color="accent" appearance="outline">
       <mat-label>CVE</mat-label>
-      <input type="text" matInput placeholder="e.g.: CVE-2016-0077" [formControl]="mycve">
+      <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2016-0077" [formControl]="mycve">
     </mat-form-field>
-    <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://cve.circl.lu/">cve.circl.lu</a></span>
+    <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://cve.circl.lu/">cve.circl.lu</a></small></span>
 </div>
 
 <div *ngIf="sourceSelect == 'MMOBILE'" class="example-form">
@@ -58,7 +60,7 @@
         </mat-option>
       </mat-autocomplete>
   </mat-form-field>
-  <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></span>
+  <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></small></span>
 </div>
 
 <div *ngIf="sourceSelect == 'MENTERPRISE'" class="example-form">
@@ -71,7 +73,35 @@
         </mat-option>
       </mat-autocomplete>
   </mat-form-field>
-  <span fxLayoutAlign="flex-end"><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></span>
+  <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/enterprise/">attack.mitre.org</a></small></span>
+</div>
+
+<div *ngIf="sourceSelect == 'PCIDSS'" class="example-form">
+  <mat-form-field class="example-form" color="accent" appearance="outline">
+    <mat-label>PCI DSS Requirements v3.2.1</mat-label>
+    <input cdkFocusInitial type="text" matInput placeholder="e.g.: Firewall" [formControl]="myPCI" [matAutocomplete]="auto5">
+    <mat-autocomplete #auto5="matAutocomplete">
+      <mat-optgroup *ngFor="let group of filteredOptionsPCIDSS | async" [label]="group.maincategory" [title]="group.maincategory">
+        <mat-option *ngFor="let item of group.items" [value]="item.title" [title]="item.title">
+          {{item.title}}
+        </mat-option>
+    </mat-optgroup>
+      </mat-autocomplete>
+  </mat-form-field>
+  <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
+</div>
+
+<div *ngIf="sourceSelect == 'OWASPTOP'" class="example-form">
+  <mat-form-field class="example-form" color="accent" appearance="outline">
+    <mat-label>OWASP category</mat-label>
+    <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP" [matAutocomplete]="auto6">
+    <mat-autocomplete #auto6="matAutocomplete">
+      <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop | async" [value]="option.title">
+        {{option.title}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
 </div>
 
 <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
@@ -83,6 +113,8 @@
   <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()">Add from CVE</button>
   <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()">Add from ATT&CK Mobile</button>
   <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent" (click)="addattackEnterprise()">Add from ATT&CK Enterprise</button>
+  <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()">Add from PCI DSS Requirements</button>
+  <button *ngIf="sourceSelect == 'OWASPTOP'" mat-raised-button color="accent" (click)="addOWASPtop()">Add OWASP Top 10</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>

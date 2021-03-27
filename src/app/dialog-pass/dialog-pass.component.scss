@@ -7,3 +7,14 @@
   .example-full-width {
     width: 100%;
   }
+
+  .label {
+    color: white;
+    padding: 8px;
+  }
+
+.success {background-color: #4CAF50;} /* Green */
+.info {background-color: #2196F3;} /* Blue */
+.warning {background-color: #ff9800;} /* Orange */
+.danger {background-color: #FF0039;} /* Red */
+.other {background-color: #e7e7e7; color: black;} /* Gray */

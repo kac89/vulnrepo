@@ -43,6 +43,8 @@ export class SettingsComponent implements OnInit {
 
     this.wipemsg = 'Deleted database successfully!';
 
+    window.location.href = window.location.protocol + '//' + window.location.host;
+
   }
 
 
