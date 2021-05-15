@@ -41,6 +41,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { IndexeddbService } from './indexeddb.service';
 import { MatChipsModule } from '@angular/material/chips';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatePipe } from '@angular/common';
@@ -62,6 +63,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DialogCveComponent } from './dialog-cve/dialog-cve.component';
 import { FaqComponent } from './faq/faq.component';
 import { DialogCustomcontentComponent } from './dialog-customcontent/dialog-customcontent.component';
+import { DialogApikeyComponent } from './dialog-apikey/dialog-apikey.component';
+import { DialogApiaddComponent } from './dialog-apiadd/dialog-apiadd.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +87,9 @@ import { DialogCustomcontentComponent } from './dialog-customcontent/dialog-cust
     DialogCvssComponent,
     DialogCveComponent,
     FaqComponent,
-    DialogCustomcontentComponent
+    DialogCustomcontentComponent,
+    DialogApikeyComponent,
+    DialogApiaddComponent
   ],
   imports: [
     BrowserModule,
@@ -116,6 +121,7 @@ import { DialogCustomcontentComponent } from './dialog-customcontent/dialog-cust
     MatSlideToggleModule,
     MatChipsModule,
     HttpModule,
+    HttpClientModule,
     MatSelectModule,
     DragDropModule,
     MatTabsModule,
@@ -127,7 +133,7 @@ import { DialogCustomcontentComponent } from './dialog-customcontent/dialog-cust
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,
     DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent,
-    DialogRemoveitemsComponent, DialogCvssComponent, DialogCustomcontentComponent],
+    DialogRemoveitemsComponent, DialogCvssComponent, DialogCustomcontentComponent, DialogApikeyComponent, DialogApiaddComponent],
   exports: [],
   bootstrap: [AppComponent]
 })

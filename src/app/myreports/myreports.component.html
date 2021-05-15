@@ -32,7 +32,7 @@
 <mat-card>
 
 
-  <mat-table *ngIf="list != 0" mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
+  <mat-table *ngIf="dataSource.data.length != 0" mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
 
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
@@ -52,30 +52,49 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="source">
+    <mat-header-cell *matHeaderCellDef><mat-icon title="Where reports are stored">folder</mat-icon></mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span *ngIf="!element.api"><mat-icon title="Local Host">computer</mat-icon></span>
+      <span *ngIf="element.api == 'remote'"><mat-icon title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon></span>
+    </mat-cell>
+  </ng-container>
+
     <ng-container matColumnDef="report_name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75'"> Title </mat-header-cell>
-      <mat-cell *matCellDef="let element" [ngClass]="'w-75'"> <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/" href="#">{{element.report_name}}</a> </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-70 th-left'"> TITLE </mat-header-cell>
+      <mat-cell *matCellDef="let element" [ngClass]="'w-70 th-left'">
+        <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/" href="#">{{element.report_name}}</a>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="report_createdate">
-      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75 th-right'"> Create Date </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75 th-right'"> CREATE DATE </mat-header-cell>
       <mat-cell *matCellDef="let element" [ngClass]="'w-75 th-right'"> {{element.report_createdate | date:'medium'}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="report_lastupdate">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Last Update </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> LAST UPDATE </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.report_lastupdate | date:'medium'}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="settings">
-      <mat-header-cell *matHeaderCellDef class="mat-column-2"> Settings </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef class="mat-column-2"><mat-icon title="Settings">settings</mat-icon></mat-header-cell>
       <mat-cell *matCellDef="let element">
         <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="myreportssettings"><mat-icon>more_vert</mat-icon></button>
         <mat-menu #myreportssettings="matMenu">
           <a [routerLink]="" (click)="shareReport(element.report_id)" class="active-link" title="Download report" mat-menu-item><mat-icon class="vertical-align-middle">cloud_download</mat-icon> Download report</a>
-          <a [routerLink]="" (click)="cloneReport(element)" class="active-link" title="Clone report" mat-menu-item><mat-icon class="vertical-align-middle">flip_to_front</mat-icon> Clone report</a>
+          <a *ngIf="!element.api" [routerLink]="" (click)="cloneReport(element)" class="active-link" title="Clone report" mat-menu-item><mat-icon class="vertical-align-middle">flip_to_front</mat-icon> Clone report</a>
+          <a *ngIf="!element.api && keyfound" [routerLink]="" [matMenuTriggerFor]="fish" title="Save report on API" mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon> Save on API</a>
+          <a *ngIf="element.api" [routerLink]="" (click)="fromAPIcloneReport(element)" class="active-link" title="Save report locally" mat-menu-item><mat-icon class="vertical-align-middle">save_alt</mat-icon> Save locally</a>
           <a [routerLink]="" (click)="removeReport(element)" class="active-link" title="Remove report" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove report</a>
         </mat-menu>
+        <mat-menu #fish="matMenu">
+          <span *ngFor="let apis of apilist">
+            <a [routerLink]="" (click)="toAPIcloneReport(element, apis.value, apis.apikey)" class="active-link" title="API: {{apis.value}}" mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon> {{apis.viewValue}}</a>
+          </span>
+          
+        </mat-menu>
+        
       </mat-cell>
     </ng-container>
 
@@ -87,19 +106,24 @@
   <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
     <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-      <div *ngIf="list != 0 && selection.selected.length > 0" style="padding: 20px 0px 0px 20px;">
-        <button title="Remove selected items" mat-icon-button color="warn" (click)="removeSelecteditems()">
-        <mat-icon>delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
-      </button>
-    </div>
+      <div *ngIf="dataSource.data.length != 0 && selection.selected.length > 0" style="padding: 20px 0px 0px 20px;">
+          <button title="Remove selected items" mat-icon-button color="warn" (click)="removeSelecteditems()">
+          <mat-icon>delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
+        </button>
+      </div>
+
+      <div *ngIf="msg != ''" style="padding: 30px 0px 0px 20px;">
+        {{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+
     </div>
 
     <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-      <br *ngIf="list != 0">
-      <mat-paginator *ngIf="list != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+      <br *ngIf="dataSource.data.length != 0">
+      <mat-paginator *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
     </div>
 
 </div>
 
-  <p *ngIf="list == 0">Your reports list is empty :-( </p>
+  <p *ngIf="dataSource.data.length == 0"><mat-icon title="sad :-(" class="vertical-align-middle padding-bottom-3 size-45">sentiment_very_dissatisfied</mat-icon> Your reports list is empty.</p>
 </mat-card>

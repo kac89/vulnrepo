@@ -22,9 +22,19 @@
           <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </mat-form-field>
 
+        <mat-form-field appearance="fill" color="accent">
+          <mat-label>Select where save report:</mat-label>
+          <mat-select (selectionChange)="selectchange($event)" [(value)]="selected">
+            <mat-option value="local">Local Host</mat-option>
+            <mat-optgroup [label]="'API'">
+              <mat-option *ngFor="let apis of localkey" [value]="apis">{{apis.viewValue}}</mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+        
       </md-card>
 
-      <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center center">
+      <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center">
         <div style="width: 100%">
 
           <p *ngIf="str != ''" fxLayoutAlign="center">Strength validation: {{str}}.</p>

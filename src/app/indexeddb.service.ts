@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { MessageService } from './message.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class IndexeddbService {
 
   private decryptstatusObs = new Subject<any>();
 
-  constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog) {
+  constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
+    private apiService: ApiService) {
 
     this.updateEncStatus(false);
     /*
@@ -198,6 +200,84 @@ export class IndexeddbService {
 
   }
 
+  addnewReportonAPI(apiurl: string, apikey: string, title: string, pass: string) {
+
+    if (title && pass) {
+
+      // detect space in pass
+      if (/\s/.test(pass)) {
+        console.log('space');
+
+      } else {
+
+        const defaultContent = `### Methodology and Standards:
+
+* OSTTMM(Open Source Security Testing Methodology Manual)
+* OWASP(Open Web Application Security Project)
+* ISSAF(Information Systems Security Assessment Framework)
+* WASC-TC(Web Application Security Consortium Threat Classification)
+* PTF(Penetration Testing Framework)
+* OISSG(Information Systems Security Assessment Framework)
+* NIST SP800-115(Technical Guide to Information Security Testing and Assessment)
+`;
+
+        const today: number = Date.now();
+        const empty_vulns = {
+          report_vulns: [],
+          report_scope: '',
+          report_summary: '',
+          report_changelog: [
+            {
+              date: today,
+              desc: 'Create report: \"' + title + '\".'
+            }
+          ],
+          report_version: 0,
+          report_metadata: {
+            starttest: '',
+            endtest: ''
+          },
+          researcher: [
+            {
+            reportername: '',
+            reportersocial: '',
+            reporterwww: '',
+            reporteremail: ''
+            }
+          ],
+          report_settings: {
+            report_html: defaultContent,
+            report_logo: ''
+          }
+        };
+
+        // Encrypt
+        const ciphertext = Crypto.AES.encrypt(JSON.stringify(empty_vulns), pass);
+
+        const reportid = uuid();
+        const data = {
+          report_id: reportid,
+          report_name: title,
+          report_createdate: today,
+          report_lastupdate: '',
+          encrypted_data: ciphertext.toString()
+        };
+
+
+          // tslint:disable-next-line:max-line-length
+          this.apiService.APISend(apiurl, apikey, 'savereport', 'reportid=' + reportid + '&reportdata=' + btoa(JSON.stringify(data))).then(resp => {
+            if (resp) {
+              this.router.navigate(['/my-reports']);
+            }
+          });
+
+
+      }
+
+    }
+
+  }
+
   importReport(data) {
     data = JSON.parse(data);
     // indexeddb communication
@@ -279,7 +359,6 @@ export class IndexeddbService {
 
   deleteReport(item: any) {
     return new Promise<any>((resolve, reject) => {
-
       this.getkeybyReportID(item.report_id).then(data => {
         if (data) {
 
@@ -304,7 +383,6 @@ export class IndexeddbService {
               resolve(true);
             };
           };
-
 
         }
       });
@@ -352,8 +430,9 @@ export class IndexeddbService {
         return this.decodeAES(data, pass);
       }
     });
-
   }
+
+
 
   decodeAES(data: any, pass: string) {
 
@@ -361,8 +440,6 @@ export class IndexeddbService {
       // Decrypt
       const bytes = Crypto.AES.decrypt(data.encrypted_data.toString(), pass);
       const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
-      // console.log('Deecrypted data:');
-      // console.log(decryptedData);
       if (decryptedData) {
         sessionStorage.setItem(data.report_id, pass);
       }
@@ -498,27 +575,65 @@ export class IndexeddbService {
   }
 
 
+  prepareupdateAPIreport(apiurl: string, apikey: string, data: any, pass: string, reportid: any, reportname: any, reportcreatedate: any) {
+    return new Promise<any>((resolve, reject) => {
+      try {
+        // Encrypt
+        const ciphertext = Crypto.AES.encrypt(JSON.stringify(data), pass);
+        const now: number = Date.now();
+        const to_update = {
+          report_id: reportid,
+          report_name: reportname,
+          report_createdate: reportcreatedate,
+          report_lastupdate: now,
+          encrypted_data: ciphertext.toString()
+        };
+
+        const localkey = sessionStorage.getItem('VULNREPO-API');
+        if (localkey) {
+          // tslint:disable-next-line:max-line-length
+          this.apiService.APISend(apiurl, apikey, 'updatereport', 'reportid=' + reportid + '&reportdata=' + btoa(JSON.stringify(to_update))).then(resp => {
+            if (resp.REPORT_UPDATE === 'OK') {
+              resolve(now);
+            }
+          });
+        }
+
+      } catch (except) {
+        console.log(except);
+      }
+
+    });
+
+  }
+
 
   downloadEncryptedReport(report_id) {
 
     this.checkifreportexist(report_id).then(data => {
       if (data) {
-        const enc = btoa(JSON.stringify(data));
-        const blob = new Blob([encodeURIComponent(enc)], { type: 'text/plain' });
-        const link = document.createElement('a');
-        const url = window.URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', data.report_name + ' ' + report_id + ' (vulnrepo.com).vulnr');
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
+        this.preparedownload(data);
+      } else {
+        this.checkAPIreport(report_id).then(re => {
+          this.preparedownload(re);
+        });
       }
 
     });
 
+  }
 
+  preparedownload(data) {
+    const enc = btoa(JSON.stringify(data));
+    const blob = new Blob([encodeURIComponent(enc)], { type: 'text/plain' });
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', data.report_name + ' ' + data.report_id + ' (vulnrepo.com).vulnr');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   cloneReportadd(report: string) {
@@ -548,5 +663,130 @@ export class IndexeddbService {
     });
   }
 
+  encryptKEY(key, pass) {
+    return new Promise<any>((resolve, reject) => {
+      const ciphertext = Crypto.AES.encrypt(key, pass);
+      resolve(ciphertext.toString());
+    });
+  }
+
+  decryptKEY(key, pass) {
+    return new Promise<any>((resolve, reject) => {
+      const bytes = Crypto.AES.decrypt(key.toString(), pass);
+      const decryptedData = bytes.toString(Crypto.enc.Utf8);
+      resolve(decryptedData.toString());
+    });
+  }
+
+  saveKEYinDB(key) {
+    return new Promise<any>((resolve, reject) => {
+      // indexeddb communication
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-api', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('api');
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('api', 'readwrite');
+        const store = tx.objectStore('api');
+
+        store.put(key, 'vulnrepo-api-vault');
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve(true);
+        };
+      };
+
+    });
+  }
+
+  retrieveAPIkey() {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-api', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('api', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('api', 'readwrite');
+        const store = tx.objectStore('api');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.get('vulnrepo-api-vault');
+
+        request.onsuccess = function (evt) {
+          resolve(request.result);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+  checkAPIreport(reportid) {
+    return new Promise<any>((resolve, reject) => {
+
+      const localkey = sessionStorage.getItem('VULNREPO-API');
+      if (localkey) {
+
+          const vaultobj = JSON.parse(localkey);
+
+          vaultobj.forEach( (element) => {
+            this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+
+              if (resp.length > 0) {
+                console.log('Report exist in API: OK');
+                resolve(resp[0]);
+              }
+            });
+
+        });
+
+      }
+
+
+    });
+  }
+
+  searchAPIreport(reportid) {
+    return new Promise<any>((resolve, reject) => {
+
+      const localkey = sessionStorage.getItem('VULNREPO-API');
+      if (localkey) {
+
+          const vaultobj = JSON.parse(localkey);
+
+          vaultobj.forEach( (element) => {
+            this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+
+              if (resp.length > 0) {
+                console.log('Report exist in API: OK');
+                resolve({data: resp[0], api: element.value, apikey: element.apikey});
+              }
+            });
+
+        });
+
+      }
+
+
+    });
+  }
 
 }

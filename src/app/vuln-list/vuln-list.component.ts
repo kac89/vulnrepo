@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { MatSort } from '@angular/material/sort';
 import {
   animate,
@@ -37,14 +37,14 @@ export class VulnListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.getvulnlistStatus = 'Loading...';
-    this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+    this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
 
-      this.dataSource = new MatTableDataSource<VulnsList[]>(res.json());
-      this.countvulns = res.json();
+      this.dataSource = new MatTableDataSource<VulnsList[]>(res);
+      this.countvulns = res;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.getvulnlistStatus = '';

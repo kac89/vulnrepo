@@ -1,0 +1,64 @@
+<h1 class="mat-display">
+    <mat-icon class="vertical-align-middle size-45">https</mat-icon> Access API Vault
+</h1>
+
+
+<div md-dialog-content>
+
+  <form class="example-form">
+
+    <mat-form-field style="width: 100%;" color="accent" appearance="fill">
+        <mat-label>Select an API</mat-label>
+        <mat-select [(value)]="selectedAPIDEF" [disabled]="apiconneted">
+          <mat-option *ngFor="let Importsource of sour" [value]="Importsource">
+            {{Importsource.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <div *ngIf="selectedAPIDEF.value == 'api.vulnrepo.com'">API: <a target="_blank" class="active-link" rel="noopener noreferrer" href="https://{{selectedAPIDEF.value}}/">https://{{selectedAPIDEF.value}}</a></div>
+      
+      <div *ngIf="selectedAPIDEF.value != 'api.vulnrepo.com'">
+        <mat-form-field class="example-full-width" color="accent">
+          <mat-label>API Name:</mat-label>
+          <input matInput placeholder="API Name" [(ngModel)]="apiname" name="apiname" value="">
+        </mat-form-field>
+  
+        <mat-form-field class="example-full-width" color="accent">
+          <mat-label>API URL:</mat-label>
+          <input matInput placeholder="https://API-URL" [(ngModel)]="apiurl" name="apiurl" value="">
+        </mat-form-field>
+      </div>
+
+
+      <mat-form-field class="example-full-width" color="accent">
+        <mat-label>API KEY:</mat-label>
+        <input matInput placeholder="API KEY" #apikey value="" [type]="hide ? 'password' : 'text'">
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </mat-form-field>
+
+      <div [hidden]="addapihide">
+        <mat-form-field class="example-full-width" color="accent">
+          <mat-label >Set your API Vault password:</mat-label>
+          <input matInput placeholder="Your storing API Vault password" #apikeypass value="" [type]="hide ? 'password' : 'text'">
+          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <p *ngIf="!apiconneted">Status: {{status}}</p>
+
+  </form>
+
+<div *ngIf="alert != ''">
+  <span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">warning</mat-icon> {{alert}}</span><br>
+</div>
+</div>
+<br>
+<div md-dialog-actions>
+  <div>
+    <button *ngIf="addapihide" mat-flat-button color="accent" (click)="addapi(apikey.value, selectedAPIDEF)">Confirm</button>
+    <button *ngIf="!addapihide" mat-flat-button color="accent" (click)="apiconnectManual(apikey.value, apikeypass.value, selectedAPIDEF)">Confirm</button>
+    &nbsp;
+    <button mat-flat-button color="primary" (click)="cancel()">Cancel</button>
+  </div>
+</div>

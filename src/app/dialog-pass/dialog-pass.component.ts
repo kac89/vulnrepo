@@ -41,9 +41,15 @@ export class DialogPassComponent implements OnInit {
       if (returned) {
         this.dialogRef.close({ data: pass });
       } else {
-        this.msg = '';
-        this.error = 'Incorrect security key';
-        this.forgot = true;
+
+        if (this.indexeddbService.decodeAES(this.data, pass)) {
+          this.dialogRef.close({ data: pass });
+        } else {
+          this.msg = '';
+          this.error = 'Incorrect security key';
+          this.forgot = true;
+        }
+
       }
 
   });
