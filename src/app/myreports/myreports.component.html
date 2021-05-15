@@ -84,7 +84,7 @@
         <mat-menu #myreportssettings="matMenu">
           <a [routerLink]="" (click)="shareReport(element.report_id)" class="active-link" title="Download report" mat-menu-item><mat-icon class="vertical-align-middle">cloud_download</mat-icon> Download report</a>
           <a *ngIf="!element.api" [routerLink]="" (click)="cloneReport(element)" class="active-link" title="Clone report" mat-menu-item><mat-icon class="vertical-align-middle">flip_to_front</mat-icon> Clone report</a>
-          <a *ngIf="!element.api" [routerLink]="" [matMenuTriggerFor]="fish" title="Save report on API" mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon> Save on API</a>
+          <a *ngIf="!element.api && keyfound" [routerLink]="" [matMenuTriggerFor]="fish" title="Save report on API" mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon> Save on API</a>
           <a *ngIf="element.api" [routerLink]="" (click)="fromAPIcloneReport(element)" class="active-link" title="Save report locally" mat-menu-item><mat-icon class="vertical-align-middle">save_alt</mat-icon> Save locally</a>
           <a [routerLink]="" (click)="removeReport(element)" class="active-link" title="Remove report" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove report</a>
         </mat-menu>

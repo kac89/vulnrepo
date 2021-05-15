@@ -31,6 +31,7 @@ export class MyreportsComponent implements OnInit {
   dataSource = new MatTableDataSource([]);
   selection = new SelectionModel<MyReportElement>(true, []);
   msg = '';
+  keyfound = false;
   apilist = [];
   list = [];
   private paginator: MatPaginator;
@@ -77,6 +78,7 @@ export class MyreportsComponent implements OnInit {
     if (localkey) {
       this.msg = 'API connection please wait...';
       console.log('Key found');
+      this.keyfound = true;
 
       const vaultobj = JSON.parse(localkey);
 

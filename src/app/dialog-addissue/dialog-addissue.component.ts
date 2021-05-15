@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Http } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -63,7 +63,7 @@ export class DialogAddissueComponent implements OnInit {
   show = false;
 
   constructor(public router: Router,
-    public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: Http,
+    public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
     private apiService: ApiService, private datePipe: DatePipe) {
 
     this.filteredOptions = this.myControl.valueChanges
@@ -151,28 +151,28 @@ export class DialogAddissueComponent implements OnInit {
 
   ngOnInit() {
 
-    this.http.get('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-      this.options = res.json();
+    this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+      this.options = res;
     });
 
-    this.http.get('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
-      this.cwe = res.json();
+    this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
+      this.cwe = res;
     });
 
-    this.http.get('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
-      this.mitremobile = res.json();
+    this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
+      this.mitremobile = res;
     });
 
-    this.http.get('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
-      this.mitreenterprise = res.json();
+    this.http.get<any>('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
+      this.mitreenterprise = res;
     });
 
-    this.http.get('/assets/pcidssv3.2.1.json?v=' + + new Date()).subscribe(res => {
-      this.pcidssv3 = res.json();
+    this.http.get<any>('/assets/pcidssv3.2.1.json?v=' + + new Date()).subscribe(res => {
+      this.pcidssv3 = res;
     });
 
-    this.http.get('/assets/OWASPtop10.json?v=' + + new Date()).subscribe(res => {
-      this.owasptop = res.json();
+    this.http.get<any>('/assets/OWASPtop10.json?v=' + + new Date()).subscribe(res => {
+      this.owasptop = res;
     });
 
   }
