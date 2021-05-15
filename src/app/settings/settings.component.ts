@@ -404,12 +404,6 @@ export class SettingsComponent implements OnInit {
       if (index !== -1) {
         result.splice(index, 1);
         this.openDialogAPIremove(result);
-
-        // if (pass) {
-          // sessionStorage.setItem('VULNREPO-API', JSON.stringify(result));
-          // this.saveAPIKEY(result, pass);
-        // }
-
       }
 
     }
