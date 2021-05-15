@@ -23,6 +23,7 @@ import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
 import marked from 'marked';
 import { sha256 } from 'js-sha256';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-report',
@@ -85,7 +86,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     { status: 'Fixed', value: 3},
     { status: 'Won\'t Fix', value: 4}
   ];
-
+  selectedtheme = 'white';
   uploadlogoprev = '';
   adv_html: any;
   advlogo: any;
@@ -96,7 +97,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     private http: Http,
     private indexeddbService: IndexeddbService,
     public router: Router,
-    private messageService: MessageService) {
+    private messageService: MessageService, private apiService: ApiService) {
 
     // console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
@@ -146,12 +147,28 @@ export class ReportComponent implements OnInit, OnDestroy {
         }
 
       } else {
-        console.log('Report exist: FAIL');
-        this.router.navigate(['/my-reports']);
+
+        this.indexeddbService.checkAPIreport(this.report_id).then(re => {
+          if (re) {
+            this.report_info = re;
+            this.reportdesc = re;
+            // check if pass in sessionStorage
+            if (sessionStorage.getItem(re.report_id) !== null) {
+              this.report_decryption_in_progress = true;
+              const pass = sessionStorage.getItem(re.report_id);
+
+              if (this.indexeddbService.decodeAES(re, pass)) {
+                this.report_decryption_in_progress = false;
+              }
+            } else {
+              setTimeout(_ => this.openDialog(re)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
+            }
+          } else {
+            this.router.navigate(['/my-reports']);
+          }
+        });
       }
-
     });
-
 
     // get css style
     this.http.get('/assets/bootstrap.min.css').subscribe(res => {
@@ -449,7 +466,6 @@ Sample code here\n\
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
-        console.log(this.decryptedReportDataChanged);
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
           if (retu) {
@@ -459,9 +475,38 @@ Sample code here\n\
             this.doStats();
           }
         });
-
       }
     });
+
+    this.indexeddbService.searchAPIreport(this.report_info.report_id).then(ret => {
+      if (ret) {
+        // tslint:disable-next-line:max-line-length
+        this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
+          if (retu) {
+            this.report_encryption_in_progress = false;
+            this.savemsg = 'All changes saved on remote API successfully!';
+            this.lastsavereportdata = retu;
+            this.doStats();
+          }
+        });
+
+
+      }
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 
   sortbycvss() {
@@ -784,7 +829,7 @@ Sample code here\n\
   themechange(event) {
 
     let theme = '';
-    if (event.value === '2') {
+    if (event.value === 'dark') {
       theme = '_dark';
     } else {
       theme = '';

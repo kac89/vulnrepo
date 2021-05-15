@@ -4,7 +4,7 @@ import { IndexeddbService } from '../indexeddb.service';
 import { SeckeyValidatorService } from '../seckey-validator.service';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-newreport',
@@ -16,24 +16,29 @@ export class NewreportComponent implements OnInit {
   hide = true;
   alert: string;
   inppass: string;
+  localkey: any;
   inppass2: string;
   color: ThemePalette = 'warn';
   mode: ProgressBarMode = 'buffer';
+  selectEDAPI = [];
+  selectEDAPI_apikey = '';
+  selectEDAPI_apiurl = '';
   value = 20;
   bufferValue = 20;
   str = '';
+  selected = 'local';
 
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
-
-
-  constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService) {
+  constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService,
+    public router: Router) {
 
   }
 
   ngOnInit() {
+
+    const localkey = sessionStorage.getItem('VULNREPO-API');
+    if (localkey) {
+      this.localkey = JSON.parse(localkey);
+    }
 
   }
 
@@ -110,7 +115,11 @@ export class NewreportComponent implements OnInit {
       if ((pass.length >= 8) && (pass2.length >= 8) && (this.passwordService.checkPasswordStrength(pass) >= 2) && (this.passwordService.checkPasswordStrength(pass2) >= 2)) {
 
         if (pass === pass2) {
-          this.indexeddbService.addnewReport(title, pass);
+          if (this.selected === 'local') {
+            this.indexeddbService.addnewReport(title, pass);
+          } else {
+            this.indexeddbService.addnewReportonAPI(this.selectEDAPI_apiurl, this.selectEDAPI_apikey, title, pass);
+          }
         } else {
           this.alert = 'The given security keys do not match. Try again.';
         }
@@ -121,6 +130,19 @@ export class NewreportComponent implements OnInit {
 
     } else {
       this.alert = 'Empty title!';
+    }
+
+  }
+
+  selectchange(event) {
+    this.selectEDAPI = [];
+    if (event.value === 'local') {
+      console.log('Local');
+      this.selectEDAPI_apikey = '';
+      this.selectEDAPI_apiurl = '';
+    } else {
+        this.selectEDAPI_apikey = event.value.apikey;
+        this.selectEDAPI_apiurl = event.value.value;
     }
 
   }

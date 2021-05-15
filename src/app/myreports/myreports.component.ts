@@ -5,8 +5,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IndexeddbService } from '../indexeddb.service';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
-import {SelectionModel} from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 import { v4 as uuid } from 'uuid';
+import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
+import { ApiService } from '../api.service';
 
 export interface MyReportElement {
   select: any;
@@ -25,15 +27,31 @@ export interface MyReportElement {
 })
 export class MyreportsComponent implements OnInit {
   dialogRef: MatDialogRef<DialogEditComponent>;
-  reportlist: string[];
-  displayedColumns: string[] = ['select', 'report_name', 'report_createdate', 'report_lastupdate', 'settings'];
+  displayedColumns: string[] = ['select', 'source', 'report_name', 'report_createdate', 'report_lastupdate', 'settings'];
   dataSource = new MatTableDataSource([]);
   selection = new SelectionModel<MyReportElement>(true, []);
-  list: any;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  msg = '';
+  apilist = [];
+  list = [];
+  private paginator: MatPaginator;
+  private sort: MatSort;
 
-  constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService) {
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+
+  setDataSourceAttributes() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService, private apiService: ApiService) {
 
   }
 
@@ -43,11 +61,76 @@ export class MyreportsComponent implements OnInit {
 
   getallreports() {
     this.indexeddbService.getReports().then(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.list = data;
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+      if (data) {
+        this.list = data;
+        this.dataSource.data = data;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      }
     });
+    this.getAPIallreports();
+  }
+
+  getAPIallreports() {
+    this.apilist = [];
+    const localkey = sessionStorage.getItem('VULNREPO-API');
+    if (localkey) {
+      this.msg = 'API connection please wait...';
+      console.log('Key found');
+
+      const vaultobj = JSON.parse(localkey);
+
+      vaultobj.forEach( (element) => {
+
+        this.apilist.push({value: element.value, apikey: element.apikey, viewValue: element.viewValue});
+        this.apiService.APISend(element.value, element.apikey, 'getreportslist', '').then(resp => {
+
+          resp.forEach((ele) => {
+            ele.api = 'remote';
+            ele.apiurl = element.value;
+            ele.apikey = element.apikey;
+            ele.apiname = element.viewValue;
+          });
+
+          this.list = this.list.concat(resp);
+          this.dataSource.data = this.list;
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.msg = '';
+        });
+
+    });
+
+    } else {
+
+      this.indexeddbService.retrieveAPIkey().then(ret => {
+        if (ret) {
+          setTimeout(_ => this.openDialog(ret));
+        }
+      });
+
+    }
+  }
+
+
+
+  openDialog(data: any): void {
+
+    const dialogRef = this.dialog.open(DialogApikeyComponent, {
+      width: '400px',
+      disableClose: true,
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The security key dialog was closed');
+      if (result) {
+        sessionStorage.setItem('VULNREPO-API', result);
+        this.getAPIallreports();
+      }
+
+    });
+
   }
 
   shareReport(report_id) {
@@ -55,6 +138,7 @@ export class MyreportsComponent implements OnInit {
   }
 
   removeReport(item) {
+
     const remo = 'removereport';
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '400px',
@@ -62,13 +146,26 @@ export class MyreportsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+
       if (result) {
-        this.indexeddbService.deleteReport(item).then(data => {
+        this.indexeddbService.deleteReport(result).then(data => {
           if (data) {
             this.getallreports();
           }
         });
+
+          if (result.api && result.apiurl && result.apikey) {
+
+            // tslint:disable-next-line:max-line-length
+            this.apiService.APISend(result.apiurl, result.apikey, 'removereport', 'reportid=' + result.report_id).then(resp => {
+              if (resp.REMOVE_REPORT === 'OK') {
+                this.getallreports();
+              }
+            });
+
+
       }
+    }
 
     });
 
@@ -88,34 +185,65 @@ export class MyreportsComponent implements OnInit {
 
   }
 
-    /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected() {
-      const numSelected = this.selection.selected.length;
-      const numRows = this.dataSource.data.length;
-      return numSelected === numRows;
-    }
+  fromAPIcloneReport(item) {
 
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-      this.isAllSelected() ?
-          this.selection.clear() :
-          this.dataSource.data.forEach(row => this.selection.select(row));
-    }
+    item.report_name = 'Clone of ' + item.report_name;
+    item.report_id = uuid();
+    delete item.api;
 
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: MyReportElement): string {
-      if (!row) {
-        return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    this.indexeddbService.cloneReportadd(item).then(data => {
+      if (data) {
+        this.getallreports();
       }
-      return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    });
+
+  }
+
+  toAPIcloneReport(item, apiurl, apikey) {
+
+    item.report_name = item.report_name;
+    item.report_id = uuid();
+    item.api = 'remote';
+    item.apiurl = apiurl;
+    item.apikey = apikey;
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.APISend(apiurl, apikey, 'savereport', 'reportid=' + item.report_id + '&reportdata=' + btoa(JSON.stringify(item))).then(resp => {
+        if (resp) {
+          this.getallreports();
+        }
+      });
+
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: MyReportElement): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  removeSelecteditems() {
+    if (this.selection.selected.length > 0) {
+      this.selection.selected.forEach((item) => {
+        this.removeReport(item);
+      });
     }
 
-    removeSelecteditems() {
-      if (this.selection.selected.length > 0) {
-        this.selection.selected.forEach( (item) => {
-            this.removeReport(item);
-        });
-      }
-
-    }
+  }
 }

@@ -18,16 +18,131 @@
   </div>
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
     <mat-card>
+      <h3>
       <mat-slide-toggle [(ngModel)]="wipechecked" class="example-margin" [color]="color" (change)="wipeDatachanged()">
-        Delete saved data! (My Reports)
+        Delete saved data on local host! (My Reports)
       </mat-slide-toggle>
+    </h3>
       <div *ngIf="wipehide">
         <p>Are you sure you want to delete all data, is <span style="color: red"><b>irreversible
               decision</b></span>!?<br><br>
-          <button mat-raised-button color="warn" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}</p>
+          <button mat-raised-button color="warn" (click)="wipealldata()">Yes, let's do it!</button> {{wipemsg}}
+        </p>
       </div>
     </mat-card>
   </div>
 
 </div>
 
+
+<br>
+<div>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <mat-card>
+        <h3>
+          VULNRΞPO API VAULT ACCESS
+        </h3>
+
+        <div *ngIf="listkey">
+          <p>Found existing vault access!
+            <button mat-icon-button color="warn" (click)="removeapikey()" title="Remove current Vault">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </p>
+
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px grid">
+        <div fxFlex="50%" fxLayoutAlign="start">
+          <button *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="accent" (click)="openDialogAPIADD()">Connect</button>
+          <button *ngIf="tryconnectdb" mat-raised-button color="primary" (click)="tryconnect()">Access to Vault</button> <br><br>
+          <button *ngIf="apiconneted" mat-raised-button color="warn" (click)="apidisconnect()">Disconnect</button>
+
+        </div>
+        <div fxFlex="50%" fxLayoutAlign="end end">
+          <button *ngIf="apiconneted || tryconnectdb" mat-raised-button color="primary" (click)="exportvault()">Export Vault</button>&nbsp;&nbsp;
+          <button type="button" *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="primary" (click)="VaultFileInput.click()">Import Vault</button>
+          <input hidden type="file" accept=".json" #VaultFileInput (change)="importvault($event.target)"/>
+        </div>
+      </div>
+
+      </mat-card>
+    </div>
+  </div>
+
+  <br>
+  <mat-card *ngIf="!tryconnectdb && !showregapi">
+    <h3>
+      VULNRΞPO API List&nbsp;
+      <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="apimenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #apimenu="matMenu">
+          <a [routerLink]="" (click)="openDialogAPIaddtovault()" class="active-link" title="Add API" mat-menu-item>
+            <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add API
+          </a>
+      </mat-menu>
+    </h3>
+
+<div>
+
+  <table mat-table style="width: 100%;" [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="apiname">
+      <th mat-header-cell *matHeaderCellDef> API Name </th>
+      <td mat-cell *matCellDef="let element"> <a target="_blank" class="active-link" href="https://{{element.apiurl}}/">{{element.apiname}}</a> </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon *ngIf="element.status == 'Connected'" color="accent" class="vertical-align-middle">check_circle</mat-icon>
+        <mat-icon *ngIf="element.status == 'Not connected'" color="warn" class="vertical-align-middle">warning</mat-icon> 
+        {{element.status}}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="created">
+      <th mat-header-cell *matHeaderCellDef> Created </th>
+      <td mat-cell *matCellDef="let element"> {{element.created}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expires">
+      <th mat-header-cell *matHeaderCellDef> Expires </th>
+      <td mat-cell *matCellDef="let element"> {{element.expires}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="storage">
+      <th mat-header-cell *matHeaderCellDef> Storage </th>
+        <td mat-cell *matCellDef="let element">
+            <mat-progress-bar 
+            title="Storage used: {{element.current_storage}}%"
+            color="warn"
+            mode="determinate"
+            value="{{element.current_storage}}"
+            bufferValue="100">
+        </mat-progress-bar>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="settings">
+      <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
+      <td mat-cell *matCellDef="let element"> <a [routerLink]="" (click)="removeApi(element.apikey)" title="Remove"><mat-icon color="warn" class="vertical-align-middle">delete_forever</mat-icon></a> </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  
+
+</div>
+
+
+    </mat-card>
+
+</div>
+
+<br>
+<br>
+<br>

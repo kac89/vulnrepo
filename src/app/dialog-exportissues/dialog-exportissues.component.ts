@@ -98,7 +98,6 @@ export class DialogExportissuesComponent implements OnInit {
     }
 
     const myClonedArray = Object.assign([], this.data);
-    console.log(myClonedArray);
 
     if (this.splitfilereport === true) {
 
