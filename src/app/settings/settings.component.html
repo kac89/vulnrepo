@@ -90,7 +90,7 @@
 
     <ng-container matColumnDef="apiname">
       <th mat-header-cell *matHeaderCellDef> API Name </th>
-      <td mat-cell *matCellDef="let element"> <a target="_blank" class="active-link" href="https://{{element.apiurl}}/">{{element.apiname}}</a> </td>
+      <td mat-cell *matCellDef="let element"> <a target="_blank" class="active-link" rel="noopener noreferrer" href="https://{{element.apiurl}}/">{{element.apiname}}</a> </td>
     </ng-container>
   
     <ng-container matColumnDef="status">
