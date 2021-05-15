@@ -201,7 +201,6 @@ export class MyreportsComponent implements OnInit {
 
   toAPIcloneReport(item, apiurl, apikey) {
 
-    item.report_name = item.report_name;
     item.report_id = uuid();
     item.api = 'remote';
     item.apiurl = apiurl;

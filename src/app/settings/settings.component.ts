@@ -408,10 +408,6 @@ export class SettingsComponent implements OnInit {
 
     }
 
-
-
-
-
   }
 
   saveAPIKEY(key, pass) {

@@ -16,7 +16,7 @@
         </mat-select>
       </mat-form-field>
       
-      <div *ngIf="selectedAPIDEF.value == 'api.vulnrepo.com'">API: <a target="_blank" class="active-link" href="https://{{selectedAPIDEF.value}}/">https://{{selectedAPIDEF.value}}</a></div>
+      <div *ngIf="selectedAPIDEF.value == 'api.vulnrepo.com'">API: <a target="_blank" class="active-link" rel="noopener noreferrer" href="https://{{selectedAPIDEF.value}}/">https://{{selectedAPIDEF.value}}</a></div>
       
       <div *ngIf="selectedAPIDEF.value != 'api.vulnrepo.com'">
         <mat-form-field class="example-full-width" color="accent">

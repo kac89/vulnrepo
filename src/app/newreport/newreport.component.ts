@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { IndexeddbService } from '../indexeddb.service';
 import { SeckeyValidatorService } from '../seckey-validator.service';
 import { ThemePalette } from '@angular/material/core';
