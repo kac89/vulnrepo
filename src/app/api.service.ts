@@ -17,16 +17,6 @@ export class ApiService {
               });
   }
 
-  APIConnect(apiurl: string, apikey: string, action: string): Promise<any> {
-    const header = new HttpHeaders().set('VULNREPO-AUTH', apikey).set('VULNREPO-ACTION', action);
-    return this.http.get<any>('https://' + apiurl + '/api/', {headers: header})
-               .toPromise()
-               .then(response => response)
-               .catch(error => {
-                console.log('error: ', error);
-              });
-  }
-
   APISend(apiurl: string, apikey: string, action: string, body: string): Promise<any> {
     const header = new HttpHeaders().set('VULNREPO-AUTH', apikey).set('VULNREPO-ACTION', action).set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
     return this.http.post<any>('https://' + apiurl + '/api/', body, {headers: header})

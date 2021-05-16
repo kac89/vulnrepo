@@ -55,7 +55,7 @@ export class DialogApiaddComponent implements OnInit {
     if (apik !== undefined && apik !== '' && pass !== undefined && pass !== '' && setapiurl !== undefined && setapiname !== undefined) {
 
       this.status = 'Connecting...';
-      this.apiService.APIConnect(setapiurl, apik, 'apiconnect').then(resp => {
+      this.apiService.APISend(setapiurl, apik, 'apiconnect', '').then(resp => {
         if (resp.AUTH === 'OK') {
           this.apiconneted = true;
 
@@ -100,7 +100,7 @@ export class DialogApiaddComponent implements OnInit {
     if (apik !== undefined && apik !== '' && this.data !== undefined && this.data !== '' && setapiurl !== undefined && setapiname !== undefined) {
 
       this.status = 'Connecting...';
-      this.apiService.APIConnect(setapiurl, apik, 'apiconnect').then(resp => {
+      this.apiService.APISend(setapiurl, apik, 'apiconnect', '').then(resp => {
         if (resp.AUTH === 'OK') {
           this.apiconneted = true;
 
