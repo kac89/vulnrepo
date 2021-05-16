@@ -8,7 +8,7 @@ If you want to build your own backend system for VULNRΞPO you are in the right 
 
 Request:
 ```http
-GET /api/ HTTP/2
+POST /api/ HTTP/2
 Vulnrepo-Auth: [API-ACCESS-KEY]
 Vulnrepo-Action: apiconnect
 

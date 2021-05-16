@@ -177,7 +177,7 @@ export class SettingsComponent implements OnInit {
 
       if (element.apikey !== undefined && element.apikey !== '') {
 
-        this.apiService.APIConnect(element.value, element.apikey, 'apiconnect').then(resp => {
+        this.apiService.APISend(element.value, element.apikey, 'apiconnect', '').then(resp => {
           if (resp.AUTH === 'OK') {
             this.apiconneted = true;
             this.listkey = false;
