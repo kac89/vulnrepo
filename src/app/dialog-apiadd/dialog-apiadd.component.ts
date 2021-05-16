@@ -105,13 +105,11 @@ export class DialogApiaddComponent implements OnInit {
           this.apiconneted = true;
 
           const localkey = sessionStorage.getItem('VULNREPO-API');
-          const list = [];
+          let list = [];
           const savejson = { apikey: apik, value: setapiurl, viewValue: setapiname };
 
           if (localkey) {
-            const e = JSON.parse(localkey);
-            const obj = Object.assign({}, e[0]);
-            list.push(obj);
+            list = JSON.parse(localkey);
             list.push(savejson);
             sessionStorage.setItem('VULNREPO-API', JSON.stringify(list));
             this.saveAPIKEY(list, this.data);
