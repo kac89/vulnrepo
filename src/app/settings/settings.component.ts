@@ -178,28 +178,32 @@ export class SettingsComponent implements OnInit {
       if (element.apikey !== undefined && element.apikey !== '') {
 
         this.apiService.APISend(element.value, element.apikey, 'apiconnect', '').then(resp => {
-          if (resp.AUTH === 'OK') {
-            this.apiconneted = true;
-            this.listkey = false;
-            this.createdate = resp.CREATEDATE;
-            this.expirydate = resp.EXPIRYDATE;
-            this.remain = this.gettimebetweendates(this.today, this.expirydate);
-            this.user = resp.WELCOME;
-            this.max_storage = resp.MAX_STORAGE;
-            this.current_storage = resp.CURRENT_STORAGE;
-            const stor = this.current_storage / this.max_storage * 100;
 
-            // tslint:disable-next-line:max-line-length
-            const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Connected', created: resp.CREATEDATE, expires: resp.EXPIRYDATE + ' (' + this.remain + ' days left)', current_storage: stor };
-            elementlist.push(elementdata);
-            this.dataSource.data = elementlist;
-            this.tryconnectdb = false;
-          } else {
-            // tslint:disable-next-line:max-line-length
-            const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Not connected', created: '', expires: '', current_storage: 0 };
-            elementlist.push(elementdata);
-            this.dataSource.data = elementlist;
-          }
+            if (resp !== undefined && resp.AUTH === 'OK') {
+              this.apiconneted = true;
+              this.listkey = false;
+              this.createdate = resp.CREATEDATE;
+              this.expirydate = resp.EXPIRYDATE;
+              this.remain = this.gettimebetweendates(this.today, this.expirydate);
+              this.user = resp.WELCOME;
+              this.max_storage = resp.MAX_STORAGE;
+              this.current_storage = resp.CURRENT_STORAGE;
+              const stor = this.current_storage / this.max_storage * 100;
+
+              // tslint:disable-next-line:max-line-length
+              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Connected', created: resp.CREATEDATE, expires: resp.EXPIRYDATE + ' (' + this.remain + ' days left)', current_storage: stor };
+              elementlist.push(elementdata);
+              this.dataSource.data = elementlist;
+              this.tryconnectdb = false;
+            } else {
+              // tslint:disable-next-line:max-line-length
+              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Not connected', created: '', expires: '', current_storage: 0 };
+              elementlist.push(elementdata);
+              this.dataSource.data = elementlist;
+            }
+
+        }).catch(error => {
+          console.log('API error: ', error);
         });
       }
 

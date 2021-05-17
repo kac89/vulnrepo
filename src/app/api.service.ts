@@ -13,7 +13,7 @@ export class ApiService {
                .toPromise()
                .then(response => response)
                .catch(error => {
-                console.log('error: ', error);
+                console.log('CVE error: ', error);
               });
   }
 
@@ -23,7 +23,7 @@ export class ApiService {
                .toPromise()
                .then(response => response)
                .catch(error => {
-                console.log('error: ', error);
+                console.log('API error: ', error);
               });
   }
 
