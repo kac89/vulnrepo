@@ -86,20 +86,21 @@ export class MyreportsComponent implements OnInit {
 
         this.apilist.push({value: element.value, apikey: element.apikey, viewValue: element.viewValue});
         this.apiService.APISend(element.value, element.apikey, 'getreportslist', '').then(resp => {
-
-          resp.forEach((ele) => {
-            ele.api = 'remote';
-            ele.apiurl = element.value;
-            ele.apikey = element.apikey;
-            ele.apiname = element.viewValue;
-          });
-
-          this.list = this.list.concat(resp);
+          if (resp.length > 0) {
+            resp.forEach((ele) => {
+              ele.api = 'remote';
+              ele.apiurl = element.value;
+              ele.apikey = element.apikey;
+              ele.apiname = element.viewValue;
+            });
+            this.list = this.list.concat(resp);
+          }
+        }).then(() => {
           this.dataSource.data = this.list;
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
           this.msg = '';
-        });
+        }).catch(() => {});
 
     });
 
