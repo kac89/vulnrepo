@@ -119,7 +119,7 @@ Vulnrepo-Auth: [API-ACCESS-KEY]
 Vulnrepo-Action: savereport
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-reportid=[report_id]&reportdata=[base64_encode(report)]
+reportdata=[base64_encode(report)]
 
 ```
 
@@ -136,7 +136,7 @@ Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
-| `report_id` | `string` | **Required**. Report ID to savereport |
+| `reportdata` | `string` | **Required**. Report data encrypted base64 |
 
 #### updatereport
 
@@ -147,7 +147,7 @@ Vulnrepo-Auth: [API-ACCESS-KEY]
 Vulnrepo-Action: updatereport
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-reportid=[report_id]&reportdata=[base64_encode(report)]
+reportdata=[base64_encode(report)]
 ```
 
 Response:
@@ -163,4 +163,4 @@ Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
-| `report_id` | `string` | **Required**. Report ID to update |
+| `reportdata` | `string` | **Required**. Report data encrypted base64 |
