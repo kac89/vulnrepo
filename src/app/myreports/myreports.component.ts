@@ -210,7 +210,7 @@ export class MyreportsComponent implements OnInit {
     item.apikey = apikey;
 
       // tslint:disable-next-line:max-line-length
-      this.apiService.APISend(apiurl, apikey, 'savereport', 'reportid=' + item.report_id + '&reportdata=' + btoa(JSON.stringify(item))).then(resp => {
+      this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(item))).then(resp => {
         if (resp) {
           this.getallreports();
         }

@@ -265,7 +265,7 @@ export class IndexeddbService {
 
 
           // tslint:disable-next-line:max-line-length
-          this.apiService.APISend(apiurl, apikey, 'savereport', 'reportid=' + reportid + '&reportdata=' + btoa(JSON.stringify(data))).then(resp => {
+          this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(data))).then(resp => {
             if (resp) {
               this.router.navigate(['/my-reports']);
             }
@@ -592,7 +592,7 @@ export class IndexeddbService {
         const localkey = sessionStorage.getItem('VULNREPO-API');
         if (localkey) {
           // tslint:disable-next-line:max-line-length
-          this.apiService.APISend(apiurl, apikey, 'updatereport', 'reportid=' + reportid + '&reportdata=' + btoa(JSON.stringify(to_update))).then(resp => {
+          this.apiService.APISend(apiurl, apikey, 'updatereport', 'reportdata=' + btoa(JSON.stringify(to_update))).then(resp => {
             if (resp.REPORT_UPDATE === 'OK') {
               resolve(now);
             }

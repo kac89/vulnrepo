@@ -28,6 +28,8 @@ Node: 14.8.0
     - You can export issues to popular bugtrackers like Atlassian JIRA or use secure way to share only issues.
  - Share report
     - You can share your report using AES encryption by default.
+ - Integration API
+    - Build your own backend system to store reports!
 
 ## Development server
 
