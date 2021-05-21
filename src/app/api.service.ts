@@ -23,7 +23,6 @@ export class ApiService {
     const header = new HttpHeaders().set('VULNREPO-AUTH', apikey).set('VULNREPO-ACTION', action).set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
     return this.http.post<any>('https://' + apiurl + '/api/', body, {headers: header})
                .toPromise()
-               .then(response => response)
                .then(response => response, (reason) => {
                  if (reason.AUTH_ACCESS === 'ACCOUNT_EXPIRES') {
                   this.snackBar.open('API ' + apiurl + ' AUTH ERROR: ACCESS EXPIRES!', 'OK', {
