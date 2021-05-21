@@ -2,6 +2,12 @@
 
 If you want to build your own backend system for VULNRΞPO you are in the right place! You choose the technology in which you will manage and store the reports. VULNRΞPO has a simple integration with the backend api, the requests described below.
 
+## Example API server
+
+Please note that this is just example how to integrate with VULNRΞPO. The server is intended for personal use!
+
+Visit: [https://github.com/kac89/vulnrepo-server](https://github.com/kac89/vulnrepo-server)
+
 ## API Reference
 
 #### Init request: apiconnect
