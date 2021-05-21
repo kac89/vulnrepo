@@ -8,6 +8,7 @@ import { MessageService } from './message.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { ApiService } from './api.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class IndexeddbService {
   private decryptstatusObs = new Subject<any>();
 
   constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
-    private apiService: ApiService) {
+    private apiService: ApiService, private snackBar: MatSnackBar) {
 
     this.updateEncStatus(false);
     /*
@@ -267,7 +268,16 @@ export class IndexeddbService {
           // tslint:disable-next-line:max-line-length
           this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(data))).then(resp => {
             if (resp) {
-              this.router.navigate(['/my-reports']);
+
+              if (resp.STORAGE === 'NOSPACE') {
+                this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
+                  duration: 3000,
+                  panelClass: ['notify-snackbar-fail']
+                });
+              } else {
+                this.router.navigate(['/my-reports']);
+              }
+
             }
           });
 
@@ -593,7 +603,13 @@ export class IndexeddbService {
         if (localkey) {
           // tslint:disable-next-line:max-line-length
           this.apiService.APISend(apiurl, apikey, 'updatereport', 'reportdata=' + btoa(JSON.stringify(to_update))).then(resp => {
-            if (resp.REPORT_UPDATE === 'OK') {
+            if (resp.STORAGE === 'NOSPACE') {
+              this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
+                duration: 3000,
+                panelClass: ['notify-snackbar-fail']
+              });
+              resolve('NOSPACE');
+            } else if (resp.REPORT_UPDATE === 'OK') {
               resolve(now);
             }
           });

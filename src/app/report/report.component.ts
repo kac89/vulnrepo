@@ -23,7 +23,7 @@ import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
 import marked from 'marked';
 import { sha256 } from 'js-sha256';
-import { ApiService } from '../api.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-report',
@@ -97,7 +97,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     private http: Http,
     private indexeddbService: IndexeddbService,
     public router: Router,
-    private messageService: MessageService, private apiService: ApiService) {
+    private messageService: MessageService,
+    private snackBar: MatSnackBar) {
 
     // console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
@@ -460,19 +461,24 @@ Sample code here\n\
     this.savemsg = 'Please wait, report is encrypted...';
     const pass = sessionStorage.getItem(report_id);
 
-    // update report
-    this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-    this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
-
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
           if (retu) {
+            // update report
+            this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+            this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+
             this.report_encryption_in_progress = false;
             this.savemsg = 'All changes saved successfully!';
             this.lastsavereportdata = retu;
             this.doStats();
+
+            this.snackBar.open('All changes saved successfully!', 'OK', {
+              duration: 3000,
+              panelClass: ['notify-snackbar-success']
+            });
           }
         });
       }
@@ -482,12 +488,24 @@ Sample code here\n\
       if (ret) {
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
-          if (retu) {
+          if (retu === 'NOSPACE') {
+            this.savemsg = '';
+            this.report_encryption_in_progress = false;
+          } else {
+            this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+            this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+
             this.report_encryption_in_progress = false;
             this.savemsg = 'All changes saved on remote API successfully!';
             this.lastsavereportdata = retu;
             this.doStats();
+
+            this.snackBar.open('All changes saved on remote API successfully!', 'OK', {
+              duration: 3000,
+              panelClass: ['notify-snackbar-success']
+            });
           }
+
         });
 
 
