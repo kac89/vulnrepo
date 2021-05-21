@@ -2,6 +2,12 @@
 
 If you want to build your own backend system for VULNRΞPO you are in the right place! You choose the technology in which you will manage and store the reports. VULNRΞPO has a simple integration with the backend api, the requests described below.
 
+## Example API server
+
+Please note that this is just example how to integrate with VULNRΞPO. The server is intended for personal use!
+
+Visit: [https://github.com/kac89/vulnrepo-server](https://github.com/kac89/vulnrepo-server)
+
 ## API Reference
 
 #### Init request: apiconnect
@@ -30,7 +36,7 @@ Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
 | `WELCOME` | `string` | User name |
 | `CREATEDATE` | `string` | Create account date |
-| `EXPIRYDATE` | `string` | Access validity period |
+| `EXPIRYDATE` | `string` | Access validity period (is not mandatory) |
 | `CURRENT_STORAGE` | `string` | Current storage used (in bytes) on API |
 | `MAX_STORAGE` | `string` | Max storage available (in bytes) on API |
 
