@@ -65,6 +65,7 @@ import { FaqComponent } from './faq/faq.component';
 import { DialogCustomcontentComponent } from './dialog-customcontent/dialog-customcontent.component';
 import { DialogApikeyComponent } from './dialog-apikey/dialog-apikey.component';
 import { DialogApiaddComponent } from './dialog-apiadd/dialog-apiadd.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -121,6 +122,7 @@ import { DialogApiaddComponent } from './dialog-apiadd/dialog-apiadd.component';
     MatSlideToggleModule,
     MatChipsModule,
     HttpModule,
+    MatSnackBarModule,
     HttpClientModule,
     MatSelectModule,
     DragDropModule,

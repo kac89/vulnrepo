@@ -9,6 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { v4 as uuid } from 'uuid';
 import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
 import { ApiService } from '../api.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface MyReportElement {
   select: any;
@@ -52,7 +53,8 @@ export class MyreportsComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService, private apiService: ApiService) {
+  constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService, private apiService: ApiService,
+    private snackBar: MatSnackBar) {
 
   }
 
@@ -61,6 +63,7 @@ export class MyreportsComponent implements OnInit {
   }
 
   getallreports() {
+    this.list = [];
     this.indexeddbService.getReports().then(data => {
       if (data) {
         this.list.push(...data);
@@ -213,6 +216,14 @@ export class MyreportsComponent implements OnInit {
       // tslint:disable-next-line:max-line-length
       this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(item))).then(resp => {
         if (resp) {
+
+          if (resp.STORAGE === 'NOSPACE') {
+            this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
+              duration: 3000,
+              panelClass: ['notify-snackbar-fail']
+            });
+          }
+
           this.getallreports();
         }
       });

@@ -109,7 +109,12 @@
 
     <ng-container matColumnDef="expires">
       <th mat-header-cell *matHeaderCellDef> Expires </th>
-      <td mat-cell *matCellDef="let element"> {{element.expires}} </td>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.expires == '0 (NaN days left)'">
+          <span class="material-icons">all_inclusive</span>
+        </span>
+        <span *ngIf="element.expires != '0 (NaN days left)'">{{element.expires}} </span>
+       </td>
     </ng-container>
 
     <ng-container matColumnDef="storage">
