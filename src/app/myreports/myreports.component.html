@@ -69,12 +69,18 @@
 
     <ng-container matColumnDef="report_createdate">
       <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75 th-right'"> CREATE DATE </mat-header-cell>
-      <mat-cell *matCellDef="let element" [ngClass]="'w-75 th-right'"> {{element.report_createdate | date:'medium'}} </mat-cell>
+      <mat-cell *matCellDef="let element" [ngClass]="'w-75 th-right'"> 
+        <span *ngIf="element.report_createdate == 0"></span>
+        <span *ngIf="element.report_createdate != 0">{{element.report_createdate | date:'medium'}} </span>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="report_lastupdate">
       <mat-header-cell *matHeaderCellDef mat-sort-header> LAST UPDATE </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.report_lastupdate | date:'medium'}} </mat-cell>
+      <mat-cell *matCellDef="let element">
+        <span *ngIf="element.report_lastupdate == 0"></span>
+        <span *ngIf="element.report_lastupdate != 0">{{element.report_lastupdate | date:'medium'}} </span>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="settings">
