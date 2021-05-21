@@ -63,8 +63,8 @@ export class MyreportsComponent implements OnInit {
   getallreports() {
     this.indexeddbService.getReports().then(data => {
       if (data) {
-        this.list = data;
-        this.dataSource.data = data;
+        this.list.push(...data);
+        this.dataSource.data = this.list;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       }
@@ -79,13 +79,13 @@ export class MyreportsComponent implements OnInit {
       this.msg = 'API connection please wait...';
       console.log('Key found');
       this.keyfound = true;
-
       const vaultobj = JSON.parse(localkey);
 
       vaultobj.forEach( (element) => {
 
         this.apilist.push({value: element.value, apikey: element.apikey, viewValue: element.viewValue});
         this.apiService.APISend(element.value, element.apikey, 'getreportslist', '').then(resp => {
+
           if (resp.length > 0) {
             resp.forEach((ele) => {
               ele.api = 'remote';
@@ -93,8 +93,9 @@ export class MyreportsComponent implements OnInit {
               ele.apikey = element.apikey;
               ele.apiname = element.viewValue;
             });
-            this.list = this.list.concat(resp);
+            this.list.push(...resp);
           }
+
         }).then(() => {
           this.dataSource.data = this.list;
           this.dataSource.sort = this.sort;
