@@ -28,6 +28,11 @@ Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
+| `WELCOME` | `string` | User name |
+| `CREATEDATE` | `string` | Create account date |
+| `EXPIRYDATE` | `string` | Access validity period |
+| `CURRENT_STORAGE` | `string` | Current storage used (in bytes) on API |
+| `MAX_STORAGE` | `string` | Max storage available (in bytes) on API |
 
 #### getreportslist: Get all reports items
 
@@ -133,6 +138,13 @@ Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 {"REPORT_SAVED": "OK"}
 ```
 
+ERROR response:
+
+No space on API:
+```http
+{"STORAGE": "NOSPACE"}
+```
+
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
@@ -158,6 +170,13 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 
 {"REPORT_UPDATE": "OK"}
+```
+
+ERROR response:
+
+No space on API:
+```http
+{"STORAGE": "NOSPACE"}
 ```
 
 | Parameter | Type     | Description                |
