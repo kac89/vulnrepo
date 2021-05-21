@@ -26,7 +26,7 @@ export class ApiService {
                .then(response => response)
                .then(response => response, (reason) => {
                  if (reason.AUTH_ACCESS === 'ACCOUNT_EXPIRES') {
-                  this.snackBar.open('API AUTH ERROR: ACCESS EXPIRES!', 'OK', {
+                  this.snackBar.open('API ' + apiurl + ' AUTH ERROR: ACCESS EXPIRES!', 'OK', {
                     duration: 3000,
                     panelClass: ['notify-snackbar-fail']
                   });
