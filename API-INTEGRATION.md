@@ -36,7 +36,7 @@ Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
 | `WELCOME` | `string` | User name |
 | `CREATEDATE` | `string` | Create account date |
-| `EXPIRYDATE` | `string` | Access validity period |
+| `EXPIRYDATE` | `string` | Access validity period (is not mandatory) |
 | `CURRENT_STORAGE` | `string` | Current storage used (in bytes) on API |
 | `MAX_STORAGE` | `string` | Max storage available (in bytes) on API |
 
