@@ -205,6 +205,7 @@ export class DialogAddissueComponent implements OnInit {
               ref: this.options[key].ref,
               cvss: this.options[key].cvss,
               cve: this.options[key].cve,
+              tags: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -225,6 +226,7 @@ export class DialogAddissueComponent implements OnInit {
               ref: '',
               cvss: '',
               cve: '',
+              tags: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -259,6 +261,7 @@ export class DialogAddissueComponent implements OnInit {
               ref: this.cwe[key].ref,
               cvss: this.cwe[key].cvss,
               cve: this.cwe[key].cve,
+              tags: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -389,6 +392,7 @@ export class DialogAddissueComponent implements OnInit {
                 ref: refer,
                 cvss: resp.cvss,
                 cve: resp.id,
+                tags: [],
                 date: today + ''
               };
               this.show = false;
@@ -439,6 +443,7 @@ export class DialogAddissueComponent implements OnInit {
               ref: this.mitremobile[key].ref,
               cvss: this.mitremobile[key].cvss,
               cve: this.mitremobile[key].cve,
+              tags: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -477,6 +482,7 @@ export class DialogAddissueComponent implements OnInit {
               ref: this.mitreenterprise[key].ref,
               cvss: this.mitreenterprise[key].cvss,
               cve: this.mitreenterprise[key].cve,
+              tags: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -536,6 +542,7 @@ export class DialogAddissueComponent implements OnInit {
                 ref: 'https://www.pcisecuritystandards.org/\nhttps://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf',
                 cvss: '',
                 cve: '',
+                tags: [],
                 date: today + ''
               };
               this.dialogRef.close(def);
@@ -576,6 +583,7 @@ export class DialogAddissueComponent implements OnInit {
               ref: this.owasptop[key].ref,
               cvss: this.owasptop[key].cvss,
               cve: this.owasptop[key].cve,
+              tags: [],
               date: today + ''
             };
             this.dialogRef.close(def);
