@@ -1076,12 +1076,24 @@ Sample code here\n\
                               <li class="list-group-item d-flex justify-content-between align-items-center"> \
                                   <a href="#Issues">Issues (' + report_data.report_vulns.length + ')</a> \
                               </li>';
+
     report_data.report_vulns.forEach((item, index) => {
+      let tags = '';
+      if (this.remove_issuetags === false) {
+        if (item.tags.length > 0) {
+          item.tags.forEach((ite, ind) => {
+            tags = tags + '<span style="color: #fff" class="badge rounded-pill bg-dark">' + escapeHtml(ite.name) + '</span>&nbsp;';
+          });
+
+        }
+      }
 
       tableofcontentlist = tableofcontentlist + ' \
       <li class="list-group-item d-flex justify-content-between align-items-center"> \
-        <a href="#' + index + '">' + escapeHtml(item.title) + '</a> \
-        <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
+        <a href="#' + index + '"> \
+          <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> ' + escapeHtml(item.title) + ' \
+        </a> \
+        <span>' + tags + '</span> \
       </li>';
 
     });
