@@ -24,6 +24,12 @@ import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-cus
 import marked from 'marked';
 import { sha256 } from 'js-sha256';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+
+export interface Tags {
+  name: string;
+}
 
 @Component({
   selector: 'app-report',
@@ -55,6 +61,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   last_page = false;
   remove_researchers = false;
   remove_issuestatus = false;
+  remove_issuetags = false;
   changelog_page = false;
   report_css: any;
   report_id: string;
@@ -91,6 +98,17 @@ export class ReportComponent implements OnInit, OnDestroy {
   adv_html: any;
   advlogo: any;
   advlogo_saved: any;
+
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  tags: Tags[] = [
+    {name: 'Lemon'},
+    {name: 'Lime'},
+    {name: 'Apple'},
+  ];
 
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
@@ -514,17 +532,6 @@ Sample code here\n\
     });
 
 
-
-
-
-
-
-
-
-
-
-
-
   }
 
   sortbycvss() {
@@ -904,6 +911,15 @@ Sample code here\n\
     }
   }
 
+  removetagsfromreport(event) {
+    if (event.checked === false) {
+      this.remove_issuetags = false;
+    }
+    if (event.checked === true) {
+      this.remove_issuetags = true;
+    }
+  }
+
   DownloadHTML(report_data, report_metadata, issueStatus) {
 
     function escapeHtml(unsafe) {
@@ -1080,7 +1096,7 @@ Sample code here\n\
 
     let authors = '';
     if (this.remove_researchers === false) {
-      if (report_data.researcher.length > 0) {
+      if (report_data.researcher.length > 0 && report_data.researcher[0].reportername !== '') {
         authors = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
         <a href="#Report authors">Report authors</a> \
     </li>';
@@ -1236,6 +1252,22 @@ Sample code here\n\
         }
       }
 
+
+      let issuetags = '';
+      if (this.remove_issuetags === false) {
+        if (item.tags.length > 0) {
+          let tags = '';
+          item.tags.forEach((ite, ind) => {
+            tags = tags + '<span style="color: #fff" class="badge rounded-pill bg-dark">' + escapeHtml(ite.name) + '</span>&nbsp;';
+          });
+
+          issuetags = '<dt>TAGs:</dt> \
+          <dd>' + tags + '</dd><br>';
+
+        }
+      }
+
+
       const desc = '<dt>Vulnerability description</dt> \
         <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
 
@@ -1294,14 +1326,14 @@ Sample code here\n\
       }
 
       if (item.ref !== '') {
-        const eweref = ' \
+        const reference_item = ' \
             <dt>References</dt> \
             <dd class="strbreak">' + parse_links(parse_newline(escapeHtml(item.ref))) + '</dd><br>';
-        issues = issues + eweref;
+        issues = issues + issuetags + reference_item;
       }
 
-      const enderw = '</dl></div>';
-      issues = issues + enderw;
+      const end_issues = '</dl></div>';
+      issues = issues + end_issues;
     });
 
     issues = issues + '<div class="pagebreak"></div>';
@@ -1314,7 +1346,7 @@ Sample code here\n\
 
 
     let authors_value = '';
-    if (report_data.researcher.length > 0) {
+    if (report_data.researcher.length > 0 && report_data.researcher[0].reportername !== '') {
       if (this.remove_researchers === false) {
 
         let aut = '';
@@ -1531,5 +1563,32 @@ Sample code here\n\
 
   }
 
-}
 
+  TAGadd(event: MatChipInputEvent, dec_data): void {
+
+    const value = (event.value || '').trim();
+
+    if (value) {
+      const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+      this.decryptedReportDataChanged.report_vulns[index].tags.push({name: value});
+      console.log(this.decryptedReportDataChanged.report_vulns[index].tags);
+    }
+
+    // Reset the input value
+    if (event.input) {
+      event.input.value = '';
+    }
+
+  }
+
+  TAGremove(tag: Tags, dec_data): void {
+
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+    const ind: number = this.decryptedReportDataChanged.report_vulns[index].tags.indexOf(tag);
+    if (ind !== -1) {
+      this.decryptedReportDataChanged.report_vulns[index].tags.splice(ind, 1);
+    }
+
+  }
+
+}
