@@ -301,7 +301,7 @@
 
             <br>
             
-            <mat-form-field class="example-tags-list" color="accent">
+            <mat-form-field *ngIf="dec_data.tags" class="example-tags-list" color="accent">
               <mat-label>TAGs</mat-label>
               <mat-chip-list #tagList aria-label="Tags">
                 <mat-chip *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags" [selectable]="selectable"
