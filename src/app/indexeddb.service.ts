@@ -162,9 +162,9 @@ export class IndexeddbService {
 
         // Encrypt
         const ciphertext = Crypto.AES.encrypt(JSON.stringify(empty_vulns), pass);
-
+        const reportId = uuid();
         const data = {
-          report_id: uuid(),
+          report_id: reportId,
           report_name: title,
           report_createdate: today,
           report_lastupdate: '',
@@ -192,6 +192,8 @@ export class IndexeddbService {
           };
         };
 
+
+        sessionStorage.setItem(reportId, pass);
         this.router.navigate(['/my-reports']);
 
 
@@ -275,6 +277,7 @@ export class IndexeddbService {
                   panelClass: ['notify-snackbar-fail']
                 });
               } else {
+                sessionStorage.setItem(reportid, pass);
                 this.router.navigate(['/my-reports']);
               }
 
