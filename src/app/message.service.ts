@@ -17,7 +17,7 @@ export class MessageService {
   }
 
   clearDecrypted() {
-      this.subject.next();
+      this.subject.next(false);
   }
 
   getDecrypted(): Observable<any> {
