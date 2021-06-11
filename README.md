@@ -6,9 +6,9 @@ Video walkthrough:
 [![Guide](https://img.youtube.com/vi/D6vmd4WhWFk/0.jpg)](https://www.youtube.com/watch?v=D6vmd4WhWFk)
 
 Environment:
-Angular CLI: 11
-Angular: 11
-Node: 14.8.0
+Angular CLI: 12
+Angular: 12
+Node: 14.17.0
 
 ## Features
 
@@ -37,7 +37,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-c production` flag for a production build.
 
 ## Lgtm
 

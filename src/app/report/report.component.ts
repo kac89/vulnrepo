@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Http } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
 import { DialogPassComponent } from '../dialog-pass/dialog-pass.component';
 import { DialogAddissueComponent } from '../dialog-addissue/dialog-addissue.component';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
@@ -26,6 +25,7 @@ import { sha256 } from 'js-sha256';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { HttpClient } from '@angular/common/http';
 
 export interface Tags {
   name: string;
@@ -112,7 +112,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
-    private http: Http,
+    private http: HttpClient,
     private indexeddbService: IndexeddbService,
     public router: Router,
     private messageService: MessageService,
@@ -190,8 +190,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     // get css style
-    this.http.get('/assets/bootstrap.min.css').subscribe(res => {
-      this.report_css = res['_body'];
+    this.http.get('/assets/bootstrap.min.css', {responseType: 'text'}).subscribe(res => {
+      this.report_css = res;
     });
   }
 
@@ -860,8 +860,8 @@ Sample code here\n\
       theme = '';
     }
 
-    this.http.get('/assets/bootstrap' + theme + '.min.css').subscribe(res3 => {
-      this.report_css = res3['_body'];
+    this.http.get('/assets/bootstrap' + theme + '.min.css', {responseType: 'text'}).subscribe(res3 => {
+      this.report_css = res3;
     });
 
   }

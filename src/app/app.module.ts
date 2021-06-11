@@ -40,7 +40,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { IndexeddbService } from './indexeddb.service';
 import { MatChipsModule } from '@angular/material/chips';
-import { HttpModule } from '@angular/http';
+
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -121,7 +121,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatAutocompleteModule,
     MatSlideToggleModule,
     MatChipsModule,
-    HttpModule,
     MatSnackBarModule,
     HttpClientModule,
     MatSelectModule,
