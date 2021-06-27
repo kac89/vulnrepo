@@ -66,6 +66,8 @@ import { DialogCustomcontentComponent } from './dialog-customcontent/dialog-cust
 import { DialogApikeyComponent } from './dialog-apikey/dialog-apikey.component';
 import { DialogApiaddComponent } from './dialog-apiadd/dialog-apiadd.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { DialogAddreportprofileComponent } from './dialog-addreportprofile/dialog-addreportprofile.component';
+
 
 @NgModule({
   declarations: [
@@ -90,7 +92,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FaqComponent,
     DialogCustomcontentComponent,
     DialogApikeyComponent,
-    DialogApiaddComponent
+    DialogApiaddComponent,
+    DialogAddreportprofileComponent
   ],
   imports: [
     BrowserModule,
@@ -134,7 +137,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   providers: [MessageService, IndexeddbService, DatePipe],
   entryComponents: [DialogPassComponent, DialogAddissueComponent, DialogImportComponent,
     DialogEditComponent, DialogExportissuesComponent, DialogChangelogComponent, DialogChangekeyComponent,
-    DialogRemoveitemsComponent, DialogCvssComponent, DialogCustomcontentComponent, DialogApikeyComponent, DialogApiaddComponent],
+    DialogRemoveitemsComponent, DialogCvssComponent, DialogCustomcontentComponent, DialogApikeyComponent, DialogApiaddComponent,
+    DialogAddreportprofileComponent],
   exports: [],
   bootstrap: [AppComponent]
 })

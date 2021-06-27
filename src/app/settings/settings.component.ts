@@ -6,6 +6,7 @@ import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component'
 import { DialogApiaddComponent } from '../dialog-apiadd/dialog-apiadd.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dialog-addreportprofile.component';
 
 export interface ApiList {
   apikey: string;
@@ -35,7 +36,7 @@ export class SettingsComponent implements OnInit {
   enableAPI = true;
   wipehide = false;
   showregapi = true;
-  wipemsg = '';
+  wipeall = false;
   apiconneted = false;
   user = '';
   today = new Date().toISOString().slice(0, 10);
@@ -45,6 +46,10 @@ export class SettingsComponent implements OnInit {
   current_storage: any;
   max_storage: any;
   status = 'Not connected!';
+  reportProfileList = [];
+
+  ReportProfilesdisplayedColumns: string[] = ['profile_name', 'profile_settings'];
+  ReportProfilesdataSource = new MatTableDataSource([]);
 
   displayedColumns: string[] = ['apiname', 'status', 'created', 'expires', 'storage', 'settings'];
   dataSource = new MatTableDataSource([]);
@@ -78,9 +83,10 @@ export class SettingsComponent implements OnInit {
 
     }
 
+    this.getReportProfiles();
+
   }
-
-
+  
   wipeDatachanged() {
 
     if (this.wipechecked === true) {
@@ -97,7 +103,6 @@ export class SettingsComponent implements OnInit {
     indexedDB.deleteDatabase('vulnrepo-settings');
     indexedDB.deleteDatabase('vulnrepo-api');
     indexedDB.deleteDatabase('vulnrepo-db');
-    this.wipemsg = 'Deleted database successfully!';
     window.location.href = window.location.protocol + '//' + window.location.host;
   }
 
@@ -125,11 +130,10 @@ export class SettingsComponent implements OnInit {
   }
 
   parseandrestorereports(array) {
-
     const parsed = JSON.parse(array);
-
     for (let _i = 0; _i < parsed.length; _i++) {
         const num = parsed[_i];
+        console.log(num);
         this.indexeddbService.importReportfromfileSettings(num);
 
         if (_i + 1 === parsed.length) {
@@ -423,5 +427,135 @@ export class SettingsComponent implements OnInit {
     });
 
   }
+
+
+getReportProfiles() {
+  this.indexeddbService.retrieveReportProfile().then(ret => {
+    if (ret) {
+      this.ReportProfilesdataSource = new MatTableDataSource(ret);
+      this.reportProfileList = this.ReportProfilesdataSource.data;
+    }
+  });
+}
+
+  openDialogReportProfiles(data: any): void {
+
+    const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
+      width: '600px',
+      disableClose: true,
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Report Settings Profile dialog was closed');
+      if (result) {
+        this.reportProfileList = this.reportProfileList.concat(result);
+        this.ReportProfilesdataSource.data = this.reportProfileList;
+        this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+        this.getReportProfiles();
+      }
+
+    });
+
+  }
+
+  removeProfileItem(item: any): void {
+    const index: number = this.reportProfileList.indexOf(item as never);
+    if (index !== -1) {
+      this.reportProfileList.splice(index, 1);
+      this.ReportProfilesdataSource.data = this.reportProfileList;
+      this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+      this.getReportProfiles();
+    }
+  }
+
+  editProfileItem(item: any): void {
+
+    const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
+      width: '600px',
+      disableClose: true,
+      data: item
+    });
+
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Report Settings Profile dialog was closed');
+      if (result) {
+        const index: number = this.reportProfileList.indexOf(result.original[0]);
+
+        if (index !== -1) {
+          this.reportProfileList[index] = {
+            profile_name: result.profile_name,
+            logo: result.logo,
+            logow: result.logow,
+            logoh: result.logoh,
+            theme: result.profile_theme,
+            video_embed: result.video_embed,
+            remove_lastpage: result.remove_lastpage,
+            remove_issueStatus: result.remove_issueStatus,
+            remove_researcher: result.remove_researcher,
+            remove_changelog: result.remove_changelog,
+            remove_tags: result.remove_tags,
+            ResName: result.ResName,
+            ResEmail: result.ResEmail,
+            ResSocial: result.ResSocial,
+            ResWeb: result.ResWeb
+          };
+          this.ReportProfilesdataSource.data = this.reportProfileList;
+          this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+          this.getReportProfiles();
+        }
+      }
+
+    });
+
+  }
+
+  exportprofiles(): void {
+
+    this.indexeddbService.retrieveReportProfile().then(ret => {
+      if (ret) {
+        const blob = new Blob([JSON.stringify(ret)], { type: 'text/plain' });
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'Backup Report Profiles (vulnrepo.com).txt');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+
+
+  }
+
+  importReportProfile(input: HTMLInputElement) {
+    console.log('import profile');
+
+    const files = input.files;
+    if (files && files.length) {
+
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parseprofile(fileReader.result);
+        
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+parseprofile(profile){
+  const parsed = JSON.parse(profile);
+  this.reportProfileList = this.reportProfileList.concat(parsed);
+  this.ReportProfilesdataSource.data = this.reportProfileList;
+  this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+  this.getReportProfiles();
+}
 
 }

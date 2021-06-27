@@ -78,8 +78,35 @@ export class IndexeddbService {
     });
   }
 
+  setProfile(base_array, profile) {
 
-  addnewReport(title: string, pass: string) {
+    if (profile) {
+
+      base_array.report_settings.report_logo.logo = profile.logo;
+      base_array.report_settings.report_logo.width = profile.logow;
+      base_array.report_settings.report_logo.height = profile.logoh;
+
+      base_array.researcher[0].reportername = profile.ResName;
+      base_array.researcher[0].reportersocial = profile.ResSocial;
+      base_array.researcher[0].reporterwww = profile.ResWeb;
+      base_array.researcher[0].reporteremail = profile.ResEmail;
+
+      base_array.report_settings.report_theme = profile.theme;
+
+      base_array.report_settings.report_video_embed = profile.video_embed;
+      base_array.report_settings.report_remove_lastpage = profile.remove_lastpage;
+      base_array.report_settings.report_remove_issuestatus = profile.remove_issueStatus;
+      base_array.report_settings.report_remove_researchers = profile.remove_researcher;
+      base_array.report_settings.report_changelog_page = profile.remove_changelog;
+      base_array.report_settings.report_remove_issuetags = profile.remove_tags;
+
+    }
+
+    return base_array
+
+  }
+
+  addnewReport(title: string, pass: string, profile: any) {
 
     if (title && pass) {
 
@@ -131,7 +158,7 @@ export class IndexeddbService {
 `;
 
         const today: number = Date.now();
-        const empty_vulns = {
+        let empty_vulns = {
           report_vulns: [],
           report_scope: '',
           report_summary: '',
@@ -156,9 +183,24 @@ export class IndexeddbService {
           ],
           report_settings: {
             report_html: defaultContent,
-            report_logo: ''
+            report_logo: {
+              logo: '',
+              width: 600,
+              height: 500
+            },
+            report_theme: 'white',
+            report_video_embed: true,
+            report_remove_lastpage: false,
+            report_remove_issuestatus: false,
+            report_remove_researchers: false,
+            report_changelog_page: false,
+            report_remove_issuetags: false,
+
           }
         };
+
+        // check profile and set profile
+        empty_vulns = this.setProfile(empty_vulns, profile)
 
         // Encrypt
         const ciphertext = Crypto.AES.encrypt(JSON.stringify(empty_vulns), pass);
@@ -203,7 +245,7 @@ export class IndexeddbService {
 
   }
 
-  addnewReportonAPI(apiurl: string, apikey: string, title: string, pass: string) {
+  addnewReportonAPI(apiurl: string, apikey: string, title: string, pass: string, profile: any) {
 
     if (title && pass) {
 
@@ -225,7 +267,7 @@ export class IndexeddbService {
 `;
 
         const today: number = Date.now();
-        const empty_vulns = {
+        let empty_vulns = {
           report_vulns: [],
           report_scope: '',
           report_summary: '',
@@ -250,13 +292,19 @@ export class IndexeddbService {
           ],
           report_settings: {
             report_html: defaultContent,
-            report_logo: ''
+            report_logo: {
+              logo: '',
+              width: 600,
+              height: 500
+            }
           }
         };
 
+        // check profile and set profile
+        empty_vulns = this.setProfile(empty_vulns, profile)
+
         // Encrypt
         const ciphertext = Crypto.AES.encrypt(JSON.stringify(empty_vulns), pass);
-
         const reportid = uuid();
         const data = {
           report_id: reportid,
@@ -804,6 +852,67 @@ export class IndexeddbService {
 
       }
 
+
+    });
+  }
+
+  saveReportProfileinDB(key) {
+    return new Promise<any>((resolve, reject) => {
+      // indexeddb communication
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-settings', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-profiles', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-profiles', 'readwrite');
+        const store = tx.objectStore('report-profiles');
+
+        store.put(key, 'vulnrepo-report-profiles-items');
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve(true);
+        };
+      };
+
+    });
+  }
+
+  retrieveReportProfile() {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-settings', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-profiles', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-profiles', 'readwrite');
+        const store = tx.objectStore('report-profiles');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.get('vulnrepo-report-profiles-items');
+
+        request.onsuccess = function (evt) {
+          resolve(request.result);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
 
     });
   }
