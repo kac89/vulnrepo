@@ -1056,7 +1056,7 @@ Sample code here\n\
     <br> \
     <br> \
     <br> \
-    <div style="text-align: center;"><h2 style="color: red">CONFIDENTIAL</h2></div> \
+    <div class="d-flex justify-content-center"><div style="width: 500px; text-align: center;" class="label Critical"><h2>CONFIDENTIAL</h2></div></div> \
     <div class="pagebreak"></div> \
     <br>';
     intro = intro + cond5;
