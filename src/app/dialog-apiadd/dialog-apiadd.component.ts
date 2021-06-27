@@ -55,11 +55,13 @@ export class DialogApiaddComponent implements OnInit {
     if (apik !== undefined && apik !== '' && pass !== undefined && pass !== '' && setapiurl !== undefined && setapiname !== undefined) {
 
       this.status = 'Connecting...';
-      this.apiService.APISend(setapiurl, apik, 'apiconnect', '').then(resp => {
+      const url = new URL(setapiurl);
+      // url.port;     // => "443"
+      this.apiService.APISend(url.hostname, apik, 'apiconnect', '').then(resp => {
         if (resp.AUTH === 'OK') {
           this.apiconneted = true;
 
-          const savejson = { apikey: apik, value: setapiurl, viewValue: setapiname };
+          const savejson = { apikey: apik, value: url.hostname, viewValue: setapiname };
 
           sessionStorage.setItem('VULNREPO-API', JSON.stringify([savejson]));
           this.saveAPIKEY([savejson], pass);
@@ -100,13 +102,15 @@ export class DialogApiaddComponent implements OnInit {
     if (apik !== undefined && apik !== '' && this.data !== undefined && this.data !== '' && setapiurl !== undefined && setapiname !== undefined) {
 
       this.status = 'Connecting...';
-      this.apiService.APISend(setapiurl, apik, 'apiconnect', '').then(resp => {
+      const url = new URL(setapiurl);
+      // url.port;     // => "443"
+      this.apiService.APISend(url.hostname, apik, 'apiconnect', '').then(resp => {
         if (resp.AUTH === 'OK') {
           this.apiconneted = true;
 
           const localkey = sessionStorage.getItem('VULNREPO-API');
           let list = [];
-          const savejson = { apikey: apik, value: setapiurl, viewValue: setapiname };
+          const savejson = { apikey: apik, value: url.hostname, viewValue: setapiname };
 
           if (localkey) {
             list = JSON.parse(localkey);

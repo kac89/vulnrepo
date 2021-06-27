@@ -759,20 +759,16 @@
                 <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon>
               </div>
 
-              <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
-                <button style="width: 100%;" (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)" class="mat-elevation-z9"
-                mat-raised-button color="warn">
-                <mat-icon class="vertical-align-middle padding-bottom-3">save_alt</mat-icon> Download HTML
-              </button>
+              <div fxFlex="60%" fxFlex.sm="40%" fxFlex.xs="100%">
+
+              <button mat-raised-button style="width: 100%;" color="warn" [matMenuTriggerFor]="aboveMenu"><mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Download decrypted</button>
+              <mat-menu #aboveMenu="matMenu" yPosition="above">
+                <button mat-menu-item (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)"><mat-icon>description</mat-icon>HTML</button>
+                <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)"><mat-icon>text_format</mat-icon>TEXT</button>
+              </mat-menu>
+
               </div>
-          
-              <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
-                <button style="width: 100%;" (click)="downloadASCII(decryptedReportDataChanged,report_info)" class="mat-elevation-z9"
-                mat-raised-button color="warn">
-                <mat-icon class="vertical-align-middle padding-bottom-3">text_format</mat-icon>
-                Download TEXT
-              </button>
-              </div>
+
           
           </div>
 
