@@ -26,6 +26,9 @@ export class NewreportComponent implements OnInit {
   bufferValue = 20;
   str = '';
   selected = 'local';
+  selected_profile = '';
+  ReportProfilesList = [];
+  profileSettingsselected: any;
 
   constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService,
     public router: Router) {
@@ -38,6 +41,13 @@ export class NewreportComponent implements OnInit {
     if (localkey) {
       this.localkey = JSON.parse(localkey);
     }
+
+        // get report profiles
+        this.indexeddbService.retrieveReportProfile().then(ret => {
+          if (ret) {
+            this.ReportProfilesList = ret;
+          }
+        });
 
   }
 
@@ -115,9 +125,9 @@ export class NewreportComponent implements OnInit {
 
         if (pass === pass2) {
           if (this.selected === 'local') {
-            this.indexeddbService.addnewReport(title, pass);
+            this.indexeddbService.addnewReport(title, pass, this.profileSettingsselected);
           } else {
-            this.indexeddbService.addnewReportonAPI(this.selectEDAPI_apiurl, this.selectEDAPI_apikey, title, pass);
+            this.indexeddbService.addnewReportonAPI(this.selectEDAPI_apiurl, this.selectEDAPI_apikey, title, pass, this.profileSettingsselected);
           }
         } else {
           this.alert = 'The given security keys do not match. Try again.';
@@ -144,6 +154,10 @@ export class NewreportComponent implements OnInit {
         this.selectEDAPI_apiurl = event.value.value;
     }
 
+  }
+
+  selectchangeProfiles(event) {
+    this.profileSettingsselected = event.value;
   }
 
 }

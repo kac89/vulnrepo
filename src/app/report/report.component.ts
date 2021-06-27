@@ -57,12 +57,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   advhtml = '';
-  embedvid = true;
-  last_page = false;
-  remove_researchers = false;
-  remove_issuestatus = false;
-  remove_issuetags = false;
-  changelog_page = false;
   report_css: any;
   report_id: string;
   report_info: any;
@@ -71,6 +65,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   selecteditem = false;
   selecteditems = [];
   selected3 = [];
+  ReportProfilesList = [];
   pok = 0;
   savemsg = '';
   report_decryption_in_progress: boolean;
@@ -104,11 +99,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  tags: Tags[] = [
-    {name: 'Lemon'},
-    {name: 'Lime'},
-    {name: 'Apple'},
-  ];
 
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
@@ -123,10 +113,9 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.decryptedReportData = message;
       this.decryptedReportDataChanged = this.decryptedReportData;
       this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
-      this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo;
+      this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
       this.doStats();
-
 
       let i = 0;
       do {
@@ -192,6 +181,13 @@ export class ReportComponent implements OnInit, OnDestroy {
     // get css style
     this.http.get('/assets/bootstrap.min.css', {responseType: 'text'}).subscribe(res => {
       this.report_css = res;
+    });
+
+    // get report profiles
+    this.indexeddbService.retrieveReportProfile().then(ret => {
+      if (ret) {
+        this.ReportProfilesList = ret;
+      }
     });
   }
 
@@ -868,55 +864,55 @@ Sample code here\n\
 
   embedVideo(event) {
     if (event.checked === false) {
-      this.embedvid = false;
+      this.decryptedReportDataChanged.report_settings.report_video_embed = false;
     }
     if (event.checked === true) {
-      this.embedvid = true;
+      this.decryptedReportDataChanged.report_settings.report_video_embed = true;
     }
   }
 
   removeGeninfo(event) {
     if (event.checked === false) {
-      this.last_page = false;
+      this.decryptedReportDataChanged.report_settings.report_remove_lastpage = false;
     }
     if (event.checked === true) {
-      this.last_page = true;
+      this.decryptedReportDataChanged.report_settings.report_remove_lastpage = true;
     }
   }
 
   removechangelogpage(event) {
     if (event.checked === false) {
-      this.changelog_page = false;
+      this.decryptedReportDataChanged.report_settings.report_changelog_page = false;
     }
     if (event.checked === true) {
-      this.changelog_page = true;
+      this.decryptedReportDataChanged.report_settings.report_changelog_page = true;
     }
   }
 
   removeResearchers(event) {
     if (event.checked === false) {
-      this.remove_researchers = false;
+      this.decryptedReportDataChanged.report_settings.report_remove_researchers = false;
     }
     if (event.checked === true) {
-      this.remove_researchers = true;
+      this.decryptedReportDataChanged.report_settings.report_remove_researchers = true;
     }
   }
 
   removeIssuestatus(event) {
     if (event.checked === false) {
-      this.remove_issuestatus = false;
+      this.decryptedReportDataChanged.report_settings.report_remove_issuestatus = false;
     }
     if (event.checked === true) {
-      this.remove_issuestatus = true;
+      this.decryptedReportDataChanged.report_settings.report_remove_issuestatus = true;
     }
   }
 
   removetagsfromreport(event) {
     if (event.checked === false) {
-      this.remove_issuetags = false;
+      this.decryptedReportDataChanged.report_settings.report_remove_issuetags = false;
     }
     if (event.checked === true) {
-      this.remove_issuetags = true;
+      this.decryptedReportDataChanged.report_settings.report_remove_issuetags = true;
     }
   }
 
@@ -1008,15 +1004,18 @@ Sample code here\n\
     ul {
       list-style-position: inside;
     }
+    .row {
+      margin-left: 0px;
+    }
     </style>
     </head>
     <body class="container">
     <br><br>`;
 
     // report settings
-    const advlogo = report_data.report_settings.report_logo;
+    const advlogo = report_data.report_settings.report_logo.logo;
     if (advlogo !== '') {
-      const er = '<center><img src="' + advlogo + '" width="800px"></center><br><br>';
+      const er = '<center><img src="' + escapeHtml(advlogo) + '" width="' + escapeHtml(report_data.report_settings.report_logo.width) + '" height="' + escapeHtml(report_data.report_settings.report_logo.height) + '"></center><br><br>';
       report_html = report_html + er;
     }
 
@@ -1064,7 +1063,7 @@ Sample code here\n\
 
     const tableofcontent_one = ' \
     <div id="row"> \
-    <h3>Table of contents</h3> \
+    <h2>Table of contents</h2> \
     <ul class="list-group">';
 
     let tableofcontentlist = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
@@ -1074,12 +1073,12 @@ Sample code here\n\
                                   <a href="#Statistics and Risk">Statistics and Risk</a> \
                               </li> \
                               <li class="list-group-item d-flex justify-content-between align-items-center"> \
-                                  <a href="#Issues">Issues (' + report_data.report_vulns.length + ')</a> \
+                                  <a href="#Results">Results (' + report_data.report_vulns.length + ')</a> \
                               </li>';
 
     report_data.report_vulns.forEach((item, index) => {
       let tags = '';
-      if (this.remove_issuetags === false) {
+      if (report_data.report_settings.report_remove_issuetags === false) {
         if (item.tags.length > 0) {
           item.tags.forEach((ite, ind) => {
             tags = tags + '<span style="color: #fff" class="badge rounded-pill bg-dark">' + escapeHtml(ite.name) + '</span>&nbsp;';
@@ -1107,7 +1106,7 @@ Sample code here\n\
     }
 
     let authors = '';
-    if (this.remove_researchers === false) {
+    if (report_data.report_settings.report_remove_researchers === false) {
       if (report_data.researcher.length > 0 && report_data.researcher[0].reportername !== '') {
         authors = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
         <a href="#Report authors">Report authors</a> \
@@ -1116,7 +1115,7 @@ Sample code here\n\
     }
 
     let tableofcontent_1 = '';
-    if (this.changelog_page === false) {
+    if (report_data.report_settings.report_changelog_page === false) {
       tableofcontent_1 = '<li class="list-group-item d-flex justify-content-between align-items-center"> \
       <a href="#Changelog">Changelog</a> \
   </li>';
@@ -1237,14 +1236,14 @@ Sample code here\n\
     const scopemarked = marked(report_data.report_scope, { renderer: renderer });
 
     // advanced text
-    let projscope = '<h3 id="Scope">Scope</h3><p>' + scopemarked + '</p>';
+    let projscope = '<h2 id="Scope">Scope</h2><p>' + scopemarked + '</p>';
 
     if (this.advhtml !== '') {
       const reportHTMLmarked = marked(this.advhtml, { renderer: renderer });
       projscope = projscope + '<br>' + reportHTMLmarked + '<br>';
     }
 
-    const statsandrisk = '<h3 id="Statistics and Risk">Statistics and Risk</h3> \
+    const statsandrisk = '<h2 id="Statistics and Risk">Statistics and Risk</h2> \
     <p>' + stats + '</p><br>  \
     <p>The risk of application security vulnerabilities discovered during an assessment will be rated according to a custom-tailored version the <a target="_blank" href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology">OWASP Risk Rating Methodology</a>. \
     Risk severity is determined based on the estimated technical and business impact of the vulnerability, and on the estimated likelihood of the vulnerability being exploited:<br><br> \
@@ -1252,12 +1251,12 @@ Sample code here\n\
 
     const advtext = projscope + statsandrisk;
 
-    let issues = '<p><center><h3 id="Issues">Issues (' + report_data.report_vulns.length + ')</h3></center></p>';
+    let issues = '<div class="card border-light mb-3"><div class="card-header"><center><h3 id="Results">Results (' + report_data.report_vulns.length + ')</h3></center></div><div class="card-body">';
     report_data.report_vulns.forEach((item, index) => {
 
 
       let issstatus = '';
-      if (this.remove_issuestatus === false) {
+      if (report_data.report_settings.report_remove_issuestatus === false) {
         if (item.status) {
           issstatus = '<dt>Issue status:</dt> \
           <dd>' + statusDesc(item.status) + '</dd><br>';
@@ -1266,7 +1265,7 @@ Sample code here\n\
 
 
       let issuetags = '';
-      if (this.remove_issuetags === false) {
+      if (report_data.report_settings.report_remove_issuetags === false) {
         if (item.tags.length > 0) {
           let tags = '';
           item.tags.forEach((ite, ind) => {
@@ -1304,31 +1303,31 @@ Sample code here\n\
 
           let shac = '';
           if (ite.sha256checksum) {
-            shac = '<br><small>(SHA256 File Checksum: ' + ite.sha256checksum + ')</small>';
+            shac = '<br><small>(SHA256 File Checksum: ' + escapeHtml(ite.sha256checksum) + ')</small>';
           }
 
           let fsize = '';
           if (ite.size) {
-            fsize = '&nbsp;<small>(Size: ' + ite.size + ' bytes)</small>';
+            fsize = '&nbsp;<small>(Size: ' + escapeHtml(ite.size) + ' bytes)</small>';
           }
 
           if (ite.type.includes('image')) {
             // tslint:disable-next-line:max-line-length
-            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><img src="' + ite.data + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><img src="' + escapeHtml(ite.data) + '" title="' + escapeHtml(ite.title) + '" class="img-fluid"><br><br>';
           } else if (ite.type === 'video/mp4' || ite.type === 'video/ogg' || ite.type === 'video/webm') {
-            if (this.embedvid === true) {
+            if (report_data.report_settings.report_video_embed === true) {
               // tslint:disable-next-line:max-line-length
-              fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><video width="100%" height="600" controls><source src="' + ite.data + '" type="' + escapeHtml(ite.type) + '">Your browser does not support the video tag.</video><br><br>';
+              fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><video width="100%" height="600" controls><source src="' + escapeHtml(ite.data) + '" type="' + escapeHtml(ite.type) + '">Your browser does not support the video tag.</video><br><br>';
             }
-            if (this.embedvid === false) {
-              fil = fil + '<b>Attachment: <a href="' + ite.data + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + fsize + shac + '<br><br>';
+            if (report_data.report_settings.report_video_embed === false) {
+              fil = fil + '<b>Attachment: <a href="' + escapeHtml(ite.data) + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + fsize + shac + '<br><br>';
             }
           } else if (ite.type === 'text/plain') {
             const byteString = atob(ite.data.split(',')[1]);
             // tslint:disable-next-line:max-line-length
-            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><b>[file content]:</b><pre>' + escapeHtml(byteString) + '</pre><br><br>';
+            fil = fil + '<b>Attachment: <i>' + escapeHtml(ite.title) + '</i></b>' + fsize + shac + '<br><b>[file content]:</b><pre style="white-space: pre-wrap;">' + escapeHtml(byteString) + '</pre><br><br>';
           } else {
-            fil = fil + '<b>Attachment: <a href="' + ite.data + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + fsize + shac + '<br><br>';
+            fil = fil + '<b>Attachment: <a href="' + escapeHtml(ite.data) + '" download="' + escapeHtml(ite.title) + '"><i>' + escapeHtml(ite.title) + '</i></a></b>' + fsize + shac + '<br><br>';
           }
 
         });
@@ -1348,49 +1347,37 @@ Sample code here\n\
       issues = issues + end_issues;
     });
 
-    issues = issues + '<div class="pagebreak"></div>';
+    issues = issues + '</div></div><div class="pagebreak"></div>';
 
     let summarycomment_value = '';
     if (report_data.report_summary !== '') {
       // tslint:disable-next-line:max-line-length
-      summarycomment_value = '<h3 id="Report summary comment">Report summary comment</h3><p>' + parse_newline(escapeHtml(report_data.report_summary)) + '</p><br>';
+      summarycomment_value = '<h2 id="Report summary comment">Report summary comment</h2><p>' + parse_newline(escapeHtml(report_data.report_summary)) + '</p><br>';
     }
 
 
     let authors_value = '';
     if (report_data.researcher.length > 0 && report_data.researcher[0].reportername !== '') {
-      if (this.remove_researchers === false) {
+      if (report_data.report_settings.report_remove_researchers === false) {
 
         let aut = '';
+
         report_data.researcher.forEach((ite, ind) => {
+
           if (ite.reportername !== '') {
-            aut = aut + '<tr> \
-            <td>' + escapeHtml(ite.reportername) + '</td> \
-            <td>' + escapeHtml(ite.reporteremail) + '</td> \
-            <td>' + parse_links(escapeHtml(ite.reportersocial)) + '</td> \
-            <td>' + parse_links(escapeHtml(ite.reporterwww)) + '</td> \
-          </tr>';
+            aut = aut + '<i class="bi bi-alarm"></i><div class="col-lg-4"> \
+            <figure>\
+              <blockquote class="blockquote">' + (ite.reportername !== '' ? '<p class="mb-0">' + escapeHtml(ite.reportername) + '</p>' : '') + '</blockquote>\
+              ' + (ite.reporteremail !== '' ? '<figcaption class="blockquote-footer">E-Mail: <cite>' + escapeHtml(ite.reporteremail) + '</cite></figcaption>' : '') + '\
+              ' + (ite.reportersocial !== '' ? '<figcaption class="blockquote-footer">Social: <cite>' + parse_links(escapeHtml(ite.reportersocial)) + '</cite></figcaption>' : '') + '\
+              ' + (ite.reporterwww !== '' ? '<figcaption class="blockquote-footer">WWW: <cite>' + parse_links(escapeHtml(ite.reporterwww)) + '</cite></figcaption>' : '') + '\
+            </figure>\
+            </div>';
           }
         });
 
-        const authtab = ' \
-  <table class="table table-hover"> \
-    <thead> \
-      <tr> \
-        <th scope="col">Name</th> \
-        <th scope="col">E-mail</th> \
-        <th scope="col">Social links</th> \
-        <th scope="col">Website</th> \
-      </tr> \
-    </thead> \
-    <tbody> \
-  ' + aut + ' \
-    </tbody> \
-  </table> \
-  ';
-
         // tslint:disable-next-line:max-line-length
-        authors_value = '<h3 id="Report authors">Report authors</h3><p>' + authtab + '</p><br>';
+        authors_value = '<h2 id="Report authors">Report authors</h2><p><div class="row">' + aut + '</div></p><br>';
 
       }
 
@@ -1398,9 +1385,9 @@ Sample code here\n\
 
 
     let changeloghtml = '';
-    if (this.changelog_page === false) {
+    if (report_data.report_settings.report_changelog_page === false) {
 
-      changeloghtml = summarycomment_value + '<h3 id="Changelog">Changelog</h3> \
+      changeloghtml = summarycomment_value + '<h2 id="Changelog">Changelog</h2> \
       <p><table class="table table-hover"> \
       <thead> \
         <tr> \
@@ -1422,7 +1409,7 @@ Sample code here\n\
     }
 
     let report_gen_info = '';
-    if (this.last_page === false) {
+    if (report_data.report_settings.report_remove_lastpage === false) {
       report_gen_info = `<div class="pagebreak"></div>
   <p>Generated by <a href="https://vulnrepo.com/">VULNRΞPO</a></p>
   `;
@@ -1544,11 +1531,11 @@ Sample code here\n\
     const linkprev = 'data:image/png;base64,' + btoa(data);
     this.uploadlogoprev = '<img src="' + linkprev + '" width="100px">';
     this.advlogo = linkprev;
-    this.decryptedReportDataChanged.report_settings.report_logo = this.advlogo;
+    this.decryptedReportDataChanged.report_settings.report_logo.logo = this.advlogo;
   }
 
   clearlogo() {
-    this.decryptedReportDataChanged.report_settings.report_logo = '';
+    this.decryptedReportDataChanged.report_settings.report_logo.logo = '';
     this.uploadlogoprev = '';
     this.advlogo = '';
     this.advlogo_saved = '';
@@ -1583,7 +1570,6 @@ Sample code here\n\
     if (value) {
       const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
       this.decryptedReportDataChanged.report_vulns[index].tags.push({name: value});
-      console.log(this.decryptedReportDataChanged.report_vulns[index].tags);
     }
 
     // Reset the input value
@@ -1600,6 +1586,31 @@ Sample code here\n\
     if (ind !== -1) {
       this.decryptedReportDataChanged.report_vulns[index].tags.splice(ind, 1);
     }
+
+  }
+
+  setReportProfile(profile: any) {
+
+    this.uploadlogoprev = '<img src="' + profile.logo + '" width="100px">';
+    this.advlogo = profile.logo;
+    this.advlogo_saved = '';
+
+    this.selectedtheme = profile.theme;
+
+    // make changes
+    this.decryptedReportDataChanged.researcher = [{reportername: profile.ResName, reportersocial: profile.ResSocial, reporterwww: profile.ResWeb, reporteremail: profile.ResEmail}];
+    this.decryptedReportDataChanged.report_settings.report_logo.logo = profile.logo;
+    this.decryptedReportDataChanged.report_settings.report_logo.width = profile.logow;
+    this.decryptedReportDataChanged.report_settings.report_logo.height = profile.logoh;
+
+    this.decryptedReportDataChanged.report_settings.report_theme = profile.theme;
+
+    this.decryptedReportDataChanged.report_settings.report_video_embed = profile.video_embed;
+    this.decryptedReportDataChanged.report_settings.report_remove_lastpage = profile.remove_lastpage;
+    this.decryptedReportDataChanged.report_settings.report_remove_issuestatus = profile.remove_issueStatus;
+    this.decryptedReportDataChanged.report_settings.report_remove_researchers = profile.remove_researcher;
+    this.decryptedReportDataChanged.report_settings.report_changelog_page = profile.remove_changelog;
+    this.decryptedReportDataChanged.report_settings.report_remove_issuetags = profile.remove_tags;
 
   }
 

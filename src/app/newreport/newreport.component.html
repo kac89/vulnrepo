@@ -1,5 +1,5 @@
 <h1 class="mat-display-2" fxLayoutAlign="start">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add</mat-icon> Create new report
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle</mat-icon> Create new report
 </h1>
 
 <div fxLayoutAlign="start">
@@ -32,6 +32,16 @@
           </mat-select>
         </mat-form-field>
         
+        <br>
+
+        <mat-form-field *ngIf="ReportProfilesList.length > 0" appearance="fill" color="accent">
+          <mat-label>Select settings profile:</mat-label>
+          <mat-select (selectionChange)="selectchangeProfiles($event)" [(value)]="selected_profile">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let profile of ReportProfilesList" [value]="profile">{{profile.profile_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
       </md-card>
 
       <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center">
