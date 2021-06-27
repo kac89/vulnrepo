@@ -301,7 +301,7 @@ export class IndexeddbService {
         };
 
         // check profile and set profile
-        empty_vulns = this.setProfile(empty_vulns, profile)
+        empty_vulns = this.setProfile(empty_vulns, profile);
 
         // Encrypt
         const ciphertext = Crypto.AES.encrypt(JSON.stringify(empty_vulns), pass);
