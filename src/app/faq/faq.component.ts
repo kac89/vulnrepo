@@ -22,11 +22,19 @@ export class FaqComponent implements OnInit {
   }
 
   scroll(id) {
-    let element = document.getElementById(id);
 
-    setTimeout(() => {
-      element.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'});
-    }, 500 );
+    const node = document.getElementById(id);
+    const yourHeight = 105 + 20;
+    
+    // scroll to your element
+    node.scrollIntoView(true);
+    
+    // now account for fixed header
+    const scrolledY = window.scrollY;
+    
+    if (scrolledY) {
+      window.scroll(0, scrolledY - yourHeight);
+    }
 
   }
 
