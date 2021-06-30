@@ -21,9 +21,14 @@
 </div>
 <br>
 <div md-dialog-actions>
-  <div>
-    <button mat-flat-button color="accent" (click)="decrypt(keypass.value)">Confirm</button>
-    &nbsp;
-    <button mat-flat-button color="primary" (click)="cancel()">Cancel</button>
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start end">
+      <button mat-flat-button color="accent" (click)="decrypt(keypass.value)"><mat-icon>lock_open</mat-icon> Open vault</button>
+    </div>
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end start">
+      <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
+    </div>
   </div>
 </div>
+
+

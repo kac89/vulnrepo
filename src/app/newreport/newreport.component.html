@@ -1,5 +1,5 @@
 <h1 class="mat-display-2" fxLayoutAlign="start">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle</mat-icon> Create new report
+  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add</mat-icon> Create new report
 </h1>
 
 <div fxLayoutAlign="start">
@@ -22,12 +22,12 @@
           <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" color="accent">
+        <mat-form-field *ngIf="localkeys.length > 0" appearance="fill" color="accent">
           <mat-label>Select where save report:</mat-label>
           <mat-select (selectionChange)="selectchange($event)" [(value)]="selected">
             <mat-option value="local">Local Host</mat-option>
             <mat-optgroup [label]="'API'">
-              <mat-option *ngFor="let apis of localkey" [value]="apis">{{apis.viewValue}}</mat-option>
+              <mat-option *ngFor="let apis of localkeys" [value]="apis">{{apis.viewValue}}</mat-option>
             </mat-optgroup>
           </mat-select>
         </mat-form-field>

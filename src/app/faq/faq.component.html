@@ -2,99 +2,166 @@
     <mat-icon class="vertical-align-middle padding-bottom-3 size-45">info</mat-icon> FAQ
   </h1>
   
-  <mat-card>
-  
-    <mat-accordion>
-  
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            1. Browser support
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>Project is working on latest browsers:</p>
-        <p>Google Chrome, Mozilla Firefox, Microsoft Edge (chromium), iOS Safari/Chrome, Android Chrome</p>
-      </mat-expansion-panel>
-  
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            2. How reports are stored?
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>All data are stored in browser (on local machine, nothing is send outside) using indexeddb and SessionStorage,
-          reports by default are encrypted in AES.</p>
-      </mat-expansion-panel>
-  
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            3. How to restore my encrypted report if I forgot my security key?
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>Use bruteforce method or better remember the security key, otherwise there is no other option to decrypt data.
-        </p>
-      </mat-expansion-panel>
-  
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            4. Can I change report security key?
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>If you able to decrypt report where security key you want to change: yes!.</p>
-      </mat-expansion-panel>
-  
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            5. How does displaying attachments in the HTML report works?
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>It's simple, all images are always displayed and *.txt files. All other file types will be displayed as a link.</p>
-      </mat-expansion-panel>    
-  
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            6. How to create PDF report?
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>Download HTML report, open and use 'print to pdf' feature in your browser (ctrl+p): <a target="_blank"
-            class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Chrome</a>/<a
-            target="_blank" class="active-link"
-            href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">FireFox</a>.</p>
-      </mat-expansion-panel>
-  
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            7. What is the difference between the file with the (.VULN) & (.VULNR) extension?
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>(.VULN) - File contains only issues.</p>
-        <p>(.VULNR) - File contains full report details e.g.: issues, metadata, author etc...</p>
-      </mat-expansion-panel>
 
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            8. What is the issue status?
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <p>Issue status is information for the researcher and information in the report about issue current status of review/fixing/if issue still exist.</p>
-        <p>
-          <mat-icon style="color:red" title="Issue status: Open (Waiting for review)" class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon> - Open (Waiting for review)<br>
-          <mat-icon style="color:yellow" title="Issue status: Fix In Progress" class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon> - Fix In Progress<br>
-          <mat-icon style="color:green" title="Issue status: Fixed" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Fixed<br>
-          <mat-icon style="color:grey" title="Issue status: Won't Fix" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Won't Fix
-        </p>
-      </mat-expansion-panel>
-    </mat-accordion>
-  
-    <br>
-  
-  
+  <mat-card id="Browser-support">
+    <mat-card-header>
+      <div mat-card-avatar>
+        <a class="active-link" href="/faq?q=Browser-support"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+      </div>
+      <mat-card-title>Browser support</mat-card-title>
+      <mat-card-subtitle>Project is working on latest browsers:</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item><mat-icon color="accent">check</mat-icon> Google Chrome </mat-list-item>
+        <mat-list-item><mat-icon color="accent">check</mat-icon> Mozilla Firefox </mat-list-item>
+        <mat-list-item><mat-icon color="accent">check</mat-icon> Microsoft Edge (chromium) </mat-list-item>
+        <mat-list-item><mat-icon color="accent">check</mat-icon> iOS Safari/Chrome </mat-list-item>
+        <mat-list-item><mat-icon color="accent">check</mat-icon> Android Chrome </mat-list-item>
+       </mat-list>
+    </mat-card-content>
   </mat-card>
+<br>
+
+<mat-card id="How-are-reports-stored">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=How-are-reports-stored"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>How are reports stored?</mat-card-title>
+    <mat-card-subtitle>All data are stored in browser (by default on local machine, nothing is send outside) using indexeddb and SessionStorage.</mat-card-subtitle>
+    <mat-card-subtitle>There is option to use external database/server to store encrypted reports, check on: <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a>.</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+<br>
+
+<mat-card id="I-forgot-my-security-key">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=I-forgot-my-security-key"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>How to restore my encrypted report if I forgot my security key?</mat-card-title>
+    <mat-card-subtitle>Use bruteforce method or better remember the security key, otherwise there is no other option to decrypt data.</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+<br>
+
+<mat-card id="Can-I-change-report-security-key">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=Can-I-change-report-security-key"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>Can I change report security key?</mat-card-title>
+    <mat-card-subtitle>Yes If you able to decrypt report where security key you want to change.</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+<br>
+
+<mat-card id="Displaying-attachments">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=Displaying-attachments"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>How does displaying attachments in the HTML report works?</mat-card-title>
+    <mat-card-subtitle>It's simple, all images are always displayed and *.txt files. All other file types will be displayed as a link.</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+<br>
+
+<mat-card id="How-to-create-PDF-report">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=How-to-create-PDF-report"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>How to create PDF report?</mat-card-title>
+    <mat-card-subtitle>Download HTML report, open and use 'print to pdf' feature in your browser (ctrl+p)</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-actions>
+    
+    <mat-list>
+      <mat-list-item><mat-icon>open_in_browser</mat-icon> <a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Google Chrome</a> </mat-list-item>
+      <mat-list-item><mat-icon>open_in_browser</mat-icon> <a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">Mozilla Firefox</a> </mat-list-item>
+    </mat-list>
+
+  </mat-card-actions>
+</mat-card>
+<br>
+
+<mat-card id="VULN-VULNR">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=VULN-VULNR"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>What is the difference between the file with the (.VULN) & (.VULNR) extension?</mat-card-title>
+    <mat-card-subtitle>Files:</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item>(.VULN) - File contains only issues</mat-list-item>
+      <mat-list-item>(.VULNR) - File contains full report details e.g.: issues, metadata, author etc...</mat-list-item>
+     </mat-list>
+  </mat-card-content>
+</mat-card>
+<br>
+
+<mat-card id="What-is-the-issue-status">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=What-is-the-issue-status"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>What is the issue status?</mat-card-title>
+    <mat-card-subtitle>Issue status is information for the researcher and information in the report about issue current status of review/fixing/if issue still exist.</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item><mat-icon style="color:red" title="Issue status: Open (Waiting for review)" class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon> - Open (Waiting for review)</mat-list-item>
+      <mat-list-item><mat-icon style="color:yellow" title="Issue status: Fix In Progress" class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon> - Fix In Progress</mat-list-item>
+      <mat-list-item><mat-icon style="color:green" title="Issue status: Fixed" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Fixed</mat-list-item>
+      <mat-list-item><mat-icon style="color:grey" title="Issue status: Won't Fix" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Won't Fix</mat-list-item>
+     </mat-list>
+  </mat-card-content>
+</mat-card>
   
-  <br><br>
+<br>
+<mat-card id="API">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=API"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>Can I use external storage for encrypted reports?</mat-card-title>
+    <mat-card-subtitle>YES, You can use Local or External server. Here is <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a> and example server for personal use on localhost:</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item>
+        <mat-icon>open_in_browser</mat-icon> <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo-server">vulnrepo-server</a>
+      </mat-list-item>
+     </mat-list>
+  </mat-card-content>
+</mat-card>
+<br>
+
+<mat-card id="API-VAULT">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=API-VAULT"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>What is the API VAULT?</mat-card-title>
+    <mat-card-subtitle>API VAULT is encrypted (AES) configuration for your API. You have only one VAULT which contains your all APIs configuration.</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+<br>
+
+<mat-card id="Report-Profiles">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <a class="active-link" href="/faq?q=Report-Profiles"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+    </div>
+    <mat-card-title>Can I create settings for exist/new report and save it?</mat-card-title>
+    <mat-card-subtitle>Use in Settings: "Report Profiles".</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+<br>
+
+<br><br>
