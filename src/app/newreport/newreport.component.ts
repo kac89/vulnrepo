@@ -15,7 +15,7 @@ export class NewreportComponent implements OnInit {
   hide = true;
   alert: string;
   inppass: string;
-  localkey: any;
+  localkeys = [];
   inppass2: string;
   color: ThemePalette = 'warn';
   mode: ProgressBarMode = 'buffer';
@@ -28,6 +28,7 @@ export class NewreportComponent implements OnInit {
   selected = 'local';
   selected_profile = '';
   ReportProfilesList = [];
+  apiReports = [];
   profileSettingsselected: any;
 
   constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService,
@@ -39,7 +40,7 @@ export class NewreportComponent implements OnInit {
 
     const localkey = sessionStorage.getItem('VULNREPO-API');
     if (localkey) {
-      this.localkey = JSON.parse(localkey);
+      this.localkeys = JSON.parse(localkey);
     }
 
         // get report profiles
