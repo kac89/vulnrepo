@@ -56,9 +56,4 @@ export class DialogPassComponent implements OnInit {
 
   }
 
-  FAQredir(): void {
-    this.dialogRef.close();
-    this.router.navigate(['/faq'], { queryParams: {q: 'I-forgot-my-security-key'}});
-  }
-
 }
