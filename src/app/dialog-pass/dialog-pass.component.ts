@@ -56,9 +56,4 @@ export class DialogPassComponent implements OnInit {
 
   }
 
-  redir(): void {
-    this.dialogRef.close();
-    this.router.navigate(['/faq']);
-  }
-
 }
