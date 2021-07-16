@@ -249,7 +249,7 @@
             <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
-                <textarea [(ngModel)]="dec_data.poc" matInput rows="8"></textarea>
+                <textarea [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"></textarea>
               </mat-form-field>
             </div>
         

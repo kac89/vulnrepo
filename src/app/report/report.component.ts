@@ -1623,14 +1623,13 @@ Sample code here\n\
   }
 
   searchBounty(poc) {
-    this.BBmsg = 'Please wait, searching...';
-    this.fastsearchBB(poc, this.bugbountylist);
+    this.fastsearchBB(poc, true);
   }
 
-  fastsearchBB(poc, list) {
-
+  fastsearchBB(poc, showsnack) {
+    this.BBmsg = 'Please wait, searching...';
     let scope = [];
-    list.forEach(function(item){  
+    this.bugbountylist.forEach(function(item){  
       scope = scope.concat(item.domains);
     });
 
@@ -1647,7 +1646,7 @@ Sample code here\n\
             // get only scope & search
             const findedbounty = scope.find(x => x == match);
             if (findedbounty) {
-              list.forEach(function(item){  
+              this.bugbountylist.forEach(function(item){  
                 const findedbounty2 = item.domains.find(x => x == findedbounty);
                 if (findedbounty2) {
                   arr.push(item);
@@ -1658,16 +1657,18 @@ Sample code here\n\
         });
     }
 
-    if (arr.length == 0) {
-      this.snackBar.open('No bug-bounty program found :-( !', 'OK', {
-        duration: 2000,
-        panelClass: ['notify-snackbar-fail']
-      });
-    } else {
-      this.snackBar.open('Found bug-bounty program !!! :-)', 'OK', {
-        duration: 2000,
-        panelClass: ['notify-snackbar-success']
-      });
+    if (showsnack !== false) {
+      if (arr.length == 0) {
+        this.snackBar.open('No bug-bounty program found :-( !', 'OK', {
+          duration: 2000,
+          panelClass: ['notify-snackbar-fail']
+        });
+      } else {
+        this.snackBar.open('Found bug-bounty program !!! :-)', 'OK', {
+          duration: 2000,
+          panelClass: ['notify-snackbar-success']
+        });
+      }
     }
 
     const uniqueArray = arr.filter(function(item, pos) {
@@ -1689,5 +1690,9 @@ Sample code here\n\
 
   redirectBounty(url){
     window.open(url, "_blank");
+  }
+
+  changePoC(poc){
+    this.fastsearchBB(poc, false);
   }
 }
