@@ -206,6 +206,7 @@ export class DialogAddissueComponent implements OnInit {
               cvss: this.options[key].cvss,
               cve: this.options[key].cve,
               tags: [],
+              bounty: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -227,6 +228,7 @@ export class DialogAddissueComponent implements OnInit {
               cvss: '',
               cve: '',
               tags: [],
+              bounty: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -262,6 +264,7 @@ export class DialogAddissueComponent implements OnInit {
               cvss: this.cwe[key].cvss,
               cve: this.cwe[key].cve,
               tags: [],
+              bounty: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -392,6 +395,7 @@ export class DialogAddissueComponent implements OnInit {
                 ref: refer,
                 cvss: resp.cvss,
                 cve: resp.id,
+                bounty: [],
                 tags: [],
                 date: today + ''
               };
@@ -444,6 +448,7 @@ export class DialogAddissueComponent implements OnInit {
               cvss: this.mitremobile[key].cvss,
               cve: this.mitremobile[key].cve,
               tags: [],
+              bounty: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -483,6 +488,7 @@ export class DialogAddissueComponent implements OnInit {
               cvss: this.mitreenterprise[key].cvss,
               cve: this.mitreenterprise[key].cve,
               tags: [],
+              bounty: [],
               date: today + ''
             };
             this.dialogRef.close(def);
@@ -543,6 +549,7 @@ export class DialogAddissueComponent implements OnInit {
                 cvss: '',
                 cve: '',
                 tags: [],
+                bounty: [],
                 date: today + ''
               };
               this.dialogRef.close(def);
@@ -584,6 +591,7 @@ export class DialogAddissueComponent implements OnInit {
               cvss: this.owasptop[key].cvss,
               cve: this.owasptop[key].cve,
               tags: [],
+              bounty: [],
               date: today + ''
             };
             this.dialogRef.close(def);

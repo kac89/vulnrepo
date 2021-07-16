@@ -58,11 +58,13 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   advhtml = '';
   report_css: any;
+  bugbountylist = [];
   report_id: string;
   report_info: any;
   lastsavereportdata = '';
   reportdesc: any;
   selecteditem = false;
+  BBmsg = '';
   selecteditems = [];
   selected3 = [];
   ReportProfilesList = [];
@@ -182,6 +184,12 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.http.get('/assets/bootstrap.min.css', {responseType: 'text'}).subscribe(res => {
       this.report_css = res;
     });
+    
+    // get bug bountys programs list, full credits: https://github.com/projectdiscovery/public-bugbounty-programs
+    this.http.get<any>('/assets/chaos-bugbounty-list.json?v=' + + new Date()).subscribe(res => {
+      this.bugbountylist = res.programs;
+    });
+
 
     // get report profiles
     this.indexeddbService.retrieveReportProfile().then(ret => {
@@ -1614,4 +1622,72 @@ Sample code here\n\
 
   }
 
+  searchBounty(poc) {
+    this.BBmsg = 'Please wait, searching...';
+    this.fastsearchBB(poc, this.bugbountylist);
+  }
+
+  fastsearchBB(poc, list) {
+
+    let scope = [];
+    list.forEach(function(item){  
+      scope = scope.concat(item.domains);
+    });
+
+    const regex = /(?:[\w-]+\.)+[\w-]+/g;
+    let m;
+    const arr = [];
+    while ((m = regex.exec(poc.poc)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        
+        m.forEach((match) => {
+            // get only scope & search
+            const findedbounty = scope.find(x => x == match);
+            if (findedbounty) {
+              list.forEach(function(item){  
+                const findedbounty2 = item.domains.find(x => x == findedbounty);
+                if (findedbounty2) {
+                  arr.push(item);
+                }
+              });
+
+            }
+        });
+    }
+
+    if (arr.length == 0) {
+      this.snackBar.open('No bug-bounty program found :-( !', 'OK', {
+        duration: 2000,
+        panelClass: ['notify-snackbar-fail']
+      });
+    } else {
+      this.snackBar.open('Found bug-bounty program !!! :-)', 'OK', {
+        duration: 2000,
+        panelClass: ['notify-snackbar-success']
+      });
+    }
+
+    const uniqueArray = arr.filter(function(item, pos) {
+      return arr.indexOf(item) == pos;
+    });
+
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(poc);
+    this.decryptedReportDataChanged.report_vulns[index].bounty = [];
+    this.decryptedReportDataChanged.report_vulns[index].bounty = this.decryptedReportDataChanged.report_vulns[index].bounty.concat(uniqueArray);
+
+    this.decryptedReportDataChanged.report_vulns[index].bounty = arr.filter(function(item, pos) {
+      return arr.indexOf(item) == pos;
+    });
+
+    this.BBmsg = '';
+    
+
+  }
+
+  redirectBounty(url){
+    window.open(url, "_blank");
+  }
 }
