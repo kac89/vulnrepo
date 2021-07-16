@@ -224,6 +224,9 @@
             </mat-panel-description>
 
             <mat-panel-description *ngIf="dec_data?.status" fxLayoutAlign="end center">
+              <div *ngIf="dec_data?.bounty">
+                <mat-icon title="Found bug-bounty program related to the issue" color="accent">attach_money</mat-icon>
+              </div>
               <div *ngIf="dec_data?.status === 1">
                 <mat-icon style="color:red" title="Issue status: Open (Waiting for review)" class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon>
               </div>
@@ -291,39 +294,43 @@
 
         <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <mat-form-field appearance="outline" class="example-full-width" color="accent">
-              <mat-label>Description</mat-label>
-              <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
-            </mat-form-field>
+          <div fxLayout="row wrap" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-            <br>
-            
-            <mat-form-field *ngIf="dec_data.tags" class="example-tags-list" color="accent">
-              <mat-label>TAGs</mat-label>
-              <mat-chip-list #tagList aria-label="Tags">
-                <mat-chip *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags" [selectable]="selectable"
-                         [removable]="removable" (removed)="TAGremove(tag, dec_data)" ngDefaultControl>
-                  {{tag.name}}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="New tag..."
-                       [matChipInputFor]="tagList"
-                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                       [matChipInputAddOnBlur]="addOnBlur"
-                       (matChipInputTokenEnd)="TAGadd($event, dec_data)">
-              </mat-chip-list>
-            </mat-form-field>
+            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+              <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                <mat-label>Description</mat-label>
+                <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
+              </mat-form-field>
+            </div>
+  
+              <div *ngIf="dec_data.tags" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                <mat-form-field appearance="outline" class="example-tags-list" color="accent">
+                  <mat-label>TAGs</mat-label>
+                  <mat-chip-list #tagList aria-label="Tags">
+                    <mat-chip *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags" [selectable]="selectable"
+                             [removable]="removable" (removed)="TAGremove(tag, dec_data)" ngDefaultControl>
+                      {{tag.name}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="New tag..."
+                           [matChipInputFor]="tagList"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           [matChipInputAddOnBlur]="addOnBlur"
+                           (matChipInputTokenEnd)="TAGadd($event, dec_data)">
+                  </mat-chip-list>
+                </mat-form-field>
+              </div>
+
           </div>
-      
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+          
+          <div fxFlex="50%" fxFlex.sm="100%"  fxFlex.xs="100%">
 
             <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
               <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <mat-form-field appearance="outline" class="example-full-width" color="accent">
                   <mat-label>References</mat-label>
-                  <textarea [(ngModel)]="dec_data.ref" matInput rows="6"></textarea>
+                  <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
                 </mat-form-field>
               </div>
           
@@ -339,6 +346,24 @@
                   <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
                   <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent" matSuffix><mat-icon matSuffix>explore</mat-icon> CVE Info</button>
                 </mat-form-field>
+              </div>
+
+
+              <div fxLayout="row wrap" *ngIf="dec_data?.bounty" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+                <div style="display: inline;" fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
+                  <div *ngIf="BBmsg != ''">
+                    <p>{{BBmsg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+                  </div>
+                  <button *ngFor="let bounty of dec_data?.bounty" mat-stroked-button color="accent" (click)="redirectBounty(bounty?.url)"><mat-icon>attach_money</mat-icon>{{bounty?.name}}</button>
+                </div>
+
+                <div fxLayoutAlign="end start" fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
+                  <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}" matBadgeColor="accent" (click)="searchBounty(dec_data)" title="Search for bug bounty program">
+                    <mat-icon>attach_money</mat-icon><mat-icon>search</mat-icon> 
+                  </button>
+                </div>
+                
               </div>
           
           </div>
