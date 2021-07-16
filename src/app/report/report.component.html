@@ -225,7 +225,7 @@
 
             <mat-panel-description *ngIf="dec_data?.status" fxLayoutAlign="end center">
               <div *ngIf="dec_data?.bounty">
-                <mat-icon title="Found bug-bounty program related to the issue" color="accent">attach_money</mat-icon>
+                <mat-icon *ngIf="dec_data?.bounty.length > 0" title="Found bug-bounty program related to the issue" color="accent">attach_money</mat-icon>
               </div>
               <div *ngIf="dec_data?.status === 1">
                 <mat-icon style="color:red" title="Issue status: Open (Waiting for review)" class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon>
