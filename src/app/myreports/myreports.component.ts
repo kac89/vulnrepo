@@ -80,7 +80,7 @@ export class MyreportsComponent implements OnInit {
     const localkey = sessionStorage.getItem('VULNREPO-API');
     if (localkey) {
       this.msg = 'API connection please wait...';
-      console.log('Key found');
+
       this.keyfound = true;
       const vaultobj = JSON.parse(localkey);
 
