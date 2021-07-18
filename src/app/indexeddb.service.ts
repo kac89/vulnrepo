@@ -425,27 +425,31 @@ export class IndexeddbService {
       this.getkeybyReportID(item.report_id).then(data => {
         if (data) {
 
-          // indexeddb communication
-          const indexedDB = window.indexedDB;
-          const open = indexedDB.open('vulnrepo-db', 1);
+          if (data.NotFound === 'NOOK') {
+            console.log('no locally report');
+          } else {
+            // indexeddb communication
+            const indexedDB = window.indexedDB;
+            const open = indexedDB.open('vulnrepo-db', 1);
 
-          open.onupgradeneeded = function () {
-            const db = open.result;
-            db.createObjectStore('reports', { autoIncrement: true });
-          };
-
-          open.onsuccess = function () {
-            const db = open.result;
-            const tx = db.transaction('reports', 'readwrite');
-            const store = tx.objectStore('reports');
-
-            store.delete(data.key);
-
-            tx.oncomplete = function () {
-              db.close();
-              resolve(true);
+            open.onupgradeneeded = function () {
+              const db = open.result;
+              db.createObjectStore('reports', { autoIncrement: true });
             };
-          };
+
+            open.onsuccess = function () {
+              const db = open.result;
+              const tx = db.transaction('reports', 'readwrite');
+              const store = tx.objectStore('reports');
+
+              store.delete(data.key);
+
+              tx.oncomplete = function () {
+                db.close();
+                resolve(true);
+              };
+            };
+          }
 
         }
       });
@@ -552,6 +556,8 @@ export class IndexeddbService {
             if (reportid === value) {
               const finded = { key, value };
               resolve(finded);
+            } else {
+              resolve({ 'NotFound': 'NOOK' });
             }
 
             cursor.continue();
@@ -705,7 +711,7 @@ export class IndexeddbService {
     document.body.removeChild(link);
   }
 
-  cloneReportadd(report: string) {
+  cloneReportadd(report: any) {
     return new Promise<any>((resolve, reject) => {
           // indexeddb communication
           const indexedDB = window.indexedDB;
@@ -819,10 +825,13 @@ export class IndexeddbService {
           vaultobj.forEach( (element) => {
             this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
-              if (resp.length > 0) {
-                console.log('Report exist in API: OK');
-                resolve(resp[0]);
+              if (resp) {
+                if (resp.length > 0) {
+                  console.log('Report exist in API: OK');
+                  resolve(resp[0]);
+                }
               }
+
             });
 
         });
@@ -842,11 +851,24 @@ export class IndexeddbService {
           const vaultobj = JSON.parse(localkey);
 
           vaultobj.forEach( (element) => {
+
+            let check = false;
+
             this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
-              if (resp.length > 0) {
-                console.log('Report exist in API: OK');
-                resolve({data: resp[0], api: element.value, apikey: element.apikey});
+              if (resp) {
+                if (resp.length > 0) {
+                  check = true;
+                  console.log('Report exist in API: OK');
+                  resolve({data: resp[0], api: element.value, apikey: element.apikey});
+                }
+              } else {
+                check = false;
+              }
+
+            }).then((resp) => {
+              if (check !== true) {
+                resolve('API_ERROR');
               }
             });
 

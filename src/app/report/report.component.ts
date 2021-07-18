@@ -20,12 +20,15 @@ import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removei
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
+import { DialogApierrorComponent } from '../dialog-apierror/dialog-apierror.component';
 import marked from 'marked';
 import { sha256 } from 'js-sha256';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { HttpClient } from '@angular/common/http';
+import * as Crypto from 'crypto-js';
+import { v4 as uuid } from 'uuid';
 
 export interface Tags {
   name: string;
@@ -482,58 +485,115 @@ Sample code here\n\
     this.report_encryption_in_progress = true;
     this.savemsg = 'Please wait, report is encrypted...';
     const pass = sessionStorage.getItem(report_id);
+    let useAPI = false;
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
-        // update report
-        this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-        this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
-        // tslint:disable-next-line:max-line-length
-        this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
-          if (retu) {
 
-            this.report_encryption_in_progress = false;
-            this.savemsg = 'All changes saved successfully!';
-            this.lastsavereportdata = retu;
-            this.doStats();
+        if (data.NotFound === 'NOOK') {
+          console.log('no locally report');
+          useAPI = true;
+        } else {
 
-            this.snackBar.open('All changes saved successfully!', 'OK', {
-              duration: 3000,
-              panelClass: ['notify-snackbar-success']
-            });
-          }
-        });
+          // update report
+          this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+          this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+          // tslint:disable-next-line:max-line-length
+          this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
+            if (retu) {
+
+              this.report_encryption_in_progress = false;
+              this.savemsg = 'All changes saved successfully!';
+              this.lastsavereportdata = retu;
+              this.doStats();
+
+              this.snackBar.open('All changes saved successfully!', 'OK', {
+                duration: 3000,
+                panelClass: ['notify-snackbar-success']
+              });
+            }
+          });
+
+        }
+
       }
-    });
+    }).then(() => {
 
-    this.indexeddbService.searchAPIreport(this.report_info.report_id).then(ret => {
-      if (ret) {
-        this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-        this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
-        // tslint:disable-next-line:max-line-length
-        this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
-          if (retu === 'NOSPACE') {
-            this.savemsg = '';
-            this.report_encryption_in_progress = false;
+      if (useAPI === true) {
+        this.indexeddbService.searchAPIreport(this.report_info.report_id).then(ret => {
+
+          if (ret === 'API_ERROR') {
+            console.log('api problems');
+    
+            const dialogRef = this.dialog.open(DialogApierrorComponent, {
+              width: '400px',
+              disableClose: true
+            });
+        
+            dialogRef.afterClosed().subscribe(result => {
+    
+              if (result === 'tryagain') {
+                console.log('User select: try again');
+                this.saveReportChanges(this.report_info.report_id);
+              }
+    
+              if (result === 'savelocally') {
+                console.log('User select: save locally');
+                try {
+                  this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+                  this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                  // Encrypt
+                  const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
+                  const now: number = Date.now();
+                  const to_update = {
+                    report_id: uuid(),
+                    report_name: this.report_info.report_name,
+                    report_createdate: this.report_info.report_createdate,
+                    report_lastupdate: now,
+                    encrypted_data: ciphertext.toString()
+                  };
+    
+                  this.indexeddbService.cloneReportadd(to_update).then(data => {
+                    if (data) {
+                      this.router.navigate(['/my-reports']);
+                    }
+                  });
+          
+                } catch (except) {
+                  console.log(except);
+                }
+    
+              }
+            });
+    
           } else {
-            this.report_encryption_in_progress = false;
-            this.savemsg = 'All changes saved on remote API successfully!';
-            this.lastsavereportdata = retu;
-            this.doStats();
-
-            this.snackBar.open('All changes saved on remote API successfully!', 'OK', {
-              duration: 3000,
-              panelClass: ['notify-snackbar-success']
+            this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+            this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+            // tslint:disable-next-line:max-line-length
+            this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
+              if (retu === 'NOSPACE') {
+                this.savemsg = '';
+                this.report_encryption_in_progress = false;
+              } else {
+                this.report_encryption_in_progress = false;
+                this.savemsg = 'All changes saved on remote API successfully!';
+                this.lastsavereportdata = retu;
+                this.doStats();
+    
+                this.snackBar.open('All changes saved on remote API successfully!', 'OK', {
+                  duration: 3000,
+                  panelClass: ['notify-snackbar-success']
+                });
+              }
+    
             });
+    
           }
-
+    
         });
-
-
       }
-
+      
     });
-
 
   }
 
@@ -598,6 +658,10 @@ Sample code here\n\
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
+
+        if (data.NotFound === 'NOOK') {
+          console.log('no locally report');
+        } else {
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
           if (retu) {
@@ -606,6 +670,7 @@ Sample code here\n\
             this.doStats();
           }
         });
+        }
 
       }
     });

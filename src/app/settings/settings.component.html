@@ -185,7 +185,8 @@
       <th mat-header-cell *matHeaderCellDef> Status </th>
       <td mat-cell *matCellDef="let element">
         <mat-icon *ngIf="element.status == 'Connected'" color="accent" class="vertical-align-middle">check_circle</mat-icon>
-        <mat-icon *ngIf="element.status == 'Not connected'" color="warn" class="vertical-align-middle">warning</mat-icon> 
+        <mat-icon *ngIf="element.status == 'Not connected'" color="warn" class="vertical-align-middle">warning</mat-icon>
+        <mat-icon *ngIf="element.status == 'Not connected: wrong API key?'" color="warn" class="vertical-align-middle">warning</mat-icon> 
         {{element.status}}
       </td>
     </ng-container>
