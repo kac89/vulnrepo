@@ -137,7 +137,7 @@
         </div>
         <div fxLayout="row" fxLayoutGap="10px grid">
           <div fxFlex="50%" fxLayoutAlign="start">
-            <button *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="accent" (click)="openDialogAPIADD()"><mat-icon class="vertical-align-middle padding-bottom-3">cloud_upload</mat-icon> Connect</button>
+            <button *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="accent" (click)="openDialogAPIADD()"><mat-icon class="vertical-align-middle padding-bottom-3">cloud_upload</mat-icon> Add API</button>
             <button *ngIf="tryconnectdb" mat-raised-button color="primary" (click)="tryconnect()">Access to Vault</button> <br><br>
             <button *ngIf="apiconneted" mat-raised-button color="warn" (click)="apidisconnect()">Disconnect</button>
   
