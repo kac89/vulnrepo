@@ -349,16 +349,16 @@
               </div>
 
 
-              <div fxLayout="row wrap" *ngIf="dec_data?.bounty" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+              <div fxLayout="row wrap" fxLayoutGap="5px grid" *ngIf="dec_data?.bounty" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-                <div style="display: inline;" fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
+                <div style="display: inline;text-align: end;" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
                   <div *ngIf="BBmsg != ''">
                     <p>{{BBmsg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
                   </div>
-                  <button *ngFor="let bounty of dec_data?.bounty" mat-stroked-button color="accent" (click)="redirectBounty(bounty?.url)"><mat-icon>attach_money</mat-icon>{{bounty?.name}}</button>
+                  <button *ngFor="let bounty of dec_data?.bounty" mat-stroked-button color="accent" (click)="redirectBounty(bounty?.url)" title="{{bounty?.url}}"><mat-icon>attach_money</mat-icon>{{bounty?.name}}</button>
                 </div>
 
-                <div fxLayoutAlign="end start" fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
+                <div fxLayoutAlign="end start" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
                   <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}" matBadgeColor="accent" (click)="searchBounty(dec_data)" title="Search for bug bounty program">
                     <mat-icon>attach_money</mat-icon><mat-icon>search</mat-icon> 
                   </button>
