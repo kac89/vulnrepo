@@ -108,7 +108,7 @@ export class MyreportsComponent implements OnInit {
 
 
         setTimeout(() => {
-          console.log('hide progress timeout');
+          // console.log('hide progress timeout');
           this.msg = '';
         }, 10000);
 

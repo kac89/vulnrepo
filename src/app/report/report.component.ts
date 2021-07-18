@@ -20,12 +20,15 @@ import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removei
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
+import { DialogApierrorComponent } from '../dialog-apierror/dialog-apierror.component';
 import marked from 'marked';
 import { sha256 } from 'js-sha256';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { HttpClient } from '@angular/common/http';
+import * as Crypto from 'crypto-js';
+import { v4 as uuid } from 'uuid';
 
 export interface Tags {
   name: string;
@@ -507,7 +510,51 @@ Sample code here\n\
     });
 
     this.indexeddbService.searchAPIreport(this.report_info.report_id).then(ret => {
-      if (ret) {
+      if (ret === 'API_ERROR') {
+        console.log('api problems');
+
+        const dialogRef = this.dialog.open(DialogApierrorComponent, {
+          width: '400px',
+          disableClose: true
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+
+          if (result === 'tryagain') {
+            console.log('User select: try again');
+            this.saveReportChanges(this.report_info.report_id);
+          }
+
+          if (result === 'savelocally') {
+            console.log('User select: save locally');
+            try {
+              this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+              this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+              // Encrypt
+              const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
+              const now: number = Date.now();
+              const to_update = {
+                report_id: uuid(),
+                report_name: this.report_info.report_name,
+                report_createdate: this.report_info.report_createdate,
+                report_lastupdate: now,
+                encrypted_data: ciphertext.toString()
+              };
+
+              this.indexeddbService.cloneReportadd(to_update).then(data => {
+                if (data) {
+                  this.router.navigate(['/my-reports']);
+                }
+              });
+      
+            } catch (except) {
+              console.log(except);
+            }
+
+          }
+        });
+
+      } else {
         this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
         this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
         // tslint:disable-next-line:max-line-length
@@ -528,7 +575,6 @@ Sample code here\n\
           }
 
         });
-
 
       }
 

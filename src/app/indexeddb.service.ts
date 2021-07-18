@@ -705,7 +705,7 @@ export class IndexeddbService {
     document.body.removeChild(link);
   }
 
-  cloneReportadd(report: string) {
+  cloneReportadd(report: any) {
     return new Promise<any>((resolve, reject) => {
           // indexeddb communication
           const indexedDB = window.indexedDB;
@@ -819,10 +819,15 @@ export class IndexeddbService {
           vaultobj.forEach( (element) => {
             this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
-              if (resp.length > 0) {
-                console.log('Report exist in API: OK');
-                resolve(resp[0]);
+              if (resp) {
+                if (resp.length > 0) {
+                  console.log('Report exist in API: OK');
+                  resolve(resp[0]);
+                }
+              } else {
+                this.router.navigate(['/my-reports']);
               }
+
             });
 
         });
@@ -842,11 +847,24 @@ export class IndexeddbService {
           const vaultobj = JSON.parse(localkey);
 
           vaultobj.forEach( (element) => {
+
+            let check = false;
+
             this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
-              if (resp.length > 0) {
-                console.log('Report exist in API: OK');
-                resolve({data: resp[0], api: element.value, apikey: element.apikey});
+              if (resp) {
+                if (resp.length > 0) {
+                  check = true;
+                  console.log('Report exist in API: OK');
+                  resolve({data: resp[0], api: element.value, apikey: element.apikey});
+                }
+              } else {
+                check = false;
+              }
+
+            }).then((resp) => {
+              if (check !== true) {
+                resolve('API_ERROR');
               }
             });
 
