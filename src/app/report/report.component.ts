@@ -140,7 +140,6 @@ export class ReportComponent implements OnInit, OnDestroy {
     // check if report exist
     this.indexeddbService.checkifreportexist(this.report_id).then(data => {
       if (data) {
-
         console.log('Report exist: OK');
         this.report_info = data;
         this.reportdesc = data;
@@ -160,7 +159,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         }
 
       } else {
-
+        console.log('Report not exist locally: YES');
         this.indexeddbService.checkAPIreport(this.report_id).then(re => {
           if (re) {
             this.report_info = re;

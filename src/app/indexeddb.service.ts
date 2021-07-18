@@ -477,6 +477,8 @@ export class IndexeddbService {
           request.result.map(x => {
             if (x.report_id.indexOf(report_id) !== -1) {
               resolve(x);
+            } else {
+              resolve(false);
             }
           });
         };
@@ -828,7 +830,10 @@ export class IndexeddbService {
               if (resp) {
                 if (resp.length > 0) {
                   console.log('Report exist in API: OK');
+                  console.log(resp);
                   resolve(resp[0]);
+                } else {
+                  resolve(false);
                 }
               }
 
@@ -836,6 +841,8 @@ export class IndexeddbService {
 
         });
 
+      } else {
+        resolve(false);
       }
 
 
