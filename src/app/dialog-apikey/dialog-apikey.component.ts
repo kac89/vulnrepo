@@ -11,11 +11,17 @@ import { IndexeddbService } from '../indexeddb.service';
 export class DialogApikeyComponent implements OnInit {
   hide = true;
   alert = '';
+  removedialog = false;
 
   constructor(public dialogRef: MatDialogRef<DialogApikeyComponent>,
     @Inject(MAT_DIALOG_DATA) public data, private indexeddbService: IndexeddbService) { }
 
   ngOnInit(): void {
+
+    if (sessionStorage.getItem('hidedialog') === 'true') {
+      this.removedialog = true;
+    }
+
   }
 
   cancel(): void {
@@ -56,5 +62,14 @@ export class DialogApikeyComponent implements OnInit {
       });
     }
 
+  }
+
+  removedialogFunc(event) {
+    if (event.checked === true) {
+      sessionStorage.setItem('hidedialog', 'true');
+    }
+    if (event.checked === false) {
+      sessionStorage.removeItem('hidedialog');
+    }
   }
 }

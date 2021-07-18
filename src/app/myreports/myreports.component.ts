@@ -121,7 +121,11 @@ export class MyreportsComponent implements OnInit {
 
       this.indexeddbService.retrieveAPIkey().then(ret => {
         if (ret) {
-          setTimeout(_ => this.openDialog(ret));
+
+          if (sessionStorage.getItem('hidedialog') !== 'true') {
+            setTimeout(_ => this.openDialog(ret));
+          }
+
         }
       });
 

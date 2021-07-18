@@ -18,6 +18,7 @@
 <div *ngIf="alert != ''">
   <span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">warning</mat-icon> {{alert}}</span><br>
 </div>
+<mat-checkbox [checked]="removedialog" (change)="removedialogFunc($event)">Do not show again in this session</mat-checkbox>
 </div>
 <br>
 <div md-dialog-actions>

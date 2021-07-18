@@ -75,7 +75,11 @@ export class SettingsComponent implements OnInit {
           this.tryconnectdb = true;
           this.listkey = true;
           this.showregapi = false;
-          setTimeout(_ => this.openDialog(ret));
+          
+          if (sessionStorage.getItem('hidedialog') !== 'true') {
+            setTimeout(_ => this.openDialog(ret));
+          }
+
         } else {
           this.showregapi = true;
         }
