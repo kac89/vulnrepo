@@ -182,8 +182,7 @@ export class SettingsComponent implements OnInit {
       if (element.apikey !== undefined && element.apikey !== '') {
 
         this.apiService.APISend(element.value, element.apikey, 'apiconnect', '').then(resp => {
-
-            if (resp !== undefined && resp.AUTH === 'OK') {
+            if (resp !== undefined && resp !== null && resp.AUTH === 'OK') {
               this.apiconneted = true;
               this.listkey = false;
               this.createdate = resp.CREATEDATE;
@@ -200,10 +199,19 @@ export class SettingsComponent implements OnInit {
               this.dataSource.data = elementlist;
               this.tryconnectdb = false;
             } else {
-              // tslint:disable-next-line:max-line-length
-              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Not connected', created: '', expires: '', current_storage: 0 };
-              elementlist.push(elementdata);
-              this.dataSource.data = elementlist;
+
+              if (resp === null) {
+                // tslint:disable-next-line:max-line-length
+                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Not connected: wrong API key?', created: '', expires: '', current_storage: 0 };
+                elementlist.push(elementdata);
+                this.dataSource.data = elementlist;
+              } else {
+                // tslint:disable-next-line:max-line-length
+                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Not connected', created: '', expires: '', current_storage: 0 };
+                elementlist.push(elementdata);
+                this.dataSource.data = elementlist;
+              }
+
             }
 
         }).catch(error => {

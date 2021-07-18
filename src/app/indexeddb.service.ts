@@ -425,27 +425,31 @@ export class IndexeddbService {
       this.getkeybyReportID(item.report_id).then(data => {
         if (data) {
 
-          // indexeddb communication
-          const indexedDB = window.indexedDB;
-          const open = indexedDB.open('vulnrepo-db', 1);
+          if (data.NotFound === 'NOOK') {
+            console.log('no locally report');
+          } else {
+            // indexeddb communication
+            const indexedDB = window.indexedDB;
+            const open = indexedDB.open('vulnrepo-db', 1);
 
-          open.onupgradeneeded = function () {
-            const db = open.result;
-            db.createObjectStore('reports', { autoIncrement: true });
-          };
-
-          open.onsuccess = function () {
-            const db = open.result;
-            const tx = db.transaction('reports', 'readwrite');
-            const store = tx.objectStore('reports');
-
-            store.delete(data.key);
-
-            tx.oncomplete = function () {
-              db.close();
-              resolve(true);
+            open.onupgradeneeded = function () {
+              const db = open.result;
+              db.createObjectStore('reports', { autoIncrement: true });
             };
-          };
+
+            open.onsuccess = function () {
+              const db = open.result;
+              const tx = db.transaction('reports', 'readwrite');
+              const store = tx.objectStore('reports');
+
+              store.delete(data.key);
+
+              tx.oncomplete = function () {
+                db.close();
+                resolve(true);
+              };
+            };
+          }
 
         }
       });
@@ -552,6 +556,8 @@ export class IndexeddbService {
             if (reportid === value) {
               const finded = { key, value };
               resolve(finded);
+            } else {
+              resolve({ 'NotFound': 'NOOK' });
             }
 
             cursor.continue();
@@ -824,8 +830,6 @@ export class IndexeddbService {
                   console.log('Report exist in API: OK');
                   resolve(resp[0]);
                 }
-              } else {
-                this.router.navigate(['/my-reports']);
               }
 
             });
