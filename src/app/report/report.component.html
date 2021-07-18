@@ -36,7 +36,7 @@
   
       <div *ngIf="decryptedReportDataChanged" style="text-align: center;" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-          <span *ngIf="reportdesc?.report_lastupdate !== '' && lastsavereportdata == ''">
+          <span *ngIf="reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == ''">
             {{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
           </span>
           <span *ngIf="lastsavereportdata !== ''">
