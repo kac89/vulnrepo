@@ -830,7 +830,6 @@ export class IndexeddbService {
               if (resp) {
                 if (resp.length > 0) {
                   console.log('Report exist in API: OK');
-                  console.log(resp);
                   resolve(resp[0]);
                 } else {
                   resolve(false);
