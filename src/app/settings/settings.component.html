@@ -170,7 +170,11 @@
 
 <div>
 
-  <table mat-table style="width: 100%;" [dataSource]="dataSource" class="mat-elevation-z8">
+  <div *ngIf="dataSource.data.length == 0" style="padding: 30px 0px 0px 20px; width: 500px;">
+    Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+  </div>
+
+  <table mat-table *ngIf="dataSource.data.length > 0" style="width: 100%;" [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container matColumnDef="apiname">
       <th mat-header-cell *matHeaderCellDef> API Name </th>

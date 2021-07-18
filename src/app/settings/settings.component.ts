@@ -410,8 +410,8 @@ export class SettingsComponent implements OnInit {
       const result = JSON.parse(localkey);
       const index = result.map(function(e) { return e.apikey; }).indexOf(element);
       if (index !== -1) {
-        result.splice(index, 1);
         this.openDialogAPIremove(result);
+        result.splice(index, 1);
       }
 
     }

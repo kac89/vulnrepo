@@ -485,12 +485,12 @@ Sample code here\n\
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
+        // update report
+        this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+        this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
           if (retu) {
-            // update report
-            this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-            this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
 
             this.report_encryption_in_progress = false;
             this.savemsg = 'All changes saved successfully!';
@@ -508,15 +508,14 @@ Sample code here\n\
 
     this.indexeddbService.searchAPIreport(this.report_info.report_id).then(ret => {
       if (ret) {
+        this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+        this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
         // tslint:disable-next-line:max-line-length
         this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
           if (retu === 'NOSPACE') {
             this.savemsg = '';
             this.report_encryption_in_progress = false;
           } else {
-            this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-            this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
-
             this.report_encryption_in_progress = false;
             this.savemsg = 'All changes saved on remote API successfully!';
             this.lastsavereportdata = retu;
