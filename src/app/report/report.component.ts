@@ -442,36 +442,33 @@ Sample code here\n\
     }
   }
 
+  export_issues(selected, original) {
+    console.log('Export issues');
 
+    const selecteditems = selected.find(i => i === true);
+    if (selecteditems) {
 
-  export_selected_issues(array, original) {
-
-    const item1 = array.find(i => i === true);
-
-    if (item1) {
-      console.log('Export issues');
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
         width: '500px',
-        data: { sel: array, orig: original }
+        data: { sel: selected, orig: original }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
       });
+  
+    } else {
+
+      const dialogRef = this.dialog.open(DialogExportissuesComponent, {
+        width: '500px',
+        data: original
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+
     }
-  }
-
-  export_issues(item) {
-    console.log('Export issues');
-    const dialogRef = this.dialog.open(DialogExportissuesComponent, {
-      width: '500px',
-      data: item
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-
   }
 
   drop(event: CdkDragDrop<string[]>) {
