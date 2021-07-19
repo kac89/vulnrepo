@@ -157,7 +157,7 @@
               <mat-button-toggle class="split-button-1">
 
                 <button style="width: 80%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
-            (click)="export_issues(decryptedReportDataChanged.report_vulns)">
+            (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">
             <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues</button>
 
               </mat-button-toggle>
@@ -170,7 +170,6 @@
             </mat-button-toggle-group>
             
             <mat-menu #dropdownMenuOne="matMenu">
-              <button mat-menu-item (click)="export_selected_issues(selected3, decryptedReportDataChanged.report_vulns)">Export selected</button>
               <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
             </mat-menu>
 
