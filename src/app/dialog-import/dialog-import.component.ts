@@ -169,6 +169,8 @@ export class DialogImportComponent implements OnInit {
         ref: res[11],
         cvss: res[2],
         cve: res[1],
+        tags: [],
+        bounty: [],
         date: today
       };
 
@@ -288,6 +290,8 @@ export class DialogImportComponent implements OnInit {
         ref: item,
         cvss: setcvss(res.severity[0]),
         cve: '',
+        tags: [],
+        bounty: [],
         date: today
       };
 
@@ -356,6 +360,8 @@ export class DialogImportComponent implements OnInit {
         ref: res.nvt[0].xref[0],
         cvss: res.severity[0],
         cve: '',
+        tags: [],
+        bounty: [],
         date: today
       };
 
@@ -553,6 +559,8 @@ export class DialogImportComponent implements OnInit {
         ref: res[7],
         cvss: res[3],
         cve: '',
+        tags: [],
+        bounty: [],
         date: today
       };
 
@@ -642,10 +650,14 @@ export class DialogImportComponent implements OnInit {
       }
 
       let hostt = '';
-      if (res.hostnames[0].hostname[0]['$'].name !== undefined) {
-        hostt = ' - ' + res.hostnames[0].hostname[0]['$'].name;
-      } else {
-        hostt = '';
+      if(res.hostnames) {
+        if(res.hostnames[0].hostname) {
+          if (res.hostnames[0].hostname[0]['$'].name !== undefined) {
+            hostt = ' - ' + res.hostnames[0].hostname[0]['$'].name;
+          } else {
+            hostt = '';
+          }
+        }
       }
 
       let cmd = '';
@@ -655,47 +667,57 @@ export class DialogImportComponent implements OnInit {
 
       let status = '';
       let ipstat = '';
-      if (res.status[0]['$'].state !== undefined) {
-        // tslint:disable-next-line:max-line-length
-        status = 'IP: ' + res.address[0]['$'].addr + '\nStatus: ' + res.status[0]['$'].state + '\nReason: ' + res.status[0]['$'].reason + '\nReason TTL: ' + res.status[0]['$'].reason_ttl + '\n';
-        ipstat = ' (' + res.status[0]['$'].state + ')';
+      if (res.status) {
+        if (res.status[0]['$'].state !== undefined) {
+          // tslint:disable-next-line:max-line-length
+          status = 'IP: ' + res.address[0]['$'].addr + '\nStatus: ' + res.status[0]['$'].state + '\nReason: ' + res.status[0]['$'].reason + '\nReason TTL: ' + res.status[0]['$'].reason_ttl + '\n';
+          ipstat = ' (' + res.status[0]['$'].state + ')';
+        }
       }
 
       let ports = 'Open ports:\n';
-      if (res.ports[0].port !== undefined) {
-        res.ports[0].port.forEach((myObject, index) => {
-          let service = '';
-          let service_name = '';
-          if (myObject.service[0]['$'].name !== undefined) {
-            service_name = myObject.service[0]['$'].name;
-          }
-          let service_product = '';
-          if (myObject.service[0]['$'].product !== undefined) {
-            service_product = myObject.service[0]['$'].product;
-          }
-          service = service_name + ' - ' + service_product;
-          ports = ports + myObject['$'].protocol + '/' + myObject['$'].portid + ' - ' + service + '\n';
-        });
-
-      }
-
       let filteredports = '';
-      if (res.ports[0].extraports !== undefined) {
-        const title = '\nFiltered ports:\n';
-        res.ports[0].extraports.forEach((myObject, index) => {
-          filteredports = myObject['$'].state + '/' + myObject['$'].count + '\n';
-        });
-        filteredports = title + filteredports;
-      }
-
+      if (res.ports) {
+        if (res.ports[0].port !== undefined) {
+          res.ports[0].port.forEach((myObject, index) => {
+            let service = '';
+            let service_name = '';
+            if (myObject.service[0]['$'].name !== undefined) {
+              service_name = myObject.service[0]['$'].name;
+            }
+            let service_product = '';
+            if (myObject.service[0]['$'].product !== undefined) {
+              service_product = myObject.service[0]['$'].product;
+            }
+            if (service_product === '') {
+              service = service_name
+            } else {
+              service = service_name + ' - ' + service_product;
+            }
+            
+            ports = ports + myObject['$'].protocol + '/' + myObject['$'].portid + ' - ' + service + '\n';
+          });
+  
+        }
+      
+        if (res.ports[0].extraports !== undefined) {
+          const title = '\nFiltered ports:\n';
+          res.ports[0].extraports.forEach((myObject, index) => {
+            filteredports = myObject['$'].state + '/' + myObject['$'].count + '\n';
+          });
+          filteredports = title + filteredports;
+        }
+    }
 
       let osdetect = '';
-      if (res.os[0].osmatch !== undefined) {
-        const title = '\n====================\nOS detection:\n';
-        res.os[0].osmatch.forEach((myObject, index) => {
-          osdetect = osdetect + myObject['$'].name + ' - ' + myObject['$'].accuracy + '% \n';
-        });
-        osdetect = title + osdetect;
+      if (res.os) {
+        if (res.os[0].osmatch !== undefined) {
+          const title = '\n====================\nOS detection:\n';
+          res.os[0].osmatch.forEach((myObject, index) => {
+            osdetect = osdetect + myObject['$'].name + ' - ' + myObject['$'].accuracy + '% \n';
+          });
+          osdetect = title + osdetect;
+        }
       }
 
       const pocc = ports + filteredports + osdetect + '';
@@ -710,6 +732,8 @@ export class DialogImportComponent implements OnInit {
         ref: 'https://nmap.org/',
         cvss: '',
         cve: '',
+        tags: [],
+        bounty: [],
         date: today
       };
 

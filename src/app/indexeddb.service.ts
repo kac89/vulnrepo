@@ -129,6 +129,7 @@ export class IndexeddbService {
         //            ref: 'https://www.owasp.org/',
         //            cvss: '4.3',
         //            cve: '',
+        //            tags: [],
         //            bounty: [],
         //            date: today
         //          },
@@ -142,6 +143,7 @@ export class IndexeddbService {
         //            ref: 'https://www.owasp.org/',
         //            cvss: '4.3',
         //            cve: '',
+        //            tags: [],
         //            bounty: [],
         //            date: today
         //          }
