@@ -1,9 +1,17 @@
-<h1 class="mat-display-2">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">fingerprint</mat-icon> {{reportdesc?.report_name}} <a
-    *ngIf="decryptedReportDataChanged" title="Edit report name" [routerLink]="" (click)="editreporttitle(reportdesc)">
-    <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
-  </a>
-</h1>
+
+<div fxLayout="row wrap" fxLayoutGap="10px grid">
+  <div fxLayoutAlign="center center" fxFlex="10%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <img title="VULNRΞPO REPORT" width="60px" src="assets/issue.png">
+  </div>
+  <div fxLayoutAlign="start center" fxFlex="90%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <h1 style="margin: 0 0 0;" class="mat-display-2">{{reportdesc?.report_name}} <a
+      *ngIf="decryptedReportDataChanged" title="Edit report name" [routerLink]="" (click)="editreporttitle(reportdesc)">
+      <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon></a>
+  </h1>
+  </div>
+</div>
+
+<br><br>
 <!-- Report info -->
 <mat-card>
   <mat-card-header>
