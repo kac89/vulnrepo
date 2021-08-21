@@ -7,11 +7,6 @@ Check online: https://vulnrepo.com/
 Video walkthrough/Tutorial:  
 [![Guide](https://img.youtube.com/vi/k32Oo57ZQdY/0.jpg)](https://www.youtube.com/watch?v=k32Oo57ZQdY)
 
-Environment:
-Angular CLI: 12
-Angular: 12
-Node: 14.17.0
-
 ## Features
 
  - Security
