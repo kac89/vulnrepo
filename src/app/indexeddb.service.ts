@@ -476,13 +476,11 @@ export class IndexeddbService {
         const store = tx.objectStore('reports');
         const request = store.getAll();
         request.onsuccess = function (evt) {
-          request.result.map(x => {
-            if (x.report_id.indexOf(report_id) !== -1) {
-              resolve(x);
-            } else {
-              resolve(false);
+          request.result.forEach((item) => {
+            if(item.report_id === report_id) {
+              resolve(item);
             }
-          });
+        });
         };
         tx.oncomplete = function () {
           db.close();
@@ -560,10 +558,7 @@ export class IndexeddbService {
             if (reportid === value) {
               const finded = { key, value };
               resolve(finded);
-            } else {
-              resolve({ 'NotFound': 'NOOK' });
             }
-
             cursor.continue();
           } else {
             // no more results
@@ -574,6 +569,7 @@ export class IndexeddbService {
 
         tx.oncomplete = function () {
           db.close();
+          resolve({ 'NotFound': 'NOOK' });
         };
         request.onerror = function (e) {
           reject(e);

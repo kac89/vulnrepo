@@ -1,14 +1,22 @@
-<h1 class="mat-display-2">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">fingerprint</mat-icon> {{reportdesc?.report_name}} <a
-    *ngIf="decryptedReportDataChanged" title="Edit report name" [routerLink]="" (click)="editreporttitle(reportdesc)">
-    <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
-  </a>
-</h1>
+
+<div fxLayout="row wrap" fxLayoutGap="10px grid">
+  <div fxLayoutAlign="center center" fxFlex="10%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <img title="VULNRΞPO REPORT" width="60px" src="assets/issue.png">
+  </div>
+  <div fxLayoutAlign="start center" fxFlex="90%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <h1 style="margin: 0 0 0;" class="mat-display-2">{{reportdesc?.report_name}} <a
+      *ngIf="decryptedReportDataChanged" title="Edit report name" [routerLink]="" (click)="editreporttitle(reportdesc)">
+      <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon></a>
+  </h1>
+  </div>
+</div>
+
+<br><br>
 <!-- Report info -->
 <mat-card>
   <mat-card-header>
     <div mat-card-avatar>
-      <mat-icon>info</mat-icon>
+      <mat-icon>fingerprint</mat-icon>
     </div>
     <mat-card-title style="display: flex">Report information
       &nbsp;
@@ -28,6 +36,7 @@
 
       <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
         <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
+        <p *ngIf="reportdesc?.report_lastupdate">Last Update: {{reportdesc?.report_lastupdate | date:'medium'}}</p>
         <p>Report ID: {{reportdesc?.report_id}}</p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b></p>
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
