@@ -108,13 +108,13 @@
     {{err_msg}}
 </div>
 <div mat-dialog-actions>
-  <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()">Add Issue</button>
-  <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()">Add from CWE</button>
-  <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()">Add from CVE</button>
-  <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()">Add from ATT&CK Mobile</button>
-  <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent" (click)="addattackEnterprise()">Add from ATT&CK Enterprise</button>
-  <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()">Add from PCI DSS Requirements</button>
-  <button *ngIf="sourceSelect == 'OWASPTOP'" mat-raised-button color="accent" (click)="addOWASPtop()">Add OWASP Top 10</button>
+  <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button>
+  <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CWE</button>
+  <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CVE</button>
+  <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Mobile</button>
+  <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent" (click)="addattackEnterprise()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Enterprise</button>
+  <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
+  <button *ngIf="sourceSelect == 'OWASPTOP'" mat-raised-button color="accent" (click)="addOWASPtop()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>
