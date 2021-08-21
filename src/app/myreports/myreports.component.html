@@ -56,7 +56,7 @@
     <mat-header-cell *matHeaderCellDef><mat-icon title="Where reports are stored">folder</mat-icon></mat-header-cell>
     <mat-cell *matCellDef="let element">
       <span *ngIf="!element.api"><mat-icon title="Local Host">computer</mat-icon></span>
-      <span *ngIf="element.api == 'remote'"><mat-icon title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon></span>
+      <span *ngIf="element.api == 'remote'"><mat-icon color="accent" title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon></span>
     </mat-cell>
   </ng-container>
 
