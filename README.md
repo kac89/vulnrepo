@@ -1,8 +1,8 @@
-# VULNRΞPO
+<div align="center"><img src="/src/assets/logo/vulnrepo_logo.png" width="300"></div>
 
-VULNRΞPO - Vulnerability Report Generator & Repository - Check online: https://vulnrepo.com/
+# VULNRΞPO - Vulnerability Report Generator & Repository
 
-![VULNRΞPO Logo](/src/assets/logo/vulnrepo_logo.png | width=200px)
+Check online: https://vulnrepo.com/
 
 Video walkthrough/Tutorial:  
 [![Guide](https://img.youtube.com/vi/k32Oo57ZQdY/0.jpg)](https://www.youtube.com/watch?v=k32Oo57ZQdY)
