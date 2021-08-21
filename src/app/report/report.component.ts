@@ -376,6 +376,8 @@ Sample code here\n\
     setTimeout(() => this.dataSource.sort = this.sort);
     setTimeout(() => this.dataSource.paginator = this.paginator);
 
+    // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
+
   }
 
   addissue() {
@@ -497,7 +499,7 @@ Sample code here\n\
           // tslint:disable-next-line:max-line-length
           this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
             if (retu) {
-
+              this.reportdesc.report_lastupdate = retu;
               this.report_encryption_in_progress = false;
               this.savemsg = 'All changes saved successfully!';
               this.lastsavereportdata = retu;
@@ -572,6 +574,7 @@ Sample code here\n\
                 this.report_encryption_in_progress = false;
               } else {
                 this.report_encryption_in_progress = false;
+                this.reportdesc.report_lastupdate = retu;
                 this.savemsg = 'All changes saved on remote API successfully!';
                 this.lastsavereportdata = retu;
                 this.doStats();

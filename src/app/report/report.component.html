@@ -16,7 +16,7 @@
 <mat-card>
   <mat-card-header>
     <div mat-card-avatar>
-      <mat-icon>info</mat-icon>
+      <mat-icon>fingerprint</mat-icon>
     </div>
     <mat-card-title style="display: flex">Report information
       &nbsp;
@@ -36,6 +36,7 @@
 
       <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
         <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
+        <p *ngIf="reportdesc?.report_lastupdate">Last Update: {{reportdesc?.report_lastupdate | date:'medium'}}</p>
         <p>Report ID: {{reportdesc?.report_id}}</p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b></p>
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
