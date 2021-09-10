@@ -8,7 +8,8 @@
     <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
     <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
     <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
-    <mat-option value="OWASPTOP">OWASP Top 10 Web Application Security Risks</mat-option>
+    <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
+    <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
   </mat-select>
 </mat-form-field>
 </h1>
@@ -91,12 +92,25 @@
   <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
 </div>
 
-<div *ngIf="sourceSelect == 'OWASPTOP'" class="example-form">
+<div *ngIf="sourceSelect == 'OWASPTOP2017'" class="example-form">
   <mat-form-field class="example-form" color="accent" appearance="outline">
     <mat-label>OWASP category</mat-label>
-    <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP" [matAutocomplete]="auto6">
+    <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2017" [matAutocomplete]="auto6">
     <mat-autocomplete #auto6="matAutocomplete">
-      <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop | async" [value]="option.title">
+      <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop2017 | async" [value]="option.title">
+        {{option.title}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
+</div>
+
+<div *ngIf="sourceSelect == 'OWASPTOP2021'" class="example-form">
+  <mat-form-field class="example-form" color="accent" appearance="outline">
+    <mat-label>OWASP category</mat-label>
+    <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2021" [matAutocomplete]="auto7">
+    <mat-autocomplete #auto7="matAutocomplete">
+      <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop2021 | async" [value]="option.title">
         {{option.title}}
       </mat-option>
     </mat-autocomplete>
@@ -114,7 +128,8 @@
   <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Mobile</button>
   <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent" (click)="addattackEnterprise()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Enterprise</button>
   <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
-  <button *ngIf="sourceSelect == 'OWASPTOP'" mat-raised-button color="accent" (click)="addOWASPtop()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10</button>
+  <button *ngIf="sourceSelect == 'OWASPTOP2017'" mat-raised-button color="accent" (click)="addOWASPtop2017()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 2017</button>
+  <button *ngIf="sourceSelect == 'OWASPTOP2021'" mat-raised-button color="accent" (click)="addOWASPtop2021()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 2021</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>

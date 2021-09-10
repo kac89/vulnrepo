@@ -45,19 +45,22 @@ export class DialogAddissueComponent implements OnInit {
   mymobilemitre = new FormControl();
   myenterprisemitre = new FormControl();
   myPCI = new FormControl();
-  myOWASP = new FormControl();
+  myOWASP2017 = new FormControl();
+  myOWASP2021 = new FormControl();
   options: Vulns[] = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];
   mitreenterprise: Vulns[] = [];
   pcidssv3: any;
-  owasptop: Vulns[] = [];
+  owasptop2017: Vulns[] = [];
+  owasptop2021: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
   filteredOptionsCWE: Observable<Vulns[]>;
   filteredOptionsmitremobile: Observable<Vulns[]>;
   filteredOptionsmitreenterprise: Observable<Vulns[]>;
   filteredOptionsPCIDSS: Observable<string[]>;
-  filteredOptionsOWASPtop: Observable<Vulns[]>;
+  filteredOptionsOWASPtop2017: Observable<Vulns[]>;
+  filteredOptionsOWASPtop2021: Observable<Vulns[]>;
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
@@ -100,11 +103,18 @@ export class DialogAddissueComponent implements OnInit {
         map(value => this._filterPCI(value))
       );
 
-      this.filteredOptionsOWASPtop = this.myOWASP.valueChanges
+      this.filteredOptionsOWASPtop2017 = this.myOWASP2017.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filterOWASP(title) : this.owasptop.slice())
+        map(title => title ? this._filterOWASP2017(title) : this.owasptop2017.slice())
+      );
+
+      this.filteredOptionsOWASPtop2021 = this.myOWASP2021.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filterOWASP2021(title) : this.owasptop2021.slice())
       );
 
   }
@@ -144,9 +154,14 @@ export class DialogAddissueComponent implements OnInit {
   }
   ////////////
 
-  private _filterOWASP(name: string): Vulns[] {
+  private _filterOWASP2017(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
-    return this.owasptop.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+    return this.owasptop2017.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
+  private _filterOWASP2021(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.owasptop2021.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
   ngOnInit() {
@@ -171,8 +186,12 @@ export class DialogAddissueComponent implements OnInit {
       this.pcidssv3 = res;
     });
 
-    this.http.get<any>('/assets/OWASPtop10.json?v=' + + new Date()).subscribe(res => {
-      this.owasptop = res;
+    this.http.get<any>('/assets/OWASPtop102017.json?v=' + + new Date()).subscribe(res => {
+      this.owasptop2017 = res;
+    });
+
+    this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date()).subscribe(res => {
+      this.owasptop2021 = res;
     });
 
   }
@@ -571,25 +590,63 @@ export class DialogAddissueComponent implements OnInit {
   }
 
 
-  addOWASPtop() {
-    const data = this.myOWASP.value;
+  addOWASPtop2017() {
+    const data = this.myOWASP2017.value;
     if (data !== '' && data !== null) {
-      for (const key in this.owasptop) {
-        if (this.owasptop.hasOwnProperty(key)) {
+      for (const key in this.owasptop2017) {
+        if (this.owasptop2017.hasOwnProperty(key)) {
 
-          if (this.owasptop[key].title === data) {
+          if (this.owasptop2017[key].title === data) {
             const date = new Date();
             const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
-              title: this.owasptop[key].title,
-              poc: this.owasptop[key].poc,
+              title: this.owasptop2017[key].title,
+              poc: this.owasptop2017[key].poc,
               files: [],
-              desc: this.owasptop[key].desc,
-              severity: this.owasptop[key].severity,
+              desc: this.owasptop2017[key].desc,
+              severity: this.owasptop2017[key].severity,
               status: 1,
-              ref: this.owasptop[key].ref,
-              cvss: this.owasptop[key].cvss,
-              cve: this.owasptop[key].cve,
+              ref: this.owasptop2017[key].ref,
+              cvss: this.owasptop2017[key].cvss,
+              cve: this.owasptop2017[key].cve,
+              tags: [],
+              bounty: [],
+              date: today + ''
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.err_msg = 'Can\'t find ' + data;
+          }
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
+  }
+
+  addOWASPtop2021() {
+    const data = this.myOWASP2021.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.owasptop2021) {
+        if (this.owasptop2021.hasOwnProperty(key)) {
+
+          if (this.owasptop2021[key].title === data) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: this.owasptop2021[key].title,
+              poc: this.owasptop2021[key].poc,
+              files: [],
+              desc: this.owasptop2021[key].desc,
+              severity: this.owasptop2021[key].severity,
+              status: 1,
+              ref: this.owasptop2021[key].ref,
+              cvss: this.owasptop2021[key].cvss,
+              cve: this.owasptop2021[key].cve,
               tags: [],
               bounty: [],
               date: today + ''
