@@ -601,6 +601,33 @@ Sample code here\n\
     this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);
   }
 
+  sortbyseverity() {
+    this.deselectall();
+
+    const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Critical');
+    });
+
+    const high = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'High');
+    });
+
+    const medium = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Medium');
+    });
+
+    const low = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Low');
+    });
+
+    const info = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Info');
+    });
+
+    const merge = [...critical, ...high, ...medium, ...low, ...info];
+    this.decryptedReportDataChanged.report_vulns = merge;
+  }
+
   addCustomcontent(item) {
 
     const dialogRef = this.dialog.open(DialogCustomcontentComponent, {
