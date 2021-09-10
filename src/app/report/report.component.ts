@@ -1377,7 +1377,7 @@ Sample code here\n\
       }
 
 
-      const desc = '<dt>Vulnerability description</dt> \
+      const desc = '<dt>Vulnerability description:</dt> \
         <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
 
       issues = issues + ' \
@@ -1391,7 +1391,7 @@ Sample code here\n\
 
       if (item.poc !== '' || item.files.length !== 0) {
         const ewe = ' \
-            <dt>Proof of Concept</dt> \
+            <dt>Proof of Concept:</dt> \
             <dd class="strbreak"> \
             <div style="white-space: pre-wrap;">' + escapeHtml(item.poc) + '</div>';
 
@@ -1436,7 +1436,7 @@ Sample code here\n\
 
       if (item.ref !== '') {
         const reference_item = ' \
-            <dt>References</dt> \
+            <dt>References:</dt> \
             <dd class="strbreak">' + parse_links(parse_newline(escapeHtml(item.ref))) + '</dd><br>';
         issues = issues + issuetags + reference_item;
       }
