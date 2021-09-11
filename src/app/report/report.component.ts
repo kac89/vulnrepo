@@ -48,7 +48,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     backgroundColor: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
   }];
 
-  private customerDiffer: KeyValueDiffer<any, any[]>;
+  private reportDiffer: KeyValueDiffer<any, any[]>;
+  private reportTitleDiffer: KeyValueDiffer<any, any>;
   private objDiffers: Array<KeyValueDiffer<string, any>>;
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
@@ -122,11 +123,14 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
-      this.customerDiffer = this.differs.find(this.decryptedReportData).create();
+      this.reportDiffer = this.differs.find(this.decryptedReportData).create();
       this.objDiffers = new Array<KeyValueDiffer<string, any>>();
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           this.objDiffers[index] = this.differs.find(itemGroup).create();
       });
+      if (this.report_info) {
+        this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
+      }
         
       this.doStats();
 
@@ -206,7 +210,6 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.ReportProfilesList = ret;
       }
     });
-
   }
 
 
@@ -281,7 +284,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     if (this.decryptedReportDataChanged) {
 
-      const changes = this.customerDiffer.diff(this.decryptedReportDataChanged);
+      const changes = this.reportDiffer.diff(this.decryptedReportDataChanged);
       if (changes) {
         this.dataChanged(changes);
       }
@@ -298,10 +301,14 @@ export class ReportComponent implements OnInit, OnDestroy {
         });
       }
 
-      
-
     }
 
+    if (this.reportTitleDiffer && this.report_info) {
+      const changesName = this.reportTitleDiffer.diff({report_name: this.report_info.report_name});
+      if (changesName) {
+        this.dataChanged(changesName);
+      }
+    }
 
   }
 
