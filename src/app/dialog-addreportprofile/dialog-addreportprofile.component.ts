@@ -22,6 +22,7 @@ export class DialogAddreportprofileComponent implements OnInit {
   remove_researcher = new FormControl();
   remove_changelog = new FormControl();
   remove_tags = new FormControl();
+  report_parsing_desc = new FormControl();
   ResName = new FormControl();
   ResEmail = new FormControl();
   ResSocial = new FormControl();
@@ -42,6 +43,7 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.remove_researcher.setValue(false);
       this.remove_changelog.setValue(false);
       this.remove_tags.setValue(false);
+      this.report_parsing_desc.setValue(false);
       this.ResName.setValue('');
       this.ResEmail.setValue('');
       this.ResSocial.setValue('');
@@ -63,6 +65,7 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.remove_researcher.setValue(this.data.remove_researcher);
       this.remove_changelog.setValue(this.data.remove_changelog);
       this.remove_tags.setValue(this.data.remove_tags);
+      this.report_parsing_desc.setValue(this.data.report_parsing_desc);
       this.ResName.setValue(this.data.ResName);
       this.ResEmail.setValue(this.data.ResEmail);
       this.ResSocial.setValue(this.data.ResSocial);
@@ -118,6 +121,7 @@ export class DialogAddreportprofileComponent implements OnInit {
         remove_researcher: this.remove_researcher.value,
         remove_changelog: this.remove_changelog.value,
         remove_tags: this.remove_tags.value,
+        report_parsing_desc: this.report_parsing_desc.value,
         ResName: this.ResName.value,
         ResEmail: this.ResEmail.value,
         ResSocial: this.ResSocial.value,
@@ -140,6 +144,7 @@ export class DialogAddreportprofileComponent implements OnInit {
         remove_researcher: this.remove_researcher.value,
         remove_changelog: this.remove_changelog.value,
         remove_tags: this.remove_tags.value,
+        report_parsing_desc: this.report_parsing_desc.value,
         ResName: this.ResName.value,
         ResEmail: this.ResEmail.value,
         ResSocial: this.ResSocial.value,

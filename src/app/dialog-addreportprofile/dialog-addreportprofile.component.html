@@ -62,9 +62,10 @@
       </div>
 
       <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <mat-checkbox [formControl]="report_parsing_desc">(Parsing: Issue Description)<br>Add new line</mat-checkbox>
+        <mat-checkbox [formControl]="remove_changelog">Remove Changelog</mat-checkbox>
         <mat-checkbox [formControl]="remove_issueStatus">Remove Issue status</mat-checkbox>
         <mat-checkbox [formControl]="remove_researcher">Remove Researcher</mat-checkbox>
-        <mat-checkbox [formControl]="remove_changelog">Remove Changelog</mat-checkbox>
         <mat-checkbox [formControl]="remove_tags">Remove TAGs</mat-checkbox>
       </div>
 

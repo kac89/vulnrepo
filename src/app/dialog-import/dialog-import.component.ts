@@ -211,6 +211,14 @@ export class DialogImportComponent implements OnInit {
       return ret;
     }
 
+
+    function stripHtml(html)
+    {
+       let tmp = document.createElement("DIV");
+       tmp.innerHTML = html;
+       return tmp.textContent || tmp.innerText || "";
+    }
+
     function setcvss(severity) {
 
       let cvss = 0;
@@ -258,21 +266,21 @@ export class DialogImportComponent implements OnInit {
 
       let item = '';
       if (res.vulnerabilityClassifications !== undefined) {
-        item = res.vulnerabilityClassifications[0].replace(/<[^<>]*>/g, '');
+        item = stripHtml(res.vulnerabilityClassifications[0]);
       } else {
         item = '';
       }
 
       let itempoc = '';
       if (res.issueDetail !== undefined) {
-        itempoc = res.issueDetail[0].replace(/<[^<>]*>/g, '');
+        itempoc = stripHtml(res.issueDetail[0]);
       } else {
         itempoc = '';
       }
 
       let itemrem = '';
       if (res.remediationBackground !== undefined) {
-        itemrem = res.remediationBackground[0].replace(/<[^<>]*>/g, '');
+        itemrem = stripHtml(res.remediationBackground[0]);
       } else {
         itemrem = '';
       }
@@ -285,7 +293,7 @@ export class DialogImportComponent implements OnInit {
         title: res.name[0],
         poc: itempoc + '\n\n' + returnhost(res.host, res.path),
         files: [],
-        desc: res.issueBackground[0].replace(/<[^<>]*>/g, '') + '\n\n' + itemrem,
+        desc: stripHtml(res.issueBackground[0]) + '\n\n' + itemrem,
         severity: res.severity[0],
         ref: item,
         cvss: setcvss(res.severity[0]),
