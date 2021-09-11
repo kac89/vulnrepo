@@ -25,7 +25,7 @@ import marked from 'marked';
 import { sha256 } from 'js-sha256';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatChipInputEvent} from '@angular/material/chips';
-import {COMMA, ENTER, P} from '@angular/cdk/keycodes';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { HttpClient } from '@angular/common/http';
 import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
