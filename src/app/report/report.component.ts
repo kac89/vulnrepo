@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
@@ -48,10 +48,11 @@ export class ReportComponent implements OnInit, OnDestroy {
     backgroundColor: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
   }];
 
-
+  private customerDiffer: KeyValueDiffer<any, any[]>;
+  private objDiffers: Array<KeyValueDiffer<string, any>>;
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
-
+  
   dialogRef: MatDialogRef<DialogPassComponent>;
   displayedColumns: string[] = ['date', 'desc', 'settings'];
   dataSource = new MatTableDataSource();
@@ -109,6 +110,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private http: HttpClient,
     private indexeddbService: IndexeddbService,
+    private differs: KeyValueDiffers,
     public router: Router,
     private messageService: MessageService,
     private snackBar: MatSnackBar) {
@@ -120,6 +122,12 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
+      this.customerDiffer = this.differs.find(this.decryptedReportData).create();
+      this.objDiffers = new Array<KeyValueDiffer<string, any>>();
+        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+          this.objDiffers[index] = this.differs.find(itemGroup).create();
+      });
+        
       this.doStats();
 
       let i = 0;
@@ -130,7 +138,6 @@ export class ReportComponent implements OnInit, OnDestroy {
       while (i < this.decryptedReportDataChanged.report_vulns.length);
 
     });
-
 
   }
 
@@ -199,6 +206,103 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.ReportProfilesList = ret;
       }
     });
+
+  }
+
+
+  dataChanged(changes: KeyValueChanges<any, any[]>) {
+    // console.log('changes');
+    /* If you want to see details then use
+      changes.forEachRemovedItem((record) => ...);
+      changes.forEachAddedItem((record) => ...);
+      changes.forEachChangedItem((record) => ...);
+    */
+
+      changes.forEachAddedItem((record) => {
+        if (record.previousValue !== null) {
+          // console.log('ADDED: ',record);
+          const detectionongoing = sessionStorage.getItem('changedetection');
+          if (!detectionongoing) {
+            this.afterDetection();
+          }
+        }
+      });
+
+      changes.forEachChangedItem((record) => {
+        // console.log('CHANGED: ',record);
+        const detectionongoing = sessionStorage.getItem('changedetection');
+
+        if (!detectionongoing && record.key !== 'report_version') {
+          // console.log('Detection start');
+          this.afterDetection();
+        }
+      });
+
+  }
+
+  callListener(e) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+
+  sureYouWanttoLeave() {
+    window.addEventListener('beforeunload', this.callListener, true);
+  }
+
+  removeSureYouWanttoLeave() {
+    window.removeEventListener('beforeunload', this.callListener, true);
+  }
+
+  afterDetectionNow() {
+    sessionStorage.setItem('changedetection', '1');
+    this.objDiffers = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+      this.objDiffers[index] = this.differs.find(itemGroup).create();
+    });
+    sessionStorage.removeItem('changedetection');
+    this.sureYouWanttoLeave();
+  }
+
+  afterDetection() {
+    sessionStorage.setItem('changedetection', '1');
+    setTimeout(() => {
+      this.objDiffers = new Array<KeyValueDiffer<string, any>>();
+      this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+        this.objDiffers[index] = this.differs.find(itemGroup).create();
+    });
+    sessionStorage.removeItem('changedetection');
+  }, 5000);
+  this.sureYouWanttoLeave();
+  }
+
+
+  ngDoCheck(): void {
+
+
+    if (this.decryptedReportDataChanged) {
+
+      const changes = this.customerDiffer.diff(this.decryptedReportDataChanged);
+      if (changes) {
+        this.dataChanged(changes);
+      }
+
+      if (this.objDiffers) {
+        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+          if (this.objDiffers[index]) {
+            const objDiffer = this.objDiffers[index];
+            const objChanges = objDiffer.diff(itemGroup);
+            if (objChanges) {
+              this.dataChanged(objChanges);
+            }
+          }
+        });
+      }
+
+      
+
+    }
+
+
   }
 
   // events
@@ -393,6 +497,7 @@ Sample code here\n\
         if (result.title !== '') {
           this.decryptedReportDataChanged.report_vulns.push(result);
           this.addtochangelog('Create issue: ' + result.title);
+          this.afterDetectionNow();
           this.doStats();
         }
       }
@@ -505,6 +610,8 @@ Sample code here\n\
               this.lastsavereportdata = retu;
               this.doStats();
 
+              this.removeSureYouWanttoLeave();
+
               this.snackBar.open('All changes saved successfully!', 'OK', {
                 duration: 3000,
                 panelClass: ['notify-snackbar-success']
@@ -553,6 +660,7 @@ Sample code here\n\
     
                   this.indexeddbService.cloneReportadd(to_update).then(data => {
                     if (data) {
+                      this.removeSureYouWanttoLeave();
                       this.router.navigate(['/my-reports']);
                     }
                   });
@@ -578,6 +686,7 @@ Sample code here\n\
                 this.savemsg = 'All changes saved on remote API successfully!';
                 this.lastsavereportdata = retu;
                 this.doStats();
+                this.removeSureYouWanttoLeave();
     
                 this.snackBar.open('All changes saved on remote API successfully!', 'OK', {
                   duration: 3000,
