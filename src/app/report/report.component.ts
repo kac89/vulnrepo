@@ -528,6 +528,7 @@ Sample code here\n\
           if (eachObj.title !== '' && eachObj.title !== undefined && eachObj.cvss !== 'Active') {
             this.decryptedReportDataChanged.report_vulns.push(eachObj);
             this.addtochangelog('Create issue: ' + eachObj.title);
+            this.afterDetectionNow();
           }
 
         });
