@@ -987,6 +987,15 @@ Sample code here\n\
     }
   }
 
+  parsingdescnewline(event) {
+    if (event.checked === false) {
+      this.decryptedReportDataChanged.report_settings.report_parsing_desc = false;
+    }
+    if (event.checked === true) {
+      this.decryptedReportDataChanged.report_settings.report_parsing_desc = true;
+    }
+  }
+
   removeResearchers(event) {
     if (event.checked === false) {
       this.decryptedReportDataChanged.report_settings.report_remove_researchers = false;
@@ -1356,7 +1365,7 @@ Sample code here\n\
       let issstatus = '';
       if (report_data.report_settings.report_remove_issuestatus === false) {
         if (item.status) {
-          issstatus = '<dt>Issue status:</dt> \
+          issstatus = '<dt>Status:</dt> \
           <dd>' + statusDesc(item.status) + '</dd><br>';
         }
       }
@@ -1376,9 +1385,14 @@ Sample code here\n\
         }
       }
 
-
-      const desc = '<dt>Vulnerability description:</dt> \
+      let desc = '';
+      if (report_data.report_settings.report_parsing_desc === false) {
+        desc = '<dt>Description:</dt> \
         <dd class="strbreak">' + escapeHtml(item.desc) + '</dd><br>';
+      } else {
+        desc = '<dt>Description:</dt> \
+        <dd class="strbreak">' + parse_newline(escapeHtml(item.desc)) + '</dd><br>';
+      }
 
       issues = issues + ' \
       <div class="row"> \
@@ -1709,7 +1723,8 @@ Sample code here\n\
     this.decryptedReportDataChanged.report_settings.report_remove_researchers = profile.remove_researcher;
     this.decryptedReportDataChanged.report_settings.report_changelog_page = profile.remove_changelog;
     this.decryptedReportDataChanged.report_settings.report_remove_issuetags = profile.remove_tags;
-
+    this.decryptedReportDataChanged.report_settings.report_parsing_desc = profile.report_parsing_desc;
+    
   }
 
   searchBounty(poc) {
