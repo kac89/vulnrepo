@@ -51,6 +51,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   private reportDiffer: KeyValueDiffer<any, any[]>;
   private reportTitleDiffer: KeyValueDiffer<any, any>;
   private objDiffers: Array<KeyValueDiffer<string, any>>;
+  private objDiffersResearcher: Array<KeyValueDiffer<string, any>>;
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
   
@@ -128,6 +129,14 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           this.objDiffers[index] = this.differs.find(itemGroup).create();
       });
+
+
+      this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
+        this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+          this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
+      });
+
+      
       if (this.report_info) {
         this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
       }
@@ -147,7 +156,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.report_id = this.route.snapshot.params['report_id'];
-
+    // remove detection var
+    sessionStorage.removeItem('changedetection');
     // check if report exist
     this.indexeddbService.checkifreportexist(this.report_id).then(data => {
       if (data) {
@@ -222,8 +232,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     */
 
       changes.forEachAddedItem((record) => {
+        // console.log('ADDED: ',record);
         if (record.previousValue !== null) {
-          // console.log('ADDED: ',record);
           const detectionongoing = sessionStorage.getItem('changedetection');
           if (!detectionongoing) {
             this.afterDetection();
@@ -234,7 +244,6 @@ export class ReportComponent implements OnInit, OnDestroy {
       changes.forEachChangedItem((record) => {
         // console.log('CHANGED: ',record);
         const detectionongoing = sessionStorage.getItem('changedetection');
-
         if (!detectionongoing && record.key !== 'report_version') {
           // console.log('Detection start');
           this.afterDetection();
@@ -262,6 +271,11 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
       this.objDiffers[index] = this.differs.find(itemGroup).create();
     });
+
+    this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+      this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
+    });
     sessionStorage.removeItem('changedetection');
     this.sureYouWanttoLeave();
   }
@@ -273,6 +287,12 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
         this.objDiffers[index] = this.differs.find(itemGroup).create();
     });
+
+    this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+      this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
+    });
+
     sessionStorage.removeItem('changedetection');
   }, 5000);
   this.sureYouWanttoLeave();
@@ -288,7 +308,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (changes) {
         this.dataChanged(changes);
       }
-
+      
       if (this.objDiffers) {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           if (this.objDiffers[index]) {
@@ -300,8 +320,22 @@ export class ReportComponent implements OnInit, OnDestroy {
           }
         });
       }
+    
 
+    if (this.objDiffersResearcher) {
+      this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+        if (this.objDiffersResearcher[index]) {
+          const objDiffer = this.objDiffersResearcher[index];
+          const objChanges = objDiffer.diff(itemGroup);
+          if (objChanges) {
+            this.dataChanged(objChanges);
+          }
+        }
+      });
     }
+
+  }
+
 
     if (this.reportTitleDiffer && this.report_info) {
       const changesName = this.reportTitleDiffer.diff({report_name: this.report_info.report_name});
@@ -845,6 +879,7 @@ Sample code here\n\
     };
 
     this.decryptedReportDataChanged.researcher.push(add);
+    this.afterDetectionNow();
 
   }
 
