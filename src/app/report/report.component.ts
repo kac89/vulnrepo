@@ -48,7 +48,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     backgroundColor: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
   }];
 
-  private reportDiffer: KeyValueDiffer<any, any[]>;
+  private reportDiffer: KeyValueDiffer<string, any>;
   private reportTitleDiffer: KeyValueDiffer<any, any>;
   private objDiffers: Array<KeyValueDiffer<string, any>>;
   private objDiffersFiles: Array<KeyValueDiffer<string, any>>;
@@ -232,7 +232,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
   dataChanged(changes: KeyValueChanges<any, any[]>) {
-    // console.log('changes');
     /* If you want to see details then use
       changes.forEachRemovedItem((record) => ...);
       changes.forEachAddedItem((record) => ...);
@@ -275,7 +274,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   afterDetectionNow() {
     sessionStorage.setItem('changedetection', '1');
-    this.objDiffers = new Array<KeyValueDiffer<string, any>>();
+    this.objDiffers = new Array<KeyValueDiffer<any, any[]>>();
     this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
       this.objDiffers[index] = this.differs.find(itemGroup).create();
     });
@@ -338,11 +337,11 @@ export class ReportComponent implements OnInit, OnDestroy {
           }
         });
       }
-
+    
       if (this.objDiffersFiles) {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           if (this.objDiffersFiles[index]) {
-            const objDiffer = this.objDiffers[index];
+            const objDiffer = this.objDiffersFiles[index];
             const objChanges = objDiffer.diff(itemGroup.files);
             if (objChanges) {
               this.dataChanged(objChanges);
@@ -350,7 +349,6 @@ export class ReportComponent implements OnInit, OnDestroy {
           }
         });
       }
-    
 
     if (this.objDiffersResearcher) {
       this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
