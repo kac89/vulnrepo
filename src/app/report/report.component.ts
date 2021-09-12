@@ -49,6 +49,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   }];
 
   private reportDiffer: KeyValueDiffer<string, any>;
+  private reportDifferlogo: KeyValueDiffer<string, any>;
+  private reportDiffersettings: KeyValueDiffer<string, any>;
   private reportTitleDiffer: KeyValueDiffer<any, any>;
   private objDiffers: Array<KeyValueDiffer<string, any>>;
   private objDiffersFiles: Array<KeyValueDiffer<string, any>>;
@@ -126,6 +128,9 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
       this.reportDiffer = this.differs.find(this.decryptedReportData).create();
+      this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
+      this.reportDiffersettings = this.differs.find(this.decryptedReportDataChanged.report_settings).create();
+
       this.objDiffers = new Array<KeyValueDiffer<string, any>>();
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           this.objDiffers[index] = this.differs.find(itemGroup).create();
@@ -266,6 +271,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   sureYouWanttoLeave() {
     window.addEventListener('beforeunload', this.callListener, true);
+    sessionStorage.removeItem('changedetection');
   }
 
   removeSureYouWanttoLeave() {
@@ -274,7 +280,12 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   afterDetectionNow() {
     sessionStorage.setItem('changedetection', '1');
-    this.objDiffers = new Array<KeyValueDiffer<any, any[]>>();
+
+    this.reportDiffer = this.differs.find(this.decryptedReportData).create();
+    this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
+    this.reportDiffersettings = this.differs.find({...this.decryptedReportDataChanged.report_settings}).create();
+
+    this.objDiffers = new Array<KeyValueDiffer<string, any>>();
     this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
       this.objDiffers[index] = this.differs.find(itemGroup).create();
     });
@@ -288,36 +299,21 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
       this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
     });
-    sessionStorage.removeItem('changedetection');
+
+    if (this.report_info) {
+      this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
+    }
+
+    
     this.sureYouWanttoLeave();
   }
 
   afterDetection() {
-    sessionStorage.setItem('changedetection', '1');
-    setTimeout(() => {
-      this.objDiffers = new Array<KeyValueDiffer<string, any>>();
-      this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
-        this.objDiffers[index] = this.differs.find(itemGroup).create();
-    });
-
-    this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
-    this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
-      this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
-    });
-
-    this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
-    this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
-      this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
-    });
-
-    sessionStorage.removeItem('changedetection');
-  }, 5000);
-  this.sureYouWanttoLeave();
+    setTimeout(() => { this.afterDetectionNow() }, 5000);
+    this.sureYouWanttoLeave();
   }
 
-
   ngDoCheck(): void {
-
 
     if (this.decryptedReportDataChanged) {
 
@@ -325,7 +321,21 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (changes) {
         this.dataChanged(changes);
       }
-      
+
+      if (this.reportDifferlogo) {
+        const changeslogo = this.reportDifferlogo.diff({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo});
+        if (changeslogo) {
+          this.dataChanged(changeslogo);
+        }
+      }
+
+      if (this.reportDiffersettings) {
+        const changessettings = this.reportDiffersettings.diff(this.decryptedReportDataChanged.report_settings);
+        if (changessettings) {
+          this.dataChanged(changessettings);
+        }
+      }
+
       if (this.objDiffers) {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           if (this.objDiffers[index]) {
@@ -341,10 +351,10 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (this.objDiffersFiles) {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           if (this.objDiffersFiles[index]) {
-            const objDiffer = this.objDiffersFiles[index];
-            const objChanges = objDiffer.diff(itemGroup.files);
-            if (objChanges) {
-              this.dataChanged(objChanges);
+            const objDiffer2 = this.objDiffersFiles[index];
+            const objChanges2 = objDiffer2.diff(itemGroup.files);
+            if (objChanges2) {
+              this.dataChanged(objChanges2);
             }
           }
         });
@@ -353,17 +363,16 @@ export class ReportComponent implements OnInit, OnDestroy {
     if (this.objDiffersResearcher) {
       this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
         if (this.objDiffersResearcher[index]) {
-          const objDiffer = this.objDiffersResearcher[index];
-          const objChanges = objDiffer.diff(itemGroup);
-          if (objChanges) {
-            this.dataChanged(objChanges);
+          const objDiffer3 = this.objDiffersResearcher[index];
+          const objChanges3 = objDiffer3.diff(itemGroup);
+          if (objChanges3) {
+            this.dataChanged(objChanges3);
           }
         }
       });
     }
 
   }
-
 
     if (this.reportTitleDiffer && this.report_info) {
       const changesName = this.reportTitleDiffer.diff({report_name: this.report_info.report_name});
