@@ -281,8 +281,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   afterDetectionNow() {
-    console.log('fired');
-
     this.reportDiffer = this.differs.find(this.decryptedReportData).create();
     this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
     this.reportDiffersettings = this.differs.find({...this.decryptedReportDataChanged.report_settings}).create();
@@ -310,7 +308,11 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   afterDetection() {
-    setTimeout(() => { this.afterDetectionNow() }, 10000);    
+    if (this.timerCounter >= 60) {
+      setTimeout(() => { this.afterDetectionNow() }, 10000);
+      this.timerCounter = 0;
+    }
+    this.timerCounter++;
     this.sureYouWanttoLeave();
   }
 
