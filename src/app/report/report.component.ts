@@ -83,6 +83,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   report_encryption_in_progress: boolean;
   upload_in_progress = false;
   youhaveunsavedchanges = false;
+  readyfortimer = true;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   subscription: Subscription;
@@ -312,12 +313,15 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
     }
 
-    
+    this.readyfortimer = true;
     this.sureYouWanttoLeave();
   }
 
   afterDetection() {
-    setTimeout(() => { this.afterDetectionNow() }, 5000);
+    if (this.readyfortimer) {
+      this.readyfortimer = false;
+      setTimeout(() => { this.afterDetectionNow() }, 10000);
+    } 
     this.sureYouWanttoLeave();
   }
 
