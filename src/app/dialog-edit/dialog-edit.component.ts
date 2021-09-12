@@ -8,7 +8,8 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./dialog-edit.component.scss']
 })
 export class DialogEditComponent implements OnInit {
-  myControl = new FormControl();
+  title = new FormControl();
+  reportname = new FormControl();
   col1 = false;
   col2 = false;
   col3 = false;
@@ -24,9 +25,11 @@ export class DialogEditComponent implements OnInit {
 
     if (this.data.report_name) {
       this.col1 = true;
+      this.reportname.setValue(this.data.report_name);
     }
     if (this.data.title) {
       this.col2 = true;
+      this.title.setValue(this.data.title);
     }
 
     if (this.data[0] !== undefined) {
@@ -57,5 +60,26 @@ export class DialogEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  changeseckey() {
+
+    if (this.data.title !== this.title.value) {
+      this.data.title = this.title.value;
+      this.dialogRef.close(this.data);
+    } else {
+      this.dialogRef.close('nochanges');
+    }
+    
+  }
+
+  changereportname() {
+
+    if (this.data.report_name !== this.reportname.value) {
+      this.data.report_name = this.reportname.value;
+      this.dialogRef.close(this.reportname.value);
+    } else {
+      this.dialogRef.close('nochanges');
+    }
+    
+  }
 
 }

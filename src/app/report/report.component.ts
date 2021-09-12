@@ -51,6 +51,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   private reportDiffer: KeyValueDiffer<any, any[]>;
   private reportTitleDiffer: KeyValueDiffer<any, any>;
   private objDiffers: Array<KeyValueDiffer<string, any>>;
+  private objDiffersFiles: Array<KeyValueDiffer<string, any>>;
+  private objDiffersResearcher: Array<KeyValueDiffer<string, any>>;
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
   
@@ -128,6 +130,21 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           this.objDiffers[index] = this.differs.find(itemGroup).create();
       });
+
+
+      this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
+        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+          this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
+      });
+      
+
+
+      this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
+        this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+          this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
+      });
+
+      
       if (this.report_info) {
         this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
       }
@@ -147,7 +164,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.report_id = this.route.snapshot.params['report_id'];
-
+    // remove detection var
+    sessionStorage.removeItem('changedetection');
     // check if report exist
     this.indexeddbService.checkifreportexist(this.report_id).then(data => {
       if (data) {
@@ -222,8 +240,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     */
 
       changes.forEachAddedItem((record) => {
+        // console.log('ADDED: ',record);
         if (record.previousValue !== null) {
-          // console.log('ADDED: ',record);
           const detectionongoing = sessionStorage.getItem('changedetection');
           if (!detectionongoing) {
             this.afterDetection();
@@ -234,7 +252,6 @@ export class ReportComponent implements OnInit, OnDestroy {
       changes.forEachChangedItem((record) => {
         // console.log('CHANGED: ',record);
         const detectionongoing = sessionStorage.getItem('changedetection');
-
         if (!detectionongoing && record.key !== 'report_version') {
           // console.log('Detection start');
           this.afterDetection();
@@ -262,6 +279,16 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
       this.objDiffers[index] = this.differs.find(itemGroup).create();
     });
+
+    this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+      this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
+    });
+
+    this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+      this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
+    });
     sessionStorage.removeItem('changedetection');
     this.sureYouWanttoLeave();
   }
@@ -273,6 +300,17 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
         this.objDiffers[index] = this.differs.find(itemGroup).create();
     });
+
+    this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+      this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
+    });
+
+    this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+      this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
+    });
+
     sessionStorage.removeItem('changedetection');
   }, 5000);
   this.sureYouWanttoLeave();
@@ -288,7 +326,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (changes) {
         this.dataChanged(changes);
       }
-
+      
       if (this.objDiffers) {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           if (this.objDiffers[index]) {
@@ -301,7 +339,33 @@ export class ReportComponent implements OnInit, OnDestroy {
         });
       }
 
+      if (this.objDiffersFiles) {
+        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+          if (this.objDiffersFiles[index]) {
+            const objDiffer = this.objDiffers[index];
+            const objChanges = objDiffer.diff(itemGroup.files);
+            if (objChanges) {
+              this.dataChanged(objChanges);
+            }
+          }
+        });
+      }
+    
+
+    if (this.objDiffersResearcher) {
+      this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+        if (this.objDiffersResearcher[index]) {
+          const objDiffer = this.objDiffersResearcher[index];
+          const objChanges = objDiffer.diff(itemGroup);
+          if (objChanges) {
+            this.dataChanged(objChanges);
+          }
+        }
+      });
     }
+
+  }
+
 
     if (this.reportTitleDiffer && this.report_info) {
       const changesName = this.reportTitleDiffer.diff({report_name: this.report_info.report_name});
@@ -372,6 +436,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           if (index !== -1) {
             this.decryptedReportDataChanged.report_vulns.splice(index, 1);
             this.addtochangelog('Remove issue: ' + eachObj.title);
+            this.afterDetectionNow();
           }
         });
         this.deselectall();
@@ -528,6 +593,7 @@ Sample code here\n\
           if (eachObj.title !== '' && eachObj.title !== undefined && eachObj.cvss !== 'Active') {
             this.decryptedReportDataChanged.report_vulns.push(eachObj);
             this.addtochangelog('Create issue: ' + eachObj.title);
+            this.afterDetectionNow();
           }
 
         });
@@ -767,6 +833,11 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if (result) {
+        if (result !== 'nochanges') {
+          this.report_info.report_name = result;
+        }
+      }
     });
 
   }
@@ -827,6 +898,15 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if (result) {
+        if (result !== 'nochanges') {
+          const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(result);
+          if (index !== -1) {
+            this.decryptedReportDataChanged.report_vulns[index].title = result.title;
+            this.afterDetectionNow();
+          }
+        }
+      }
     });
   }
   ngOnDestroy() {
@@ -844,6 +924,7 @@ Sample code here\n\
     };
 
     this.decryptedReportDataChanged.researcher.push(add);
+    this.afterDetectionNow();
 
   }
 
@@ -853,6 +934,7 @@ Sample code here\n\
 
     if (index !== -1) {
       this.decryptedReportDataChanged.researcher.splice(index, 1);
+      this.afterDetectionNow();
     }
 
   }
@@ -942,6 +1024,7 @@ Sample code here\n\
       if (index !== -1) {
         this.decryptedReportDataChanged.report_vulns.splice(index, 1);
         this.addtochangelog('Remove issue: ' + result.title);
+        this.afterDetectionNow();
         this.doStats();
       }
 
@@ -1691,6 +1774,7 @@ Sample code here\n\
     const linkprev = data;
     // tslint:disable-next-line:max-line-length
     this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': escapeHtml(name), 'type': escapeHtml(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
+    this.afterDetectionNow();
 
   }
 
@@ -1751,6 +1835,7 @@ Sample code here\n\
     const ind: number = this.decryptedReportDataChanged.report_vulns[index].files.indexOf(data);
     if (ind !== -1) {
       this.decryptedReportDataChanged.report_vulns[index].files.splice(ind, 1);
+      this.afterDetectionNow();
     }
   }
 
