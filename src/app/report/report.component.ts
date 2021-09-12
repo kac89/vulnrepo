@@ -436,6 +436,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           if (index !== -1) {
             this.decryptedReportDataChanged.report_vulns.splice(index, 1);
             this.addtochangelog('Remove issue: ' + eachObj.title);
+            this.afterDetectionNow();
           }
         });
         this.deselectall();
@@ -933,6 +934,7 @@ Sample code here\n\
 
     if (index !== -1) {
       this.decryptedReportDataChanged.researcher.splice(index, 1);
+      this.afterDetectionNow();
     }
 
   }
@@ -1022,6 +1024,7 @@ Sample code here\n\
       if (index !== -1) {
         this.decryptedReportDataChanged.report_vulns.splice(index, 1);
         this.addtochangelog('Remove issue: ' + result.title);
+        this.afterDetectionNow();
         this.doStats();
       }
 
@@ -1832,6 +1835,7 @@ Sample code here\n\
     const ind: number = this.decryptedReportDataChanged.report_vulns[index].files.indexOf(data);
     if (ind !== -1) {
       this.decryptedReportDataChanged.report_vulns[index].files.splice(ind, 1);
+      this.afterDetectionNow();
     }
   }
 
