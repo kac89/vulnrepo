@@ -51,6 +51,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   private reportDiffer: KeyValueDiffer<any, any[]>;
   private reportTitleDiffer: KeyValueDiffer<any, any>;
   private objDiffers: Array<KeyValueDiffer<string, any>>;
+  private objDiffersFiles: Array<KeyValueDiffer<string, any>>;
   private objDiffersResearcher: Array<KeyValueDiffer<string, any>>;
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
@@ -129,6 +130,13 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           this.objDiffers[index] = this.differs.find(itemGroup).create();
       });
+
+
+      this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
+        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+          this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
+      });
+      
 
 
       this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
@@ -272,6 +280,11 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.objDiffers[index] = this.differs.find(itemGroup).create();
     });
 
+    this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+      this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
+    });
+
     this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
     this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
       this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
@@ -286,6 +299,11 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.objDiffers = new Array<KeyValueDiffer<string, any>>();
       this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
         this.objDiffers[index] = this.differs.find(itemGroup).create();
+    });
+
+    this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
+    this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+      this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
     });
 
     this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
@@ -314,6 +332,18 @@ export class ReportComponent implements OnInit, OnDestroy {
           if (this.objDiffers[index]) {
             const objDiffer = this.objDiffers[index];
             const objChanges = objDiffer.diff(itemGroup);
+            if (objChanges) {
+              this.dataChanged(objChanges);
+            }
+          }
+        });
+      }
+
+      if (this.objDiffersFiles) {
+        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+          if (this.objDiffersFiles[index]) {
+            const objDiffer = this.objDiffers[index];
+            const objChanges = objDiffer.diff(itemGroup.files);
             if (objChanges) {
               this.dataChanged(objChanges);
             }
@@ -802,6 +832,11 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if (result) {
+        if (result !== 'nochanges') {
+          this.report_info.report_name = result;
+        }
+      }
     });
 
   }
@@ -862,6 +897,15 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if (result) {
+        if (result !== 'nochanges') {
+          const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(result);
+          if (index !== -1) {
+            this.decryptedReportDataChanged.report_vulns[index].title = result.title;
+            this.afterDetectionNow();
+          }
+        }
+      }
     });
   }
   ngOnDestroy() {
@@ -1727,6 +1771,7 @@ Sample code here\n\
     const linkprev = data;
     // tslint:disable-next-line:max-line-length
     this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': escapeHtml(name), 'type': escapeHtml(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
+    this.afterDetectionNow();
 
   }
 

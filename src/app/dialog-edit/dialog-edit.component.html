@@ -8,11 +8,11 @@
   <div class="example-form">
 
       <mat-form-field *ngIf="col1" class="example-full-width" color="accent">
-        <input type="text" matInput [ngModel]="data?.report_name" (ngModelChange)="data.report_name=$event">
+        <input [formControl]="reportname" type="text" matInput>
       </mat-form-field>
 
       <mat-form-field *ngIf="col2" class="example-full-width" color="accent">
-        <input type="text" matInput [ngModel]="data?.title" (ngModelChange)="data.title=$event">
+        <input [formControl]="title" type="text" matInput>
       </mat-form-field>
 
       <h3 *ngIf="col3">{{data[1].item.title}}</h3>
@@ -22,5 +22,10 @@
 </div>
 
 <div mat-dialog-actions>
-    <button *ngIf="col5" mat-raised-button color="warn" (click)="removeReport(data[1].item)">Remove</button> <button *ngIf="col4" mat-raised-button color="warn" (click)="removechangelog(data[1].item)">Remove</button> <button *ngIf="col3" mat-raised-button color="warn" (click)="removeissue(data[1].item)">Remove</button> <button mat-raised-button color="primary" (click)="cancel()">Close</button>
+    <button *ngIf="col1" mat-raised-button color="accent" (click)="changereportname()">Save</button>
+    <button *ngIf="col2" mat-raised-button color="accent" (click)="changeseckey()">Save</button>
+    <button *ngIf="col5" mat-raised-button color="warn" (click)="removeReport(data[1].item)">Remove</button>
+    <button *ngIf="col4" mat-raised-button color="warn" (click)="removechangelog(data[1].item)">Remove</button>
+    <button *ngIf="col3" mat-raised-button color="warn" (click)="removeissue(data[1].item)">Remove</button>
+    <button mat-raised-button color="primary" (click)="cancel()">Close</button>
 </div>
