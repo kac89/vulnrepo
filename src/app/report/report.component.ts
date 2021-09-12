@@ -48,7 +48,6 @@ export class ReportComponent implements OnInit, OnDestroy {
     backgroundColor: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
   }];
 
-  private timer: any;
   private reportDiffer: KeyValueDiffer<string, any>;
   private reportDifferlogo: KeyValueDiffer<string, any>;
   private reportDiffersettings: KeyValueDiffer<string, any>;
@@ -79,6 +78,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   selected3 = [];
   ReportProfilesList = [];
   pok = 0;
+  timerCounter = 0;
   savemsg = '';
   report_decryption_in_progress: boolean;
   report_encryption_in_progress: boolean;
@@ -278,12 +278,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   removeSureYouWanttoLeave() {
     window.removeEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = false;
-    //remove all setTimers
-    let id = window.setTimeout(function() {}, 0);
-    for (let i = id; i >= 0; i--) {
-      window.clearTimeout(i);
-    }
-
   }
 
   afterDetectionNow() {
