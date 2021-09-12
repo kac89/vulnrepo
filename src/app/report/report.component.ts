@@ -82,6 +82,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   report_decryption_in_progress: boolean;
   report_encryption_in_progress: boolean;
   upload_in_progress = false;
+  youhaveunsavedchanges = false;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   subscription: Subscription;
@@ -272,10 +273,17 @@ export class ReportComponent implements OnInit, OnDestroy {
   sureYouWanttoLeave() {
     window.addEventListener('beforeunload', this.callListener, true);
     sessionStorage.removeItem('changedetection');
+    this.youhaveunsavedchanges = true;
   }
 
   removeSureYouWanttoLeave() {
     window.removeEventListener('beforeunload', this.callListener, true);
+    this.youhaveunsavedchanges = false;
+    //remove all setTimers
+    const highestTimeoutId = setTimeout(";");
+      for (let i = 0 ; i < highestTimeoutId; i++) {
+          clearTimeout(i); 
+      }
   }
 
   afterDetectionNow() {
