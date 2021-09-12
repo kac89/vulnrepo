@@ -281,7 +281,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     window.removeEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = false;
     //remove all setTimers
-    const highestTimeoutId = setTimeout(";");
+    const highestTimeoutId = setTimeout(';');
       for (let i = 0 ; i < highestTimeoutId; i++) {
           clearTimeout(i); 
       }
