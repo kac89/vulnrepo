@@ -48,6 +48,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     backgroundColor: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
   }];
 
+  private timer: any;
   private reportDiffer: KeyValueDiffer<string, any>;
   private reportDifferlogo: KeyValueDiffer<string, any>;
   private reportDiffersettings: KeyValueDiffer<string, any>;
@@ -83,7 +84,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   report_encryption_in_progress: boolean;
   upload_in_progress = false;
   youhaveunsavedchanges = false;
-  readyfortimer = true;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   subscription: Subscription;
@@ -171,8 +171,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.report_id = this.route.snapshot.params['report_id'];
-    // remove detection var
-    sessionStorage.removeItem('changedetection');
+
     // check if report exist
     this.indexeddbService.checkifreportexist(this.report_id).then(data => {
       if (data) {
@@ -248,17 +247,13 @@ export class ReportComponent implements OnInit, OnDestroy {
       changes.forEachAddedItem((record) => {
         // console.log('ADDED: ',record);
         if (record.previousValue !== null) {
-          const detectionongoing = sessionStorage.getItem('changedetection');
-          if (!detectionongoing) {
             this.afterDetection();
-          }
         }
       });
 
       changes.forEachChangedItem((record) => {
         // console.log('CHANGED: ',record);
-        const detectionongoing = sessionStorage.getItem('changedetection');
-        if (!detectionongoing && record.key !== 'report_version') {
+        if (record.key !== 'report_version') {
           // console.log('Detection start');
           this.afterDetection();
         }
@@ -270,10 +265,13 @@ export class ReportComponent implements OnInit, OnDestroy {
     e.preventDefault();
     e.returnValue = '';
   }
+  timeout(e) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
 
   sureYouWanttoLeave() {
     window.addEventListener('beforeunload', this.callListener, true);
-    sessionStorage.removeItem('changedetection');
     this.youhaveunsavedchanges = true;
   }
 
@@ -281,14 +279,15 @@ export class ReportComponent implements OnInit, OnDestroy {
     window.removeEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = false;
     //remove all setTimers
-    const highestTimeoutId = setTimeout(';');
-      for (let i = 0 ; i < highestTimeoutId; i++) {
-          clearTimeout(i); 
-      }
+    let id = window.setTimeout(function() {}, 0);
+    for (let i = id; i >= 0; i--) {
+      window.clearTimeout(i);
+    }
+
   }
 
   afterDetectionNow() {
-    sessionStorage.setItem('changedetection', '1');
+    console.log('fired');
 
     this.reportDiffer = this.differs.find(this.decryptedReportData).create();
     this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
@@ -313,15 +312,11 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
     }
 
-    this.readyfortimer = true;
     this.sureYouWanttoLeave();
   }
 
   afterDetection() {
-    if (this.readyfortimer) {
-      this.readyfortimer = false;
-      setTimeout(() => { this.afterDetectionNow() }, 10000);
-    } 
+    setTimeout(() => { this.afterDetectionNow() }, 10000);    
     this.sureYouWanttoLeave();
   }
 
