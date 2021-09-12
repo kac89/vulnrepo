@@ -57,6 +57,10 @@
             <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes and release version!
           </button>
         </p>
+        <span *ngIf="youhaveunsavedchanges">
+          <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon> You have unsaved changes! <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
+        </span>
+        
       </div>
   
     </div>
