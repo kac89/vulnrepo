@@ -278,9 +278,14 @@ export class ReportComponent implements OnInit, OnDestroy {
   removeSureYouWanttoLeave() {
     window.removeEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = false;
+    let id = window.setTimeout(function() {}, 0);
+    while (id--) {
+        window.clearTimeout(id); // will do nothing if no timeout with id is present
+    }
   }
 
   afterDetectionNow() {
+    console.log('fired');
     this.reportDiffer = this.differs.find(this.decryptedReportData).create();
     this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
     this.reportDiffersettings = this.differs.find({...this.decryptedReportDataChanged.report_settings}).create();
