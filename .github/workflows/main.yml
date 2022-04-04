@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - name: CHECKOUT
-      uses: actions/checkout@master
+      uses: actions/checkout@v3
     
     - name: Cache
       uses: actions/cache@v3.0.1
@@ -38,9 +38,3 @@ jobs:
 
     - name: npm install and npm run build
       run: npm i & npm run build:prod
-
-    - name: Push Build to Release
-      uses: kac89/pgrelease@main
-      with:
-        artifacts: "dist/vulnrepo-app/*"
-        token: ${{ secrets.TOKEN }}
