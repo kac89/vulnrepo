@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - name: CHECKOUT
-      uses: actions/checkout@v3
+      uses: actions/checkout@master
     
     - name: Cache
       uses: actions/cache@v3.0.1
