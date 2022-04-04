@@ -21,10 +21,10 @@ jobs:
 
     steps:
     - name: CHECKOUT
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
     
     - name: Cache
-    - uses: actions/cache@v3.0.1
+      uses: actions/cache@v3.0.1
       with:
         path: ~/.npm
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -32,17 +32,16 @@ jobs:
           ${{ runner.os }}-node-
     
     - name: Use Node.js ${{ matrix.node-version }}
-    - uses: actions/setup-node@v3
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
     - name: npm install and npm run build
-    - run: npm i
-    - run: npm run build:prod
+      run: npm i & npm run build:prod
 
     - name: Push Build to Release
-    - uses: kac89/pgrelease@latest
+      uses: kac89/pgrelease@latest
       with:
         artifacts: "dist/vulnrepo-app/*"
         token: ${{ secrets.TOKEN }}
