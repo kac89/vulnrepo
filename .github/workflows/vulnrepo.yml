@@ -46,9 +46,11 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: deploy_dist
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.3.0
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.6.0
         with:
-          token: ${{ secrets.TOKEN }}
-          branch: pgrelease
-          folder: deploy_dist/vulnrepo-app
+          github_token: ${{ secrets.TOKEN }}
+          repository: pgrelease
+          branch: main
+          directory: deploy_dist
+
