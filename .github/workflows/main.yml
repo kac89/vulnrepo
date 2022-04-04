@@ -20,16 +20,14 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    - name: CHECKOUT
     - uses: actions/checkout@v3
     
     - name: Cache
     - uses: actions/cache@v3.0.1
       with:
-        # A list of files, directories, and wildcard patterns to cache and restore
         path: ~/.npm
-        # An explicit key for restoring and saving the cache
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
         restore-keys: |
           ${{ runner.os }}-node-
     
@@ -38,15 +36,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+
     - name: npm install and npm run build
-    - run: |
-          npm i
-          npm run build:prod
+    - run: npm i
+    - run: npm run build:prod
+
     - name: Push Build to Release
     - uses: kac89/pgrelease@latest
       with:
-          artifacts: "dist/vulnrepo-app/*"
-          token: ${{ secrets.TOKEN }}
+        artifacts: "dist/vulnrepo-app/*"
+        token: ${{ secrets.TOKEN }}
