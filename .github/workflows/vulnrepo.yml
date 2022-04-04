@@ -30,8 +30,7 @@ jobs:
           npm i
           npm run build -- -c production
 
-    - name: Push Build to Releases
-      uses: kac89/pgrelease@main
-      with:
-          artifacts: "dist/vulnrepo-app/*"
-          token: ${{ secrets.TOKEN }}
+    - name: Deploy to github pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      run: npm run deploy
