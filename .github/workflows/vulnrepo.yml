@@ -46,6 +46,7 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: deploy_dist
+          path: .
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
