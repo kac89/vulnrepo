@@ -40,7 +40,7 @@ jobs:
       run: npm i & npm run build:prod
 
     - name: Push Build to Release
-      uses: kac89/pgrelease@master
+      uses: kac89/pgrelease@main
       with:
         artifacts: "dist/vulnrepo-app/*"
         token: ${{ secrets.TOKEN }}
