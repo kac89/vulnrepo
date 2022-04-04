@@ -53,5 +53,5 @@ jobs:
           github_token: ${{ secrets.TOKEN }}
           repository: pgrelease
           branch: main
-          directory: deploy_dist
+          directory: /home/runner/work/vulnrepo/vulnrepo/deploy_dist
 
