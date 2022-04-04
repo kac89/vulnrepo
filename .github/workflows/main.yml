@@ -15,28 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - name: CHECKOUT
       uses: actions/checkout@v3
-    
-    - name: Cache
-      uses: actions/cache@v3.0.1
+    - name: Build
+      uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - name: npm install
-      run: npm i
-    - name: build  
-      run: npm run build:prod
+        github_access_token: ${{ secrets.TOKEN }} # see the Configuration section for how you can create secrets
+        build_configuration: production # The build environment for the app. please look configurations in your angular.json
+        base_href: /pgrelease/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
+        deploy_branch: pgrelease # The branch the action should deploy to.
+        angular_dist_build_folder: dist/vulnrepo-app # The folder where your project is supposed to be after running ng build by the action.
