@@ -21,11 +21,11 @@ jobs:
     steps:
     - name: CHECKOUT
       uses: actions/checkout@v3
-    - name: Build
-      uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
+    - name: Node ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
       with:
-        github_access_token: ${{ secrets.TOKEN }} # see the Configuration section for how you can create secrets
-        build_configuration: production # The build environment for the app. please look configurations in your angular.json
-        base_href: /pgrelease/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
-        deploy_branch: pgrelease # The branch the action should deploy to.
-        angular_dist_build_folder: dist/vulnrepo-app # The folder where your project is supposed to be after running ng build by the action.
+        node-version: ${{ matrix.node-version }}
+    - name: npm install and npm run build
+      run: |
+          npm i
+          npm run build:prod
