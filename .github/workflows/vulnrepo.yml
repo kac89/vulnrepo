@@ -45,6 +45,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          token: ${{ secrets.TOKEN }}
           
       - name: Download build
         uses: actions/download-artifact@v3.0.0
@@ -55,12 +56,11 @@ jobs:
         run: ls -la
       - name: cmd run 2
         run: cd vulnrepo-app;ls -la
-      - name: Pushes to another repository
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
-        with:
-          source-directory: 'vulnrepo-app'
-          destination-github-username: 'kac89'
-          destination-repository-name: 'pgrelease'
-          target-branch: main
+        
+      - name: Commit build
+        run: |
+          git config --global user.name 'Kac89'
+          git config --global user.email 'kac89@users.noreply.github.com'
+          git add vulnrepo-app/*
+          git commit -m "$(date)"
+          git push
