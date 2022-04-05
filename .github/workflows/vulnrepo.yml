@@ -59,3 +59,4 @@ jobs:
           repository: kac89/pgrelease
           branch: main
           directory: vulnrepo-app
+          force: true
