@@ -28,7 +28,7 @@ jobs:
     - name: npm install and npm run build
       run: |
           npm i
-          npm run build -- -c production --base-href /pgrelease/
+          npm run build -- -c production
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.0.0
