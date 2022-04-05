@@ -58,5 +58,5 @@ jobs:
           github_token: ${{ secrets.TOKEN }}
           repository: kac89/pgrelease
           branch: main
-          directory: vulnrepo-app
+          directory: /home/runner/work/vulnrepo/vulnrepo/vulnrepo-app
           force: true
