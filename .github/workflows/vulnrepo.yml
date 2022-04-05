@@ -60,10 +60,10 @@ jobs:
         
       - name: Commit build
         run: |
-          git reset
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'kac89@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/kac89/pgrelease.git
+          git rm -r .
           cd vulnrepo-app
           git add .
           git commit -m "$(date)"
