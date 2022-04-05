@@ -51,12 +51,16 @@ jobs:
         with:
           name: deploy_dist
           path: .
-
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.6.0
+      - name: cmd run
+        run: ls -la
+      - name: cmd run 2
+        run: vulnrepo-app;ls -la
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
         with:
-          github_token: ${{ secrets.TOKEN }}
-          repository: kac89/pgrelease
-          branch: main
-          directory: /home/runner/work/vulnrepo/vulnrepo/vulnrepo-app
-          force: true
+          source-directory: 'vulnrepo-app'
+          destination-github-username: 'kac89'
+          destination-repository-name: 'pgrelease'
+          target-branch: main
