@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: BUILD PROD VULNREPO
+name: BUILD PROD
 
 on:
   push:
@@ -18,11 +18,8 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - name: CHECKOUT
+    - name: Checkout
       uses: actions/checkout@v3
-      with:
-        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
-        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
 
     - name: Node ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -45,6 +42,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          
       - name: Download build
         uses: actions/download-artifact@v3.0.0
         with:
