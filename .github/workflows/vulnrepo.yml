@@ -54,7 +54,7 @@ jobs:
       - name: cmd run
         run: ls -la
       - name: cmd run 2
-        run: vulnrepo-app;ls -la
+        run: cd vulnrepo-app;ls -la
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
