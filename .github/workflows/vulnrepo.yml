@@ -50,12 +50,12 @@ jobs:
       - name: LS cmd
         run: ls -la
       - name: LS cmd2
-        run: cd deploy_dist; ls -la
+        run: cd vulnrepo-app; ls -la
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.TOKEN }}
           repository: pgrelease
           branch: main
-          directory: /home/runner/work/vulnrepo/vulnrepo/deploy_dist
+          directory: vulnrepo-app
 
