@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -47,15 +46,12 @@ jobs:
         with:
           name: deploy_dist
           path: .
-      - name: LS cmd
-        run: ls -la
-      - name: LS cmd2
-        run: cd vulnrepo-app; ls -la
+
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.TOKEN }}
-          repository: pgrelease
+          repository: kac89/pgrelease
           branch: main
           directory: vulnrepo-app
 
