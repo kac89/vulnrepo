@@ -67,4 +67,4 @@ jobs:
           git remote add origin https://x-access-token:${{ secrets.TOKEN }}@github.com/kac89/pgrelease.git
           git add .
           git commit -m "$(date)"
-          git push -u origin main
+          git push -u origin master
