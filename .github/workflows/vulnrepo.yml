@@ -47,6 +47,10 @@ jobs:
         with:
           name: deploy_dist
           path: .
+      - name: LS cmd
+        run: ls -la
+      - name: LS cmd2
+        run: cd deploy_dist; ls -la
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
