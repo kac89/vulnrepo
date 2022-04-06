@@ -1,0 +1,71 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: BUILD DEV
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Node ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install and npm run build
+      run: |
+          npm i
+          npm run build -- -c production
+    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        name: deploy_dist
+        path: dist
+        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          token: ${{ secrets.TOKEN }}
+          
+      - name: Download build
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: deploy_dist
+          path: .
+          
+      - name: cmd run
+        run: ls -la
+      - name: Angular create 404.html
+        run: cd vulnrepo-app;cp index.html 404.html;ls -la
+        
+      - name: Add CNAME
+        run: cd vulnrepo-app;echo "dev.vulnrepo.com" > CNAME;ls -la        
+        
+      - name: Commit build
+        run: |
+          cd vulnrepo-app
+          git init
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'kac89@users.noreply.github.com'
+          git remote add origin https://x-access-token:${{ secrets.TOKEN }}@github.com/kac89/vulnrepo-build-dev.git
+          git add .
+          git commit -m "$(date)"
+          git push -f -u origin master
