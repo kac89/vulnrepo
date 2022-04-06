@@ -3,7 +3,7 @@ import { IndexeddbService } from './indexeddb.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-
+import { version } from "../version";
 
 @Component({
   selector: 'app-root',
@@ -15,12 +15,21 @@ export class AppComponent implements OnInit, OnDestroy {
   show_status: any;
   enc_status: any;
   subscription: Subscription;
+  app_ver = '';
+  app_ver_short = '';
 
   constructor(public route: ActivatedRoute, public router: Router, private indexeddbService: IndexeddbService) {
-
+    
   }
 
   ngOnInit() {
+    this.app_ver = version.number;
+    
+    if (this.app_ver !== ''){
+
+      this.app_ver_short = this.app_ver.substring(0, 6)
+
+    }
 
     if (!window.indexedDB) {
       console.log('Your browser doesn\'t support a stable version of IndexedDB.');
