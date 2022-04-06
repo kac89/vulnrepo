@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
     
     if (this.app_ver !== ''){
 
-      this.app_ver_short = this.app_ver.substring(0, 6)
+      this.app_ver_short = this.app_ver.substring(0, 7)
 
     }
 
