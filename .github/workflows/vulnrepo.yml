@@ -6,8 +6,6 @@ name: BUILD PROD
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
@@ -65,6 +63,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'kac89@users.noreply.github.com'
           git remote add origin https://x-access-token:${{ secrets.TOKEN }}@github.com/kac89/vulnrepo-build-prod.git
+          git pull origin master
           git add .
           git commit -m "$(date)"
           git push -u origin master
