@@ -36,6 +36,10 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-c production` flag for a production build.
 
+## DEV Environment
+
+You can test our latest changes from dev branch, visit: https://dev.vulnrepo.com/
+
 ## Lgtm
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/kac89/vulnrepo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kac89/vulnrepo/alerts/)
