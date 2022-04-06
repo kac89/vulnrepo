@@ -21,7 +21,7 @@ import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
 import { DialogApierrorComponent } from '../dialog-apierror/dialog-apierror.component';
-import marked from 'marked';
+import { marked } from 'marked'
 import { sha256 } from 'js-sha256';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatChipInputEvent} from '@angular/material/chips';
@@ -285,7 +285,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   afterDetectionNow() {
-    console.log('fired');
     this.reportDiffer = this.differs.find(this.decryptedReportData).create();
     this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
     this.reportDiffersettings = this.differs.find({...this.decryptedReportDataChanged.report_settings}).create();
