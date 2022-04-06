@@ -197,6 +197,8 @@ export class IndexeddbService {
             report_video_embed: true,
             report_remove_lastpage: false,
             report_remove_issuestatus: false,
+            report_remove_issuecvss: true,
+            report_remove_issuecve: true,
             report_remove_researchers: false,
             report_changelog_page: false,
             report_remove_issuetags: false,

@@ -1227,6 +1227,24 @@ Sample code here\n\
     }
   }
 
+  removeIssuecvss(event) {
+    if (event.checked === false) {
+      this.decryptedReportDataChanged.report_settings.report_remove_issuecvss = false;
+    }
+    if (event.checked === true) {
+      this.decryptedReportDataChanged.report_settings.report_remove_issuecvss = true;
+    }
+  }
+
+  removeIssuecve(event) {
+    if (event.checked === false) {
+      this.decryptedReportDataChanged.report_settings.report_remove_issuecve = false;
+    }
+    if (event.checked === true) {
+      this.decryptedReportDataChanged.report_settings.report_remove_issuecve = true;
+    }
+  }
+
   removetagsfromreport(event) {
     if (event.checked === false) {
       this.decryptedReportDataChanged.report_settings.report_remove_issuetags = false;
@@ -1574,6 +1592,21 @@ Sample code here\n\
     let issues = '<div class="card border-light mb-3"><div class="card-header"><center><h3 id="Results">Results (' + report_data.report_vulns.length + ')</h3></center></div><div class="card-body">';
     report_data.report_vulns.forEach((item, index) => {
 
+      let iscve = '';
+      if (report_data.report_settings.report_remove_issuecve === false) {
+        if (item.cve) {
+          iscve = '<dt>CVE:</dt> \
+          <dd>' + item.cve + '</dd><br>';
+        }
+      }
+
+      let iscvss = '';
+      if (report_data.report_settings.report_remove_issuecvss === false) {
+        if (item.cvss) {
+          iscvss = '<dt>CVSS v3.1 (Base score):</dt> \
+          <dd>' + item.cvss + '</dd><br>';
+        }
+      }
 
       let issstatus = '';
       if (report_data.report_settings.report_remove_issuestatus === false) {
@@ -1612,7 +1645,7 @@ Sample code here\n\
       <h4 id="' + index + '"> \
       <span class="label ' + escapeHtml(item.severity) + '">' + escapeHtml(item.severity) + '</span> \
       ' + escapeHtml(item.title) + '</h4> \
-        <dl>' + issstatus + desc;
+        <dl>' + iscve + iscvss + issstatus + desc;
 
 
 
@@ -1935,6 +1968,8 @@ Sample code here\n\
     this.decryptedReportDataChanged.report_settings.report_video_embed = profile.video_embed;
     this.decryptedReportDataChanged.report_settings.report_remove_lastpage = profile.remove_lastpage;
     this.decryptedReportDataChanged.report_settings.report_remove_issuestatus = profile.remove_issueStatus;
+    this.decryptedReportDataChanged.report_settings.report_remove_issuecvss = profile.remove_issuecvss;
+    this.decryptedReportDataChanged.report_settings.report_remove_issuecve = profile.remove_issuecve;
     this.decryptedReportDataChanged.report_settings.report_remove_researchers = profile.remove_researcher;
     this.decryptedReportDataChanged.report_settings.report_changelog_page = profile.remove_changelog;
     this.decryptedReportDataChanged.report_settings.report_remove_issuetags = profile.remove_tags;
