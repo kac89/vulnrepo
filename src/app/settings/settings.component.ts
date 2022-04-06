@@ -505,6 +505,8 @@ getReportProfiles() {
             video_embed: result.video_embed,
             remove_lastpage: result.remove_lastpage,
             remove_issueStatus: result.remove_issueStatus,
+            remove_issuecvss: result.remove_issuecvss,
+            remove_issuecve: result.remove_issuecve,
             remove_researcher: result.remove_researcher,
             remove_changelog: result.remove_changelog,
             remove_tags: result.remove_tags,

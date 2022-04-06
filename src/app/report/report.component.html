@@ -739,6 +739,8 @@
               <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page" (change)="removechangelogpage($event)">Remove Changelog</mat-checkbox><br>
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuestatus" (change)="removeIssuestatus($event)">Remove Issue status</mat-checkbox><br>
+                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecvss" (change)="removeIssuecvss($event)">Remove Issue CVSS</mat-checkbox><br>
+                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecve" (change)="removeIssuecve($event)">Remove Issue CVE</mat-checkbox><br>
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_researchers" (change)="removeResearchers($event)">Remove Researcher</mat-checkbox>
               </div>
       
