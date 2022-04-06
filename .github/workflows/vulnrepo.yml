@@ -55,8 +55,8 @@ jobs:
           
       - name: cmd run
         run: ls -la
-      - name: cmd run 2
-        run: cd vulnrepo-app;ls -la
+      - name: Angular create 404.html
+        run: cd vulnrepo-app;cp index.html 404.html;ls -la
         
       - name: Commit build
         run: |
@@ -64,7 +64,7 @@ jobs:
           git init
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'kac89@users.noreply.github.com'
-          git remote add origin https://x-access-token:${{ secrets.TOKEN }}@github.com/kac89/pgrelease.git
+          git remote add origin https://x-access-token:${{ secrets.TOKEN }}@github.com/kac89/vulnrepo-build-prod.git
           git add .
           git commit -m "$(date)"
           git push -u origin master
