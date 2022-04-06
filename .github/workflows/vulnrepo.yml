@@ -56,6 +56,9 @@ jobs:
       - name: Angular create 404.html
         run: cd vulnrepo-app;cp index.html 404.html;ls -la
         
+      - name: Add CNAME
+        run: cd vulnrepo-app;echo "vulnrepo.com" > CNAME;ls -la        
+        
       - name: Commit build
         run: |
           cd vulnrepo-app
