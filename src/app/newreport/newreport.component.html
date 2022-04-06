@@ -50,7 +50,7 @@
           <p *ngIf="str != ''" fxLayoutAlign="center">Strength validation: {{str}}.</p>
           <mat-progress-bar *ngIf="str != ''" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
           <p fxLayoutAlign="center">
-            <a class="active-link" [routerLink]="" (click)="generatePassword()"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">lock</mat-icon> Generate strong key!</a>
+            <a class="active-link" [routerLink]="[]" (click)="generatePassword()"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">lock</mat-icon> Generate strong key!</a>
           </p>
 
         </div>
