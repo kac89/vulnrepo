@@ -72,8 +72,8 @@
 
               <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="reportprofilesettings"><mat-icon>more_vert</mat-icon></button>
               <mat-menu #reportprofilesettings="matMenu">
-                <a [routerLink]="" (click)="editProfileItem(element)" class="active-link" title="Edit" mat-menu-item><mat-icon class="vertical-align-middle">edit</mat-icon> Edit profile</a>
-                <a [routerLink]="" (click)="removeProfileItem(element)" class="active-link" title="Remove" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove</a>
+                <a [routerLink]="[]" (click)="editProfileItem(element)" class="active-link" title="Edit" mat-menu-item><mat-icon class="vertical-align-middle">edit</mat-icon> Edit profile</a>
+                <a [routerLink]="[]" (click)="removeProfileItem(element)" class="active-link" title="Remove" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove</a>
               </mat-menu>
 
             </td>
@@ -161,7 +161,7 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #apimenu="matMenu">
-          <a [routerLink]="" (click)="openDialogAPIaddtovault()" class="active-link" title="Add API" mat-menu-item>
+          <a [routerLink]="[]" (click)="openDialogAPIaddtovault()" class="active-link" title="Add API" mat-menu-item>
             <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add API
           </a>
           <a target="_blank" class="active-link" rel="noopener noreferrer" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md" mat-menu-item><mat-icon class="vertical-align-middle padding-bottom-3">build</mat-icon> Build own API</a>
@@ -221,7 +221,7 @@
 
     <ng-container matColumnDef="settings">
       <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
-      <td mat-cell *matCellDef="let element"> <a [routerLink]="" (click)="removeApi(element.apikey)" title="Remove"><mat-icon color="warn" class="vertical-align-middle">delete_forever</mat-icon></a> </td>
+      <td mat-cell *matCellDef="let element"> <a [routerLink]="[]" (click)="removeApi(element.apikey)" title="Remove"><mat-icon color="warn" class="vertical-align-middle">delete_forever</mat-icon></a> </td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
