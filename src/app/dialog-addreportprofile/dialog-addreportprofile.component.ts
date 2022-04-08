@@ -19,6 +19,8 @@ export class DialogAddreportprofileComponent implements OnInit {
   video_embed = new FormControl();
   remove_lastpage = new FormControl();
   remove_issueStatus = new FormControl();
+  remove_issuecvss = new FormControl();
+  remove_issuecve = new FormControl();
   remove_researcher = new FormControl();
   remove_changelog = new FormControl();
   remove_tags = new FormControl();
@@ -40,6 +42,8 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.profile_theme.setValue('white');
       this.remove_lastpage.setValue(false);
       this.remove_issueStatus.setValue(false);
+      this.remove_issuecvss.setValue(true);
+      this.remove_issuecve.setValue(true);
       this.remove_researcher.setValue(false);
       this.remove_changelog.setValue(false);
       this.remove_tags.setValue(false);
@@ -62,6 +66,8 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.profile_theme.setValue(this.data.theme);
       this.remove_lastpage.setValue(this.data.remove_lastpage);
       this.remove_issueStatus.setValue(this.data.remove_issueStatus);
+      this.remove_issuecvss.setValue(this.data.remove_issuecvss);
+      this.remove_issuecve.setValue(this.data.remove_issuecve);
       this.remove_researcher.setValue(this.data.remove_researcher);
       this.remove_changelog.setValue(this.data.remove_changelog);
       this.remove_tags.setValue(this.data.remove_tags);
@@ -118,6 +124,8 @@ export class DialogAddreportprofileComponent implements OnInit {
         video_embed: this.video_embed.value,
         remove_lastpage: this.remove_lastpage.value,
         remove_issueStatus: this.remove_issueStatus.value,
+        remove_issuecvss: this.remove_issuecvss.value,
+        remove_issuecve: this.remove_issuecve.value,
         remove_researcher: this.remove_researcher.value,
         remove_changelog: this.remove_changelog.value,
         remove_tags: this.remove_tags.value,
@@ -141,6 +149,8 @@ export class DialogAddreportprofileComponent implements OnInit {
         video_embed: this.video_embed.value,
         remove_lastpage: this.remove_lastpage.value,
         remove_issueStatus: this.remove_issueStatus.value,
+        remove_issuecvss: this.remove_issuecvss.value,
+        remove_issuecve: this.remove_issuecve.value,
         remove_researcher: this.remove_researcher.value,
         remove_changelog: this.remove_changelog.value,
         remove_tags: this.remove_tags.value,

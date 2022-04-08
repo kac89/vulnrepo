@@ -96,6 +96,8 @@ export class IndexeddbService {
       base_array.report_settings.report_video_embed = profile.video_embed;
       base_array.report_settings.report_remove_lastpage = profile.remove_lastpage;
       base_array.report_settings.report_remove_issuestatus = profile.remove_issueStatus;
+      base_array.report_settings.report_remove_issuecvss = profile.remove_issuecvss;
+      base_array.report_settings.report_remove_issuecve = profile.remove_issuecve;
       base_array.report_settings.report_remove_researchers = profile.remove_researcher;
       base_array.report_settings.report_changelog_page = profile.remove_changelog;
       base_array.report_settings.report_remove_issuetags = profile.remove_tags;
