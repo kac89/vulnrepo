@@ -62,7 +62,7 @@ jobs:
         run: cd vulnrepo-app;echo "vulnrepo.com" > CNAME;ls -la
         
       - name: Add README.md
-        run: cd vulnrepo-app;echo "# vulnrepo-build-prod\n\nAutomatic build of the https://github.com/kac89/vulnrepo application." > README.md
+        run: cd vulnrepo-app;printf "# vulnrepo-build-prod\n\nAutomatic build of the https://github.com/kac89/vulnrepo application." > README.md
         
       - name: Commit build
         run: |
