@@ -61,6 +61,9 @@ jobs:
       - name: Add CNAME
         run: cd vulnrepo-app;echo "dev.vulnrepo.com" > CNAME;ls -la        
         
+      - name: Add README.md
+        run: cd vulnrepo-app;echo "# vulnrepo-build-dev\n\nAutomatic build of the https://github.com/kac89/vulnrepo application branch dev." > README.md
+        
       - name: Commit build
         run: |
           cd vulnrepo-app
