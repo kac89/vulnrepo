@@ -209,7 +209,7 @@ export class DialogImportComponent implements OnInit {
     const csvData = csv || '';
     let m: any;
     const issuelist = [];
-    let text = csvData.substring(csvData.indexOf("\n") + 1)
+    let text = csvData.substring(csvData.indexOf("\n") + 1);
     text = text.replace(/, /g,'. ');
     
 
