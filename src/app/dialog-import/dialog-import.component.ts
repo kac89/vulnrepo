@@ -22,6 +22,9 @@ export class DialogImportComponent implements OnInit {
   xmltojson: any[];
   public show_input = true;
   public please_wait = false;
+
+  public bugcrowdshow_input = true;
+  public bugcrowdplease_wait = false;
   public burpshow_input = true;
   public burpplease_wait = false;
   public openvas9show_input = true;
@@ -40,6 +43,7 @@ export class DialogImportComponent implements OnInit {
   sour: Importsource[] = [
     { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)' },
     { value: 'burp', viewValue: 'Burp Suite (.XML)' },
+    { value: 'bugcrowd', viewValue: 'Bugcrowd (.CSV)' },
     { value: 'nmap', viewValue: 'Nmap (.XML)' },
     { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
     { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' },
@@ -183,6 +187,79 @@ export class DialogImportComponent implements OnInit {
 
   }
 
+  bugcrowdonFileSelect(input: HTMLInputElement) {
+    const files = input.files;
+    if (files && files.length) {
+      this.bugcrowdshow_input = false;
+      this.bugcrowdplease_wait = true;
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+      fileReader.onload = (e) => {
+        this.parsebugcrowd(fileReader.result);
+      };
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+  }
+
+
+  
+  parsebugcrowd(csv) {
+    
+    const csvData = csv || '';
+    let m: any;
+    const issuelist = [];
+    let text = csvData.substring(csvData.indexOf("\n") + 1)
+    text = text.replace(/, /g,'. ');
+    
+
+    function setseverity(severity: string) {
+
+      if (severity === "5") {
+        severity = "Info";
+      } else if (severity === "4") {
+        severity = "Low";
+      } else if (severity === "3") {
+        severity = "Medium";
+      } else if (severity === "2") {
+        severity = "High";
+      } else if (severity === "1") {
+        severity = "Critical";
+      }
+
+      return severity;
+    }
+
+
+    const regex = /(.*),(.*),(.*),(.*),(.*),(.*),([\S\s]*?),([\S\s]*?),(.*),(.*),(.*),(.*),(.*)/gm;
+    while ((m = regex.exec(text)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        
+        const date = new Date();
+        const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+        const def = {
+          title: m[4],
+          poc: m[6] + "\n\n" + m[8],
+          files: [],
+          desc: m[7],
+          severity: setseverity(m[11]),
+          ref: '',
+          cvss: '',
+          cve: '',
+          tags: [],
+          bounty: [],
+          date: today
+        };
+
+        issuelist.push(def);
+
+    }
+    this.dialogRef.close(issuelist);
+
+  }
 
   burponFileSelect(input: HTMLInputElement) {
     const files = input.files;
