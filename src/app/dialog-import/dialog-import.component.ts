@@ -246,10 +246,10 @@ export class DialogImportComponent implements OnInit {
           files: [],
           desc: m[7],
           severity: setseverity(m[11]),
-          ref: '',
+          ref: 'https://bugcrowd.com/vulnerability-rating-taxonomy',
           cvss: '',
           cve: '',
-          tags: [],
+          tags: [{name: 'bugcrowd'}],
           bounty: [],
           date: today
         };
@@ -455,10 +455,6 @@ export class DialogImportComponent implements OnInit {
 
     this.dialogRef.close(info);
   }
-
-
-
-
 
 
   nessusxmlonFileSelect(input: HTMLInputElement) {
