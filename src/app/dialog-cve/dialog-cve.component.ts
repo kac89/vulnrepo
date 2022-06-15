@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ApiService } from '../api.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -12,7 +12,7 @@ export class DialogCveComponent implements OnInit {
   err_msg: string;
   show = false;
   results: any;
-  mycve = new FormControl();
+  mycve = new UntypedFormControl();
 
   constructor(private apiService: ApiService,
     public dialogRef: MatDialogRef<DialogCveComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {

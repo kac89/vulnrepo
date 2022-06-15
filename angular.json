@@ -143,6 +143,5 @@
         }
       }
     }
-  },
-  "defaultProject": "vulnrepo-app"
+  }
 }

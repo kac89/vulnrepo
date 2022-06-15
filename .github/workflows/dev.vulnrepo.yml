@@ -27,7 +27,7 @@ jobs:
       run: cd src;echo "export const version = { number:'${GITHUB_SHA}'}" > version.ts
     - name: npm install and npm run build
       run: |
-          npm i
+          npm i --force
           npm run build -- -c production
     
     - name: Upload a Build Artifact
