@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-edit',
@@ -8,8 +8,8 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./dialog-edit.component.scss']
 })
 export class DialogEditComponent implements OnInit {
-  title = new FormControl();
-  reportname = new FormControl();
+  title = new UntypedFormControl();
+  reportname = new UntypedFormControl();
   col1 = false;
   col2 = false;
   col3 = false;

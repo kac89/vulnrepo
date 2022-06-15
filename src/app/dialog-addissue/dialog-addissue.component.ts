@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
@@ -39,14 +39,14 @@ export interface PCITesting {
   styleUrls: ['./dialog-addissue.component.scss']
 })
 export class DialogAddissueComponent implements OnInit {
-  myControl = new FormControl();
-  myControl2 = new FormControl();
-  mycve = new FormControl();
-  mymobilemitre = new FormControl();
-  myenterprisemitre = new FormControl();
-  myPCI = new FormControl();
-  myOWASP2017 = new FormControl();
-  myOWASP2021 = new FormControl();
+  myControl = new UntypedFormControl();
+  myControl2 = new UntypedFormControl();
+  mycve = new UntypedFormControl();
+  mymobilemitre = new UntypedFormControl();
+  myenterprisemitre = new UntypedFormControl();
+  myPCI = new UntypedFormControl();
+  myOWASP2017 = new UntypedFormControl();
+  myOWASP2021 = new UntypedFormControl();
   options: Vulns[] = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];

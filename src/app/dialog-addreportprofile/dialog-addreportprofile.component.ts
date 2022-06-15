@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-addreportprofile',
@@ -10,25 +10,25 @@ import { FormControl } from '@angular/forms';
 })
 export class DialogAddreportprofileComponent implements OnInit {
 
-  profile_name = new FormControl();
-  profile_theme = new FormControl();
-  logow = new FormControl();
-  logoh = new FormControl();
+  profile_name = new UntypedFormControl();
+  profile_theme = new UntypedFormControl();
+  logow = new UntypedFormControl();
+  logoh = new UntypedFormControl();
   uploadlogoprev = '';
   advlogo = '';
-  video_embed = new FormControl();
-  remove_lastpage = new FormControl();
-  remove_issueStatus = new FormControl();
-  remove_issuecvss = new FormControl();
-  remove_issuecve = new FormControl();
-  remove_researcher = new FormControl();
-  remove_changelog = new FormControl();
-  remove_tags = new FormControl();
-  report_parsing_desc = new FormControl();
-  ResName = new FormControl();
-  ResEmail = new FormControl();
-  ResSocial = new FormControl();
-  ResWeb = new FormControl();
+  video_embed = new UntypedFormControl();
+  remove_lastpage = new UntypedFormControl();
+  remove_issueStatus = new UntypedFormControl();
+  remove_issuecvss = new UntypedFormControl();
+  remove_issuecve = new UntypedFormControl();
+  remove_researcher = new UntypedFormControl();
+  remove_changelog = new UntypedFormControl();
+  remove_tags = new UntypedFormControl();
+  report_parsing_desc = new UntypedFormControl();
+  ResName = new UntypedFormControl();
+  ResEmail = new UntypedFormControl();
+  ResSocial = new UntypedFormControl();
+  ResWeb = new UntypedFormControl();
   origi = [];
 
   constructor(public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
