@@ -1,18 +1,34 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { ApiService } from '../api.service';
 import { UntypedFormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-dialog-cve',
   templateUrl: './dialog-cve.component.html',
   styleUrls: ['./dialog-cve.component.scss']
 })
-export class DialogCveComponent implements OnInit {
+
+export class DialogCveComponent implements OnInit, AfterViewInit {
   err_msg: string;
   show = false;
   results: any;
+  gbug: any;
   mycve = new UntypedFormControl();
+
+  ELEMENT_DATA = [];
+
+  displayedColumns: string[] = ['position', 'name', 'weight'];
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
 
   constructor(private apiService: ApiService,
     public dialogRef: MatDialogRef<DialogCveComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -40,6 +56,9 @@ export class DialogCveComponent implements OnInit {
             if (resp.id) {
                 this.results = resp;
                 this.show = false;
+
+                this.gbug = JSON.parse(this.results[0].githubpoc)
+                this.dataSource = new MatTableDataSource(this.gbug.items);
             }
 
             if (resp.error) {
