@@ -480,7 +480,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   openDialogCVE(data: any): void {
 
     const dialogRef = this.dialog.open(DialogCveComponent, {
-      width: '600px',
+      width: '700px',
       disableClose: false,
       data: data
     });
