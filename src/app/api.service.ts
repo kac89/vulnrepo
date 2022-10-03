@@ -10,7 +10,7 @@ export class ApiService {
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
   getCVE(cve: string): Promise<any> {
-    return this.http.get<any>('https://api.vulnrepo.com/cve/' + cve)
+    return this.http.get<any>('https://cve.vulnrepo.com/' + cve)
                .toPromise()
                .then(response => response)
                .catch(error => {
