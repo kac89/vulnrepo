@@ -21,11 +21,15 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['name', 'description', 'source'];
   dataSource = new MatTableDataSource([]);
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  displayedColumns2: string[] = ['url'];
+  dataSource2 = new MatTableDataSource([]);
+
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginator2') paginator2: MatPaginator;
 
   ngAfterViewInit() {
     setTimeout(() => this.dataSource.paginator = this.paginator);
-    
+    setTimeout(() => this.dataSource2.paginator = this.paginator2);
   }
 
 
@@ -56,8 +60,12 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
                 this.results = resp;
                 this.show = false;
                 this.gbug = this.results.githubpoc;
+                
                 this.dataSource = new MatTableDataSource(this.gbug.items);
                 setTimeout(() => this.dataSource.paginator = this.paginator);
+
+                this.dataSource2 = new MatTableDataSource(this.results.references);
+                setTimeout(() => this.dataSource2.paginator = this.paginator2);
             }
 
             if (resp.error) {
