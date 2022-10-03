@@ -55,8 +55,7 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
             if (resp.id) {
                 this.results = resp;
                 this.show = false;
-
-                this.gbug = JSON.parse(this.results[0].githubpoc)
+                this.gbug = this.results.githubpoc;
                 this.dataSource = new MatTableDataSource(this.gbug.items);
                 setTimeout(() => this.dataSource.paginator = this.paginator);
             }
