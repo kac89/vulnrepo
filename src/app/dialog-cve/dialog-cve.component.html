@@ -20,7 +20,7 @@
         <p>
             <mat-chip-list>
                 <mat-chip *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip>
-                <mat-chip *ngIf="results?.cwe">{{ results?.cwe }}</mat-chip>
+                <a *ngIf="results?.cwe" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.cwe }}"><mat-chip>{{ results?.cwe }}</mat-chip></a>
             </mat-chip-list>
         </p>
 
