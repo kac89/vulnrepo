@@ -24,44 +24,23 @@
             </mat-chip-list>
         </p>
 
-        <h2 *ngIf="results?.references.length != 0">References</h2>
-
-        <div *ngIf="results?.references">
-            <table mat-table [dataSource]="dataSource2">
-          
-              <ng-container matColumnDef="url">
-                <th mat-header-cell *matHeaderCellDef> Reference </th>
-                <td mat-cell *matCellDef="let element"> {{element}} </td>
-              </ng-container>
-          
-              <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-            </table>
-          
-            <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]"
-                           showFirstLastButtons 
-                           aria-label="Select page of periodic elements">
-            </mat-paginator>
-          </div>
-
-
         <h2 *ngIf="dataSource.data.length != 0">Github POCs</h2>
 
         <div *ngIf="dataSource.data.length != 0">
             <table mat-table [dataSource]="dataSource">
           
               <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <th mat-header-cell *matHeaderCellDef> <b>Name</b> </th>
                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
               </ng-container>
           
               <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <th mat-header-cell *matHeaderCellDef> <b>Description</b> </th>
                 <td mat-cell *matCellDef="let element"> {{element.description}} </td>
               </ng-container>
           
               <ng-container matColumnDef="source">
-                <th mat-header-cell *matHeaderCellDef> Source </th>
+                <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
                 <td mat-cell *matCellDef="let element"> {{element.html_url}} </td>
               </ng-container>
           
@@ -75,6 +54,25 @@
             </mat-paginator>
           </div>
           
+          <h2 *ngIf="results?.references.length != 0">References</h2>
+
+          <div *ngIf="results?.references">
+              <table mat-table [dataSource]="dataSource2">
+            
+                <ng-container matColumnDef="url">
+                  <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
+                  <td mat-cell *matCellDef="let element"> {{element}} </td>
+                </ng-container>
+            
+                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+              </table>
+            
+              <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]"
+                             showFirstLastButtons 
+                             aria-label="Select page of periodic elements">
+              </mat-paginator>
+            </div>
 
     </div>
 
