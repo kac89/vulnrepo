@@ -404,9 +404,14 @@ export class DialogAddissueComponent implements OnInit {
 
               }
 
+              let pocgithub = '';
+              for (let _i = 0; _i < resp.githubpoc.items.length; _i++) {
+                pocgithub += resp.githubpoc.items[_i].html_url + '\n';
+              }
+
               const def = {
                 title: cvetitle,
-                poc: '',
+                poc: pocgithub,
                 files: [],
                 desc: resp.summary,
                 severity: severity,
