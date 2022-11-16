@@ -2118,7 +2118,7 @@ Sample code here\n\
   }
 
   format_code_funct(dec_data): void {
-    this.prepfunctItem(dec_data, "```", "```", "```\ncode text\n```");
+    this.prepfunctItem(dec_data, "```\n", "\n```", "```\ncode text\n```");
   }
 
   format_quote_funct(dec_data): void {
