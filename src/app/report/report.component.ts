@@ -2098,11 +2098,11 @@ Sample code here\n\
   }
 
   format_bold_funct(dec_data): void {
-    this.prepfunctItem(dec_data, "**", "**", "**bold**");
+    this.prepfunctItem(dec_data, " **", "** ", "**bold**");
   }
 
   format_italic_funct(dec_data): void {
-    this.prepfunctItem(dec_data, "_", "_", "_emphasized text_");
+    this.prepfunctItem(dec_data, " _", "_ ", " _emphasized text_ ");
   }
 
   format_heading_funct(dec_data): void {
@@ -2110,19 +2110,19 @@ Sample code here\n\
   }
 
   format_strikethrough_funct(dec_data): void {
-    this.prepfunctItem(dec_data, "~~", "~~", "~~strikethrough~~");
+    this.prepfunctItem(dec_data, " ~~", "~~ ", "~~strikethrough~~");
   }
 
   format_list_funct(dec_data): void {
-    this.prepfunctItem(dec_data, "- ", "", "- list text");
+    this.prepfunctItem(dec_data, "\n- ", "\n", "\n- list text\n");
   }
 
   format_code_funct(dec_data): void {
-    this.prepfunctItem(dec_data, "```\n", "\n```", "```\ncode text\n```");
+    this.prepfunctItem(dec_data, "\n```\n", "\n```\n", "\n```\ncode text\n```\n");
   }
 
   format_quote_funct(dec_data): void {
-    this.prepfunctItem(dec_data, "> ", "", "> heading text");
+    this.prepfunctItem(dec_data, "\n> ", "\n", "\n> quote here\n");
   }
 
   format_table_funct(dec_data): void {
