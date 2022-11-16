@@ -273,31 +273,31 @@
                   <button mat-icon-button color="accent" (click)="poc_preview_funct(dec_data)" title="Preview">
                     <mat-icon>visibility</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_bold_funct(dec_data)" title="Bold Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_bold_funct(dec_data)" title="Bold Format">
                     <mat-icon>format_bold</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_italic_funct(dec_data)" title="Italic Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_italic_funct(dec_data)" title="Italic Format">
                     <mat-icon>format_italic</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_heading_funct(dec_data)" title="Heading Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_heading_funct(dec_data)" title="Heading Format">
                     <mat-icon>title</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_strikethrough_funct(dec_data)" title="Strikethrough Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_strikethrough_funct(dec_data)" title="Strikethrough Format">
                     <mat-icon>strikethrough_s</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_link_funct(dec_data)" title="Link Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_link_funct(dec_data)" title="Link Format">
                     <mat-icon>link</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_list_funct(dec_data)" title="List Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_list_funct(dec_data)" title="List Format">
                     <mat-icon>list</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_code_funct(dec_data)" title="Code Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_code_funct(dec_data)" title="Code Format">
                     <mat-icon>code</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_quote_funct(dec_data)" title="Quote Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_quote_funct(dec_data)" title="Quote Format">
                     <mat-icon>format_quote</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" (click)="format_table_funct(dec_data)" title="Table Format">
+                  <button [disabled]="poc_editor_hide" mat-icon-button color="primary" (click)="format_table_funct(dec_data)" title="Table Format">
                     <mat-icon>table</mat-icon>
                   </button>
                 </div>
