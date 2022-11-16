@@ -84,7 +84,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   textarea_click: any;
   selected3 = [];
   ReportProfilesList = [];
-  scopePreviewHTML = "";
+  scopePreviewHTML = [];
   pok = 0;
   timerCounter = 0;
   savemsg = '';
@@ -2146,9 +2146,9 @@ IP   | hostname | role | comments\n\
     this.resetselectposition();
   }
 
-  poc_preview_funct(dec_data): void {
+  poc_preview_funct(dec_data, id): void {
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
-    this.scopePreviewHTML = DOMPurify.sanitize(marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc));
+    this.scopePreviewHTML[id] = DOMPurify.sanitize(marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc));
     this.poc_editor_hide = !this.poc_editor_hide;
     this.prev_hide = !this.prev_hide;
 
