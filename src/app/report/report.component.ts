@@ -75,7 +75,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   reportdesc: any;
   selecteditem = false;
   prev_hide = true;
-  poc_editor_hide = false;
+  poc_editor_hide = [];
   BBmsg = '';
   selecteditems = [];
   textarea_selected=""
@@ -2149,7 +2149,7 @@ IP   | hostname | role | comments\n\
   poc_preview_funct(dec_data, id): void {
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
     this.scopePreviewHTML[id] = DOMPurify.sanitize(marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc));
-    this.poc_editor_hide = !this.poc_editor_hide;
+    this.poc_editor_hide[id] = !this.poc_editor_hide[id];
     this.prev_hide = !this.prev_hide;
 
   }
