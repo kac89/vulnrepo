@@ -38,7 +38,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Contributors
 
-Please posting PR for branch `dev` otherwise it will be rejected.
+Please push PR for branch `dev` otherwise it will be rejected.
 
 ## DEV Environment
 
