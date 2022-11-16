@@ -266,7 +266,7 @@
             <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
-                <div [innerHtml]="scopePreviewHTML[i]" [hidden]="prev_hide"></div>
+                <div [innerHtml]="scopePreviewHTML[i]" [hidden]="!prev_hide[i]"></div>
                 <textarea [hidden]="poc_editor_hide[i]" (select)="selectionchangepoc($event)" (click)="clickselectionchangepoc($event)" [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"></textarea>
                 <mat-divider></mat-divider>
                 <div class="example-button-row">

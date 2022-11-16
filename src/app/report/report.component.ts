@@ -74,7 +74,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   lastsavereportdata = '';
   reportdesc: any;
   selecteditem = false;
-  prev_hide = true;
+  prev_hide = [];
   poc_editor_hide = [];
   BBmsg = '';
   selecteditems = [];
@@ -169,6 +169,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       let i = 0;
       do {
         this.selected3.push(false);
+        this.prev_hide.push(false);
         i++;
       }
       while (i < this.decryptedReportDataChanged.report_vulns.length);
@@ -677,6 +678,9 @@ Sample code here\n\
     moveItemInArray(this.decryptedReportDataChanged.report_vulns, event.previousIndex, event.currentIndex);
     moveItemInArray(this.selecteditems, event.previousIndex, event.currentIndex);
     moveItemInArray(this.selected3, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.scopePreviewHTML, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.poc_editor_hide, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.prev_hide, event.previousIndex, event.currentIndex);
   }
 
   saveReportChanges(report_id: any) {
@@ -2150,7 +2154,7 @@ IP   | hostname | role | comments\n\
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
     this.scopePreviewHTML[id] = DOMPurify.sanitize(marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc));
     this.poc_editor_hide[id] = !this.poc_editor_hide[id];
-    this.prev_hide = !this.prev_hide;
+    this.prev_hide[id] = !this.prev_hide[id];
 
   }
 }
