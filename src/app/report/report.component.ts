@@ -29,6 +29,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { HttpClient } from '@angular/common/http';
 import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
+import * as DOMPurify from 'dompurify';
 
 export interface Tags {
   name: string;
@@ -73,10 +74,17 @@ export class ReportComponent implements OnInit, OnDestroy {
   lastsavereportdata = '';
   reportdesc: any;
   selecteditem = false;
+  prev_hide = true;
+  poc_editor_hide = false;
   BBmsg = '';
   selecteditems = [];
+  textarea_selected=""
+  textarea_selected_start: any;
+  textarea_selected_end: any;
+  textarea_click: any;
   selected3 = [];
   ReportProfilesList = [];
+  scopePreviewHTML = "";
   pok = 0;
   timerCounter = 0;
   savemsg = '';
@@ -2049,5 +2057,100 @@ Sample code here\n\
 
   changePoC(poc){
     this.fastsearchBB(poc, false);
+    this.resetselectposition();
+  }
+
+  clickselectionchangepoc(event) {
+    this.textarea_click = event.target.selectionStart;
+  }
+  selectionchangepoc(ev:any) {
+    const start = ev.target.selectionStart;
+    const end = ev.target.selectionEnd;
+    this.textarea_selected = ev.target.value.substr(start, end - start);
+    this.textarea_selected_start = start;
+    this.textarea_selected_end = end;
+  }
+
+  replaceBetween(origin, startIndex, endIndex, insertion): string {
+    return origin.substring(0, startIndex) + insertion + origin.substring(endIndex);
+  }
+
+  stringslice(a, b, position): string {
+    return [a.slice(0, position), b, a.slice(position)].join('');
+  }
+
+  resetselectposition(): void {
+    this.textarea_selected = "";
+    this.textarea_selected_start = 0;
+    this.textarea_selected_end = 0;
+  }
+
+  prepfunctItem(dec_data, lsig, rsig, dsig): void {
+    if (this.textarea_selected !== "") {
+      const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+      this.decryptedReportDataChanged.report_vulns[index].poc = this.replaceBetween(this.decryptedReportDataChanged.report_vulns[index].poc, this.textarea_selected_start, this.textarea_selected_end, lsig + this.textarea_selected + rsig);
+      this.resetselectposition();
+    }else{
+      const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+      this.decryptedReportDataChanged.report_vulns[index].poc = this.stringslice(this.decryptedReportDataChanged.report_vulns[index].poc, dsig, this.textarea_click);
+      this.resetselectposition();
+    }
+  }
+
+  format_bold_funct(dec_data): void {
+    this.prepfunctItem(dec_data, "**", "**", "**bold**");
+  }
+
+  format_italic_funct(dec_data): void {
+    this.prepfunctItem(dec_data, "_", "_", "_emphasized text_");
+  }
+
+  format_heading_funct(dec_data): void {
+    this.prepfunctItem(dec_data, "\n### ", "", "\n### heading text");
+  }
+
+  format_strikethrough_funct(dec_data): void {
+    this.prepfunctItem(dec_data, "~~", "~~", "~~strikethrough~~");
+  }
+
+  format_list_funct(dec_data): void {
+    this.prepfunctItem(dec_data, "- ", "", "- list text");
+  }
+
+  format_code_funct(dec_data): void {
+    this.prepfunctItem(dec_data, "```", "```", "```\ncode text\n```");
+  }
+
+  format_quote_funct(dec_data): void {
+    this.prepfunctItem(dec_data, "> ", "", "> heading text");
+  }
+
+  format_table_funct(dec_data): void {
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+    const dsig = ' \
+\n\
+IP   | hostname | role | comments\n\
+------|--------------|-------|---------------\n\
+127.0.0.1 | localhost.localdomain | PROD | sql inj here\n\
+255.255.255.255 | N/A | DMZ | much worst ;-)\n';
+
+    this.decryptedReportDataChanged.report_vulns[index].poc = this.stringslice(this.decryptedReportDataChanged.report_vulns[index].poc, dsig, this.textarea_click);
+    this.resetselectposition();
+  }
+
+  format_link_funct(dec_data): void {
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+    const dsig = '[enter link description here](https://vulnrepo.com/)';
+
+    this.decryptedReportDataChanged.report_vulns[index].poc = this.stringslice(this.decryptedReportDataChanged.report_vulns[index].poc, dsig, this.textarea_click);
+    this.resetselectposition();
+  }
+
+  poc_preview_funct(dec_data): void {
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+    this.scopePreviewHTML = DOMPurify.sanitize(marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc));
+    this.poc_editor_hide = !this.poc_editor_hide;
+    this.prev_hide = !this.prev_hide;
+
   }
 }

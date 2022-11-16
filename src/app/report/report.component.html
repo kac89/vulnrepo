@@ -266,7 +266,41 @@
             <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
-                <textarea [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"></textarea>
+                <div [innerHtml]="scopePreviewHTML" [hidden]="prev_hide"></div>
+                <textarea [hidden]="poc_editor_hide" (select)="selectionchangepoc($event)" (click)="clickselectionchangepoc($event)" [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"></textarea>
+                <mat-divider></mat-divider>
+                <div class="example-button-row">
+                  <button mat-icon-button color="accent" (click)="poc_preview_funct(dec_data)" title="Preview">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_bold_funct(dec_data)" title="Bold Format">
+                    <mat-icon>format_bold</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_italic_funct(dec_data)" title="Italic Format">
+                    <mat-icon>format_italic</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_heading_funct(dec_data)" title="Heading Format">
+                    <mat-icon>title</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_strikethrough_funct(dec_data)" title="Strikethrough Format">
+                    <mat-icon>strikethrough_s</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_link_funct(dec_data)" title="Link Format">
+                    <mat-icon>link</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_list_funct(dec_data)" title="List Format">
+                    <mat-icon>list</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_code_funct(dec_data)" title="Code Format">
+                    <mat-icon>code</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_quote_funct(dec_data)" title="Quote Format">
+                    <mat-icon>format_quote</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" (click)="format_table_funct(dec_data)" title="Table Format">
+                    <mat-icon>table</mat-icon>
+                  </button>
+                </div>
               </mat-form-field>
             </div>
         

@@ -106,3 +106,10 @@ table {
 .example-tab-icon {
   margin-right: 8px;
 }
+
+.example-button-row button,
+.example-button-row a {
+  margin-right: 0px;
+  width: 30px;
+  height: 30px;
+}

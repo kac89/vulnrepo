@@ -27,6 +27,7 @@
     "clone": "^2.1.2",
     "core-js": "^3.21.1",
     "crypto-js": "^3.3.0",
+    "dompurify": "^2.4.1",
     "events": "^3.2.0",
     "gulp-clone": "^2.0.1",
     "js-sha256": "^0.9.0",
@@ -42,7 +43,7 @@
     "zone.js": "^0.11.5"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.0.2",
+    "@angular-devkit/build-angular": "^14.2.9",
     "@angular/cli": "^14.0.2",
     "@angular/compiler-cli": "^14.0.1",
     "@angular/language-service": "^14.0.1",
@@ -51,7 +52,7 @@
     "@types/marked": "^4.0.3",
     "@types/node": "^15.14.9",
     "@types/xml2js": "^0.4.9",
-    "codelyzer": "^6.0.2",
+    "codelyzer": "^0.0.28",
     "jasmine-core": "~3.7.1",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "^6.3.17",
