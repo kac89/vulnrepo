@@ -2098,7 +2098,7 @@ Sample code here\n\
   }
 
   format_bold_funct(dec_data): void {
-    this.prepfunctItem(dec_data, " **", "** ", "**bold**");
+    this.prepfunctItem(dec_data, "**", "**", "**bold**");
   }
 
   format_italic_funct(dec_data): void {
@@ -2140,7 +2140,7 @@ IP   | hostname | role | comments\n\
 
   format_link_funct(dec_data): void {
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
-    const dsig = '[enter link description here](https://vulnrepo.com/)';
+    const dsig = '\n[enter link description here](https://vulnrepo.com/)\n';
 
     this.decryptedReportDataChanged.report_vulns[index].poc = this.stringslice(this.decryptedReportDataChanged.report_vulns[index].poc, dsig, this.textarea_click);
     this.resetselectposition();
