@@ -1221,6 +1221,15 @@ Sample code here\n\
     }
   }
 
+  parsingpocmarkdown(event) {
+    if (event.checked === false) {
+      this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown = false;
+    }
+    if (event.checked === true) {
+      this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown = true;
+    }
+  }
+
   removeResearchers(event) {
     if (event.checked === false) {
       this.decryptedReportDataChanged.report_settings.report_remove_researchers = false;
@@ -1662,10 +1671,20 @@ Sample code here\n\
 
 
       if (item.poc !== '' || item.files.length !== 0) {
-        const ewe = ' \
-            <dt>Proof of Concept:</dt> \
-            <dd class="strbreak"> \
-            <div style="white-space: pre-wrap;">' + escapeHtml(item.poc) + '</div>';
+        let ewe = '';
+        if (report_data.report_settings.report_parsing_poc_markdown === true) {
+
+          ewe = ' \
+              <dt>Proof of Concept:</dt> \
+              <dd class="strbreak"> \
+              <div style="white-space: pre-wrap;">' + DOMPurify.sanitize(marked.parse(item.poc)); + '</div>';
+  
+        } else {
+          ewe = ' \
+              <dt>Proof of Concept:</dt> \
+              <dd class="strbreak"> \
+              <div style="white-space: pre-wrap;">' + escapeHtml(item.poc) + '</div>';
+        }
 
         let fil = '';
         item.files.forEach((ite, ind) => {
@@ -1986,7 +2005,7 @@ Sample code here\n\
     this.decryptedReportDataChanged.report_settings.report_changelog_page = profile.remove_changelog;
     this.decryptedReportDataChanged.report_settings.report_remove_issuetags = profile.remove_tags;
     this.decryptedReportDataChanged.report_settings.report_parsing_desc = profile.report_parsing_desc;
-    
+    this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown = profile.report_parsing_poc_markdown;
   }
 
   searchBounty(poc) {

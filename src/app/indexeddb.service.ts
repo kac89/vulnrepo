@@ -102,6 +102,7 @@ export class IndexeddbService {
       base_array.report_settings.report_changelog_page = profile.remove_changelog;
       base_array.report_settings.report_remove_issuetags = profile.remove_tags;
       base_array.report_settings.report_parsing_desc = profile.report_parsing_desc;
+      base_array.report_settings.report_parsing_poc_markdown = profile.report_parsing_poc_markdown;
       
     }
 
@@ -204,7 +205,8 @@ export class IndexeddbService {
             report_remove_researchers: false,
             report_changelog_page: false,
             report_remove_issuetags: false,
-            report_parsing_desc: false
+            report_parsing_desc: false,
+            report_parsing_poc_markdown: true
           }
         };
 

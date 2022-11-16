@@ -770,7 +770,8 @@
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed" (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
               </div>
               <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc" (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox>
+                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc" (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
+                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown" (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
               </div>
               <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page" (change)="removechangelogpage($event)">Remove Changelog</mat-checkbox><br>
