@@ -25,6 +25,7 @@ export class DialogAddreportprofileComponent implements OnInit {
   remove_changelog = new UntypedFormControl();
   remove_tags = new UntypedFormControl();
   report_parsing_desc = new UntypedFormControl();
+  report_parsing_poc_markdown = new UntypedFormControl();
   ResName = new UntypedFormControl();
   ResEmail = new UntypedFormControl();
   ResSocial = new UntypedFormControl();
@@ -48,6 +49,7 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.remove_changelog.setValue(false);
       this.remove_tags.setValue(false);
       this.report_parsing_desc.setValue(false);
+      this.report_parsing_poc_markdown.setValue(true);
       this.ResName.setValue('');
       this.ResEmail.setValue('');
       this.ResSocial.setValue('');
@@ -72,6 +74,7 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.remove_changelog.setValue(this.data.remove_changelog);
       this.remove_tags.setValue(this.data.remove_tags);
       this.report_parsing_desc.setValue(this.data.report_parsing_desc);
+      this.report_parsing_poc_markdown.setValue(this.data.report_parsing_poc_markdown);
       this.ResName.setValue(this.data.ResName);
       this.ResEmail.setValue(this.data.ResEmail);
       this.ResSocial.setValue(this.data.ResSocial);
@@ -130,6 +133,7 @@ export class DialogAddreportprofileComponent implements OnInit {
         remove_changelog: this.remove_changelog.value,
         remove_tags: this.remove_tags.value,
         report_parsing_desc: this.report_parsing_desc.value,
+        report_parsing_poc_markdown: this.report_parsing_poc_markdown.value,
         ResName: this.ResName.value,
         ResEmail: this.ResEmail.value,
         ResSocial: this.ResSocial.value,
@@ -155,6 +159,7 @@ export class DialogAddreportprofileComponent implements OnInit {
         remove_changelog: this.remove_changelog.value,
         remove_tags: this.remove_tags.value,
         report_parsing_desc: this.report_parsing_desc.value,
+        report_parsing_poc_markdown: this.report_parsing_poc_markdown.value,
         ResName: this.ResName.value,
         ResEmail: this.ResEmail.value,
         ResSocial: this.ResSocial.value,
