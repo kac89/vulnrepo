@@ -268,8 +268,8 @@
                 <mat-label>Proof of Concept</mat-label>
                 <div [innerHtml]="scopePreviewHTML[i]" [hidden]="!prev_hide[i]"></div>
                 <textarea [hidden]="poc_editor_hide[i]" (select)="selectionchangepoc($event)" (click)="clickselectionchangepoc($event)" [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"></textarea>
-                <mat-divider></mat-divider>
-                <div class="example-button-row">
+                <mat-divider *ngIf="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"></mat-divider>
+                <div class="example-button-row" *ngIf="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown">
                   <button mat-icon-button color="accent" (click)="poc_preview_funct(dec_data, i)" title="Preview">
                     <mat-icon>visibility</mat-icon>
                   </button>
