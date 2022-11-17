@@ -843,8 +843,11 @@
 
               <button mat-raised-button style="width: 100%;" color="warn" [matMenuTriggerFor]="aboveMenu"><mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Download decrypted</button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
+                
                 <button mat-menu-item (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)"><mat-icon>description</mat-icon>HTML</button>
                 <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)"><mat-icon>text_format</mat-icon>TEXT</button>
+                <button mat-menu-item (click)="DownloadJSON(report_info)"><mat-icon>code</mat-icon>JSON</button>
+                <button mat-menu-item (click)="DownloadMarkdown(report_info)"><mat-icon>subtitles</mat-icon>Markdown</button>
               </mat-menu>
 
               </div>
