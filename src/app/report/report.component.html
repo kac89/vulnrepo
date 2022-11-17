@@ -266,7 +266,41 @@
             <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
-                <textarea [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"></textarea>
+                <div [innerHtml]="scopePreviewHTML[i]" [hidden]="!prev_hide[i]"></div>
+                <textarea [hidden]="poc_editor_hide[i]" (select)="selectionchangepoc($event)" (click)="clickselectionchangepoc($event)" [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"></textarea>
+                <mat-divider *ngIf="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"></mat-divider>
+                <div class="example-button-row" *ngIf="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown">
+                  <button mat-icon-button color="accent" (click)="poc_preview_funct(dec_data, i)" title="Preview">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_bold_funct(dec_data)" title="Bold Format">
+                    <mat-icon>format_bold</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_italic_funct(dec_data)" title="Italic Format">
+                    <mat-icon>format_italic</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_heading_funct(dec_data)" title="Heading Format">
+                    <mat-icon>title</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_strikethrough_funct(dec_data)" title="Strikethrough Format">
+                    <mat-icon>strikethrough_s</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_link_funct(dec_data)" title="Link Format">
+                    <mat-icon>link</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_list_funct(dec_data)" title="List Format">
+                    <mat-icon>list</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_code_funct(dec_data)" title="Code Format">
+                    <mat-icon>code</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_quote_funct(dec_data)" title="Quote Format">
+                    <mat-icon>format_quote</mat-icon>
+                  </button>
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary" (click)="format_table_funct(dec_data)" title="Table Format">
+                    <mat-icon>table</mat-icon>
+                  </button>
+                </div>
               </mat-form-field>
             </div>
         
@@ -736,7 +770,8 @@
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed" (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
               </div>
               <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc" (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox>
+                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc" (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
+                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown" (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
               </div>
               <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page" (change)="removechangelogpage($event)">Remove Changelog</mat-checkbox><br>
@@ -808,8 +843,11 @@
 
               <button mat-raised-button style="width: 100%;" color="warn" [matMenuTriggerFor]="aboveMenu"><mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Download decrypted</button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
+                
                 <button mat-menu-item (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)"><mat-icon>description</mat-icon>HTML</button>
                 <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)"><mat-icon>text_format</mat-icon>TEXT</button>
+                <button mat-menu-item (click)="DownloadJSON(report_info)"><mat-icon>code</mat-icon>JSON</button>
+                <button mat-menu-item (click)="DownloadMarkdown(report_info)"><mat-icon>subtitles</mat-icon>Markdown</button>
               </mat-menu>
 
               </div>
