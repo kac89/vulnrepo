@@ -23,9 +23,9 @@ import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-cus
 import { DialogApierrorComponent } from '../dialog-apierror/dialog-apierror.component';
 import { marked } from 'marked'
 import { sha256 } from 'js-sha256';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { HttpClient } from '@angular/common/http';
 import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
@@ -58,7 +58,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   private objDiffersResearcher: Array<KeyValueDiffer<string, any>>;
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
-  
+
   dialogRef: MatDialogRef<DialogPassComponent>;
   displayedColumns: string[] = ['date', 'desc', 'settings'];
   dataSource = new MatTableDataSource();
@@ -78,7 +78,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   poc_editor_hide = [];
   BBmsg = '';
   selecteditems = [];
-  textarea_selected=""
+  textarea_selected = ""
   textarea_selected_start: any;
   textarea_selected_end: any;
   textarea_click: any;
@@ -104,10 +104,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     { severity: 'Info', count: 0 }
   ];
   issueStatus = [
-    { status: 'Open (Waiting for review)', value: 1},
-    { status: 'Fix In Progress', value: 2},
-    { status: 'Fixed', value: 3},
-    { status: 'Won\'t Fix', value: 4}
+    { status: 'Open (Waiting for review)', value: 1 },
+    { status: 'Fix In Progress', value: 2 },
+    { status: 'Fixed', value: 3 },
+    { status: 'Won\'t Fix', value: 4 }
   ];
   selectedtheme = 'white';
   uploadlogoprev = '';
@@ -138,32 +138,32 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
       this.reportDiffer = this.differs.find(this.decryptedReportData).create();
-      this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
+      this.reportDifferlogo = this.differs.find({ report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo }).create();
       this.reportDiffersettings = this.differs.find(this.decryptedReportDataChanged.report_settings).create();
 
       this.objDiffers = new Array<KeyValueDiffer<string, any>>();
-        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
-          this.objDiffers[index] = this.differs.find(itemGroup).create();
+      this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+        this.objDiffers[index] = this.differs.find(itemGroup).create();
       });
 
 
       this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
-        this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
-          this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
+      this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
+        this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
       });
-      
+
 
 
       this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
-        this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
-          this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
+      this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+        this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
       });
 
-      
+
       if (this.report_info) {
-        this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
+        this.reportTitleDiffer = this.differs.find({ report_name: this.report_info.report_name }).create();
       }
-        
+
       this.doStats();
 
       let i = 0;
@@ -227,10 +227,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     // get css style
-    this.http.get('/assets/bootstrap.min.css', {responseType: 'text'}).subscribe(res => {
+    this.http.get('/assets/bootstrap.min.css', { responseType: 'text' }).subscribe(res => {
       this.report_css = res;
     });
-    
+
     // get bug bountys programs list, full credits: https://github.com/projectdiscovery/public-bugbounty-programs
     this.http.get<any>('/assets/chaos-bugbounty-list.json?v=' + + new Date()).subscribe(res => {
       this.bugbountylist = res.programs;
@@ -253,20 +253,20 @@ export class ReportComponent implements OnInit, OnDestroy {
       changes.forEachChangedItem((record) => ...);
     */
 
-      changes.forEachAddedItem((record) => {
-        // console.log('ADDED: ',record);
-        if (record.previousValue !== null) {
-            this.afterDetection();
-        }
-      });
+    changes.forEachAddedItem((record) => {
+      // console.log('ADDED: ',record);
+      if (record.previousValue !== null) {
+        this.afterDetection();
+      }
+    });
 
-      changes.forEachChangedItem((record) => {
-        // console.log('CHANGED: ',record);
-        if (record.key !== 'report_version') {
-          // console.log('Detection start');
-          this.afterDetection();
-        }
-      });
+    changes.forEachChangedItem((record) => {
+      // console.log('CHANGED: ',record);
+      if (record.key !== 'report_version') {
+        // console.log('Detection start');
+        this.afterDetection();
+      }
+    });
 
   }
 
@@ -287,16 +287,16 @@ export class ReportComponent implements OnInit, OnDestroy {
   removeSureYouWanttoLeave() {
     window.removeEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = false;
-    let id = window.setTimeout(function() {}, 0);
+    let id = window.setTimeout(function () { }, 0);
     while (id--) {
-        window.clearTimeout(id); // will do nothing if no timeout with id is present
+      window.clearTimeout(id); // will do nothing if no timeout with id is present
     }
   }
 
   afterDetectionNow() {
     this.reportDiffer = this.differs.find(this.decryptedReportData).create();
-    this.reportDifferlogo = this.differs.find({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo}).create();
-    this.reportDiffersettings = this.differs.find({...this.decryptedReportDataChanged.report_settings}).create();
+    this.reportDifferlogo = this.differs.find({ report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo }).create();
+    this.reportDiffersettings = this.differs.find({ ...this.decryptedReportDataChanged.report_settings }).create();
 
     this.objDiffers = new Array<KeyValueDiffer<string, any>>();
     this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
@@ -314,7 +314,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
     if (this.report_info) {
-      this.reportTitleDiffer = this.differs.find({report_name: this.report_info.report_name}).create();
+      this.reportTitleDiffer = this.differs.find({ report_name: this.report_info.report_name }).create();
     }
 
     this.sureYouWanttoLeave();
@@ -339,7 +339,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
 
       if (this.reportDifferlogo) {
-        const changeslogo = this.reportDifferlogo.diff({report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo});
+        const changeslogo = this.reportDifferlogo.diff({ report_logo: this.decryptedReportDataChanged.report_settings.report_logo.logo });
         if (changeslogo) {
           this.dataChanged(changeslogo);
         }
@@ -363,7 +363,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           }
         });
       }
-    
+
       if (this.objDiffersFiles) {
         this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
           if (this.objDiffersFiles[index]) {
@@ -376,22 +376,22 @@ export class ReportComponent implements OnInit, OnDestroy {
         });
       }
 
-    if (this.objDiffersResearcher) {
-      this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
-        if (this.objDiffersResearcher[index]) {
-          const objDiffer3 = this.objDiffersResearcher[index];
-          const objChanges3 = objDiffer3.diff(itemGroup);
-          if (objChanges3) {
-            this.dataChanged(objChanges3);
+      if (this.objDiffersResearcher) {
+        this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
+          if (this.objDiffersResearcher[index]) {
+            const objDiffer3 = this.objDiffersResearcher[index];
+            const objChanges3 = objDiffer3.diff(itemGroup);
+            if (objChanges3) {
+              this.dataChanged(objChanges3);
+            }
           }
-        }
-      });
+        });
+      }
+
     }
 
-  }
-
     if (this.reportTitleDiffer && this.report_info) {
-      const changesName = this.reportTitleDiffer.diff({report_name: this.report_info.report_name});
+      const changesName = this.reportTitleDiffer.diff({ report_name: this.report_info.report_name });
       if (changesName) {
         this.dataChanged(changesName);
       }
@@ -639,9 +639,9 @@ Sample code here\n\
         data: bySeverity
       });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
     }
   }
 
@@ -659,14 +659,14 @@ Sample code here\n\
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
       });
-  
+
     } else {
 
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
         width: '500px',
         data: original
       });
-  
+
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
       });
@@ -728,19 +728,19 @@ Sample code here\n\
 
           if (ret === 'API_ERROR') {
             console.log('api problems');
-    
+
             const dialogRef = this.dialog.open(DialogApierrorComponent, {
               width: '400px',
               disableClose: true
             });
-        
+
             dialogRef.afterClosed().subscribe(result => {
-    
+
               if (result === 'tryagain') {
                 console.log('User select: try again');
                 this.saveReportChanges(this.report_info.report_id);
               }
-    
+
               if (result === 'savelocally') {
                 console.log('User select: save locally');
                 try {
@@ -756,21 +756,21 @@ Sample code here\n\
                     report_lastupdate: now,
                     encrypted_data: ciphertext.toString()
                   };
-    
+
                   this.indexeddbService.cloneReportadd(to_update).then(data => {
                     if (data) {
                       this.removeSureYouWanttoLeave();
                       this.router.navigate(['/my-reports']);
                     }
                   });
-          
+
                 } catch (except) {
                   console.log(except);
                 }
-    
+
               }
             });
-    
+
           } else {
             this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
             this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
@@ -786,20 +786,20 @@ Sample code here\n\
                 this.lastsavereportdata = retu;
                 this.doStats();
                 this.removeSureYouWanttoLeave();
-    
+
                 this.snackBar.open('All changes saved on remote API successfully!', 'OK', {
                   duration: 3000,
                   panelClass: ['notify-snackbar-success']
                 });
               }
-    
+
             });
-    
+
           }
-    
+
         });
       }
-      
+
     });
 
   }
@@ -901,14 +901,14 @@ Sample code here\n\
         if (data.NotFound === 'NOOK') {
           console.log('no locally report');
         } else {
-        // tslint:disable-next-line:max-line-length
-        this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
-          if (retu) {
-            this.savemsg = 'All changes saved successfully!';
-            this.lastsavereportdata = retu;
-            this.doStats();
-          }
-        });
+          // tslint:disable-next-line:max-line-length
+          this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
+            if (retu) {
+              this.savemsg = 'All changes saved successfully!';
+              this.lastsavereportdata = retu;
+              this.doStats();
+            }
+          });
         }
 
       }
@@ -1179,7 +1179,7 @@ Sample code here\n\
       theme = '';
     }
 
-    this.http.get('/assets/bootstrap' + theme + '.min.css', {responseType: 'text'}).subscribe(res3 => {
+    this.http.get('/assets/bootstrap' + theme + '.min.css', { responseType: 'text' }).subscribe(res3 => {
       this.report_css = res3;
     });
 
@@ -1275,61 +1275,116 @@ Sample code here\n\
     }
   }
 
-parserefmd(str): string{
-  const xx = str.split("\n");
-  let ar = "";
-  xx.forEach((item, index) => {
-    item = item.replace(" ", "_");
-    ar = ar + `[`+item+`](`+item+`)\n\n`;
-  });
+  parserefmd(str): string {
+    const xx = str.split("\n");
+    let ar = "";
+    xx.forEach((item, index) => {
+      item = item.replace(" ", "_");
+      ar = ar + `[` + item + `](` + item + `)\n\n`;
+    });
 
-  return ar
-}
+    return ar
+  }
 
-DownloadMarkdown(report_info): void {
+  DownloadMarkdown(report_info): void {
 
-const str = `# Security Report
+    const str = `# Security Report
 ## ` + report_info.report_name + `
 ##### Report Version: ` + this.decryptedReportDataChanged.report_version + `
-##### Report ID: ` + report_info.report_id + `
-##### Start date: ` + this.decryptedReportDataChanged.report_metadata.starttest + `
-##### End date: ` + this.decryptedReportDataChanged.report_metadata.endtest + `
+##### Report ID: ` + report_info.report_id;
 
+    let str_dates = "";
+    if (this.decryptedReportDataChanged.report_metadata.starttest !== '' && this.decryptedReportDataChanged.report_metadata.endtest !== '') {
+      const stringToSplit = new Date(this.decryptedReportDataChanged.report_metadata.starttest).toLocaleString();
+      const x = stringToSplit.split(',');
+      const stringToSplit2 = new Date(this.decryptedReportDataChanged.report_metadata.endtest).toLocaleString();
+      const y = stringToSplit2.split(',');
+      str_dates = `
+##### Start date: ` + x[0] + `
+##### End date: ` + y[0] + `\n\n`;
+    }
+
+
+    const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Critical');
+    });
+
+    const high = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'High');
+    });
+
+    const medium = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Medium');
+    });
+
+    const low = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Low');
+    });
+
+    const info = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.severity === 'Info');
+    });
+
+    const vulnstats = `## Statistics\n
+Severity   | Number 
+------|--------------
+Critical | `+ critical.length + `
+High | `+ high.length + `
+Medium | `+ medium.length + `
+Low | `+ low.length + `
+Info | `+ info.length + `\n\n`;
+
+    const str_scope = `
 ## Scope
-` + this.decryptedReportDataChanged.report_scope + `
+` + this.decryptedReportDataChanged.report_scope + `\n\n`;
 
-## Results
-`;
+    let str_issues = '## Results\n\n';
 
-let str_issues = '';
-
-this.decryptedReportDataChanged.report_vulns.forEach((item, index) => {
-  index = index + 1;
-	str_issues = str_issues + `
+    this.decryptedReportDataChanged.report_vulns.forEach((item, index) => {
+      index = index + 1;
+      str_issues = str_issues + `
 ##### ` + index + `. ` + item.title + `
-###### Status: Open (Waiting for review)
+###### Severity:
+` + item.severity + `
 ###### Description:
 ` + item.desc + `
 ###### PoC:
 ` + item.poc + `
 ###### References:
-` + this.parserefmd(item.ref) + `\n\n`;
-});
+` + this.parserefmd(item.ref) + `\n-------------\n\n`;
+    });
 
-let str_researcher = '';
+    let str_researcher = '';
+    if (this.decryptedReportDataChanged.report_settings.report_remove_researchers === false) {
+      this.decryptedReportDataChanged.researcher.forEach((item, index) => {
+        str_researcher = str_researcher + `## Researcher
+  > ` + item.reportername + ` ` + item.reportersocial + `\n\n`;
+      });
+    }
 
-this.decryptedReportDataChanged.researcher.forEach((item, index) => {
-  str_researcher = str_researcher + `## Researcher
-> ` + item.reportername + ` ` + item.reportersocial + `\n\n`;
-});
+    let str_changelog = '';
+    if (this.decryptedReportDataChanged.report_settings.report_changelog_page === false) {
+      str_changelog = `## Changelog\n
+Date   | Description 
+------|--------------\n`;
 
+      this.decryptedReportDataChanged.report_changelog.forEach((item, index) => {
 
+        const stringToSplit = new Date(item.date).toLocaleString();
+        const rdate = stringToSplit.split(',');
 
-const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
+        str_changelog = str_changelog + rdate[0] + ` | ` + item.desc + `\n`;
+      });
+      str_changelog = str_changelog + '\n\n';
+    }
 
+    let str2 = '';
+    if (this.decryptedReportDataChanged.report_settings.report_remove_lastpage === false) {
+      str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
+    }
 
     // download HTML report
-    const blob = new Blob([str+str_issues+str_researcher+str2], { type: 'text/markdown' });
+    const blob = new Blob([str + str_dates + str_scope + vulnstats + str_issues + str_researcher + str_changelog + str2], { type: 'text/markdown' });
     const link = document.createElement('a');
     const url = window.URL.createObjectURL(blob);
     link.setAttribute('href', url);
@@ -1342,20 +1397,20 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
 
   DownloadJSON(report_info): void {
 
-  const json = {
-    "report_name": report_info.report_name,
-    "report_id": report_info.report_id,
-    "report_createdate": report_info.report_createdate,
-    "report_lastupdate": report_info.report_lastupdate,
-    "report_changelog": this.decryptedReportDataChanged.report_changelog,
-    "researcher": this.decryptedReportDataChanged.researcher,
-    "report_vulns": this.decryptedReportDataChanged.report_vulns,
-    "report_version": this.decryptedReportDataChanged.report_version,
-    "report_summary": this.decryptedReportDataChanged.report_summary,
-    "report_metadata": this.decryptedReportDataChanged.report_metadata,
-    "report_scope": this.decryptedReportDataChanged.report_scope,
-    "report_logo": this.decryptedReportDataChanged.report_settings.report_logo
-  };
+    const json = {
+      "report_name": report_info.report_name,
+      "report_id": report_info.report_id,
+      "report_createdate": report_info.report_createdate,
+      "report_lastupdate": report_info.report_lastupdate,
+      "report_changelog": this.decryptedReportDataChanged.report_changelog,
+      "researcher": this.decryptedReportDataChanged.researcher,
+      "report_vulns": this.decryptedReportDataChanged.report_vulns,
+      "report_version": this.decryptedReportDataChanged.report_version,
+      "report_summary": this.decryptedReportDataChanged.report_summary,
+      "report_metadata": this.decryptedReportDataChanged.report_metadata,
+      "report_scope": this.decryptedReportDataChanged.report_scope,
+      "report_logo": this.decryptedReportDataChanged.report_settings.report_logo
+    };
 
     // download HTML report
     const blob = new Blob([JSON.stringify(json)], { type: 'application/json' });
@@ -1689,11 +1744,11 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
     const scopemarked = marked(report_data.report_scope, { renderer: renderer });
 
     // advanced text
-    let projscope = '<h2 id="Scope">Scope</h2><p>' + scopemarked + '</p>';
+    let projscope = '<h2 id="Scope">Scope</h2><p>' + DOMPurify.sanitize(scopemarked) + '</p>';
 
     if (this.advhtml !== '') {
       const reportHTMLmarked = marked(this.advhtml, { renderer: renderer });
-      projscope = projscope + '<br>' + reportHTMLmarked + '<br>';
+      projscope = projscope + '<br>' + DOMPurify.sanitize(reportHTMLmarked) + '<br>';
     }
 
     const statsandrisk = '<h2 id="Statistics and Risk">Statistics and Risk</h2> \
@@ -1772,7 +1827,7 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
               <dt>Proof of Concept:</dt> \
               <dd class="strbreak"> \
               <div style="white-space: pre-wrap;">' + DOMPurify.sanitize(marked.parse(item.poc)) + '</div>';
-  
+
         } else {
           ewe = ' \
               <dt>Proof of Concept:</dt> \
@@ -1880,14 +1935,14 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
       </thead> \
       <tbody>';
 
-          report_data.report_changelog.forEach((item, index) => {
+      report_data.report_changelog.forEach((item, index) => {
 
-            changeloghtml = changeloghtml + '<tr> \
+        changeloghtml = changeloghtml + '<tr> \
       <td>' + escapeHtml(new Date(item.date).toLocaleString()) + '</td> \
       <td>' + escapeHtml(item.desc) + '</td> \
       </tr>';
-          });
-          changeloghtml = changeloghtml + '</tbody></table></p>';
+      });
+      changeloghtml = changeloghtml + '</tbody></table></p>';
 
     }
 
@@ -2054,7 +2109,7 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
 
     if (value) {
       const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
-      this.decryptedReportDataChanged.report_vulns[index].tags.push({name: value});
+      this.decryptedReportDataChanged.report_vulns[index].tags.push({ name: value });
     }
 
     // Reset the input value
@@ -2083,7 +2138,7 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
     this.selectedtheme = profile.theme;
 
     // make changes
-    this.decryptedReportDataChanged.researcher = [{reportername: profile.ResName, reportersocial: profile.ResSocial, reporterwww: profile.ResWeb, reporteremail: profile.ResEmail}];
+    this.decryptedReportDataChanged.researcher = [{ reportername: profile.ResName, reportersocial: profile.ResSocial, reporterwww: profile.ResWeb, reporteremail: profile.ResEmail }];
     this.decryptedReportDataChanged.report_settings.report_logo.logo = profile.logo;
     this.decryptedReportDataChanged.report_settings.report_logo.width = profile.logow;
     this.decryptedReportDataChanged.report_settings.report_logo.height = profile.logoh;
@@ -2109,7 +2164,7 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
   fastsearchBB(poc, showsnack) {
     this.BBmsg = 'Please wait, searching...';
     let scope = [];
-    this.bugbountylist.forEach(function(item){  
+    this.bugbountylist.forEach(function (item) {
       scope = scope.concat(item.domains);
     });
 
@@ -2117,24 +2172,24 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
     let m;
     const arr = [];
     while ((m = regex.exec(poc.poc)) !== null) {
-        // This is necessary to avoid infinite loops with zero-width matches
-        if (m.index === regex.lastIndex) {
-            regex.lastIndex++;
-        }
-        
-        m.forEach((match) => {
-            // get only scope & search
-            const findedbounty = scope.find(x => x == match);
-            if (findedbounty) {
-              this.bugbountylist.forEach(function(item){  
-                const findedbounty2 = item.domains.find(x => x == findedbounty);
-                if (findedbounty2) {
-                  arr.push(item);
-                }
-              });
+      // This is necessary to avoid infinite loops with zero-width matches
+      if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+      }
 
+      m.forEach((match) => {
+        // get only scope & search
+        const findedbounty = scope.find(x => x == match);
+        if (findedbounty) {
+          this.bugbountylist.forEach(function (item) {
+            const findedbounty2 = item.domains.find(x => x == findedbounty);
+            if (findedbounty2) {
+              arr.push(item);
             }
-        });
+          });
+
+        }
+      });
     }
 
     if (showsnack !== false) {
@@ -2151,7 +2206,7 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
       }
     }
 
-    const uniqueArray = arr.filter(function(item, pos) {
+    const uniqueArray = arr.filter(function (item, pos) {
       return arr.indexOf(item) == pos;
     });
 
@@ -2159,20 +2214,20 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
     this.decryptedReportDataChanged.report_vulns[index].bounty = [];
     this.decryptedReportDataChanged.report_vulns[index].bounty = this.decryptedReportDataChanged.report_vulns[index].bounty.concat(uniqueArray);
 
-    this.decryptedReportDataChanged.report_vulns[index].bounty = arr.filter(function(item, pos) {
+    this.decryptedReportDataChanged.report_vulns[index].bounty = arr.filter(function (item, pos) {
       return arr.indexOf(item) == pos;
     });
 
     this.BBmsg = '';
-    
+
 
   }
 
-  redirectBounty(url){
+  redirectBounty(url) {
     window.open(url, "_blank");
   }
 
-  changePoC(poc){
+  changePoC(poc) {
     this.fastsearchBB(poc, false);
     this.resetselectposition();
   }
@@ -2180,7 +2235,7 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
   clickselectionchangepoc(event) {
     this.textarea_click = event.target.selectionStart;
   }
-  selectionchangepoc(ev:any) {
+  selectionchangepoc(ev: any) {
     const start = ev.target.selectionStart;
     const end = ev.target.selectionEnd;
     this.textarea_selected = ev.target.value.substr(start, end - start);
@@ -2207,7 +2262,7 @@ const str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
       const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
       this.decryptedReportDataChanged.report_vulns[index].poc = this.replaceBetween(this.decryptedReportDataChanged.report_vulns[index].poc, this.textarea_selected_start, this.textarea_selected_end, lsig + this.textarea_selected + rsig);
       this.resetselectposition();
-    }else{
+    } else {
       const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
       this.decryptedReportDataChanged.report_vulns[index].poc = this.stringslice(this.decryptedReportDataChanged.report_vulns[index].poc, dsig, this.textarea_click);
       this.resetselectposition();
