@@ -1369,7 +1369,11 @@ Date   | Description
 ------|--------------\n`;
 
       this.decryptedReportDataChanged.report_changelog.forEach((item, index) => {
-        str_changelog = str_changelog + item.date + ` | ` + item.desc + `\n`;
+
+        const stringToSplit = new Date(item.date).toLocaleString();
+        const rdate = stringToSplit.split(',');
+
+        str_changelog = str_changelog + rdate[0] + ` | ` + item.desc + `\n`;
       });
       str_changelog = str_changelog + '\n\n';
     }
