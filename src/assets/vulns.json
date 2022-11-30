@@ -358,5 +358,23 @@
         "ref": "https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A8-Insecure_Deserialization",
         "cvss": "5",
         "cve": ""
+    },
+    {
+        "title": "Frameable response (potential Clickjacking)",
+        "poc": "",
+        "desc": "If a page fails to set an appropriate X-Frame-Options or Content-Security-Policy HTTP header, it might be possible for a page controlled by an attacker to load it within an iframe. This may enable a clickjacking attack, in which the attacker's page overlays the target application's interface with a different interface provided by the attacker. By inducing victim users to perform actions such as mouse clicks and keystrokes, the attacker can cause them to unwittingly carry out actions within the application that is being targeted. This technique allows the attacker to circumvent defenses against cross-site request forgery, and may result in unauthorized actions. Note that some applications attempt to prevent these attacks from within the HTML page itself, using (framebusting) code. However, this type of defense is normally ineffective and can usually be circumvented by a skilled attacker. You should determine whether any functions accessible within frameable pages can be used by application users to perform any sensitive actions within the application. Issue remediation To effectively prevent framing attacks, the application should return a response header with the name X-Frame-Options and the value DENY to prevent framing altogether, or the value SAMEORIGIN to allow framing only by pages on the same origin as the response itself. Note that the SAMEORIGIN header can be partially bypassed if the application itself can be made to frame untrusted websites.",
+        "severity": "Low",
+        "ref": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options",
+        "cvss": "1",
+        "cve": ""
+    },
+    {
+        "title": "Cookie without HttpOnly flag set",
+        "poc": "",
+        "desc": "If the HttpOnly attribute is set on a cookie, then the cookie's value cannot be read or set by client-side JavaScript. This measure makes certain client-side attacks, such as cross-site scripting, slightly harder to exploit by preventing them from trivially capturing the cookie's value via an injected script.",
+        "severity": "Low",
+        "ref": "https://portswigger.net/research/web-storage-the-lesser-evil-for-session-tokens#httponly",
+        "cvss": "1",
+        "cve": ""
     }
 ]
