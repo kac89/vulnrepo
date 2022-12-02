@@ -376,5 +376,23 @@
         "ref": "https://portswigger.net/research/web-storage-the-lesser-evil-for-session-tokens#httponly",
         "cvss": "1",
         "cve": ""
+    },
+    {
+        "title": "CWE-256: Plaintext Storage of a Password",
+        "poc": "",
+        "desc": "Storing a password in plaintext may result in a system compromise.",
+        "severity": "High",
+        "ref": "https://cwe.mitre.org/data/definitions/256.html",
+        "cvss": "8",
+        "cve": "CVE-2022-30275"
+    },
+    {
+        "title": "CWE-312: Cleartext Storage of Sensitive Information",
+        "poc": "",
+        "desc": "The product stores sensitive information in cleartext within a resource that might be accessible to another control sphere.",
+        "severity": "Medium",
+        "ref": "https://cwe.mitre.org/data/definitions/312.html",
+        "cvss": "5",
+        "cve": "CVE-2022-30275"
     }
 ]
