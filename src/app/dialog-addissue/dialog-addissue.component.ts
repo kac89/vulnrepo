@@ -47,6 +47,8 @@ export class DialogAddissueComponent implements OnInit {
   myPCI = new UntypedFormControl();
   myOWASP2017 = new UntypedFormControl();
   myOWASP2021 = new UntypedFormControl();
+  myOWASPTOP10CICD = new UntypedFormControl();
+  myOWASPTOP10k8s = new UntypedFormControl();
   options: Vulns[] = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];
@@ -54,6 +56,8 @@ export class DialogAddissueComponent implements OnInit {
   pcidssv3: any;
   owasptop2017: Vulns[] = [];
   owasptop2021: Vulns[] = [];
+  OWASPTOP10CICD: Vulns[] = [];
+  OWASPTOP10k8s: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
   filteredOptionsCWE: Observable<Vulns[]>;
   filteredOptionsmitremobile: Observable<Vulns[]>;
@@ -61,6 +65,8 @@ export class DialogAddissueComponent implements OnInit {
   filteredOptionsPCIDSS: Observable<string[]>;
   filteredOptionsOWASPtop2017: Observable<Vulns[]>;
   filteredOptionsOWASPtop2021: Observable<Vulns[]>;
+  filteredOptionsOWASPTOP10CICD: Observable<Vulns[]>;
+  filteredOptionsOWASPTOP10k8s: Observable<Vulns[]>;
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
@@ -117,6 +123,19 @@ export class DialogAddissueComponent implements OnInit {
         map(title => title ? this._filterOWASP2021(title) : this.owasptop2021.slice())
       );
 
+      this.filteredOptionsOWASPTOP10CICD = this.myOWASPTOP10CICD.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filterOWASPTOP10CICD(title) : this.OWASPTOP10CICD.slice())
+      );
+
+      this.filteredOptionsOWASPTOP10k8s = this.myOWASPTOP10k8s.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filterOWASPTOP10k8s(title) : this.OWASPTOP10k8s.slice())
+      );
   }
 
   private _filter(name: string): Vulns[] {
@@ -164,6 +183,16 @@ export class DialogAddissueComponent implements OnInit {
     return this.owasptop2021.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
+  private _filterOWASPTOP10CICD(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.OWASPTOP10CICD.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
+  private _filterOWASPTOP10k8s(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.OWASPTOP10k8s.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
   ngOnInit() {
 
     this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
@@ -192,6 +221,14 @@ export class DialogAddissueComponent implements OnInit {
 
     this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date()).subscribe(res => {
       this.owasptop2021 = res;
+    });
+
+    this.http.get<any>('/assets/OWASPtop10cicd.json?v=' + + new Date()).subscribe(res => {
+      this.OWASPTOP10CICD = res;
+    });
+
+    this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date()).subscribe(res => {
+      this.OWASPTOP10k8s = res;
     });
 
   }
@@ -671,5 +708,81 @@ export class DialogAddissueComponent implements OnInit {
 
   }
 
+
+  addOWASPTOP10CICD() {
+    const data = this.myOWASPTOP10CICD.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.OWASPTOP10CICD) {
+        if (this.OWASPTOP10CICD.hasOwnProperty(key)) {
+
+          if (this.OWASPTOP10CICD[key].title === data) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: this.OWASPTOP10CICD[key].title,
+              poc: this.OWASPTOP10CICD[key].poc,
+              files: [],
+              desc: this.OWASPTOP10CICD[key].desc,
+              severity: this.OWASPTOP10CICD[key].severity,
+              status: 1,
+              ref: this.OWASPTOP10CICD[key].ref,
+              cvss: this.OWASPTOP10CICD[key].cvss,
+              cve: this.OWASPTOP10CICD[key].cve,
+              tags: [],
+              bounty: [],
+              date: today + ''
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.err_msg = 'Can\'t find ' + data;
+          }
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
+  }
+
+  addOWASPTOP10k8s() {
+    const data = this.myOWASPTOP10k8s.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.OWASPTOP10k8s) {
+        if (this.OWASPTOP10k8s.hasOwnProperty(key)) {
+
+          if (this.OWASPTOP10k8s[key].title === data) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: this.OWASPTOP10k8s[key].title,
+              poc: this.OWASPTOP10k8s[key].poc,
+              files: [],
+              desc: this.OWASPTOP10k8s[key].desc,
+              severity: this.OWASPTOP10k8s[key].severity,
+              status: 1,
+              ref: this.OWASPTOP10k8s[key].ref,
+              cvss: this.OWASPTOP10k8s[key].cvss,
+              cve: this.OWASPTOP10k8s[key].cve,
+              tags: [],
+              bounty: [],
+              date: today + ''
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.err_msg = 'Can\'t find ' + data;
+          }
+
+        }
+      }
+    } else {
+      this.err_msg = 'Please add title!';
+    }
+
+  }
 
 }

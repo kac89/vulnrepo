@@ -10,6 +10,8 @@
     <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
     <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
     <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
+    <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
+    <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
   </mat-select>
 </mat-form-field>
 </h1>
@@ -118,6 +120,32 @@
   <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
 </div>
 
+<div *ngIf="sourceSelect == 'OWASPTOP10CICD'" class="example-form">
+  <mat-form-field class="example-form" color="accent" appearance="outline">
+    <mat-label>OWASP category</mat-label>
+    <input cdkFocusInitial type="text" matInput placeholder="type: Insufficient" [formControl]="myOWASPTOP10CICD" [matAutocomplete]="auto8">
+    <mat-autocomplete #auto8="matAutocomplete">
+      <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPTOP10CICD | async" [value]="option.title">
+        {{option.title}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
+</div>
+
+<div *ngIf="sourceSelect == 'OWASPTOP10k8s'" class="example-form">
+  <mat-form-field class="example-form" color="accent" appearance="outline">
+    <mat-label>OWASP category</mat-label>
+    <input cdkFocusInitial type="text" matInput placeholder="type: Kube" [formControl]="myOWASPTOP10k8s" [matAutocomplete]="auto9">
+    <mat-autocomplete #auto9="matAutocomplete">
+      <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPTOP10k8s | async" [value]="option.title">
+        {{option.title}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
+</div>
+
 <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
     {{err_msg}}
 </div>
@@ -130,6 +158,8 @@
   <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
   <button *ngIf="sourceSelect == 'OWASPTOP2017'" mat-raised-button color="accent" (click)="addOWASPtop2017()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 2017</button>
   <button *ngIf="sourceSelect == 'OWASPTOP2021'" mat-raised-button color="accent" (click)="addOWASPtop2021()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 2021</button>
+  <button *ngIf="sourceSelect == 'OWASPTOP10CICD'" mat-raised-button color="accent" (click)="addOWASPTOP10CICD()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 CI/CD Security Risks</button>
+  <button *ngIf="sourceSelect == 'OWASPTOP10k8s'" mat-raised-button color="accent" (click)="addOWASPTOP10k8s()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Kubernetes Top 10</button>
   &nbsp;
   <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 </div>
