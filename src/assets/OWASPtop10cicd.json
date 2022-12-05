@@ -1,0 +1,92 @@
+[
+    {
+        "title": "Insufficient Flow Control Mechanisms",
+        "poc": "",
+        "desc": "CI/CD flows are designed for speed. New code can be created on a developers machine and get to production within minutes, often with full reliance on automation and minimal human involvement. Seeing that CI/CD processes are essentially the highway to the highly gated and secured production environments, organizations continuously introduce measures and controls aimed at ensuring that no single entity (human or application) can push code or artifacts through the pipeline without being required to undergo a strict set of reviews and approvals.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-01-Insufficient-Flow-Control-Mechanisms",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inadequate Identity and Access Management",
+        "poc": "",
+        "desc": "Software delivery processes consist of multiple systems connected together with the aim of moving code and artifacts from development to production. Each system provides multiple methods of access and integration (username & password, personal access token, marketplace application, oauth applications, plugins, SSH keys). The different types of accounts and method of access can potentially have their own unique provisioning method, set of security policies and authorization model. This complexity creates challenges in managing the different identities throughout the entire identity lifecycle and ensuring their permissions are aligned with the principle of least privilege.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-02-Inadequate-Identity-And-Access-Management",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Dependency Chain Abuse",
+        "poc": "",
+        "desc": "Managing dependencies and external packages used by self written code is becoming increasingly complex given the total number of systems involved in the process across all development contexts in an organization. Packages are oftentimes fetched using a dedicated client per programming language, typically from a combination of self-managed package repositories (e.g. Jfrog Artifactory) and language specific SaaS repositories (for example - Node.js has npm and the npm registry, Pythons pip uses PyPI, and Rubys gems uses RubyGems). \n\nMany organizations go to great lengths to detect usage of packages with known vulnerabilities and conduct static analysis of both self-written and 3rd party code. However, in the context of using dependencies, there is an equally important set of controls required to secure the dependency ecosystem - involving securing the process defining how dependencies are pulled. Inadequate configurations may cause an unsuspecting engineer, or worse - the build system, to download a malicious package instead of the package that was intended to be pulled. In many cases, the package is not only downloaded, but also immediately executed after download, due to pre-install scripts and similar processes which are designed to run a packages code immediately after the package is pulled.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-03-Dependency-Chain-Abuse",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Poisoned Pipeline Execution (PPE)",
+        "poc": "",
+        "desc": "The PPE vector abuses permissions against an SCM repository, in a way that causes a CI pipeline to execute malicious commands. Users that have permissions to manipulate the CI configuration files, or other files which the CI pipeline job relies on, can modify them to contain malicious commands, ultimately poisoning the CI pipeline executing these commands. Pipelines executing unreviewed code, for example those which are triggered directly off of pull requests or commits to arbitrary repository branches, are more susceptible to PPE. The reason is that these scenarios, by design, contain code which has not undergone any reviews or approvals. Once able to execute malicious code within the CI pipeline, the attacker can conduct a wide array of malicious operations, all within the context of the pipelines identity.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-04-Poisoned-Pipeline-Execution",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Insufficient PBAC (Pipeline-Based Access Controls)",
+        "poc": "",
+        "desc": "Pipelines are the beating heart of CI/CD. Nodes executing pipelines carry out the commands specified in the pipeline configuration and by doing so - conduct a wide array of sensitive activities: Access source code, build and test it. Obtain secrets from various locations, such as environment variables, vaults, dedicated cloud-based identity services (such as the AWS metadata service), and other locations. Create, modify and deploy artifacts. PBAC is a term which refers to the context in which each pipeline - and each step within that pipeline - is running. Given the highly sensitive and critical nature of each pipeline, it is imperative to limit each pipeline to the exact set of data and resources it needs access to. Ideally, each pipeline and step should be restricted in such a manner that will ensure that in case an adversary is able to to execute malicious code within the context of the pipeline, the extent of potential damage is minimal.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-05-Insufficient-PBAC",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Insufficient Credential Hygiene",
+        "poc": "",
+        "desc": "CI/CD environments are built of multiple systems communicating and authenticating against each other, creating great challenges around protecting credentials due to the large variety of contexts in which credentials can exist. \n\nApplication credentials are used by the application at runtime, credentials to production systems are used by pipelines to deploy infrastructure, artifacts and apps to production, engineers use credentials as part of their testing environments and within their code and artifacts.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-06-Insufficient-Credential-Hygiene",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Insecure System Configuration",
+        "poc": "",
+        "desc": "CI/CD environments are comprised of multiple systems, provided by a variety of vendors. To optimize CI/CD security, defenders are required to place strong emphasis both on the code and artifacts flowing through the pipeline, and the posture and resilience of each individual system. In a similar way to other systems storing and processing data, CI/CD systems involve various security settings and configurations on all levels - application, network and infrastructure. These settings have a major influence on the security posture of the CI/CD environments and the susceptibility to a potential compromise. Adversaries of all levels of sophistication, are always on the lookout for potential CI/CD vulnerabilities and misconfigurations that can be leveraged to their benefit.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-07-Insecure-System-Configuration",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Ungoverned Usage of 3rd Party Services",
+        "poc": "",
+        "desc": "It is rare to find an organization which does not have numerous 3rd parties connected to its CI/CD systems and processes. Their ease of implementation, combined with their immediate value, has made 3rd parties an integral part of the engineering day-to-day. The methods of embedding or granting access to 3rd parties are becoming more diverse and the complexities associated with implementing them are diminishing.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-08-Ungoverned-Usage-of-3rd-Party-Services",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Improper Artifact Integrity Validation",
+        "poc": "",
+        "desc": "CI/CD processes consist of multiple steps, ultimately responsible for taking code all the way from an engineers workstation to production. There are multiple resources being fed into each step - combining internal resources and artifacts with 3rd party packages and artifacts fetched from remote locations. The fact that the ultimate resource is reliant upon multiple sources spread across the different steps, provided by multiple contributors, creates multiple entry points through which this ultimate resource can be tampered with. \n\nIf a tampered resource was able to successfully infiltrate the delivery process, without raising any suspicion or encountering any security gates - it will most likely continue flowing through the pipeline - all the way to production - in the guise of a legitimate resource.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-09-Improper-Artifact-Integrity-Validation",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Insufficient Logging and Visibility",
+        "poc": "",
+        "desc": "The existence of strong logging and visibility capabilities is essential for an organization’s ability to prepare for, detect and investigate a security related incident.\n\nWhile workstations, servers, network devices and key IT and business applications are typically covered in depth within an organization’s logging and visibility programs, it is often not the case with systems and processes in engineering environments.\n\nGiven the amount of potential attack vectors leveraging engineering environments and processes it is imperative that security teams build the appropriate capabilities to detect these attacks as soon as they happen. As many of these vectors involve leveraging programmatic access against the different systems, a key aspect of facing this challenge is to create strong levels of visibility around both human and programmatic access.\n\nGiven the sophisticated nature of CI/CD attack vectors, there is an equal level of importance to both the audit logs of the systems - e.g. user access, user creation, permission modification, and the applicative logs - e.g. push event to a repo, execution of builds, upload of artifacts.",
+        "severity": "Info",
+        "ref": "https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-10-Insufficient-Logging-And-Visibility",
+        "cvss": "",
+        "cve": ""
+    }
+]

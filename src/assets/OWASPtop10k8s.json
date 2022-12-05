@@ -1,0 +1,92 @@
+[
+    {
+        "title": "Insecure Workload Configurations",
+        "poc": "",
+        "desc": "Kubernetes manifests contain many different configurations that can affect the reliability, security, and scalability of a given workload. These configurations should be audited and remediated continuously. Some examples of high-impact manifest configurations are below:\n\nApplication processes should not run as root: Running the process inside of a container as the root user is a common misconfiguration in many clusters. While root may be an absolute requirement for some workloads, it should be avoided when possible. If the container were to be compromised, the attacker would have root-level privileges that allow actions such as starting a malicious process that otherwise wouldnt be permitted with other users on the system.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K01-insecure-workload-configurations.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Supply Chain Vulnerabilities",
+        "poc": "",
+        "desc": "Image Integrity: Software provenance has recently attracted significant attention in the media due to events such as the Solarwinds breach and a variety of tainted third-party packages. These supply chain risks can surface in various states of the container build cycle as well as at runtime inside of Kubernetes. When systems of record do not exist regarding the contents of a container image it is possible that an unexpected container may run in a cluster.\n\nImage Composition: A container image consists of layers, each of which can present security implications. A properly constructed container image not only reduces attack surface, but can also increase deployment efficiency. Images with extraneous software can be leveraged to elevate privileges or exploit known vulnerabilities.\n\nKnown Software Vulnerabilities: Due to their extensive use of third-party packages, many container images are inherently dangerous to pull into a trusted environment and run. For example, if a given layer in an image contains a version of OpenSSL that is susceptible to a known exploit it may be propagated to several workloads and unknowingly put an entire cluster at risk.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K02-supply-chain-vulnerabilities.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Overly Permissive RBAC Configurations",
+        "poc": "",
+        "desc": "RBAC is an extremely powerful security enforcement mechanism in Kubernetes when appropriately configured but can quickly become a massive risk to the cluster and increase the blast radius in the event of a compromise. Below are a few examples of misconfigured RBAC:\n\nUnnecessary use of cluster-admin\n\nWhen a subject such as a Service Account, User, or Group has access to the built-in Kubernetes “superuser” called cluster-admin they are able to perform any action on any resource within a cluster. This level of permission is especially dangerous when used in a ClusterRoleBinding which grants full control over every resource across the entire cluster. cluster-admin can also be used as a RoleBinding which may also pose significant risk.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K03-overly-permissive-rbac.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Lack of Centralized Policy Enforcement",
+        "poc": "",
+        "desc": "Kubernetes policy enforcement can and should take place in a few places throughout the software delivery lifecycle. Policy enforcement gives security and compliance teams the ability to apply governance, compliance, and security requirements throughout a multi-cluster / multi-cloud infrastructure.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K04-policy-enforcement.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inadequate Logging and Monitoring",
+        "poc": "",
+        "desc": "Inadequate logging in the context of Kubernetes occurs any time:\n\nRelevant events such as failed authentication attempts, access to sensitive resources, manual deletion or modification of Kubernetes resources are not logged.\nLogs and traces of running workloads are not monitored for suspicious activity.\nAlerting thresholds are not in place or escalated appropriately.\nLogs are not centrally stored and protected against tampering.\nLogging infrastructure is disabled completely.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K05-inadequate-logging.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Broken Authentication Mechanisms",
+        "poc": "",
+        "desc": "Several entities need to access the Kubernetes API. Authentication is the first hurdle for these requests. Authentication to the Kubernetes API is via HTTP request and the authentication method can vary from cluster to cluster. If a request cannot be authenticated, it is rejected with an HTTP status of 401.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K06-broken-authentication.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Missing Network Segmentation Controls",
+        "poc": "",
+        "desc": "Kubernetes networking is flat by default. Meaning that, when no additional controls are in place any workload can communicate to another without constraint. Attackers who exploit a running workload can leverage this default behavior to probe the internal network, traverse to other running containers, or invoke private APIs.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K07-network-segmentation.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Secrets Management Failures",
+        "poc": "",
+        "desc": "Kubernetes secrets are a standalone API object in Kubernetes used to store small objects. They are created like any other Kubernetes object. The username and password values in the example manifest above are base64 encoded ** and thus not encrypted. This makes checking secrets into version control or other systems very dangerous. We will explore below how to prevent secrets leaking to unwanted locations.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K08-secrets-management.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Misconfigured Cluster Components",
+        "poc": "",
+        "desc": "Misconfigurations in core Kubernetes components can lead to complete cluster compromise or worse. In this section we will explore some of the components that exist on the Kubernetes control plane and nodes which can easily be misconfigured:\n\nkubelet: Agent that runs on each node in the cluster and ensures that containers run as expected and are healthy. \n\netcd: A highly available key/value store that Kubernetes uses to centrally house all cluster data. It is important to keep etcd safe as it stores config data as well as secrets.\n\nkube-apiserver: The API server is a component of the Kubernetes control plane  that exposes the Kubernetes API. The API server is the front end for the Kubernetes control plane.\n\nA simple security check you can perform is to inspect the internet accessibility of the API server itself. ",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K09-misconfigured-cluster-components.md",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Outdated and Vulnerable Kubernetes Components",
+        "poc": "",
+        "desc": "A Kubernetes cluster is an extremely complex software ecosystem that can present challenges when it comes to traditional patch and vulnerability management.\n\nArgoCD CVEs: ArgoCD is a an extremely popular declarative GitOps tool used to continuously deliver software into one or more clusters. ArgoCD has had a few CVEs over the years including CVE-2022-24348 which allows malicious actors to load a malicious Kubernetes Helm Chart (YAML). ArgoCD runs inside of the cluster and is responsible for deploying these charts automatically. This Helm chart exploits a parsing vulnerability to access restricted information such as API keys, secrets, and more. This data can then be used by the attacker to pivot within the Kubernetes cluster or dump further sensitive data.\n\nKubernetes CVEs: In October 2021, the popular Kubernetes ingress ingress-nginx had a CVE released (kubernetes/ingress-nginx#7837) which allowed users who had the ability to create or update ingress objects the ability to obtain all secrets in a cluster. This leveraged a supported feature called “custom snippets”. This issue was not addressable by solely upgrading the ingress-nginx version which made it a scramble for security teams to address at scale.\n\nIstio CVEs: One of the core pieces of functionality of Istio is to provided service-to-service authN / authZ. In 2020 an authentication bypass vulnerability was discovered (https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8595) which abused Istio’s Authentication Policy exact path matching logic. This allowed unauthorized access to resources without a valid JWT token. Attackers could bypass the JWT validation all-together by appending ? or # characters after the protected paths.\n\nMinimum Kubernetes Version: If multiple clusters and running in different cloud or on-prem environments, it is important to maintain an accurate inventory of those clusters and ensure conformance with minimum Kubernetes versions. Using OSS IaC platforms such as Terraform, it is possible to audit the versions of the Kubernetes APIs across multiple clusters and patch when appropriate.",
+        "severity": "Info",
+        "ref": "https://github.com/OWASP/www-project-kubernetes-top-ten/blob/main/2022/en/src/K10-vulnerable-components.md",
+        "cvss": "",
+        "cve": ""
+    }
+]
