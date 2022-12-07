@@ -517,7 +517,20 @@
                   <mat-icon style="color: red">delete_forever</mat-icon>
                 </a>
               </div>
-              <div *ngIf="!key.type.includes('image')" class="mat-elevation-z4"
+              <div *ngIf="key.type.includes('video')" class="mat-elevation-z4"
+              style="padding: 5px; text-align: center;">
+              <video width="400px" height="100%" controls><source [src]="key.data" type="{{key.type}}">Your browser does not support the video tag.</video>
+              <br>
+              <a [routerLink]="[]" (click)="downloadAttach(key.data, key.title)" title="Download file">
+                <mat-hint>
+                  <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>get_app</mat-icon> {{key.title}}
+                </mat-hint>
+              </a>&nbsp;<a style="float: right;" [routerLink]="[]" (click)="removeAttach(key, dec_data)"
+                title="Remove file">
+                <mat-icon style="color: red">delete_forever</mat-icon>
+              </a>
+            </div>
+              <div *ngIf="!key.type.includes('image') && !key.type.includes('video')" class="mat-elevation-z4"
                 style="padding: 5px; text-align: center;">
                 <img src="/assets/file.png" title="{{key.title}}" width="80px" height="100px"><br>
                 <a [routerLink]="[]" (click)="downloadAttach(key.data, key.title)" title="Download file">
