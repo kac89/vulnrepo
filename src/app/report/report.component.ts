@@ -1410,7 +1410,7 @@ Date   | Description
       "report_metadata": this.decryptedReportDataChanged.report_metadata,
       "report_scope": this.decryptedReportDataChanged.report_scope,
       "report_logo": this.decryptedReportDataChanged.report_settings.report_logo,
-      "report_settings": this.decryptedReportDataChanged.report_settings,
+      "report_settings": this.decryptedReportDataChanged.report_settings
     };
 
     // download HTML report
