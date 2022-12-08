@@ -453,7 +453,7 @@ getReportProfiles() {
   openDialogReportProfiles(data: any): void {
 
     const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
-      width: '600px',
+      width: '800px',
       disableClose: true,
       data: data
     });

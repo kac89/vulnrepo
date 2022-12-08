@@ -11,6 +11,7 @@ import { UntypedFormControl } from '@angular/forms';
 export class DialogAddreportprofileComponent implements OnInit {
 
   profile_name = new UntypedFormControl();
+  report_css = new UntypedFormControl();
   profile_theme = new UntypedFormControl();
   logow = new UntypedFormControl();
   logoh = new UntypedFormControl();
@@ -54,10 +55,12 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.ResEmail.setValue('');
       this.ResSocial.setValue('');
       this.ResWeb.setValue('');
+      this.report_css.setValue('');
     } else {
 
       this.origi.push(this.data);
       this.profile_name.setValue(this.data.profile_name);
+      this.report_css.setValue(this.data.report_css);
 
       this.uploadlogoprev = '<img src="' + this.data.logo + '" width="100px">';
       this.advlogo = this.data.logo;
@@ -120,6 +123,7 @@ export class DialogAddreportprofileComponent implements OnInit {
     this.dialogRef.close([
       {
         profile_name: this.profile_name.value,
+        report_css: this.report_css.value,
         logo: this.advlogo,
         logow: this.logow.value,
         logoh: this.logoh.value,
@@ -146,6 +150,7 @@ export class DialogAddreportprofileComponent implements OnInit {
     console.log('add new profile');
     this.dialogRef.close({
         profile_name: this.profile_name.value,
+        report_css: this.report_css.value,
         logo: this.advlogo,
         logow: this.logow.value,
         logoh: this.logoh.value,

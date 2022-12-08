@@ -1,0 +1,16 @@
+<div class="fixActionRow">
+    <h1 mat-dialog-title>Add Custom CSS (HTML v2)</h1>
+    <div mat-dialog-content>
+
+        <mat-form-field appearance="outline" class="example-full-width" color="accent">
+            <textarea rows="12" matInput placeholder="HTML report CSS" [(ngModel)]="data.report_settings.report_css"
+                value="{{data.report_settings.report_css}}"></textarea>
+            <mat-hint>CSS only!</mat-hint>
+        </mat-form-field>
+
+    </div>
+    <div class="spacer"></div>
+    <div mat-dialog-actions>
+        <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+    </div>
+</div>
