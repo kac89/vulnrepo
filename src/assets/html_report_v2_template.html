@@ -478,9 +478,10 @@
 			$(".report_name").text(obj.report_name);
 			$(".report_version").text('Report Version: ' + obj.report_version);
 			$(".report_id").text('Report ID: ' + obj.report_id);
-
-			$(".report_date_range").text('Date: ' + obj.report_metadata.starttest + ' - ' + obj.report_metadata.endtest);
-
+			if (obj.report_metadata.starttest !== "" || obj.report_metadata.endtest !== "") {
+				$(".report_date_range").text('Date: ' + obj.report_metadata.starttest + ' - ' + obj.report_metadata.endtest);
+			}
+			
 			$(".issues_count").text(obj.report_vulns.length);
 			
 			// Table of contents
@@ -574,12 +575,23 @@
 				}
 
 				function gettags(tags) {
+					if (tags.length === 0) {
+						return '';
+					}
 					var out = "";
 					for (let index = 0; index < tags.length; ++index) {
 						out = out + '<span class="badge bg-secondary">'+tags[index].name+'</span>';
 
 					}
 					return '<h5>Tags:</h5>'+out+'<br><br>';
+				}
+
+				function getrefs(refs) {
+					if (refs.length === 0) {
+						return '';
+					}
+
+					return '<div><h5>References:</h5></div><div>' + DOMPurify.sanitize(parse_links(parse_newline(refs))) + '</div';
 				}
 
 
@@ -601,10 +613,7 @@
 							<div>` + DOMPurify.sanitize(elementpoc) + `</div>
 							<br>
 							`+ ((!obj.report_settings.report_remove_issuetags) ? gettags(element.tags) : '') + `
-							<div>
-								<h5>References:</h5>
-							</div>
-							<div>` + DOMPurify.sanitize(parse_links(parse_newline(element.ref))) + `</div>`;
+							`+ ((element.ref) ? getrefs(element.ref) : '');
 
 				var files = '';
 				if (element.files.length > 0) {
