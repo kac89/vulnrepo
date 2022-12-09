@@ -478,9 +478,10 @@
 			$(".report_name").text(obj.report_name);
 			$(".report_version").text('Report Version: ' + obj.report_version);
 			$(".report_id").text('Report ID: ' + obj.report_id);
-
-			$(".report_date_range").text('Date: ' + obj.report_metadata.starttest + ' - ' + obj.report_metadata.endtest);
-
+			if (obj.report_metadata.starttest !== "" || obj.report_metadata.endtest !== "") {
+				$(".report_date_range").text('Date: ' + obj.report_metadata.starttest + ' - ' + obj.report_metadata.endtest);
+			}
+			
 			$(".issues_count").text(obj.report_vulns.length);
 			
 			// Table of contents
