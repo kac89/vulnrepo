@@ -20,6 +20,7 @@ import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removei
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
+import { DialogReportcssComponent } from '../dialog-reportcss/dialog-reportcss.component';
 import { DialogApierrorComponent } from '../dialog-apierror/dialog-apierror.component';
 import { marked } from 'marked'
 import { sha256 } from 'js-sha256';
@@ -850,6 +851,21 @@ Sample code here\n\
 
   }
 
+  addCustomcss(item) {
+
+    const dialogRef = this.dialog.open(DialogReportcssComponent, {
+      width: '550px',
+      height: '450px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
+  }
+
+
   editreporttitle(item) {
 
     const dialogRef = this.dialog.open(DialogEditComponent, {
@@ -1409,7 +1425,6 @@ Date   | Description
       "report_summary": this.decryptedReportDataChanged.report_summary,
       "report_metadata": this.decryptedReportDataChanged.report_metadata,
       "report_scope": this.decryptedReportDataChanged.report_scope,
-      "report_logo": this.decryptedReportDataChanged.report_settings.report_logo,
       "report_settings": this.decryptedReportDataChanged.report_settings
     };
 
@@ -1423,6 +1438,59 @@ Date   | Description
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  DownloadHTMLv2(report_info, encrypted): void {
+
+    const json = {
+      "report_name": report_info.report_name,
+      "report_id": report_info.report_id,
+      "report_createdate": report_info.report_createdate,
+      "report_lastupdate": report_info.report_lastupdate,
+      "report_changelog": this.decryptedReportDataChanged.report_changelog,
+      "researcher": this.decryptedReportDataChanged.researcher,
+      "report_vulns": this.decryptedReportDataChanged.report_vulns,
+      "report_version": this.decryptedReportDataChanged.report_version,
+      "report_summary": this.decryptedReportDataChanged.report_summary,
+      "report_metadata": this.decryptedReportDataChanged.report_metadata,
+      "report_scope": this.decryptedReportDataChanged.report_scope,
+      "report_settings": this.decryptedReportDataChanged.report_settings,
+      "report_encrypted_t": true
+    };
+    
+    const ciphertext = Crypto.AES.encrypt(JSON.stringify(json), sessionStorage.getItem(report_info.report_id));
+
+    this.http.get('/assets/html_report_v2_template.html?v=' + + new Date(), {responseType: 'text'}).subscribe(res => {
+
+
+      if (this.decryptedReportDataChanged.report_settings.report_css !== '') {
+        res = res.replace("[CSS_Injection_here]", DOMPurify.sanitize(this.decryptedReportDataChanged.report_settings.report_css))
+      }
+
+      // download HTML report
+      let blob = new Blob();
+      if (encrypted) {
+        blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'"+ciphertext+"';")], { type: 'text/html' });
+      } else {
+        blob = new Blob([res.replace("{'HERE':'REPLACE'};", JSON.stringify(json)+";")], { type: 'text/html' });
+      }
+      
+      const link = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      let encryptedtext = "";
+      if (encrypted) {
+        encryptedtext = " encrypted";
+      }
+      link.setAttribute('href', url);
+      link.setAttribute('download', report_info.report_name + ' ' + report_info.report_id + encryptedtext + ' (vulnrepo.com).html');
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    
+
   }
 
   DownloadHTML(report_data, report_metadata, issueStatus) {
@@ -2146,6 +2214,7 @@ Date   | Description
 
     this.decryptedReportDataChanged.report_settings.report_theme = profile.theme;
 
+    this.decryptedReportDataChanged.report_settings.report_css = profile.report_css;
     this.decryptedReportDataChanged.report_settings.report_video_embed = profile.video_embed;
     this.decryptedReportDataChanged.report_settings.report_remove_lastpage = profile.remove_lastpage;
     this.decryptedReportDataChanged.report_settings.report_remove_issuestatus = profile.remove_issueStatus;

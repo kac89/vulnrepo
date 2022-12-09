@@ -1,0 +1,775 @@
+<html>
+
+<head>
+	<title>VULNRΞPO Vulnerability Report</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,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"/>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+		integrity="sha384-i61gTtaoovXtAbKjo903+O55Jkn2+RtzHtvNez+yI49HAASvznhe9sZyjaSHTau9"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"
+		integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+		integrity="sha384-kA/QUaaECJX8mvLWVzUpozKGGzVrJbqZxyGzBU+/IBDusLvuQo0K0YXStVUDYcDI"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.1/purify.min.js"
+		integrity="sha512-uHOKtSfJWScGmyyFr2O2+efpDx2nhwHU2v7MVeptzZoiC7bdF6Ny/CmZhN2AwIK1oCFiVQQ5DA/L9FSzyPNu6Q=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	<style>
+		.pagebreak {
+			page-break-before: always;
+		}
+
+		.label {
+			color: white;
+			display: inline-block;
+			font-family: verdana, sans-serif;
+			padding: 4px;
+		}
+
+		/*critical*/
+		.critical {
+			border-color: #FF0039;
+			background-color: #FF0039;
+		}
+
+		/*high*/
+		.high {
+			border-color: #FF7518;
+			background-color: #FF7518;
+		}
+
+		/*medium*/
+		.medium {
+			color: #000;
+			border-color: #F9EE06;
+			background-color: #F9EE06;
+		}
+
+		/*low*/
+		.low {
+			border-color: #3FB618;
+			background-color: #3FB618;
+		}
+
+		/*information*/
+		.info {
+			border-color: #2780E3;
+			background-color: #2780E3;
+		}
+
+		.strbreak {
+			word-break: break-word;
+		}
+
+		#btn-back-to-top {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			display: none;
+		}
+	</style>
+	<style>
+		[CSS_Injection_here]
+	</style>
+	<style>
+
+		.titlecolor {
+			color: #FFFFFF;
+		}
+
+		.titlebackground {
+			color: #FFFFFF;
+			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1008%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='rgba(24%2c 106%2c 59%2c 1)' style='--darkreader-inline-fill: %2313552f%3b' data-darkreader-inline-fill=''%3e%3c/rect%3e%3cpath d='M0%2c450.312C82.222%2c463.503%2c148.047%2c384.386%2c218.447%2c339.909C289.442%2c295.057%2c391.116%2c269.815%2c413.717%2c188.938C436.744%2c106.536%2c344.531%2c36.698%2c326.556%2c-46.952C310.408%2c-122.103%2c350.179%2c-204.449%2c314.55%2c-272.559C275.85%2c-346.539%2c206.739%2c-407.785%2c126.23%2c-429.9C46.152%2c-451.896%2c-34.717%2c-412.979%2c-114.647%2c-390.453C-195.496%2c-367.668%2c-284.485%2c-357.432%2c-343.392%2c-297.551C-403.681%2c-236.265%2c-421.441%2c-147.383%2c-436.947%2c-62.824C-452.975%2c24.582%2c-488.304%2c127.759%2c-434.33%2c198.352C-378.884%2c270.87%2c-256.571%2c230.561%2c-177.61%2c276.367C-104.449%2c318.808%2c-83.512%2c436.914%2c0%2c450.312' fill='%2313552f' style='--darkreader-inline-fill: %230f4426%3b' data-darkreader-inline-fill=''%3e%3c/path%3e%3cpath d='M1440 1143.159C1568.2350000000001 1171.6970000000001 1718.555 1236.187 1825.7559999999999 1160.249 1933.748 1083.751 1902.8310000000001 915.4449999999999 1940.5430000000001 788.591 1972.118 682.379 2030.8200000000002 586.055 2029.394 475.258 2027.839 354.401 2000.4479999999999 233.277 1932.114 133.58100000000002 1859.136 27.109000000000037 1760.438-74.45600000000002 1634.185-101.33299999999997 1510.132-127.74199999999996 1393.621-47.697 1273.632-6.597999999999956 1159.5140000000001 32.49000000000001 1015.8820000000001 33.97000000000003 948.018 133.69600000000003 880.224 233.31900000000002 957.027 368.848 937.251 487.716 916.798 610.65 783.648 722.852 830.807 838.2090000000001 877.566 952.586 1040.285 954.722 1150.78 1010.034 1247.645 1058.5230000000001 1334.264 1119.6280000000002 1440 1143.159' fill='%231d7f47' style='--darkreader-inline-fill: %23176639%3b' data-darkreader-inline-fill=''%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1008'%3e%3crect width='1440' height='560' fill='white' style='--darkreader-inline-fill: %23e8e6e3%3b' data-darkreader-inline-fill=''%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container py-4 px-3 mx-auto" id="reportdetal">
+		<header class="d-flex justify-content-between align-items-md-center pb-3 mb-5 border-bottom">
+			<h1 class="h4">
+				IT Security Report
+			</h1>
+			<div class="p-3 mb-2 bg-danger text-white">CONFIDENTIAL</div>
+		</header>
+
+
+		<main>
+			<div class="logo"></div>
+			<div class="my-3 p-3 titlebackground">
+				<h2 class="report_name display-5 titlecolor"></h2>
+				<p class="report_version lead"></p>
+				<p class="report_id lead"></p>
+				<p class="report_date_range lead"></p>
+			</div>
+
+
+			<br>
+			<br>
+			<br>
+			<div class="pagebreak"></div>
+
+			<br><br>
+
+			<div class="row">
+				<h2 id="Table of contents"><i class="bi bi-card-list"></i> Table of contents</h2>
+				<div class="list-group w-auto">
+
+					<a href="#Scope" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+						aria-current="true">
+						<i style="font-size: 2rem;" class="bi bi-bounding-box-circles"></i>
+						<div class="d-flex gap-2 w-100 justify-content-between">
+							<div>
+								<h6 class="mb-0">Scope</h6>
+								<p class="mb-0 opacity-75">Details about report scope.</p>
+							</div>
+						</div>
+					</a>
+
+					<a href="#Statistics and Risk" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+						aria-current="true">
+						<i style="font-size: 2rem;" class="bi bi-bar-chart"></i>
+						<div class="d-flex gap-2 w-100 justify-content-between">
+							<div>
+								<h6 class="mb-0">Statistics and Risk</h6>
+								<p class="mb-0 opacity-75">How severity and impact are calculated.</p>
+							</div>
+						</div>
+					</a>
+
+					<a href="#Issues" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+						aria-current="true">
+						<i style="font-size: 2rem;" class="bi bi-bug"></i>
+						<div class="d-flex gap-2 w-100 justify-content-between">
+							<div>
+								<h6 class="mb-0">Issues</h6>
+								<p class="mb-0 opacity-75">Section containing found issues.</p>
+							</div>
+							<span style="height: 20px" class="badge text-bg-primary issues_count">0</span>
+
+						</div>
+					</a>
+
+					<div class="table_of_contents"></div>
+
+					<div class="list_researcher">
+						<a href="#Researcher" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+						aria-current="true">
+						<i style="font-size: 2rem;" class="bi bi-person-circle"></i>
+						<div class="d-flex gap-2 w-100 justify-content-between">
+							<div>
+								<h6 class="mb-0">Researcher</h6>
+								<p class="mb-0 opacity-75">Information about report authors.</p>
+							</div>
+						</div>
+					</a>
+					</div>
+
+
+					<div class="list_changelog">
+						<a href="#Changelog" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+						aria-current="true">
+						<i style="font-size: 2rem;" class="bi bi-list-nested"></i>
+						<div class="d-flex gap-2 w-100 justify-content-between">
+							<div>
+								<h6 class="mb-0">Changelog</h6>
+								<p class="mb-0 opacity-75">List of important changes in report.</p>
+							</div>
+						</div>
+					</a>
+					</div>
+
+
+				</div>
+			</div>
+
+			<br><br>
+			<h2 id="Scope"><i class="bi bi-bounding-box-circles"></i> Scope</h2>
+			<div class="row report_scope"></div>
+			<br>
+			<div class="row report_html"></div>
+			<br>
+
+			<h2 id="Statistics and Risk"><i class="bi bi-bar-chart"></i> Statistics and Risk</h2>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Severity</th>
+						<th>Number</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><span class="label Critical">Critical</span></td>
+						<td class="critical_count"></td>
+					</tr>
+					<tr>
+						<td><span class="label High">High</span></td>
+						<td class="high_count"></td>
+					</tr>
+					<tr>
+						<td><span class="label Medium">Medium</span></td>
+						<td class="medium_count"></td>
+					</tr>
+					<tr>
+						<td><span class="label Low">Low</span></td>
+						<td class="low_count"></td>
+					</tr>
+					<tr>
+						<td><span class="label Info">Info</span></td>
+						<td class="info_count"></td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			<p>The risk of application security vulnerabilities discovered during an assessment will be rated according
+				to a custom-tailored version the <a target="_blank"
+					href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology">OWASP Risk Rating
+					Methodology</a>. Risk severity is determined based on the estimated technical and business impact of
+				the vulnerability, and on the estimated likelihood of the vulnerability being exploited:<br><br>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th colspan="5" class="text-center">Overall Risk Severity</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td rowspan="4" class="text-center"><b>Impact</b></td>
+						<td class="text-center" style="color: rgb(235, 127, 48); --darkreader-inline-color: #ed8940;"
+							data-darkreader-inline-color=""><b>HIGH</b></td>
+						<td class="text-center"><span style="width: 100%;" class="label Medium">Medium</span></td>
+						<td class="text-center"><span style="width: 100%;" class="label High">High</span></td>
+						<td class="text-center"><span style="width: 100%;" class="label Critical">Critical</span></td>
+					</tr>
+					<tr>
+						<td class="text-center" style="color: rgb(255, 251, 1); --darkreader-inline-color: #fffb1a;"
+							data-darkreader-inline-color=""><b>MEDIUM</b></td>
+						<td class="text-center"><span style="width: 100%;" class="label Low">Low</span></td>
+						<td class="text-center"><span style="width: 100%;" class="label Medium">Medium</span></td>
+						<td class="text-center"><span style="width: 100%;" class="label High">High</span></td>
+					</tr>
+					<tr>
+						<td class="text-center" style="color: rgb(145, 208, 84); --darkreader-inline-color: #98d35f;"
+							data-darkreader-inline-color=""><b>LOW</b></td>
+						<td class="text-center"><span style="width: 100%;" class="label Info">Info</span></td>
+						<td class="text-center"><span style="width: 100%;" class="label Low">Low</span></td>
+						<td class="text-center"><span style="width: 100%;" class="label Medium">Medium</span></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td class="text-center" style="color: rgb(145, 208, 84); --darkreader-inline-color: #98d35f;"
+							data-darkreader-inline-color=""><b>LOW</b></td>
+						<td class="text-center" style="color: rgb(255, 251, 1); --darkreader-inline-color: #fffb1a;"
+							data-darkreader-inline-color=""><b>MEDIUM</b></td>
+						<td class="text-center" style="color: rgb(235, 127, 48); --darkreader-inline-color: #ed8940;"
+							data-darkreader-inline-color=""><b>HIGH</b></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td>&nbsp;</td>
+						<td colspan="4" class="text-center"><b>Likelihood</b></td>
+					</tr>
+				</tfoot>
+			</table><br>Our Risk rating is based on this calculation: <b>Risk = Likelihood * Impact</b>.</p>
+			<br><br>
+			<h2 id="Issues" class="report_vulns_h2"></h2><br>
+			<div class="row report_vulns"></div>
+
+			<br>
+			<h2 id="Report summary" class="report_summary_h2"></h2>
+			<div class="report_summary"></div>
+
+			<br>
+			<h2 id="Researcher" class="report_researcher_h2"></h2>
+			<div class="report_researcher"></div>
+
+			<br>
+			<h2 id="Changelog" class="report_changelog_h2"></h2>
+			<div class="report_changelog"></div>
+
+			<button type="button" class="btn btn-success btn-floating btn-lg" id="btn-back-to-top">
+				<i class="bi bi-arrow-up-circle"></i>
+				Up
+			</button>
+		</main>
+		<footer class="py-3 my-4 list_copyright">
+			<ul class="nav justify-content-center border-bottom pb-3 mb-3"></ul>
+			<p class="text-center text-muted">&copy; Generated by <a href="https://vulnrepo.com/">VULNRΞPO</a></p>
+		</footer>
+
+	</div>
+
+	<div class="modal fade" id="passprompt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Report is encrypted</h5>
+				</div>
+				<div class="modal-body">
+					<label for="inputPassword" class="col-sm-4 col-form-label">Security key</label>
+					<input width="100%" type="password" class="form-control" id="inputPassword"><br>
+                    <div class="wrongpass"><span class="badge bg-danger">Wrong security key?</span></div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success">Decrypt</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+
+<script>
+	$(document).ready(function () {
+		$('#reportdetal').hide();
+        $('.wrongpass').hide();
+		$('.list_changelog').hide();
+		$('.list_researcher').hide();
+		$('.list_copyright').hide();
+		
+		
+		var obj = {'HERE':'REPLACE'};
+
+		if (typeof obj.report_encrypted_t == 'undefined') {
+
+			const modal = new Promise(function (resolve, reject) {
+
+				const localkey = sessionStorage.getItem('VULNREPO-PASS');
+				if (localkey) {
+
+					var xx = decodeAES(obj, localkey);
+					if (xx) {
+						resolve(xx);
+					}
+
+				} else {
+					$('#passprompt').modal('show');
+
+
+                    $('#passprompt').on('keypress', function (event) {
+                        var keycode = (event.keyCode ? event.keyCode : event.which);
+                        if(keycode == '13'){
+                            $('#passprompt .btn-success').click();   
+                        }
+                    });
+
+					$('#passprompt .btn-success').click(function () {
+						var xx = decodeAES(obj, $('#inputPassword').val());
+						if (xx) {
+							resolve(xx);
+						} else {
+                            
+                            $('.wrongpass').show();
+                        }
+					});
+				}
+
+			}).then((dec_data) => {
+				if (dec_data) {
+					genreport(dec_data);
+
+					const localkey = sessionStorage.getItem('VULNREPO-PASS');
+					if (!localkey) {
+						sessionStorage.setItem('VULNREPO-PASS', $('#inputPassword').val());
+					}
+
+					$('#passprompt').modal('hide');
+					$('#reportdetal').show();
+				}
+			}).catch(function (err) {
+				console.log(err);
+			});
+
+
+		} else if (obj.report_encrypted_t == true) {
+			genreport(obj);
+			$('#reportdetal').show();
+		}
+
+		function parse_links(text) {
+			const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+			return text.replace(urlRegex, function (url) {
+				return '<a target="_blank" href="' + url + '">' + url + '</a>';
+			});
+		}
+
+		function parse_newline(text) {
+			return text.toString().replace(/(?:\r\n|\r|\n)/g, '<br>');
+		}
+
+		function filetype(type, title, data, isembed) {
+			var fil = "";
+			if (type.includes('image')) {
+
+				fil = fil + '<img width="100%" src="' + DOMPurify.sanitize(data) + '" title="' + DOMPurify.sanitize(title) + '">';
+
+			} else if (type === 'video/mp4' || type === 'video/ogg' || type === 'video/webm') {
+
+				if (isembed) {
+					fil = fil + '<video width="100%" height="600" controls><source src="' + DOMPurify.sanitize(data) + '" type="' + DOMPurify.sanitize(type) + '">Your browser does not support the video tag.</video>';
+				} else {
+					fil = fil + '<a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
+				}
+			} else if (type === 'text/plain') {
+
+				const byteString = atob(data.split(',')[1]);
+				fil = fil + '<pre style="white-space: pre-wrap;">' + DOMPurify.sanitize(byteString) + '</pre>';
+
+			} else {
+				fil = fil + '<a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
+			}
+			return fil;
+		}
+
+		function decodeAES(data, pass) {
+			const bytes = CryptoJS.AES.decrypt(data, pass);
+			try {
+				// Decrypt
+				const bytes = CryptoJS.AES.decrypt(data, pass);
+				const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+				if (decryptedData) {
+					return decryptedData;
+				}
+
+			} catch (except) {
+				console.log('wrong pass');
+			}
+		}
+
+		function genreport(obj) {
+
+			// console.log(obj);
+
+			// add Markdown rendering
+			const renderer = new marked.Renderer();
+			renderer.table = function (header, body) {
+				const table = `
+				<table class="table">
+					<thead>${header}</thead>
+					<tbody>${body}</tbody>
+				</table>
+			`;
+				return table;
+			};
+
+			$("title").text(obj.report_name);
+
+			if (obj.report_settings.report_logo.logo != "") {
+				if (obj.report_settings.report_logo.width != "" || obj.report_settings.report_logo.height != "") {
+					$(".logo").prepend('<img width="' + DOMPurify.sanitize(obj.report_settings.report_logo.width) + '" height="' + DOMPurify.sanitize(obj.report_settings.report_logo.height) + '" src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
+				} else {
+					$(".logo").prepend('<img src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
+				}
+			}
+
+			$(".report_name").text(obj.report_name);
+			$(".report_version").text('Report Version: ' + obj.report_version);
+			$(".report_id").text('Report ID: ' + obj.report_id);
+
+			$(".report_date_range").text('Date: ' + obj.report_metadata.starttest + ' - ' + obj.report_metadata.endtest);
+
+			$(".issues_count").text(obj.report_vulns.length);
+			
+			// Table of contents
+			for (let index = 0; index < obj.report_vulns.length; ++index) {
+				const element = obj.report_vulns[index];
+
+				// issue status
+				let elementissuestatus = "";
+
+				const issueStatus = [{ status: 'Open (Waiting for review)', value: 1 },
+								{ status: 'Fix In Progress', value: 2 },
+								{ status: 'Fixed', value: 3 },
+								{ status: 'Won\'t Fix', value: 4 }
+							];
+
+				function statusDesc(status) {
+					const ret = issueStatus.filter(function (el) {
+						return (el.value === status);
+					});
+					return ret[0].status;
+				}
+
+				if (obj.report_settings.report_remove_issuestatus !== true) {
+					elementissuestatus = statusDesc(element.status);
+				}
+
+
+				var table_of_contents = `
+				<a href="#` + index + `" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+						<span class="label ` + DOMPurify.sanitize(element.severity) + `" style="height: 35px">` + DOMPurify.sanitize(element.severity) + `</span>
+						<div class="d-flex gap-2 w-100 justify-content-between">
+							<div>
+								<h6 class="mb-0">` + DOMPurify.sanitize(element.title) + `</h6>
+								<p class="mb-0 opacity-75">`+elementissuestatus+`</p>
+							</div>
+							<small class="opacity-50 text-nowrap">` + DOMPurify.sanitize(element.date) + `</small>
+						</div>
+				</a>
+		`;
+
+				$(".table_of_contents").append(table_of_contents);
+			}
+
+			//scope
+			const markedscope = marked.parse(obj.report_scope, { renderer: renderer });
+			$(".report_scope").html(DOMPurify.sanitize(markedscope));
+
+			//report html
+			const markedhtml = marked.parse(obj.report_settings.report_html, { renderer: renderer });
+			$(".report_html").html(DOMPurify.sanitize(markedhtml));
+
+			// Issues
+			$(".report_vulns_h2").append('<i class="bi bi-bug"></i> Issues (' + obj.report_vulns.length  + ')');
+			for (let index = 0; index < obj.report_vulns.length; ++index) {
+				const element = obj.report_vulns[index];
+
+				//poc
+				let elementpoc = "";
+				if (obj.report_settings.report_parsing_poc_markdown) {
+					elementpoc = marked.parse(element.poc, { renderer: renderer });
+				} else {
+					elementpoc = element.poc;
+				}
+				
+				//desc
+				let elementdesc = "";
+				if (obj.report_settings.report_parsing_desc) {
+					elementdesc = parse_newline(element.desc);
+				} else {
+					elementdesc = element.desc;
+				}
+
+				// issue status
+				let elementissuestatus = "";
+
+				const issueStatus = [{ status: 'Open (Waiting for review)', value: 1 },
+								{ status: 'Fix In Progress', value: 2 },
+								{ status: 'Fixed', value: 3 },
+								{ status: 'Won\'t Fix', value: 4 }
+							];
+
+				function statusDesc(status) {
+					const ret = issueStatus.filter(function (el) {
+						return (el.value === status);
+					});
+					return ret[0].status;
+				}
+
+				if (obj.report_settings.report_remove_issuestatus !== true) {
+					elementissuestatus = statusDesc(element.status);
+				}
+
+				function gettags(tags) {
+					var out = "";
+					for (let index = 0; index < tags.length; ++index) {
+						out = out + '<span class="badge bg-secondary">'+tags[index].name+'</span>';
+
+					}
+					return '<h5>Tags:</h5>'+out+'<br><br>';
+				}
+
+
+				var issues = `
+				<div id="` + index + `" class="card bg-light mb-3">
+					<div class="card-header"><div class="d-flex flex-sm-row flex-column justify-content-between"><div><span class="label ` + DOMPurify.sanitize(element.severity) + `">` + DOMPurify.sanitize(element.severity) + `</span> ` + DOMPurify.sanitize(element.title) + `</div><div> <span>`+elementissuestatus+`</span></div></div></div>
+					<div class="card-body">
+						<div class="card-text">
+							`+ ((!obj.report_settings.report_remove_issuecve) ? `<div><h5>` + DOMPurify.sanitize(element.cve) + `</h5></div>` : '') + `
+							`+ ((!obj.report_settings.report_remove_issuecvss) ? `<div><h5>CVSS: ` + DOMPurify.sanitize(element.cvss) + `</h5></div>` : '') + `
+							<div>
+								<h5>Description:</h5>
+							</div>
+							<div>` + DOMPurify.sanitize(elementdesc) + `</div>
+							<br>
+							<div>
+								<h5>Proof of Concept:</h5>
+							</div>
+							<div>` + DOMPurify.sanitize(elementpoc) + `</div>
+							<br>
+							`+ ((!obj.report_settings.report_remove_issuetags) ? gettags(element.tags) : '') + `
+							<div>
+								<h5>References:</h5>
+							</div>
+							<div>` + DOMPurify.sanitize(parse_links(parse_newline(element.ref))) + `</div>`;
+
+				var files = '';
+				if (element.files.length > 0) {
+					files = '<br><div><h5>Files:</h5></div>';
+					for (let index = 0; index < element.files.length; ++index) {
+						const ele = element.files[index];
+
+						files = files + `
+
+									<div class="card bg-light mb-3">
+									<div class="card-header">
+										<div class="d-flex flex-sm-row flex-column justify-content-between">
+											<div><b>` + DOMPurify.sanitize(ele.title) + `</b> (` + DOMPurify.sanitize(ele.size) + ` bytes)</div>
+											<div><small><b>sha256:</b> ` + DOMPurify.sanitize(ele.sha256checksum) + `</small></div>
+										</div>
+									</div>
+									<div class="card-body">
+										<p class="card-text">
+											` + filetype(ele.type, ele.title, ele.data, obj.report_settings.report_video_embed) + `<br>
+										</p>
+									</div>
+									</div>
+
+									`;
+					}
+				}
+				var issues2 = `
+
+						</div>
+					</div>
+				</div>
+				`;
+				
+				$(".report_vulns").append(issues + files + issues2);
+			}
+
+
+			//severity table
+			const critical = obj.report_vulns.filter(function (el) {
+				return (el.severity === 'Critical');
+			});
+
+			const high = obj.report_vulns.filter(function (el) {
+				return (el.severity === 'High');
+			});
+
+			const medium = obj.report_vulns.filter(function (el) {
+				return (el.severity === 'Medium');
+			});
+
+			const low = obj.report_vulns.filter(function (el) {
+				return (el.severity === 'Low');
+			});
+
+			const info = obj.report_vulns.filter(function (el) {
+				return (el.severity === 'Info');
+			});
+
+			$(".critical_count").text(critical.length);
+			$(".high_count").text(high.length);
+			$(".medium_count").text(medium.length);
+			$(".low_count").text(low.length);
+			$(".info_count").text(info.length);
+
+			// report summary
+			if (obj.report_summary !== "") {
+				$(".report_summary_h2").append('<i class="bi bi-card-heading"></i> Report summary');
+				const markedreport_summary = marked.parse(obj.report_summary, { renderer: renderer });
+				$(".report_summary").html(DOMPurify.sanitize(markedreport_summary));
+			}
+
+
+			//Researcher
+			var researcher_data = "";
+
+			for (let index = 0; index < obj.researcher.length; ++index) {
+				const element = obj.researcher[index];
+
+				researcher_data = researcher_data + `
+				<div class="card text-white bg-success mb-3" style="max-width: 20rem;">
+					<div class="card-body">
+						<h4 class="card-title">`+ DOMPurify.sanitize(element.reportername) + `</h4>
+						<p class="card-text">
+						`+ ((DOMPurify.sanitize(element.reporterwww)) ? DOMPurify.sanitize(element.reporterwww) : '') + `
+						`+ ((DOMPurify.sanitize(element.reportersocial)) ? DOMPurify.sanitize(element.reportersocial) : '') + `
+						`+ ((DOMPurify.sanitize(element.reporteremail)) ? DOMPurify.sanitize(element.reporteremail) : '') + `
+						</p>
+					</div>
+				</div>`;
+			}
+			if (obj.report_settings.report_remove_researchers === false) {
+				$(".report_researcher_h2").append('<i class="bi bi-person-circle"></i> Researcher');
+				$(".report_researcher").append(researcher_data);
+				$('.list_researcher').show();
+			}
+
+			
+
+			//changelog
+			var changelog_temp = `
+			<table class="table table-hover">
+							<thead>
+							<tr>
+								<th scope="col">Date</th>
+								<th scope="col">Event</th>
+							</tr>
+							</thead>
+							<tbody>`;
+			var changelog_data = "";
+
+			for (let index = 0; index < obj.report_changelog.length; ++index) {
+				const element = obj.report_changelog[index];
+				const xxx = new Date(element.date).toLocaleDateString();
+				changelog_data = changelog_data + `
+					<tr>
+						<td>` + DOMPurify.sanitize(xxx) + `</td>
+						<td>`+ DOMPurify.sanitize(element.desc) + `</td>
+					</tr>`;
+			}
+
+			var changelog2 = `
+							</tbody>
+						</table>
+						<br>
+			`;
+
+			if (obj.report_settings.report_changelog_page === false) {
+				$('.list_changelog').show();
+				$(".report_changelog_h2").append('<i class="bi bi-list-nested"></i> Changelog');
+				$(".report_changelog").append(changelog_temp + changelog_data + changelog2);
+			}
+
+			if (obj.report_settings.report_remove_lastpage === false) {
+				$('.list_copyright').show();
+			}
+
+			//back to top
+			//Get the button
+			let mybutton = document.getElementById("btn-back-to-top");
+
+			// When the user scrolls down 20px from the top of the document, show the button
+			window.onscroll = function () {
+				scrollFunction();
+			};
+
+			function scrollFunction() {
+				if (
+					document.body.scrollTop > 20 ||
+					document.documentElement.scrollTop > 20
+				) {
+					mybutton.style.display = "block";
+				} else {
+					mybutton.style.display = "none";
+				}
+			}
+			// When the user clicks on the button, scroll to the top of the document
+			mybutton.addEventListener("click", backToTop);
+
+			function backToTop() {
+				document.body.scrollTop = 0;
+				document.documentElement.scrollTop = 0;
+			}
+
+		}
+	});
+</script>
+
+</html>
