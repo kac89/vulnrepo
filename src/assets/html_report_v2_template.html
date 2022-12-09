@@ -574,6 +574,9 @@
 				}
 
 				function gettags(tags) {
+					if (tags.length === 0) {
+						return '';
+					}
 					var out = "";
 					for (let index = 0; index < tags.length; ++index) {
 						out = out + '<span class="badge bg-secondary">'+tags[index].name+'</span>';
