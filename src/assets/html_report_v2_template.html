@@ -487,13 +487,34 @@
 			for (let index = 0; index < obj.report_vulns.length; ++index) {
 				const element = obj.report_vulns[index];
 
+				// issue status
+				let elementissuestatus = "";
+
+				const issueStatus = [{ status: 'Open (Waiting for review)', value: 1 },
+								{ status: 'Fix In Progress', value: 2 },
+								{ status: 'Fixed', value: 3 },
+								{ status: 'Won\'t Fix', value: 4 }
+							];
+
+				function statusDesc(status) {
+					const ret = issueStatus.filter(function (el) {
+						return (el.value === status);
+					});
+					return ret[0].status;
+				}
+
+				if (obj.report_settings.report_remove_issuestatus !== true) {
+					elementissuestatus = statusDesc(element.status);
+				}
+
+
 				var table_of_contents = `
 				<a href="#` + index + `" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
 						<span class="label ` + DOMPurify.sanitize(element.severity) + `" style="height: 35px">` + DOMPurify.sanitize(element.severity) + `</span>
 						<div class="d-flex gap-2 w-100 justify-content-between">
 							<div>
 								<h6 class="mb-0">` + DOMPurify.sanitize(element.title) + `</h6>
-								<p class="mb-0 opacity-75">Some placeholder content in a paragraph.</p>
+								<p class="mb-0 opacity-75">`+elementissuestatus+`</p>
 							</div>
 							<small class="opacity-50 text-nowrap">` + DOMPurify.sanitize(element.date) + `</small>
 						</div>
