@@ -585,6 +585,14 @@
 					return '<h5>Tags:</h5>'+out+'<br><br>';
 				}
 
+				function getrefs(refs) {
+					if (refs.length === 0) {
+						return '';
+					}
+
+					return '<div><h5>References:</h5></div><div>' + DOMPurify.sanitize(parse_links(parse_newline(refs))) + '</div';
+				}
+
 
 				var issues = `
 				<div id="` + index + `" class="card bg-light mb-3">
@@ -604,10 +612,7 @@
 							<div>` + DOMPurify.sanitize(elementpoc) + `</div>
 							<br>
 							`+ ((!obj.report_settings.report_remove_issuetags) ? gettags(element.tags) : '') + `
-							<div>
-								<h5>References:</h5>
-							</div>
-							<div>` + DOMPurify.sanitize(parse_links(parse_newline(element.ref))) + `</div>`;
+							`+ ((element.ref) ? getrefs(element.ref) : '');
 
 				var files = '';
 				if (element.files.length > 0) {
