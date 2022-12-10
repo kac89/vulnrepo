@@ -41,9 +41,14 @@
       
     </div>
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <p>HTML v2 CSS style</p>
-      <textarea rows="12" matInput placeholder="CSS style"
+
+
+      <mat-form-field style="width: 100%" appearance="outline" color="accent">
+        <mat-label>HTML v2 CSS style</mat-label>
+        <textarea rows="12" matInput placeholder="CSS style"
                 value="" [formControl]="report_css"></textarea>
+      </mat-form-field>
+
     </div>
 
   </div>
