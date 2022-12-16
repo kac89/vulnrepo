@@ -529,11 +529,11 @@ getReportProfiles() {
 
     this.indexeddbService.retrieveReportProfile().then(ret => {
       if (ret) {
-        const blob = new Blob([JSON.stringify(ret)], { type: 'text/plain' });
+        const blob = new Blob([JSON.stringify(ret)], { type: 'application/json' });
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', 'Backup Report Profiles (vulnrepo.com).txt');
+        link.setAttribute('download', 'Backup Report Profiles (vulnrepo.com).json');
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();

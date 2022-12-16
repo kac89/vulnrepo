@@ -99,7 +99,7 @@
             <button *ngIf="reportProfileList.length > 0" mat-raised-button color="primary" (click)="exportprofiles()" title="Export report profiles">
               <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Export
             </button>
-            <input hidden type="file" accept=".txt" #imreportprofiles (change)="importReportProfile($event.target)"/>
+            <input hidden type="file" accept=".json" #imreportprofiles (change)="importReportProfile($event.target)"/>
           </div>
         </div>
 
