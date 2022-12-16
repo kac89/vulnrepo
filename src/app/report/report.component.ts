@@ -2213,8 +2213,9 @@ Date   | Description
     this.decryptedReportDataChanged.report_settings.report_logo.height = profile.logoh;
 
     this.decryptedReportDataChanged.report_settings.report_theme = profile.theme;
-
+    
     this.decryptedReportDataChanged.report_settings.report_css = profile.report_css;
+    this.decryptedReportDataChanged.report_settings.report_html = profile.report_custom_content;
     this.decryptedReportDataChanged.report_settings.report_video_embed = profile.video_embed;
     this.decryptedReportDataChanged.report_settings.report_remove_lastpage = profile.remove_lastpage;
     this.decryptedReportDataChanged.report_settings.report_remove_issuestatus = profile.remove_issueStatus;

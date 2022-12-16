@@ -12,6 +12,7 @@ export class DialogAddreportprofileComponent implements OnInit {
 
   profile_name = new UntypedFormControl();
   report_css = new UntypedFormControl();
+  report_custom_content = new UntypedFormControl();
   profile_theme = new UntypedFormControl();
   logow = new UntypedFormControl();
   logoh = new UntypedFormControl();
@@ -36,7 +37,7 @@ export class DialogAddreportprofileComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-
+console.log(this.data);
     if (this.data === 'open') {
       this.logow.setValue(600);
       this.logoh.setValue(500);
@@ -56,11 +57,14 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.ResSocial.setValue('');
       this.ResWeb.setValue('');
       this.report_css.setValue('');
+      this.report_custom_content.setValue('');
     } else {
 
       this.origi.push(this.data);
       this.profile_name.setValue(this.data.profile_name);
       this.report_css.setValue(this.data.report_css);
+      this.report_custom_content.setValue(this.data.report_custom_content);
+      
 
       this.uploadlogoprev = '<img src="' + this.data.logo + '" width="100px">';
       this.advlogo = this.data.logo;
@@ -124,6 +128,7 @@ export class DialogAddreportprofileComponent implements OnInit {
       {
         profile_name: this.profile_name.value,
         report_css: this.report_css.value,
+        report_custom_content: this.report_custom_content.value,
         logo: this.advlogo,
         logow: this.logow.value,
         logoh: this.logoh.value,
@@ -151,6 +156,7 @@ export class DialogAddreportprofileComponent implements OnInit {
     this.dialogRef.close({
         profile_name: this.profile_name.value,
         report_css: this.report_css.value,
+        report_custom_content: this.report_custom_content.value,
         logo: this.advlogo,
         logow: this.logow.value,
         logoh: this.logoh.value,
