@@ -580,7 +580,7 @@
 					}
 					var out = "";
 					for (let index = 0; index < tags.length; ++index) {
-						out = out + '<span class="badge bg-secondary">'+tags[index].name+'</span>';
+						out = out + '<span class="badge bg-secondary">'+DOMPurify.sanitize(tags[index].name)+'</span>';
 
 					}
 					return '<h5>Tags:</h5>'+out+'<br><br>';
