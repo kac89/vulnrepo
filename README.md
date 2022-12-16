@@ -16,7 +16,7 @@ Video walkthrough/Tutorial:
  - Import issues from security scanners
     - Supported import from: Nmap, Nessus, Burp, OpenVAS, Bugcrowd. After importing, easily manage and edit vulnerabilities.
  - TXT & HTML & PDF
-    - You can download report in TXT, HTML formats!. If you need PDF just 'print as PDF' html report.
+    - You can download report in TXT, HTML formats!. Also encrypted version of HTML report! If you need PDF just 'print as PDF' html report.
  - Attachments
     - You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically doing checksum sha256 of attached file.
  - Changelog
@@ -27,6 +27,8 @@ Video walkthrough/Tutorial:
     - You can share your report using AES encryption by default.
  - API Integration
     - Build your own backend system to store reports!
+ - Report template customization
+    - New version of HTML report allow easy template edit or CSS.
 
 ## Development server
 
@@ -43,11 +45,6 @@ You can test our latest changes from dev branch, visit: https://dev.vulnrepo.com
 ## Docker Setup
 
 You can run the project as a docker build using the included docker-compose.yml. Just execute `docker-compose up` and access it on `http://localhost`
-
-## Lgtm
-
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/kac89/vulnrepo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kac89/vulnrepo/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/kac89/vulnrepo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kac89/vulnrepo/context:javascript)
 
 ## Licencing
 
