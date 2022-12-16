@@ -12,10 +12,38 @@
   
   <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+      <mat-form-field style="width: 100%" appearance="outline" color="accent">
+        <mat-label>HTML Custom Content</mat-label>
+        <textarea rows="12" matInput placeholder="You can use Markdown or HTML"
+                value="" [formControl]="report_custom_content"></textarea>
+      </mat-form-field>
+
+      
+    </div>
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+
+      <mat-form-field style="width: 100%" appearance="outline" color="accent">
+        <mat-label>HTML v2 CSS style</mat-label>
+        <textarea rows="12" matInput placeholder="CSS style"
+                value="" [formControl]="report_css"></textarea>
+      </mat-form-field>
+
+    </div>
+
+  </div>
+
+  <br>
+
+
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+
+    <div fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
 
       <button mat-flat-button (click)="fileuploadInput.click()" color="primary" title="Upload report logo" style="margin-right: 10px!important;">
-        <i class="material-icons">attach_file</i> HTML Report logo
+        <i class="material-icons">attach_file</i>
         <input type="file" #fileuploadInput id="file" accept="image/*" (change)="importlogo($event.target)" name="myfiles" style="display:none;">
       </button>
 
@@ -38,30 +66,19 @@
       </button>
 
 
-      
     </div>
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-
-      <mat-form-field style="width: 100%" appearance="outline" color="accent">
-        <mat-label>HTML v2 CSS style</mat-label>
-        <textarea rows="12" matInput placeholder="CSS style"
-                value="" [formControl]="report_css"></textarea>
+    <div fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <mat-form-field class="example-full-width" color="accent">
+        <mat-label>Theme (HTML old)</mat-label>
+        <mat-select [formControl]="profile_theme">
+          <mat-option value="white">White</mat-option>
+          <mat-option value="dark">Dark</mat-option>
+        </mat-select>
       </mat-form-field>
-
     </div>
-
   </div>
 
-  <br>
 
-  <mat-form-field class="example-full-width" color="accent">
-      <mat-label>Theme</mat-label>
-      <mat-select [formControl]="profile_theme">
-        <mat-option value="white">White</mat-option>
-        <mat-option value="dark">Dark</mat-option>
-      </mat-select>
-    </mat-form-field>
 
 
   <div class="example-full-width">
