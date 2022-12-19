@@ -9,7 +9,6 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DialogReportcssComponent implements OnInit {
 
-  report_css = "";
   constructor(private http: HttpClient, public dialogRef: MatDialogRef<DialogReportcssComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
@@ -27,14 +26,9 @@ export class DialogReportcssComponent implements OnInit {
 
   selectcss(event) {
 
-    console.log(event);
-    console.log(this.data);
-
     if (event.value === 'monospace') {
 
       this.http.get('/assets/report-css/monospace.css', { responseType: 'text' }).subscribe(ret => {
-        this.report_css = ret;
-        console.log(this.report_css);
         this.data.report_settings.report_css = ret;
       });
 
