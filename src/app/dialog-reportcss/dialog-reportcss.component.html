@@ -1,9 +1,23 @@
 <div class="fixActionRow">
-    <h1 mat-dialog-title>Add Custom CSS (HTML v2)</h1>
+
+    <div layout="row" layout-align="space-between" fxLayoutGap="10px grid">
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
+            <h1 mat-dialog-title>Custom CSS</h1>
+        </div>
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end end">
+            <mat-form-field appearance="outline" color="accent" style="width: 150px; font-size:11px;">
+                <mat-label>Example CSS style</mat-label>
+                <mat-select (selectionChange)="selectcss($event)">
+                    <mat-option value="monospace">Monospace</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
     <div mat-dialog-content>
 
         <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <textarea rows="12" matInput placeholder="HTML report CSS" [(ngModel)]="data.report_settings.report_css"
+            <textarea rows="12" matInput placeholder="HTML report CSS"
                 value="{{data.report_settings.report_css}}"></textarea>
             <mat-hint>CSS only!</mat-hint>
         </mat-form-field>
@@ -11,6 +25,7 @@
     </div>
     <div class="spacer"></div>
     <div mat-dialog-actions>
+        <button mat-raised-button color="accent" (click)="savechange()">Save</button>
         <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
     </div>
 </div>
