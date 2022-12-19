@@ -864,21 +864,6 @@
 
           </div>
         </mat-tab>
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">palette</mat-icon>
-            Theme colors
-          </ng-template>
-          <div style="padding: 10px!important;">
-            <mat-form-field appearance="fill" color="accent">
-              <mat-label>HTML theme colors:</mat-label>
-              <mat-select (selectionChange)="themechange($event)" [(value)]="selectedtheme">
-                <mat-option value="white">White (default)</mat-option>
-                <mat-option value="dark">Dark</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </mat-tab>
 
         <mat-tab>
           <ng-template mat-tab-label>

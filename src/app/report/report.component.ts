@@ -1186,21 +1186,6 @@ Sample code here\n\
 
   }
 
-  themechange(event) {
-
-    let theme = '';
-    if (event.value === 'dark') {
-      theme = '_dark';
-    } else {
-      theme = '';
-    }
-
-    this.http.get('/assets/bootstrap' + theme + '.min.css', { responseType: 'text' }).subscribe(res3 => {
-      this.report_css = res3;
-    });
-
-  }
-
   embedVideo(event) {
     if (event.checked === false) {
       this.decryptedReportDataChanged.report_settings.report_video_embed = false;
