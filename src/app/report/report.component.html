@@ -14,35 +14,22 @@
 <br><br>
 <!-- Report info -->
 <mat-card>
-  <mat-card-header>
+  <mat-card-header *ngIf="decryptedReportDataChanged">
     <div mat-card-avatar>
       <mat-icon>fingerprint</mat-icon>
     </div>
-    <mat-card-title style="display: flex">Report information
-      &nbsp;
-      <button *ngIf="decryptedReportDataChanged" mat-icon-button
-        style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;"
-        [matMenuTriggerFor]="reportsetting">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #reportsetting="matMenu">
-        <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" class="active-link"
-          title="Change report security key" mat-menu-item>
-          <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
-        </a>
-      </mat-menu>
-    </mat-card-title>
+    <mat-card-title style="display: flex">Release version</mat-card-title>
   </mat-card-header>
   <mat-card-content>
 
     <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
       <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-        <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
-        <p *ngIf="reportdesc?.report_lastupdate">Last Update: {{reportdesc?.report_lastupdate | date:'medium'}}</p>
         <p>Report ID: {{reportdesc?.report_id}}</p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
         </p>
+        <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
+        <p *ngIf="reportdesc?.report_lastupdate">Last Update: {{reportdesc?.report_lastupdate | date:'medium'}}</p>
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar
             style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
@@ -89,7 +76,7 @@
       <div mat-card-avatar>
         <mat-icon>description</mat-icon>
       </div>
-      <mat-card-title>Report details</mat-card-title>
+      <mat-card-title>Details</mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
@@ -97,7 +84,7 @@
 
         <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
           <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <mat-label>Scope</mat-label>
+            <mat-label>Report scope</mat-label>
             <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
               value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
             <mat-hint>You can use Markdown or HTML.
@@ -793,13 +780,19 @@
         <mat-icon>settings</mat-icon>
       </div>
 
-      <mat-card-title style="display: flex" fxLayoutAlign="start">Report Settings
+      <mat-card-title style="display: flex" fxLayoutAlign="start">Settings
         &nbsp;
         <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;"
           [matMenuTriggerFor]="Settingsmenu">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #Settingsmenu="matMenu">
+
+          <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" class="active-link"
+          title="Change report security key" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
+           </a>
+
           <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)" class="active-link"
             title="Add custom content to report" mat-menu-item>
             <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add custom content to report
