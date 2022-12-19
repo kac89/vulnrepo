@@ -1449,7 +1449,7 @@ Date   | Description
 
 
       if (this.decryptedReportDataChanged.report_settings.report_css !== '') {
-        res = res.replace("[CSS_Injection_here]", DOMPurify.sanitize(this.decryptedReportDataChanged.report_settings.report_css))
+        res = res.replace("/*[CSS_Injection_here]*/", DOMPurify.sanitize(this.decryptedReportDataChanged.report_settings.report_css))
       }
 
       // download HTML report
