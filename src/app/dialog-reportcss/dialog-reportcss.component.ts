@@ -34,8 +34,6 @@ export class DialogReportcssComponent implements OnInit {
 
     }
 
-
-
   }
 
 }

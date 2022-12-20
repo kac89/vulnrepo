@@ -3,7 +3,7 @@
     <div mat-dialog-content>
 
         <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <textarea rows="12" matInput placeholder="HTML content" [(ngModel)]="data.report_settings.report_html"
+            <textarea [formControl]="report_custom_content" rows="12" matInput placeholder="HTML content"
                 value="{{data.report_settings.report_html}}"></textarea>
             <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
         </mat-form-field>
@@ -11,6 +11,7 @@
     </div>
     <div class="spacer"></div>
     <div mat-dialog-actions>
+        <button mat-raised-button color="accent" (click)="savechange()">Save</button>
         <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
     </div>
 </div>
