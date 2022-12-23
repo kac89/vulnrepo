@@ -4,8 +4,8 @@ RUN mkdir /app
 
 WORKDIR /app
 COPY . .
-RUN npm install
-RUN npm run build --prod
+RUN npm i --force
+RUN npm run build -- -c production
 
 
 FROM nginx:latest AS ngi
