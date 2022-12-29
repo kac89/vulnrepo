@@ -808,7 +808,11 @@
         </mat-menu>
         <mat-menu #reportProfiles="matMenu">
           <span *ngFor="let profile of ReportProfilesList">
-            <button mat-menu-item (click)="setReportProfile(profile)">{{profile.profile_name}}</button>
+            <button mat-menu-item (click)="setReportProfile(profile)">
+              <mat-icon *ngIf="!profile.api" title="Local Host">computer</mat-icon>
+              <mat-icon *ngIf="profile.api == 'remote'" color="accent" title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon>
+              {{profile.profile_name}}
+            </button>
           </span>
         </mat-menu>
       </mat-card-title>
