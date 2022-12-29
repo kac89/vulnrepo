@@ -27,6 +27,7 @@ export interface ApiList {
 export class SettingsComponent implements OnInit {
   color = 'accent';
   info = '';
+  msg = '';
   listkey = false;
   checked = false;
   hide = true;
@@ -47,8 +48,9 @@ export class SettingsComponent implements OnInit {
   max_storage: any;
   status = 'Not connected!';
   reportProfileList = [];
+  reportProfileList_int = [];
 
-  ReportProfilesdisplayedColumns: string[] = ['profile_name', 'profile_settings'];
+  ReportProfilesdisplayedColumns: string[] = ['source', 'profile_name', 'profile_settings'];
   ReportProfilesdataSource = new MatTableDataSource([]);
 
   displayedColumns: string[] = ['apiname', 'status', 'created', 'expires', 'storage', 'settings'];
@@ -60,6 +62,8 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
 
+    this.getReportProfiles();
+
     const localkey = sessionStorage.getItem('VULNREPO-API');
     if (localkey) {
 
@@ -70,6 +74,7 @@ export class SettingsComponent implements OnInit {
 
     } else {
 
+      
       this.indexeddbService.retrieveAPIkey().then(ret => {
         if (ret) {
           this.tryconnectdb = true;
@@ -86,8 +91,6 @@ export class SettingsComponent implements OnInit {
       });
 
     }
-
-    this.getReportProfiles();
 
   }
   
@@ -227,7 +230,7 @@ export class SettingsComponent implements OnInit {
 
 
   sessionStorage.setItem('VULNREPO-API', JSON.stringify(vaultobj));
-
+  this.getReportProfiles();
   }
 
   removeapikey() {
@@ -247,6 +250,7 @@ export class SettingsComponent implements OnInit {
     this.apiconneted = false;
     this.status = 'Not connected!';
     this.tryconnectdb = true;
+    this.getReportProfiles();
   }
 
   tryconnect() {
@@ -447,8 +451,52 @@ getReportProfiles() {
       this.ReportProfilesdataSource = new MatTableDataSource(ret);
       this.reportProfileList = this.ReportProfilesdataSource.data;
     }
+    this.getAPIReportProfiles();
   });
 }
+
+
+getAPIReportProfiles() {
+
+  const localkey = sessionStorage.getItem('VULNREPO-API');
+  if (localkey) {
+    this.msg = 'API connection please wait...';
+
+    const vaultobj = JSON.parse(localkey);
+
+    vaultobj.forEach( (element) => {
+
+      this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
+        this.reportProfileList_int = [];
+        if (resp.length > 0) {
+          resp.forEach((ele) => {
+            ele.api = 'remote';
+            ele.apiurl = element.value;
+            ele.apikey = element.apikey;
+            ele.apiname = element.viewValue;
+          });
+          this.reportProfileList_int.push(...resp);
+        }
+
+      }).then(() => {
+
+        this.ReportProfilesdataSource.data = [...this.reportProfileList, ...this.reportProfileList_int];
+        //this.dataSource.sort = this.sort;
+        //this.dataSource.paginator = this.paginator;
+        this.msg = '';
+      }).catch(() => {});
+
+
+      setTimeout(() => {
+        // console.log('hide progress timeout');
+        this.msg = '';
+      }, 10000);
+
+  });
+
+  }
+}
+
 
   openDialogReportProfiles(data: any): void {
 
@@ -570,6 +618,24 @@ parseprofile(profile){
   this.ReportProfilesdataSource.data = this.reportProfileList;
   this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
   this.getReportProfiles();
+}
+
+downloadProfileItem(element) {
+
+  delete element.api;
+  delete element.apikey;
+  delete element.apiname;
+  delete element.apiurl;
+
+  const blob = new Blob([JSON.stringify(element)], { type: 'application/json' });
+  const link = document.createElement('a');
+  const url = window.URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', '' + element.profile_name + ' settings profile (vulnrepo.com).json');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 }

@@ -189,3 +189,29 @@ No space on API:
 | :-------- | :------- | :------------------------- |
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
 | `reportdata` | `string` | **Required**. Report data encrypted base64 |
+
+
+#### getreportprofiles: Get all reports profiles settings
+
+Request:
+```http
+POST /api/ HTTP/2
+Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Action: getreportprofiles
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+```
+
+Response:
+```http
+HTTP/2 200 OK
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+
+[{"[trunked]"}]
+
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `API-ACCESS-KEY` | `string` | **Required**. Your API key |

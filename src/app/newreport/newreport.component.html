@@ -37,8 +37,11 @@
         <mat-form-field *ngIf="ReportProfilesList.length > 0" appearance="fill" color="accent">
           <mat-label>Select settings profile:</mat-label>
           <mat-select (selectionChange)="selectchangeProfiles($event)" [(value)]="selected_profile">
+            <mat-select-trigger>{{selected_profilefin}}</mat-select-trigger>
             <mat-option>None</mat-option>
-            <mat-option *ngFor="let profile of ReportProfilesList" [value]="profile">{{profile.profile_name}}</mat-option>
+            <mat-option *ngFor="let profile of ReportProfilesList" [value]="profile">
+              <mat-icon *ngIf="!profile.api" title="Local Host">computer</mat-icon><mat-icon *ngIf="profile.api" color="accent" title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon> {{profile.profile_name}}
+            </mat-option>
           </mat-select>
         </mat-form-field>
 

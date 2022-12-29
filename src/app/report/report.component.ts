@@ -31,6 +31,7 @@ import { HttpClient } from '@angular/common/http';
 import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
 import * as DOMPurify from 'dompurify';
+import { ApiService } from '../api.service';
 
 export interface Tags {
   name: string;
@@ -70,6 +71,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   advhtml = '';
   report_css: any;
   bugbountylist = [];
+  reportProfileList_int = [];
   report_id: string;
   report_info: any;
   lastsavereportdata = '';
@@ -128,6 +130,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     private indexeddbService: IndexeddbService,
     private differs: KeyValueDiffers,
     public router: Router,
+    private apiService: ApiService,
     private messageService: MessageService,
     private snackBar: MatSnackBar) {
 
@@ -243,9 +246,49 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (ret) {
         this.ReportProfilesList = ret;
       }
+      this.getAPIReportProfiles();
     });
   }
 
+  getAPIReportProfiles() {
+    const localkey = sessionStorage.getItem('VULNREPO-API');
+    if (localkey) {
+      //this.msg = 'API connection please wait...';
+  
+      const vaultobj = JSON.parse(localkey);
+  
+      vaultobj.forEach( (element) => {
+  
+        this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
+          this.reportProfileList_int = [];
+          if (resp.length > 0) {
+            resp.forEach((ele) => {
+              ele.api = 'remote';
+              ele.apiurl = element.value;
+              ele.apikey = element.apikey;
+              ele.apiname = element.viewValue;
+            });
+            this.reportProfileList_int.push(...resp);
+          }
+  
+        }).then(() => {
+  
+          this.ReportProfilesList = [...this.ReportProfilesList, ...this.reportProfileList_int];
+          //this.dataSource.sort = this.sort;
+          //this.dataSource.paginator = this.paginator;
+          //this.msg = '';
+        }).catch(() => {});
+  
+  
+        setTimeout(() => {
+          // console.log('hide progress timeout');
+          //this.msg = '';
+        }, 10000);
+  
+    });
+  
+    }
+  }
 
   dataChanged(changes: KeyValueChanges<any, any[]>) {
     /* If you want to see details then use

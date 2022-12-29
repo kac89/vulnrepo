@@ -4,6 +4,9 @@ import { SeckeyValidatorService } from '../seckey-validator.service';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
+import { ApiService } from '../api.service';
+import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-newreport',
@@ -11,7 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./newreport.component.scss']
 })
 export class NewreportComponent implements OnInit {
-
+  dialogRef: MatDialogRef<DialogApikeyComponent>;
   hide = true;
   alert: string;
   inppass: string;
@@ -23,16 +26,30 @@ export class NewreportComponent implements OnInit {
   selectEDAPI_apikey = '';
   selectEDAPI_apiurl = '';
   value = 20;
+  keyfound = false;
+  msg = '';
   bufferValue = 20;
   str = '';
   selected = 'local';
   selected_profile = '';
+  selected_profilefin = '';
   ReportProfilesList = [];
   apiReports = [];
   profileSettingsselected: any;
-
-  constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService,
+  apireportprofiles = [];
+  apireportprofilesList = [];
+  constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService, private apiService: ApiService, public dialog: MatDialog,  
     public router: Router) {
+
+    // get report profiles
+    this.indexeddbService.retrieveReportProfile().then(ret => {
+      if (ret) {
+        this.ReportProfilesList = ret;
+    
+        this.getAllreportprofilesfromapi();
+
+      }
+    });
 
   }
 
@@ -43,13 +60,64 @@ export class NewreportComponent implements OnInit {
       this.localkeys = JSON.parse(localkey);
     }
 
-        // get report profiles
-        this.indexeddbService.retrieveReportProfile().then(ret => {
-          if (ret) {
-            this.ReportProfilesList = ret;
-          }
-        });
+  }
 
+  getAllreportprofilesfromapi() {
+  
+
+    const localkey = sessionStorage.getItem('VULNREPO-API');
+    if (localkey) {
+      this.msg = 'API connection please wait...';
+
+      this.keyfound = true;
+      const vaultobj = JSON.parse(localkey);
+
+      vaultobj.forEach( (element) => {
+
+        this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
+
+          if (resp.length > 0) {
+
+            resp.forEach((ele) => {
+              ele.api = 'remote';
+              ele.apiurl = element.value;
+              ele.apikey = element.apikey;
+              ele.apiname = element.viewValue;
+            });
+
+            this.apireportprofilesList.push(...resp);
+          }
+
+        }).then(() => {
+
+          this.ReportProfilesList = [...this.ReportProfilesList, ...this.apireportprofilesList];
+          
+          this.msg = '';
+        }).catch(() => {});
+
+
+        setTimeout(() => {
+          // console.log('hide progress timeout');
+          this.msg = '';
+        }, 10000);
+
+      });
+
+
+    } else {
+
+      this.indexeddbService.retrieveAPIkey().then(ret => {
+        
+        if (ret) {
+
+          if (sessionStorage.getItem('hidedialog') !== 'true') {
+            setTimeout(_ => this.openDialog(ret));
+          }
+
+        }
+      });
+
+    }
   }
 
   generatePassword() {
@@ -78,6 +146,31 @@ export class NewreportComponent implements OnInit {
     this.hide = false;
   }
 
+  openDialog(data: any): void {
+
+    const dialogRef = this.dialog.open(DialogApikeyComponent, {
+      width: '400px',
+      disableClose: true,
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The security key dialog was closed');
+      if (result) {
+        sessionStorage.setItem('VULNREPO-API', result);
+        
+        const localkey = sessionStorage.getItem('VULNREPO-API');
+        if (localkey) {
+          this.localkeys = JSON.parse(localkey);
+        }
+
+        this.getAllreportprofilesfromapi();
+
+      }
+
+    });
+
+  }
 
   passCheck(pass) {
 
@@ -158,7 +251,11 @@ export class NewreportComponent implements OnInit {
   }
 
   selectchangeProfiles(event) {
-    this.profileSettingsselected = event.value;
+    if (event.value) {
+      this.selected_profilefin = event.value.profile_name;
+      this.profileSettingsselected = event.value;
+    }
+
   }
 
 }
