@@ -911,9 +911,7 @@ Sample code here\n\
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result) {
-        if (result !== '') {
-          this.decryptedReportDataChanged.report_settings.report_css = result;
-        }
+        this.decryptedReportDataChanged.report_settings.report_css = result;
       }
     });
 

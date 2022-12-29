@@ -18,7 +18,7 @@
 
         <mat-form-field appearance="outline" class="example-full-width" color="accent">
             <textarea rows="12" matInput placeholder="HTML report CSS"
-                value="{{data.report_settings.report_css}}"></textarea>
+                value="" [formControl]="report_css"></textarea>
             <mat-hint>CSS only!</mat-hint>
         </mat-form-field>
 
