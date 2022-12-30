@@ -62,7 +62,13 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getReportProfiles();
+    //get report profiles from local at init
+    this.indexeddbService.retrieveReportProfile().then(ret => {
+      if (ret) {
+        this.ReportProfilesdataSource = new MatTableDataSource(ret);
+        this.reportProfileList = this.ReportProfilesdataSource.data;
+      }
+    });
 
     const localkey = sessionStorage.getItem('VULNREPO-API');
     if (localkey) {
