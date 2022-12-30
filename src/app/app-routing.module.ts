@@ -52,7 +52,7 @@ const routes: Routes = [{
 },
 {
   path: 'server',
-  loadChildren: () => new Promise( () => { if(window.location.href.match(/server/) ) window.location.href = 'https://github.com/kac89/vulnrepo-server'; } ) 
+  loadChildren: () => new Promise(() => { if(window.location.href.match(/server/)) window.location.href = 'https://github.com/kac89/vulnrepo-server'; })
 },
 {
   path: 'vuln-list',
