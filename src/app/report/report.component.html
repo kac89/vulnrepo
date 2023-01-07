@@ -161,14 +161,14 @@
         <div fxLayout="row" fxLayoutGap="5px grid" fxLayoutAlign="flex-end">
 
           <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <button style="width: 100%;" mat-button (click)="import_issues()">
+            <button style="width: 100%" mat-button (click)="import_issues()">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
             </button>
           </div>
 
           <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-            <button [matMenuTriggerFor]="dropdownMenuOne" class="exportbutton" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
+            <button [matMenuTriggerFor]="dropdownMenuOne" style="width: 100%" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
               <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
             </button>
 
