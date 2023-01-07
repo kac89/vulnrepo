@@ -48,12 +48,14 @@
           {{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
         </span>
 
-        <p>
-          <button mat-raised-button color="primary" (click)="saveReportChanges(reportdesc.report_id)">
+        <div>
+          <br>
+          <button mat-raised-button class="mat-elevation-z9" color="primary" (click)="saveReportChanges(reportdesc.report_id)">
             <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save all changes and release
             version!
           </button>
-        </p>
+        </div>
+        <br>
         <span *ngIf="youhaveunsavedchanges">
           <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon> You have unsaved
           changes! <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
@@ -158,18 +160,18 @@
 
         <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
 
-          <div fxFlex.xs="100%">
+          <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
             <button style="width: 100%;" mat-button (click)="import_issues()">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
             </button>
           </div>
 
-          <div fxFlex.xs="100%">
+          <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
 
             <mat-button-toggle-group>
               <mat-button-toggle class="split-button-1">
 
-                <button style="width: 80%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
+                <button style="width: 82%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
                   (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">
                   <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
                 </button>
@@ -203,7 +205,7 @@
             </mat-menu>
           </div>
 
-          <div fxFlex.xs="100%">
+          <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
 
             <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu"
               color="accent">
@@ -229,16 +231,12 @@
 
 
           <mat-expansion-panel-header cdkDragHandle>
-            <mat-panel-title fxLayoutAlign="start center">
-              <div style="display: block ruby;">
+            <mat-panel-title fxLayoutAlign="start">
+              <div style="white-space: nowrap;">
                 <mat-checkbox style="margin-left: 5px;" [(ngModel)]="selected3[i]" (change)="toggle()"
                   (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
                 <span
                   class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>&nbsp;&nbsp;{{dec_data.title}}
-                <a *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
-                  (click)="editissuetitle(dec_data);$event.stopPropagation();">
-                  <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
-                </a>
               </div>
             </mat-panel-title>
             <mat-panel-description fxLayoutAlign="center center">
@@ -253,6 +251,13 @@
             </mat-panel-description>
 
             <mat-panel-description *ngIf="dec_data?.status" fxLayoutAlign="end center">
+              <div>
+                <a *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
+                  (click)="editissuetitle(dec_data);$event.stopPropagation();">
+                  <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
+                </a>
+              </div>&nbsp;
+              
               <div *ngIf="dec_data?.bounty">
                 <mat-icon *ngIf="dec_data?.bounty.length > 0" title="Found bug-bounty program related to the issue"
                   color="accent">attach_money</mat-icon>
@@ -933,7 +938,7 @@
 
       <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
           <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
@@ -942,7 +947,7 @@
               </mat-icon>
             </div>
 
-            <div fxFlex="60%" fxFlex.sm="80%" fxFlex.xs="100%">
+            <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
               <button style="width: 100%;" class="mat-elevation-z9" mat-raised-button [matMenuTriggerFor]="aboveMenu2" color="accent">
                 <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
               </button>
@@ -962,7 +967,7 @@
 
         </div>
 
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
           <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
@@ -971,9 +976,9 @@
               </mat-icon>
             </div>
 
-            <div fxFlex="60%" fxFlex.sm="40%" fxFlex.xs="100%">
+            <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-              <button mat-raised-button style="width: 100%;" color="warn" [matMenuTriggerFor]="aboveMenu">
+              <button mat-raised-button style="width: 100%;" class="mat-elevation-z9" color="warn" [matMenuTriggerFor]="aboveMenu">
                 <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Download decrypted
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
