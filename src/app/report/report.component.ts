@@ -848,6 +848,13 @@ Sample code here\n\
 
   }
 
+  getselectedissues(items) {
+    const ret = items.filter(function (el) {
+      return (el === true);
+    });
+    return ret.length;
+  }
+
   sortbycvss() {
     this.deselectall();
     this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);

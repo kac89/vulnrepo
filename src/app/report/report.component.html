@@ -158,36 +158,23 @@
       </mat-card-title>
       <mat-card-title class="card-container-right">
 
-        <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
+        <div fxLayout="row" fxLayoutGap="5px grid" fxLayoutAlign="flex-end">
 
-          <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
+          <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
             <button style="width: 100%;" mat-button (click)="import_issues()">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
             </button>
           </div>
 
-          <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+          <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-            <mat-button-toggle-group>
-              <mat-button-toggle class="split-button-1">
-
-                <button style="width: 82%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
-                  (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">
-                  <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
-                </button>
-
-              </mat-button-toggle>
-
-              <mat-button-toggle [matMenuTriggerFor]="dropdownMenuOne">
-
-                <button class="exportbutton" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
-                  <mat-icon>arrow_drop_down</mat-icon>
-                </button>
-
-              </mat-button-toggle>
-            </mat-button-toggle-group>
+            <button [matMenuTriggerFor]="dropdownMenuOne" class="exportbutton" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
+              <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
+            </button>
 
             <mat-menu #dropdownMenuOne="matMenu">
+              <button *ngIf="getselectedissues(selected3) == 0" mat-menu-item (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">Export all</button>
+              <button *ngIf="getselectedissues(selected3) >= 1" mat-menu-item (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">Export selected ({{getselectedissues(selected3)}})</button>
               <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
             </mat-menu>
 
@@ -205,11 +192,11 @@
             </mat-menu>
           </div>
 
-          <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
+          <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
 
             <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu"
               color="accent">
-              <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon> Sort by
+              <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort by
             </button>
             <mat-menu #menu="matMenu">
               <button mat-menu-item (click)="sortbyseverity()">Severity</button>
