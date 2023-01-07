@@ -158,18 +158,18 @@
 
         <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
 
-          <div fxFlex.xs="100%">
+          <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
             <button style="width: 100%;" mat-button (click)="import_issues()">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
             </button>
           </div>
 
-          <div fxFlex.xs="100%">
+          <div fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
 
             <mat-button-toggle-group>
               <mat-button-toggle class="split-button-1">
 
-                <button style="width: 80%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
+                <button style="width: 82%;" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button
                   (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">
                   <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
                 </button>
@@ -203,7 +203,7 @@
             </mat-menu>
           </div>
 
-          <div fxFlex.xs="100%">
+          <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
 
             <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu"
               color="accent">
@@ -229,8 +229,8 @@
 
 
           <mat-expansion-panel-header cdkDragHandle>
-            <mat-panel-title fxLayoutAlign="start center">
-              <div style="display: block ruby;">
+            <mat-panel-title fxLayoutAlign="start">
+              <div style="white-space: nowrap;">
                 <mat-checkbox style="margin-left: 5px;" [(ngModel)]="selected3[i]" (change)="toggle()"
                   (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
                 <span
