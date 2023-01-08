@@ -265,6 +265,7 @@
                 <mat-icon style="color:grey" title="Issue status: Won't Fix"
                   class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
               </div>
+              <mat-icon *ngIf="dec_data.files.length > 0" title="Attached file" class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
             </mat-panel-description>
 
           </mat-expansion-panel-header>
@@ -976,7 +977,7 @@
                   <mat-icon>description</mat-icon>HTML (old)
                 </button>
                 <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)">
-                  <mat-icon>text_format</mat-icon>TEXT
+                  <mat-icon>description</mat-icon>TEXT
                 </button>
                 <button mat-menu-item (click)="DownloadJSON(report_info)">
                   <mat-icon>code</mat-icon>JSON
