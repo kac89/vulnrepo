@@ -616,6 +616,8 @@ Sample code here\n\
 
     this.listchangelog = this.decryptedReportData.report_changelog;
     this.dataSource = new MatTableDataSource(this.decryptedReportData.report_changelog);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
     setTimeout(() => this.dataSource.sort = this.sort);
     setTimeout(() => this.dataSource.paginator = this.paginator);
 
