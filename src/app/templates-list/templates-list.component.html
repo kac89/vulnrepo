@@ -1,11 +1,43 @@
 <div>
-  <h1 class="mat-headline-3">
-    <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> Templates List
-    ({{this.countvulns.length}})
-  </h1>
+
+  <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+    <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+          <h1 class="mat-headline-3">
+            <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> Templates List
+            ({{this.countvulns.length}})
+          </h1>
+
+    </div>
+
+    <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select a source</mat-label>
+          
+            <mat-select disableRipple [(value)]="sourceSelect" (selectionChange)="changeselect()">
+              <mat-option value="VULNREPO">VULNRΞPO</mat-option>
+              <mat-option value="CWE">CWE Research Concepts</mat-option>
+              <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+              <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+              <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
+              <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
+              <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
+              <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+    </div>
+
+  </div>
+
+
+
+
   
   <mat-card appearance="outlined" class="mdc-card my-card-content">
-    <p>List contains issues templates used during creating a report, source name: "VULNRΞPO". You can share own templates use <a class="active-link"
+    <p *ngIf="sourceSelect == 'VULNREPO'">List contains issues templates used during creating a report, source name: "VULNRΞPO". You can share own templates use <a class="active-link"
         target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/src/assets/vulns.json">vulns.json</a>, is
       super easy! Push your changes to your fork and submit a pull request on github.</p>
       <p>Click on vuln to expand.</p>

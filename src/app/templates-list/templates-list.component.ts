@@ -11,6 +11,17 @@ import {
   trigger
 } from '@angular/animations';
 
+export interface VulnsList {
+  title: string;
+  poc: string;
+  desc: string;
+  severity: string;
+  ref: string;
+  cvss: number;
+  cve: string;
+  expanded?: boolean;
+}
+
 @Component({
   selector: 'app-templates-list',
   templateUrl: './templates-list.component.html',
@@ -33,6 +44,7 @@ export class TemplatesListComponent implements OnInit {
   getvulnlistStatus = '';
   countvulns = [];
   expandedElement: VulnsList | null;
+  sourceSelect = 'VULNREPO';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -53,15 +65,122 @@ export class TemplatesListComponent implements OnInit {
 
   }
 
-}
+  changeselect() {
 
-export interface VulnsList {
-  title: string;
-  poc: string;
-  desc: string;
-  severity: string;
-  ref: string;
-  cvss: number;
-  cve: string;
-  expanded?: boolean;
+    if (this.sourceSelect === "VULNREPO") {
+      
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource = new MatTableDataSource<VulnsList[]>(res);
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    } else if (this.sourceSelect === "CWE") {
+
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource.data = res;
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    } else if (this.sourceSelect === "MMOBILE") {
+
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource.data = res;
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    } else if (this.sourceSelect === "MENTERPRISE") {
+
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource.data = res;
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    } else if (this.sourceSelect === "OWASPTOP2017") {
+
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/OWASPtop102017.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource.data = res;
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    } else if (this.sourceSelect === "OWASPTOP2021") {
+
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource.data = res;
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    } else if (this.sourceSelect === "OWASPTOP10CICD") {
+
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/OWASPtop10cicd.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource.data = res;
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    } else if (this.sourceSelect === "OWASPTOP10k8s") {
+
+      this.getvulnlistStatus = 'Loading...';
+      this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date()).subscribe(res => {
+  
+        this.dataSource.data = res;
+        this.countvulns = res;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.getvulnlistStatus = '';
+  
+      });
+
+
+    }
+
+  }
+
 }
