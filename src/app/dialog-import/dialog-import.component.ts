@@ -880,9 +880,17 @@ export class DialogImportComponent implements OnInit {
 
 
         if (Object.values(intvulns).indexOf(myObject2.VulnerabilityID) > -1) {
-          console.log('has test1');
+          // console.log('has VulnerabilityID');
         } else {
           const reff = myObject2.References.join("\n"); 
+          let cvss = '';
+
+          if (typeof myObject2.CVSS !== 'undefined') {
+            if (typeof myObject2.CVSS.nvd !== 'undefined') {
+              cvss = myObject2.CVSS.nvd.V3Score;
+            }
+  
+          }
 
           const date = new Date();
           const today = this.datePipe.transform(date, 'yyyy-MM-dd');
@@ -893,7 +901,7 @@ export class DialogImportComponent implements OnInit {
             desc: myObject2.Description,
             severity: setseverity(myObject2.Severity),
             ref: reff,
-            cvss: myObject2.CVSS.nvd.V3Score,
+            cvss: cvss,
             cve: '',
             tags: [],
             bounty: [],
