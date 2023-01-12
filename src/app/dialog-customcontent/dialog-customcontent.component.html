@@ -1,9 +1,9 @@
-<div class="fixActionRow">
+<div class="mdc-card my-card-content">
     <h1 mat-dialog-title>Add Custom Content (You can use Markdown or HTML)</h1>
     <div mat-dialog-content>
 
         <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <textarea [formControl]="report_custom_content" rows="12" matInput placeholder="HTML content"
+            <textarea [formControl]="report_custom_content" rows="8" matInput placeholder="HTML content"
                 value="{{data.report_settings.report_html}}"></textarea>
             <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
         </mat-form-field>

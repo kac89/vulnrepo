@@ -9,7 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { v4 as uuid } from 'uuid';
 import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
 import { ApiService } from '../api.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface MyReportElement {
   select: any;

@@ -1,4 +1,6 @@
-<h1 class="mat-display">
+<div class="mdc-card my-card-content">
+
+  <h1 class="mat-display">
     <mat-icon class="vertical-align-middle size-45">explore</mat-icon> CVE Info (Online DB)
 </h1>
 <mat-dialog-content>
@@ -18,10 +20,10 @@
         
         <p *ngIf="results?.summary"><b>Summary:</b> {{ results?.summary }}</p>
         <p>
-            <mat-chip-list>
-                <mat-chip *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip>
-                <a *ngIf="results?.cwe" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.cwe }}"><mat-chip>{{ results?.cwe }}</mat-chip></a>
-            </mat-chip-list>
+            <mat-chip-listbox>
+                <mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option>
+                <a *ngIf="results?.cwe" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.cwe }}"><mat-chip-option>{{ results?.cwe }}</mat-chip-option></a>
+            </mat-chip-listbox>
         </p>
 
         <h2 *ngIf="dataSource.data.length != 0">Github POCs</h2>
@@ -93,8 +95,10 @@
         <button mat-raised-button color="accent" (click)="saveCVE()">
             <mat-icon matSuffix>save</mat-icon> Save & close
         </button>&nbsp;
-        <button mat-flat-button color="primary" mat-dialog-close>Cancel</button>
+        
     </div>
-
-    
+    &nbsp;
+    <button mat-flat-button color="primary" mat-dialog-close>Cancel</button>
 </mat-dialog-actions>
+
+</div>

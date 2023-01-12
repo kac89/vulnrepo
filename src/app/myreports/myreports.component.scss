@@ -6,23 +6,29 @@ th.mat-sort-header-sorted {
   color: black;
 }
 
-.mat-header-cell:first-child,.mat-cell:first-child{
+.mat-mdc-header-cell:first-child,.mat-mdc-cell:first-child{
   flex:5%;
+  text-align: center;
+  justify-content: center;
 }
-.mat-header-cell:nth-child(2),.mat-cell:nth-child(2){
-  flex:5%;
+.mat-mdc-header-cell:nth-child(2),.mat-mdc-cell:nth-child(2){
+  flex:6%;
+  text-align: center;
+  justify-content: center;
 }
-.mat-header-cell:nth-child(3),.mat-cell:nth-child(3){
-  flex:70%;
+.mat-mdc-header-cell:nth-child(3),.mat-mdc-cell:nth-child(3){
+  flex:60%;
+  text-align: center;
+  justify-content: flex-start;
 }
-.mat-header-cell:nth-child(4),.mat-cell:nth-child(4){
-  flex:20%;
+.mat-mdc-header-cell:nth-child(4),.mat-mdc-cell:nth-child(4){
+  flex:22%;
 }
-.mat-header-cell:nth-child(5),.mat-cell:nth-child(5){
-  flex:20%;
+.mat-mdc-header-cell:nth-child(5),.mat-mdc-cell:nth-child(5){
+  flex:22%;
 }
-.mat-header-cell:last-child,.mat-cell:last-child{
-  flex:5%;
-  text-align: right;
+.mat-mdc-header-cell:last-child,.mat-mdc-cell:last-child{
+  flex:6%;
+  text-align: center;
   justify-content: flex-end;
 }

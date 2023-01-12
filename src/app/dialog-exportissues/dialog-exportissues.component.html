@@ -1,102 +1,106 @@
-<h1 mat-dialog-title>Export issues {{isReturn.length}} to:</h1>
-<div mat-dialog-content>
+<div class="mdc-card my-card-content">
+    <h1 mat-dialog-title>Export issues {{isReturn.length}} to:</h1>
+    <div mat-dialog-content>
 
-    <mat-tab-group>
+        <mat-tab-group color="accent">
 
+            <mat-tab label="VULNRΞPO (.VULN)">
 
-        <mat-tab label="VULNRΞPO (.VULN)">
-
-            <form class="example-form">
-                <p>Exported file will be encrypted by default:</p>
-                <mat-form-field class="example-full-width" color="accent">
-                    <input matInput cdkFocusInitial placeholder="Set report security key" #pass
-                        [type]="hide ? 'password' : 'text'">
-                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field class="example-full-width" color="accent">
-                    <input matInput placeholder="Re-enter report security key" #pass2
-                        [type]="hide ? 'password' : 'text'">
-                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </mat-form-field>
-
-                <button *ngIf="pass.value != '' && pass2.value != '' && pass.value == pass2.value" mat-raised-button
-                    color="accent" (click)="vulnrepojsonexport(pass.value,pass2.value)" cdkFocusInitial>Secure issues
-                    export</button>
-                &nbsp;
-                <button mat-raised-button color="primary" (click)="cancel()">Close</button>
-
-            </form>
-
-        </mat-tab>
-
-
-        <mat-tab label="Atlassian JIRA"><br>
-
-            <mat-form-field class="example-full-width" color="accent">
-                <input cdkFocusInitial matInput placeholder="Jira URL*" #jira_c_url value="">
-            </mat-form-field>
-
-            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0px grid">
-
-                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                    <mat-form-field class="pola" color="accent">
-                        <input matInput placeholder="Project key*" #jira_c_key value="">
-                    </mat-form-field>
-                </div>
-
-                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                <form class="example-form">
+                    <p>Exported file will be encrypted by default:</p>
                     <mat-form-field class="example-full-width" color="accent">
-                        <input matInput placeholder="Set ticket label" #jira_c_label value="">
+                        <input matInput cdkFocusInitial placeholder="Set report security key" #pass
+                            [type]="hide ? 'password' : 'text'">
+                        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </mat-form-field>
-                </div>
 
-            </div>
-
-            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0px grid">
-
-                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                    <mat-form-field class="pola" color="accent">
-                        <input matInput placeholder="User e-mail/login*" #jira_c_email value="">
+                    <mat-form-field class="example-full-width" color="accent">
+                        <input matInput placeholder="Re-enter report security key" #pass2
+                            [type]="hide ? 'password' : 'text'">
+                        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </mat-form-field>
+
+                    <button *ngIf="pass.value != '' && pass2.value != '' && pass.value == pass2.value" mat-raised-button
+                        color="accent" (click)="vulnrepojsonexport(pass.value,pass2.value)" cdkFocusInitial>Secure
+                        issues
+                        export</button>
+                    &nbsp;
+                    <button mat-raised-button color="primary" (click)="cancel()">Close</button>
+
+                </form>
+
+            </mat-tab>
+
+
+            <mat-tab label="Atlassian JIRA"><br>
+
+                <mat-form-field class="example-full-width" color="accent">
+                    <input cdkFocusInitial matInput placeholder="Jira URL*" #jira_c_url value="">
+                </mat-form-field>
+
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0px grid">
+
+                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                        <mat-form-field class="pola" color="accent">
+                            <input matInput placeholder="Project key*" #jira_c_key value="">
+                        </mat-form-field>
+                    </div>
+
+                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                        <mat-form-field class="example-full-width" color="accent">
+                            <input matInput placeholder="Set ticket label" #jira_c_label value="">
+                        </mat-form-field>
+                    </div>
+
                 </div>
 
-                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="center center"
-                    style="border: 1px solid #ccc !important;border-radius: 16px;">
-                    <mat-checkbox [checked]="splitfilereport" (change)="splitfile($event)">Split the file<br>(smaller parts)</mat-checkbox>
-                    &nbsp;&nbsp;&nbsp;&nbsp;:<input style="width: 40px;" matInput
-                        placeholder="How many issue to split the file?" #splitcount value="2" maxlength="4" size="4"
-                        title="How many issue to split the file?">
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0px grid">
+
+                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                        <mat-form-field class="pola" color="accent">
+                            <input matInput placeholder="User e-mail/login*" #jira_c_email value="">
+                        </mat-form-field>
+                    </div>
+
+                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="center center"
+                        style="border: 1px solid #ccc !important;border-radius: 16px;">
+                        <mat-checkbox [checked]="splitfilereport" (change)="splitfile($event)">Split the
+                            file<br>(smaller parts)</mat-checkbox>
+                        &nbsp;&nbsp;&nbsp;&nbsp;:<input style="width: 40px;" matInput
+                            placeholder="How many issue to split the file?" #splitcount value="2" maxlength="4" size="4"
+                            title="How many issue to split the file?">
+                    </div>
+
                 </div>
 
-            </div>
+                <mat-form-field class="example-full-width" color="accent">
+                    <textarea matInput value="{{fields_prop}}" #jira_workflow placeholder="WorkFlow fields*"></textarea>
+                    <mat-hint>You can customize all fields params. Variables: $key, $title, $desc, $poc, $ref,
+                        $severity,
+                        $label</mat-hint>
+                </mat-form-field>
 
-            <mat-form-field class="example-full-width" color="accent">
-                <textarea matInput value="{{fields_prop}}" #jira_workflow placeholder="WorkFlow fields*"></textarea>
-                <mat-hint>You can customize all fields params. Variables: $key, $title, $desc, $poc, $ref, $severity,
-                    $label</mat-hint>
-            </mat-form-field>
+                <br><br><br>
+                <button mat-raised-button color="accent"
+                    (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value, splitcount.value)">Generate
+                    cURL request</button>&nbsp;
+                <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 
-            <br><br><br>
-            <button mat-raised-button color="accent"
-                (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value, splitcount.value)">Generate
-                cURL request</button>&nbsp;
-            <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+                <br><br>
+                <div *ngIf="curlhide">
+                    <p>Download data.json file and in the same folder run curl:</p>
+                    <pre style="white-space:pre-wrap;">{{curlcmd}}</pre>
+                    <p>cURL should prompt to enter your user password to jira.</p>
+                </div>
+                <div *ngIf="multipartcurl">
+                    <p>Download data[0-9].json files and in the same folder run curl:</p>
+                    <textarea matInput placeholder="Ex. It makes me feel...">{{multicurlcmd}}</textarea>
+                    <p>cURL should prompt to enter your user password to JIRA.</p>
+                </div>
 
-            <br><br>
-            <div *ngIf="curlhide">
-                <p>Download data.json file and in the same folder run curl:</p>
-                <pre style="white-space:pre-wrap;">{{curlcmd}}</pre>
-                <p>cURL should prompt to enter your user password to jira.</p>
-            </div>
-            <div *ngIf="multipartcurl">
-                <p>Download data[0-9].json files and in the same folder run curl:</p>
-                <textarea matInput placeholder="Ex. It makes me feel...">{{multicurlcmd}}</textarea>
-                <p>cURL should prompt to enter your user password to JIRA.</p>
-            </div>
+            </mat-tab>
 
-        </mat-tab>
+        </mat-tab-group>
 
-    </mat-tab-group>
-
+    </div>
 </div>

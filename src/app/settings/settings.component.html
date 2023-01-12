@@ -1,30 +1,35 @@
-<h1 class="mat-display-2">
+<h1 class="mat-headline-3">
   <mat-icon class="vertical-align-middle padding-bottom-3 size-45">settings</mat-icon> Settings
 </h1>
 
 <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <mat-card>
+    <mat-card appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">restore</mat-icon>
         <mat-card-title>Backup & Import</mat-card-title>
         <mat-card-subtitle>Save or import saved "My Reports"</mat-card-subtitle>
       </mat-card-header>
 
-      <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="dumpallmyreports()">
-          <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Backup
-        </button>
-        <button mat-raised-button type="button" color="primary" (click)="myreportimporall.click()">
-          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
-        </button>
-        <input hidden type="file" accept=".txt" #myreportimporall (change)="restoreMyReports($event.target)"/>
-      </mat-card-actions>
-
+      <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="10px grid">
+        <div fxFlex="50%" fxLayoutAlign="start">
+          <button mat-raised-button color="primary" (click)="dumpallmyreports()">
+            <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Backup
+          </button>
+        </div>
+        <div fxFlex="50%" fxLayoutAlign="end end">
+          <button mat-raised-button type="button" color="primary" (click)="myreportimporall.click()">
+            <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
+          </button>
+          <input hidden type="file" accept=".txt" #myreportimporall (change)="restoreMyReports($event.target)"/>
+        </div>
+      </div>
+    </mat-card-content>
     </mat-card>
-<br>
-    <mat-card>
+    <br>
+    <mat-card appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">delete_forever</mat-icon>
         <mat-card-title>Remove all stored data</mat-card-title>
@@ -50,7 +55,7 @@
 
     <br>
 
-    <mat-card>
+    <mat-card appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">public</mat-icon>
         <mat-card-title>VULNRΞPO API VAULT ACCESS</mat-card-title>
@@ -84,7 +89,7 @@
   </div>
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-    <mat-card>
+    <mat-card appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">settings_applications</mat-icon>
         <mat-card-title>Report Profiles</mat-card-title>
@@ -126,17 +131,14 @@
           <tr mat-header-row *matHeaderRowDef="ReportProfilesdisplayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: ReportProfilesdisplayedColumns;"></tr>
         </table>
-
-      </mat-card-content>
-      <mat-card-actions>
-
+        <br>
         <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start end">
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
             <button mat-raised-button color="primary" (click)="openDialogReportProfiles('open')" title="Add report profile">
               <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add
             </button>
           </div>
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end start">
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end">
             <button mat-raised-button color="primary"(click)="imreportprofiles.click()" title="Import report profile">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
             </button>
@@ -147,7 +149,7 @@
           </div>
         </div>
 
-      </mat-card-actions>
+      </mat-card-content>
         
     </mat-card>
 
@@ -163,13 +165,13 @@
 
 <div>
 
-  <mat-card *ngIf="!tryconnectdb && !showregapi">
+  <mat-card appearance="outlined" *ngIf="!tryconnectdb && !showregapi">
 
     <mat-card-header>
       <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">public</mat-icon>
       <mat-card-title>VULNRΞPO API List
 
-        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="apimenu">
+        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="apimenu">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #apimenu="matMenu">

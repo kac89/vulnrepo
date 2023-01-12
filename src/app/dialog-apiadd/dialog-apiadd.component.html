@@ -1,4 +1,5 @@
-<h1 class="mat-display">
+<div class="mdc-card my-card-content">
+  <h1 class="mat-display">
     <mat-icon class="vertical-align-middle size-45">https</mat-icon> Access API Vault
 </h1>
 
@@ -16,7 +17,7 @@
         </mat-select>
       </mat-form-field>
       
-      <div *ngIf="selectedAPIDEF.value == 'api.vulnrepo.com'">API: <a target="_blank" class="active-link" rel="noopener noreferrer" href="https://{{selectedAPIDEF.value}}/">https://{{selectedAPIDEF.value}}</a></div>
+      <div *ngIf="selectedAPIDEF.value == 'api.vulnrepo.com'">API: <a target="_blank" class="active-link" rel="noopener noreferrer" href="https://{{selectedAPIDEF.value}}/">https://{{selectedAPIDEF.value}}</a></div><br>
       
       <div *ngIf="selectedAPIDEF.value != 'api.vulnrepo.com'">
         <mat-form-field class="example-full-width" color="accent">
@@ -61,4 +62,5 @@
     &nbsp;
     <button mat-flat-button color="primary" (click)="cancel()">Cancel</button>
   </div>
+</div>
 </div>

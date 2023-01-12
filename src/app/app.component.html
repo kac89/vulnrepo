@@ -17,13 +17,13 @@
     
     <span class="example-fill-remaining-space" *ngIf="!show_status"></span>
 
-    <div fxShow="true" fxHide.lt-md="true">
-      <a routerLink="/home" routerLinkActive="active-link" href="/home" mat-button>
+    <div style="align-items: center;display: flex;" fxShow="true" fxHide.lt-md="true">
+      <a routerLink="/home" style="padding: 12px;" routerLinkActive="active-link" href="/home" mat-button>
         <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon>
         Home
       </a>
 
-      <a routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-button>
+      <a routerLink="/my-reports" style="padding: 12px;" routerLinkActive="active-link" href="/my-reports" mat-button>
         <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon>
         My Reports
       </a>
@@ -33,33 +33,33 @@
       </button>
       <mat-menu #menu="matMenu">
 
-        <a routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
+        <a routerLink="/new-report" routerLinkActive="mdc-list-item--selected" href="/new-report" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Create new report
         </a>
 
-        <a routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
+        <a routerLink="/import-report" routerLinkActive="mdc-list-item--selected" href="/import-report" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
         </a>
 
-        <a routerLink="/vuln-list" routerLinkActive="active-link" href="/vuln-list" mat-menu-item>
+        <a routerLink="/vuln-list" routerLinkActive="mdc-list-item--selected" href="/vuln-list" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
           Vulnerability List
         </a>
-        <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
+        <a routerLink="/settings" routerLinkActive="mdc-list-item--selected" href="/settings" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
           Settings
         </a>
-        <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
+        <a routerLink="/faq" routerLinkActive="mdc-list-item--selected" href="/faq" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
           FAQ
         </a>
       </mat-menu>
 
-      <a target="_blank" href="https://github.com/kac89/vulnrepo" title="Visit project on github.com" mat-button>
+      <a target="_blank" href="https://github.com/kac89/vulnrepo" style="align-items: end;text-align: center;" title="Visit project on github.com" mat-button>
         <img src="./assets/github.png" height="22px">
       </a>
 
-      <a target="_blank" href="https://twitter.com/vulnrepo" title="Follow project on twitter" mat-button>
+      <a target="_blank" href="https://twitter.com/vulnrepo" style="display: inline;text-align: center;" title="Follow project on twitter" mat-button>
         <img src="./assets/twitter.svg" height="32px">
       </a>
 

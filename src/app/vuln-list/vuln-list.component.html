@@ -1,64 +1,66 @@
-<h1 class="mat-display-2">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> Vulnerability List
-  ({{this.countvulns.length}})
-</h1>
-
-<mat-card>
-  <p>List contains issues templates used during creating a report, source name: "VULNRΞPO". You can share own templates use <a class="active-link"
-      target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/src/assets/vulns.json">vulns.json</a>, is
-    super easy! Push your changes to your fork and submit a pull request on github.</p>
-    <p>Click on vuln to expand.</p>
-
-  <div class="mat-elevation-z8">
-
-
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort matSortActive="cvss"
-      matSortDirection="desc">
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
-        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="severity">
-        <th mat-header-cell *matHeaderCellDef> Severity </th>
-        <td mat-cell *matCellDef="let element"> {{element.severity}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="cvss">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> CVSS </th>
-        <td mat-cell *matCellDef="let element"> {{element.cvss}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="cve">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> CVE </th>
-        <td mat-cell *matCellDef="let element"> {{element.cve}} </td>
-      </ng-container>
-
-      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-      <ng-container matColumnDef="expandedDetail">
-        <td mat-cell *matCellDef="let element;let i=index" [attr.colspan]="displayedColumns.length">
-          <div class="example-element-detail" [@detailExpand]="element.expanded ? 'expanded' : 'collapsed'">
-            <div class="example-element-description">
-              <b>Description: </b>{{element.desc}}<br>
-              <b *ngIf="element.cve">CVE: {{element.cve}}</b><br>
-              <b>Reference:</b>{{element.ref}}<br>
+<div>
+  <h1 class="mat-headline-3">
+    <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> Vulnerability List
+    ({{this.countvulns.length}})
+  </h1>
+  
+  <mat-card appearance="outlined" class="mdc-card my-card-content">
+    <p>List contains issues templates used during creating a report, source name: "VULNRΞPO". You can share own templates use <a class="active-link"
+        target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/src/assets/vulns.json">vulns.json</a>, is
+      super easy! Push your changes to your fork and submit a pull request on github.</p>
+      <p>Click on vuln to expand.</p>
+  
+    <div class="mat-elevation-z8">
+  
+  
+      <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort matSortActive="cvss"
+        matSortDirection="desc">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+          <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="severity">
+          <th mat-header-cell *matHeaderCellDef> Severity </th>
+          <td mat-cell *matCellDef="let element"> {{element.severity}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="cvss">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> CVSS </th>
+          <td mat-cell *matCellDef="let element"> {{element.cvss}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="cve">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> CVE </th>
+          <td mat-cell *matCellDef="let element"> {{element.cve}} </td>
+        </ng-container>
+  
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element;let i=index" [attr.colspan]="displayedColumns.length">
+            <div class="example-element-detail" [@detailExpand]="element.expanded ? 'expanded' : 'collapsed'">
+              <div class="example-element-description">
+                <b>Description: </b>{{element.desc}}<br>
+                <b *ngIf="element.cve">CVE: {{element.cve}}</b><br>
+                <b>Reference:</b>{{element.ref}}<br>
+              </div>
             </div>
-          </div>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
-        [class.example-expanded-row]="element.expanded" (click)="element.expanded = !element.expanded">
-      </tr>
-      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-    </table>
-
-    <!--<mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>-->
-
-  </div>
-  <p *ngIf="getvulnlistStatus">{{getvulnlistStatus}}</p>
-</mat-card>
-<br>
-<br>
-<br>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+          [class.example-expanded-row]="element.expanded" (click)="element.expanded = !element.expanded">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+  
+      <!--<mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>-->
+  
+    </div>
+    <p *ngIf="getvulnlistStatus">{{getvulnlistStatus}}</p>
+  </mat-card>
+  <br>
+  <br>
+  <br>
+</div>

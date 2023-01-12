@@ -37,7 +37,7 @@ export class DialogAddreportprofileComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-console.log(this.data);
+
     if (this.data === 'open') {
       this.logow.setValue(600);
       this.logoh.setValue(500);

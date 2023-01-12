@@ -48,10 +48,10 @@ table {
   background-color: #2780E3;
 } 
 
-.card-container-right{
-  display: inline;
+.card-container-right {
+  display: flex;
   float: right;
-  font-size: 12px;
+  margin-left:-8px;
 }
   
 .card-container-left{
