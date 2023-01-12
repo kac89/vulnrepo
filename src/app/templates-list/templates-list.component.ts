@@ -12,9 +12,9 @@ import {
 } from '@angular/animations';
 
 @Component({
-  selector: 'app-vuln-list',
-  templateUrl: './vuln-list.component.html',
-  styleUrls: ['./vuln-list.component.scss'],
+  selector: 'app-templates-list',
+  templateUrl: './templates-list.component.html',
+  styleUrls: ['./templates-list.component.scss'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -26,7 +26,7 @@ import {
     ])
   ]
 })
-export class VulnListComponent implements OnInit {
+export class TemplatesListComponent implements OnInit {
 
   displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve'];
   dataSource = new MatTableDataSource<VulnsList[]>();

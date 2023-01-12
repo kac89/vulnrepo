@@ -52,7 +52,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { DialogExportissuesComponent } from './dialog-exportissues/dialog-exportissues.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DialogChangelogComponent } from './dialog-changelog/dialog-changelog.component';
-import { VulnListComponent } from './vuln-list/vuln-list.component';
+import { TemplatesListComponent } from './templates-list/templates-list.component';
 import { DialogChangekeyComponent } from './dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from './dialog-removeitems/dialog-removeitems.component';
 import { MatMenuModule } from '@angular/material/menu';
@@ -86,7 +86,6 @@ import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.co
         ImportReportComponent,
         DialogExportissuesComponent,
         DialogChangelogComponent,
-        VulnListComponent,
         DialogChangekeyComponent,
         DialogRemoveitemsComponent,
         DialogCvssComponent,
@@ -97,7 +96,8 @@ import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.co
         DialogApiaddComponent,
         DialogAddreportprofileComponent,
         DialogApierrorComponent,
-        DialogReportcssComponent
+        DialogReportcssComponent,
+        TemplatesListComponent
     ],
     imports: [
         BrowserModule,
