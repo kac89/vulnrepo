@@ -37,6 +37,7 @@
             ],
             "allowedCommonJsDependencies": [
               "chart.js",
+              "dompurify",
               "crypto-js",
               "js-sha256",
               "uuid",

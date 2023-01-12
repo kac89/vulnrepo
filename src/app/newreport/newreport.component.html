@@ -1,70 +1,74 @@
-<h1 class="mat-display-2" fxLayoutAlign="start">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add</mat-icon> Create new report
-</h1>
+<div >
+  <h1 class="mat-headline-3" fxLayoutAlign="start">
+    <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add</mat-icon> Create new report
+  </h1>
+  
+  <div fxLayoutAlign="start">
+    <form class="example-full-width">
+      <mat-card appearance="outlined" class="mdc-card my-card-content">
+      <mat-form-field class="example-full-width" color="accent">
+        <input matInput placeholder="Report title (e.g: External penetration testing report)" #title value="">
+      </mat-form-field>
+  
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+  
+        <md-card fxFlex="50%" fxFlex.xs="100%" appearance="outlined" class="mdc-card my-card-content">
+          <mat-form-field class="example-full-width" color="accent">
+            <input [(ngModel)]="inppass" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+  
+          <mat-form-field class="example-full-width" color="accent">
+            <input [(ngModel)]="inppass2" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+  
+          <mat-form-field *ngIf="localkeys.length > 0" appearance="fill" color="accent">
+            <mat-label>Select where save report:</mat-label>
+            <mat-select (selectionChange)="selectchange($event)" [(value)]="selected">
+              <mat-option value="local">Local Host</mat-option>
+              <mat-optgroup [label]="'API'">
+                <mat-option *ngFor="let apis of localkeys" [value]="apis">{{apis.viewValue}}</mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+          
+          <br>
+  
+          <mat-form-field *ngIf="ReportProfilesList.length > 0" appearance="fill" color="accent">
+            <mat-label>Select settings profile (Optional):</mat-label>
+            <mat-select (selectionChange)="selectchangeProfiles($event)" [(value)]="selected_profile">
+              <mat-select-trigger>{{selected_profilefin}}</mat-select-trigger>
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let profile of ReportProfilesList" [value]="profile">
+                <mat-icon *ngIf="!profile.api" title="Local Host">computer</mat-icon><mat-icon *ngIf="profile.api" color="accent" title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon> {{profile.profile_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+        </md-card>
+  
+        <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center">
+          <div style="width: 100%">
+  
+            <p *ngIf="str != ''" fxLayoutAlign="center">Strength validation: {{str}}.</p>
+            <mat-progress-bar *ngIf="str != ''" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
+            <p fxLayoutAlign="center">
+              <a class="active-link" [routerLink]="[]" (click)="generatePassword()"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">lock</mat-icon> Generate strong key!</a>
+            </p>
+  
+          </div>
+        </md-card>
+      </div>
+  
+      <p><mat-icon style="color: red" class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> Do not lose your security key! cause access to the report will be impossible!</p>
+      <p *ngIf="alert"><br><span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">error</mat-icon> {{alert}}</span><br></p><br>
+      <mat-dialog-actions>
+        <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value,pass2.value)"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">save</mat-icon> Create new report</button>
+      </mat-dialog-actions>
 
-<div fxLayoutAlign="start">
-  <form class="example-full-width">
-    <mat-card>
-    <mat-form-field class="example-full-width" color="accent">
-      <input matInput placeholder="Report title (e.g: External penetration testing report)" #title value="">
-    </mat-form-field>
-
-    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-
-      <md-card fxFlex="50%" fxFlex.xs="100%">
-        <mat-form-field class="example-full-width" color="accent">
-          <input [(ngModel)]="inppass" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
-          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width" color="accent">
-          <input [(ngModel)]="inppass2" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
-          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </mat-form-field>
-
-        <mat-form-field *ngIf="localkeys.length > 0" appearance="fill" color="accent">
-          <mat-label>Select where save report:</mat-label>
-          <mat-select (selectionChange)="selectchange($event)" [(value)]="selected">
-            <mat-option value="local">Local Host</mat-option>
-            <mat-optgroup [label]="'API'">
-              <mat-option *ngFor="let apis of localkeys" [value]="apis">{{apis.viewValue}}</mat-option>
-            </mat-optgroup>
-          </mat-select>
-        </mat-form-field>
-        
-        <br>
-
-        <mat-form-field *ngIf="ReportProfilesList.length > 0" appearance="fill" color="accent">
-          <mat-label>Select settings profile:</mat-label>
-          <mat-select (selectionChange)="selectchangeProfiles($event)" [(value)]="selected_profile">
-            <mat-select-trigger>{{selected_profilefin}}</mat-select-trigger>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor="let profile of ReportProfilesList" [value]="profile">
-              <mat-icon *ngIf="!profile.api" title="Local Host">computer</mat-icon><mat-icon *ngIf="profile.api" color="accent" title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon> {{profile.profile_name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-      </md-card>
-
-      <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center">
-        <div style="width: 100%">
-
-          <p *ngIf="str != ''" fxLayoutAlign="center">Strength validation: {{str}}.</p>
-          <mat-progress-bar *ngIf="str != ''" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
-          <p fxLayoutAlign="center">
-            <a class="active-link" [routerLink]="[]" (click)="generatePassword()"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">lock</mat-icon> Generate strong key!</a>
-          </p>
-
-        </div>
-      </md-card>
-    </div>
-
-    <p><mat-icon style="color: red" class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> Do not lose your security key! cause access to the report will be impossible!</p>
-    <p *ngIf="alert"><br><span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">error</mat-icon> {{alert}}</span><br></p><br>
-    <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value,pass2.value)"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">save</mat-icon> Create new report</button>
-
-  </mat-card>
-  </form>
-
+    </mat-card>
+    </form>
+  
+  </div>
 </div>

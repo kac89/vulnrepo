@@ -29,22 +29,22 @@
     }
   }
 
-  .mat-header-cell:first-child,.mat-cell:first-child{
+  .mat-mdc-header-cell:first-child,.mat-mdc-cell:first-child{
     flex:40%;
   }
-  .mat-header-cell:nth-child(2),.mat-cell:nth-child(2){
+  .mat-mdc-header-cell:nth-child(2),.mat-mdc-cell:nth-child(2){
     flex:5%;
   }
-  .mat-header-cell:nth-child(3),.mat-cell:nth-child(3){
+  .mat-mdc-header-cell:nth-child(3),.mat-mdc-cell:nth-child(3){
     flex:5%;
   }
-  .mat-header-cell:nth-child(4),.mat-cell:nth-child(4){
+  .mat-mdc-header-cell:nth-child(4),.mat-mdc-cell:nth-child(4){
     flex:5%;
   }
-  .mat-header-cell:nth-child(5),.mat-cell:nth-child(5){
+  .mat-mdc-header-cell:nth-child(5),.mat-mdc-cell:nth-child(5){
     flex:40%;
   }
-  .mat-header-cell:last-child,.mat-cell:last-child{
+  .mat-mdc-header-cell:last-child,.mat-mdc-cell:last-child{
     flex:5%;
     text-align: right;
     justify-content: flex-end;

@@ -2,7 +2,7 @@
 <div fxLayout="row wrap" fxLayoutGap="5px grid">
 
   <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-    <h1 class="mat-display-2">
+    <h1 class="mat-headline-3">
       <mat-icon class="vertical-align-middle padding-bottom-3 size-45">list_alt</mat-icon> My Reports
     </h1>
   </div>
@@ -31,7 +31,7 @@
 
 </div>
 <br>
-<mat-card>
+<mat-card appearance="outlined" class="mdc-card my-card-content">
 
 
   <mat-table *ngIf="dataSource.data.length != 0" mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
@@ -88,7 +88,7 @@
     <ng-container matColumnDef="settings">
       <mat-header-cell *matHeaderCellDef class="mat-column-2"><mat-icon title="Settings">settings</mat-icon></mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;" [matMenuTriggerFor]="myreportssettings"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="myreportssettings"><mat-icon>more_vert</mat-icon></button>
         <mat-menu #myreportssettings="matMenu">
           <a [routerLink]="[]" (click)="shareReport(element.report_id)" class="active-link" title="Download report" mat-menu-item><mat-icon class="vertical-align-middle">cloud_download</mat-icon> Download report</a>
           <a *ngIf="!element.api" [routerLink]="[]" (click)="cloneReport(element)" class="active-link" title="Clone report" mat-menu-item><mat-icon class="vertical-align-middle">flip_to_front</mat-icon> Clone report</a>
@@ -128,7 +128,7 @@
 
     <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
       <br *ngIf="dataSource.data.length != 0">
-      <mat-paginator *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+      <mat-paginator color="accent" *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
     </div>
 
 </div>

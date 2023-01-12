@@ -512,7 +512,9 @@
 				}
 
 				if (obj.report_settings.report_remove_issuestatus !== true) {
-					elementissuestatus = statusDesc(element.status);
+					if (typeof element.status != 'undefined') {
+						elementissuestatus = statusDesc(element.status);
+					}
 				}
 
 
@@ -578,7 +580,9 @@
 				}
 
 				if (obj.report_settings.report_remove_issuestatus !== true) {
-					elementissuestatus = statusDesc(element.status);
+					if (typeof element.status != 'undefined') {
+						elementissuestatus = statusDesc(element.status);
+					}
 				}
 
 				function gettags(tags) {

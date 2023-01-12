@@ -3,7 +3,7 @@
     <img title="VULNRΞPO REPORT" width="60px" src="assets/issue.png">
   </div>
   <div fxLayoutAlign="start center" fxFlex="90%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <h1 style="margin: 0 0 0;" class="mat-display-2">{{reportdesc?.report_name}} <a *ngIf="decryptedReportDataChanged"
+    <h1 style="margin: 0 0 0;" class="mat-headline-3">{{reportdesc?.report_name}} <a *ngIf="decryptedReportDataChanged"
         title="Edit report name" [routerLink]="[]" (click)="editreporttitle(reportdesc)">
         <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
       </a>
@@ -13,7 +13,7 @@
 
 <br><br>
 <!-- Report info -->
-<mat-card>
+<mat-card appearance="outlined" class="mdc-typography--body1">
   <mat-card-header *ngIf="decryptedReportDataChanged">
     <div mat-card-avatar>
       <mat-icon>fingerprint</mat-icon>
@@ -73,7 +73,7 @@
 
   <br>
   <!-- Report details -->
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>description</mat-icon>
@@ -148,28 +148,32 @@
 
   <br>
   <!-- Issues list -->
-  <mat-card>
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>bug_report</mat-icon>
-      </div>
-      <mat-card-title class="card-container-left">
-        <span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span>
-      </mat-card-title>
-      <mat-card-title class="card-container-right">
+  <mat-card appearance="outlined">
 
-        <div fxLayout="row" fxLayoutGap="5px grid" fxLayoutAlign="flex-end">
 
-          <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <div fxLayout="row wrap" style="display:flex;padding: 16px 16px 0;">
+
+        <div class="mat-mdc-card-avatar">
+          <mat-icon>bug_report</mat-icon>
+        </div>
+
+        <div class="mat-mdc-card-title" style="padding-left: 16px;">
+          <span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span>
+        </div>
+        <div style="flex-grow: 1"></div>
+       
+        <div fxLayoutAlign="end" fxLayoutGap="5px grid">
+
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
             <button style="width: 100%" mat-button (click)="import_issues()">
-              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import issues
+              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
             </button>
           </div>
 
-          <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
             <button [matMenuTriggerFor]="dropdownMenuOne" style="width: 100%" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
-              <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export issues
+              <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export
             </button>
 
             <mat-menu #dropdownMenuOne="matMenu">
@@ -196,7 +200,7 @@
 
             <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu"
               color="accent">
-              <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort by
+              <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
             </button>
             <mat-menu #menu="matMenu">
               <button mat-menu-item (click)="sortbyseverity()">Severity</button>
@@ -207,15 +211,15 @@
 
         </div>
 
-      </mat-card-title>
-    </mat-card-header>
+
+      </div>
+
     <mat-card-content>
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
 
         <mat-expansion-panel class="mat-elevation-z9"
           *ngFor="let dec_data of decryptedReportDataChanged.report_vulns; let i=index" (opened)="panelOpenState = true"
           (closed)="panelOpenState = false" cdkDrag>
-
 
           <mat-expansion-panel-header cdkDragHandle>
             <mat-panel-title fxLayoutAlign="start">
@@ -228,21 +232,22 @@
             </mat-panel-title>
             <mat-panel-description fxLayoutAlign="center center">
               <span style="pointer-events:none;">
-                <mat-chip-list>
-                  <mat-chip *ngFor="let tag of dec_data.tags" [selectable]="false" ngDefaultControl>
+                <mat-chip-listbox>
+                  <mat-chip-option *ngFor="let tag of dec_data.tags" [selectable]="false" ngDefaultControl>
                     {{tag.name}}
-                  </mat-chip>
-                </mat-chip-list>
+                  </mat-chip-option>
+                </mat-chip-listbox>
               </span>
               &nbsp; {{ (dec_data.cve.length>30) ? (dec_data.cve | slice:0:30)+'..':(dec_data.cve) }}
             </mat-panel-description>
 
-            <mat-panel-description *ngIf="dec_data?.status" fxLayoutAlign="end center">
+            <mat-panel-description fxLayoutAlign="end center">
               <div>
-                <a *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
+
+                <button mat-icon-button style="width: 30px; height: 30px; line-height: 5px; border-radius: 70%;padding: 0px;" *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
                   (click)="editissuetitle(dec_data);$event.stopPropagation();">
                   <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
-                </a>
+                </button>
               </div>&nbsp;
               
               <div *ngIf="dec_data?.bounty">
@@ -282,44 +287,44 @@
                   matInput rows="8"></textarea>
                 <mat-divider *ngIf="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown">
                 </mat-divider>
-                <div class="example-button-row"
+                <div style="margin-top: 16px;" class="example-button-row"
                   *ngIf="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown">
-                  <button mat-icon-button color="accent" (click)="poc_preview_funct(dec_data, i)" title="Preview">
+                  <button mat-icon-button style="padding: 0px;" color="accent" (click)="poc_preview_funct(dec_data, i)" title="Preview">
                     <mat-icon>visibility</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_bold_funct(dec_data)" title="Bold Format">
                     <mat-icon>format_bold</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_italic_funct(dec_data)" title="Italic Format">
                     <mat-icon>format_italic</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_heading_funct(dec_data)" title="Heading Format">
                     <mat-icon>title</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_strikethrough_funct(dec_data)" title="Strikethrough Format">
                     <mat-icon>strikethrough_s</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_link_funct(dec_data)" title="Link Format">
                     <mat-icon>link</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_list_funct(dec_data)" title="List Format">
                     <mat-icon>list</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_code_funct(dec_data)" title="Code Format">
                     <mat-icon>code</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_quote_funct(dec_data)" title="Quote Format">
                     <mat-icon>format_quote</mat-icon>
                   </button>
-                  <button [disabled]="poc_editor_hide[i]" mat-icon-button color="primary"
+                  <button [disabled]="poc_editor_hide[i]" mat-icon-button style="padding: 0px;" color="primary"
                     (click)="format_table_funct(dec_data)" title="Table Format">
                     <mat-icon>table</mat-icon>
                   </button>
@@ -382,16 +387,16 @@
               <div *ngIf="dec_data.tags" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <mat-form-field appearance="outline" class="example-tags-list" color="accent">
                   <mat-label>TAGs</mat-label>
-                  <mat-chip-list #tagList aria-label="Tags">
-                    <mat-chip *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags" [selectable]="selectable"
+                  <mat-chip-grid #tagList aria-label="Tags">
+                    <mat-chip-row *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags" [selectable]="selectable"
                       [removable]="removable" (removed)="TAGremove(tag, dec_data)" ngDefaultControl>
                       {{tag.name}}
                       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                    </mat-chip>
+                    </mat-chip-row>
                     <input placeholder="New tag..." [matChipInputFor]="tagList"
                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
                       (matChipInputTokenEnd)="TAGadd($event, dec_data)">
-                  </mat-chip-list>
+                  </mat-chip-grid>
                 </mat-form-field>
               </div>
 
@@ -413,7 +418,7 @@
                     <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
                     <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent"
                       matSuffix>
-                      <mat-icon matSuffix>add_circle_outline</mat-icon> CVSS calculator
+                      CVSS
                     </button>
                   </mat-form-field>
                 </div>
@@ -423,7 +428,7 @@
                     <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
                     <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent"
                       matSuffix>
-                      <mat-icon matSuffix>explore</mat-icon> CVE Info
+                      CVE
                     </button>
                   </mat-form-field>
                 </div>
@@ -563,7 +568,7 @@
 
   <br>
   <!-- Stats -->
-  <mat-card *ngIf="decryptedReportDataChanged.report_vulns.length !== 0">
+  <mat-card appearance="outlined" *ngIf="decryptedReportDataChanged.report_vulns.length !== 0">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>insert_chart</mat-icon>
@@ -613,13 +618,13 @@
 
   <br>
   <!-- Researcher -->
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>face</mat-icon>
       </div>
-      <mat-card-title>Researcher&nbsp;
-        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;"
+      <mat-card-title style="display: flex">Researcher&nbsp;
+        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;"
           [matMenuTriggerFor]="researchermenu">
           <mat-icon>more_vert</mat-icon>
         </button>
@@ -682,14 +687,14 @@
 
   <br>
   <!-- changelog -->
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>track_changes</mat-icon>
       </div>
       <mat-card-title style="display: flex">Changelog
         &nbsp;
-        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;"
+        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;"
           [matMenuTriggerFor]="changelogmenu">
           <mat-icon>more_vert</mat-icon>
         </button>
@@ -723,7 +728,7 @@
           <td mat-cell *matCellDef="let element">
 
             <button mat-icon-button
-              style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;"
+              style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;"
               [matMenuTriggerFor]="changelogsettings">
               <mat-icon>more_vert</mat-icon>
             </button>
@@ -756,7 +761,7 @@
 
         <div fxFlex="70%" fxFlex.sm="80%" fxFlex.xs="90%" *ngIf="listchangelog != 0">
           <p>
-            <mat-paginator [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
+            <mat-paginator color="accent" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
           </p>
         </div>
 
@@ -767,7 +772,7 @@
   <br>
 
   <!-- Report Settings -->
-  <mat-card *ngIf="decryptedReportDataChanged">
+  <mat-card appearance="outlined" *ngIf="decryptedReportDataChanged">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>settings</mat-icon>
@@ -775,10 +780,10 @@
 
       <mat-card-title style="display: flex" fxLayoutAlign="start">Settings
         &nbsp;
-        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;"
-          [matMenuTriggerFor]="Settingsmenu">
+        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="Settingsmenu">
           <mat-icon>more_vert</mat-icon>
         </button>
+        
         <mat-menu #Settingsmenu="matMenu">
 
           <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" class="active-link"
@@ -842,13 +847,13 @@
                 </button>
 
                 <div fxLayout="column" style="margin-top: 5px; height: 125px;">
-                  <mat-form-field appearance="outline" color="accent" [style.width.px]="75">
+                  <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
                     <mat-label>Width (px)</mat-label>
                     <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.width"
                       value="{{decryptedReportDataChanged.report_settings.report_logo.width}}">
                   </mat-form-field>
 
-                  <mat-form-field appearance="outline" color="accent" [style.width.px]="75">
+                  <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
                     <mat-label>Height (px)</mat-label>
                     <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.height"
                       value="{{decryptedReportDataChanged.report_settings.report_logo.height}}">
@@ -915,7 +920,7 @@
   <br>
 
   <!-- Download -->
-  <mat-card *ngIf="decryptedReportDataChanged">
+  <mat-card appearance="outlined" *ngIf="decryptedReportDataChanged">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>cloud_download</mat-icon>
@@ -926,18 +931,11 @@
 
       <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-            <div fxFlex="7%" fxFlex.sm="7%" fxFlex.xs="7%">
-              <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption
-              </mat-icon>
-            </div>
+        <div fxLayoutAlign="center start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
             <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <button style="width: 100%;" class="mat-elevation-z9" mat-raised-button [matMenuTriggerFor]="aboveMenu2" color="accent">
-                <mat-icon class="vertical-align-middle padding-bottom-3">share</mat-icon> Share encrypted
+              <button style="width: 100%;" class="mdc-elevation--z11" mat-raised-button [matMenuTriggerFor]="aboveMenu2" color="accent">
+                <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon> Download encrypted
               </button>
               <mat-menu #aboveMenu2="matMenu" yPosition="above">
 
@@ -950,24 +948,14 @@
               </mat-menu>
             </div>
 
-          </div>
-
-
         </div>
 
-        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-            <div fxFlex="7%" fxFlex.sm="7%" fxFlex.xs="7%">
-              <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption
-              </mat-icon>
-            </div>
+        <div fxLayoutAlign="center end" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
             <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
 
               <button mat-raised-button style="width: 100%;" class="mat-elevation-z9" color="warn" [matMenuTriggerFor]="aboveMenu">
-                <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Download decrypted
+                <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
                 <button mat-menu-item (click)="DownloadHTMLv2(report_info, false)">
@@ -989,14 +977,7 @@
 
             </div>
 
-
-          </div>
-
-
-
         </div>
-
-
 
       </div>
 

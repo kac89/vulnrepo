@@ -8,7 +8,7 @@ import { MessageService } from './message.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { ApiService } from './api.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'

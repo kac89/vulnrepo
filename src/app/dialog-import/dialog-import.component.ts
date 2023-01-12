@@ -23,6 +23,8 @@ export class DialogImportComponent implements OnInit {
   public show_input = true;
   public please_wait = false;
 
+  public trivyshow_input = true;
+  public trivyplease_wait = false;
   public bugcrowdshow_input = true;
   public bugcrowdplease_wait = false;
   public burpshow_input = true;
@@ -47,7 +49,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'nmap', viewValue: 'Nmap (.XML)' },
     { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
     { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' },
-    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' }
+    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
+    { value: 'trivy', viewValue: 'Trivy (.JSON)' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
@@ -822,6 +825,94 @@ export class DialogImportComponent implements OnInit {
     });
 
     this.dialogRef.close(info);
+
+  }
+
+  trivyonFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.trivyshow_input = false;
+      this.trivyplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+
+      fileReader.onload = (e) => {
+        this.trivyparse(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  trivyparse(json) {
+    
+    const data = JSON.parse(json);
+    const issuelist = [];
+
+    function setseverity(severity: string) {
+
+      if (severity === "INFO") {
+        severity = "Info";
+      } else if (severity === "LOW") {
+        severity = "Low";
+      } else if (severity === "MEDIUM") {
+        severity = "Medium";
+      } else if (severity === "HIGH") {
+        severity = "High";
+      } else if (severity === "CRITICAL") {
+        severity = "Critical";
+      }
+
+      return severity;
+    }
+
+
+    data.Results.forEach((myObject, index) => {
+
+      const intvulns = [];
+      myObject.Vulnerabilities.forEach((myObject2, index) => {
+
+
+        if (Object.values(intvulns).indexOf(myObject2.VulnerabilityID) > -1) {
+          console.log('has test1');
+        } else {
+          const reff = myObject2.References.join("\n"); 
+
+          const date = new Date();
+          const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+          const def = {
+            title: myObject2.Title,
+            poc: 'Target: ' + myObject.Target + '\nClass: ' + myObject.Class + '\nType: ' + myObject.Type + '\nPkgID: ' + myObject2.PkgID + '\nPkgName: ' + myObject2.PkgName + '\nInstalled Version: ' + myObject2.InstalledVersion + '\nFixed Version: ' + myObject2.FixedVersion + '\n',
+            files: [],
+            desc: myObject2.Description,
+            severity: setseverity(myObject2.Severity),
+            ref: reff,
+            cvss: myObject2.CVSS.nvd.V3Score,
+            cve: '',
+            tags: [],
+            bounty: [],
+            date: today
+          };
+  
+          intvulns.push(myObject2.VulnerabilityID);
+          issuelist.push(def);
+        }
+        
+      });
+      
+    });
+
+
+
+
+
+    this.dialogRef.close(issuelist);
 
   }
 
