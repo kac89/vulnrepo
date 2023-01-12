@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { VulnListComponent } from './vuln-list.component';
+import { VulnListComponent } from './templates-list.component';
 
 describe('VulnListComponent', () => {
   let component: VulnListComponent;

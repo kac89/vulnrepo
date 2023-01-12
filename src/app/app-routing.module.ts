@@ -8,7 +8,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { NewreportComponent } from './newreport/newreport.component';
 import { ReportComponent } from './report/report.component';
 import { ImportReportComponent } from './import-report/import-report.component';
-import { VulnListComponent } from './vuln-list/vuln-list.component';
+import { TemplatesListComponent } from './templates-list/templates-list.component';
 
 const routes: Routes = [{
   path: 'home',
@@ -55,9 +55,9 @@ const routes: Routes = [{
   loadChildren: () => new Promise(() => { if(window.location.href.match(/server/)) window.location.href = 'https://github.com/kac89/vulnrepo-server'; })
 },
 {
-  path: 'vuln-list',
+  path: 'templates-list',
   pathMatch: 'full',
-  component: VulnListComponent
+  component: TemplatesListComponent
 },
 {
   path: '**',
