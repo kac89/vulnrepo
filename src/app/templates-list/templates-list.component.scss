@@ -11,6 +11,11 @@
     border-bottom-width: 0;
   }
   
+  td , th {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 200px;
+}
   .example-element-detail {
     overflow: hidden;
     display: flex;
