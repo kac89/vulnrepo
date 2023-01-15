@@ -2440,6 +2440,7 @@ IP   | hostname | role | comments\n\
     this.scopePreviewHTML[id] = DOMPurify.sanitize(marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc));
     this.poc_editor_hide[id] = !this.poc_editor_hide[id];
     this.prev_hide[id] = !this.prev_hide[id];
+    console.log(this.poc_editor_hide[id]);
 
   }
 }

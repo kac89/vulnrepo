@@ -282,9 +282,12 @@
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
                 <div [innerHtml]="scopePreviewHTML[i]" [hidden]="!prev_hide[i]"></div>
-                <textarea [hidden]="poc_editor_hide[i]" (select)="selectionchangepoc($event)"
+                <div [hidden]="poc_editor_hide[i]">
+                  <textarea (select)="selectionchangepoc($event)"
                   (click)="clickselectionchangepoc($event)" [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)"
                   matInput rows="8"></textarea>
+                </div>
+                
                 <mat-divider *ngIf="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown">
                 </mat-divider>
                 <div style="margin-top: 16px;" class="example-button-row"
