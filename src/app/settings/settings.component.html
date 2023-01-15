@@ -2,7 +2,7 @@
   <mat-icon class="vertical-align-middle padding-bottom-3 size-45">settings</mat-icon> Settings
 </h1>
 
-<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+<div class="mdc-typography--body1" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
     <mat-card appearance="outlined">
@@ -45,12 +45,10 @@
             <mat-checkbox [(ngModel)]="wipeall">YES</mat-checkbox>
           </div>
         </div>
-
-        
-      </mat-card-content>
-      <mat-card-actions>
+        <br>
         <button *ngIf="wipeall == true" mat-raised-button color="warn" (click)="wipealldata()"><mat-icon>clear</mat-icon> Yes, do it!</button>
-      </mat-card-actions>
+      </mat-card-content>
+
     </mat-card>
 
     <br>
@@ -64,11 +62,12 @@
 
       <mat-card-content>
         <div *ngIf="listkey">
-          <p>Found existing vault access!
+          <h3>Found existing vault access!
             <button mat-icon-button color="warn" (click)="removeapikey()" title="Remove current Vault">
-            <mat-icon>delete_forever</mat-icon>
-          </button>
-        </p>
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </h3>
+          
       </div>
       <div fxLayout="row" fxLayoutGap="10px grid">
         <div fxFlex="50%" fxLayoutAlign="start">
