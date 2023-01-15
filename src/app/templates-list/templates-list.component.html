@@ -32,15 +32,10 @@
 
   </div>
 
-
-
-
-  
-  <mat-card appearance="outlined" class="mdc-card my-card-content">
-    <p *ngIf="sourceSelect == 'VULNREPO'">List contains issues templates used during creating a report, source name: "VULNRΞPO". You can share own templates use <a class="active-link"
+  <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
+    <div *ngIf="sourceSelect == 'VULNREPO'">List contains issues templates used during creating a report, source name: "VULNRΞPO". You can share own templates use <a class="active-link"
         target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/src/assets/vulns.json">vulns.json</a>, is
-      super easy! Push your changes to your fork and submit a pull request on github.</p>
-      <p>Click on vuln to expand.</p>
+      super easy! Push your changes to your fork and submit a pull request on github.</div>
   
     <div class="mat-elevation-z8">
   
@@ -87,7 +82,7 @@
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
       </table>
   
-      <!--<mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>-->
+      <mat-paginator [pageSizeOptions]="[100,500,1000]" showFirstLastButtons></mat-paginator>
   
     </div>
     <p *ngIf="getvulnlistStatus">{{getvulnlistStatus}}</p>
