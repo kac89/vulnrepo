@@ -235,7 +235,7 @@ export class DialogAddissueComponent implements OnInit {
 
   redir(): void {
     this.dialogRef.close();
-    this.router.navigate(['/vuln-list']);
+    this.router.navigate(['/templates-list']);
   }
 
   cancel(): void {
