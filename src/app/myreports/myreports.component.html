@@ -113,11 +113,14 @@
 
   <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+    <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
       <div *ngIf="dataSource.data.length != 0 && selection.selected.length > 0" style="padding: 20px 0px 0px 20px;">
-          <button title="Remove selected items" mat-icon-button color="warn" (click)="removeSelecteditems()">
-          <mat-icon>delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
-        </button>
+
+        <a mat-raised-button color="warn" title="Remove selected items" (click)="removeSelecteditems()">
+          <mat-icon class="vertical-align-middle padding-bottom-3">delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
+        </a>
+
+
       </div>
 
       <div *ngIf="msg != ''" style="padding: 30px 0px 0px 20px;">
@@ -126,7 +129,7 @@
 
     </div>
 
-    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+    <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
       <br *ngIf="dataSource.data.length != 0">
       <mat-paginator color="accent" *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
     </div>
