@@ -241,6 +241,12 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
 
+  this.getReportProfiles();
+
+  }
+
+
+  getReportProfiles() {
     // get report profiles
     this.indexeddbService.retrieveReportProfile().then(ret => {
       if (ret) {
@@ -248,6 +254,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
       this.getAPIReportProfiles();
     });
+
   }
 
   getAPIReportProfiles() {
@@ -1506,7 +1513,7 @@ Date   | Description
     
     const ciphertext = Crypto.AES.encrypt(JSON.stringify(json), sessionStorage.getItem(report_info.report_id));
 
-    this.http.get('/assets/html_report_v2_template.html?v=' + + new Date(), {responseType: 'text'}).subscribe(res => {
+    this.http.get('/assets/html_report_v2_template.html?v=' + new Date(), {responseType: 'text'}).subscribe(res => {
 
 
       if (this.decryptedReportDataChanged.report_settings.report_css !== '') {
@@ -2441,4 +2448,34 @@ IP   | hostname | role | comments\n\
     this.poc_editor_hide[id] = !this.poc_editor_hide[id];
     this.prev_hide[id] = !this.prev_hide[id];
   }
+
+  savenewReportProfile() {
+    const time = new Date().toLocaleString();
+    const profile = {
+      profile_name: time,
+      logo: this.decryptedReportDataChanged.report_settings.report_logo.logo,
+      logow: this.decryptedReportDataChanged.report_settings.report_logo.width,
+      logoh: this.decryptedReportDataChanged.report_settings.report_logo.height,
+      report_parsing_desc: this.decryptedReportDataChanged.report_settings.report_parsing_desc,
+      report_parsing_poc_markdown: this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown,
+      video_embed: this.decryptedReportDataChanged.report_settings.report_video_embed,
+      remove_lastpage: this.decryptedReportDataChanged.report_settings.report_remove_lastpage,
+      remove_issueStatus: this.decryptedReportDataChanged.report_settings.report_remove_issuestatus,
+      remove_issuecvss: this.decryptedReportDataChanged.report_settings.report_remove_issuecvss,
+      remove_issuecve: this.decryptedReportDataChanged.report_settings.report_remove_issuecve,
+      remove_researcher: this.decryptedReportDataChanged.report_settings.report_remove_researchers,
+      remove_changelog: this.decryptedReportDataChanged.report_settings.report_changelog_page,
+      remove_tags: this.decryptedReportDataChanged.report_settings.report_remove_issuetags,
+      ResName: this.decryptedReportDataChanged.researcher[0].reportername,
+      ResEmail: this.decryptedReportDataChanged.researcher[0].reporteremail,
+      ResSocial: this.decryptedReportDataChanged.researcher[0].reportersocial,
+      ResWeb: this.decryptedReportDataChanged.researcher[0].reporterwww
+    };
+    this.ReportProfilesList = this.ReportProfilesList.concat(profile);
+    this.indexeddbService.saveReportProfileinDB(this.ReportProfilesList).then(ret => {});
+    this.getReportProfiles();
+  }
+
+
+
 }

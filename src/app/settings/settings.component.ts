@@ -558,6 +558,8 @@ getAPIReportProfiles() {
             theme: result.profile_theme,
             video_embed: result.video_embed,
             remove_lastpage: result.remove_lastpage,
+            report_parsing_desc: result.report_parsing_desc,
+            report_parsing_poc_markdown: result.report_parsing_poc_markdown,
             remove_issueStatus: result.remove_issueStatus,
             remove_issuecvss: result.remove_issuecvss,
             remove_issuecve: result.remove_issuecve,
