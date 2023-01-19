@@ -2452,7 +2452,7 @@ IP   | hostname | role | comments\n\
   savenewReportProfile() {
     const time = new Date().toLocaleString();
     const profile = {
-      profile_name: 'Autosave report profile ' + time,
+      profile_name: time,
       logo: this.decryptedReportDataChanged.report_settings.report_logo.logo,
       logow: this.decryptedReportDataChanged.report_settings.report_logo.width,
       logoh: this.decryptedReportDataChanged.report_settings.report_logo.height,
@@ -2466,10 +2466,10 @@ IP   | hostname | role | comments\n\
       remove_researcher: this.decryptedReportDataChanged.report_settings.report_remove_researchers,
       remove_changelog: this.decryptedReportDataChanged.report_settings.report_changelog_page,
       remove_tags: this.decryptedReportDataChanged.report_settings.report_remove_issuetags,
-      ResName: this.decryptedReportDataChanged.researcher.reportername,
-      ResEmail: this.decryptedReportDataChanged.researcher.reporteremail,
-      ResSocial: this.decryptedReportDataChanged.researcher.reportersocial,
-      ResWeb: this.decryptedReportDataChanged.researcher.reporterwww
+      ResName: this.decryptedReportDataChanged.researcher[0].reportername,
+      ResEmail: this.decryptedReportDataChanged.researcher[0].reporteremail,
+      ResSocial: this.decryptedReportDataChanged.researcher[0].reportersocial,
+      ResWeb: this.decryptedReportDataChanged.researcher[0].reporterwww
     };
     this.ReportProfilesList = this.ReportProfilesList.concat(profile);
     this.indexeddbService.saveReportProfileinDB(this.ReportProfilesList).then(ret => {});
