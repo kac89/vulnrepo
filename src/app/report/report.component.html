@@ -29,7 +29,6 @@
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
         </p>
         <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
-        <p *ngIf="reportdesc?.report_lastupdate">Last Update: {{reportdesc?.report_lastupdate | date:'medium'}}</p>
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar
             style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
@@ -42,10 +41,10 @@
 
         <span
           *ngIf="reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == ''">
-          {{savemsg}}<br>Last save: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
+          {{savemsg}}<br>Last release: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
         </span>
         <span *ngIf="lastsavereportdata !== ''">
-          {{savemsg}}<br>Last save: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
+          {{savemsg}}<br>Last release: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
         </span>
 
         <div>
