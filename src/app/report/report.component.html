@@ -604,7 +604,7 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedSeverityColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedSeverityColumns;"></tr>
-            <tr mat-footer-row *matFooterRowDef="displayedSeverityColumns"></tr>
+            <tr mat-footer-row *matFooterRowDef="displayedSeverityColumns sticky: true"></tr>
           </table>
         </div>
 
