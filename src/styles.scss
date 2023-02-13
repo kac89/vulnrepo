@@ -179,3 +179,7 @@ mat-icon.size-45 {
   background: #b71c1c;
   color: #000;
 }
+
+.mdc-list-item--selected .mdc-list-item__primary-text, .mdc-list-item--activated .mdc-list-item__primary-text {
+  color: #69f0ae;
+}
