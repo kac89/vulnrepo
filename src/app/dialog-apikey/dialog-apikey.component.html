@@ -10,15 +10,19 @@
     <form class="example-form">
 
       <mat-form-field class="example-full-width" color="accent">
-        <input matInput placeholder="API Vault password" #keypass (keydown)="onKeydown($event,keypass.value)" [type]="hide ? 'password' : 'text'">
+        <input matInput placeholder="API Vault password" #keypass [formControl]="insertkeypass" (keydown)="onKeydown($event,keypass.value)" [type]="hide ? 'password' : 'text'">
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+
+        <mat-error *ngIf="insertkeypass.hasError('incorrect')">
+          <strong>
+            <mat-icon class="vertical-align-middle size-45">https</mat-icon> Incorrect API Vault password!
+          </strong>
+        </mat-error>
+
       </mat-form-field>
 
     </form>
 
-  <div *ngIf="alert != ''">
-    <span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">warning</mat-icon> {{alert}}</span><br>
-  </div>
   <mat-checkbox [checked]="removedialog" (change)="removedialogFunc($event)">Do not show again in this session</mat-checkbox>
   <br><br>
   </div>
