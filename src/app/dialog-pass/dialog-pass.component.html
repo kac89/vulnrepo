@@ -1,6 +1,6 @@
 <div class="mdc-card my-card-content">
   <h1 class="mat-display">
-      <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report
+    <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report
   </h1>
 
 
@@ -9,34 +9,28 @@
     <form class="example-form">
 
       <mat-form-field class="example-full-width" color="accent">
-        <input matInput placeholder="Report security key" #pass (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
+        <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
+          (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-error *ngIf="insertpass.hasError('incorrect')">
+          <strong>
+            <mat-icon class="vertical-align-middle size-45">https</mat-icon> Security key is incorrect!
+          </strong>
+        </mat-error>
       </mat-form-field>
-
-      <div class="example-full-width" fxLayout="row" fxLayoutGap="10px grid">
-        <div fxFlex="65%" fxLayoutAlign="flex-start center">
-          <p *ngIf="error != ''">
-            <span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">warning</mat-icon> {{error}}</span><br>
-          </p>
-        </div>
-        <div fxFlex="35%" fxLayoutAlign="flex-end center">
-          <div *ngIf="forgot">
-            <a class="active-link" target="_blank" href="/faq?q=I-forgot-my-security-key">Forgot your key?</a>
-          </div>
-        </div>
-      </div>
-
+      <br>
       <div *ngIf="msg != ''">
-        <p>{{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+        {{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        <br>
       </div>
     </form>
-
   </div>
   <br>
   <div md-dialog-actions>
     <div fxLayout="row" fxLayoutGap="10px grid">
       <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="start">
-        <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)"><mat-icon>check</mat-icon> Decrypt</button>
+        <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)"><mat-icon>check</mat-icon>
+          Decrypt</button>
       </div>
       <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="end">
         <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>

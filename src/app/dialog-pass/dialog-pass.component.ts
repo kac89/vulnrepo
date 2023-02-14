@@ -3,6 +3,7 @@ import { Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { IndexeddbService } from '../indexeddb.service';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-pass',
@@ -12,8 +13,7 @@ import { IndexeddbService } from '../indexeddb.service';
 export class DialogPassComponent implements OnInit {
   hide = true;
   msg = '';
-  error = '';
-  forgot = false;
+  insertpass = new UntypedFormControl();
 
   constructor(public router: Router, private indexeddbService: IndexeddbService,
     public dialogRef: MatDialogRef<DialogPassComponent>,
@@ -25,6 +25,7 @@ export class DialogPassComponent implements OnInit {
     this.router.navigate(['/my-reports']);
   }
   ngOnInit() {
+    this.insertpass.setValue("");
   }
 
   onKeydown(event, pass: string, report_id: string) {
@@ -34,7 +35,6 @@ export class DialogPassComponent implements OnInit {
   }
 
   decrypt(pass: string, report_id: string) {
-    this.error = '';
     this.msg = 'Report is decrypted please wait...';
 
     this.indexeddbService.decrypt(pass, report_id).then(returned => {
@@ -43,11 +43,11 @@ export class DialogPassComponent implements OnInit {
       } else {
 
         if (this.indexeddbService.decodeAES(this.data, pass)) {
+          this.insertpass.setErrors(null);
           this.dialogRef.close({ data: pass });
         } else {
           this.msg = '';
-          this.error = 'Incorrect security key';
-          this.forgot = true;
+          this.insertpass.setErrors({'incorrect': true});
         }
 
       }
