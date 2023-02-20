@@ -5,7 +5,8 @@ import { IndexeddbService } from '../indexeddb.service';
 import { DialogPassComponent } from '../dialog-pass/dialog-pass.component';
 import { DialogAddissueComponent } from '../dialog-addissue/dialog-addissue.component';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, of, concatMap } from 'rxjs';
+import { finalize } from "rxjs/operators";
 import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
@@ -241,7 +242,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
 
-  this.getReportProfiles();
+    this.getReportProfiles();
 
   }
 
@@ -261,11 +262,11 @@ export class ReportComponent implements OnInit, OnDestroy {
     const localkey = sessionStorage.getItem('VULNREPO-API');
     if (localkey) {
       //this.msg = 'API connection please wait...';
-  
+
       const vaultobj = JSON.parse(localkey);
-  
-      vaultobj.forEach( (element) => {
-  
+
+      vaultobj.forEach((element) => {
+
         this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
           this.reportProfileList_int = [];
           if (resp.length > 0) {
@@ -277,23 +278,23 @@ export class ReportComponent implements OnInit, OnDestroy {
             });
             this.reportProfileList_int.push(...resp);
           }
-  
+
         }).then(() => {
-  
+
           this.ReportProfilesList = [...this.ReportProfilesList, ...this.reportProfileList_int];
           //this.dataSource.sort = this.sort;
           //this.dataSource.paginator = this.paginator;
           //this.msg = '';
-        }).catch(() => {});
-  
-  
+        }).catch(() => { });
+
+
         setTimeout(() => {
           // console.log('hide progress timeout');
           //this.msg = '';
         }, 10000);
-  
-    });
-  
+
+      });
+
     }
   }
 
@@ -906,7 +907,7 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      
+
       if (result) {
         if (result !== '') {
           this.decryptedReportDataChanged.report_settings.report_html = result;
@@ -1493,7 +1494,35 @@ Date   | Description
     document.body.removeChild(link);
   }
 
-  DownloadHTMLv2(report_info, encrypted): void {
+  getDataSynchronous(file) {
+    return this.http.get('/assets/res/' + file, { responseType: 'text' }).toPromise()
+  }
+
+
+  DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info) {
+    // download HTML report
+    let blob = new Blob();
+    if (encrypted) {
+      blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + ciphertext + "';")], { type: 'text/html' });
+    } else {
+      blob = new Blob([res.replace("{'HERE':'REPLACE'};", JSON.stringify(json) + ";")], { type: 'text/html' });
+    }
+
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    let encryptedtext = "";
+    if (encrypted) {
+      encryptedtext = " encrypted";
+    }
+    link.setAttribute('href', url);
+    link.setAttribute('download', report_info.report_name + ' ' + report_info.report_id + encryptedtext + ' (vulnrepo.com).html');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  DownloadHTMLv2(report_info, encrypted, type_dep): void {
 
     const json = {
       "report_name": report_info.report_name,
@@ -1510,39 +1539,102 @@ Date   | Description
       "report_settings": this.decryptedReportDataChanged.report_settings,
       "report_encrypted_t": true
     };
-    
+
+    const report_dep_css_obj = [
+      { "filename": "bootstrap/5.2.3/css/bootstrap.rtl.min.css", "integrity": "sha512-tC3gnye8BsHmrW3eRP3Nrj/bs+CSVUfzkjOlfLNrfvcbKXFxk5+b8dQCZi9rgVFjDudwipXfqEhsKMMgRZGCDw==" },
+      { "filename": "bootstrap-icons/1.10.3/font/bootstrap-icons.min.css", "integrity": "sha512-YFENbnqHbCRmJt5d+9lHimyEMt8LKSNTMLSaHjvsclnZGICeY/0KYEeiHwD1Ux4Tcao0h60tdcMv+0GljvWyHg==" }
+    ];
+
+    const report_dep_js_obj = [
+      { "filename": "jquery/3.6.3/jquery.min.js", "integrity": "sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" },
+      { "filename": "crypto-js/4.1.1/crypto-js.min.js", "integrity": "sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" },
+      { "filename": "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "integrity": "sha512-i9cEfJwUwViEPFKdC1enz4ZRGBj8YQo6QByFTF92YXHi7waCqyexvRD75S5NVTsSiTv7rKWqG9Y5eFxmRsOn0A==" },
+      { "filename": "marked/4.2.5/marked.min.js", "integrity": "sha512-5JZDwulT+S/K8p/KO4tikNKA5t6Ebb+tqPwT7Ma+lVpJuS4G+Z0lSktWcl8hymXeFqCprGEuKGOCrKjyulql/A==" },
+      { "filename": "dompurify/2.4.1/purify.min.js", "integrity": "sha512-uHOKtSfJWScGmyyFr2O2+efpDx2nhwHU2v7MVeptzZoiC7bdF6Ny/CmZhN2AwIK1oCFiVQQ5DA/L9FSzyPNu6Q==" }
+    ];
+
+
     const ciphertext = Crypto.AES.encrypt(JSON.stringify(json), sessionStorage.getItem(report_info.report_id));
 
-    this.http.get('/assets/html_report_v2_template.html?v=' + new Date(), {responseType: 'text'}).subscribe(res => {
+    this.http.get('/assets/html_report_v2_template.html?v=' + new Date(), { responseType: 'text' }).subscribe(res => {
 
       if (this.decryptedReportDataChanged.report_settings.report_css !== '') {
         res = res.replace("/*[CSS_Injection_here]*/", DOMPurify.sanitize(this.decryptedReportDataChanged.report_settings.report_css))
       }
 
-      // download HTML report
-      let blob = new Blob();
-      if (encrypted) {
-        blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'"+ciphertext+"';")], { type: 'text/html' });
+      if (type_dep === "mini") {
+
+        let css_String = "";
+        let js_String = "";
+
+        report_dep_css_obj.forEach(function (value) {
+          css_String = css_String + '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/' + value.filename + '" integrity="' + value.integrity + '" crossorigin="anonymous" referrerpolicy="no-referrer" />\n';
+        });
+        res = res.replace("<depstyle></depstyle>", css_String);
+
+        report_dep_js_obj.forEach(function (value) {
+          js_String = js_String + '<script src="https://cdnjs.cloudflare.com/ajax/libs/' + value.filename + '" integrity="' + value.integrity + '" crossorigin="anonymous" referrerpolicy="no-referrer"></script>\n';
+        });
+        res = res.replace("<depscripts></depscripts>", js_String);
+        this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
+
       } else {
-        blob = new Blob([res.replace("{'HERE':'REPLACE'};", JSON.stringify(json)+";")], { type: 'text/html' });
+
+        // FULL REPORT DEP included
+        let css_String = "";
+        let js_String = "";
+
+        of("bootstrap/5.2.3/css/bootstrap.rtl.min.css", "bootstrap-icons/1.10.3/font/bootstrap-icons.min.css")
+          .pipe(
+            concatMap(ind => {
+              let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
+              return obs1
+            })
+          ).subscribe(data => {
+            css_String = css_String + `<style>
+`+ data + `
+</style>`;
+
+          }).add(() => {
+            //console.log('Finally callback');
+            this.http.get('/assets/res/bootstrap-icons/1.10.3/font/fonts/bootstrap-icons.woff2.b64', { responseType: 'text' }).subscribe(ret => {
+
+              css_String = css_String + `<style>
+            @font-face{
+              font-display:block;
+              font-family:bootstrap-icons;
+              src:url(data:font/opentype;base64,`+ ret + `) format("woff2"),
+              /*url(data:font/opentype;base64, [base64 string here]) format("woff")*/
+            }
+            </style>`
+              res = res.replace("<depstyle></depstyle>", css_String);
+              css_String = "";
+
+              of("jquery/3.6.3/jquery.min.js", "crypto-js/4.1.1/crypto-js.min.js", "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "marked/4.2.5/marked.min.js", "dompurify/2.4.1/purify.min.js")
+                .pipe(
+                  concatMap(ind => {
+                    let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
+                    return obs1
+                  })
+                ).subscribe(data2 => {
+                  js_String = js_String + `<script>
+            ` + data2 + `
+            </script>`;
+
+                }).add(() => {
+                  res = res.replace("<depscripts></depscripts>", js_String);
+                  js_String = "";
+                  this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
+                });
+
+
+            });
+
+          });
+
+
       }
-      
-      const link = document.createElement('a');
-      const url = window.URL.createObjectURL(blob);
-      let encryptedtext = "";
-      if (encrypted) {
-        encryptedtext = " encrypted";
-      }
-      link.setAttribute('href', url);
-      link.setAttribute('download', report_info.report_name + ' ' + report_info.report_id + encryptedtext + ' (vulnrepo.com).html');
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     });
-
-    
-
   }
 
   DownloadHTML(report_data, report_metadata, issueStatus) {
@@ -2265,7 +2357,7 @@ Date   | Description
     this.decryptedReportDataChanged.report_settings.report_logo.height = profile.logoh;
 
     this.decryptedReportDataChanged.report_settings.report_theme = profile.theme;
-    
+
     this.decryptedReportDataChanged.report_settings.report_css = profile.report_css;
     this.decryptedReportDataChanged.report_settings.report_html = profile.report_custom_content;
     this.decryptedReportDataChanged.report_settings.report_video_embed = profile.video_embed;
@@ -2303,7 +2395,7 @@ Date   | Description
       ResWeb: this.decryptedReportDataChanged.researcher[0].reporterwww
     };
     this.ReportProfilesList = this.ReportProfilesList.concat(profile);
-    this.indexeddbService.saveReportProfileinDB(this.ReportProfilesList).then(ret => {});
+    this.indexeddbService.saveReportProfileinDB(this.ReportProfilesList).then(ret => { });
     this.getReportProfiles();
   }
 
