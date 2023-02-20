@@ -952,8 +952,11 @@
               </button>
               <mat-menu #aboveMenu2="matMenu" yPosition="above">
 
-                <button mat-menu-item (click)="DownloadHTMLv2(report_info, true)">
-                  <mat-icon>description</mat-icon>HTML (v2)
+                <button mat-menu-item (click)="DownloadHTMLv2(report_info, true, false)" title="Full report with dependency">
+                  <mat-icon>description</mat-icon>HTML
+                </button>
+                <button mat-menu-item (click)="DownloadHTMLv2(report_info, true, 'mini')" title="Full report with linked external dependency (small size)">
+                  <mat-icon>description</mat-icon>HTML (mini)
                 </button>
                 <button mat-menu-item (click)="shareReport(report_info.report_id)">
                   <mat-icon>code</mat-icon>VULNR
@@ -971,10 +974,13 @@
                 <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
-                <button mat-menu-item (click)="DownloadHTMLv2(report_info, false)">
-                  <mat-icon>description</mat-icon>HTML (v2)
+                <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false)" title="Full report with dependency">
+                  <mat-icon>description</mat-icon>HTML
                 </button>
-                <button mat-menu-item (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)">
+                <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, 'mini')" title="Full report with linked external dependency (small size)">
+                  <mat-icon>description</mat-icon>HTML (mini)
+                </button>
+                <button mat-menu-item (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)" title="Deprecated old HTML report">
                   <mat-icon>description</mat-icon>HTML (old)
                 </button>
                 <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)">
