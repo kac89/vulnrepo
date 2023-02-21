@@ -1604,9 +1604,14 @@ Date   | Description
               font-display:block;
               font-family:bootstrap-icons;
               src:url(data:font/opentype;base64,`+ ret + `) format("woff2"),
-              /*url(data:font/opentype;base64, [base64 string here]) format("woff")*/
+              url(data:font/opentype;base64,<wofftag></wofftag>) format("woff")
             }
-            </style>`
+            </style>`;
+
+            this.http.get('/assets/res/bootstrap-icons/1.10.3/font/fonts/bootstrap-icons.woff.b64', { responseType: 'text' }).subscribe(ret2 => {
+
+              css_String = css_String.replace('<wofftag></wofftag>', ret2);
+              console.log(css_String);
               res = res.replace("<depstyle></depstyle>", css_String);
               css_String = "";
 
@@ -1626,6 +1631,8 @@ Date   | Description
                   js_String = "";
                   this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
                 });
+
+            });
 
 
             });
