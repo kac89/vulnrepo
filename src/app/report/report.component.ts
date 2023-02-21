@@ -1611,7 +1611,7 @@ Date   | Description
             this.http.get('/assets/res/bootstrap-icons/1.10.3/font/fonts/bootstrap-icons.woff.b64', { responseType: 'text' }).subscribe(ret2 => {
 
               css_String = css_String.replace('<wofftag></wofftag>', ret2);
-              console.log(css_String);
+
               res = res.replace("<depstyle></depstyle>", css_String);
               css_String = "";
 
