@@ -1604,28 +1604,35 @@ Date   | Description
               font-display:block;
               font-family:bootstrap-icons;
               src:url(data:font/opentype;base64,`+ ret + `) format("woff2"),
-              /*url(data:font/opentype;base64, [base64 string here]) format("woff")*/
+              url(data:font/opentype;base64,<wofftag></wofftag>) format("woff")
             }
-            </style>`
-              res = res.replace("<depstyle></depstyle>", css_String);
-              css_String = "";
+            </style>`;
 
-              of("jquery/3.6.3/jquery.min.js", "crypto-js/4.1.1/crypto-js.min.js", "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "marked/4.2.5/marked.min.js", "dompurify/2.4.1/purify.min.js")
-                .pipe(
-                  concatMap(ind => {
-                    let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
-                    return obs1
-                  })
-                ).subscribe(data2 => {
-                  js_String = js_String + `<script>
+              this.http.get('/assets/res/bootstrap-icons/1.10.3/font/fonts/bootstrap-icons.woff.b64', { responseType: 'text' }).subscribe(ret2 => {
+
+                css_String = css_String.replace('<wofftag></wofftag>', ret2);
+
+                res = res.replace("<depstyle></depstyle>", css_String);
+                css_String = "";
+
+                of("jquery/3.6.3/jquery.min.js", "crypto-js/4.1.1/crypto-js.min.js", "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "marked/4.2.5/marked.min.js", "dompurify/2.4.1/purify.min.js")
+                  .pipe(
+                    concatMap(ind => {
+                      let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
+                      return obs1
+                    })
+                  ).subscribe(data2 => {
+                    js_String = js_String + `<script>
             ` + data2 + `
             </script>`;
 
-                }).add(() => {
-                  res = res.replace("<depscripts></depscripts>", js_String);
-                  js_String = "";
-                  this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
-                });
+                  }).add(() => {
+                    res = res.replace("<depscripts></depscripts>", js_String);
+                    js_String = "";
+                    this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
+                  });
+
+              });
 
 
             });
