@@ -1,7 +1,7 @@
 <div class="mdc-card my-card-content">
 
   <h1 mat-dialog-title>Add Issue from: 
-    <mat-form-field appearance="outline" color="accent" style="width: 150px; font-size:11px;">
+    <mat-form-field appearance="outline" color="accent" style="width: 200px; font-size:11px;">
       <mat-label>Source</mat-label>
       <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
         <mat-option value="VULNREPO">VULNRΞPO</mat-option>
@@ -17,10 +17,10 @@
       </mat-select>
     </mat-form-field>
     </h1>
-    <div mat-dialog-content>
+    <div>
     <br>
-      <div *ngIf="sourceSelect == 'VULNREPO'" class="example-form">
-          <mat-form-field class="example-form" color="accent" appearance="outline">
+      <div *ngIf="sourceSelect == 'VULNREPO'">
+          <mat-form-field class="example-full-width" color="accent">
             <mat-label>Issue title</mat-label>
             <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="myControl" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
@@ -29,12 +29,12 @@
                 </mat-option>
               </mat-autocomplete>
           </mat-form-field>
-          <span fxLayoutAlign="flex-end"><small><a class="active-link" href="/templates-list" routerLink="/templates-list" (click)="redir()">Vulnerability List</a></small></span>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates List</a></small></span>
       </div>
       
     
-      <div *ngIf="sourceSelect == 'CWE'" class="example-form">
-        <mat-form-field class="example-form" color="accent" appearance="outline">
+      <div *ngIf="sourceSelect == 'CWE'">
+        <mat-form-field class="example-full-width" color="accent">
           <mat-label>CWE title</mat-label>
           <input cdkFocusInitial type="text" matInput placeholder="type: CWE-20 or bypass, injection" [formControl]="myControl2" [matAutocomplete]="auto2">
           <mat-autocomplete #auto2="matAutocomplete">
@@ -47,16 +47,16 @@
     </div>
     
     
-      <div *ngIf="sourceSelect == 'CVE'" class="example-form">
-        <mat-form-field class="example-form" color="accent" appearance="outline">
+      <div *ngIf="sourceSelect == 'CVE'">
+        <mat-form-field class="example-full-width" color="accent">
           <mat-label>CVE</mat-label>
           <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2016-0077" [formControl]="mycve">
         </mat-form-field>
         <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://cve.circl.lu/">cve.circl.lu</a></small></span>
     </div>
     
-    <div *ngIf="sourceSelect == 'MMOBILE'" class="example-form">
-      <mat-form-field class="example-form" color="accent" appearance="outline">
+    <div *ngIf="sourceSelect == 'MMOBILE'">
+      <mat-form-field class="example-full-width" color="accent">
         <mat-label>ATT&CK Mobile</mat-label>
         <input cdkFocusInitial type="text" matInput placeholder="e.g.: Application Discovery" [formControl]="mymobilemitre" [matAutocomplete]="auto3">
         <mat-autocomplete #auto3="matAutocomplete">
@@ -68,8 +68,8 @@
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></small></span>
     </div>
     
-    <div *ngIf="sourceSelect == 'MENTERPRISE'" class="example-form">
-      <mat-form-field class="example-form" color="accent" appearance="outline">
+    <div *ngIf="sourceSelect == 'MENTERPRISE'">
+      <mat-form-field class="example-full-width" color="accent">
         <mat-label>ATT&CK Enterprise</mat-label>
         <input cdkFocusInitial type="text" matInput placeholder="e.g.: DNS Server" [formControl]="myenterprisemitre" [matAutocomplete]="auto4">
         <mat-autocomplete #auto4="matAutocomplete">
@@ -81,8 +81,8 @@
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/enterprise/">attack.mitre.org</a></small></span>
     </div>
     
-    <div *ngIf="sourceSelect == 'PCIDSS'" class="example-form">
-      <mat-form-field class="example-form" color="accent" appearance="outline">
+    <div *ngIf="sourceSelect == 'PCIDSS'" >
+      <mat-form-field class="example-full-width" color="accent">
         <mat-label>PCI DSS Requirements v3.2.1</mat-label>
         <input cdkFocusInitial type="text" matInput placeholder="e.g.: Firewall" [formControl]="myPCI" [matAutocomplete]="auto5">
         <mat-autocomplete #auto5="matAutocomplete">
@@ -96,8 +96,8 @@
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
     </div>
     
-    <div *ngIf="sourceSelect == 'OWASPTOP2017'" class="example-form">
-      <mat-form-field class="example-form" color="accent" appearance="outline">
+    <div *ngIf="sourceSelect == 'OWASPTOP2017'">
+      <mat-form-field class="example-full-width" color="accent">
         <mat-label>OWASP category</mat-label>
         <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2017" [matAutocomplete]="auto6">
         <mat-autocomplete #auto6="matAutocomplete">
@@ -109,8 +109,8 @@
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
     </div>
     
-    <div *ngIf="sourceSelect == 'OWASPTOP2021'" class="example-form">
-      <mat-form-field class="example-form" color="accent" appearance="outline">
+    <div *ngIf="sourceSelect == 'OWASPTOP2021'">
+      <mat-form-field class="example-full-width" color="accent">
         <mat-label>OWASP category</mat-label>
         <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2021" [matAutocomplete]="auto7">
         <mat-autocomplete #auto7="matAutocomplete">
@@ -122,8 +122,8 @@
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
     </div>
     
-    <div *ngIf="sourceSelect == 'OWASPTOP10CICD'" class="example-form">
-      <mat-form-field class="example-form" color="accent" appearance="outline">
+    <div *ngIf="sourceSelect == 'OWASPTOP10CICD'">
+      <mat-form-field class="example-full-width" color="accent">
         <mat-label>OWASP category</mat-label>
         <input cdkFocusInitial type="text" matInput placeholder="type: Insufficient" [formControl]="myOWASPTOP10CICD" [matAutocomplete]="auto8">
         <mat-autocomplete #auto8="matAutocomplete">
@@ -135,8 +135,8 @@
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
     </div>
     
-    <div *ngIf="sourceSelect == 'OWASPTOP10k8s'" class="example-form">
-      <mat-form-field class="example-form" color="accent" appearance="outline">
+    <div *ngIf="sourceSelect == 'OWASPTOP10k8s'">
+      <mat-form-field class="example-full-width" color="accent">
         <mat-label>OWASP category</mat-label>
         <input cdkFocusInitial type="text" matInput placeholder="type: Kube" [formControl]="myOWASPTOP10k8s" [matAutocomplete]="auto9">
         <mat-autocomplete #auto9="matAutocomplete">
@@ -149,7 +149,7 @@
     </div>
     
     <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
-        {{err_msg}}
+        <span style="color: red;">{{err_msg}}</span>
     </div>
     <div mat-dialog-actions>
       <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button>
