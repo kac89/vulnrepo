@@ -233,11 +233,6 @@ export class DialogAddissueComponent implements OnInit {
 
   }
 
-  redir(): void {
-    this.dialogRef.close();
-    this.router.navigate(['/templates-list']);
-  }
-
   cancel(): void {
     this.dialogRef.close();
   }
