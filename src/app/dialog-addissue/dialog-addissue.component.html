@@ -1,8 +1,8 @@
 <div class="mdc-card my-card-content">
 
-  <h1 mat-dialog-title>Add Issue from: 
-    <mat-form-field appearance="outline" color="accent" style="width: 200px; font-size:11px;">
-      <mat-label>Source</mat-label>
+  <h1 mat-dialog-title><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue from:
+    <mat-form-field appearance="outline" color="accent" style="float: inline-end; width: 250px; font-size:11px;">
+      <mat-label>Templates source</mat-label>
       <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
         <mat-option value="VULNREPO">VULNRΞPO</mat-option>
         <mat-option value="CVE">CVE (ONLINE DB)</mat-option>
