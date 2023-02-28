@@ -4,7 +4,7 @@
 </h1>
 
 
-<div md-dialog-content>
+<div>
 
   <form class="example-form">
 
@@ -57,8 +57,8 @@
 <br>
 <div md-dialog-actions>
   <div>
-    <button *ngIf="addapihide" mat-flat-button color="accent" (click)="addapi(apikey.value, selectedAPIDEF)">Confirm</button>
-    <button *ngIf="!addapihide" mat-flat-button color="accent" (click)="apiconnectManual(apikey.value, apikeypass.value, selectedAPIDEF)">Confirm</button>
+    <button *ngIf="addapihide" mat-flat-button color="accent" (click)="addapi(apikey.value, selectedAPIDEF)">Connect</button>
+    <button *ngIf="!addapihide" mat-flat-button color="accent" (click)="apiconnectManual(apikey.value, apikeypass.value, selectedAPIDEF)">Connect</button>
     &nbsp;
     <button mat-flat-button color="primary" (click)="cancel()">Cancel</button>
   </div>
