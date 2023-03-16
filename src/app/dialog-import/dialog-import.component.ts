@@ -39,6 +39,8 @@ export class DialogImportComponent implements OnInit {
   public nmapshow_input = true;
   public nmapplease_wait = false;
   public nmapwrongpass = false;
+  public jiraxmlshow_input = true;
+  public jiraxmlplease_wait = false;
 
   file: any;
   hide = true;
@@ -50,7 +52,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
     { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' },
     { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
-    { value: 'trivy', viewValue: 'Trivy (.JSON)' }
+    { value: 'trivy', viewValue: 'Trivy (.JSON)' },
+    { value: 'jira_xml', viewValue: 'Jira (.XML)' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
@@ -921,6 +924,114 @@ export class DialogImportComponent implements OnInit {
 
 
     this.dialogRef.close(issuelist);
+
+  }
+
+  jiraxmlonFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.jiraxmlshow_input = false;
+      this.jiraxmlplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parseJiraxml(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parseJiraxml(xml) {
+    let xmltojson = [];
+    const parser = new xml2js.Parser({ strict: true, trim: true });
+    parser.parseString(xml, (err, result) => {
+      xmltojson = result.rss.channel[0].item;
+    });
+
+    const date = new Date();
+    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+
+    const info = xmltojson.map((res, key) => {
+
+      //severity
+      if (res.priority[0]._.toString() === 'Blocker') {
+        res.priority[0]._ = 'Critical';
+      }
+      if (res.priority[0]._.toString() === 'Major') {
+        res.priority[0]._ = 'High';
+      }
+      if (res.priority[0]._.toString() === 'Minor') {
+        res.priority[0]._ = 'Medium';
+      }
+      if (res.priority[0]._.toString() === 'Trivial') {
+        res.priority[0]._ = 'Low';
+      }
+
+      const rrr = res.description[0].split('POC:');
+      let nn2 = "";
+      if (rrr[1] == undefined) {
+        nn2 = rrr[0].split('\n\n');
+      } else {
+        nn2 = rrr[1].split('\n\n');
+      }
+
+      if (nn2[0] === rrr[0]) {
+        rrr[0] = "";
+      }
+
+      //remove HTML tags 
+      let html_desc = rrr[0];
+      let div = document.createElement("div");
+      div.innerHTML = html_desc;
+      let html_poc = nn2[0];
+      let div2 = document.createElement("div");
+      div2.innerHTML = html_poc;
+
+
+      //extract ref
+      const exref = res.description[0].split('Reference:');
+      let refn = "";
+      if (exref[1] == undefined) {
+        refn = exref[0].split('\n\n');
+      } else {
+        refn = exref[1].split('\n\n');
+      }
+      if (exref[0] === nn2[0]) {
+        refn = "";
+      }
+      if (exref[0] === rrr[0]) {
+        refn = "";
+      }
+
+      let html_ref = refn;
+      let div3 = document.createElement("div");
+      div3.innerHTML = html_ref;
+
+      const def = {
+        title: res.summary[0],
+        poc: div2.innerText,
+        files: [],
+        desc: div.innerText,
+        severity: res.priority[0]._,
+        ref: div3.innerText + '\n' + res.link[0],
+        cvss: '',
+        cve: '',
+        tags: [],
+        bounty: [],
+        date: today
+      };
+
+      return def;
+    });
+
+    this.dialogRef.close(info);
 
   }
 
