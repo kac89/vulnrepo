@@ -536,7 +536,7 @@ getAPIReportProfiles() {
   }
 
   editProfileItem(item: any): void {
-
+    console.log(item);
     const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
       width: '700px',
       disableClose: true,
@@ -548,7 +548,6 @@ getAPIReportProfiles() {
       console.log('Report Settings Profile dialog was closed');
       if (result) {
         const index: number = this.reportProfileList.indexOf(result.original[0]);
-
         if (index !== -1) {
           this.reportProfileList[index] = {
             profile_name: result.profile_name,
@@ -569,7 +568,9 @@ getAPIReportProfiles() {
             ResName: result.ResName,
             ResEmail: result.ResEmail,
             ResSocial: result.ResSocial,
-            ResWeb: result.ResWeb
+            ResWeb: result.ResWeb,
+            report_css: result.report_css,
+            report_custom_content: result.report_custom_content
           };
           this.ReportProfilesdataSource.data = this.reportProfileList;
           this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});

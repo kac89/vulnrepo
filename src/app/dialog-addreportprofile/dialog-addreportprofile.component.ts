@@ -39,6 +39,7 @@ export class DialogAddreportprofileComponent implements OnInit {
   ngOnInit(): void {
 
     if (this.data === 'open') {
+
       this.logow.setValue(600);
       this.logoh.setValue(500);
       this.video_embed.setValue(true);
@@ -58,13 +59,11 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.ResWeb.setValue('');
       this.report_css.setValue('');
       this.report_custom_content.setValue('');
+      
     } else {
 
       this.origi.push(this.data);
       this.profile_name.setValue(this.data.profile_name);
-      this.report_css.setValue(this.data.report_css);
-      this.report_custom_content.setValue(this.data.report_custom_content);
-      
 
       this.uploadlogoprev = '<img src="' + this.data.logo + '" width="100px">';
       this.advlogo = this.data.logo;
@@ -86,6 +85,8 @@ export class DialogAddreportprofileComponent implements OnInit {
       this.ResEmail.setValue(this.data.ResEmail);
       this.ResSocial.setValue(this.data.ResSocial);
       this.ResWeb.setValue(this.data.ResWeb);
+      this.report_css.setValue(this.data.report_css);
+      this.report_custom_content.setValue(this.data.report_custom_content);
     }
 
 
