@@ -508,7 +508,7 @@ getAPIReportProfiles() {
 
     const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
       width: '800px',
-      height: '981px',
+      height: '985px',
       disableClose: true,
       data: data
     });
@@ -539,7 +539,7 @@ getAPIReportProfiles() {
   editProfileItem(item: any): void {
     const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
       width: '800px',
-      height: '981px',
+      height: '985px',
       disableClose: true,
       data: item
     });
