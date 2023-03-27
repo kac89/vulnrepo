@@ -90,7 +90,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   ReportProfilesList = [];
   scopePreviewHTML = [];
   RaportsTags = [];
-  ReportsTags = [];
   pok = 0;
   timerCounter = 0;
   savemsg = '';
