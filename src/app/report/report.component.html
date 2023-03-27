@@ -179,6 +179,7 @@
               <button *ngIf="getselectedissues(selected3) == 0" mat-menu-item (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">Export all</button>
               <button *ngIf="getselectedissues(selected3) >= 1" mat-menu-item (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">Export selected ({{getselectedissues(selected3)}})</button>
               <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
+              <button *ngIf="getTags(decryptedReportDataChanged.report_vulns) >= 1" mat-menu-item [matMenuTriggerFor]="bytag">Export by Tag</button>
             </mat-menu>
 
             <mat-menu #bysev="matMenu">
@@ -192,6 +193,13 @@
                 (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
               <button mat-menu-item
                 (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
+            </mat-menu>
+            <mat-menu #bytag="matMenu">
+              <span *ngFor="let tagsin of getAllTAgs()">
+                <button mat-menu-item (click)="export_by_tag(tagsin)">
+                  {{tagsin}}
+                </button>
+              </span>
             </mat-menu>
           </div>
 

@@ -89,6 +89,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   selected3 = [];
   ReportProfilesList = [];
   scopePreviewHTML = [];
+  RaportsTags = [];
+  ReportsTags = [];
   pok = 0;
   timerCounter = 0;
   savemsg = '';
@@ -682,6 +684,23 @@ Sample code here\n\
 
   }
 
+
+  export_by_tag(tag) {
+    const filteredTags = this.decryptedReportDataChanged.report_vulns.filter((element) => element.tags.some((subElement) => subElement.name === tag));
+
+    console.log('Export issues');
+    const dialogRef = this.dialog.open(DialogExportissuesComponent, {
+      width: '500px',
+      data: filteredTags
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
+
+  }
+
   export_by_severity(exportitem, severity) {
 
     const bySeverity = exportitem.filter(item => item.severity === severity);
@@ -863,6 +882,38 @@ Sample code here\n\
       return (el === true);
     });
     return ret.length;
+  }
+  getTags(items) {
+    const ret = items.filter(function (el) {
+      return (el.tags.length !== 0);
+    });
+    
+    return ret.length;
+  }
+
+  getAllTAgs() {
+
+    const rettag = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+      return (el.tags.length >0);
+    });
+
+    if (rettag.length > 0) {
+      const xxx = [];
+      this.RaportsTags = [];
+      rettag.forEach(function (value) {
+        value.tags.forEach(function (tagval) {
+
+          if (!xxx.includes(tagval.name)) {
+            xxx.push(tagval.name);
+          }
+
+        });        
+      }); 
+      this.RaportsTags = xxx;
+
+    }
+
+  return this.RaportsTags
   }
 
   sortbycvss() {
