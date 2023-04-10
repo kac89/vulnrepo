@@ -2337,15 +2337,19 @@ Date   | Description
   }
 
 
-  parselogo(data) {
+  parselogo(data, name, type) {
     const linkprev = 'data:image/png;base64,' + btoa(data);
     this.uploadlogoprev = '<img src="' + linkprev + '" width="100px">';
     this.advlogo = linkprev;
     this.decryptedReportDataChanged.report_settings.report_logo.logo = this.advlogo;
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = name;
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = type;
   }
 
   clearlogo() {
     this.decryptedReportDataChanged.report_settings.report_logo.logo = '';
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = '';
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = '';
     this.uploadlogoprev = '';
     this.advlogo = '';
     this.advlogo_saved = '';
@@ -2364,7 +2368,7 @@ Date   | Description
       const fileToRead = files[0];
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
-        this.parselogo(fileReader.result);
+        this.parselogo(fileReader.result, files[0].name, files[0].type);
 
       };
       fileReader.readAsBinaryString(fileToRead);
