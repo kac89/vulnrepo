@@ -443,6 +443,18 @@ export class DialogImportComponent implements OnInit {
     const date = new Date();
     const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = xml.map((res, key) => {
+      let zref = "";
+      if(res.nvt[0].xref || res.nvt[0].refs) {
+
+        let references = res.nvt[0].xref ?? res.nvt[0].refs[0].ref;
+        references.forEach(function (value) {
+          if(value.$.id) {
+            zref = zref + value.$.id +"\n"
+          }
+          
+        }); 
+
+      }
 
       const def = {
         title: res.name,
@@ -450,7 +462,7 @@ export class DialogImportComponent implements OnInit {
         files: [],
         desc: res.description,
         severity: res.threat[0],
-        ref: res.nvt[0].xref[0],
+        ref: zref,
         cvss: res.severity[0],
         cve: '',
         tags: [],
