@@ -6,7 +6,6 @@ import { DialogPassComponent } from '../dialog-pass/dialog-pass.component';
 import { DialogAddissueComponent } from '../dialog-addissue/dialog-addissue.component';
 import { Router } from '@angular/router';
 import { Subscription, of, concatMap } from 'rxjs';
-import { finalize } from "rxjs/operators";
 import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
@@ -61,6 +60,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   private objDiffersResearcher: Array<KeyValueDiffer<string, any>>;
   public pieChartData: number[] = [0, 0, 0, 0, 0];
   public pieChartType = 'pie';
+  public pieChartPlugins = [];
 
   dialogRef: MatDialogRef<DialogPassComponent>;
   displayedColumns: string[] = ['date', 'desc', 'settings'];
@@ -119,6 +119,39 @@ export class ReportComponent implements OnInit, OnDestroy {
   adv_html: any;
   advlogo: any;
   advlogo_saved: any;
+
+ severitytable = [
+    { name: 'Critical', value: 0 },
+    { name: 'High', value: 0 },
+    { name: 'Medium', value: 0 },
+    { name: 'Low', value: 0 },
+    { name: 'Info', value: 0 }
+  ];
+
+ // options stats
+ gradient: boolean = true;
+ showLegend: boolean = true;
+ showLabels: boolean = true;
+ isDoughnut: boolean = false;
+
+ colorScheme = {
+   domain: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
+ };
+ colorSchemeheat = {
+  domain: ['#0e4429', '#006d32','#26a641', '#39d353']
+};
+  // options stats activity
+  legend: boolean = true;
+  animations: boolean = true;
+  xAxis: boolean = true;
+  yAxis: boolean = true;
+  showYAxisLabel: boolean = true;
+  showXAxisLabel: boolean = true;
+  xAxisLabel: string = 'Severity';
+  yAxisLabel: string = 'Timeline';
+  timeline: boolean = true;
+
+  multi = [];
 
   visible = true;
   selectable = true;
@@ -452,15 +485,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
-  // events
-  public chartClicked(e: any): void {
-    // console.log(e);
-  }
-
-  public chartHovered(e: any): void {
-    // console.log(e);
-  }
-
   toggle() {
 
     if (this.selected3.indexOf(true) !== -1) {
@@ -591,6 +615,60 @@ Sample code here\n\
 
   }
 
+  getheatmapData(critical, high, medium, low, info) {
+
+    function getcri(item) {
+      const groupBy = (items, key) => items.reduce(
+        (result, item) => ({
+          ...result,
+          [item[key]]: [
+            ...(result[item[key]] || []),
+            item,
+          ],
+        }), 
+        {},
+      );
+
+      let list = groupBy(item, 'date');
+
+      const arrret = [];
+      for (let key in list) {
+        let value = list[key];
+        arrret.push({ 
+          "value": value.length, 
+          "name": new Date(key)
+        });
+      }
+      return arrret
+      
+    }
+
+let rea = [
+  {
+    "name": "Critical",
+    "series": getcri(critical)
+  },
+  {
+    "name": "High",
+    "series": getcri(high)
+  },
+  {
+    "name": "Medium",
+    "series": getcri(medium)
+  },
+  {
+    "name": "Low",
+    "series": getcri(low)
+  },
+  {
+    "name": "Info",
+    "series": getcri(info)
+  }
+];
+
+    return rea
+  }
+
   doStats() {
 
     const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
@@ -621,7 +699,15 @@ Sample code here\n\
       { severity: 'Info', count: info.length }
     ];
 
-    this.pieChartData = [critical.length, high.length, medium.length, low.length, info.length];
+    this.severitytable = [
+      { name: 'Critical', value: critical.length },
+      { name: 'High', value: high.length },
+      { name: 'Medium', value: medium.length },
+      { name: 'Low', value: low.length },
+      { name: 'Info', value: info.length }
+    ];
+    
+    this.multi = this.getheatmapData(critical, high, medium, low, info);
 
     this.listchangelog = this.decryptedReportData.report_changelog;
     this.dataSource = new MatTableDataSource(this.decryptedReportData.report_changelog);

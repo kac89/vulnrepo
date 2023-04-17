@@ -716,7 +716,7 @@ export class DialogImportComponent implements OnInit {
   }
 
   parseNmap(xml) {
-
+    
     let json = '';
     let hosts = [];
     const parser = new xml2js.Parser({ strict: true, trim: true });
@@ -725,7 +725,7 @@ export class DialogImportComponent implements OnInit {
       json = result.nmaprun;
       hosts = result.nmaprun.host;
     });
-
+    
     const date = new Date();
     const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = hosts.map((res, key) => {

@@ -371,7 +371,7 @@
 
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
-                    <input matInput [matDatepicker]="picker" placeholder="Find date" [(ngModel)]="dec_data.date">
+                    <input matInput [matDatepicker]="picker" placeholder="Find date" (dateChange)="doStats()" [(ngModel)]="dec_data.date">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -592,36 +592,31 @@
 
       <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
-        <div fxFlex="50%" fxFlex.sm="40%" fxFlex.xs="100%">
-          <table mat-table [dataSource]="dataSourceforseverity" id="stats" class="mat-elevation-z8">
-
-            <!-- Severity Column -->
-            <ng-container matColumnDef="severity">
-              <th mat-header-cell *matHeaderCellDef> Severity </th>
-              <td mat-cell *matCellDef="let element"> <span
-                  class="label {{element.severity | lowercase}}">{{element.severity}}</span> </td>
-              <td mat-footer-cell *matFooterCellDef> Total </td>
-            </ng-container>
-
-            <!-- Count Column -->
-            <ng-container matColumnDef="count">
-              <th mat-header-cell *matHeaderCellDef> Number </th>
-              <td mat-cell *matCellDef="let element"> {{element.count}} </td>
-              <td mat-footer-cell *matFooterCellDef> {{ decryptedReportDataChanged.report_vulns.length }} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedSeverityColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedSeverityColumns;"></tr>
-            <tr mat-footer-row *matFooterRowDef="displayedSeverityColumns sticky: true"></tr>
-          </table>
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+          <div style="display: block; width: 100%; height: 300px;">
+            <ngx-charts-advanced-pie-chart
+              [scheme]="colorScheme"
+              [results]="severitytable"
+              >
+            </ngx-charts-advanced-pie-chart>
+          </div>
         </div>
 
-        <div fxFlex="50%" fxFlex.sm="60%" fxFlex.xs="100%">
-          <div style="display: block">
-            <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [colors]="chartcolors"
-              [chartType]="pieChartType" (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
-          </div>
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+    <ngx-charts-heat-map
+    [scheme]="colorSchemeheat"
+    [legend]="legend"
+    [legendPosition]="'right'"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxis]="xAxis"
+    [yAxis]="yAxis"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [results]="multi"
+    >
+  </ngx-charts-heat-map>
         </div>
 
       </div>

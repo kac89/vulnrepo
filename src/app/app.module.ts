@@ -33,7 +33,8 @@ import { MessageService } from './message.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ChartsModule } from 'ng2-charts';
+
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DialogAddissueComponent } from './dialog-addissue/dialog-addissue.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -123,7 +124,6 @@ import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.co
         MatExpansionModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        ChartsModule,
         MatBadgeModule,
         MatAutocompleteModule,
         MatSlideToggleModule,
@@ -136,7 +136,8 @@ import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.co
         MatMenuModule,
         MatRadioModule,
         HammerModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        NgxChartsModule
     ],
     providers: [MessageService, IndexeddbService, DatePipe],
     exports: [],
