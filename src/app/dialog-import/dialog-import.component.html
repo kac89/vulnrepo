@@ -34,6 +34,11 @@
         <p *ngIf="burpplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
   
         <input *ngIf="selected_source == 'nmap'" cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile">
+        <span *ngIf="selected_source == 'nmap'">
+          <hr>
+          <mat-checkbox [(ngModel)]="checked">Remove state down ip's</mat-checkbox>
+        </span>
+        
         <p *ngIf="nmapplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
   
         <input *ngIf="selected_source == 'openvas'" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
