@@ -20,6 +20,8 @@ export class DialogImportComponent implements OnInit {
   csvContent: string;
   parsedCsv: any[];
   xmltojson: any[];
+  checked = true;
+
   public show_input = true;
   public please_wait = false;
 
@@ -725,6 +727,14 @@ export class DialogImportComponent implements OnInit {
       json = result.nmaprun;
       hosts = result.nmaprun.host;
     });
+    
+    // only state up ip's
+    if(this.checked) {
+      const getUp = hosts.filter(function (el) {
+        return (el.status[0]['$'].state === 'up');
+      });
+      hosts=getUp;
+    }
 
     const date = new Date();
     const today = this.datePipe.transform(date, 'yyyy-MM-dd');

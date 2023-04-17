@@ -115,3 +115,9 @@ tr.mat-mdc-footer-row td {
 .mat-mdc-table-sticky {
   border-top: 1px solid #595959;
 }
+
+::ng-deep .ngx-charts { 
+  text{
+      fill: #fff!important; 
+  }
+}
