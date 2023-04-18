@@ -1641,7 +1641,7 @@ Date   | Description
     if (encrypted) {
       blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + ciphertext + "';")], { type: 'text/html' });
     } else {
-      blob = new Blob([res.replace("{'HERE':'REPLACE'};", JSON.stringify(json) + ";")], { type: 'text/html' });
+      blob = new Blob([res.replace("{'HERE':'REPLACE'};", JSON.stringify(json).replaceAll("'", "") + ";")], { type: 'text/html' });
     }
 
     const link = document.createElement('a');
