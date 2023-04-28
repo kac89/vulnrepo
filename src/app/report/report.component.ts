@@ -2708,8 +2708,18 @@ IP   | hostname | role | comments\n\
   }
 
   poc_preview_funct(dec_data, id): void {
+
+    // add Markdown rendering
+    const renderer = new marked.Renderer();
+    renderer.code = function (code, infostring, escaped) {
+      const xx = `
+          <code style="white-space: pre-wrap;word-wrap: break-word;">` + DOMPurify.sanitize(code) + `</code>
+      `;
+      return xx;
+    };
+
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
-    this.scopePreviewHTML[id] = DOMPurify.sanitize(marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc));
+    this.scopePreviewHTML[id] = marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc, { renderer: renderer });
     this.poc_editor_hide[id] = !this.poc_editor_hide[id];
     this.prev_hide[id] = !this.prev_hide[id];
   }

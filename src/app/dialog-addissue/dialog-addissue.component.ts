@@ -273,7 +273,7 @@ export class DialogAddissueComponent implements OnInit {
               poc: '',
               files: [],
               desc: '',
-              severity: '',
+              severity: 'Info',
               status: 1,
               ref: '',
               cvss: '',

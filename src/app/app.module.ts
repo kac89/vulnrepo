@@ -70,7 +70,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogAddreportprofileComponent } from './dialog-addreportprofile/dialog-addreportprofile.component';
 import { DialogApierrorComponent } from './dialog-apierror/dialog-apierror.component';
 import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.component';
-
+import { NoSanitizePipe } from './nosanitizerpipe';
 
 @NgModule({
     declarations: [
@@ -98,7 +98,8 @@ import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.co
         DialogAddreportprofileComponent,
         DialogApierrorComponent,
         DialogReportcssComponent,
-        TemplatesListComponent
+        TemplatesListComponent,
+        NoSanitizePipe
     ],
     imports: [
         BrowserModule,
