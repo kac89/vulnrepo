@@ -525,13 +525,19 @@
 
 				$(".table_of_contents").append(table_of_contents);
 			}
-
+			let markedscope = "";
 			//scope
-			const markedscope = marked.parse(obj.report_scope, { renderer: renderer });
+			if (obj.report_scope) {
+				markedscope = marked.parse(obj.report_scope, { renderer: renderer });	
+			}
 			$(".report_scope").html(DOMPurify.sanitize(markedscope));
 
+			let markedhtml = "";
 			//report html
-			const markedhtml = marked.parse(obj.report_settings.report_html, { renderer: renderer });
+			if (obj.report_settings.report_html) {
+				markedhtml = marked.parse(obj.report_settings.report_html, { renderer: renderer });
+			}
+			
 			$(".report_html").html(DOMPurify.sanitize(markedhtml));
 
 			// Issues
