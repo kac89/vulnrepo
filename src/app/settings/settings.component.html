@@ -134,13 +134,14 @@
         <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
           <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
             <button mat-raised-button color="primary" (click)="openDialogReportProfiles('open')" title="Add report profile">
-              <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add
+              <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Create profile
             </button>
           </div>
           <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end">
             <button mat-raised-button color="primary"(click)="imreportprofiles.click()" title="Import report profile">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
             </button>
+            &nbsp;
             <button *ngIf="reportProfileList.length > 0" mat-raised-button color="primary" (click)="exportprofiles()" title="Export report profiles">
               <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Export
             </button>
