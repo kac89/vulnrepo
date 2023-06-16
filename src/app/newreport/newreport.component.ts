@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-newreport',
@@ -32,6 +33,9 @@ export class NewreportComponent implements OnInit {
   str = '';
   selected = 'local';
   selected_profile = '';
+  titlenewreport = new UntypedFormControl();
+  pass1model = new UntypedFormControl();
+  pass2model = new UntypedFormControl();
   selected_profilefin = '';
   ReportProfilesList = [];
   apiReports = [];
@@ -140,8 +144,8 @@ export class NewreportComponent implements OnInit {
     password = password.split('').sort(function() {return 0.5 - Math.random(); }).join('');
     pass = password.substr(0, length);
     // set gen pass
-    this.inppass = pass;
-    this.inppass2 = pass;
+    this.pass1model.setValue(pass);
+    this.pass2model.setValue(pass);
     this.passCheck(pass);
     this.hide = false;
   }
@@ -224,15 +228,17 @@ export class NewreportComponent implements OnInit {
             this.indexeddbService.addnewReportonAPI(this.selectEDAPI_apiurl, this.selectEDAPI_apikey, title, pass, this.profileSettingsselected);
           }
         } else {
-          this.alert = 'The given security keys do not match. Try again.';
+          this.pass1model.setErrors({'passnotmatch': true});
+          this.pass2model.setErrors({'passnotmatch': true});
         }
 
       } else {
-        this.alert = 'Security key is too weak. Try again.';
+        this.pass1model.setErrors({'tooweakpass': true});
+        this.pass2model.setErrors({'tooweakpass': true});
       }
 
     } else {
-      this.alert = 'Empty title!';
+      this.titlenewreport.setErrors({'notempty': true});
     }
 
   }

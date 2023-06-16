@@ -7,20 +7,35 @@
     <form class="example-full-width mdc-typography--body1" >
       <mat-card appearance="outlined" class="mdc-card my-card-content">
       <mat-form-field class="example-full-width" color="accent">
-        <input matInput placeholder="Report title (e.g: External penetration testing report)" #title value="">
+        <input matInput placeholder="Report title (e.g: External penetration testing report)" #title [formControl]="titlenewreport" value="">
+        <mat-error *ngIf="titlenewreport.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
       </mat-form-field>
   
       <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
   
         <md-card fxFlex="50%" fxFlex.xs="100%" appearance="outlined" class="mdc-card my-card-content">
           <mat-form-field class="example-full-width" color="accent">
-            <input [(ngModel)]="inppass" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
+            <input [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error *ngIf="pass1model.hasError('tooweakpass')">
+              <strong>Security key is too weak!</strong>
+            </mat-error>
+            <mat-error *ngIf="pass1model.hasError('passnotmatch')">
+              <strong>The given security keys do not match!</strong>
+            </mat-error>
           </mat-form-field>
   
           <mat-form-field class="example-full-width" color="accent">
-            <input [(ngModel)]="inppass2" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'" [ngModelOptions]="{standalone: true}">
+            <input [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'">
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error *ngIf="pass2model.hasError('tooweakpass')">
+              <strong>Security key is too weak!</strong>
+            </mat-error>
+            <mat-error *ngIf="pass2model.hasError('passnotmatch')">
+              <strong>The given security keys do not match!</strong>
+            </mat-error>
           </mat-form-field>
   
           <mat-form-field *ngIf="localkeys.length > 0" appearance="fill" color="accent">
@@ -50,6 +65,8 @@
   
         <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center">
           <div style="width: 100%">
+
+            <div fxLayoutAlign="center" class="label warning"><mat-icon style="margin-right: 10px;" class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> <b>Do not lose your security key!<br> Access to the report will be impossible!</b></div>
   
             <p *ngIf="str != ''" fxLayoutAlign="center">Strength validation: {{str}}.</p>
             <mat-progress-bar *ngIf="str != ''" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
@@ -61,7 +78,7 @@
         </md-card>
       </div>
   
-      <p><mat-icon style="color: red" class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> Do not lose your security key! cause access to the report will be impossible!</p>
+      
       <p *ngIf="alert"><br><span class="label danger"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">error</mat-icon> {{alert}}</span><br></p><br>
       <mat-dialog-actions>
         <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value,pass2.value)"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">save</mat-icon> Create new report</button>
