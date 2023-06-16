@@ -17,10 +17,7 @@ import { UntypedFormControl } from '@angular/forms';
 export class NewreportComponent implements OnInit {
   dialogRef: MatDialogRef<DialogApikeyComponent>;
   hide = true;
-  alert: string;
-  inppass: string;
   localkeys = [];
-  inppass2: string;
   color: ThemePalette = 'warn';
   mode: ProgressBarMode = 'buffer';
   selectEDAPI = [];
