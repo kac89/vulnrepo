@@ -60,25 +60,36 @@ export class DialogEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  changeseckey() {
-
-    if (this.data.title !== this.title.value) {
-      this.data.title = this.title.value;
-      this.dialogRef.close(this.data);
+  changeissuetitle() {
+    if (this.title.value !== '') {
+      if (this.data.title !== this.title.value) {
+        this.data.title = this.title.value;
+        this.dialogRef.close(this.data);
+      } else {
+        this.dialogRef.close('nochanges');
+      }
     } else {
-      this.dialogRef.close('nochanges');
+      this.title.setErrors({'notempty': true});
     }
+
     
   }
 
   changereportname() {
 
-    if (this.data.report_name !== this.reportname.value) {
-      this.data.report_name = this.reportname.value;
-      this.dialogRef.close(this.reportname.value);
+
+    if (this.reportname.value !== '') {
+      if (this.data.report_name !== this.reportname.value) {
+        this.data.report_name = this.reportname.value;
+        this.dialogRef.close(this.reportname.value);
+      } else {
+        this.dialogRef.close('nochanges');
+      }
     } else {
-      this.dialogRef.close('nochanges');
+      this.reportname.setErrors({'notempty': true});
     }
+
+
     
   }
 
