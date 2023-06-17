@@ -10,10 +10,16 @@
 
         <mat-form-field *ngIf="col1" class="example-full-width" color="accent">
           <input [formControl]="reportname" type="text" matInput>
+          <mat-error *ngIf="reportname.hasError('notempty')">
+            <strong>Title must not be empty!</strong>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field *ngIf="col2" class="example-full-width" color="accent">
           <input [formControl]="title" type="text" matInput>
+          <mat-error *ngIf="title.hasError('notempty')">
+            <strong>Title must not be empty!</strong>
+          </mat-error>
         </mat-form-field>
 
         <h3 *ngIf="col3">{{data[1].item.title}}</h3>
@@ -24,7 +30,7 @@
 
   <div mat-dialog-actions>
       <button *ngIf="col1" mat-raised-button color="accent" (click)="changereportname()">Save</button>
-      <button *ngIf="col2" mat-raised-button color="accent" (click)="changeseckey()">Save</button>
+      <button *ngIf="col2" mat-raised-button color="accent" (click)="changeissuetitle()">Save</button>
       <button *ngIf="col5" mat-raised-button color="warn" (click)="removeReport(data[1].item)">Remove</button>
       <button *ngIf="col4" mat-raised-button color="warn" (click)="removechangelog(data[1].item)">Remove</button>
       <button *ngIf="col3" mat-raised-button color="warn" (click)="removeissue(data[1].item)">Remove</button>
