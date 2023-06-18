@@ -22,12 +22,15 @@
       <div *ngIf="sourceSelect == 'VULNREPO'">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Issue title</mat-label>
-            <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="myControl" [matAutocomplete]="auto">
+            <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="customissueform" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
                   {{option.title}}
                 </mat-option>
               </mat-autocomplete>
+            <mat-error *ngIf="customissueform.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
           </mat-form-field>
           <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates List</a></small></span>
       </div>
@@ -36,12 +39,18 @@
       <div *ngIf="sourceSelect == 'CWE'">
         <mat-form-field class="example-full-width" color="accent">
           <mat-label>CWE title</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="type: CWE-20 or bypass, injection" [formControl]="myControl2" [matAutocomplete]="auto2">
+          <input cdkFocusInitial type="text" matInput placeholder="type: CWE-20 or bypass, injection" [formControl]="cwecontrol" [matAutocomplete]="auto2">
           <mat-autocomplete #auto2="matAutocomplete">
               <mat-option [title]="option.title" *ngFor="let option of filteredOptionsCWE | async" [value]="option.title">
                 {{option.title}}
               </mat-option>
             </mat-autocomplete>
+          <mat-error *ngIf="cwecontrol.hasError('notempty')">
+            <strong>Title must not be empty!</strong>
+          </mat-error>
+          <mat-error *ngIf="cwecontrol.hasError('cantfind')">
+            <strong>Can not be found!</strong>
+          </mat-error>
         </mat-form-field>
         <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://cwe.mitre.org/data/index.html">cwe.mitre.org</a></small></span>
     </div>
@@ -51,6 +60,15 @@
         <mat-form-field class="example-full-width" color="accent">
           <mat-label>CVE</mat-label>
           <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2016-0077" [formControl]="mycve">
+          <mat-error *ngIf="mycve.hasError('notempty')">
+            <strong>CVE must not be empty!</strong>
+          </mat-error>
+          <mat-error *ngIf="mycve.hasError('cve_format_error')">
+            <strong>CVE format error!</strong>
+          </mat-error>
+          <mat-error *ngIf="mycve.hasError('cve_notfound')">
+            <strong>CVE not found!</strong>
+          </mat-error>
         </mat-form-field>
         <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://cve.circl.lu/">cve.circl.lu</a></small></span>
     </div>
@@ -64,6 +82,12 @@
               {{option.title}}
             </mat-option>
           </mat-autocomplete>
+        <mat-error *ngIf="mymobilemitre.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="mymobilemitre.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
       </mat-form-field>
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></small></span>
     </div>
@@ -77,6 +101,12 @@
               {{option.title}}
             </mat-option>
           </mat-autocomplete>
+        <mat-error *ngIf="myenterprisemitre.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="myenterprisemitre.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
       </mat-form-field>
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/enterprise/">attack.mitre.org</a></small></span>
     </div>
@@ -92,6 +122,12 @@
             </mat-option>
         </mat-optgroup>
           </mat-autocomplete>
+        <mat-error *ngIf="myPCI.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="myPCI.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
       </mat-form-field>
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
     </div>
@@ -105,6 +141,12 @@
             {{option.title}}
           </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="myOWASP2017.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="myOWASP2017.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
       </mat-form-field>
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
     </div>
@@ -118,6 +160,12 @@
             {{option.title}}
           </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="myOWASP2021.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="myOWASP2021.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
       </mat-form-field>
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
     </div>
@@ -131,6 +179,12 @@
             {{option.title}}
           </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="myOWASPTOP10CICD.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="myOWASPTOP10CICD.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
       </mat-form-field>
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
     </div>
@@ -144,6 +198,12 @@
             {{option.title}}
           </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="myOWASPTOP10k8s.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="myOWASPTOP10k8s.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
       </mat-form-field>
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
     </div>

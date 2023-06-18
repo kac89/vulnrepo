@@ -39,8 +39,8 @@ export interface PCITesting {
   styleUrls: ['./dialog-addissue.component.scss']
 })
 export class DialogAddissueComponent implements OnInit {
-  myControl = new UntypedFormControl();
-  myControl2 = new UntypedFormControl();
+  customissueform = new UntypedFormControl();
+  cwecontrol = new UntypedFormControl();
   mycve = new UntypedFormControl();
   mymobilemitre = new UntypedFormControl();
   myenterprisemitre = new UntypedFormControl();
@@ -75,14 +75,14 @@ export class DialogAddissueComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
     private apiService: ApiService, private datePipe: DatePipe) {
 
-    this.filteredOptions = this.myControl.valueChanges
+    this.filteredOptions = this.customissueform.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filter(title) : this.options.slice())
       );
 
-    this.filteredOptionsCWE = this.myControl2.valueChanges
+    this.filteredOptionsCWE = this.cwecontrol.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
@@ -238,7 +238,7 @@ export class DialogAddissueComponent implements OnInit {
   }
 
   addIssue() {
-    const data = this.myControl.value;
+    const data = this.customissueform.value;
     if (data !== '' && data !== null) {
       for (const key in this.options) {
         if (this.options.hasOwnProperty(key)) {
@@ -289,14 +289,14 @@ export class DialogAddissueComponent implements OnInit {
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.customissueform.setErrors({'notempty': true});
     }
 
   }
 
 
   addIssueCWE() {
-    const data = this.myControl2.value;
+    const data = this.cwecontrol.value;
     if (data !== '' && data !== null) {
       for (const key in this.cwe) {
         if (this.cwe.hasOwnProperty(key)) {
@@ -322,13 +322,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.err_msg = 'Can\'t find ' + data;
+            this.cwecontrol.setErrors({'cantfind': true});
           }
 
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.cwecontrol.setErrors({'notempty': true});
     }
 
   }
@@ -466,19 +466,19 @@ export class DialogAddissueComponent implements OnInit {
 
           } else {
             this.show = false;
-            this.err_msg = 'CVE not found.';
+            this.mycve.setErrors({'cve_notfound': true});
           }
 
         });
 
       } else {
         this.show = false;
-        this.err_msg = 'CVE format error.';
+        this.mycve.setErrors({'cve_format_error': true});
       }
 
     } else {
       this.show = false;
-      this.err_msg = 'Empty field?.';
+      this.mycve.setErrors({'notempty': true});
     }
 
   }
@@ -511,13 +511,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.err_msg = 'Can\'t find ' + data;
+            this.mymobilemitre.setErrors({'cantfind': true});
           }
 
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.mymobilemitre.setErrors({'notempty': true});
     }
 
 
@@ -551,13 +551,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.err_msg = 'Can\'t find ' + data;
+            this.myenterprisemitre.setErrors({'cantfind': true});
           }
 
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.myenterprisemitre.setErrors({'notempty': true});
     }
 
 
@@ -612,7 +612,7 @@ export class DialogAddissueComponent implements OnInit {
               break;
 
             } else {
-              this.err_msg = 'Can\'t find ' + data;
+              this.myPCI.setErrors({'cantfind': true});
             }
 
           }
@@ -620,9 +620,8 @@ export class DialogAddissueComponent implements OnInit {
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.myPCI.setErrors({'notempty': true});
     }
-
 
   }
 
@@ -654,13 +653,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.err_msg = 'Can\'t find ' + data;
+            this.myOWASP2017.setErrors({'cantfind': true});
           }
 
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.myOWASP2017.setErrors({'notempty': true});
     }
 
   }
@@ -692,13 +691,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.err_msg = 'Can\'t find ' + data;
+            this.myOWASP2021.setErrors({'cantfind': true});
           }
 
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.myOWASP2021.setErrors({'notempty': true});
     }
 
   }
@@ -731,13 +730,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.err_msg = 'Can\'t find ' + data;
+            this.myOWASPTOP10CICD.setErrors({'cantfind': true});
           }
 
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.myOWASPTOP10CICD.setErrors({'notempty': true});
     }
 
   }
@@ -769,13 +768,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.err_msg = 'Can\'t find ' + data;
+            this.myOWASPTOP10k8s.setErrors({'cantfind': true});
           }
 
         }
       }
     } else {
-      this.err_msg = 'Please add title!';
+      this.myOWASPTOP10k8s.setErrors({'notempty': true});
     }
 
   }
