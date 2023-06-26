@@ -35,7 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const db = window.indexedDB.open('testindexeddb');
     db.onerror = () => {
-      console.error('Your browser doesn\'t support a stable version of IndexedDB. Try use latest ff/chrome browser and not in private browsing mode! Note: In private browsing mode, most data storage is not supported.');
+      console.error('Your browser doesn\'t support a stable version of IndexedDB. Try use latest modern browser and not in private browsing mode! Note: In private browsing mode, most data storage is not supported.');
     };
 
     if (!window.indexedDB) {
