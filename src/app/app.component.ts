@@ -4,6 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { version } from "../version";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,10 @@ export class AppComponent implements OnInit, OnDestroy {
   enc_status: any;
   subscription: Subscription;
   app_ver = '';
+
   app_ver_short = '';
 
-  constructor(public route: ActivatedRoute, public router: Router, private indexeddbService: IndexeddbService) {
+  constructor(public route: ActivatedRoute, public router: Router, private indexeddbService: IndexeddbService, public snackBar: MatSnackBar) {
     
   }
 
@@ -31,11 +33,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
     }
 
+    const db = window.indexedDB.open('testindexeddb');
+    db.onerror = () => {
+      console.error('Your browser doesn\'t support a stable version of IndexedDB. Try use latest ff/chrome browser and not in private browsing mode! Note: In private browsing mode, most data storage is not supported.');
+    };
+
     if (!window.indexedDB) {
-      console.log('Your browser doesn\'t support a stable version of IndexedDB.');
+      console.error('Your browser doesn\'t support a stable version of IndexedDB.');
     }
     if (!window.sessionStorage) {
-      console.log('Your browser doesn\'t support a stable version of sessionStorage.');
+      console.error('Your browser doesn\'t support a stable version of sessionStorage.');
     }
 
     this.subscription = this.indexeddbService.getstatusencryption().subscribe(value => {
