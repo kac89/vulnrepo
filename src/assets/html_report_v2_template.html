@@ -610,15 +610,6 @@
 					return '<div><h5>References:</h5></div><div>' + DOMPurify.sanitize(parse_links(parse_newline(refs))) + '</div';
 				}
 
-				function escape(htmlStr) {
-   return htmlStr.replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#39;");        
-
-}
-
 				var issues = `
 				<div id="` + index + `" class="card bg-light mb-3">
 					<div class="card-header"><div class="d-flex flex-sm-row flex-column justify-content-between"><div><span class="label ` + DOMPurify.sanitize(element.severity) + `">` + DOMPurify.sanitize(element.severity) + `</span> ` + DOMPurify.sanitize(element.title) + `</div><div> <span>`+elementissuestatus+`</span></div></div></div>
@@ -634,7 +625,7 @@
 							<div>
 								<h5>Proof of Concept:</h5>
 							</div>
-							<div>` + escape(elementpoc) + `</div>
+							<div>` + DOMPurify.sanitize(elementpoc) + `</div>
 							<br>
 							`+ ((!obj.report_settings.report_remove_issuetags) ? gettags(element.tags) : '') + `
 							`+ ((element.ref) ? getrefs(element.ref) : '');
