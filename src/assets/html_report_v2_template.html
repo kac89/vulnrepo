@@ -339,8 +339,15 @@
 		$('.list_researcher').hide();
 		$('.list_copyright').hide();
 		
+		const base64_data = {'HERE':'REPLACE'};
+		const decodedData = atob(base64_data);
 		
-		var obj = {'HERE':'REPLACE'};
+		try {
+			var obj = JSON.parse(decodedData);
+		} catch(e) {
+			console.log(e);
+			obj = base64_data;
+		}
 
 		if (typeof obj.report_encrypted_t == 'undefined') {
 

@@ -4,7 +4,6 @@ import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { version } from "../version";
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   app_ver_short = '';
 
-  constructor(public route: ActivatedRoute, public router: Router, private indexeddbService: IndexeddbService, public snackBar: MatSnackBar) {
+  constructor(public route: ActivatedRoute, public router: Router, private indexeddbService: IndexeddbService) {
     
   }
 
