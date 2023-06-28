@@ -345,7 +345,7 @@
 		$('.list_copyright').hide();
 		
 		const base64_data = {'HERE':'REPLACE'};
-		const decodedData = atob(base64_data);
+		const decodedData = decodeURIComponent(atob(base64_data));
 		
 		try {
 			var obj = JSON.parse(decodedData);
