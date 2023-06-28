@@ -345,10 +345,10 @@
 		$('.list_copyright').hide();
 		
 		const base64_data = {'HERE':'REPLACE'};
-		const decodedData = decodeURIComponent(atob(base64_data));
+		const decodedData = atob(base64_data);
 		
 		try {
-			var obj = JSON.parse(decodedData);
+			var obj = JSON.parse(decodeURIComponent(decodedData));
 		} catch(e) {
 			console.log(e);
 			obj = base64_data;
