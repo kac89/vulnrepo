@@ -1641,7 +1641,19 @@ Date   | Description
     if (encrypted) {
       blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + ciphertext + "';")], { type: 'text/html' });
     } else {
-      blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + btoa(JSON.stringify(json)) + "';")], { type: 'text/html' });
+      var jsondata = JSON.stringify(json);
+
+      function removenonutf8chars(input) {
+        var output = "";
+        for (var i=0; i<input.length; i++) {
+            if (input.charCodeAt(i) <= 127) {
+                output += input.charAt(i);
+            }
+        }
+        return output;
+    }
+
+      blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + btoa(removenonutf8chars(jsondata)) + "';")], { type: 'text/html' });
     }
 
     const link = document.createElement('a');
