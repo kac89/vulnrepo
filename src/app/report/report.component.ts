@@ -1643,16 +1643,18 @@ Date   | Description
     } else {
       var jsondata = JSON.stringify(json);
 
-
-    function toBinary(strdata) {
-      const codeUnits = new Uint16Array(strdata.length);
-      for (let i = 0; i < codeUnits.length; i++) {
-        codeUnits[i] = strdata.charCodeAt(i);
+      function removenonutf8chars(input) {
+        var output = "";
+        for (var i=0; i<input.length; i++) {
+          if (input.charCodeAt(i) <= 127) {
+            output += input.charAt(i);
+          }
+        }
+        return output;
       }
-      return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
-    }
 
-      blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + toBinary(jsondata) + "';")], { type: 'text/html' });
+
+      blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + btoa(removenonutf8chars(jsondata)) + "';")], { type: 'text/html' });
     }
 
     const link = document.createElement('a');

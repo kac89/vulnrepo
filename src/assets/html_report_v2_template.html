@@ -344,18 +344,8 @@
 		$('.list_researcher').hide();
 		$('.list_copyright').hide();
 		
-
-		function fromBinary(encoded) {
-			const binary = atob(encoded);
-			const bytes = new Uint8Array(binary.length);
-			for (let i = 0; i < bytes.length; i++) {
-				bytes[i] = binary.charCodeAt(i);
-			}
-			return String.fromCharCode(...new Uint16Array(bytes.buffer));
-		}
-
 		const base64_data = {'HERE':'REPLACE'};
-		const decodedData = fromBinary(base64_data);
+		const decodedData = atob(base64_data);
 		
 		try {
 			var obj = JSON.parse(decodedData);
