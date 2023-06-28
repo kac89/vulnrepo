@@ -1644,10 +1644,10 @@ Date   | Description
       var jsondata = JSON.stringify(json);
 
 
-    function toBinary(str) {
-      const codeUnits = new Uint16Array(str.length);
+    function toBinary(strdata) {
+      const codeUnits = new Uint16Array(strdata.length);
       for (let i = 0; i < codeUnits.length; i++) {
-        codeUnits[i] = str.charCodeAt(i);
+        codeUnits[i] = strdata.charCodeAt(i);
       }
       return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
     }
