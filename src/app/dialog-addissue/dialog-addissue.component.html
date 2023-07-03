@@ -22,8 +22,16 @@
       <div *ngIf="sourceSelect == 'VULNREPO'">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Issue title</mat-label>
-            <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="customissueform" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
+            <mat-chip-grid #chipGrid aria-label="Issue title">
+              <mat-chip-row *ngFor="let isitemw of chipsissue" (removed)="remove(isitemw)">
+                {{isitemw}}
+                <button matChipRemove [attr.aria-label]="'remove ' + isitemw">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+            <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="customissueform" [matAutocomplete]="auto" [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
                   {{option.title}}
                 </mat-option>
@@ -32,6 +40,7 @@
               <strong>Title must not be empty!</strong>
             </mat-error>
           </mat-form-field>
+
           <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates List</a></small></span>
       </div>
       

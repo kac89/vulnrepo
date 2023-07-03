@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormControl } from '@angular/forms';
@@ -7,7 +7,11 @@ import { map, startWith } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
-
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
+import { exit } from 'process';
 export interface Vulns {
   title: string;
   cve: string;
@@ -36,7 +40,7 @@ export interface PCITesting {
 @Component({
   selector: 'app-dialog-addissue',
   templateUrl: './dialog-addissue.component.html',
-  styleUrls: ['./dialog-addissue.component.scss']
+  styleUrls: ['./dialog-addissue.component.scss'],
 })
 export class DialogAddissueComponent implements OnInit {
   customissueform = new UntypedFormControl();
@@ -70,6 +74,9 @@ export class DialogAddissueComponent implements OnInit {
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  announcer = inject(LiveAnnouncer);
+  chipsissue: string[] = [];
 
   constructor(public router: Router,
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
@@ -239,58 +246,71 @@ export class DialogAddissueComponent implements OnInit {
 
   addIssue() {
     const data = this.customissueform.value;
-    if (data !== '' && data !== null) {
-      for (const key in this.options) {
-        if (this.options.hasOwnProperty(key)) {
 
-          if (this.options[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
-            const def = {
-              title: this.options[key].title,
-              poc: this.options[key].poc,
-              files: [],
-              desc: this.options[key].desc,
-              severity: this.options[key].severity,
-              status: 1,
-              ref: this.options[key].ref,
-              cvss: this.options[key].cvss,
-              cve: this.options[key].cve,
-              tags: [],
-              bounty: [],
-              date: today + ''
-            };
-            this.dialogRef.close(def);
-            break;
-
-          } else if (Number(key) + 1 === this.options.length) {
-
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
-
-            const def = {
-              title: data,
-              poc: '',
-              files: [],
-              desc: '',
-              severity: 'Info',
-              status: 1,
-              ref: '',
-              cvss: '',
-              cve: '',
-              tags: [],
-              bounty: [],
-              date: today + ''
-            };
-            this.dialogRef.close(def);
-          }
-
-
-        }
-      }
-    } else {
-      this.customissueform.setErrors({'notempty': true});
+    if (this.customissueform.value !== "") {
+      this.chipsissue.push(this.customissueform.value);
     }
+    
+    let exitel = [];
+    for (var datael of this.chipsissue) {
+      if (datael !== '' && datael !== null) {
+
+        const found = this.options.find((obj) => {
+          return obj.title === datael;
+        });
+        
+        if (found !== undefined) {
+
+          if (found.title === datael) {
+            const date = new Date();
+            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+            const def = {
+              title: found.title,
+              poc: found.poc,
+              files: [],
+              desc: found.desc,
+              severity: found.severity,
+              status: 1,
+              ref: found.ref,
+              cvss: found.cvss,
+              cve: found.cve,
+              tags: [],
+              bounty: [],
+              date: today + ''
+            };
+            exitel.push(def);
+
+          } 
+
+
+        } else {
+
+          const date = new Date();
+          const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+
+          const def = {
+            title: datael,
+            poc: '',
+            files: [],
+            desc: '',
+            severity: 'Info',
+            status: 1,
+            ref: '',
+            cvss: '',
+            cve: '',
+            tags: [],
+            bounty: [],
+            date: today + ''
+          };
+          exitel.push(def);
+        }
+
+      } else {
+        this.customissueform.setErrors({'notempty': true});
+      }
+    }
+
+    this.dialogRef.close(exitel);
 
   }
 
@@ -779,4 +799,34 @@ export class DialogAddissueComponent implements OnInit {
 
   }
 
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value) {
+      this.chipsissue.push(value);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+
+    this.customissueform.setValue(null);
+  }
+
+  remove(fruit: string): void {
+    const index = this.chipsissue.indexOf(fruit);
+
+    if (index >= 0) {
+      this.chipsissue.splice(index, 1);
+
+      this.announcer.announce(`Removed ${fruit}`);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.chipsissue.push(event.option.viewValue);
+    //this.fruitInput.nativeElement.value = '';
+    this.customissueform.setValue('');
+  }
 }
