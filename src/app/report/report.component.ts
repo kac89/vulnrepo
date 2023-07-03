@@ -729,7 +729,16 @@ let rea = [
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
 
-      if (result !== undefined) {
+      if (result.length !== undefined) {
+        for (var elem of result) {
+          if (elem.title !== '') {
+            this.decryptedReportDataChanged.report_vulns.push(elem);
+            this.addtochangelog('Create issue: ' + elem.title);
+            this.afterDetectionNow();
+            this.doStats();
+          }
+        }
+      } else {
         if (result.title !== '') {
           this.decryptedReportDataChanged.report_vulns.push(result);
           this.addtochangelog('Create issue: ' + result.title);
