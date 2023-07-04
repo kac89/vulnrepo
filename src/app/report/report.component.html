@@ -351,6 +351,7 @@
 
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
+                    <mat-label>Severity</mat-label>
                     <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
                       (ngModelChange)="doStats()">
                       <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
@@ -362,6 +363,7 @@
 
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
+                    <mat-label>Issue status</mat-label>
                     <mat-select placeholder="Issue status" [(value)]="dec_data.status" [ngModel]="dec_data.status"
                       (ngModelChange)="doStats()">
                       <mat-option *ngFor="let issuestat of issueStatus" [value]="issuestat.value">
