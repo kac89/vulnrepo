@@ -44,6 +44,7 @@ export interface PCITesting {
 })
 export class DialogAddissueComponent implements OnInit {
   customissueform = new UntypedFormControl();
+  gridaction = new UntypedFormControl();
   cwecontrol = new UntypedFormControl();
   mycve = new UntypedFormControl();
   mymobilemitre = new UntypedFormControl();
@@ -247,70 +248,72 @@ export class DialogAddissueComponent implements OnInit {
   addIssue() {
     const data = this.customissueform.value;
 
-    if (this.customissueform.value !== "") {
+    if (this.customissueform.value !== "" && this.customissueform.value !== null) {
       this.chipsissue.push(this.customissueform.value);
     }
-    
+
     let exitel = [];
-    for (var datael of this.chipsissue) {
-      if (datael !== '' && datael !== null) {
-
-        const found = this.options.find((obj) => {
-          return obj.title === datael;
-        });
-        
-        if (found !== undefined) {
-
-          if (found.title === datael) {
+    if (this.chipsissue.length > 0) {
+      for (var datael of this.chipsissue) {
+  
+          const found = this.options.find((obj) => {
+            return obj.title === datael;
+          });
+          
+          if (found !== undefined) {
+  
+            if (found.title === datael) {
+              const date = new Date();
+              const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+              const def = {
+                title: found.title,
+                poc: found.poc,
+                files: [],
+                desc: found.desc,
+                severity: found.severity,
+                status: 1,
+                ref: found.ref,
+                cvss: found.cvss,
+                cve: found.cve,
+                tags: [],
+                bounty: [],
+                date: today + ''
+              };
+              exitel.push(def);
+  
+            } 
+  
+  
+          } else {
+  
             const date = new Date();
             const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+  
             const def = {
-              title: found.title,
-              poc: found.poc,
+              title: datael,
+              poc: '',
               files: [],
-              desc: found.desc,
-              severity: found.severity,
+              desc: '',
+              severity: 'Info',
               status: 1,
-              ref: found.ref,
-              cvss: found.cvss,
-              cve: found.cve,
+              ref: '',
+              cvss: '',
+              cve: '',
               tags: [],
               bounty: [],
               date: today + ''
             };
             exitel.push(def);
-
-          } 
-
-
-        } else {
-
-          const date = new Date();
-          const today = this.datePipe.transform(date, 'yyyy-MM-dd');
-
-          const def = {
-            title: datael,
-            poc: '',
-            files: [],
-            desc: '',
-            severity: 'Info',
-            status: 1,
-            ref: '',
-            cvss: '',
-            cve: '',
-            tags: [],
-            bounty: [],
-            date: today + ''
-          };
-          exitel.push(def);
-        }
-
-      } else {
-        this.customissueform.setErrors({'notempty': true});
+          }
       }
-    }
 
-    this.dialogRef.close(exitel);
+      this.dialogRef.close(exitel);
+
+
+    } else {
+      this.customissueform.setErrors({'notempty': true});
+      this.gridaction.setErrors({'notempty': true});
+    }
 
   }
 
@@ -811,7 +814,7 @@ export class DialogAddissueComponent implements OnInit {
     // Clear the input value
     event.chipInput!.clear();
 
-    this.customissueform.setValue(null);
+    this.customissueform.setValue('');
   }
 
   remove(fruit: string): void {

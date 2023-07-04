@@ -22,7 +22,7 @@
       <div *ngIf="sourceSelect == 'VULNREPO'">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Issue title</mat-label>
-            <mat-chip-grid #chipGrid aria-label="Issue title">
+            <mat-chip-grid #chipGrid aria-label="Issue title" [formControl]="gridaction">
               <mat-chip-row *ngFor="let isitemw of chipsissue" (removed)="remove(isitemw)">
                 {{isitemw}}
                 <button matChipRemove [attr.aria-label]="'remove ' + isitemw">
