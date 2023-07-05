@@ -654,7 +654,8 @@
         fxLayoutGap="10px grid">
         <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Name" [(ngModel)]="researchers.reportername"
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="researchers.reportername"
               value="{{researchers.reportername}}">
             <mat-icon matSuffix>person_pin</mat-icon>
           </mat-form-field>
@@ -662,7 +663,8 @@
 
         <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="E-mail" [(ngModel)]="researchers.reporteremail"
+            <mat-label>E-mail</mat-label>
+            <input matInput [(ngModel)]="researchers.reporteremail"
               value="{{researchers.reporteremail}}">
             <mat-icon matSuffix>email</mat-icon>
           </mat-form-field>
@@ -670,7 +672,8 @@
 
         <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Social links" [(ngModel)]="researchers.reportersocial"
+            <mat-label>Social links</mat-label>
+            <input matInput [(ngModel)]="researchers.reportersocial"
               value="{{researchers.reportersocial}}">
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
@@ -678,7 +681,8 @@
 
         <div fxFlex="24%" fxFlex.sm="44%" fxFlex.xs="94%">
           <mat-form-field class="example-full-width" color="accent">
-            <input matInput placeholder="Website" [(ngModel)]="researchers.reporterwww"
+            <mat-label>Website</mat-label>
+            <input matInput [(ngModel)]="researchers.reporterwww"
               value="{{researchers.reporterwww}}">
             <mat-icon matSuffix>public</mat-icon>
           </mat-form-field>
