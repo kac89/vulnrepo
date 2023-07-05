@@ -548,24 +548,31 @@
         </mat-expansion-panel>
 
         <div *ngIf="pok == 1">
+          <br>
           <mat-expansion-panel class="mat-elevation-z9" disabled>
             <mat-expansion-panel-header>
               <mat-panel-title fxLayoutAlign="start center" style="margin-left: 13px;">
                 <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
                   settings</mat-icon>
-                <a class="active-link" [routerLink]="[]" (click)="selectall()">
-                  <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>done_all</mat-icon> Select all
-                </a>
-                &nbsp;||&nbsp;
-                <a class="active-link" [routerLink]="[]" (click)="deselectall()">Unselect all</a>
-                &nbsp;
-                <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>chevron_left</mat-icon>
 
 
-                <button mat-button color="warn" (click)="removeSelecteditems(selected3)">
-                  <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE
+                <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                  <mat-icon>done_all</mat-icon>
+                  Select all
                 </button>
 
+                &nbsp;
+
+                <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                  <mat-icon>done_all</mat-icon>
+                  Unselect all
+                </button>
+
+                &nbsp;&nbsp;
+
+                <button mat-stroked-button color="warn" (click)="removeSelecteditems(selected3)">
+                  <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE ({{ selected3_true.length }})
+                </button>
 
               </mat-panel-title>
             </mat-expansion-panel-header>
