@@ -87,6 +87,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   textarea_selected_end: any;
   textarea_click: any;
   selected3 = [];
+  selected3_true = [];
   ReportProfilesList = [];
   scopePreviewHTML = [];
   RaportsTags = [];
@@ -486,7 +487,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   toggle() {
-
+    this.selected3_true = this.selected3.filter(item => item === true);
     if (this.selected3.indexOf(true) !== -1) {
       this.pok = 1;
     } else {
