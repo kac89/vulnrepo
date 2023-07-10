@@ -168,6 +168,8 @@ export class IndexeddbService {
 `;
 
         const today: number = Date.now();
+        const event = new Date();
+        const s = event.toISOString();
         let empty_vulns = {
           report_vulns: [],
           report_scope: '',
@@ -180,7 +182,7 @@ export class IndexeddbService {
           ],
           report_version: 0,
           report_metadata: {
-            starttest: '',
+            starttest: s,
             endtest: ''
           },
           researcher: [
@@ -280,6 +282,8 @@ export class IndexeddbService {
 `;
 
         const today: number = Date.now();
+        const event = new Date();
+        const s = event.toISOString();
         let empty_vulns = {
           report_vulns: [],
           report_scope: '',
@@ -292,7 +296,7 @@ export class IndexeddbService {
           ],
           report_version: 0,
           report_metadata: {
-            starttest: '',
+            starttest: s,
             endtest: ''
           },
           researcher: [
