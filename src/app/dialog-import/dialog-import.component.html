@@ -42,6 +42,7 @@
         <p *ngIf="nmapplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
   
         <input *ngIf="selected_source == 'openvas'" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
+        <p *ngIf="selected_source == 'openvas'">Import results-*.xml file.</p>
         <p *ngIf="openvas9please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
   
         <input *ngIf="selected_source == 'nessus'" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">

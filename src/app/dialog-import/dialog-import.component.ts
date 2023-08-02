@@ -440,6 +440,10 @@ export class DialogImportComponent implements OnInit {
 
   parseOpenvasxml(xml) {
 
+function isarr(arr) {
+  return Array.isArray(arr)
+}
+
     const date = new Date();
     const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = xml.map((res, key) => {
@@ -456,11 +460,34 @@ export class DialogImportComponent implements OnInit {
 
       }
 
+      //title
+      var res_name = "";
+      if (isarr(res.name) == true) {
+        res_name = res.name[0];
+      }
+      if (isarr(res.name) == false) {
+        res_name = res.name;
+      }
+
+      //desc
+      var res_desc = "";
+      if (isarr(res.description) == true) {
+        res_desc = res.description[0];
+      }
+      if (isarr(res.description) == false) {
+        res_desc = res.description;
+      }
+
+      //severity
+      if (res.threat[0] == 'Log') {
+        res.threat[0] = 'Info';
+      }
+
       const def = {
-        title: res.name,
+        title: res_name,
         poc: res.port[0] + '\n\n' + res.host[0]._,
         files: [],
-        desc: res.description,
+        desc: res_desc,
         severity: res.threat[0],
         ref: zref,
         cvss: res.severity[0],
