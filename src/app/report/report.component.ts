@@ -32,7 +32,8 @@ import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
 import * as DOMPurify from 'dompurify';
 import { ApiService } from '../api.service';
-
+import { MatCalendar, MatCalendarCellCssClasses } from '@angular/material/datepicker';
+import { DateRange } from '@angular/material/datepicker';
 export interface Tags {
   name: string;
 }
@@ -68,7 +69,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   listchangelog: any[];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
+  @ViewChild(MatCalendar) calendar: MatCalendar<Date>;
   advhtml = '';
   report_css: any;
   bugbountylist = [];
@@ -138,21 +139,9 @@ export class ReportComponent implements OnInit, OnDestroy {
  colorScheme = {
    domain: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
  };
- colorSchemeheat = {
-  domain: ['#0e4429', '#006d32','#26a641', '#39d353']
-};
-  // options stats activity
-  legend: boolean = true;
-  animations: boolean = true;
-  xAxis: boolean = true;
-  yAxis: boolean = true;
-  showYAxisLabel: boolean = true;
-  showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Severity';
-  yAxisLabel: string = 'Timeline';
-  timeline: boolean = true;
 
-  multi = [];
+  // options stats activity
+  selectedRangeValue: DateRange<Date> | null;
 
   visible = true;
   selectable = true;
@@ -278,9 +267,53 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
     this.getReportProfiles();
-
+    
   }
 
+  entestdateChanged() {
+    this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
+  }
+
+  dateClass() {    
+    return (date: Date): MatCalendarCellCssClasses => {
+      const issuearr_success = [];
+      const issuearr_critical = [];
+
+      const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+        return (el.severity === 'Critical');
+      });
+
+      critical.forEach((item, index) => {
+        if(issuearr_critical.indexOf(item) === -1) {
+          issuearr_critical.push(item.date);
+        }
+      });
+
+      this.decryptedReportDataChanged.report_vulns.forEach((item, index) => {
+        if(issuearr_success.indexOf(item) === -1) {
+          issuearr_success.push(item.date);
+        }
+      });
+
+      const successdate = issuearr_success
+        .map(strDate => new Date(strDate))
+        .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+
+      const specialdate = issuearr_critical
+      .map(strDate => new Date(strDate))
+      .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+
+      if(specialdate) {
+        return 'special-date'
+      } else if(successdate) {
+        return 'success-date'
+      } else {
+        return ''
+      }
+    
+    };
+    
+    }
 
   getReportProfiles() {
     // get report profiles
@@ -616,60 +649,6 @@ Sample code here\n\
 
   }
 
-  getheatmapData(critical, high, medium, low, info) {
-
-    function getcri(item) {
-      const groupBy = (items, key) => items.reduce(
-        (result, item) => ({
-          ...result,
-          [item[key]]: [
-            ...(result[item[key]] || []),
-            item,
-          ],
-        }), 
-        {},
-      );
-
-      let list = groupBy(item, 'date');
-
-      const arrret = [];
-      for (let key in list) {
-        let value = list[key];
-        arrret.push({ 
-          "value": value.length, 
-          "name": new Date(key)
-        });
-      }
-      return arrret
-      
-    }
-
-let rea = [
-  {
-    "name": "Critical",
-    "series": getcri(critical)
-  },
-  {
-    "name": "High",
-    "series": getcri(high)
-  },
-  {
-    "name": "Medium",
-    "series": getcri(medium)
-  },
-  {
-    "name": "Low",
-    "series": getcri(low)
-  },
-  {
-    "name": "Info",
-    "series": getcri(info)
-  }
-];
-
-    return rea
-  }
-
   doStats() {
 
     const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
@@ -707,8 +686,6 @@ let rea = [
       { name: 'Low', value: low.length },
       { name: 'Info', value: info.length }
     ];
-    
-    this.multi = this.getheatmapData(critical, high, medium, low, info);
 
     this.listchangelog = this.decryptedReportData.report_changelog;
     this.dataSource = new MatTableDataSource(this.decryptedReportData.report_changelog);
@@ -716,9 +693,11 @@ let rea = [
     this.dataSource.paginator = this.paginator;
     setTimeout(() => this.dataSource.sort = this.sort);
     setTimeout(() => this.dataSource.paginator = this.paginator);
-
+    setTimeout(() => this.calendar.updateTodaysDate());
+    this.entestdateChanged();
+    
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
-
+    
   }
 
   addissue() {

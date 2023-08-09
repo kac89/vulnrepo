@@ -109,7 +109,7 @@
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Research start date</mat-label>
                     <input matInput [matDatepicker]="picker" 
-                      [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest">
+                      [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest" (ngModelChange)="entestdateChanged()">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -119,7 +119,7 @@
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Research end date</mat-label>
                     <input matInput [matDatepicker]="pickerend" 
-                      [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest">
+                      [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest" (ngModelChange)="entestdateChanged()">
                     <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
                     <mat-datepicker #pickerend></mat-datepicker>
                   </mat-form-field>
@@ -605,6 +605,19 @@
       <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
         <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+          <div>
+
+            <ngx-charts-bar-vertical
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="severitytable"
+            [gradient]="gradient"
+            >
+            </ngx-charts-bar-vertical>
+
+          </div>
+
           <div style="display: block; width: 100%; height: 300px;">
             <ngx-charts-advanced-pie-chart
               [scheme]="colorScheme"
@@ -612,23 +625,19 @@
               >
             </ngx-charts-advanced-pie-chart>
           </div>
+
         </div>
 
         <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-    <ngx-charts-heat-map
-    [scheme]="colorSchemeheat"
-    [legend]="legend"
-    [legendPosition]="'right'"
-    [showXAxisLabel]="showXAxisLabel"
-    [showYAxisLabel]="showYAxisLabel"
-    [xAxis]="xAxis"
-    [yAxis]="yAxis"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [results]="multi"
-    >
-  </ngx-charts-heat-map>
+          <mat-card>
+            <mat-calendar class="mat-elevation-z9" 
+              [dateClass]="dateClass()"
+              [selected]="selectedRangeValue"
+              >
+            </mat-calendar>
+          </mat-card>
+          
         </div>
 
       </div>

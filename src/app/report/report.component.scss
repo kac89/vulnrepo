@@ -121,3 +121,18 @@ tr.mat-mdc-footer-row td {
       fill: #fff!important; 
   }
 }
+
+::ng-deep.special-date {
+  border-color: #FF0039!important;
+  background-color: #FF0039!important;
+  border-radius: 100%;
+  border-width: 0px;
+}
+
+::ng-deep.success-date {
+  border-color: #18ad3d58!important;
+  background-color: #18ad3d58!important;
+  opacity: 0.6;
+  border-radius: 100%;
+  border-width: 0px;
+}
