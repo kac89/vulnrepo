@@ -38,6 +38,10 @@ $dark-theme: mat.define-dark-theme((
  density: 0,
 ));
 
+:root {
+  --mat-sidenav-content-background-color: #000;
+}
+
 $mdc-typography-styles-headline1: (  font-family: unquote("Roboto"),  font-size: 96);$mdc-typography-styles-headline2: (  font-family: unquote("Roboto"),  font-size: 60);$mdc-typography-styles-headline3: (  font-family: unquote("Roboto"),  font-size: 48);$mdc-typography-styles-headline4: (  font-family: unquote("Roboto"),  font-size: 34);$mdc-typography-styles-headline5: (  font-family: unquote("Roboto"),  font-size: 24);$mdc-typography-styles-headline6: (  font-family: unquote("Roboto"),  font-size: 20);$mdc-typography-styles-body1: (  font-family: unquote("Roboto"),  font-size: 16);$mdc-typography-styles-body2: (  font-family: unquote("Roboto"),  font-size: 14);$mdc-typography-styles-subtitle1: (  font-family: unquote("Roboto"),  font-size: 16);$mdc-typography-styles-subtitle2: (  font-family: unquote("Roboto"),  font-size: 14);$mdc-typography-styles-button: (  font-family: unquote("Roboto"),  font-size: 14);$mdc-typography-styles-overline: (  font-family: unquote("Roboto"),  font-size: 10);$mdc-typography-styles-caption: (  font-family: unquote("Roboto"),  font-size: 12);
 
 /* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated */
@@ -182,4 +186,8 @@ mat-icon.size-45 {
 
 .mdc-list-item--selected .mdc-list-item__primary-text, .mdc-list-item--activated .mdc-list-item__primary-text {
   color: #69f0ae;
+}
+
+::ng-deep.mat-drawer-container {
+  background-color: #000!important;
 }
