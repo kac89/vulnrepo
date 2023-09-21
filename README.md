@@ -5,7 +5,7 @@
 Check online: https://vulnrepo.com/
 
 Video walkthrough/Tutorial:  
-[![Guide](https://img.youtube.com/vi/k32Oo57ZQdY/0.jpg)](https://www.youtube.com/watch?v=k32Oo57ZQdY)
+[![Guide](https://img.youtube.com/vi/cW_kVPtUJbU/0.jpg)](https://www.youtube.com/watch?v=cW_kVPtUJbU)
 
 ## Features
 

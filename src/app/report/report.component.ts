@@ -1676,7 +1676,8 @@ Date   | Description
       { "filename": "crypto-js/4.1.1/crypto-js.min.js", "integrity": "sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" },
       { "filename": "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "integrity": "sha512-i9cEfJwUwViEPFKdC1enz4ZRGBj8YQo6QByFTF92YXHi7waCqyexvRD75S5NVTsSiTv7rKWqG9Y5eFxmRsOn0A==" },
       { "filename": "marked/4.2.5/marked.min.js", "integrity": "sha512-5JZDwulT+S/K8p/KO4tikNKA5t6Ebb+tqPwT7Ma+lVpJuS4G+Z0lSktWcl8hymXeFqCprGEuKGOCrKjyulql/A==" },
-      { "filename": "dompurify/2.4.1/purify.min.js", "integrity": "sha512-uHOKtSfJWScGmyyFr2O2+efpDx2nhwHU2v7MVeptzZoiC7bdF6Ny/CmZhN2AwIK1oCFiVQQ5DA/L9FSzyPNu6Q==" }
+      { "filename": "dompurify/2.4.1/purify.min.js", "integrity": "sha512-uHOKtSfJWScGmyyFr2O2+efpDx2nhwHU2v7MVeptzZoiC7bdF6Ny/CmZhN2AwIK1oCFiVQQ5DA/L9FSzyPNu6Q==" },
+      { "filename": "Chart.js/4.4.0/chart.umd.js", "integrity": "sha512-6HrPqAvK+lZElIZ4mZ64fyxIBTsaX5zAFZg2V/2WT+iKPrFzTzvx6QAsLW2OaLwobhMYBog/+bvmIEEGXi0p1w==" }
     ];
 
 
@@ -1741,7 +1742,7 @@ Date   | Description
                 res = res.replace("<depstyle></depstyle>", css_String);
                 css_String = "";
 
-                of("jquery/3.6.3/jquery.min.js", "crypto-js/4.1.1/crypto-js.min.js", "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "marked/4.2.5/marked.min.js", "dompurify/2.4.1/purify.min.js")
+                of("jquery/3.6.3/jquery.min.js", "crypto-js/4.1.1/crypto-js.min.js", "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "marked/4.2.5/marked.min.js", "dompurify/2.4.1/purify.min.js", "chart-js/4.4.0/chart.js")
                   .pipe(
                     concatMap(ind => {
                       let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })

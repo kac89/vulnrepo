@@ -1,135 +1,180 @@
 <div fxLayout="row wrap" fxLayoutGap="10px grid">
-    <div fxLayoutAlign="center center" fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <img width="150px" src="assets/logo/vulnrepo_logo.png">
-    </div>
-    <div fxLayoutAlign="start center" fxFlex="80%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <h1 style="margin: 0 0 0;" class="mat-headline-3">Create vulnerability reports like a PRO!!!</h1>
-    </div>
+  <div fxLayoutAlign="center center" fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <img width="150px" src="assets/logo/vulnrepo_logo.png">
+  </div>
+  <div fxLayoutAlign="start center" fxFlex="80%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <h1 style="margin: 0 0 0;" class="mat-headline-3">Create vulnerability reports like a PRO!!!</h1>
+  </div>
 </div>
+
+<br>
+
+<div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="30px grid">
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <span style="text-decoration: underline;text-decoration-color: #69f0ae"><b style="color:white">VULNRΞPO</b></span>
+    is a FREE Open Source project designed to speed up the creation of IT Security vulnerability reports and can be used
+    as a Security Reports Repository.<br><br>Accelerates vulnerability reporting, you can quickly and securely share the
+    report with the vendor or use as a repository with vulnerabilities for bug bounty research! the ideal tool for the
+    Pentester, Researcher or anyone starting out in IT Security!<br><br>Store and manage your research locally, share it
+    securely!<br>Focus on research! DON'T waste your time creating a report!
+  </div>
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/cW_kVPtUJbU"
+      title="YouTube video player" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen></iframe>
+  </div>
+</div>
+
 <br>
 <mat-card class="my-card-content">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>list</mat-icon>
+    </div>
+    <mat-card-title style="display: contents">Features list</mat-card-title>
+  </mat-card-header>
+  <div fxLayout="row wrap" fxLayoutGap="10px grid">
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-  <div class="mdc-typography--body1">
-    <p><span style="text-decoration: underline;text-decoration-color: #69f0ae"><b style="color:white">VULNRΞPO</b></span> is a FREE Open Source project designed to speed up the creation of IT Security vulnerability reports and can be used as a Security Reports Repository. Store and manage your research locally, share it securely! Focus on research! DON'T waste your time creating a report!</p>
-  </div>
-
-    <div fxLayout="row wrap" fxLayoutGap="10px grid">
-      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-        <h2 class="mdc-typography--headline5">Feature list</h2>
-
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">security</mat-icon>
-              <mat-card-title>Security</mat-card-title>
-              <mat-card-subtitle>
-                Project use browser for encrypt/decrypt (AES) and store data in locally. Full confidentiality of data, <span style="text-decoration: underline;text-decoration-color: #69f0ae">end-to-end encryption</span>, by default nothing is sent out. No backend system, only front-end technology, pure JS client.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-        <br>
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">share</mat-icon>
-              <mat-card-title>Share report</mat-card-title>
-              <mat-card-subtitle>
-                You can share your report using AES encryption by default.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-        <br>
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">cloud_download</mat-icon>
-              <mat-card-title>TXT & HTML & PDF</mat-card-title>
-              <mat-card-subtitle>
-                You can download report in TXT, HTML formats!. If you need PDF just 'print as PDF' html report.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-        <br>
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">attach_file</mat-icon>
-              <mat-card-title>Attachments</mat-card-title>
-              <mat-card-subtitle>
-                You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically doing checksum sha256 of attached file.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">security</mat-icon>
+            <mat-card-title>Security</mat-card-title>
+            <mat-card-subtitle>
+              Project use browser for encrypt/decrypt (AES) and store data in locally. Full confidentiality of data,
+              <span style="text-decoration: underline;text-decoration-color: #69f0ae">end-to-end encryption</span>, by
+              default nothing is sent out. No backend system, only front-end technology, pure JS client.
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
       </div>
 
-      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-        <h2>&nbsp;</h2>
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">info</mat-icon>
-              <mat-card-title>Issues templates!</mat-card-title>
-              <mat-card-subtitle>
-                Create own templates or use default. The use of templates greatly speeds up the work for pentester or security auditor. Import CVE, CWE, MITRE ATT&CK or PCI DSS data also possible.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-        <br>
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
-              <mat-card-title>Import issues from security scanners</mat-card-title>
-              <mat-card-subtitle>
-                Supported import from: Nmap, Nessus, Burp, OpenVAS, Bugcrowd, Trivy. After importing, easily manage and edit vulnerabilities.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-        <br>
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">track_changes</mat-icon>
-              <mat-card-title>Changelog</mat-card-title>
-              <mat-card-subtitle>
-                All important changes in report will be logged in to changelog and update to the next version of the report.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-        <br>
-        <div class="mdc-elevation--z11">
-          <mat-card appearance="outlined" style="padding: 12px;">
-            <mat-card-header>
-              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
-              <mat-card-title>Export Issues</mat-card-title>
-              <mat-card-subtitle>
-                You can export issues to popular bugtrackers like Atlassian JIRA or use secure way to share only issues.
-              </mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
-
-        
+      <br>
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">share</mat-icon>
+            <mat-card-title>Share report</mat-card-title>
+            <mat-card-subtitle>
+              You can share your report using AES encryption by default.
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
       </div>
+
+      <br>
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">cloud_download</mat-icon>
+            <mat-card-title>TXT & HTML & PDF & JSON</mat-card-title>
+            <mat-card-subtitle>
+              You can download report in TXT, HTML formats!. If you need PDF just 'print as PDF' html report. The JSON
+              format opens up completely new possibilities for processing report data.
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+      <br>
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">attach_file</mat-icon>
+            <mat-card-title>Attachments</mat-card-title>
+            <mat-card-subtitle>
+              You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically doing
+              checksum sha256 of attached file.
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
 
     </div>
 
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">info</mat-icon>
+            <mat-card-title>Issues templates!</mat-card-title>
+            <mat-card-subtitle>
+              Create own templates or use default. The use of templates greatly speeds up the work for pentester or
+              security auditor. Import CVE, CWE, MITRE ATT&CK or PCI DSS data also possible.
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+      <br>
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
+            <mat-card-title>Import issues from security scanners</mat-card-title>
+            <mat-card-subtitle>
+              Supported import from: Nmap, Nessus, Burp, OpenVAS, Bugcrowd, Trivy. After importing, easily manage and
+              edit vulnerabilities.
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+      <br>
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">track_changes</mat-icon>
+            <mat-card-title>Changelog</mat-card-title>
+            <mat-card-subtitle>
+              All important changes in report will be logged in to changelog and update to the next version of the
+              report.
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+      <br>
+      <div class="mdc-elevation--z11">
+        <mat-card appearance="outlined" style="padding: 12px;">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
+            <mat-card-title>Export Issues</mat-card-title>
+            <mat-card-subtitle>
+              You can export issues to popular bugtrackers like Atlassian JIRA or use secure way to share only issues.
+              Using JSON format, you can write your own integration into any system, like LaTeX, MS docs etc...
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+
+    </div>
+
+  </div>
+
 </mat-card>
+
+<br>
+<br>
+
+<div fxLayout="column" fxLayoutGap="5px grid">
+  <h1 fxLayoutAlign="center" class="mat-headline-4">Join our community!</h1>
+  <div fxLayoutAlign="center">
+    <div fxLayout="row wrap" fxLayoutGap="5px grid">
+      <div class="row"><a target="_blank" href="https://github.com/kac89/vulnrepo"><img src="assets/github.png" style="height: 36px; width: 36px;"></a></div>
+      <div class="row"><a target="_blank" href="https://x.com/vulnrepo"><img src="assets/X.svg" style="width: 70px;margin-top: -7px;"></a></div>
+      <div class="row"><a target="_blank" href="https://www.youtube.com/@vulnrepo"><img src="assets/yt.png" style="width: 56px;"></a></div>
+    </div>
+  </div>
+  
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
