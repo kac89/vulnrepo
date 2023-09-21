@@ -201,36 +201,45 @@
 			<br>
 
 			<h2 id="Statistics and Risk"><i class="bi bi-bar-chart"></i> Statistics and Risk</h2>
-			<table class="table table-hover">
-				<thead>
-					<tr>
-						<th>Severity</th>
-						<th>Number</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><span class="label Critical">Critical</span></td>
-						<td class="critical_count"></td>
-					</tr>
-					<tr>
-						<td><span class="label High">High</span></td>
-						<td class="high_count"></td>
-					</tr>
-					<tr>
-						<td><span class="label Medium">Medium</span></td>
-						<td class="medium_count"></td>
-					</tr>
-					<tr>
-						<td><span class="label Low">Low</span></td>
-						<td class="low_count"></td>
-					</tr>
-					<tr>
-						<td><span class="label Info">Info</span></td>
-						<td class="info_count"></td>
-					</tr>
-				</tbody>
-			</table>
+
+			<div class="row">
+				<div class="col-md-5 mx-auto">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Severity</th>
+								<th>Number</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="label Critical">Critical</span></td>
+								<td class="critical_count"></td>
+							</tr>
+							<tr>
+								<td><span class="label High">High</span></td>
+								<td class="high_count"></td>
+							</tr>
+							<tr>
+								<td><span class="label Medium">Medium</span></td>
+								<td class="medium_count"></td>
+							</tr>
+							<tr>
+								<td><span class="label Low">Low</span></td>
+								<td class="low_count"></td>
+							</tr>
+							<tr>
+								<td><span class="label Info">Info</span></td>
+								<td class="info_count"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-5 mx-auto">
+					<canvas id="issueChart"></canvas>
+				</div>
+			</div> 
+
 			<br>
 			<p>The risk of application security vulnerabilities discovered during an assessment will be rated according
 				to a custom-tailored version the <a target="_blank"
@@ -698,6 +707,37 @@
 			$(".medium_count").text(medium.length);
 			$(".low_count").text(low.length);
 			$(".info_count").text(info.length);
+
+			// issueChart
+			const ctx = document.getElementById('issueChart');
+			var xValues = ["Critical", "High", "Medium", "Low", "Info"];
+			var yValues = [critical.length, high.length, medium.length, low.length, info.length];
+			var barColors = [
+			"#FF0039",
+			"#FF7518",
+			"#F9EE06",
+			"#3FB618",
+			"#2780E3"
+			];
+
+			new Chart(ctx, {
+			type: "pie",
+			data: {
+				labels: xValues,
+				datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+				}]
+			},
+			options: {
+				responsive: true,
+				plugins: {
+					legend: {
+						display: false
+					}
+				}
+			},
+			});
 
 			// report summary
 			if (obj.report_summary !== "") {

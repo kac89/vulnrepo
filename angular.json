@@ -36,7 +36,6 @@
               "src/styles.scss"
             ],
             "allowedCommonJsDependencies": [
-              "chart.js",
               "dompurify",
               "crypto-js",
               "js-sha256",
