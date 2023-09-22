@@ -171,6 +171,7 @@ export class MyreportsComponent implements OnInit {
         this.indexeddbService.deleteReport(result).then(data => {
           if (data) {
             this.getallreports();
+            this.selection.clear()
           }
         });
 
@@ -180,6 +181,7 @@ export class MyreportsComponent implements OnInit {
             this.apiService.APISend(result.apiurl, result.apikey, 'removereport', 'reportid=' + result.report_id).then(resp => {
               if (resp.REMOVE_REPORT === 'OK') {
                 this.getallreports();
+                this.selection.clear()
               }
             });
 
