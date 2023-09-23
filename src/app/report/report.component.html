@@ -819,17 +819,17 @@
         
         <mat-menu #Settingsmenu="matMenu">
 
-          <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" class="active-link"
+          <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)"
           title="Change report security key" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
            </a>
 
-          <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)" class="active-link"
+          <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)"
             title="Add custom content to report" mat-menu-item>
             <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add custom content to report
           </a>
 
-          <a [routerLink]="[]" (click)="addCustomcss(decryptedReportDataChanged)" class="active-link"
+          <a [routerLink]="[]" (click)="addCustomcss(decryptedReportDataChanged)"
             title="Add custom css" mat-menu-item>
             <mat-icon class="vertical-align-middle padding-bottom-3">palette</mat-icon> Custom CSS (HTML v2)
           </a>
@@ -1007,9 +1007,6 @@
                 </button>
                 <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, 'mini')" title="Full report with linked external dependency, decrypted (small size of the report)">
                   <mat-icon>description</mat-icon>HTML (mini)
-                </button>
-                <button mat-menu-item (click)="DownloadHTML(decryptedReportDataChanged,report_info,issueStatus)" title="Deprecated old HTML report">
-                  <mat-icon>description</mat-icon>HTML (old)
                 </button>
                 <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)" title="Decrypted ASCII report format">
                   <mat-icon>description</mat-icon>TEXT
