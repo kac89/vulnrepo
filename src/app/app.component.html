@@ -33,23 +33,23 @@
       </button>
       <mat-menu #menu="matMenu">
 
-        <a routerLink="/new-report" routerLinkActive="mdc-list-item--selected" href="/new-report" mat-menu-item>
+        <a routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Create new report
         </a>
 
-        <a routerLink="/import-report" routerLinkActive="mdc-list-item--selected" href="/import-report" mat-menu-item>
+        <a routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
         </a>
 
-        <a routerLink="/templates-list" routerLinkActive="mdc-list-item--selected" href="/templates-list" mat-menu-item>
+        <a routerLink="/templates-list" routerLinkActive="active-link" href="/templates-list" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
           Templates List
         </a>
-        <a routerLink="/settings" routerLinkActive="mdc-list-item--selected" href="/settings" mat-menu-item>
+        <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
           Settings
         </a>
-        <a routerLink="/faq" routerLinkActive="mdc-list-item--selected" href="/faq" mat-menu-item>
+        <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
           FAQ
         </a>
@@ -70,33 +70,33 @@
 <mat-sidenav-container fxFlexFill>
   <mat-sidenav #sidenav>
     <mat-nav-list>
-      <a routerLink="/home" routerLinkActive="mdc-list-item--selected" href="/home" mat-list-item>
+      <a routerLink="/home" routerLinkActive="active-link" href="/home" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon>
         Home
       </a>
-      <a routerLink="/my-reports" routerLinkActive="mdc-list-item--selected" href="/my-reports" mat-list-item>
+      <a routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon>
         My Reports
       </a>
-      <a routerLink="/new-report" routerLinkActive="mdc-list-item--selected" href="/new-report" mat-list-item>
+      <a routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Create new report
       </a>
-      <a routerLink="/import-report" routerLinkActive="mdc-list-item--selected" href="/import-report" mat-list-item>
+      <a routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
       </a>
-      <a routerLink="/templates-list" routerLinkActive="mdc-list-item--selected" href="/templates-list" mat-list-item>
+      <a routerLink="/templates-list" routerLinkActive="active-link" href="/templates-list" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
         Templates List
       </a>
-      <a routerLink="/settings" routerLinkActive="mdc-list-item--selected" href="/settings" mat-list-item>
+      <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
         Settings
       </a>
-      <a routerLink="/faq" routerLinkActive="mdc-list-item--selected" href="/faq" mat-list-item>
+      <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
         FAQ
       </a>
-      <a (click)="sidenav.toggle()" mat-list-item>
+      <a (click)="sidenav.toggle()" mat-menu-item>
         <mat-icon>close</mat-icon> Close
       </a>
     </mat-nav-list>
