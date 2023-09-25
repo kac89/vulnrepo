@@ -645,6 +645,8 @@ export class IndexeddbService {
 
         this.updatereportDB(reportorder, to_update).then(retu => {
           if (retu === 'encrypted:ok') {
+            //execute navbar refresh
+            this.sessionsub.removeSessionStorageItem('encrypted:ok');
             resolve(now);
           }
         });
