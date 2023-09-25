@@ -4,6 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { version } from "../version";
+import { SessionstorageserviceService } from "./sessionstorageservice.service"
 
 @Component({
   selector: 'app-root',
@@ -15,15 +16,20 @@ export class AppComponent implements OnInit, OnDestroy {
   show_status: any;
   enc_status: any;
   subscription: Subscription;
+  show_active_reports = false;
   app_ver = '';
-
+  arr_oreports = [];
   app_ver_short = '';
 
-  constructor(public route: ActivatedRoute, public router: Router, private indexeddbService: IndexeddbService) {
-    
+  constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService) {
+    this.sessionsub.storageChange.subscribe( data => {
+      // console.log(data);
+      this.getopenreports();
+    });
   }
 
   ngOnInit() {
+    this.show_active_reports = false;
     this.app_ver = version.number;
     
     if (this.app_ver !== ''){
@@ -58,12 +64,27 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }
     });
-
+    
+    this.getopenreports();
   }
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
+  }
+
+  getopenreports() {
+    this.arr_oreports = [];
+    
+    for (const key of Object.keys(sessionStorage)) {
+      this.indexeddbService.checkifreportexist(key).then(data => {
+        if (data) {
+          this.show_active_reports = true;
+          this.arr_oreports.push({"report_id": data.report_id, "report_name": data.report_name});
+        }
+      });
+    };
+    
   }
 
 }

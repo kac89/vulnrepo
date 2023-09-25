@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from '../api.service';
 import { IndexeddbService } from '../indexeddb.service';
 import { Inject } from '@angular/core';
+import { SessionstorageserviceService } from "../sessionstorageservice.service"
 
 interface Apisource {
   value: string;
@@ -29,7 +30,7 @@ export class DialogApiaddComponent implements OnInit {
   selectedAPIDEF = this.sour[0];
 
   constructor(public dialogRef: MatDialogRef<DialogApiaddComponent>, private apiService: ApiService,
-    private indexeddbService: IndexeddbService, @Inject(MAT_DIALOG_DATA) public data) { }
+    private indexeddbService: IndexeddbService, @Inject(MAT_DIALOG_DATA) public data, public sessionsub: SessionstorageserviceService) { }
 
   ngOnInit(): void {
 
@@ -63,7 +64,7 @@ export class DialogApiaddComponent implements OnInit {
 
           const savejson = { apikey: apik, value: url.hostname, viewValue: setapiname };
 
-          sessionStorage.setItem('VULNREPO-API', JSON.stringify([savejson]));
+          this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify([savejson]));
           this.saveAPIKEY([savejson], pass);
           this.dialogRef.close('OK');
 
@@ -108,14 +109,14 @@ export class DialogApiaddComponent implements OnInit {
         if (resp.AUTH === 'OK') {
           this.apiconneted = true;
 
-          const localkey = sessionStorage.getItem('VULNREPO-API');
+          const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
           let list = [];
           const savejson = { apikey: apik, value: url.hostname, viewValue: setapiname };
 
           if (localkey) {
             list = JSON.parse(localkey);
             list.push(savejson);
-            sessionStorage.setItem('VULNREPO-API', JSON.stringify(list));
+            this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(list));
             this.saveAPIKEY(list, this.data);
           }
 

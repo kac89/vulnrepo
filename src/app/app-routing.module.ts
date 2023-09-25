@@ -9,6 +9,7 @@ import { NewreportComponent } from './newreport/newreport.component';
 import { ReportComponent } from './report/report.component';
 import { ImportReportComponent } from './import-report/import-report.component';
 import { TemplatesListComponent } from './templates-list/templates-list.component';
+import { DeactivateGuardService } from './deactivate-guard.service';
 
 const routes: Routes = [{
   path: 'home',
@@ -33,7 +34,8 @@ const routes: Routes = [{
 {
   path: 'report/:report_id',
   pathMatch: 'full',
-  component: ReportComponent
+  component: ReportComponent,
+  canDeactivate: [DeactivateGuardService]
 },
 {
   path: 'settings',

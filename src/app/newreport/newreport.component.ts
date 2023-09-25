@@ -8,6 +8,7 @@ import { ApiService } from '../api.service';
 import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
+import { SessionstorageserviceService } from "../sessionstorageservice.service"
 
 @Component({
   selector: 'app-newreport',
@@ -40,7 +41,7 @@ export class NewreportComponent implements OnInit {
   apireportprofiles = [];
   apireportprofilesList = [];
   constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService, private apiService: ApiService, public dialog: MatDialog,  
-    public router: Router) {
+    public router: Router, public sessionsub: SessionstorageserviceService) {
 
     // get report profiles
     this.indexeddbService.retrieveReportProfile().then(ret => {
@@ -56,7 +57,7 @@ export class NewreportComponent implements OnInit {
 
   ngOnInit() {
 
-    const localkey = sessionStorage.getItem('VULNREPO-API');
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       this.localkeys = JSON.parse(localkey);
     }
@@ -66,7 +67,7 @@ export class NewreportComponent implements OnInit {
   getAllreportprofilesfromapi() {
   
 
-    const localkey = sessionStorage.getItem('VULNREPO-API');
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       this.msg = 'API connection please wait...';
 
@@ -110,8 +111,8 @@ export class NewreportComponent implements OnInit {
       this.indexeddbService.retrieveAPIkey().then(ret => {
         
         if (ret) {
-
-          if (sessionStorage.getItem('hidedialog') !== 'true') {
+          
+          if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
             setTimeout(_ => this.openDialog(ret));
           }
 
@@ -158,9 +159,9 @@ export class NewreportComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The security key dialog was closed');
       if (result) {
-        sessionStorage.setItem('VULNREPO-API', result);
+        this.sessionsub.setSessionStorageItem('VULNREPO-API', result);
         
-        const localkey = sessionStorage.getItem('VULNREPO-API');
+        const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
         if (localkey) {
           this.localkeys = JSON.parse(localkey);
         }

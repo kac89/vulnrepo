@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
 import { ApiService } from '../api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SessionstorageserviceService } from "../sessionstorageservice.service"
 
 export interface MyReportElement {
   select: any;
@@ -54,7 +55,7 @@ export class MyreportsComponent implements OnInit {
   }
 
   constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService, private apiService: ApiService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService) {
 
   }
 
@@ -77,7 +78,7 @@ export class MyreportsComponent implements OnInit {
 
   getAPIallreports() {
     this.apilist = [];
-    const localkey = sessionStorage.getItem('VULNREPO-API');
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       this.msg = 'API connection please wait...';
 
@@ -122,7 +123,7 @@ export class MyreportsComponent implements OnInit {
       this.indexeddbService.retrieveAPIkey().then(ret => {
         if (ret) {
 
-          if (sessionStorage.getItem('hidedialog') !== 'true') {
+          if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
             setTimeout(_ => this.openDialog(ret));
           }
 
@@ -145,7 +146,7 @@ export class MyreportsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The security key dialog was closed');
       if (result) {
-        sessionStorage.setItem('VULNREPO-API', result);
+        this.sessionsub.setSessionStorageItem('VULNREPO-API', result);
         this.getAPIallreports();
       }
 
@@ -171,7 +172,8 @@ export class MyreportsComponent implements OnInit {
         this.indexeddbService.deleteReport(result).then(data => {
           if (data) {
             this.getallreports();
-            this.selection.clear()
+            this.selection.clear();
+            this.sessionsub.removeSessionStorageItem(item.report_id);
           }
         });
 
