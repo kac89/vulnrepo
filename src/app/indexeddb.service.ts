@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { ApiService } from './api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SessionstorageserviceService } from "./sessionstorageservice.service"
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class IndexeddbService {
   private decryptstatusObs = new Subject<any>();
 
   constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
-    private apiService: ApiService, private snackBar: MatSnackBar) {
+    private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService) {
 
     this.updateEncStatus(false);
     /*
@@ -250,7 +251,7 @@ export class IndexeddbService {
         };
 
 
-        sessionStorage.setItem(reportId, pass);
+        this.sessionsub.setSessionStorageItem(reportId, pass);
         this.router.navigate(['/my-reports']);
 
 
@@ -342,7 +343,7 @@ export class IndexeddbService {
                   panelClass: ['notify-snackbar-fail']
                 });
               } else {
-                sessionStorage.setItem(reportid, pass);
+                this.sessionsub.setSessionStorageItem(reportid, pass);
                 this.router.navigate(['/my-reports']);
               }
 
@@ -523,7 +524,7 @@ export class IndexeddbService {
       const bytes = Crypto.AES.decrypt(data.encrypted_data.toString(), pass);
       const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
       if (decryptedData) {
-        sessionStorage.setItem(data.report_id, pass);
+        this.sessionsub.setSessionStorageItem(data.report_id, pass);
       }
       this.updateEncStatus(true);
       this.messageService.sendDecrypted(decryptedData);
@@ -671,7 +672,7 @@ export class IndexeddbService {
           encrypted_data: ciphertext.toString()
         };
 
-        const localkey = sessionStorage.getItem('VULNREPO-API');
+        const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
         if (localkey) {
           // tslint:disable-next-line:max-line-length
           this.apiService.APISend(apiurl, apikey, 'updatereport', 'reportdata=' + btoa(JSON.stringify(to_update))).then(resp => {
@@ -830,7 +831,7 @@ export class IndexeddbService {
   checkAPIreport(reportid) {
     return new Promise<any>((resolve, reject) => {
 
-      const localkey = sessionStorage.getItem('VULNREPO-API');
+      const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
       if (localkey) {
 
           const vaultobj = JSON.parse(localkey);
@@ -862,7 +863,7 @@ export class IndexeddbService {
   searchAPIreport(reportid) {
     return new Promise<any>((resolve, reject) => {
 
-      const localkey = sessionStorage.getItem('VULNREPO-API');
+      const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
       if (localkey) {
 
           const vaultobj = JSON.parse(localkey);

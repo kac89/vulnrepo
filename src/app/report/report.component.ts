@@ -34,6 +34,8 @@ import * as DOMPurify from 'dompurify';
 import { ApiService } from '../api.service';
 import { MatCalendar, MatCalendarCellCssClasses } from '@angular/material/datepicker';
 import { DateRange } from '@angular/material/datepicker';
+import { SessionstorageserviceService } from "../sessionstorageservice.service"
+
 export interface Tags {
   name: string;
 }
@@ -157,9 +159,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     public router: Router,
     private apiService: ApiService,
     private messageService: MessageService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    public sessionsub: SessionstorageserviceService) {
 
-    // console.log(route);
+    //console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
       this.decryptedReportDataChanged = this.decryptedReportData;
@@ -208,70 +211,91 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.report_id = this.route.snapshot.params['report_id'];
+    // this.report_id = this.route.snapshot.params['report_id'];
 
-    // check if report exist
-    this.indexeddbService.checkifreportexist(this.report_id).then(data => {
-      if (data) {
-        console.log('Report exist: OK');
-        this.report_info = data;
-        this.reportdesc = data;
-        // check if pass in sessionStorage
-        if (sessionStorage.getItem(data.report_id) !== null) {
-          this.report_decryption_in_progress = true;
-          const pass = sessionStorage.getItem(data.report_id);
-          this.indexeddbService.decrypt(pass, data.report_id).then(returned => {
 
-            if (returned) {
-              this.report_decryption_in_progress = false;
-            }
+    this.route.params.subscribe(routeParams => {
+      if(routeParams.report_id != ''){
+        if(routeParams.report_id){
+          this.report_id = routeParams.report_id;
+          this.youhaveunsavedchanges = false;
+          this.lastsavereportdata = '';
+          this.savemsg = '';
+          // check if report exist
+          this.indexeddbService.checkifreportexist(this.report_id).then(data => {
+            if (data) {
+              console.log('Report exist: OK');
+              this.report_info = data;
+              this.reportdesc = data;
+              // check if pass in sessionStorage
+              
+              if (this.sessionsub.getSessionStorageItem(data.report_id) !== null) {
+                this.report_decryption_in_progress = true;
+                const pass = this.sessionsub.getSessionStorageItem(data.report_id);
+                this.indexeddbService.decrypt(pass, data.report_id).then(returned => {
 
-          });
-        } else {
-          setTimeout(_ => this.openDialog(data)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
-        }
+                  if (returned) {
+                    this.report_decryption_in_progress = false;
+                  }
 
-      } else {
-        console.log('Report not exist locally: YES');
-        this.indexeddbService.checkAPIreport(this.report_id).then(re => {
-          if (re) {
-            this.report_info = re;
-            this.reportdesc = re;
-            // check if pass in sessionStorage
-            if (sessionStorage.getItem(re.report_id) !== null) {
-              this.report_decryption_in_progress = true;
-              const pass = sessionStorage.getItem(re.report_id);
-
-              if (this.indexeddbService.decodeAES(re, pass)) {
-                this.report_decryption_in_progress = false;
+                });
+              } else {
+                setTimeout(_ => this.openDialog(data)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
               }
+
             } else {
-              setTimeout(_ => this.openDialog(re)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
+              console.log('Report not exist locally: YES');
+              this.indexeddbService.checkAPIreport(this.report_id).then(re => {
+                if (re) {
+                  this.report_info = re;
+                  this.reportdesc = re;
+                  // check if pass in sessionStorage
+                  if (this.sessionsub.getSessionStorageItem(re.report_id) !== null) {
+                    this.report_decryption_in_progress = true;
+                    const pass = this.sessionsub.getSessionStorageItem(re.report_id);
+
+                    if (this.indexeddbService.decodeAES(re, pass)) {
+                      this.report_decryption_in_progress = false;
+                    }
+                  } else {
+                    setTimeout(_ => this.openDialog(re)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
+                  }
+                } else {
+                  this.router.navigate(['/my-reports']);
+                }
+              });
             }
-          } else {
-            this.router.navigate(['/my-reports']);
-          }
-        });
+          });
+
+          // get css style
+          this.http.get('/assets/bootstrap.min.css', { responseType: 'text' }).subscribe(res => {
+            this.report_css = res;
+          });
+
+          // get bug bountys programs list, full credits: https://github.com/projectdiscovery/public-bugbounty-programs
+          this.http.get<any>('/assets/chaos-bugbounty-list.json?v=' + + new Date()).subscribe(res => {
+            this.bugbountylist = res.programs;
+          });
+
+          this.getReportProfiles();
+
+        }
       }
     });
 
-    // get css style
-    this.http.get('/assets/bootstrap.min.css', { responseType: 'text' }).subscribe(res => {
-      this.report_css = res;
-    });
 
-    // get bug bountys programs list, full credits: https://github.com/projectdiscovery/public-bugbounty-programs
-    this.http.get<any>('/assets/chaos-bugbounty-list.json?v=' + + new Date()).subscribe(res => {
-      this.bugbountylist = res.programs;
-    });
-
-
-    this.getReportProfiles();
     
   }
 
   entestdateChanged() {
     this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
+  }
+
+  canDeactivate() {
+    if (this.youhaveunsavedchanges == true) {
+      return confirm("You have unsaved changes, Do you really want to leave?");
+    }
+    return true;
   }
 
   dateClass() {    
@@ -327,7 +351,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   getAPIReportProfiles() {
-    const localkey = sessionStorage.getItem('VULNREPO-API');
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       //this.msg = 'API connection please wait...';
 
@@ -374,16 +398,17 @@ export class ReportComponent implements OnInit, OnDestroy {
     */
 
     changes.forEachAddedItem((record) => {
-      // console.log('ADDED: ',record);
       if (record.previousValue !== null) {
         this.afterDetection();
+        console.log('ADDED: ',record);
       }
     });
 
     changes.forEachChangedItem((record) => {
-      // console.log('CHANGED: ',record);
-      if (record.key !== 'report_version') {
+      // fix for rising detection change after report read only
+      if (record.key !== 'report_version' && record.key !== 'report_name') {
         // console.log('Detection start');
+        //console.log('CHANGED: ',record);
         this.afterDetection();
       }
     });
@@ -693,7 +718,9 @@ Sample code here\n\
     this.dataSource.paginator = this.paginator;
     setTimeout(() => this.dataSource.sort = this.sort);
     setTimeout(() => this.dataSource.paginator = this.paginator);
-    setTimeout(() => this.calendar.updateTodaysDate());
+    if (this.decryptedReportDataChanged.report_vulns.length > 0) {
+      setTimeout(() => this.calendar.updateTodaysDate());
+    }
     this.entestdateChanged();
     
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
@@ -833,7 +860,7 @@ Sample code here\n\
   saveReportChanges(report_id: any) {
     this.report_encryption_in_progress = true;
     this.savemsg = 'Please wait, report is encrypted...';
-    const pass = sessionStorage.getItem(report_id);
+    const pass = this.sessionsub.getSessionStorageItem(report_id);
     let useAPI = false;
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
@@ -1098,7 +1125,7 @@ Sample code here\n\
   updateSecKey(report_id, pass) {
 
     this.savemsg = 'Please wait, report is encrypted...';
-    sessionStorage.setItem(report_id, pass);
+    this.sessionsub.setSessionStorageItem(report_id, pass);
 
     // update report
     this.addtochangelog('Change report security key');
@@ -1681,7 +1708,7 @@ Date   | Description
     ];
 
 
-    const ciphertext = Crypto.AES.encrypt(JSON.stringify(json), sessionStorage.getItem(report_info.report_id));
+    const ciphertext = Crypto.AES.encrypt(JSON.stringify(json), this.sessionsub.getSessionStorageItem(report_info.report_id));
 
     this.http.get('/assets/html_report_v2_template.html?v=' + new Date(), { responseType: 'text' }).subscribe(res => {
 

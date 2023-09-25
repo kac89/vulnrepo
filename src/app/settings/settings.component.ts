@@ -7,6 +7,7 @@ import { DialogApiaddComponent } from '../dialog-apiadd/dialog-apiadd.component'
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dialog-addreportprofile.component';
+import { SessionstorageserviceService } from "../sessionstorageservice.service"
 
 export interface ApiList {
   apikey: string;
@@ -58,7 +59,7 @@ export class SettingsComponent implements OnInit {
 
 
   constructor(public router: Router, private indexeddbService: IndexeddbService, private apiService: ApiService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog, public sessionsub: SessionstorageserviceService) { }
 
   ngOnInit() {
 
@@ -70,7 +71,7 @@ export class SettingsComponent implements OnInit {
       }
     });
 
-    const localkey = sessionStorage.getItem('VULNREPO-API');
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
 
       console.log('Key found');
@@ -87,7 +88,7 @@ export class SettingsComponent implements OnInit {
           this.listkey = true;
           this.showregapi = false;
           
-          if (sessionStorage.getItem('hidedialog') !== 'true') {
+          if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
             setTimeout(_ => this.openDialog(ret));
           }
 
@@ -235,7 +236,8 @@ export class SettingsComponent implements OnInit {
   });
 
 
-  sessionStorage.setItem('VULNREPO-API', JSON.stringify(vaultobj));
+  this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(vaultobj));
+  
   this.getReportProfiles();
   }
 
@@ -250,7 +252,7 @@ export class SettingsComponent implements OnInit {
   }
 
   apidisconnect() {
-    sessionStorage.removeItem('VULNREPO-API');
+    this.sessionsub.removeSessionStorageItem('VULNREPO-API');
     this.showregapi = false;
     this.listkey = true;
     this.apiconneted = false;
@@ -311,7 +313,7 @@ export class SettingsComponent implements OnInit {
         this.listkey = false;
         this.showregapi = false;
 
-        const localkey = sessionStorage.getItem('VULNREPO-API');
+        const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
         if (localkey) {
           this.apiconnect(localkey);
         }
@@ -343,7 +345,7 @@ export class SettingsComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(resul => {
           console.log('The security key dialog was closed');
           if (resul === 'OK') {
-            const localkey = sessionStorage.getItem('VULNREPO-API');
+            const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
             if (localkey) {
               this.apiconnect(localkey);
             }
@@ -366,7 +368,7 @@ export class SettingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-          sessionStorage.setItem('VULNREPO-API', JSON.stringify(drem));
+          this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(drem));
           this.saveAPIKEY(drem, result);
           this.apiconnect(JSON.stringify(drem));
       }
@@ -427,7 +429,7 @@ export class SettingsComponent implements OnInit {
 
   removeApi(element) {
 
-    const localkey = sessionStorage.getItem('VULNREPO-API');
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       const result = JSON.parse(localkey);
       const index = result.map(function(e) { return e.apikey; }).indexOf(element);
@@ -464,7 +466,7 @@ getReportProfiles() {
 
 getAPIReportProfiles() {
 
-  const localkey = sessionStorage.getItem('VULNREPO-API');
+  const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
   if (localkey) {
     this.msg = 'API connection please wait...';
 
