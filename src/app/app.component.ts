@@ -29,6 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.show_active_reports = false;
     this.app_ver = version.number;
     
     if (this.app_ver !== ''){
@@ -74,10 +75,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   getopenreports() {
     this.arr_oreports = [];
-    this.show_active_reports = true;
+    
     for (const key of Object.keys(sessionStorage)) {
       this.indexeddbService.checkifreportexist(key).then(data => {
         if (data) {
+          this.show_active_reports = true;
           this.arr_oreports.push({"report_id": data.report_id, "report_name": data.report_name});
         }
       });
