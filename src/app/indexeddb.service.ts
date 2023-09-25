@@ -685,6 +685,8 @@ export class IndexeddbService {
               });
               resolve('NOSPACE');
             } else if (resp.REPORT_UPDATE === 'OK') {
+              //execute navbar refresh
+              this.sessionsub.removeSessionStorageItem('encrypted:ok');
               resolve(now);
             }
           });
