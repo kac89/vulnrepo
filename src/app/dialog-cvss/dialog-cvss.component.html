@@ -11,7 +11,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="This metric reflects the context by which vulnerability exploitation is possible. The Base Score increases the more remote (logically, and physically) an attacker can be in order to exploit the vulnerable component."><b>Attack Vector (AV)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[0]">
-                <mat-radio-button class="example-radio-button" (change)="AVonclick(item)" *ngFor="let item of AV"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="AVonclick(item)" *ngFor="let item of AV"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -21,7 +21,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="This metric describes the conditions beyond the attacker’s control that must exist in order to exploit the vulnerability. Such conditions may require the collection of more information about the target or computational exceptions. The assessment of this metric excludes any requirements for user interaction in order to exploit the vulnerability. If a specific configuration is required for an attack to succeed, the Base metrics should be scored assuming the vulnerable component is in that configuration."><b>Attack Complexity (AC)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[1]">
-                <mat-radio-button class="example-radio-button" (change)="AConclick(item)" *ngFor="let item of AC"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="AConclick(item)" *ngFor="let item of AC"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -31,7 +31,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="This metric describes the level of privileges an attacker must possess before successfully exploiting the vulnerability."><b>Privileges Required (PR)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[2]">
-                <mat-radio-button class="example-radio-button" (change)="PRonclick(item)" *ngFor="let item of PR"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="PRonclick(item)" *ngFor="let item of PR"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -41,7 +41,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="This metric captures the requirement for a user, other than the attacker, to participate in the successful compromise the vulnerable component. This metric determines whether the vulnerability can be exploited solely at the will of the attacker, or whether a separate user (or user-initiated process) must participate in some manner."><b>User Interaction (UI)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[3]">
-                <mat-radio-button class="example-radio-button" (change)="UIonclick(item)" *ngFor="let item of UI"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="UIonclick(item)" *ngFor="let item of UI"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -56,7 +56,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="Does a successful attack impact a component other than the vulnerable component? If so, the Base Score increases and the Confidentiality, Integrity and Authentication metrics should be scored relative to the impacted component."><b>Scope (S)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[4]">
-                <mat-radio-button class="example-radio-button" (change)="Sonclick(item)" *ngFor="let item of S"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="Sonclick(item)" *ngFor="let item of S"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -66,7 +66,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="This metric measures the impact to the confidentiality of the information resources managed by a software component due to a successfully exploited vulnerability. Confidentiality refers to limiting information access and disclosure to only authorized users, as well as preventing access by, or disclosure to, unauthorized ones."><b>Confidentiality Impact (C)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[5]">
-                <mat-radio-button class="example-radio-button" (change)="Conclick(item)" *ngFor="let item of C"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="Conclick(item)" *ngFor="let item of C"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -76,7 +76,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="This metric measures the impact to integrity of a successfully exploited vulnerability. Integrity refers to the trustworthiness and veracity of information."><b>Integrity Impact (I)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[6]">
-                <mat-radio-button class="example-radio-button" (change)="Ionclick(item)" *ngFor="let item of I"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="Ionclick(item)" *ngFor="let item of I"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -86,7 +86,7 @@
         <div fxFlex="25%" fxFlex.sm="25%" fxFlex.xs="100%">
             <label title="This metric measures the impact to the availability of the impacted component resulting from a successfully exploited vulnerability. It refers to the loss of availability of the impacted component itself, such as a networked service (e.g., web, database, email). Since availability refers to the accessibility of information resources, attacks that consume network bandwidth, processor cycles, or disk space all impact the availability of an impacted component."><b>Availability Impact (A)</b></label><br>
             <mat-radio-group class="example-radio-group" [(ngModel)]="selectedAnswers[7]">
-                <mat-radio-button class="example-radio-button" (change)="Aonclick(item)" *ngFor="let item of A"
+                <mat-radio-button class="example-radio-button" [matTooltip]="item[1]" (change)="Aonclick(item)" *ngFor="let item of A"
                     [value]="">
                     {{item[0]}}
                 </mat-radio-button>
@@ -94,8 +94,14 @@
         </div>
 
     </div>
-    <hr>
-    <div>{{selectedItem}}</div>
+    
+    <mat-form-field class="example-full-width" color="accent">
+        <mat-label>Score Vector</mat-label>
+        <input [formControl]="scorevector" matInput placeholder="CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_" value="">
+        <button matSuffix mat-icon-button aria-label="Copy score vector" title="Copy score vector" color="accent" [cdkCopyToClipboard]="scorevector.value">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+      </mat-form-field>
 
 
 </mat-dialog-content>
