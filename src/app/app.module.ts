@@ -71,6 +71,8 @@ import { DialogAddreportprofileComponent } from './dialog-addreportprofile/dialo
 import { DialogApierrorComponent } from './dialog-apierror/dialog-apierror.component';
 import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.component';
 import { NoSanitizePipe } from './nosanitizerpipe';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [
@@ -138,7 +140,9 @@ import { NoSanitizePipe } from './nosanitizerpipe';
         MatRadioModule,
         HammerModule,
         MatProgressBarModule,
-        NgxChartsModule
+        NgxChartsModule,
+        ClipboardModule,
+        MatTooltipModule
     ],
     providers: [MessageService, IndexeddbService, DatePipe],
     exports: [],
