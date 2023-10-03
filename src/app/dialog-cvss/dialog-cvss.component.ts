@@ -1,19 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-dialog-cvss',
   templateUrl: './dialog-cvss.component.html',
   styleUrls: ['./dialog-cvss.component.scss']
 })
+
 export class DialogCvssComponent implements OnInit {
+
+  @ViewChild('tooltip') tooltip: MatTooltip;
 
   selectedAnswers = [];
   selectedItem: string;
   show = false;
+  mobile = false;
   severity: string;
   basescore: number;
   AVvalue: any;
@@ -59,8 +64,20 @@ export class DialogCvssComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit() {
+    window.onresize = () => this.mobile = window.innerWidth <= 1024;
     this.scorevector.disable();
     this.scorevector.setValue('CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_');
+  }
+
+  copyText() {
+    setTimeout(() => {
+      this.tooltip.show();
+      this.tooltip.message = "Copied!";
+      });
+    setTimeout(() => {
+      this.tooltip.hide();
+      this.tooltip.message = "Copy to clipboard";
+    }, 2000);
   }
 
   changevector(vector, event) {
