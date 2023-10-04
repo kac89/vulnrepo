@@ -98,7 +98,7 @@
     <mat-form-field class="example-full-width" color="accent">
         <mat-label>Score Vector</mat-label>
         <input [formControl]="scorevector" matInput placeholder="CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_" value="">
-        <button matSuffix mat-icon-button aria-label="Load score vector" title="Load score vector" color="accent" (click)="refreshfromvector(scorevector.value)">
+        <button matSuffix mat-icon-button aria-label="Load score vector" title="Load score vector" color="accent" (click)="refreshfromvector(scorevector.value)" life="1000" tooltipEvent="focus" matTooltip="Load score vector" matTooltipPosition="below">
             <mat-icon>sync</mat-icon>
           </button>
         <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy score vector" title="Copy score vector" color="accent" [cdkCopyToClipboard]="scorevector.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">
