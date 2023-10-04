@@ -6,6 +6,7 @@
         "severity": "Medium",
         "ref": "https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)\nhttps://en.wikipedia.org/wiki/Cross-site_scripting\nhttps://portswigger.net/web-security/cross-site-scripting/stored",
         "cvss": "4.3",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -15,6 +16,7 @@
         "severity": "Medium",
         "ref": "https://portswigger.net/web-security/cross-site-scripting/reflected",
         "cvss": "4",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -24,6 +26,7 @@
         "severity": "Medium",
         "ref": "https://www.owasp.org/index.php/DOM_Based_XSS\nhttps://portswigger.net/web-security/cross-site-scripting/dom-based",
         "cvss": "4",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -33,6 +36,7 @@
         "severity": "Medium",
         "ref": "https://portswigger.net/kb/issues/00200311_cross-site-scripting-reflected-dom-based",
         "cvss": "4",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -42,6 +46,7 @@
         "severity": "Medium",
         "ref": "https://portswigger.net/kb/issues/00200312_cross-site-scripting-stored-dom-based",
         "cvss": "4",
+        "cvss_vector": "",
         "cve": ""
     },    
     {
@@ -51,6 +56,7 @@
         "severity": "High",
         "ref": "http://cwe.mitre.org/data/definitions/352.html",
         "cvss": "6",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -60,6 +66,7 @@
         "severity": "Medium",
         "ref": "http://www.acunetix.com/blog/articles/server-side-request-forgery-vulnerability/",
         "cvss": "4",
+        "cvss_vector": "",
         "cve": ""
     },	
     {
@@ -69,6 +76,7 @@
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Buffer_Overflow",
         "cvss": "9",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -78,6 +86,7 @@
         "severity": "Low",
         "ref": "https://en.wikipedia.org/wiki/Denial-of-service_attack",
         "cvss": "3",
+        "cvss_vector": "",
         "cve": ""
     },	
     {
@@ -87,6 +96,7 @@
         "severity": "High",
         "ref": "http://cwe.mitre.org/data/definitions/98.html",
         "cvss": "7",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -96,6 +106,7 @@
         "severity": "High",
         "ref": "https://www.owasp.org/index.php/SQL_Injection",
         "cvss": "8",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -105,6 +116,7 @@
         "severity": "High",
         "ref": "https://www.owasp.org/index.php/Blind_SQL_Injection",
         "cvss": "8",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -114,6 +126,7 @@
         "severity": "Medium",
         "ref": "https://www.owasp.org/index.php/Path_Traversal\nhttp://projects.webappsec.org/w/page/13246952/Path Traversal\nhttp://cwe.mitre.org/data/definitions/22.html",
         "cvss": "4",
+        "cvss_vector": "",
         "cve": ""
     },	
     {
@@ -123,6 +136,7 @@
         "severity": "High",
         "ref": "https://en.wikipedia.org/wiki/Uncontrolled_format_string",
         "cvss": "6",
+        "cvss_vector": "",
         "cve": ""
     },	
     {
@@ -132,6 +146,7 @@
         "severity": "High",
         "ref": "http://projects.webappsec.org/w/page/13246926/Format String",
         "cvss": "6",
+        "cvss_vector": "",
         "cve": ""
     },	
     {
@@ -141,6 +156,7 @@
         "severity": "High",
         "ref": "http://www.securiteam.com/securitynews/6D0100A5PU.html\nhttps://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing",
         "cvss": "8",
+        "cvss_vector": "",
         "cve": ""
     },	
     {
@@ -150,6 +166,7 @@
         "severity": "Info",
         "ref": "http://cwe.mitre.org/data/definitions/612.html",
         "cvss": "0",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -159,6 +176,7 @@
         "severity": "High",
         "ref": "http://heartbleed.com/",
         "cvss": "7.5",
+        "cvss_vector": "",
         "cve": "CVE-2014-0160"
     },
     {
@@ -168,6 +186,7 @@
         "severity": "Medium",
         "ref": "https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet",
         "cvss": "4.1",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -177,6 +196,7 @@
         "severity": "High",
         "ref": "http://blog.portswigger.net/2015/08/server-side-template-injection.html",
         "cvss": "7.5",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -186,6 +206,7 @@
         "severity": "Critical",
         "ref": "https://www.owasp.org/index.php/Code_Injection\nhttps://en.wikipedia.org/wiki/Arbitrary_code_execution",
         "cvss": "10",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -195,6 +216,7 @@
         "severity": "High",
         "ref": "https://cwe.mitre.org/data/definitions/434.html\nhttps://www.owasp.org/index.php/Unrestricted_File_Upload",
         "cvss": "6",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -204,6 +226,7 @@
         "severity": "High",
         "ref": "https://portswigger.net/web-security/os-command-injection",
         "cvss": "8",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -213,6 +236,7 @@
         "severity": "Medium",
         "ref": "https://portswigger.net/kb/issues/00300100_cleartext-submission-of-password",
         "cvss": "5",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -222,6 +246,7 @@
         "severity": "Info",
         "ref": "https://portswigger.net/kb/issues/00600500_credit-card-numbers-disclosed\nhttps://cwe.mitre.org/data/definitions/200.html",
         "cvss": "0",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -231,6 +256,7 @@
         "severity": "Low",
         "ref": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security\nhttps://moxie.org/software/sslstrip/\nhttps://hstspreload.org/\nhttps://cwe.mitre.org/data/definitions/523.html",
         "cvss": "3",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -240,6 +266,7 @@
         "severity": "Low",
         "ref": "https://www.chromium.org/Home/chromium-security/marking-http-as-non-secure\nhttps://wiki.mozilla.org/Security/Server_Side_TLS\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security",
         "cvss": "3",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -249,6 +276,7 @@
         "severity": "Low",
         "ref": "https://cwe.mitre.org/data/definitions/538.html\nhttps://cwe.mitre.org/data/definitions/548.html",
         "cvss": "1",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -258,6 +286,7 @@
         "severity": "Low",
         "ref": "https://cwe.mitre.org/data/definitions/18.html\nhttps://cwe.mitre.org/data/definitions/200.html\nhttps://cwe.mitre.org/data/definitions/388.html\nhttps://cwe.mitre.org/data/definitions/540.html\nhttps://cwe.mitre.org/data/definitions/541.html\nhttps://cwe.mitre.org/data/definitions/615.html",
         "cvss": "1",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -267,6 +296,7 @@
         "severity": "Medium",
         "ref": "https://www.tenable.com/plugins/nessus/20007",
         "cvss": "4.3",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -276,6 +306,7 @@
         "severity": "Low",
         "ref": "https://www.tenable.com/plugins/nessus/104743",
         "cvss": "1",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -285,6 +316,7 @@
         "severity": "High",
         "ref": "https://www.hackerone.com/blog/Guide-Subdomain-Takeovers",
         "cvss": "7",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -294,6 +326,7 @@
         "severity": "Medium",
         "ref": "https://cwe.mitre.org/data/definitions/287.html",
         "cvss": "5",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -303,6 +336,7 @@
         "severity": "High",
         "ref": "https://attack.mitre.org/tactics/TA0004/",
         "cvss": "7",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -312,6 +346,7 @@
         "severity": "Medium",
         "ref": "https://wiki.owasp.org/index.php/Testing_for_Insecure_Direct_Object_References_(OTG-AUTHZ-004)\nhttps://portswigger.net/web-security/access-control/idor",
         "cvss": "5",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -321,6 +356,7 @@
         "severity": "High",
         "ref": "https://medium.com/mobile-penetration-testing/01-insecure-logging-a41c41a8e648",
         "cvss": "7",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -330,6 +366,7 @@
         "severity": "High",
         "ref": "https://medium.com/mobile-penetration-testing/02-hard-coding-issues-fa795c8294c4",
         "cvss": "7",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -339,6 +376,7 @@
         "severity": "High",
         "ref": "https://medium.com/mobile-penetration-testing/access-control-92e88578d8b6",
         "cvss": "7",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -348,6 +386,7 @@
         "severity": "High",
         "ref": "https://medium.com/mobile-penetration-testing/13-insecure-input-validation-part-3-595b1439cd07",
         "cvss": "7",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -357,6 +396,7 @@
         "severity": "Medium",
         "ref": "https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A8-Insecure_Deserialization",
         "cvss": "5",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -366,6 +406,7 @@
         "severity": "Low",
         "ref": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options",
         "cvss": "1",
+        "cvss_vector": "",
         "cve": ""
     },
     {
@@ -375,6 +416,7 @@
         "severity": "Low",
         "ref": "https://portswigger.net/research/web-storage-the-lesser-evil-for-session-tokens#httponly",
         "cvss": "1",
+        "cvss_vector": "",
         "cve": ""
     }
 ]
