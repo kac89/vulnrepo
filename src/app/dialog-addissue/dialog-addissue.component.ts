@@ -16,6 +16,7 @@ export interface Vulns {
   title: string;
   cve: string;
   cvss: number;
+  cvss_vector: string;
   desc: string;
   poc: string;
   ref: string;
@@ -246,7 +247,6 @@ export class DialogAddissueComponent implements OnInit {
   }
 
   addIssue() {
-    const data = this.customissueform.value;
 
     if (this.customissueform.value !== "" && this.customissueform.value !== null) {
       this.chipsissue.push(this.customissueform.value);
@@ -274,6 +274,7 @@ export class DialogAddissueComponent implements OnInit {
                 status: 1,
                 ref: found.ref,
                 cvss: found.cvss,
+                cvss_vector: found.cvss_vector,
                 cve: found.cve,
                 tags: [],
                 bounty: [],
@@ -298,6 +299,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: '',
               cvss: '',
+              cvss_vector: '',
               cve: '',
               tags: [],
               bounty: [],
@@ -336,6 +338,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: this.cwe[key].ref,
               cvss: this.cwe[key].cvss,
+              cvss_vector: '',
               cve: this.cwe[key].cve,
               tags: [],
               bounty: [],
@@ -473,6 +476,7 @@ export class DialogAddissueComponent implements OnInit {
                 status: 1,
                 ref: refer,
                 cvss: resp.cvss,
+                cvss_vector: '',
                 cve: resp.id,
                 bounty: [],
                 tags: [],
@@ -525,6 +529,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: this.mitremobile[key].ref,
               cvss: this.mitremobile[key].cvss,
+              cvss_vector: '',
               cve: this.mitremobile[key].cve,
               tags: [],
               bounty: [],
@@ -565,6 +570,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: this.mitreenterprise[key].ref,
               cvss: this.mitreenterprise[key].cvss,
+              cvss_vector: '',
               cve: this.mitreenterprise[key].cve,
               tags: [],
               bounty: [],
@@ -626,6 +632,7 @@ export class DialogAddissueComponent implements OnInit {
                 status: 1,
                 ref: 'https://www.pcisecuritystandards.org/\nhttps://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf',
                 cvss: '',
+                cvss_vector: '',
                 cve: '',
                 tags: [],
                 bounty: [],
@@ -667,6 +674,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: this.owasptop2017[key].ref,
               cvss: this.owasptop2017[key].cvss,
+              cvss_vector: '',
               cve: this.owasptop2017[key].cve,
               tags: [],
               bounty: [],
@@ -705,6 +713,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: this.owasptop2021[key].ref,
               cvss: this.owasptop2021[key].cvss,
+              cvss_vector: '',
               cve: this.owasptop2021[key].cve,
               tags: [],
               bounty: [],
@@ -744,6 +753,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: this.OWASPTOP10CICD[key].ref,
               cvss: this.OWASPTOP10CICD[key].cvss,
+              cvss_vector: '',
               cve: this.OWASPTOP10CICD[key].cve,
               tags: [],
               bounty: [],
@@ -782,6 +792,7 @@ export class DialogAddissueComponent implements OnInit {
               status: 1,
               ref: this.OWASPTOP10k8s[key].ref,
               cvss: this.OWASPTOP10k8s[key].cvss,
+              cvss_vector: '',
               cve: this.OWASPTOP10k8s[key].cve,
               tags: [],
               bounty: [],
