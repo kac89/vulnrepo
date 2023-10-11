@@ -63,6 +63,12 @@
           <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
           Templates List
         </a>
+
+        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
+          <mat-icon class="vertical-align-middle padding-bottom-3">help</mat-icon>
+          Methodology
+        </a>
+
         <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
           Settings
@@ -70,6 +76,13 @@
         <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
           FAQ
+        </a>
+      </mat-menu>
+
+      <mat-menu #methods="matMenu">
+        <a routerLink="/asvs4" routerLinkActive="active-link" href="/asvs4" target="_blank" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">description</mat-icon>
+          ASVS 4.0.3
         </a>
       </mat-menu>
 
