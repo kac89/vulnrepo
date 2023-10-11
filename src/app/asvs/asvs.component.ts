@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
-import {Router, ActivatedRoute} from '@angular/router';
+
 
 export interface PeriodicElement {
   Shortcode: string;
@@ -30,7 +30,7 @@ param:any;
 renderedData:any;
 localstorageasvs4 = JSON.parse(localStorage.getItem("asvs4"));
 
-constructor(private http: HttpClient, private activatedRoute: ActivatedRoute){
+constructor(private http: HttpClient){
   this.selection.changed.subscribe(
     (s)=>{
           //console.log(s);
@@ -179,36 +179,11 @@ resetselected() {
       this.selectRows();
     });
 
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.param = params['q'];
-    });
-
-  }
-
-
-  scroll(id) {
-    const node = document.getElementById(id);
-    const yourHeight = 105 + 20;
-    
-    // scroll to your element
-    node.scrollIntoView(true);
-    
-    // now account for fixed header
-    const scrolledY = window.scrollY;
-    
-    if (scrolledY) {
-      window.scroll(0, scrolledY - yourHeight);
-    }
-  
-  }
-
-
-  ngAfterViewInit(){
-    console.log("after view init")
-    console.log(this.param);
-    this.scroll(this.param);
 
 
   }
+
+
+
 
 }
