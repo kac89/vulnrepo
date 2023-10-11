@@ -10,6 +10,7 @@ import { ReportComponent } from './report/report.component';
 import { ImportReportComponent } from './import-report/import-report.component';
 import { TemplatesListComponent } from './templates-list/templates-list.component';
 import { DeactivateGuardService } from './deactivate-guard.service';
+import { AsvsComponent } from './asvs/asvs.component';
 
 const routes: Routes = [{
   path: 'home',
@@ -30,6 +31,11 @@ const routes: Routes = [{
   path: 'new-report',
   pathMatch: 'full',
   component: NewreportComponent
+},
+{
+  path: 'asvs4',
+  pathMatch: 'full',
+  component: AsvsComponent
 },
 {
   path: 'report/:report_id',

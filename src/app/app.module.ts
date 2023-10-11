@@ -73,6 +73,7 @@ import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.co
 import { NoSanitizePipe } from './nosanitizerpipe';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AsvsComponent } from './asvs/asvs.component';
 
 @NgModule({
     declarations: [
@@ -101,7 +102,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         DialogApierrorComponent,
         DialogReportcssComponent,
         TemplatesListComponent,
-        NoSanitizePipe
+        NoSanitizePipe,
+        AsvsComponent
     ],
     imports: [
         BrowserModule,
