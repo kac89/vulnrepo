@@ -11,7 +11,8 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
-import { exit } from 'process';
+
+
 export interface Vulns {
   title: string;
   cve: string;

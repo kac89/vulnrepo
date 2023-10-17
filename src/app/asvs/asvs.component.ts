@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
-
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DialogAsvs4Component } from '../dialog-asvs4/dialog-asvs4.component';
 
 export interface PeriodicElement {
   Shortcode: string;
@@ -29,8 +30,9 @@ selectlevel: string;
 param:any;
 renderedData:any;
 localstorageasvs4 = JSON.parse(localStorage.getItem("asvs4"));
+dialogRef: MatDialogRef<DialogAsvs4Component>;
 
-constructor(private http: HttpClient){
+constructor(private http: HttpClient, public dialog: MatDialog){
   this.selection.changed.subscribe(
     (s)=>{
           //console.log(s);
@@ -44,6 +46,21 @@ constructor(private http: HttpClient){
 
 replacespace(text) {
   return text.replaceAll(" ", "-");
+}
+
+openasvs4dialog(): void {
+
+  const dialogRef = this.dialog.open(DialogAsvs4Component, {
+    width: '400px',
+    disableClose: false,
+    data: [this.parsefunct(this.asvsdata), this.selection.selected]
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    //console.log(result);
+    console.log('The ASVS4 dialog was closed');
+  });
+
 }
 
 parsefunct(arr){
@@ -158,8 +175,13 @@ selectRows() {
 
 resetselected() {
 
-  this.selection.clear();
-  localStorage.removeItem("asvs4");
+  if (window.confirm("Do you really want to clear results?")) {
+    this.selection.clear();
+    localStorage.removeItem("asvs4");
+  }
+  
+
+
 }
 
   ngOnInit() {

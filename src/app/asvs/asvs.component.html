@@ -12,8 +12,9 @@
     </div>
 
     <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-      <button mat-raised-button color="warn" (click)="resetselected()">Reset/Unselect all</button>
+      <button mat-raised-button color="accent" (click)="openasvs4dialog()"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon> Export</button>
+      &nbsp;&nbsp;
+      <button mat-raised-button color="warn" (click)="resetselected()"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Reset/Unselect all</button>
 
     </div>
 
@@ -36,9 +37,9 @@
       </mat-select>
     </mat-form-field>
 
-    <div>ASVS Level: {{selectlevel}} Items: {{parsefunct(asvsdata).length}} Checked: {{this.selection.selected.length}}</div>
+    <div>ASVS Level: {{selectlevel}} Items: {{parsefunct(asvsdata).length}} Checked: {{selection.selected.length}}</div>
     <div>
-      <mat-progress-bar color="accent" mode="determinate" value="{{(this.selection.selected.length / this.parsefunct(this.asvsdata).length) * 100}}"></mat-progress-bar>
+      <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(asvsdata).length) * 100}}"></mat-progress-bar>
     </div>
   </mat-card>
 
