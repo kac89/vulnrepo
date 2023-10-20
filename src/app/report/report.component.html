@@ -1017,6 +1017,10 @@
                 <button mat-menu-item (click)="DownloadMarkdown(report_info)" title="Decrypted Markdown report format">
                   <mat-icon>subtitles</mat-icon>Markdown
                 </button>
+
+                <a mat-menu-item routerLink="/faq" [queryParams]="{ q : 'How-to-create-PDF-report' }" href="/faq" title="Get PDF report format">
+                  <mat-icon>link</mat-icon>PDF
+                </a>
               </mat-menu>
 
             </div>
