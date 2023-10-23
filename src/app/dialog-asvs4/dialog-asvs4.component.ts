@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 export class DialogAsvs4Component implements OnInit {
   selected = 'unsel';
   hide = true;
+  text = '';
   selecteditems = [];
   allitems = [];
   unselected = [];
@@ -27,10 +28,6 @@ export class DialogAsvs4Component implements OnInit {
     this.allitems = this.data[0];
 
     this.unselected = this.allitems.filter(x => !this.selecteditems.includes(x));
-
-  
-    
-    
 
   }
 
@@ -51,48 +48,54 @@ export class DialogAsvs4Component implements OnInit {
       this.exportvuln(this.unselected, this.pass.value, this.pass2.value);
 
     }
-
-    this.dialogRef.close();
+    
   }
 
   exportvuln(data, pass, pass2) {
 
-    const date = new Date();
-    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+    if (pass !== pass2) {
+      this.text = 'Password fields not match';
+    } else {
 
-    const toexport = data.map((res, key) => {
-      const def = {
-        title: 'ASVS requirement ' + res.Shortcode,
-        poc: '',
-        files: [],
-        desc: res.Description,
-        severity: 'Info',
-        ref: 'https://owasp.org/www-pdf-archive/OWASP_Application_Security_Verification_Standard_4.0-en.pdf\nhttps://cwe.mitre.org/data/definitions/'+res.CWE[0]+'.html',
-        cvss: '',
-        cvss_vector: '',
-        cve: '',
-        tags: [],
-        bounty: [],
-        date: today
-      };
+      const date = new Date();
+      const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+  
+      const toexport = data.map((res, key) => {
+        const def = {
+          title: 'ASVS requirement ' + res.Shortcode,
+          poc: '',
+          files: [],
+          desc: res.Description,
+          severity: 'Info',
+          ref: 'https://owasp.org/www-pdf-archive/OWASP_Application_Security_Verification_Standard_4.0-en.pdf\nhttps://cwe.mitre.org/data/definitions/'+res.CWE[0]+'.html',
+          cvss: '',
+          cvss_vector: '',
+          cve: '',
+          tags: [],
+          bounty: [],
+          date: today
+        };
+  
+        return def;
+      });
+  
+        const json = JSON.stringify(toexport);
+        // Encrypt
+        const ciphertext = Crypto.AES.encrypt(json, pass);
+  
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));
+        element.setAttribute('download', 'Vulnrepo asvs4 export.vuln');
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
 
-      return def;
-    });
 
-
-    if (pass === pass2) {
-      const json = JSON.stringify(toexport);
-      // Encrypt
-      const ciphertext = Crypto.AES.encrypt(json, pass);
-
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));
-      element.setAttribute('download', 'Vulnrepo asvs4 export.vuln');
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+      this.dialogRef.close();
     }
+
+
 
 
   }
