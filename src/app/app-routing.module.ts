@@ -11,6 +11,7 @@ import { ImportReportComponent } from './import-report/import-report.component';
 import { TemplatesListComponent } from './templates-list/templates-list.component';
 import { DeactivateGuardService } from './deactivate-guard.service';
 import { AsvsComponent } from './asvs/asvs.component';
+import { TbhmComponent } from './tbhm/tbhm.component';
 
 const routes: Routes = [{
   path: 'home',
@@ -36,6 +37,11 @@ const routes: Routes = [{
   path: 'asvs4',
   pathMatch: 'full',
   component: AsvsComponent
+},
+{
+  path: 'tbhm',
+  pathMatch: 'full',
+  component: TbhmComponent
 },
 {
   path: 'report/:report_id',
