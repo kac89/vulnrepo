@@ -27,7 +27,7 @@
 <h1>Task Checklist ({{selecteditems.length}}/74)</h1>
   <mat-card [formGroup]="allreq" appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
 
-    <h3>- App Recon and analysis</h3>
+    <h3>App Recon and analysis</h3>
 
     <mat-checkbox class="example-margin" formControlName="r1">Map visible content (Manually)</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r2">Discover hidden & default content (Direcory/File Bruteforce)</mat-checkbox>
@@ -38,8 +38,8 @@
     <mat-checkbox class="example-margin" formControlName="r7">Gather wordlists for specific techniology (Assetnote ones are excellent)</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r8">Map the attack surface automatically (Spider)</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r9">Identify all javascript files for later analysis (in your proxy)</mat-checkbox>
-    <br>
-    <h3>- Test handling of access</h3>
+
+    <h3>Test handling of access</h3>
 
     <h4>Authentication</h4>
 
@@ -72,7 +72,7 @@
     <mat-checkbox class="example-margin" formControlName="r30">Test effectiveness of controls, using multiple accounts if possible</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r31">Test for insecure access control methods (request parameters, Referer header, etc)</mat-checkbox>
 
-    <h4>Test handling of input</h4>
+    <h3>Test handling of input</h3>
 
     <mat-checkbox class="example-margin" formControlName="r32">Fuzz all request parameters</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r33">Test for SQL injection</mat-checkbox>
@@ -92,7 +92,7 @@
     <mat-checkbox class="example-margin" formControlName="r47">Test for XPath injection</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r48">Test for SSRF and HTTP Redirrects in all redirecting parameters</mat-checkbox>
 
-    <h4>Test application logic</h4>
+    <h3>Test application logic</h3>
 
     <mat-checkbox class="example-margin" formControlName="r49">Identify the logic attack surface</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r50">Test transmission of data via the client</mat-checkbox>
@@ -103,7 +103,7 @@
     <mat-checkbox class="example-margin" formControlName="r55">Test trust boundaries</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r56">Test transaction logic</mat-checkbox>
 
-    <h4>Assess application hosting</h4>
+    <h3>Assess application hosting</h3>
 
     <mat-checkbox class="example-margin" formControlName="r57">Test segregation in shared infrastructures</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r58">Test segregation between ASP-hosted applications</mat-checkbox>
@@ -115,7 +115,7 @@
     <mat-checkbox class="example-margin" formControlName="r64">Virtual hosting mis-configuration</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r65">Bugs in web server software</mat-checkbox>
 
-    <h4>Miscellaneous tests</h4>
+    <h3>Miscellaneous tests</h3>
 
     <mat-checkbox class="example-margin" formControlName="r66">Check for DOM-based attacks</mat-checkbox>
     <mat-checkbox class="example-margin" formControlName="r67">Check for frame injection</mat-checkbox>
