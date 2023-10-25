@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
   templateUrl: './tbhm.component.html',
   styleUrls: ['./tbhm.component.scss']
 })
-export class TbhmComponent {
+export class TbhmComponent implements OnInit {
 
   
   allreq:any;
@@ -89,7 +89,9 @@ export class TbhmComponent {
     r74: false,
   };
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder) {}
+
+  ngOnInit() {
 
     this.allreqstored = JSON.parse(localStorage.getItem("tbhm"));
 
@@ -112,12 +114,17 @@ export class TbhmComponent {
 
   }
 
-
   resetselected(){
     if (window.confirm("Do you really want to clear results?")) {
-      this.allreq = this._formBuilder.group(this.groupdef);
+      
       localStorage.removeItem("tbhm");
+      this.allreq = this._formBuilder.group(this.groupdef);
       this.selecteditems = Object.keys(this.allreq.value).filter(key => this.allreq.value[key]);
+
+      this.allreq.valueChanges.subscribe(value => {
+        this.selecteditems = Object.keys(this.allreq.value).filter(key => this.allreq.value[key]);
+        localStorage.setItem("tbhm", JSON.stringify(value));
+      });
     }
   }
 
