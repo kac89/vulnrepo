@@ -1,0 +1,134 @@
+<div>
+
+    <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+        <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+    
+          <h1 class="mat-headline-3">
+            <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> The Bug Hunter's Methodology
+          </h1>
+    
+        </div>
+
+        <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+          <button mat-raised-button color="warn" (click)="resetselected()"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Reset/Unselect all</button>
+    
+        </div>
+    
+      </div>
+    
+</div>
+
+<mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
+    <h2>Fast Testing Checklist</h2>
+    <a class="active-link" target="_blank" href="https://github.com/jhaddix/tbhm">More info</a>
+  </mat-card>
+  <br><br>
+<h1>Task Checklist ({{selecteditems.length}}/74)</h1>
+  <mat-card [formGroup]="allreq" appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
+
+    <h3>- App Recon and analysis</h3>
+
+    <mat-checkbox class="example-margin" formControlName="r1">Map visible content (Manually)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r2">Discover hidden & default content (Direcory/File Bruteforce)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r3">Test for debug parameters</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r4">Identify data entry points (Discover Dynamic Content in Burp Pro)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r5">Identify the technologies used (Wapplyzer or similiar)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r6">Research existing vulnerabilitties in technology (Google ++)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r7">Gather wordlists for specific techniology (Assetnote ones are excellent)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r8">Map the attack surface automatically (Spider)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r9">Identify all javascript files for later analysis (in your proxy)</mat-checkbox>
+    <br>
+    <h3>- Test handling of access</h3>
+
+    <h4>Authentication</h4>
+
+    <mat-checkbox class="example-margin" formControlName="r10">Test password quality rules</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r11">Test for username enumeration</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r12">Test resilience to password guessing</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r13">Test any account recovery function</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r14">Test any "remember me" function</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r15">Test any impersonation function</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r16">Test username uniqueness</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r17">Check for unsafe distribution of credentials</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r18">Test for fail-open conditions</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r19">Test any multi-stage mechanisms</mat-checkbox>
+
+    <h4>Session handling</h4>
+
+    <mat-checkbox class="example-margin" formControlName="r20">Test tokens for meaning</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r21">Test tokens for predictability</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r22">Check for insecure transmission of tokens</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r23">Check for disclosure of tokens in logs</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r24">Check mapping of tokens to sessions</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r25">Check session termination</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r26">Check for session fixation</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r27">Check for cross-site request forgery</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r28">Check cookie scope</mat-checkbox>
+
+    <h4>Access controls</h4>
+
+    <mat-checkbox class="example-margin" formControlName="r29">Understand the access control requirements</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r30">Test effectiveness of controls, using multiple accounts if possible</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r31">Test for insecure access control methods (request parameters, Referer header, etc)</mat-checkbox>
+
+    <h4>Test handling of input</h4>
+
+    <mat-checkbox class="example-margin" formControlName="r32">Fuzz all request parameters</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r33">Test for SQL injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r34">Identify all reflected data</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r35">Test for reflected XSS</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r36">Test for HTTP header injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r37">Test for arbitrary redirection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r38">Test for stored attacks</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r39">Test for OS command injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r40">Test for path traversal</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r41">Test for script injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r42">Test for file inclusion</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r43">Test for SMTP injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r44">Test for native software flaws (buffer overflow, integer bugs, format strings)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r45">Test for SOAP injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r46">Test for LDAP injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r47">Test for XPath injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r48">Test for SSRF and HTTP Redirrects in all redirecting parameters</mat-checkbox>
+
+    <h4>Test application logic</h4>
+
+    <mat-checkbox class="example-margin" formControlName="r49">Identify the logic attack surface</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r50">Test transmission of data via the client</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r51">Test for reliance on client-side input validation</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r52">Test any thick-client components (Java, ActiveX, Flash)</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r53">Test multi-stage processes for logic flaws</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r54">Test handling of incomplete input</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r55">Test trust boundaries</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r56">Test transaction logic</mat-checkbox>
+
+    <h4>Assess application hosting</h4>
+
+    <mat-checkbox class="example-margin" formControlName="r57">Test segregation in shared infrastructures</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r58">Test segregation between ASP-hosted applications</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r59">Test for web server vulnerabilities</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r60">Default credentials</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r61">Default content</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r62">Dangerous HTTP methods</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r63">Proxy functionality</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r64">Virtual hosting mis-configuration</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r65">Bugs in web server software</mat-checkbox>
+
+    <h4>Miscellaneous tests</h4>
+
+    <mat-checkbox class="example-margin" formControlName="r66">Check for DOM-based attacks</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r67">Check for frame injection</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r68">Check for local privacy vulnerabilities</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r69">Persistent cookies</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r70">Caching</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r71">Sensitive data in URL parameters</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r72">Forms with autocomplete enabled</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r73">Follow up any information leakage</mat-checkbox>
+    <mat-checkbox class="example-margin" formControlName="r74">Check for weak SSL ciphers</mat-checkbox>
+
+  </mat-card>
+  
+  <br>
+  <br>
+  <br>

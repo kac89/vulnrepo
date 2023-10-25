@@ -75,6 +75,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AsvsComponent } from './asvs/asvs.component';
 import { DialogAsvs4Component } from './dialog-asvs4/dialog-asvs4.component';
+import { TbhmComponent } from './tbhm/tbhm.component';
 
 @NgModule({
     declarations: [
@@ -105,7 +106,8 @@ import { DialogAsvs4Component } from './dialog-asvs4/dialog-asvs4.component';
         TemplatesListComponent,
         NoSanitizePipe,
         AsvsComponent,
-        DialogAsvs4Component
+        DialogAsvs4Component,
+        TbhmComponent
     ],
     imports: [
         BrowserModule,
