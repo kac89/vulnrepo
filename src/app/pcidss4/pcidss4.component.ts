@@ -133,6 +133,23 @@ export class Pcidss4Component implements OnInit {
     }  
   }
 
+  getcolors(id) {
+
+    if(id === 1){
+      return "#FF0039";
+    } else if (id === 2) {
+      return "#FF7518";
+    } else if (id === 3) {
+      return "#F9EE06";
+    } else if (id === 4) {
+      return "#3FB618";
+    } else if (id === 5) {
+      return "#2780E3";
+    } else if (id === 6) {
+      return "#a2c6f0";
+    }
+
+  }
 
   toggleSpecificGroup(name) {
 

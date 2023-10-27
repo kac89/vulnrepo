@@ -113,7 +113,11 @@
 
                 <ng-container matColumnDef="milestone">
                   <th mat-header-cell *matHeaderCellDef> <b>Milestone</b> </th>
-                  <td mat-cell *matCellDef="let element"> {{element.milestone}} </td>
+                  <td mat-cell *matCellDef="let element"> 
+                    <mat-chip [ngStyle]="{'background-color': getcolors(element.milestone)}">
+                      {{element.milestone}}
+                    </mat-chip>
+                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="saq">
