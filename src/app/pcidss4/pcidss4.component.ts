@@ -37,20 +37,6 @@ export class Pcidss4Component implements OnInit {
   ];
 
   constructor(private http: HttpClient){}
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: pcidssElement): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
-  }
 
   resetselected(){
     if (window.confirm("Do you really want to clear results?")) {
