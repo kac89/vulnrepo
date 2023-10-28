@@ -23,6 +23,7 @@ export class Pcidss4Component implements OnInit {
   selection = new SelectionModel<pcidssElement>(true, []);
   pcidssdata = [];
   pcidss:any;
+  renderedData:any;
   selectsaqmodel = [
     { value: 'All', viewValue: '--- Show all ---' },
     { value: 'SAQ A', viewValue: 'SAQ A - Card-not-present merchants (e-commerce or mail/telephone order)' },
@@ -47,7 +48,7 @@ export class Pcidss4Component implements OnInit {
   parsefunct(arr){
 
     let out:any;
-    out = arr
+    out = arr;
     if (this.selectlevel !== 'All') {
       out = arr.filter((item) => {
         if (item.milestone === Number(this.selectlevel)) {
@@ -55,7 +56,7 @@ export class Pcidss4Component implements OnInit {
         }
       });
     }
-
+    
     if (this.selectsaq !== 'All') {
       out = arr.filter((item) => {
         if (item.saq.some(x => x === this.selectsaq)) {
@@ -63,7 +64,7 @@ export class Pcidss4Component implements OnInit {
         }
       });
     }
-
+    
     if (this.selectsaq !== 'All' && this.selectlevel !== 'All') {
       out = arr.filter((item) => {
         if (item.milestone === Number(this.selectlevel) && item.saq.some(x => x === this.selectsaq)) {
@@ -71,12 +72,39 @@ export class Pcidss4Component implements OnInit {
         }
       });
     }
-    
 
     return out
   }
-  parseSAQ(item){
-    return item.join("<br>");
+
+  onChangeSelect(){
+    let out:any;
+
+    if (this.selectlevel !== 'All') {
+      out = this.dataSource.data.filter((item) => {
+        if (item.milestone === Number(this.selectlevel)) {
+          return item;
+        }
+      });
+    }
+    
+    if (this.selectsaq !== 'All') {
+      out = this.dataSource.data.filter((item) => {
+        if (item.saq.some(x => x === this.selectsaq)) {
+          return item;
+        }
+      });
+    }
+    
+    if (this.selectsaq !== 'All' && this.selectlevel !== 'All') {
+      out = this.dataSource.data.filter((item) => {
+        if (item.milestone === Number(this.selectlevel) && item.saq.some(x => x === this.selectsaq)) {
+          return item;
+        }
+      });
+    }
+
+    this.dataSource = new MatTableDataSource<pcidssElement>(out);
+    this.selection.clear();
   }
 
   isAllSelectedGv(name) {
@@ -143,12 +171,11 @@ export class Pcidss4Component implements OnInit {
     const regex = new RegExp('^'+name+'*');
     
     const filterbyname = this.dataSource.data.filter((item) => {
-      
       if (regex.test(item.id)) {
         return item;
       }
     });
-  
+
     const filterbynameselected = this.selection.selected.filter((item) => {
       if (regex.test(item.id)) {
         return item;
@@ -166,7 +193,7 @@ export class Pcidss4Component implements OnInit {
   ngOnInit() {
     this.selectlevel = 'All';
     this.selectsaq = 'All';
-
+    this.dataSource.connect().subscribe(d => this.renderedData = d);
     this.http.get<any>('/assets/pcidssv4.json?v=' + + new Date()).subscribe(res => {
       this.pcidss = res;
 
@@ -176,7 +203,7 @@ export class Pcidss4Component implements OnInit {
         }   
       }   
 
-      this.dataSource.data = this.pcidssdata;
+      this.dataSource = new MatTableDataSource<pcidssElement>(this.pcidssdata);
     });
 
 
