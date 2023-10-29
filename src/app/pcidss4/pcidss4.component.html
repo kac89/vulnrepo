@@ -37,6 +37,7 @@
               </mat-form-field>
               <br>
               <p>SAQ: {{selectsaq}}</p>
+              <p>{{getextendedinfosaq(selectsaq)}}</p>
     
         </div>
     
@@ -46,19 +47,13 @@
                 <mat-label>Select an Prioritized Approach</mat-label>
           
                 <mat-select [(ngModel)]="selectlevel" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
-                  <mat-option value="All" selected>--- Show all ---</mat-option>
-                  <mat-option value="1">1 - Do not store sensitive authentication data and limit cardholder data
-                    retention.</mat-option>
-                  <mat-option value="2">2 - Protect systems and networks and be prepared to respond to a
-                    system breach.</mat-option>
-                  <mat-option value="3">3 - Secure payment applications.</mat-option>
-                  <mat-option value="4">4 - Monitor and control access to your systems.</mat-option>
-                  <mat-option value="5">5 - Protect stored cardholder data.</mat-option>
-                  <mat-option value="6">6 - Complete remaining compliance efforts, and ensure all controls are in
-                    place.</mat-option>
+                  <mat-option *ngFor="let saq of selectlevelmodel" [value]="saq.value">
+                    {{saq.viewValue}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
               <p>Prioritized Approach: {{selectlevel}}</p>
+              <p>{{getextendedinfo(selectlevel)}}</p>
         </div>
     
       </div>

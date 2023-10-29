@@ -25,16 +25,26 @@ export class Pcidss4Component implements OnInit {
   pcidss:any;
   renderedData:any;
   selectsaqmodel = [
-    { value: 'All', viewValue: '--- Show all ---' },
-    { value: 'SAQ A', viewValue: 'SAQ A - Card-not-present merchants (e-commerce or mail/telephone order)' },
-    { value: 'SAQ A-EP', viewValue: 'SAQ A-EP - e-Commerce merchants' },
-    { value: 'SAQ B', viewValue: 'SAQ B - Brick and mortar or mail/telephone order merchants' },
-    { value: 'SAQ B-IP', viewValue: 'SAQ B-IP - Brick and mortar or mail/telephone order merchants' },
-    { value: 'SAQ C', viewValue: 'SAQ C - Brick and mortar or mail/telephone order merchants' },
-    { value: 'SAQ C-VT', viewValue: 'SAQ C-VT - Brick and mortar or mail/telephone order merchants' },
-    { value: 'SAQ P2PE', viewValue: 'SAQ P2PE - Brick and mortar or mail/telephone order merchants' },
-    { value: 'SAQ D (Merchants)', viewValue: 'SAQ D - Merchants' },
-    { value: 'SAQ D (Service providers)', viewValue: 'SAQ D - Service providers' }
+    { value: 'All', viewValue: '--- Show all ---', extendedinfo: '' },
+    { value: 'SAQ A', viewValue: 'SAQ A - Card-not-present merchants (e-commerce or mail/telephone order)', extendedinfo: 'This self-assessment questionnaire is not applicable for face-to-face channels and is to be completed by merchants who deal with ‘card not present’ transactions i.e. e-Commerce, mail or telephone order. If your organization has outsourced all cardholder functions to PCI DSS compliant third-party service providers and does not electronically store, process or transmit cardholder data on your systems or premises, this SAQ is the right one for you. (Not applicable for Face to Face channels)' },
+    { value: 'SAQ A-EP', viewValue: 'SAQ A-EP - e-Commerce merchants', extendedinfo: 'The ‘A-EP’ selfassessment questionnaire is similar to SAQ A but refers to merchants who outsource all payment processing to PCI DSS validated third parties, and who have a website(s) that doesn’t directly receive cardholder data but that can impact the security of the payment transaction. (Applicable to only e-Commerce channels) ' },
+    { value: 'SAQ B', viewValue: 'SAQ B - Brick and mortar or mail/telephone order merchants', extendedinfo: 'This self-assessment questionnaire is applicable to merchants who use only; imprint machines and/or standalone, dial-out terminals and have no electronic cardholder data transmission, processing and storage. (Not applicable to e-Commerce channels)' },
+    { value: 'SAQ B-IP', viewValue: 'SAQ B-IP - Brick and mortar or mail/telephone order merchants', extendedinfo: 'The B-IP self-assessment questionnaire is applicable to all merchants who only utilise standalone, PTS-approved payment terminals with an IP connection to the payment processor, with no electronic cardholder data storage. This questionnaire covers terminals that are network-based whereas SAQ B is for terminals that transmit data through dial-up. (Not applicable to e-Commerce channels)' },
+    { value: 'SAQ C', viewValue: 'SAQ C - Brick and mortar or mail/telephone order merchants', extendedinfo: 'For merchants with payment application systems connected to the Internet, and who don’t store any cardholder data electronically. (Not applicable to e-Commerce channels)' },
+    { value: 'SAQ C-VT', viewValue: 'SAQ C-VT - Brick and mortar or mail/telephone order merchants', extendedinfo: 'This self-assessment questionnaire is designed for merchants who manually enter a single transaction at a time via a keyboard into an Internet-based virtual terminal solution that is provided and hosted by a PCI DSS validated third-party service provider. These merchants also do not store any cardholder data. (Not applicable to e-Commerce channels) ' },
+    { value: 'SAQ P2PE', viewValue: 'SAQ P2PE - Brick and mortar or mail/telephone order merchants', extendedinfo: 'This self-assessment questionnaire is dedicated for merchants who use approved point-to-point encryption (P2PE) devices, with no electronic card data storage. P2PE stands for point-to-point encryption, which uses specially-approved devices to capture and encrypt cardholder data before that data ever enters a merchants computer network. (Not applicable to e-Commerce channels)' },
+    { value: 'SAQ D (Merchants)', viewValue: 'SAQ D - Merchants', extendedinfo: 'This is a self-assessment questionnaire for merchants who are not described in the above types of SAQs.' },
+    { value: 'SAQ D (Service providers)', viewValue: 'SAQ D - Service providers', extendedinfo: 'All service providers defined by a payment brand as eligible to complete a SAQ.' }
+  ];
+
+  selectlevelmodel = [
+    { value: 'All', viewValue: '--- Show all ---', extendedinfo: '' },
+    { value: '1', viewValue: '1 - Do not store sensitive authentication data and limit cardholder data retention.', extendedinfo: 'This milestone targets a key area of risk for entities that have been compromised. Remember – if sensitive authentication data and other account data are not stored, the effects of a compromise will be greatly reduced. If you don’t need it, don’t store it.' },
+    { value: '2', viewValue: '2 - Protect systems and networks and be prepared to respond to a system breach.', extendedinfo: 'This milestone targets controls for points of access to most compromises and the response processes.' },
+    { value: '3', viewValue: '3 - Secure payment applications.', extendedinfo: 'This milestone targets controls for applications, application processes, and application servers. Weaknesses in these areas are easy prey for compromising systems and obtaining access to cardholder data.' },
+    { value: '4', viewValue: '4 - Monitor and control access to your systems.', extendedinfo: 'Controls for this milestone allow you to detect the who, what, when, and how concerning access to your network and cardholder data environment.' },
+    { value: '5', viewValue: '5 - Protect stored cardholder data.', extendedinfo: 'For those organizations that have analyzed their business processes and determined that they must store Primary Account Numbers, this milestone targets key protection mechanisms for the stored data.' },
+    { value: '6', viewValue: '6 - Complete remaining compliance efforts, and ensure all controls are in place.', extendedinfo: 'This milestone completes PCI DSS requirements and finishes all remaining related policies, procedures, and processes needed to protect the cardholder data environment.' }
   ];
 
   constructor(private http: HttpClient){}
@@ -43,6 +53,36 @@ export class Pcidss4Component implements OnInit {
     if (window.confirm("Do you really want to clear results?")) {
       this.selection.clear();
     }
+  }
+
+  getextendedinfo(level){
+    let out:any;
+    let xx:any;
+    xx = '';
+    out =  this.selectlevelmodel.filter((item) => {
+      if (Number(item.value) === Number(level)) {
+        return item;
+      }
+    });
+    if(out[0]){
+      xx = out[0].extendedinfo;
+    }
+    return xx
+  }
+
+  getextendedinfosaq(level){
+    let out:any;
+    let xx:any;
+    xx = '';
+    out =  this.selectsaqmodel.filter((item) => {
+      if (item.value === level) {
+        return item;
+      }
+    });
+    if(out[0]){
+      xx = out[0].extendedinfo;
+    }
+    return xx
   }
 
   parsefunct(arr){
