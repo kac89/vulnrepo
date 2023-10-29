@@ -54,6 +54,8 @@ export class Pcidss4Component implements OnInit {
             //console.log(s);
             if (this.selection.selected.length > 0) {
               localStorage.setItem("pcidss4", JSON.stringify(this.selection.selected));
+            } else {
+              localStorage.removeItem("pcidss4");
             }
    
        }); 
