@@ -76,7 +76,7 @@ export class Pcidss4Component implements OnInit {
   onChangeSelect(){
     let out = [];
     this.selection.clear();
-    this.dataSource.data = this.pcidss;
+    this.dataSource.data = this.pcidssdata;
     if (this.selectsaq !== 'All' && this.selectlevel !== 'All') {
       out = this.dataSource.data.filter((item) => {
         if (item.milestone === Number(this.selectlevel) && item.saq.some(x => x === this.selectsaq)) {
@@ -84,7 +84,7 @@ export class Pcidss4Component implements OnInit {
         }
       });
       if (out.length > 0) {
-        this.dataSource = new MatTableDataSource<pcidssElement>(out);
+        this.dataSource.data = out;
       }
     } else if (this.selectlevel !== 'All') {
       out = this.dataSource.data.filter((item) => {
@@ -93,7 +93,7 @@ export class Pcidss4Component implements OnInit {
         }
       });
       if (out.length > 0) {
-        this.dataSource = new MatTableDataSource<pcidssElement>(out);
+        this.dataSource.data = out;
       }
     } else if (this.selectsaq !== 'All') {
       out = this.dataSource.data.filter((item) => {
@@ -102,15 +102,15 @@ export class Pcidss4Component implements OnInit {
         }
       });
       if (out.length > 0) {
-        this.dataSource = new MatTableDataSource<pcidssElement>(out);
+        this.dataSource.data = out;
       }
     } 
 
     if (out.length === 0) {
-      this.dataSource = new MatTableDataSource<pcidssElement>(this.pcidssdata);
+      this.dataSource.data = this.pcidssdata;
     }
     if (out.length > 0) {
-      this.dataSource = new MatTableDataSource<pcidssElement>(out);
+      this.dataSource.data = out;
     }
 
   }
@@ -210,7 +210,7 @@ export class Pcidss4Component implements OnInit {
         }   
       }   
 
-      this.dataSource = new MatTableDataSource<pcidssElement>(this.pcidssdata);
+      this.dataSource.data = this.pcidssdata;
     });
 
 
