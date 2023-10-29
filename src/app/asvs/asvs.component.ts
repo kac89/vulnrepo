@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {SelectionModel} from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAsvs4Component } from '../dialog-asvs4/dialog-asvs4.component';
 
@@ -63,6 +63,53 @@ openasvs4dialog(): void {
 
 }
 
+onChangeSelect(){
+  let out = [];
+
+  this.dataSource.data = this.asvsdata;
+  if (this.selectlevel === 'All') {
+    out = this.dataSource.data;
+    if (out.length > 0) {
+      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+    }
+  } else if (this.selectlevel === 'L1') {
+    out = this.dataSource.data.filter((item) => {
+      if (item.L1.Required === true) {
+        return item;
+      }
+    });
+    if (out.length > 0) {
+      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+    }
+  } else if (this.selectlevel === 'L2') {
+    out = this.dataSource.data.filter((item) => {
+      if (item.L2.Required === true) {
+        return item;
+      }
+    });
+    if (out.length > 0) {
+      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+    }
+  } else if (this.selectlevel === 'L3') {
+    out = this.dataSource.data.filter((item) => {
+      if (item.L3.Required === true) {
+        return item;
+      }
+    });
+    if (out.length > 0) {
+      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+    }
+  } 
+
+  if (out.length === 0) {
+    this.dataSource = new MatTableDataSource<PeriodicElement>(this.asvsdata);
+  }
+  if (out.length > 0) {
+    this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+  }
+
+}
+
 parsefunct(arr){
   let out:any;
 
@@ -72,25 +119,19 @@ parsefunct(arr){
         return item;
       }
     });
-  }
-
-  if (this.selectlevel === 'L2') {
+  } else if (this.selectlevel === 'L2') {
     out = arr.filter((item) => {
       if (item.L2.Required === true) {
         return item;
       }
     });
-  }
-  
-  if (this.selectlevel === 'L3') {
+  } else if (this.selectlevel === 'L3') {
     out = arr.filter((item) => {
       if (item.L3.Required === true) {
         return item;
       }
     });
-  }
-
-  if (this.selectlevel === 'All') {
+  } else if (this.selectlevel === 'All') {
     out = arr;
   }
 
@@ -100,9 +141,9 @@ parsefunct(arr){
 isAllSelectedGv(name) {
 
   name = name + '.';
-
+  const regex = new RegExp('^'+name+'*');
   const filterbyname = this.dataSource.data.filter((item) => {
-    if (item.Shortcode.includes(name)) {
+    if (regex.test(item.Shortcode)) {
       return item;
     }
   });
@@ -122,9 +163,9 @@ isAllSelectedGroup(items) {
 checkedfn(name){
 
   name = name + '.';
-
+  const regex = new RegExp('^'+name+'*');
   const filterbynameselected = this.selection.selected.filter((item) => {
-    if (item.Shortcode.includes(name)) {
+    if (regex.test(item.Shortcode)) {
       return item;
     }
   });
@@ -139,15 +180,16 @@ checkedfn(name){
 toggleSpecificGroup(name) {
 
   name = name + '.';
+  const regex = new RegExp('^'+name+'*');
 
   const filterbyname = this.dataSource.data.filter((item) => {
-    if (item.Shortcode.includes(name)) {
+    if (regex.test(item.Shortcode)) {
       return item;
     }
   });
 
   const filterbynameselected = this.selection.selected.filter((item) => {
-    if (item.Shortcode.includes(name)) {
+    if (regex.test(item.Shortcode)) {
       return item;
     }
   });
@@ -196,7 +238,7 @@ resetselected() {
         }   
       }   
 
-      this.dataSource.data = this.asvsdata;
+      this.dataSource = new MatTableDataSource<PeriodicElement>(this.asvsdata);
 
       this.selectRows();
     });
