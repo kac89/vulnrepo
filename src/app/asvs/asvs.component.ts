@@ -141,9 +141,9 @@ parsefunct(arr){
 isAllSelectedGv(name) {
 
   name = name + '.';
-  const regex = new RegExp('^'+name+'*');
+
   const filterbyname = this.dataSource.data.filter((item) => {
-    if (regex.test(item.Shortcode)) {
+    if (item.Shortcode.includes(name)) {
       return item;
     }
   });
@@ -163,9 +163,9 @@ isAllSelectedGroup(items) {
 checkedfn(name){
 
   name = name + '.';
-  const regex = new RegExp('^'+name+'*');
+
   const filterbynameselected = this.selection.selected.filter((item) => {
-    if (regex.test(item.Shortcode)) {
+    if (item.Shortcode.includes(name)) {
       return item;
     }
   });
@@ -180,16 +180,15 @@ checkedfn(name){
 toggleSpecificGroup(name) {
 
   name = name + '.';
-  const regex = new RegExp('^'+name+'*');
 
   const filterbyname = this.dataSource.data.filter((item) => {
-    if (regex.test(item.Shortcode)) {
+    if (item.Shortcode.includes(name)) {
       return item;
     }
   });
 
   const filterbynameselected = this.selection.selected.filter((item) => {
-    if (regex.test(item.Shortcode)) {
+    if (item.Shortcode.includes(name)) {
       return item;
     }
   });
