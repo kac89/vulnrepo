@@ -237,7 +237,7 @@ resetselected() {
         }   
       }   
 
-      this.dataSource = new MatTableDataSource<PeriodicElement>(this.asvsdata);
+      this.dataSource.data = this.asvsdata;
 
       this.selectRows();
     });
