@@ -70,7 +70,7 @@ onChangeSelect(){
   if (this.selectlevel === 'All') {
     out = this.dataSource.data;
     if (out.length > 0) {
-      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+      this.dataSource.data = out;
     }
   } else if (this.selectlevel === 'L1') {
     out = this.dataSource.data.filter((item) => {
@@ -79,7 +79,7 @@ onChangeSelect(){
       }
     });
     if (out.length > 0) {
-      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+      this.dataSource.data = out;
     }
   } else if (this.selectlevel === 'L2') {
     out = this.dataSource.data.filter((item) => {
@@ -88,7 +88,7 @@ onChangeSelect(){
       }
     });
     if (out.length > 0) {
-      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+      this.dataSource.data = out;
     }
   } else if (this.selectlevel === 'L3') {
     out = this.dataSource.data.filter((item) => {
@@ -97,15 +97,15 @@ onChangeSelect(){
       }
     });
     if (out.length > 0) {
-      this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+      this.dataSource.data = out;
     }
   } 
 
   if (out.length === 0) {
-    this.dataSource = new MatTableDataSource<PeriodicElement>(this.asvsdata);
+    this.dataSource.data = this.asvsdata;
   }
   if (out.length > 0) {
-    this.dataSource = new MatTableDataSource<PeriodicElement>(out);
+    this.dataSource.data = out;
   }
 
 }

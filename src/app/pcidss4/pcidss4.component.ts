@@ -22,6 +22,7 @@ export class Pcidss4Component implements OnInit {
   dataSource = new MatTableDataSource<pcidssElement>();
   selection = new SelectionModel<pcidssElement>(true, []);
   pcidssdata = [];
+  localstoragepcidss4 = JSON.parse(localStorage.getItem("pcidss4"));
   pcidss:any;
   renderedData:any;
   selectsaqmodel = [
@@ -47,11 +48,21 @@ export class Pcidss4Component implements OnInit {
     { value: '6', viewValue: '6 - Complete remaining compliance efforts, and ensure all controls are in place.', extendedinfo: 'This milestone completes PCI DSS requirements and finishes all remaining related policies, procedures, and processes needed to protect the cardholder data environment.' }
   ];
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient){
+    this.selection.changed.subscribe(
+      (s)=>{
+            //console.log(s);
+            if (this.selection.selected.length > 0) {
+              localStorage.setItem("pcidss4", JSON.stringify(this.selection.selected));
+            }
+   
+       }); 
+  }
 
   resetselected(){
     if (window.confirm("Do you really want to clear results?")) {
       this.selection.clear();
+      localStorage.removeItem("pcidss4");
     }
   }
 
@@ -83,6 +94,19 @@ export class Pcidss4Component implements OnInit {
       xx = out[0].extendedinfo;
     }
     return xx
+  }
+
+  selectRows() {
+    this.renderedData.forEach(row => {
+      if (this.localstoragepcidss4 !== null) {
+        this.localstoragepcidss4.forEach((item) => {
+          if(item.id === row.id){
+            this.selection.select(row);
+            return;
+           }
+        });
+      }
+    });
   }
 
   parsefunct(arr){
@@ -251,6 +275,8 @@ export class Pcidss4Component implements OnInit {
       }   
 
       this.dataSource.data = this.pcidssdata;
+
+      this.selectRows();
     });
 
 
