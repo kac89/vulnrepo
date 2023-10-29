@@ -174,8 +174,6 @@ export class Pcidss4Component implements OnInit {
   }
 
   toggleSpecificGroup(name) {
-
-    console.log(name);
     name = name + '.';
     const regex = new RegExp('^'+name+'*');
     
@@ -184,9 +182,6 @@ export class Pcidss4Component implements OnInit {
         return item;
       }
     });
-    console.log(this.dataSource.data);
-    console.log(filterbyname);
-    console.log(this.selection.selected);
 
     const filterbynameselected = this.selection.selected.filter((item) => {
       if (regex.test(item.id)) {
