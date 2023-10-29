@@ -38,6 +38,8 @@ constructor(private http: HttpClient, public dialog: MatDialog){
           //console.log(s);
           if (this.selection.selected.length > 0) {
             localStorage.setItem("asvs4", JSON.stringify(this.selection.selected));
+          } else {
+            localStorage.removeItem("asvs4");
           }
  
      }); 
