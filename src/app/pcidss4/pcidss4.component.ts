@@ -49,25 +49,22 @@ export class Pcidss4Component implements OnInit {
 
     let out:any;
     out = arr;
-    if (this.selectlevel !== 'All') {
+
+    if (this.selectsaq !== 'All' && this.selectlevel !== 'All') {
+      out = arr.filter((item) => {
+        if (item.milestone === Number(this.selectlevel) && item.saq.some(x => x === this.selectsaq)) {
+          return item;
+        }
+      });
+    } else if (this.selectlevel !== 'All') {
       out = arr.filter((item) => {
         if (item.milestone === Number(this.selectlevel)) {
           return item;
         }
       });
-    }
-    
-    if (this.selectsaq !== 'All') {
+    } else if (this.selectsaq !== 'All') {
       out = arr.filter((item) => {
         if (item.saq.some(x => x === this.selectsaq)) {
-          return item;
-        }
-      });
-    }
-    
-    if (this.selectsaq !== 'All' && this.selectlevel !== 'All') {
-      out = arr.filter((item) => {
-        if (item.milestone === Number(this.selectlevel) && item.saq.some(x => x === this.selectsaq)) {
           return item;
         }
       });
@@ -77,34 +74,45 @@ export class Pcidss4Component implements OnInit {
   }
 
   onChangeSelect(){
-    let out:any;
-
-    if (this.selectlevel !== 'All') {
-      out = this.dataSource.data.filter((item) => {
-        if (item.milestone === Number(this.selectlevel)) {
-          return item;
-        }
-      });
-    }
-    
-    if (this.selectsaq !== 'All') {
-      out = this.dataSource.data.filter((item) => {
-        if (item.saq.some(x => x === this.selectsaq)) {
-          return item;
-        }
-      });
-    }
-    
+    let out = [];
+    this.selection.clear();
+    this.dataSource.data = this.pcidss;
     if (this.selectsaq !== 'All' && this.selectlevel !== 'All') {
       out = this.dataSource.data.filter((item) => {
         if (item.milestone === Number(this.selectlevel) && item.saq.some(x => x === this.selectsaq)) {
           return item;
         }
       });
+      if (out.length > 0) {
+        this.dataSource = new MatTableDataSource<pcidssElement>(out);
+      }
+    } else if (this.selectlevel !== 'All') {
+      out = this.dataSource.data.filter((item) => {
+        if (item.milestone === Number(this.selectlevel)) {
+          return item;
+        }
+      });
+      if (out.length > 0) {
+        this.dataSource = new MatTableDataSource<pcidssElement>(out);
+      }
+    } else if (this.selectsaq !== 'All') {
+      out = this.dataSource.data.filter((item) => {
+        if (item.saq.some(x => x === this.selectsaq)) {
+          return item;
+        }
+      });
+      if (out.length > 0) {
+        this.dataSource = new MatTableDataSource<pcidssElement>(out);
+      }
+    } 
+
+    if (out.length === 0) {
+      this.dataSource = new MatTableDataSource<pcidssElement>(this.pcidssdata);
+    }
+    if (out.length > 0) {
+      this.dataSource = new MatTableDataSource<pcidssElement>(out);
     }
 
-    this.dataSource = new MatTableDataSource<pcidssElement>(out);
-    this.selection.clear();
   }
 
   isAllSelectedGv(name) {
@@ -167,6 +175,7 @@ export class Pcidss4Component implements OnInit {
 
   toggleSpecificGroup(name) {
 
+    console.log(name);
     name = name + '.';
     const regex = new RegExp('^'+name+'*');
     
@@ -175,6 +184,9 @@ export class Pcidss4Component implements OnInit {
         return item;
       }
     });
+    console.log(this.dataSource.data);
+    console.log(filterbyname);
+    console.log(this.selection.selected);
 
     const filterbynameselected = this.selection.selected.filter((item) => {
       if (regex.test(item.id)) {
