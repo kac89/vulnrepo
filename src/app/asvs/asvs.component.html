@@ -29,7 +29,7 @@
     <mat-form-field color="accent" appearance="fill">
       <mat-label>Select an ASVS level</mat-label>
 
-      <mat-select [(ngModel)]="selectlevel" disableRipple color="accent">
+      <mat-select [(ngModel)]="selectlevel" disableRipple (ngModelChange)="onChangeSelect()" color="accent">
         <mat-option value="All" selected>--- Show all ---</mat-option>
         <mat-option value="L1">Level 1 - First steps, automated, or whole of portfolio view</mat-option>
         <mat-option value="L2">Level 2 - Most applications</mat-option>

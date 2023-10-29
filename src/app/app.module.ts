@@ -76,6 +76,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AsvsComponent } from './asvs/asvs.component';
 import { DialogAsvs4Component } from './dialog-asvs4/dialog-asvs4.component';
 import { TbhmComponent } from './tbhm/tbhm.component';
+import { Pcidss4Component } from './pcidss4/pcidss4.component';
 
 @NgModule({
     declarations: [
@@ -107,7 +108,8 @@ import { TbhmComponent } from './tbhm/tbhm.component';
         NoSanitizePipe,
         AsvsComponent,
         DialogAsvs4Component,
-        TbhmComponent
+        TbhmComponent,
+        Pcidss4Component
     ],
     imports: [
         BrowserModule,

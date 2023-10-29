@@ -12,6 +12,7 @@ import { TemplatesListComponent } from './templates-list/templates-list.componen
 import { DeactivateGuardService } from './deactivate-guard.service';
 import { AsvsComponent } from './asvs/asvs.component';
 import { TbhmComponent } from './tbhm/tbhm.component';
+import { Pcidss4Component } from './pcidss4/pcidss4.component';
 
 const routes: Routes = [{
   path: 'home',
@@ -37,6 +38,11 @@ const routes: Routes = [{
   path: 'asvs4',
   pathMatch: 'full',
   component: AsvsComponent
+},
+{
+  path: 'pcidss4',
+  pathMatch: 'full',
+  component: Pcidss4Component
 },
 {
   path: 'tbhm',

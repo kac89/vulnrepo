@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {SelectionModel} from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAsvs4Component } from '../dialog-asvs4/dialog-asvs4.component';
 
@@ -38,6 +38,8 @@ constructor(private http: HttpClient, public dialog: MatDialog){
           //console.log(s);
           if (this.selection.selected.length > 0) {
             localStorage.setItem("asvs4", JSON.stringify(this.selection.selected));
+          } else {
+            localStorage.removeItem("asvs4");
           }
  
      }); 
@@ -63,6 +65,53 @@ openasvs4dialog(): void {
 
 }
 
+onChangeSelect(){
+  let out = [];
+
+  this.dataSource.data = this.asvsdata;
+  if (this.selectlevel === 'All') {
+    out = this.dataSource.data;
+    if (out.length > 0) {
+      this.dataSource.data = out;
+    }
+  } else if (this.selectlevel === 'L1') {
+    out = this.dataSource.data.filter((item) => {
+      if (item.L1.Required === true) {
+        return item;
+      }
+    });
+    if (out.length > 0) {
+      this.dataSource.data = out;
+    }
+  } else if (this.selectlevel === 'L2') {
+    out = this.dataSource.data.filter((item) => {
+      if (item.L2.Required === true) {
+        return item;
+      }
+    });
+    if (out.length > 0) {
+      this.dataSource.data = out;
+    }
+  } else if (this.selectlevel === 'L3') {
+    out = this.dataSource.data.filter((item) => {
+      if (item.L3.Required === true) {
+        return item;
+      }
+    });
+    if (out.length > 0) {
+      this.dataSource.data = out;
+    }
+  } 
+
+  if (out.length === 0) {
+    this.dataSource.data = this.asvsdata;
+  }
+  if (out.length > 0) {
+    this.dataSource.data = out;
+  }
+
+}
+
 parsefunct(arr){
   let out:any;
 
@@ -72,25 +121,19 @@ parsefunct(arr){
         return item;
       }
     });
-  }
-
-  if (this.selectlevel === 'L2') {
+  } else if (this.selectlevel === 'L2') {
     out = arr.filter((item) => {
       if (item.L2.Required === true) {
         return item;
       }
     });
-  }
-  
-  if (this.selectlevel === 'L3') {
+  } else if (this.selectlevel === 'L3') {
     out = arr.filter((item) => {
       if (item.L3.Required === true) {
         return item;
       }
     });
-  }
-
-  if (this.selectlevel === 'All') {
+  } else if (this.selectlevel === 'All') {
     out = arr;
   }
 
