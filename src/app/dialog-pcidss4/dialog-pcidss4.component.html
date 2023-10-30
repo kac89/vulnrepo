@@ -1,0 +1,38 @@
+<div class="mdc-card my-card-content">
+    <h1 class="mat-display" mat-dialog-title>
+        PCI DSS v4.0 Export
+    </h1>
+    <mat-dialog-content class="mat-typography">
+        <p>From</p>
+        <mat-form-field color="accent">
+            <mat-label>Select an option</mat-label>
+            <mat-select [(value)]="selected">
+              <mat-option value="checked">Export checked</mat-option>
+              <mat-option value="unsel">Export unselected</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p>Exported file will be encrypted by default:</p>
+          <mat-form-field class="example-full-width" color="accent">
+              <input matInput cdkFocusInitial placeholder="Set report security key" [formControl]="pass"
+                  [type]="hide ? 'password' : 'text'">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width" color="accent">
+              <input matInput placeholder="Re-enter report security key" [formControl]="pass2"
+                  [type]="hide ? 'password' : 'text'">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+
+          <p style="color: red">{{text}}</p>
+
+          <p>The VULN file can be imported into the report.</p>
+    </mat-dialog-content>
+
+    <hr>
+    <div mat-dialog-actions>
+        <button mat-raised-button color="accent" (click)="exportitems()"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon> Download</button>
+        &nbsp;
+        <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+      </div>
+</div>

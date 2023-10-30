@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DialogPcidss4Component } from '../dialog-pcidss4/dialog-pcidss4.component';
 
 export interface pcidssElement {
   id: string;
@@ -25,6 +27,7 @@ export class Pcidss4Component implements OnInit {
   localstoragepcidss4 = JSON.parse(localStorage.getItem("pcidss4"));
   pcidss:any;
   renderedData:any;
+  dialogRef: MatDialogRef<DialogPcidss4Component>;
   selectsaqmodel = [
     { value: 'All', viewValue: '--- Show all ---', extendedinfo: '' },
     { value: 'SAQ A', viewValue: 'SAQ A - Card-not-present merchants (e-commerce or mail/telephone order)', extendedinfo: 'This self-assessment questionnaire is not applicable for face-to-face channels and is to be completed by merchants who deal with ‘card not present’ transactions i.e. e-Commerce, mail or telephone order. If your organization has outsourced all cardholder functions to PCI DSS compliant third-party service providers and does not electronically store, process or transmit cardholder data on your systems or premises, this SAQ is the right one for you. (Not applicable for Face to Face channels)' },
@@ -48,7 +51,7 @@ export class Pcidss4Component implements OnInit {
     { value: '6', viewValue: '6 - Complete remaining compliance efforts, and ensure all controls are in place.', extendedinfo: 'This milestone completes PCI DSS requirements and finishes all remaining related policies, procedures, and processes needed to protect the cardholder data environment.' }
   ];
 
-  constructor(private http: HttpClient){
+  constructor(private http: HttpClient, public dialog: MatDialog){
     this.selection.changed.subscribe(
       (s)=>{
             //console.log(s);
@@ -66,6 +69,21 @@ export class Pcidss4Component implements OnInit {
       this.selection.clear();
       localStorage.removeItem("pcidss4");
     }
+  }
+
+  openpcidss4dialog(): void {
+
+    const dialogRef = this.dialog.open(DialogPcidss4Component, {
+      width: '400px',
+      disableClose: false,
+      data: [this.parsefunct(this.pcidssdata), this.selection.selected]
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log(result);
+      console.log('The ASVS4 dialog was closed');
+    });
+  
   }
 
   getextendedinfo(level){
