@@ -77,6 +77,7 @@ import { AsvsComponent } from './asvs/asvs.component';
 import { DialogAsvs4Component } from './dialog-asvs4/dialog-asvs4.component';
 import { TbhmComponent } from './tbhm/tbhm.component';
 import { Pcidss4Component } from './pcidss4/pcidss4.component';
+import { DialogPcidss4Component } from './dialog-pcidss4/dialog-pcidss4.component';
 
 @NgModule({
     declarations: [
@@ -109,7 +110,8 @@ import { Pcidss4Component } from './pcidss4/pcidss4.component';
         AsvsComponent,
         DialogAsvs4Component,
         TbhmComponent,
-        Pcidss4Component
+        Pcidss4Component,
+        DialogPcidss4Component
     ],
     imports: [
         BrowserModule,
