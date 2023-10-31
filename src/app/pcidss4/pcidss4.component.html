@@ -121,9 +121,15 @@
                 <ng-container matColumnDef="saq">
                   <th mat-header-cell *matHeaderCellDef> <b>SAQ</b> </th>
                   <td mat-cell *matCellDef="let element">
-                    <mat-chip *ngFor="let saqit of element.saq">
-                      {{saqit}}
-                    </mat-chip>
+
+
+                    <mat-chip-listbox class="mat-mdc-chip-set-stacked" style="max-width: 250px">
+                      <mat-chip-option *ngFor="let chip of element.saq" style="max-width: 250px" [selected]="getselectchip(chip, selectsaq)" [color]="colorchip(chip, selectsaq)" disabled>
+                        {{chip}}
+                      </mat-chip-option>
+                    </mat-chip-listbox>
+
+
                 </ng-container>
               
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -71,6 +71,23 @@ export class Pcidss4Component implements OnInit {
     }
   }
 
+  getselectchip(chip, selectsaq){
+    if (chip === selectsaq) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  colorchip(chip, selectsaq){
+    if (chip === selectsaq) {
+      return 'accent';
+    } else {
+      return 'info';
+    }
+  }
+
   openpcidss4dialog(): void {
 
     const dialogRef = this.dialog.open(DialogPcidss4Component, {

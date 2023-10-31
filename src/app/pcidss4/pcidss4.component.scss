@@ -1,3 +1,31 @@
 .example-full-width {
     width: 100%;
   }
+  table {
+    width: 100%;
+  }
+  
+  .mat-mdc-header-cell:first-child,.mat-mdc-cell:first-child{
+    flex:5%;
+    text-align: center;
+    justify-content: center;
+  }
+  .mat-mdc-header-cell:nth-child(2),.mat-mdc-cell:nth-child(2){
+    flex:5%;
+    text-align: center;
+    justify-content: center;
+  }
+  .mat-mdc-header-cell:nth-child(3),.mat-mdc-cell:nth-child(3){
+    flex:60%;
+    justify-content: flex-start;
+  }
+  .mat-mdc-header-cell:nth-child(4),.mat-mdc-cell:nth-child(4){
+    flex:10%;
+    text-align: center;
+    justify-content: center;
+  }
+  .mat-mdc-header-cell:last-child,.mat-mdc-cell:last-child{
+    flex:20%;
+    justify-content: flex-end;
+  }
+  
