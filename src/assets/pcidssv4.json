@@ -1,6 +1,6 @@
 {
 	"name": "PCI DSS v4.0",
-	"author": "",
+	"json_author": "Kacper Rybczyński (https://kacperrybczynski.com)",
 	"items": [
         {
             "requirement": "Requirement 1: Install and Maintain Network Security Controls",
