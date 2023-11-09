@@ -65,7 +65,7 @@
 
   <br> <br>
 
-<mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
+<mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1 sticky">
 
   Requirements: {{parsefunct(pcidssdata).length}} Checked: {{selection.selected.length}}<br>
   <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(pcidssdata).length) * 100}}"></mat-progress-bar>
