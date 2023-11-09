@@ -36,7 +36,9 @@
         <mat-option value="L3">Level 3 - High value, high assurance, or high safety</mat-option>
       </mat-select>
     </mat-form-field>
-
+  </mat-card>
+  <br>
+  <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1 sticky">
     <div>ASVS Level: {{selectlevel}} Items: {{parsefunct(asvsdata).length}} Checked: {{selection.selected.length}}</div>
     <div>
       <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(asvsdata).length) * 100}}"></mat-progress-bar>
