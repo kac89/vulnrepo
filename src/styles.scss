@@ -175,13 +175,15 @@ mat-icon.size-45 {
 }
 
 .notify-snackbar-success {
-  background: #69f0ae;
-  color: #000;
+  --mdc-snackbar-container-color: #69f0ae;
+  --mat-mdc-snack-bar-button-color: #000;
+  --mdc-snackbar-supporting-text-color: #000;
 }
 
 .notify-snackbar-fail {
-  background: #b71c1c;
-  color: #000;
+  --mdc-snackbar-container-color: #b71c1c;
+  --mat-mdc-snack-bar-button-color: #000;
+  --mdc-snackbar-supporting-text-color: #000;  
 }
 
 .mdc-list-item--selected .mdc-list-item__primary-text, .mdc-list-item--activated .mdc-list-item__primary-text {
