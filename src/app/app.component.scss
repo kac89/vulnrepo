@@ -10,3 +10,31 @@
     
     color: red;
 }
+.neon {
+    position: relative;
+    display: inline-block;
+    color: transparent;
+    -webkit-text-stroke: 1.5px #16bf6e;
+    text-shadow: 0 0 20px rgba(0,255,0,.5);
+  }
+  .neon span {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    opacity: .3;
+  }
+
+  .flash {
+    animation: flash-animation 5s linear infinite;
+  }
+  @keyframes flash-animation {
+    0%   {opacity: 1;}
+    50%  {opacity: 1;}
+    51%  {opacity: 0.3;}
+    52%  {opacity: 1;}
+    75% {opacity: 1;}
+    76% {opacity: 0.6;}
+    77% {opacity: 1;}
+    78% {opacity: 0.3;}
+    79% {opacity: 1;}
+  }

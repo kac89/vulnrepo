@@ -4,7 +4,10 @@
       <mat-icon>menu</mat-icon>
     </button>
     <span style="display: contents;">
-      <img style="margin-right: 5px;" width="35px" src="assets/logo/vulnrepo_logo.png"> <span style="color:white">VULNRΞPO</span>&nbsp;<small>v.β <small *ngIf="app_ver != ''"><span style="text-decoration: underline;text-decoration-color: #69f0ae"><a title="Version Rev ID: {{app_ver}}" target="_blank" style="font-size: smaller; color: rgba(255, 255, 255, 0.7);" href="https://github.com/kac89/vulnrepo/commit/{{app_ver}}">#{{app_ver_short}}</a></span></small></small>
+      <img style="margin-right: 5px;" width="35px" src="assets/logo/vulnrepo_logo.png"> 
+      
+      <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
+      &nbsp;<small>v.β <small *ngIf="app_ver != ''"><span style="text-decoration: underline;text-decoration-color: #69f0ae"><a title="Version Rev ID: {{app_ver}}" target="_blank" style="font-size: smaller; color: rgba(255, 255, 255, 0.7);" href="https://github.com/kac89/vulnrepo/commit/{{app_ver}}">#{{app_ver_short}}</a></span></small></small>
     </span>
     <div *ngIf="show_status" class="title-center">
 
