@@ -1,24 +1,23 @@
 <div>
 
   <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-    <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-      <h1 class="mat-headline-3">
-        <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> Application Security
-        Verification Standard
-      </h1>
-
+    <div fxLayoutAlign="center center" fxFlex="10%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <img width="60px" src="assets/issue.png">
+    </div>
+    <div fxLayoutAlign="start center" fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <h1 style="margin: 0 0 0;" class="mat-headline-3">Application Security Verification Standard</h1>
     </div>
 
-    <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+    <div fxLayoutAlign="end center" fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
       <button mat-raised-button color="accent" (click)="openasvs4dialog()"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon> Export</button>
       &nbsp;&nbsp;
       <button mat-raised-button color="warn" (click)="resetselected()"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Reset/Unselect all</button>
 
     </div>
-
   </div>
+
+  <br>
 
   <mat-card *ngIf="asvs" appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
     {{asvs.Description}} <a class="active-link" target="_blank" href="https://owasp.org/www-project-application-security-verification-standard/">ASVS more info</a>
