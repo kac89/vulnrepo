@@ -1,23 +1,20 @@
 <div>
 
-    <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-        <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-    
-          <h1 class="mat-headline-3">
-            <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> The Bug Hunter's Methodology
-          </h1>
-    
-        </div>
-
-        <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-          <button mat-raised-button color="warn" (click)="resetselected()"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Reset/Unselect all</button>
-    
-        </div>
-    
-      </div>
+  <div fxLayout="row wrap" fxLayoutGap="10px grid">
+    <div fxLayoutAlign="center center" fxFlex="10%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <img width="60px" src="assets/issue.png">
+    </div>
+    <div fxLayoutAlign="start center" fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <h1 style="margin: 0 0 0;" class="mat-headline-3">The Bug Hunter's Methodology</h1>
+    </div>
+    <div fxLayoutAlign="end center" fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <button mat-raised-button color="warn" (click)="resetselected()"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Reset/Unselect all</button>
+    </div>
+  </div>
     
 </div>
+
+<br>
 
 <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
     <h2>Fast Testing Checklist</h2>
