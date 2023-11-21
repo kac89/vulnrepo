@@ -7,12 +7,6 @@
       <img style="margin-right: 15px;" width="35px" src="assets/logo/vulnrepo_logo.png"> 
       
       <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
-      &nbsp;&nbsp;&nbsp;<small class="mdc-typography--caption">v.β <small *ngIf="app_ver != ''">
-        <span class="mdc-typography--caption">
-          <a title="Version Rev ID: {{app_ver}}" target="_blank" style="color: rgba(111, 111, 111, 0.7);" href="https://github.com/kac89/vulnrepo/commit/{{app_ver}}">{{app_ver_short}}</a>
-        </span>
-      </small>
-    </small>
     </span>
     <div *ngIf="show_status" class="title-center">
 
@@ -64,9 +58,12 @@
           Settings
         </a>
         <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
-          <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
+          <mat-icon class="vertical-align-middle padding-bottom-3">live_help
+          </mat-icon>
           FAQ
         </a>
+
+        <button mat-menu-item (click)="goAbout()"><mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
 
         <div *ngIf="show_active_reports">
 
@@ -149,6 +146,7 @@
         <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
         FAQ
       </a>
+      <button mat-menu-item (click)="goAbout()"><mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
       <a (click)="sidenav.toggle()" mat-menu-item>
         <mat-icon>close</mat-icon> Close
       </a>

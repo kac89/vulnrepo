@@ -207,8 +207,7 @@
 
           <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-            <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu"
-              color="accent">
+            <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu">
               <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
             </button>
             <mat-menu #menu="matMenu">
