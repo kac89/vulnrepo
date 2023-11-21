@@ -69,7 +69,7 @@ export class AppComponent implements OnInit, OnDestroy {
   goAbout(): void {
 
     const dialogRef = this.dialog.open(DialogAboutComponent, {
-      width: '800px',
+      width: '500px',
       disableClose: false,
       data: []
     });
