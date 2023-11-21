@@ -3,8 +3,9 @@ import { IndexeddbService } from './indexeddb.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { version } from "../version";
 import { SessionstorageserviceService } from "./sessionstorageservice.service"
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +18,10 @@ export class AppComponent implements OnInit, OnDestroy {
   enc_status: any;
   subscription: Subscription;
   show_active_reports = false;
-  app_ver = '';
   arr_oreports = [];
-  app_ver_short = '';
+  dialogRef: MatDialogRef<DialogAboutComponent>;
 
-  constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService) {
+  constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService,public dialog: MatDialog) {
     this.sessionsub.storageChange.subscribe( data => {
       // console.log(data);
       this.getopenreports();
@@ -30,13 +30,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.show_active_reports = false;
-    this.app_ver = version.number;
-    
-    if (this.app_ver !== ''){
-
-      this.app_ver_short = this.app_ver.substring(0, 7)
-
-    }
 
     const db = window.indexedDB.open('testindexeddb');
     db.onerror = () => {
@@ -71,6 +64,20 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
+  }
+
+  goAbout(): void {
+
+    const dialogRef = this.dialog.open(DialogAboutComponent, {
+      width: '800px',
+      disableClose: false,
+      data: []
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The CVSS dialog was closed');
+    });
+
   }
 
   getopenreports() {

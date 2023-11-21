@@ -78,6 +78,7 @@ import { DialogAsvs4Component } from './dialog-asvs4/dialog-asvs4.component';
 import { TbhmComponent } from './tbhm/tbhm.component';
 import { Pcidss4Component } from './pcidss4/pcidss4.component';
 import { DialogPcidss4Component } from './dialog-pcidss4/dialog-pcidss4.component';
+import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 
 @NgModule({
     declarations: [
@@ -111,7 +112,8 @@ import { DialogPcidss4Component } from './dialog-pcidss4/dialog-pcidss4.componen
         DialogAsvs4Component,
         TbhmComponent,
         Pcidss4Component,
-        DialogPcidss4Component
+        DialogPcidss4Component,
+        DialogAboutComponent
     ],
     imports: [
         BrowserModule,
