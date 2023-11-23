@@ -27,7 +27,7 @@ export class DialogAboutComponent implements OnInit {
     }
   }
 
-  cancel(): void {
+  closedialog(): void {
     this.dialogRef.close();
   }
 
