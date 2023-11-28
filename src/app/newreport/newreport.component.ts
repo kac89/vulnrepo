@@ -47,7 +47,14 @@ export class NewreportComponent implements OnInit {
     this.indexeddbService.retrieveReportProfile().then(ret => {
       if (ret) {
         this.ReportProfilesList = ret;
-    
+
+        if(this.ReportProfilesList.length === 1) {
+
+          this.selected_profilefin = this.ReportProfilesList[0].profile_name;
+          this.profileSettingsselected = this.ReportProfilesList[0];
+          this.selected_profile = this.ReportProfilesList[0];
+        }
+        
         this.getAllreportprofilesfromapi();
 
       }
@@ -66,7 +73,6 @@ export class NewreportComponent implements OnInit {
 
   getAllreportprofilesfromapi() {
   
-
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       this.msg = 'API connection please wait...';
@@ -111,7 +117,7 @@ export class NewreportComponent implements OnInit {
       this.indexeddbService.retrieveAPIkey().then(ret => {
         
         if (ret) {
-          
+
           if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
             setTimeout(_ => this.openDialog(ret));
           }
