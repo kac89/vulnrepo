@@ -246,6 +246,12 @@ curl \
   vulnrepojsonexport(pass, pass2) {
 
     if (pass === pass2) {
+
+
+      if (this.isReturn.length > 0) {
+        this.data = this.isReturn;
+      }
+
       const json = JSON.stringify(this.data);
       // Encrypt
       const ciphertext = Crypto.AES.encrypt(json, pass);
