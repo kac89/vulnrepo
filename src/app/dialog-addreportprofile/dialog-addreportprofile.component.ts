@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dialog-addreportprofile',
@@ -34,7 +35,7 @@ export class DialogAddreportprofileComponent implements OnInit {
   ResWeb = new UntypedFormControl();
   origi = [];
 
-  constructor(public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(private http: HttpClient, public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
 
@@ -180,4 +181,11 @@ export class DialogAddreportprofileComponent implements OnInit {
       });
   }
 
+  selectcss(event) {
+    if (event.value === 'monospace') {
+      this.http.get('/assets/report-css/monospace.css', { responseType: 'text' }).subscribe(ret => {
+        this.report_css.setValue(ret);
+      });
+    }
+  }
 }
