@@ -29,6 +29,9 @@ Video walkthrough/Tutorial:
     - Build your own backend system to store reports!
  - Report template customization
     - New version of HTML report allow easy template edit or CSS.
+ - Methodology
+    - Use audit tool to make sure nothing missing in the report!
+
 
 ## Development server
 
