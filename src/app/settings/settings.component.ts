@@ -11,6 +11,7 @@ import { SessionstorageserviceService } from "../sessionstorageservice.service"
 
 export interface ApiList {
   apikey: string;
+  organisation: string;
   apiname: string;
   apiurl: string;
   status: string;
@@ -54,7 +55,7 @@ export class SettingsComponent implements OnInit {
   ReportProfilesdisplayedColumns: string[] = ['source', 'profile_name', 'profile_settings'];
   ReportProfilesdataSource = new MatTableDataSource([]);
 
-  displayedColumns: string[] = ['apiname', 'status', 'created', 'expires', 'storage', 'settings'];
+  displayedColumns: string[] = ['apiname', 'organisation', 'status', 'created', 'expires', 'storage', 'settings'];
   dataSource = new MatTableDataSource([]);
 
 
@@ -208,7 +209,7 @@ export class SettingsComponent implements OnInit {
               const stor = this.current_storage / this.max_storage * 100;
 
               // tslint:disable-next-line:max-line-length
-              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Connected', created: resp.CREATEDATE, expires: resp.EXPIRYDATE + ' (' + this.remain + ' days left)', current_storage: stor };
+              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: this.user, status: 'Connected', created: resp.CREATEDATE, expires: resp.EXPIRYDATE + ' (' + this.remain + ' days left)', current_storage: stor };
               elementlist.push(elementdata);
               this.dataSource.data = elementlist;
               this.tryconnectdb = false;
@@ -216,12 +217,12 @@ export class SettingsComponent implements OnInit {
 
               if (resp === null) {
                 // tslint:disable-next-line:max-line-length
-                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Not connected: wrong API key?', created: '', expires: '', current_storage: 0 };
+                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: '', status: 'Not connected: wrong API key?', created: '', expires: '', current_storage: 0 };
                 elementlist.push(elementdata);
                 this.dataSource.data = elementlist;
               } else {
                 // tslint:disable-next-line:max-line-length
-                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, status: 'Not connected', created: '', expires: '', current_storage: 0 };
+                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: '', status: 'Not connected', created: '', expires: '', current_storage: 0 };
                 elementlist.push(elementdata);
                 this.dataSource.data = elementlist;
               }
