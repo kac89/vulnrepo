@@ -198,6 +198,11 @@
       <td mat-cell *matCellDef="let element"> <a target="_blank" class="active-link" rel="noopener noreferrer" href="https://{{element.apiurl}}/">{{element.apiname}}</a> </td>
     </ng-container>
   
+    <ng-container matColumnDef="organisation">
+      <th mat-header-cell *matHeaderCellDef> Organisation </th>
+      <td mat-cell *matCellDef="let element"> {{element.organisation}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef> Status </th>
       <td mat-cell *matCellDef="let element">

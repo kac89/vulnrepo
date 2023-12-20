@@ -735,8 +735,7 @@ Sample code here\n\
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-
-      if (result.length !== undefined) {
+      if (result !== undefined) {
         for (var elem of result) {
           if (elem.title !== '') {
             this.decryptedReportDataChanged.report_vulns.push(elem);
@@ -746,11 +745,14 @@ Sample code here\n\
           }
         }
       } else {
-        if (result.title !== '') {
-          this.decryptedReportDataChanged.report_vulns.push(result);
-          this.addtochangelog('Create issue: ' + result.title);
-          this.afterDetectionNow();
-          this.doStats();
+
+        if (result) {
+          if (result.title !== '') {
+            this.decryptedReportDataChanged.report_vulns.push(result);
+            this.addtochangelog('Create issue: ' + result.title);
+            this.afterDetectionNow();
+            this.doStats();
+          }
         }
       }
 
