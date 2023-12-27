@@ -99,6 +99,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   savemsg = '';
   report_decryption_in_progress: boolean;
   report_encryption_in_progress: boolean;
+  api_connection_status: boolean;
   upload_in_progress = false;
   youhaveunsavedchanges = false;
   decryptedReportData: any;
@@ -245,10 +246,12 @@ export class ReportComponent implements OnInit, OnDestroy {
 
             } else {
               console.log('Report not exist locally: YES');
+              this.api_connection_status = true;
               this.indexeddbService.checkAPIreport(this.report_id).then(re => {
                 if (re) {
                   this.report_info = re;
                   this.reportdesc = re;
+                  this.api_connection_status = false;
                   // check if pass in sessionStorage
                   if (this.sessionsub.getSessionStorageItem(re.report_id) !== null) {
                     this.report_decryption_in_progress = true;
