@@ -264,6 +264,7 @@ export class ReportComponent implements OnInit, OnDestroy {
                     setTimeout(_ => this.openDialog(re)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
                   }
                 } else {
+                  this.api_connection_status = false;
                   this.router.navigate(['/my-reports']);
                 }
               });
