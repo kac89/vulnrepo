@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import * as xml2js from 'xml2js';
 import * as Crypto from 'crypto-js';
+import { CurrentdateService } from '../currentdate.service';
 
 interface Importsource {
   value: string;
@@ -58,7 +59,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'jira_xml', viewValue: 'Jira (.XML)' }
   ];
 
-  constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe) { }
+  constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
+    private currentdateService: CurrentdateService) { }
 
   ngOnInit() {
   }
@@ -168,8 +170,6 @@ export class DialogImportComponent implements OnInit {
 
     const parsedCsv2 = group_issues(this.parsedCsv);
     const parsedCsv = unique(parsedCsv2, 0);
-    const date = new Date();
-    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = parsedCsv.map((res, key) => {
 
       const def = {
@@ -184,7 +184,7 @@ export class DialogImportComponent implements OnInit {
         cve: res[1],
         tags: [],
         bounty: [],
-        date: today
+        date: this.currentdateService.getcurrentDate()
       };
 
       return def;
@@ -247,8 +247,6 @@ export class DialogImportComponent implements OnInit {
             regex.lastIndex++;
         }
         
-        const date = new Date();
-        const today = this.datePipe.transform(date, 'yyyy-MM-dd');
         const def = {
           title: m[4],
           poc: m[6] + "\n\n" + m[8],
@@ -261,7 +259,7 @@ export class DialogImportComponent implements OnInit {
           cve: '',
           tags: [{name: 'bugcrowd'}],
           bounty: [],
-          date: today
+          date: this.currentdateService.getcurrentDate()
         };
 
         issuelist.push(def);
@@ -347,8 +345,6 @@ export class DialogImportComponent implements OnInit {
 
     });
 
-    const date = new Date();
-    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = emp.map((res, key) => {
 
       let item = '';
@@ -388,7 +384,7 @@ export class DialogImportComponent implements OnInit {
         cve: '',
         tags: [],
         bounty: [],
-        date: today
+        date: this.currentdateService.getcurrentDate()
       };
 
       return def;
@@ -447,8 +443,6 @@ function isarr(arr) {
   return Array.isArray(arr)
 }
 
-    const date = new Date();
-    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = xml.map((res, key) => {
       let zref = "";
       if(res.nvt[0].xref || res.nvt[0].refs) {
@@ -498,7 +492,7 @@ function isarr(arr) {
         cve: '',
         tags: [],
         bounty: [],
-        date: today
+        date: this.currentdateService.getcurrentDate()
       };
 
       return def;
@@ -584,8 +578,6 @@ function isarr(arr) {
 
     });
 
-    const date = new Date();
-    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = uniq_items.map((res, key) => {
 
       if (res[8].toString() === 'Information') {
@@ -694,7 +686,7 @@ function isarr(arr) {
         cve: '',
         tags: [],
         bounty: [],
-        date: today
+        date: this.currentdateService.getcurrentDate()
       };
 
       return def;
@@ -780,8 +772,6 @@ function isarr(arr) {
       hosts=getUp;
     }
 
-    const date = new Date();
-    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
     const info = hosts.map((res, key) => {
       let addre = '';
       if (res.address[0]['$'].addr !== undefined) {
@@ -876,7 +866,7 @@ function isarr(arr) {
         cve: '',
         tags: [],
         bounty: [],
-        date: today
+        date: this.currentdateService.getcurrentDate()
       };
 
       return def;
@@ -950,8 +940,6 @@ function isarr(arr) {
   
           }
 
-          const date = new Date();
-          const today = this.datePipe.transform(date, 'yyyy-MM-dd');
           const def = {
             title: myObject2.Title,
             poc: 'Target: ' + myObject.Target + '\nClass: ' + myObject.Class + '\nType: ' + myObject.Type + '\nPkgID: ' + myObject2.PkgID + '\nPkgName: ' + myObject2.PkgName + '\nInstalled Version: ' + myObject2.InstalledVersion + '\nFixed Version: ' + myObject2.FixedVersion + '\n',
@@ -964,7 +952,7 @@ function isarr(arr) {
             cve: '',
             tags: [],
             bounty: [],
-            date: today
+            date: this.currentdateService.getcurrentDate()
           };
   
           intvulns.push(myObject2.VulnerabilityID);
@@ -1010,9 +998,6 @@ function isarr(arr) {
     parser.parseString(xml, (err, result) => {
       xmltojson = result.rss.channel[0].item;
     });
-
-    const date = new Date();
-    const today = this.datePipe.transform(date, 'yyyy-MM-dd');
 
     const info = xmltojson.map((res, key) => {
 
@@ -1082,7 +1067,7 @@ function isarr(arr) {
         cve: '',
         tags: [],
         bounty: [],
-        date: today
+        date: this.currentdateService.getcurrentDate()
       };
 
       return def;

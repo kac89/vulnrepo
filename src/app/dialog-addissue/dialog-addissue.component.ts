@@ -11,7 +11,7 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import { CurrentdateService } from '../currentdate.service';
 
 export interface Vulns {
   title: string;
@@ -83,6 +83,7 @@ export class DialogAddissueComponent implements OnInit {
 
   constructor(public router: Router,
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
+    private currentdateService: CurrentdateService,
     private apiService: ApiService, private datePipe: DatePipe) {
 
     this.filteredOptions = this.customissueform.valueChanges
@@ -247,6 +248,10 @@ export class DialogAddissueComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  getcurrentDate(): number {
+    return this.currentdateService.getcurrentDate();
+  }
+
   addIssue() {
 
     if (this.customissueform.value !== "" && this.customissueform.value !== null) {
@@ -264,8 +269,6 @@ export class DialogAddissueComponent implements OnInit {
           if (found !== undefined) {
   
             if (found.title === datael) {
-              const date = new Date();
-              const today = this.datePipe.transform(date, 'yyyy-MM-dd');
               const def = {
                 title: found.title,
                 poc: found.poc,
@@ -279,7 +282,7 @@ export class DialogAddissueComponent implements OnInit {
                 cve: found.cve,
                 tags: [],
                 bounty: [],
-                date: today + ''
+                date: this.getcurrentDate()
               };
               exitel.push(def);
   
@@ -287,9 +290,6 @@ export class DialogAddissueComponent implements OnInit {
   
   
           } else {
-  
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
   
             const def = {
               title: datael,
@@ -304,7 +304,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: '',
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             exitel.push(def);
           }
@@ -328,8 +328,6 @@ export class DialogAddissueComponent implements OnInit {
         if (this.cwe.hasOwnProperty(key)) {
 
           if (this.cwe[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
               title: this.cwe[key].title,
               poc: this.cwe[key].poc,
@@ -343,7 +341,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: this.cwe[key].cve,
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             this.dialogRef.close(def);
             break;
@@ -406,9 +404,6 @@ export class DialogAddissueComponent implements OnInit {
           if (resp !== null && resp !== undefined) {
             // if everything OK
             if (resp.id) {
-              const date = new Date();
-              const today = this.datePipe.transform(date, 'yyyy-MM-dd');
-
               let cvetitle = '';
 
               if (resp.refmap) {
@@ -481,7 +476,7 @@ export class DialogAddissueComponent implements OnInit {
                 cve: resp.id,
                 bounty: [],
                 tags: [],
-                date: today + ''
+                date: this.getcurrentDate()
               };
               this.show = false;
               this.dialogRef.close(def);
@@ -519,8 +514,6 @@ export class DialogAddissueComponent implements OnInit {
         if (this.mitremobile.hasOwnProperty(key)) {
 
           if (this.mitremobile[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
               title: this.mitremobile[key].title,
               poc: this.mitremobile[key].poc,
@@ -534,7 +527,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: this.mitremobile[key].cve,
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             this.dialogRef.close(def);
             break;
@@ -560,8 +553,6 @@ export class DialogAddissueComponent implements OnInit {
         if (this.mitreenterprise.hasOwnProperty(key)) {
 
           if (this.mitreenterprise[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
               title: this.mitreenterprise[key].title,
               poc: this.mitreenterprise[key].poc,
@@ -575,7 +566,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: this.mitreenterprise[key].cve,
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             this.dialogRef.close(def);
             break;
@@ -621,8 +612,6 @@ export class DialogAddissueComponent implements OnInit {
                 il = il + item.title + '\n\n';
               });
 
-              const date = new Date();
-              const today = this.datePipe.transform(date, 'yyyy-MM-dd');
               const def = {
                 title: tytul,
                 poc: 'Testing:\n\n' + il + '\nGuidance:\n\n' + this.pcidssv3[key].items[ile].guidance,
@@ -637,7 +626,7 @@ export class DialogAddissueComponent implements OnInit {
                 cve: '',
                 tags: [],
                 bounty: [],
-                date: today + ''
+                date: this.getcurrentDate()
               };
               this.dialogRef.close(def);
               break;
@@ -664,8 +653,6 @@ export class DialogAddissueComponent implements OnInit {
         if (this.owasptop2017.hasOwnProperty(key)) {
 
           if (this.owasptop2017[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
               title: this.owasptop2017[key].title,
               poc: this.owasptop2017[key].poc,
@@ -679,7 +666,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: this.owasptop2017[key].cve,
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             this.dialogRef.close(def);
             break;
@@ -703,8 +690,6 @@ export class DialogAddissueComponent implements OnInit {
         if (this.owasptop2021.hasOwnProperty(key)) {
 
           if (this.owasptop2021[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
               title: this.owasptop2021[key].title,
               poc: this.owasptop2021[key].poc,
@@ -718,7 +703,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: this.owasptop2021[key].cve,
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             this.dialogRef.close(def);
             break;
@@ -743,8 +728,6 @@ export class DialogAddissueComponent implements OnInit {
         if (this.OWASPTOP10CICD.hasOwnProperty(key)) {
 
           if (this.OWASPTOP10CICD[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
               title: this.OWASPTOP10CICD[key].title,
               poc: this.OWASPTOP10CICD[key].poc,
@@ -758,7 +741,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: this.OWASPTOP10CICD[key].cve,
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             this.dialogRef.close(def);
             break;
@@ -782,8 +765,6 @@ export class DialogAddissueComponent implements OnInit {
         if (this.OWASPTOP10k8s.hasOwnProperty(key)) {
 
           if (this.OWASPTOP10k8s[key].title === data) {
-            const date = new Date();
-            const today = this.datePipe.transform(date, 'yyyy-MM-dd');
             const def = {
               title: this.OWASPTOP10k8s[key].title,
               poc: this.OWASPTOP10k8s[key].poc,
@@ -797,7 +778,7 @@ export class DialogAddissueComponent implements OnInit {
               cve: this.OWASPTOP10k8s[key].cve,
               tags: [],
               bounty: [],
-              date: today + ''
+              date: this.getcurrentDate()
             };
             this.dialogRef.close(def);
             break;

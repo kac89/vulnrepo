@@ -353,6 +353,15 @@
 		$('.list_researcher').hide();
 		$('.list_copyright').hide();
 		
+		let locale = '';
+
+		//set local
+		if(navigator.language) {
+			locale = navigator.language; //detect browser local
+		} else {
+			locale = 'en-GB'; //dd/MM/yyyy
+		}
+
 		const base64_data = {'HERE':'REPLACE'};
 		const decodedData = atob(base64_data);
 		
@@ -500,7 +509,20 @@
 			$(".report_version").text('Report Version: ' + obj.report_version);
 			$(".report_id").text('Report ID: ' + obj.report_id);
 			if (obj.report_metadata.starttest !== "" || obj.report_metadata.endtest !== "") {
-				$(".report_date_range").text('Date: ' + obj.report_metadata.starttest + ' - ' + obj.report_metadata.endtest);
+				let strd = new Date(obj.report_metadata.starttest).toLocaleDateString(locale);
+				let endd = new Date(obj.report_metadata.endtest).toLocaleDateString(locale);
+
+				if (strd === 'Invalid Date') {
+					strd = '';
+				}
+
+				if (endd === 'Invalid Date') {
+					endd = '';
+				} else {
+					endd = ' - ' + endd;
+				}
+
+				$(".report_date_range").text('Date: ' + strd + endd);
 			}
 			
 			$(".issues_count").text(obj.report_vulns.length);
@@ -540,7 +562,7 @@
 								<h6 class="mb-0">` + DOMPurify.sanitize(element.title) + `</h6>
 								<p class="mb-0 opacity-75">`+elementissuestatus+`</p>
 							</div>
-							<small class="opacity-50 text-nowrap">` + DOMPurify.sanitize(element.date) + `</small>
+							<small class="opacity-50 text-nowrap">` + DOMPurify.sanitize(new Date(element.date).toLocaleDateString(locale)) + `</small>
 						</div>
 				</a>
 		`;
@@ -787,7 +809,7 @@
 
 			for (let index = 0; index < obj.report_changelog.length; ++index) {
 				const element = obj.report_changelog[index];
-				const xxx = new Date(element.date).toLocaleDateString();
+				const xxx = new Date(element.date).toLocaleDateString(locale);
 				changelog_data = changelog_data + `
 					<tr>
 						<td>` + DOMPurify.sanitize(xxx) + `</td>

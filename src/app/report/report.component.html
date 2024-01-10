@@ -111,7 +111,7 @@
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Research start date</mat-label>
                     <input matInput [matDatepicker]="picker" 
-                      [(ngModel)]="decryptedReportDataChanged.report_metadata.starttest" (ngModelChange)="entestdateChanged()">
+                    (dateChange)="onDateChangeReportstart($event)" [value]="renderdateformat(decryptedReportDataChanged.report_metadata.starttest)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -121,7 +121,7 @@
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Research end date</mat-label>
                     <input matInput [matDatepicker]="pickerend" 
-                      [(ngModel)]="decryptedReportDataChanged.report_metadata.endtest" (ngModelChange)="entestdateChanged()">
+                    (dateChange)="onDateChangeReportend($event)" [value]="renderdateformat(decryptedReportDataChanged.report_metadata.endtest)">
                     <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
                     <mat-datepicker #pickerend></mat-datepicker>
                   </mat-form-field>
@@ -377,7 +377,7 @@
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Create issue date</mat-label>
-                    <input matInput [matDatepicker]="picker" (dateChange)="doStats()" [(ngModel)]="dec_data.date">
+                    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)" [value]="renderdateformat(dec_data.date)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>

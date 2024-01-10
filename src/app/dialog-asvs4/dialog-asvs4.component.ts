@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import * as Crypto from 'crypto-js';
 import { UntypedFormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { CurrentdateService } from '../currentdate.service';
 
 @Component({
   selector: 'app-dialog-asvs4',
@@ -18,7 +19,8 @@ export class DialogAsvs4Component implements OnInit {
   unselected = [];
   pass = new UntypedFormControl();
   pass2 = new UntypedFormControl();
-  constructor(public dialogRef: MatDialogRef<DialogAsvs4Component>, @Inject(MAT_DIALOG_DATA) public data: any, public datePipe: DatePipe) {
+  constructor(public dialogRef: MatDialogRef<DialogAsvs4Component>, @Inject(MAT_DIALOG_DATA) public data: any, public datePipe: DatePipe,
+  private currentdateService: CurrentdateService) {
 
   }
 
@@ -56,9 +58,6 @@ export class DialogAsvs4Component implements OnInit {
     if (pass !== pass2) {
       this.text = 'Password fields not match';
     } else {
-
-      const date = new Date();
-      const today = this.datePipe.transform(date, 'yyyy-MM-dd');
   
       const toexport = data.map((res, key) => {
         const def = {
@@ -73,7 +72,7 @@ export class DialogAsvs4Component implements OnInit {
           cve: '',
           tags: [],
           bounty: [],
-          date: today
+          date: this.currentdateService.getcurrentDate()
         };
   
         return def;
