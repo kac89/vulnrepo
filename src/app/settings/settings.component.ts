@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dialog-addreportprofile.component';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
+import { CurrentdateService } from '../currentdate.service';
 
 export interface ApiList {
   apikey: string;
@@ -60,7 +61,7 @@ export class SettingsComponent implements OnInit {
 
 
   constructor(public router: Router, private indexeddbService: IndexeddbService, private apiService: ApiService,
-    public dialog: MatDialog, public sessionsub: SessionstorageserviceService) { }
+    public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService) { }
 
   ngOnInit() {
 
@@ -381,7 +382,14 @@ export class SettingsComponent implements OnInit {
 
     this.indexeddbService.retrieveAPIkey().then(data => {
       if (data) {
-        const today = new Date().toLocaleString();
+        let today = '';
+        if (navigator.language) {
+           today = new Date(this.currentdateService.getcurrentDate()).toLocaleDateString(navigator.language);
+        } else {
+           today = String(Date.now());
+        }
+        
+        
         // download dump
         const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
         const link = document.createElement('a');

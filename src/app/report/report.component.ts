@@ -32,9 +32,11 @@ import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
 import * as DOMPurify from 'dompurify';
 import { ApiService } from '../api.service';
-import { MatCalendar, MatCalendarCellCssClasses } from '@angular/material/datepicker';
-import { DateRange } from '@angular/material/datepicker';
+import { MatCalendar, MatCalendarCellCssClasses, DateRange } from '@angular/material/datepicker';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
+import { DatePipe } from '@angular/common';
+import { UntypedFormControl } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 
 export interface Tags {
   name: string;
@@ -104,6 +106,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   youhaveunsavedchanges = false;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
+  setLocal = 'en-GB';  //dd/MM/yyyy
   subscription: Subscription;
   displayedSeverityColumns: string[] = ['severity', 'count'];
   dataSourceforseverity = [
@@ -152,6 +155,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
+
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
     private http: HttpClient,
@@ -161,8 +165,9 @@ export class ReportComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private messageService: MessageService,
     private snackBar: MatSnackBar,
-    public sessionsub: SessionstorageserviceService) {
-
+    public sessionsub: SessionstorageserviceService, 
+    private datePipe: DatePipe,
+    private dateAdapter: DateAdapter<Date>) {
     //console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
@@ -179,19 +184,15 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.objDiffers[index] = this.differs.find(itemGroup).create();
       });
 
-
       this.objDiffersFiles = new Array<KeyValueDiffer<string, any>>();
       this.decryptedReportDataChanged.report_vulns.forEach((itemGroup, index) => {
         this.objDiffersFiles[index] = this.differs.find(itemGroup.files).create();
       });
 
-
-
       this.objDiffersResearcher = new Array<KeyValueDiffer<string, any>>();
       this.decryptedReportDataChanged.researcher.forEach((itemGroup, index) => {
         this.objDiffersResearcher[index] = this.differs.find(itemGroup).create();
       });
-
 
       if (this.report_info) {
         this.reportTitleDiffer = this.differs.find({ report_name: this.report_info.report_name }).create();
@@ -214,6 +215,14 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // this.report_id = this.route.snapshot.params['report_id'];
 
+    //set local
+    if(navigator.language) {
+      this.dateAdapter.setLocale(navigator.language); //detect browser local
+      this.setLocal = navigator.language;
+    } else {
+      this.dateAdapter.setLocale(this.setLocal);
+    }
+    
 
     this.route.params.subscribe(routeParams => {
       if(routeParams.report_id != ''){
@@ -293,6 +302,18 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   entestdateChanged() {
     this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
+  }
+
+  onDateChangeReportstart(event) {
+    const newdate = new Date(event.value).getTime();
+    this.decryptedReportDataChanged.report_metadata.starttest = newdate;
+    this.entestdateChanged();
+  }
+
+  onDateChangeReportend(event) {
+    const newdate = new Date(event.value).getTime();
+    this.decryptedReportDataChanged.report_metadata.endtest = newdate;
+    this.entestdateChanged();
   }
 
   canDeactivate() {
@@ -404,7 +425,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     changes.forEachAddedItem((record) => {
       if (record.previousValue !== null) {
         this.afterDetection();
-        console.log('ADDED: ',record);
+        //console.log('ADDED: ',record);
       }
     });
 
@@ -729,6 +750,22 @@ Sample code here\n\
     
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
     
+  }
+
+  renderdateformat(inputdate) {
+      const date = new Date(inputdate).getTime();
+      const rdate = this.datePipe.transform(date, 'yyyy-MM-dd');
+      return rdate
+  }
+
+  onDateChange(data, event) {
+    const newdate = new Date(event.value).getTime();
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(data);
+    if (index !== -1) {
+      this.decryptedReportDataChanged.report_vulns[index].date = newdate;
+      this.doStats();
+    }
+
   }
 
   addissue() {
@@ -1328,8 +1365,8 @@ Sample code here\n\
     let report_ascii_head = '######################################################\n\
 # Report Title: ' + metadata.report_name + '\n\
 # Report ID: ' + metadata.report_id + '\n\
-# Create Date: ' + new Date(metadata.report_createdate).toLocaleString() + '\n\
-# Last Update: ' + new Date(metadata.report_lastupdate).toLocaleString() + '\n';
+# Create Date: ' + new Date(metadata.report_createdate).toLocaleDateString(this.setLocal) + '\n\
+# Last Update: ' + new Date(metadata.report_lastupdate).toLocaleDateString(this.setLocal) + '\n';
 
     if (report_details.researcher.length > 0) {
 
@@ -1375,7 +1412,7 @@ Sample code here\n\
       }
 
       if (value.date !== '') {
-        report_ascii_vulns = report_ascii_vulns + '# Find Date: ' + value.date + '\n';
+        report_ascii_vulns = report_ascii_vulns + '# Find Date: ' + new Date(value.date).toLocaleDateString(this.setLocal) + '\n';
       }
 
       if (value.cvss !== '') {
@@ -1523,13 +1560,13 @@ Sample code here\n\
 
     let str_dates = "";
     if (this.decryptedReportDataChanged.report_metadata.starttest !== '' && this.decryptedReportDataChanged.report_metadata.endtest !== '') {
-      const stringToSplit = new Date(this.decryptedReportDataChanged.report_metadata.starttest).toLocaleString();
-      const x = stringToSplit.split(',');
-      const stringToSplit2 = new Date(this.decryptedReportDataChanged.report_metadata.endtest).toLocaleString();
-      const y = stringToSplit2.split(',');
+      const startdatestr = new Date(this.decryptedReportDataChanged.report_metadata.starttest).toLocaleDateString(this.setLocal);
+
+      const enddatestr = new Date(this.decryptedReportDataChanged.report_metadata.endtest).toLocaleDateString(this.setLocal);
+
       str_dates = `
-##### Start date: ` + x[0] + `
-##### End date: ` + y[0] + `\n\n`;
+##### Start date: ` + startdatestr + `
+##### End date: ` + enddatestr + `\n\n`;
     }
 
 
@@ -1598,10 +1635,9 @@ Date   | Description
 
       this.decryptedReportDataChanged.report_changelog.forEach((item, index) => {
 
-        const stringToSplit = new Date(item.date).toLocaleString();
-        const rdate = stringToSplit.split(',');
+        const rdate = new Date(item.date).toLocaleDateString(this.setLocal);
 
-        str_changelog = str_changelog + rdate[0] + ` | ` + item.desc + `\n`;
+        str_changelog = str_changelog + rdate + ` | ` + item.desc + `\n`;
       });
       str_changelog = str_changelog + '\n\n';
     }
@@ -1997,7 +2033,8 @@ Date   | Description
   }
 
   savenewReportProfile() {
-    const time = new Date().toLocaleString();
+    
+    const time = new Date().toLocaleDateString(this.setLocal);
     const profile = {
       profile_name: time,
       logo: this.decryptedReportDataChanged.report_settings.report_logo.logo,

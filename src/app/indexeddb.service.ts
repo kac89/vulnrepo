@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 import { ApiService } from './api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SessionstorageserviceService } from "./sessionstorageservice.service"
+import { CurrentdateService } from './currentdate.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class IndexeddbService {
   private decryptstatusObs = new Subject<any>();
 
   constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
-    private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService) {
+    private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,
+    private currentdateService: CurrentdateService) {
 
     this.updateEncStatus(false);
     /*
@@ -169,8 +171,7 @@ export class IndexeddbService {
 `;
 
         const today: number = Date.now();
-        const event = new Date();
-        const s = event.toISOString();
+
         let empty_vulns = {
           report_vulns: [],
           report_scope: '',
@@ -183,7 +184,7 @@ export class IndexeddbService {
           ],
           report_version: 0,
           report_metadata: {
-            starttest: s,
+            starttest: today,
             endtest: ''
           },
           researcher: [
@@ -283,8 +284,7 @@ export class IndexeddbService {
 `;
 
         const today: number = Date.now();
-        const event = new Date();
-        const s = event.toISOString();
+
         let empty_vulns = {
           report_vulns: [],
           report_scope: '',
@@ -297,7 +297,7 @@ export class IndexeddbService {
           ],
           report_version: 0,
           report_metadata: {
-            starttest: s,
+            starttest: today,
             endtest: ''
           },
           researcher: [

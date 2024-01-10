@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import * as Crypto from 'crypto-js';
 import { UntypedFormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { CurrentdateService } from '../currentdate.service';
 
 @Component({
   selector: 'app-dialog-pcidss4',
@@ -20,7 +21,8 @@ export class DialogPcidss4Component {
   pass2 = new UntypedFormControl();
 
 
-  constructor(public dialogRef: MatDialogRef<DialogPcidss4Component>, @Inject(MAT_DIALOG_DATA) public data: any, public datePipe: DatePipe) {
+  constructor(public dialogRef: MatDialogRef<DialogPcidss4Component>, @Inject(MAT_DIALOG_DATA) public data: any, public datePipe: DatePipe,
+  private currentdateService: CurrentdateService) {
 
   }
 
@@ -59,9 +61,6 @@ export class DialogPcidss4Component {
     if (pass !== pass2) {
       this.text = 'Password fields not match';
     } else {
-
-      const date = new Date();
-      const today = this.datePipe.transform(date, 'yyyy-MM-dd');
   
       const toexport = data.map((res, key) => {
         const def = {
@@ -76,7 +75,7 @@ export class DialogPcidss4Component {
           cve: '',
           tags: [],
           bounty: [],
-          date: today
+          date: this.currentdateService.getcurrentDate()
         };
   
         return def;
