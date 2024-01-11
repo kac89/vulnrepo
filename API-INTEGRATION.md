@@ -57,7 +57,7 @@ Content-Type: application/json
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 
-[{"report_id":"[report_id]","report_name":"Test Report","report_createdate":1606571788759,"report_lastupdate":1608657635687,"encrypted_data":"U2FsdGVkX1\/N5+L8lTFgApttAb+SI...[trunked]"}]
+[{"report_id":"[report_id]","report_name":"Test Report","report_createdate":1606571788759,"report_lastupdate":1608657635687}]
 
 ```
 
