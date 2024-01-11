@@ -42,7 +42,8 @@
               "uuid",
               "xml2js",
               "rxjs-compat/Subject",
-              "rxjs/Subject"
+              "rxjs/Subject",
+              "rfdc"
            ],
             "scripts": [],
             "vendorChunk": true,

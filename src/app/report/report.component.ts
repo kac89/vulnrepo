@@ -35,7 +35,6 @@ import { ApiService } from '../api.service';
 import { MatCalendar, MatCalendarCellCssClasses, DateRange } from '@angular/material/datepicker';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { DatePipe } from '@angular/common';
-import { UntypedFormControl } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 
 export interface Tags {
@@ -1868,19 +1867,10 @@ Date   | Description
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
     const today: number = Date.now();
 
-    function escapeHtml(unsafe) {
-      return unsafe.toString()
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
     this.upload_in_progress = false;
     const linkprev = data;
     // tslint:disable-next-line:max-line-length
-    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': escapeHtml(name), 'type': escapeHtml(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
+    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': DOMPurify.sanitize(name), 'type': DOMPurify.sanitize(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
     this.afterDetectionNow();
 
   }
@@ -1952,8 +1942,8 @@ Date   | Description
     this.uploadlogoprev = '<img src="' + linkprev + '" width="100px">';
     this.advlogo = linkprev;
     this.decryptedReportDataChanged.report_settings.report_logo.logo = this.advlogo;
-    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = name;
-    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = type;
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = DOMPurify.sanitize(name);
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = DOMPurify.sanitize(type);
   }
 
   clearlogo() {
