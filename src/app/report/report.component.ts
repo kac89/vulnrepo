@@ -768,6 +768,13 @@ Sample code here\n\
 
   }
 
+  mergeissue(issue){
+    this.decryptedReportDataChanged.report_vulns.push(issue);
+    this.addtochangelog('Create issue: ' + issue.title);
+    this.afterDetectionNow();
+    this.doStats();
+  }
+
   addissue() {
 
     function isIterable(x: unknown): boolean {
@@ -785,27 +792,18 @@ Sample code here\n\
         if(isIterable(result)) {
           for (var elem of result) {
             if (elem.title !== '') {
-              this.decryptedReportDataChanged.report_vulns.push(elem);
-              this.addtochangelog('Create issue: ' + elem.title);
-              this.afterDetectionNow();
-              this.doStats();
+              this.mergeissue(elem);
             }
           }
         } else {
-          this.decryptedReportDataChanged.report_vulns.push(result);
-          this.addtochangelog('Create issue: ' + result.title);
-          this.afterDetectionNow();
-          this.doStats();
+          this.mergeissue(result);
         }
 
       } else {
 
         if (result) {
           if (result.title !== '') {
-            this.decryptedReportDataChanged.report_vulns.push(result);
-            this.addtochangelog('Create issue: ' + result.title);
-            this.afterDetectionNow();
-            this.doStats();
+            this.mergeissue(result);
           }
         }
       }
