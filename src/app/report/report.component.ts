@@ -769,6 +769,11 @@ Sample code here\n\
   }
 
   addissue() {
+
+    function isIterable(x: unknown): boolean {
+      return !!x?.[Symbol.iterator];
+    }
+
     console.log('Add issue');
     const dialogRef = this.dialog.open(DialogAddissueComponent, {
       width: '600px'
@@ -777,14 +782,22 @@ Sample code here\n\
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result !== undefined) {
-        for (var elem of result) {
-          if (elem.title !== '') {
-            this.decryptedReportDataChanged.report_vulns.push(elem);
-            this.addtochangelog('Create issue: ' + elem.title);
-            this.afterDetectionNow();
-            this.doStats();
+        if(isIterable(result)) {
+          for (var elem of result) {
+            if (elem.title !== '') {
+              this.decryptedReportDataChanged.report_vulns.push(elem);
+              this.addtochangelog('Create issue: ' + elem.title);
+              this.afterDetectionNow();
+              this.doStats();
+            }
           }
+        } else {
+          this.decryptedReportDataChanged.report_vulns.push(result);
+          this.addtochangelog('Create issue: ' + result.title);
+          this.afterDetectionNow();
+          this.doStats();
         }
+
       } else {
 
         if (result) {
