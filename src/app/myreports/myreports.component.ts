@@ -226,9 +226,6 @@ export class MyreportsComponent implements OnInit {
   toAPIcloneReport(item, apiurl, apikey) {
 
     item.report_id = uuid();
-    //item.api = 'remote';
-    //item.apiurl = apiurl;
-    //item.apikey = apikey;
 
       // tslint:disable-next-line:max-line-length
       this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(item))).then(resp => {
