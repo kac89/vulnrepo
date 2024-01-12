@@ -1,0 +1,41 @@
+<mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">edit</mat-icon>
+      <mat-card-title>Edit selected ({{selected_items_true.length}})</mat-card-title>
+      <mat-card-subtitle>Make changes on multiple issues</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div fxLayout="row wrap" fxLayoutGap="5px grid">
+            <div fxLayoutAlign="start center" fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+                <mat-form-field color="accent">
+                    <mat-label>Set severity</mat-label>
+                    <mat-select [(value)]="selseverity">
+                      <mat-option value="0"></mat-option>
+                      @for (option of tableseverity; track option) {
+                        <mat-option value="{{ option.value }}">{{ option.name }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            <div fxLayoutAlign="center center" fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+                <mat-form-field color="accent">
+                    <mat-label>Set status</mat-label>
+                    <mat-select [(value)]="selstatus">
+                      <mat-option value="0"></mat-option>
+                      @for (option of tablestatus; track option) {
+                        <mat-option value="{{ option.value }}">{{ option.status }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            <div fxLayoutAlign="end center" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
+                <button mat-raised-button color="accent" (click)="applychanges()">Apply</button>
+            </div>
+        </div>
+        <p>
+            <button mat-raised-button color="primary" (click)="closedialog()">Close</button>
+        </p>
+        
+    </mat-card-content>
+  </mat-card>

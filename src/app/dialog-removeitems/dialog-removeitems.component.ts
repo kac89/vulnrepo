@@ -24,7 +24,7 @@ export class DialogRemoveitemsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  removefromreport(array) {
+  removefromreport() {
     this.dialogRef.close(this.isReturn);
   }
 

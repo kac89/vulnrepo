@@ -17,6 +17,7 @@ import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-expor
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
 import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
+import { DialogIssuesEditComponent } from '../dialog-issues-edit/dialog-issues-edit.component';
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
@@ -578,13 +579,30 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
+  openissuesedit(array) {
+
+    const dialogRef = this.dialog.open(DialogIssuesEditComponent, {
+      width: '600px',
+      data: { sel: array, orig: this.decryptedReportDataChanged.report_vulns }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result) {
+        console.log('Dialog edit issue closed');
+      }
+    });
+
+  }
+
   selectall() {
     this.selecteditems = [];
     this.selected3 = [];
-
+    this.selected3_true = [];
     let i = 0;
     do {
       this.selected3.push(true);
+      this.selected3_true.push(true);
       i++;
     }
     while (i < this.decryptedReportDataChanged.report_vulns.length);
@@ -594,6 +612,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   deselectall() {
     this.selecteditems = [];
     this.selected3 = [];
+    this.selected3_true = [];
     this.pok = 0;
     let i = 0;
     do {

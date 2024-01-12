@@ -569,6 +569,13 @@
                   Unselect all
                 </button>
 
+                &nbsp;
+
+                <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selected3)">
+                  <mat-icon>edit</mat-icon>
+                  Edit ({{ selected3_true.length }})
+                </button>
+
                 &nbsp;&nbsp;
 
                 <button mat-stroked-button color="warn" (click)="removeSelecteditems(selected3)">
