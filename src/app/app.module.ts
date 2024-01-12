@@ -79,6 +79,7 @@ import { TbhmComponent } from './tbhm/tbhm.component';
 import { Pcidss4Component } from './pcidss4/pcidss4.component';
 import { DialogPcidss4Component } from './dialog-pcidss4/dialog-pcidss4.component';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
+import { DialogIssuesEditComponent } from './dialog-issues-edit/dialog-issues-edit.component';
 
 @NgModule({
     declarations: [
@@ -113,7 +114,8 @@ import { DialogAboutComponent } from './dialog-about/dialog-about.component';
         TbhmComponent,
         Pcidss4Component,
         DialogPcidss4Component,
-        DialogAboutComponent
+        DialogAboutComponent,
+        DialogIssuesEditComponent
     ],
     imports: [
         BrowserModule,

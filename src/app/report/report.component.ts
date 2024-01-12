@@ -17,6 +17,7 @@ import { DialogExportissuesComponent } from '../dialog-exportissues/dialog-expor
 import { DialogChangelogComponent } from '../dialog-changelog/dialog-changelog.component';
 import { DialogChangekeyComponent } from '../dialog-changekey/dialog-changekey.component';
 import { DialogRemoveitemsComponent } from '../dialog-removeitems/dialog-removeitems.component';
+import { DialogIssuesEditComponent } from '../dialog-issues-edit/dialog-issues-edit.component';
 import { DialogCvssComponent } from '../dialog-cvss/dialog-cvss.component';
 import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
@@ -578,13 +579,30 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
+  openissuesedit(array) {
+
+    const dialogRef = this.dialog.open(DialogIssuesEditComponent, {
+      width: '600px',
+      data: { sel: array, orig: this.decryptedReportDataChanged.report_vulns }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result) {
+        console.log('Dialog edit issue closed');
+      }
+    });
+
+  }
+
   selectall() {
     this.selecteditems = [];
     this.selected3 = [];
-
+    this.selected3_true = [];
     let i = 0;
     do {
       this.selected3.push(true);
+      this.selected3_true.push(true);
       i++;
     }
     while (i < this.decryptedReportDataChanged.report_vulns.length);
@@ -594,6 +612,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   deselectall() {
     this.selecteditems = [];
     this.selected3 = [];
+    this.selected3_true = [];
     this.pok = 0;
     let i = 0;
     do {
@@ -1505,6 +1524,15 @@ Sample code here\n\
     }
   }
 
+  removeattachname(event) {
+    if (event.checked === false) {
+      this.decryptedReportDataChanged.report_settings.report_remove_attach_name = false;
+    }
+    if (event.checked === true) {
+      this.decryptedReportDataChanged.report_settings.report_remove_attach_name = true;
+    }
+  }
+
   removeResearchers(event) {
     if (event.checked === false) {
       this.decryptedReportDataChanged.report_settings.report_remove_researchers = false;
@@ -2031,6 +2059,7 @@ Date   | Description
     this.decryptedReportDataChanged.report_settings.report_remove_issuetags = profile.remove_tags;
     this.decryptedReportDataChanged.report_settings.report_parsing_desc = profile.report_parsing_desc;
     this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown = profile.report_parsing_poc_markdown;
+    this.decryptedReportDataChanged.report_settings.report_remove_attach_name = profile.report_remove_attach_name;
   }
 
   savenewReportProfile() {
@@ -2043,6 +2072,7 @@ Date   | Description
       logoh: this.decryptedReportDataChanged.report_settings.report_logo.height,
       report_parsing_desc: this.decryptedReportDataChanged.report_settings.report_parsing_desc,
       report_parsing_poc_markdown: this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown,
+      report_remove_attach_name: this.decryptedReportDataChanged.report_settings.report_remove_attach_name,
       video_embed: this.decryptedReportDataChanged.report_settings.report_video_embed,
       remove_lastpage: this.decryptedReportDataChanged.report_settings.report_remove_lastpage,
       remove_issueStatus: this.decryptedReportDataChanged.report_settings.report_remove_issuestatus,

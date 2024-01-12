@@ -569,6 +569,13 @@
                   Unselect all
                 </button>
 
+                &nbsp;
+
+                <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selected3)">
+                  <mat-icon>edit</mat-icon>
+                  Edit ({{ selected3_true.length }})
+                </button>
+
                 &nbsp;&nbsp;
 
                 <button mat-stroked-button color="warn" (click)="removeSelecteditems(selected3)">
@@ -865,7 +872,7 @@
         <mat-tab>
           <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">image</mat-icon>
-            Logo
+            Report logo
           </ng-template>
           <div style="padding: 10px!important;">
 
@@ -927,6 +934,8 @@
                   (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"
                   (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
+                <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_attach_name"
+                  (change)="removeattachname($event)">Hide the filename of all attachments</mat-checkbox>
               </div>
               <div fxFlex="25%" fxFlex.sm="100%" fxFlex.xs="100%">
                 <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page"
