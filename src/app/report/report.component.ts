@@ -1505,6 +1505,15 @@ Sample code here\n\
     }
   }
 
+  removeattachname(event) {
+    if (event.checked === false) {
+      this.decryptedReportDataChanged.report_settings.report_remove_attach_name = false;
+    }
+    if (event.checked === true) {
+      this.decryptedReportDataChanged.report_settings.report_remove_attach_name = true;
+    }
+  }
+
   removeResearchers(event) {
     if (event.checked === false) {
       this.decryptedReportDataChanged.report_settings.report_remove_researchers = false;
@@ -2031,6 +2040,7 @@ Date   | Description
     this.decryptedReportDataChanged.report_settings.report_remove_issuetags = profile.remove_tags;
     this.decryptedReportDataChanged.report_settings.report_parsing_desc = profile.report_parsing_desc;
     this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown = profile.report_parsing_poc_markdown;
+    this.decryptedReportDataChanged.report_settings.report_remove_attach_name = profile.report_remove_attach_name;
   }
 
   savenewReportProfile() {
@@ -2043,6 +2053,7 @@ Date   | Description
       logoh: this.decryptedReportDataChanged.report_settings.report_logo.height,
       report_parsing_desc: this.decryptedReportDataChanged.report_settings.report_parsing_desc,
       report_parsing_poc_markdown: this.decryptedReportDataChanged.report_settings.report_parsing_poc_markdown,
+      report_remove_attach_name: this.decryptedReportDataChanged.report_settings.report_remove_attach_name,
       video_embed: this.decryptedReportDataChanged.report_settings.report_video_embed,
       remove_lastpage: this.decryptedReportDataChanged.report_settings.report_remove_lastpage,
       remove_issueStatus: this.decryptedReportDataChanged.report_settings.report_remove_issuestatus,

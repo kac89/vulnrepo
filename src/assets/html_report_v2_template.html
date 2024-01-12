@@ -678,7 +678,7 @@
 									<div class="card bg-light mb-3">
 									<div class="card-header">
 										<div class="d-flex flex-sm-row flex-column justify-content-between">
-											<div><b>` + DOMPurify.sanitize(ele.title) + `</b> (` + DOMPurify.sanitize(ele.size) + ` bytes)</div>
+											<div><b>` + ((!obj.report_settings.report_remove_attach_name) ? DOMPurify.sanitize(ele.title) : '') + `</b> (` + DOMPurify.sanitize(ele.size) + ` bytes)</div>
 											<div><small><b>sha256:</b> ` + DOMPurify.sanitize(ele.sha256checksum) + `</small></div>
 										</div>
 									</div>
