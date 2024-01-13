@@ -24,7 +24,7 @@
 
     <div fxLayout="row wrap" fxLayoutGap="10px grid">
       <p *ngIf="api_connection_status">API connection please wait...<mat-progress-bar
-        style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
+        style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
       <div *ngIf="!api_connection_status" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
         <p>Report ID: {{reportdesc?.report_id}}</p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
