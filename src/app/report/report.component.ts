@@ -234,6 +234,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           // check if report exist
           this.indexeddbService.checkifreportexist(this.report_id).then(data => {
             if (data) {
+              this.report_decryption_in_progress = true;
               console.log('Report exist: OK');
               this.report_info = data;
               this.reportdesc = data;
@@ -250,6 +251,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
                 });
               } else {
+                this.report_decryption_in_progress = false;
                 setTimeout(_ => this.openDialog(data)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
               }
 
