@@ -227,6 +227,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(routeParams => {
       if(routeParams.report_id != ''){
         if(routeParams.report_id){
+          this.report_decryption_in_progress = true;
           this.report_id = routeParams.report_id;
           this.youhaveunsavedchanges = false;
           this.lastsavereportdata = '';
@@ -234,7 +235,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           // check if report exist
           this.indexeddbService.checkifreportexist(this.report_id).then(data => {
             if (data) {
-              this.report_decryption_in_progress = true;
+              
               console.log('Report exist: OK');
               this.report_info = data;
               this.reportdesc = data;
@@ -258,6 +259,7 @@ export class ReportComponent implements OnInit, OnDestroy {
             } else {
               console.log('Report not exist locally: YES');
               this.api_connection_status = true;
+              this.report_decryption_in_progress = false;
               this.indexeddbService.checkAPIreport(this.report_id).then(re => {
                 if (re) {
                   this.report_info = re;
