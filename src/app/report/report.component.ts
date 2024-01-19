@@ -977,9 +977,9 @@ Sample code here\n\
 
         this.indexeddbService.checkAPIreportchanges(this.report_id).then(re => {
           if (re) {
-              console.log(re);
-              console.log(re.report_lastupdate);
-              console.log(this.reportdesc.report_lastupdate);
+              //console.log(re);
+              //console.log(re.report_lastupdate);
+              //console.log(this.reportdesc.report_lastupdate);
   
               if(this.reportdesc.report_lastupdate === re.report_lastupdate) {
                 console.log('no changes');
