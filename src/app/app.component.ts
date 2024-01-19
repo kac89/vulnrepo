@@ -88,9 +88,22 @@ export class AppComponent implements OnInit, OnDestroy {
         if (data) {
           this.show_active_reports = true;
           this.arr_oreports.push({"report_id": data.report_id, "report_name": data.report_name});
+        } else {
+
+          this.indexeddbService.checkAPIreport(key).then(data => {
+            if (data) {
+              this.show_active_reports = true;
+              this.arr_oreports.push({"report_id": data.report_id, "report_name": data.report_name, "report_source": 'api'});
+            }
+          });
+
         }
+
+        this.arr_oreports = [...this.arr_oreports.reduce((map, obj) => map.set(obj.report_id, obj), new Map()).values()];
+
       });
     };
+
     
   }
 
