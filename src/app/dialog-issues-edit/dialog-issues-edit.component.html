@@ -6,9 +6,9 @@
     </mat-card-header>
 
     <mat-card-content>
-        <div fxLayout="row wrap" fxLayoutGap="5px grid">
+        <div fxLayout="row wrap" fxLayoutGap="10px grid">
             <div fxLayoutAlign="start center" fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
-                <mat-form-field color="accent">
+                <mat-form-field color="accent" style="width: 100%;">
                     <mat-label>Set severity</mat-label>
                     <mat-select [(value)]="selseverity">
                       <mat-option value="0"></mat-option>
@@ -18,8 +18,8 @@
                     </mat-select>
                   </mat-form-field>
             </div>
-            <div fxLayoutAlign="center center" fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
-                <mat-form-field color="accent">
+            <div fxLayoutAlign="start center" fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+                <mat-form-field color="accent" style="width: 100%;">
                     <mat-label>Set status</mat-label>
                     <mat-select [(value)]="selstatus">
                       <mat-option value="0"></mat-option>
@@ -30,7 +30,7 @@
                   </mat-form-field>
             </div>
             <div fxLayoutAlign="end center" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
-                <button mat-raised-button color="accent" (click)="applychanges()">Apply</button>
+                <button mat-raised-button color="accent" (click)="applychanges()" style="width: 100%;"><mat-icon>save</mat-icon> Apply</button>
             </div>
         </div>
         <p>
