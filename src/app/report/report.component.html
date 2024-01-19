@@ -26,7 +26,7 @@
       <p *ngIf="api_connection_status">API connection please wait...<mat-progress-bar
         style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
       <div *ngIf="!api_connection_status" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-        <p *ngIf="!report_decryption_in_progress">Report ID: {{reportdesc?.report_id}}</p>
+        <p *ngIf="!report_decryption_in_progress">Report ID: {{reportdesc?.report_id}} <mat-icon *ngIf="report_source_api"color="accent">public</mat-icon></p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
         </p>
         <p *ngIf="!report_decryption_in_progress">Created: {{reportdesc?.report_createdate | date:'medium'}}</p>

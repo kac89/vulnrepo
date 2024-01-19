@@ -102,6 +102,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   report_decryption_in_progress: boolean;
   report_encryption_in_progress: boolean;
   api_connection_status: boolean;
+  report_source_api = false;
   upload_in_progress = false;
   youhaveunsavedchanges = false;
   decryptedReportData: any;
@@ -214,7 +215,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // this.report_id = this.route.snapshot.params['report_id'];
-
     //set local
     if(navigator.language) {
       this.dateAdapter.setLocale(navigator.language); //detect browser local
@@ -247,6 +247,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
                   if (returned) {
                     this.report_decryption_in_progress = false;
+                    this.report_source_api = false;
                   }
 
                 });
@@ -270,6 +271,7 @@ export class ReportComponent implements OnInit, OnDestroy {
                     this.report_decryption_in_progress = true;
                     if (this.indexeddbService.decodeAES(re, pass)) {
                       this.report_decryption_in_progress = false;
+                      this.report_source_api = true;
                     }
                   } else {
                     setTimeout(_ => this.openDialog(re)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194

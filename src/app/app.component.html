@@ -78,8 +78,9 @@
 
           <span *ngFor="let activreport of arr_oreports">
             <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
-              <mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon> {{activreport.report_name}}
+              <mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon><mat-icon color="accent" *ngIf="activreport.report_source == 'api'" class="vertical-align-middle padding-bottom-3">public</mat-icon> {{activreport.report_name}}
             </a>
+
           </span>
 
         </div>
