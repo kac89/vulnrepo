@@ -864,6 +864,39 @@ export class IndexeddbService {
     });
   }
 
+  checkAPIreportchanges(reportid) {
+    return new Promise<any>((resolve, reject) => {
+
+      const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+      if (localkey) {
+
+          const vaultobj = JSON.parse(localkey);
+
+          vaultobj.forEach( (element) => {
+            this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+
+              if (resp) {
+                if (resp.length > 0) {
+                  console.log('Report exist in API: OK');
+                  resolve(resp[0]);
+                } else {
+                  resolve(false);
+                }
+              }
+
+            });
+
+        });
+
+      } else {
+        resolve(false);
+      }
+
+
+    });
+  }
+
+
   searchAPIreport(reportid) {
     return new Promise<any>((resolve, reject) => {
 
