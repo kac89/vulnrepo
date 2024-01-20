@@ -274,6 +274,7 @@ export class ReportComponent implements OnInit, OnDestroy {
                       this.report_source_api = true;
                     }
                   } else {
+                    this.report_source_api = true;
                     setTimeout(_ => this.openDialog(re)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
                   }
                 } else {
