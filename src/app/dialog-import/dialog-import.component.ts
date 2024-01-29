@@ -624,7 +624,7 @@ function isarr(arr) {
       });
 
 
-      let out_ip = '\nResults:\n';
+      let out_ip = 'Output:\n';
       res[2].forEach((myObject, index) => {
 
         if (myObject.ip !== undefined) {
