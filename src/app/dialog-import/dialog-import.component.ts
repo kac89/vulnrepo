@@ -624,7 +624,7 @@ function isarr(arr) {
       });
 
 
-      let out_ip = '\nResults:\n';
+      let out_ip = 'Output:\n\n';
       res[2].forEach((myObject, index) => {
 
         if (myObject.ip !== undefined) {
@@ -676,7 +676,7 @@ function isarr(arr) {
 
       const def = {
         title: res[0],
-        poc: out_hosts + out_ip,
+        poc: out_hosts + "\n\n" + out_ip,
         files: [],
         desc: res[5],
         severity: res[8].toString(),
