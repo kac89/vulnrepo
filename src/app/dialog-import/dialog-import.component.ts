@@ -676,7 +676,7 @@ function isarr(arr) {
 
       const def = {
         title: res[0],
-        poc: out_hosts + out_ip,
+        poc: out_hosts + "\n\n" + out_ip,
         files: [],
         desc: res[5],
         severity: res[8].toString(),
