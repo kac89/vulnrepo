@@ -452,7 +452,7 @@
 				} else {
 					fil = fil + '<a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
 				}
-			} else if (type.includes('text')) {
+			} else if (type === 'text/plain') {
 
 				const byteString = atob(data.split(',')[1]);
 				fil = fil + '<pre style="white-space: pre-wrap;">' + DOMPurify.sanitize(byteString) + '</pre>';
