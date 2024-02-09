@@ -445,7 +445,7 @@
 
 				fil = fil + '<img width="100%" src="' + DOMPurify.sanitize(data) + '" title="' + DOMPurify.sanitize(title) + '">';
 
-			} else if (type === 'video/mp4' || type === 'video/ogg' || type === 'video/webm') {
+			} else if (type.includes('video')) {
 
 				if (isembed) {
 					fil = fil + '<video width="100%" height="600" controls><source src="' + DOMPurify.sanitize(data) + '" type="' + DOMPurify.sanitize(type) + '">Your browser does not support the video tag.</video>';
