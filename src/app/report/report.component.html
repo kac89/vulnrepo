@@ -487,7 +487,7 @@
             <button mat-fab (click)="fileuploadInput.click()" color="primary" title="Upload file">
               <i class="material-icons">attach_file</i>
               <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)"
-                style="display:none;">
+                style="display:none;" multiple>
             </button>
 
             <div fxFlex></div>
