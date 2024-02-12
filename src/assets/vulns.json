@@ -418,5 +418,15 @@
         "cvss": "1",
         "cvss_vector": "",
         "cve": ""
+    },
+    {
+        "title": "[FPD] Full Path Disclosure",
+        "poc": "",
+        "desc": "Full Path Disclosure (FPD) vulnerabilities enable the attacker to see the path to the webroot/file. e.g.: /home/omg/htdocs/file/. Certain vulnerabilities, such as using the load_file() (within a SQL Injection) query to view the page source, require the attacker to have the full path to the file they wish to view.",
+        "severity": "Low",
+        "ref": "https://owasp.org/www-community/attacks/Full_Path_Disclosure",
+        "cvss": "1",
+        "cvss_vector": "",
+        "cve": ""
     }
 ]
