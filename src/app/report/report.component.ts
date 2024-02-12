@@ -1948,15 +1948,16 @@ Date   | Description
     });
   }
 
-  checksumfile(dataurl, files, dec_data) {
+  checksumfile(dataurl, file, dec_data) {
     let file_sha2 = '';
     // sha256 file checksum
     const reader = new FileReader();
     reader.onloadend = (e) => {
       file_sha2 = sha256(reader.result);
-      this.proccessUpload(dataurl, files[0].name, files[0].type, files[0].size, file_sha2, dec_data);
+      
+      this.proccessUpload(dataurl, file.name, file.type, file.size, file_sha2, dec_data);
     };
-    reader.readAsArrayBuffer(files[0]);
+    reader.readAsArrayBuffer(file);
 
   }
 
@@ -1978,13 +1979,13 @@ Date   | Description
     const files = input.files;
     if (files && files.length) {
       this.upload_in_progress = true;
-      const fileToRead = files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        this.checksumfile(fileReader.result, files, dec_data);
-      };
-      fileReader.readAsDataURL(fileToRead);
-
+      for(let i = 0; i < files.length; i++) {
+        const fileReader = new FileReader();
+        fileReader.onload = (e) => {
+          this.checksumfile(fileReader.result, files[i], dec_data);
+        };
+        fileReader.readAsDataURL(files[i]);
+      }
     }
 
   }
