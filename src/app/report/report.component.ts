@@ -131,7 +131,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   advlogo: any;
   advlogo_saved: any;
 
- severitytable = [
+  severitytable = [
     { name: 'Critical', value: 0 },
     { name: 'High', value: 0 },
     { name: 'Medium', value: 0 },
@@ -139,15 +139,15 @@ export class ReportComponent implements OnInit, OnDestroy {
     { name: 'Info', value: 0 }
   ];
 
- // options stats
- gradient: boolean = true;
- showLegend: boolean = true;
- showLabels: boolean = true;
- isDoughnut: boolean = false;
+  // options stats
+  gradient: boolean = true;
+  showLegend: boolean = true;
+  showLabels: boolean = true;
+  isDoughnut: boolean = false;
 
- colorScheme = {
-   domain: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
- };
+  colorScheme = {
+    domain: ['#FF0039', '#FF7518', '#F9EE06', '#3FB618', '#2780E3']
+  };
 
   // options stats activity
   selectedRangeValue: DateRange<Date> | null;
@@ -168,7 +168,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private messageService: MessageService,
     private snackBar: MatSnackBar,
-    public sessionsub: SessionstorageserviceService, 
+    public sessionsub: SessionstorageserviceService,
     private datePipe: DatePipe,
     private dateAdapter: DateAdapter<Date>) {
     //console.log(route);
@@ -218,17 +218,17 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // this.report_id = this.route.snapshot.params['report_id'];
     //set local
-    if(navigator.language) {
+    if (navigator.language) {
       this.dateAdapter.setLocale(navigator.language); //detect browser local
       this.setLocal = navigator.language;
     } else {
       this.dateAdapter.setLocale(this.setLocal);
     }
-    
+
 
     this.route.params.subscribe(routeParams => {
-      if(routeParams.report_id != ''){
-        if(routeParams.report_id){
+      if (routeParams.report_id != '') {
+        if (routeParams.report_id) {
           this.report_decryption_in_progress = true;
           this.report_id = routeParams.report_id;
           this.youhaveunsavedchanges = false;
@@ -237,7 +237,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           // check if report exist
           this.indexeddbService.checkifreportexist(this.report_id).then(data => {
             if (data) {
-              
+
               console.log('Report exist: OK');
               this.report_info = data;
               this.reportdesc = data;
@@ -298,14 +298,14 @@ export class ReportComponent implements OnInit, OnDestroy {
           });
 
           this.getReportProfiles();
-          
+
 
         }
       }
     });
 
 
-    
+
   }
 
   entestdateChanged() {
@@ -331,7 +331,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  dateClass() {    
+  dateClass() {
     return (date: Date): MatCalendarCellCssClasses => {
       const issuearr_success = [];
       const issuearr_critical = [];
@@ -341,13 +341,13 @@ export class ReportComponent implements OnInit, OnDestroy {
       });
 
       critical.forEach((item, index) => {
-        if(issuearr_critical.indexOf(item) === -1) {
+        if (issuearr_critical.indexOf(item) === -1) {
           issuearr_critical.push(item.date);
         }
       });
 
       this.decryptedReportDataChanged.report_vulns.forEach((item, index) => {
-        if(issuearr_success.indexOf(item) === -1) {
+        if (issuearr_success.indexOf(item) === -1) {
           issuearr_success.push(item.date);
         }
       });
@@ -357,20 +357,20 @@ export class ReportComponent implements OnInit, OnDestroy {
         .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
 
       const specialdate = issuearr_critical
-      .map(strDate => new Date(strDate))
-      .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+        .map(strDate => new Date(strDate))
+        .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
 
-      if(specialdate) {
+      if (specialdate) {
         return 'special-date'
-      } else if(successdate) {
+      } else if (successdate) {
         return 'success-date'
       } else {
         return ''
       }
-    
+
     };
-    
-    }
+
+  }
 
   getReportProfiles() {
     // get report profiles
@@ -773,15 +773,15 @@ Sample code here\n\
       setTimeout(() => this.calendar.updateTodaysDate());
     }
     this.entestdateChanged();
-    
+
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
-    
+
   }
 
   renderdateformat(inputdate) {
-      const date = new Date(inputdate).getTime();
-      const rdate = this.datePipe.transform(date, 'yyyy-MM-dd');
-      return rdate
+    const date = new Date(inputdate).getTime();
+    const rdate = this.datePipe.transform(date, 'yyyy-MM-dd');
+    return rdate
   }
 
   onDateChange(data, event) {
@@ -794,7 +794,7 @@ Sample code here\n\
 
   }
 
-  mergeissue(issue){
+  mergeissue(issue) {
     this.decryptedReportDataChanged.report_vulns.push(issue);
     this.addtochangelog('Create issue: ' + issue.title);
     this.afterDetectionNow();
@@ -815,7 +815,7 @@ Sample code here\n\
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result !== undefined) {
-        if(isIterable(result)) {
+        if (isIterable(result)) {
           for (var elem of result) {
             if (elem.title !== '') {
               this.mergeissue(elem);
@@ -982,140 +982,140 @@ Sample code here\n\
 
         this.indexeddbService.checkAPIreportchanges(this.report_id).then(re => {
           if (re) {
-              //console.log(re);
-              //console.log(re.report_lastupdate);
-              //console.log(this.reportdesc.report_lastupdate);
-  
-              if(this.reportdesc.report_lastupdate === re.report_lastupdate) {
-                console.log('no changes');
+            //console.log(re);
+            //console.log(re.report_lastupdate);
+            //console.log(this.reportdesc.report_lastupdate);
 
-                this.indexeddbService.searchAPIreport(this.report_info.report_id).then(ret => {
+            if (this.reportdesc.report_lastupdate === re.report_lastupdate) {
+              console.log('no changes');
 
-                  if (ret === 'API_ERROR') {
-                    console.log('api problems');
-        
-                    const dialogRef = this.dialog.open(DialogApierrorComponent, {
-                      width: '400px',
-                      disableClose: true
-                    });
-        
-                    dialogRef.afterClosed().subscribe(result => {
-        
-                      if (result === 'tryagain') {
-                        console.log('User select: try again');
-                        this.saveReportChanges(this.report_info.report_id);
+              this.indexeddbService.searchAPIreport(this.report_info.report_id).then(ret => {
+
+                if (ret === 'API_ERROR') {
+                  console.log('api problems');
+
+                  const dialogRef = this.dialog.open(DialogApierrorComponent, {
+                    width: '400px',
+                    disableClose: true
+                  });
+
+                  dialogRef.afterClosed().subscribe(result => {
+
+                    if (result === 'tryagain') {
+                      console.log('User select: try again');
+                      this.saveReportChanges(this.report_info.report_id);
+                    }
+
+                    if (result === 'savelocally') {
+                      console.log('User select: save locally');
+                      try {
+                        this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+                        this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                        // Encrypt
+                        const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
+                        const now: number = Date.now();
+                        const to_update = {
+                          report_id: uuid(),
+                          report_name: this.report_info.report_name,
+                          report_createdate: this.report_info.report_createdate,
+                          report_lastupdate: now,
+                          encrypted_data: ciphertext.toString()
+                        };
+
+                        this.indexeddbService.cloneReportadd(to_update).then(data => {
+                          if (data) {
+                            this.removeSureYouWanttoLeave();
+                            this.router.navigate(['/my-reports']);
+                          }
+                        });
+
+                      } catch (except) {
+                        console.log(except);
                       }
-        
-                      if (result === 'savelocally') {
-                        console.log('User select: save locally');
-                        try {
-                          this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                          this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
-                          // Encrypt
-                          const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
-                          const now: number = Date.now();
-                          const to_update = {
-                            report_id: uuid(),
-                            report_name: this.report_info.report_name,
-                            report_createdate: this.report_info.report_createdate,
-                            report_lastupdate: now,
-                            encrypted_data: ciphertext.toString()
-                          };
-        
-                          this.indexeddbService.cloneReportadd(to_update).then(data => {
-                            if (data) {
-                              this.removeSureYouWanttoLeave();
-                              this.router.navigate(['/my-reports']);
-                            }
-                          });
-        
-                        } catch (except) {
-                          console.log(except);
-                        }
-        
-                      }
-                    });
-        
-                  } else {
+
+                    }
+                  });
+
+                } else {
+                  this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
+                  this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                  // tslint:disable-next-line:max-line-length
+                  this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
+                    if (retu === 'NOSPACE') {
+                      this.savemsg = '';
+                      this.report_encryption_in_progress = false;
+                    } else {
+                      this.report_encryption_in_progress = false;
+                      this.reportdesc.report_lastupdate = retu;
+                      this.savemsg = 'All changes saved on remote API successfully!';
+                      this.lastsavereportdata = retu;
+                      this.doStats();
+                      this.removeSureYouWanttoLeave();
+
+                      this.snackBar.open('All changes saved on remote API successfully!', 'OK', {
+                        duration: 3000,
+                        panelClass: ['notify-snackbar-success']
+                      });
+                    }
+
+                  });
+
+                }
+
+              });
+
+
+            } else {
+              console.log('report changes detected!!!');
+
+
+              const dialogRef = this.dialog.open(DialogApierrorComponent, {
+                width: '400px',
+                disableClose: true
+              });
+
+              dialogRef.afterClosed().subscribe(result => {
+
+                if (result === 'tryagain') {
+                  console.log('User select: try again');
+                  this.saveReportChanges(this.report_info.report_id);
+                }
+
+                if (result === 'savelocally') {
+                  console.log('User select: save locally');
+                  try {
                     this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
                     this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
-                    // tslint:disable-next-line:max-line-length
-                    this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
-                      if (retu === 'NOSPACE') {
-                        this.savemsg = '';
-                        this.report_encryption_in_progress = false;
-                      } else {
-                        this.report_encryption_in_progress = false;
-                        this.reportdesc.report_lastupdate = retu;
-                        this.savemsg = 'All changes saved on remote API successfully!';
-                        this.lastsavereportdata = retu;
-                        this.doStats();
+                    // Encrypt
+                    const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
+                    const now: number = Date.now();
+                    const to_update = {
+                      report_id: uuid(),
+                      report_name: this.report_info.report_name,
+                      report_createdate: this.report_info.report_createdate,
+                      report_lastupdate: now,
+                      encrypted_data: ciphertext.toString()
+                    };
+
+                    this.indexeddbService.cloneReportadd(to_update).then(data => {
+                      if (data) {
                         this.removeSureYouWanttoLeave();
-        
-                        this.snackBar.open('All changes saved on remote API successfully!', 'OK', {
-                          duration: 3000,
-                          panelClass: ['notify-snackbar-success']
-                        });
+                        this.router.navigate(['/my-reports']);
                       }
-        
                     });
-        
+
+                  } catch (except) {
+                    console.log(except);
                   }
-        
-                });
 
+                }
+              });
 
-              } else {
-                console.log('report changes detected!!!');
+            }
 
-
-                const dialogRef = this.dialog.open(DialogApierrorComponent, {
-                  width: '400px',
-                  disableClose: true
-                });
-    
-                dialogRef.afterClosed().subscribe(result => {
-    
-                  if (result === 'tryagain') {
-                    console.log('User select: try again');
-                    this.saveReportChanges(this.report_info.report_id);
-                  }
-    
-                  if (result === 'savelocally') {
-                    console.log('User select: save locally');
-                    try {
-                      this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                      this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
-                      // Encrypt
-                      const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
-                      const now: number = Date.now();
-                      const to_update = {
-                        report_id: uuid(),
-                        report_name: this.report_info.report_name,
-                        report_createdate: this.report_info.report_createdate,
-                        report_lastupdate: now,
-                        encrypted_data: ciphertext.toString()
-                      };
-    
-                      this.indexeddbService.cloneReportadd(to_update).then(data => {
-                        if (data) {
-                          this.removeSureYouWanttoLeave();
-                          this.router.navigate(['/my-reports']);
-                        }
-                      });
-    
-                    } catch (except) {
-                      console.log(except);
-                    }
-    
-                  }
-                });
-
-              }
-  
           }
         });
-        
+
       }
 
     });
@@ -1132,14 +1132,14 @@ Sample code here\n\
     const ret = items.filter(function (el) {
       return (el.tags.length !== 0);
     });
-    
+
     return ret.length;
   }
 
   getAllTAgs() {
 
     const rettag = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.tags.length >0);
+      return (el.tags.length > 0);
     });
 
     if (rettag.length > 0) {
@@ -1152,13 +1152,13 @@ Sample code here\n\
             xxx.push(tagval.name);
           }
 
-        });        
-      }); 
+        });
+      });
       this.RaportsTags = xxx;
 
     }
 
-  return this.RaportsTags
+    return this.RaportsTags
   }
 
   sortbycvss() {
@@ -1978,7 +1978,7 @@ Date   | Description
     const reader = new FileReader();
     reader.onloadend = (e) => {
       file_sha2 = sha256(reader.result);
-      
+
       this.proccessUpload(dataurl, file.name, file.type, file.size, file_sha2, dec_data);
     };
     reader.readAsArrayBuffer(file);
@@ -2003,7 +2003,7 @@ Date   | Description
     const files = input.files;
     if (files && files.length) {
       this.upload_in_progress = true;
-      for(let i = 0; i < files.length; i++) {
+      for (let i = 0; i < files.length; i++) {
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
           this.checksumfile(fileReader.result, files[i], dec_data);
@@ -2158,7 +2158,7 @@ Date   | Description
   }
 
   savenewReportProfile() {
-    
+
     const time = new Date().toLocaleDateString(this.setLocal);
     const profile = {
       profile_name: time,
@@ -2366,25 +2366,25 @@ IP   | hostname | role | comments\n\
 
   saveTemplate(dec_data): void {
 
-      const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
-        width: '800px',
-        disableClose: false,
-        data: {
-          "title": dec_data.title,
-          "poc": "",
-          "desc": dec_data.desc,
-          "severity": dec_data.severity,
-          "ref": dec_data.ref,
-          "cvss": dec_data.cvss,
-          "cvss_vector": dec_data.cvss_vector,
-          "cve": dec_data.cve
+    const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
+      width: '800px',
+      disableClose: false,
+      data: {
+        "title": dec_data.title,
+        "poc": "",
+        "desc": dec_data.desc,
+        "severity": dec_data.severity,
+        "ref": dec_data.ref,
+        "cvss": dec_data.cvss,
+        "cvss_vector": dec_data.cvss_vector,
+        "cve": dec_data.cve
       }
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The add custom template dialog was closed');
-      });
-  
-    }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The add custom template dialog was closed');
+    });
+
+  }
 
 }
