@@ -81,11 +81,11 @@ Please add template:
     
 \`\`\`
 {
-  "title": "`+templatename.replace("`", "'")+`",
+  "title": "`+templatename.replaceAll("`", "'")+`",
   "poc": "",
-  "desc": "`+description.replace("`", "'")+`",
+  "desc": "`+description.replaceAll("`", "'")+`",
   "severity": "`+severity+`",
-  "ref": "`+encodeURI(references).replace("%0A", "\\n")+`",
+  "ref": "`+encodeURI(references).replaceAll("%0A", "\\n")+`",
   "cvss": "`+cvss+`",
   "cvss_vector": "`+cvss_vector+`",
   "cve": "`+cve+`"
