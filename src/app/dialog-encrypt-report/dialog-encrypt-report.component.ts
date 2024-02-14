@@ -51,7 +51,14 @@ export class DialogEncryptReportComponent implements OnInit {
     if (this.usemyrepkey) {
       this.dialogRef.close('userepokey');
     } else {
-      this.dialogRef.close(this.setkey.value);
+
+      if(this.setkey.value.length < 6) {
+        this.setkey.setErrors({'tooweakpass': true});
+        console.log(this.setkey.value.length);
+      } else{
+        this.dialogRef.close(this.setkey.value);
+      }
+
     }
     
   }
