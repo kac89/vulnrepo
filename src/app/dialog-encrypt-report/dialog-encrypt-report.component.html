@@ -12,7 +12,7 @@
             <div *ngIf="!usemyrepkey" fxLayoutAlign="start center">
                 <mat-form-field color="accent" class="example-full-width">
                     <mat-label>Set report security key</mat-label>
-                    <input [type]="hide ? 'password' : 'text'" [formControl]="setkey" matInput #securitykey maxlength="256" placeholder="Ex. I need help with...">
+                    <input [type]="hide ? 'password' : 'text'" [formControl]="setkey" matInput #securitykey maxlength="256">
                     
                     <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
                         <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -25,6 +25,10 @@
                       </button>
             
                     <mat-hint align="end">{{securitykey.value.length}} / 256 chars</mat-hint>
+                    @if (setkey.hasError('tooweakpass')) {
+                      <mat-error><strong>Security key is too weak! (min. 8 chars)</strong></mat-error>
+                    }
+
                   </mat-form-field>
                   
             </div>

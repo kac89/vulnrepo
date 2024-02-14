@@ -21,7 +21,7 @@ export class DialogEncryptReportComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DialogEncryptReportComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private utilsService: UtilsService){
+    private utilsService: UtilsService) {
 
   }
 
@@ -38,7 +38,7 @@ export class DialogEncryptReportComponent implements OnInit {
     setTimeout(() => {
       this.tooltip.show();
       this.tooltip.message = "Copied!";
-      });
+    });
     setTimeout(() => {
       this.tooltip.hide();
       this.tooltip.message = "Copy to clipboard";
@@ -51,9 +51,15 @@ export class DialogEncryptReportComponent implements OnInit {
     if (this.usemyrepkey) {
       this.dialogRef.close('userepokey');
     } else {
-      this.dialogRef.close(this.setkey.value);
+
+      if (this.setkey.value.length <= 7) {
+        this.setkey.setErrors({ 'tooweakpass': true });
+      } else {
+        this.dialogRef.close(this.setkey.value);
+      }
+
     }
-    
+
   }
   cancel(): void {
     this.dialogRef.close();
