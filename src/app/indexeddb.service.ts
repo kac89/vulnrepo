@@ -108,7 +108,7 @@ export class IndexeddbService {
       base_array.report_settings.report_remove_issuetags = profile.remove_tags;
       base_array.report_settings.report_parsing_desc = profile.report_parsing_desc;
       base_array.report_settings.report_parsing_poc_markdown = profile.report_parsing_poc_markdown;
-      
+
     }
 
     return base_array;
@@ -189,10 +189,10 @@ export class IndexeddbService {
           },
           researcher: [
             {
-            reportername: '',
-            reportersocial: '',
-            reporterwww: '',
-            reporteremail: ''
+              reportername: '',
+              reportersocial: '',
+              reporterwww: '',
+              reporteremail: ''
             }
           ],
           report_settings: {
@@ -302,10 +302,10 @@ export class IndexeddbService {
           },
           researcher: [
             {
-            reportername: '',
-            reportersocial: '',
-            reporterwww: '',
-            reporteremail: ''
+              reportername: '',
+              reportersocial: '',
+              reporterwww: '',
+              reporteremail: ''
             }
           ],
           report_settings: {
@@ -333,22 +333,22 @@ export class IndexeddbService {
         };
 
 
-          // tslint:disable-next-line:max-line-length
-          this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(data))).then(resp => {
-            if (resp) {
+        // tslint:disable-next-line:max-line-length
+        this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(data))).then(resp => {
+          if (resp) {
 
-              if (resp.STORAGE === 'NOSPACE') {
-                this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
-                  duration: 3000,
-                  panelClass: ['notify-snackbar-fail']
-                });
-              } else {
-                this.sessionsub.setSessionStorageItem(reportid, pass);
-                this.router.navigate(['/my-reports']);
-              }
-
+            if (resp.STORAGE === 'NOSPACE') {
+              this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
+                duration: 3000,
+                panelClass: ['notify-snackbar-fail']
+              });
+            } else {
+              this.sessionsub.setSessionStorageItem(reportid, pass);
+              this.router.navigate(['/my-reports']);
             }
-          });
+
+          }
+        });
 
 
       }
@@ -491,10 +491,10 @@ export class IndexeddbService {
         const request = store.getAll();
         request.onsuccess = function (evt) {
           request.result.forEach((item) => {
-            if(item.report_id === report_id) {
+            if (item.report_id === report_id) {
               resolve(item);
             }
-        });
+          });
         };
         tx.oncomplete = function () {
           db.close();
@@ -731,27 +731,27 @@ export class IndexeddbService {
 
   cloneReportadd(report: any) {
     return new Promise<any>((resolve, reject) => {
-          // indexeddb communication
-          const indexedDB = window.indexedDB;
-          const open = indexedDB.open('vulnrepo-db', 1);
+      // indexeddb communication
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db', 1);
 
-          open.onupgradeneeded = function () {
-            const db = open.result;
-            db.createObjectStore('reports', { autoIncrement: true });
-          };
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports', { autoIncrement: true });
+      };
 
-          open.onsuccess = function () {
-            const db = open.result;
-            const tx = db.transaction('reports', 'readwrite');
-            const store = tx.objectStore('reports');
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports', 'readwrite');
+        const store = tx.objectStore('reports');
 
-            store.put(report);
+        store.put(report);
 
-            tx.oncomplete = function () {
-              db.close();
-              resolve(true);
-            };
-          };
+        tx.oncomplete = function () {
+          db.close();
+          resolve(true);
+        };
+      };
 
     });
   }
@@ -838,21 +838,21 @@ export class IndexeddbService {
       const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
       if (localkey) {
 
-          const vaultobj = JSON.parse(localkey);
+        const vaultobj = JSON.parse(localkey);
 
-          vaultobj.forEach( (element) => {
-            this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+        vaultobj.forEach((element) => {
+          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
-              if (resp) {
-                if (resp.length > 0) {
-                  console.log('Report exist in API: OK');
-                  resolve(resp[0]);
-                } else {
-                  resolve(false);
-                }
+            if (resp) {
+              if (resp.length > 0) {
+                console.log('Report exist in API: OK');
+                resolve(resp[0]);
+              } else {
+                resolve(false);
               }
+            }
 
-            });
+          });
 
         });
 
@@ -870,21 +870,21 @@ export class IndexeddbService {
       const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
       if (localkey) {
 
-          const vaultobj = JSON.parse(localkey);
+        const vaultobj = JSON.parse(localkey);
 
-          vaultobj.forEach( (element) => {
-            this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+        vaultobj.forEach((element) => {
+          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
-              if (resp) {
-                if (resp.length > 0) {
-                  console.log('Report exist in API: OK');
-                  resolve(resp[0]);
-                } else {
-                  resolve(false);
-                }
+            if (resp) {
+              if (resp.length > 0) {
+                console.log('Report exist in API: OK');
+                resolve(resp[0]);
+              } else {
+                resolve(false);
               }
+            }
 
-            });
+          });
 
         });
 
@@ -903,29 +903,29 @@ export class IndexeddbService {
       const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
       if (localkey) {
 
-          const vaultobj = JSON.parse(localkey);
+        const vaultobj = JSON.parse(localkey);
 
-          vaultobj.forEach( (element) => {
+        vaultobj.forEach((element) => {
 
-            let check = false;
+          let check = false;
 
-            this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
-              if (resp) {
-                if (resp.length > 0) {
-                  check = true;
-                  console.log('Report exist in API: OK');
-                  resolve({data: resp[0], api: element.value, apikey: element.apikey});
-                }
-              } else {
-                check = false;
+            if (resp) {
+              if (resp.length > 0) {
+                check = true;
+                console.log('Report exist in API: OK');
+                resolve({ data: resp[0], api: element.value, apikey: element.apikey });
               }
+            } else {
+              check = false;
+            }
 
-            }).then((resp) => {
-              if (check !== true) {
-                resolve('API_ERROR');
-              }
-            });
+          }).then((resp) => {
+            if (check !== true) {
+              resolve('API_ERROR');
+            }
+          });
 
         });
 
@@ -993,6 +993,155 @@ export class IndexeddbService {
         };
       };
 
+    });
+  }
+
+  saveReportTemplateinDB(key) {
+    return new Promise<any>((resolve, reject) => {
+      // indexeddb communication
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-templates', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-templates', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-templates', 'readwrite');
+        const store = tx.objectStore('report-templates');
+
+        store.put(key);
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve(true);
+        };
+      };
+
+    });
+  }
+
+  retrieveReportTemplates() {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-templates', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-templates', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+
+        const db = open.result;
+        const tx = db.transaction('report-templates', 'readwrite');
+        const store = tx.objectStore('report-templates');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.getAll();
+
+        request.onsuccess = function (evt) {
+          resolve(request.result);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+
+      };
+
+    });
+  }
+
+  getkeybyTemplateID(title) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-templates', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-templates', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-templates', 'readwrite');
+        const store = tx.objectStore('report-templates');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.openCursor();
+
+        request.onsuccess = function (evt) {
+
+          const cursor = request.result;
+          if (cursor) {
+            const key = cursor.primaryKey;
+            const value = cursor.value.title;
+
+            if (title === value) {
+              const finded = { key, value };
+              resolve(finded);
+            }
+            cursor.continue();
+          } else {
+            // no more results
+
+          }
+
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve({ 'NotFound': 'NOOK' });
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+  deleteTemplate(item: any) {
+    return new Promise<any>((resolve, reject) => {
+      this.getkeybyTemplateID(item.title).then(data => {
+        if (data) {
+
+          if (data.NotFound === 'NOOK') {
+            console.log('no locally template');
+          } else {
+            // indexeddb communication
+            const indexedDB = window.indexedDB;
+            const open = indexedDB.open('vulnrepo-templates', 1);
+
+            open.onupgradeneeded = function () {
+              const db = open.result;
+              db.createObjectStore('report-templates', { autoIncrement: true });
+            };
+
+            open.onsuccess = function () {
+              const db = open.result;
+              const tx = db.transaction('report-templates', 'readwrite');
+              const store = tx.objectStore('report-templates');
+
+              store.delete(data.key);
+
+              tx.oncomplete = function () {
+                db.close();
+                resolve(true);
+              };
+            };
+          }
+
+        }
+      });
     });
   }
 

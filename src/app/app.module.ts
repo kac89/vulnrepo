@@ -80,6 +80,8 @@ import { Pcidss4Component } from './pcidss4/pcidss4.component';
 import { DialogPcidss4Component } from './dialog-pcidss4/dialog-pcidss4.component';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogIssuesEditComponent } from './dialog-issues-edit/dialog-issues-edit.component';
+import { DialogAddCustomTemplateComponent } from './dialog-add-custom-template/dialog-add-custom-template.component';
+import { DialogEncryptReportComponent } from './dialog-encrypt-report/dialog-encrypt-report.component';
 
 @NgModule({
     declarations: [
@@ -115,7 +117,9 @@ import { DialogIssuesEditComponent } from './dialog-issues-edit/dialog-issues-ed
         Pcidss4Component,
         DialogPcidss4Component,
         DialogAboutComponent,
-        DialogIssuesEditComponent
+        DialogIssuesEditComponent,
+        DialogAddCustomTemplateComponent,
+        DialogEncryptReportComponent
     ],
     imports: [
         BrowserModule,

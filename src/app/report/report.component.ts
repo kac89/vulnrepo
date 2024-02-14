@@ -37,6 +37,8 @@ import { MatCalendar, MatCalendarCellCssClasses, DateRange } from '@angular/mate
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { DatePipe } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
+import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
+import { DialogEncryptReportComponent } from '../dialog-encrypt-report/dialog-encrypt-report.component';
 
 export interface Tags {
   name: string;
@@ -1825,8 +1827,26 @@ Date   | Description
     document.body.removeChild(link);
   }
 
-  DownloadHTMLv2(report_info, encrypted, type_dep): void {
+  encrypt_reportv2(report_info, encrypted, type_dep): void {
+    const dialogRef = this.dialog.open(DialogEncryptReportComponent, {
+      width: '600px',
+      //height: '985px',
+      disableClose: true,
+      data: []
+    });
 
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Encrypt report dialog was closed');
+      if (result) {
+        this.DownloadHTMLv2(report_info, encrypted, type_dep, result);
+      }
+    });
+
+  }
+
+
+  DownloadHTMLv2(report_info, encrypted, type_dep, encpass): void {
     const json = {
       "report_name": report_info.report_name,
       "report_id": report_info.report_id,
@@ -1856,9 +1876,13 @@ Date   | Description
       { "filename": "dompurify/2.4.1/purify.min.js", "integrity": "sha512-uHOKtSfJWScGmyyFr2O2+efpDx2nhwHU2v7MVeptzZoiC7bdF6Ny/CmZhN2AwIK1oCFiVQQ5DA/L9FSzyPNu6Q==" },
       { "filename": "Chart.js/4.4.0/chart.umd.js", "integrity": "sha512-6HrPqAvK+lZElIZ4mZ64fyxIBTsaX5zAFZg2V/2WT+iKPrFzTzvx6QAsLW2OaLwobhMYBog/+bvmIEEGXi0p1w==" }
     ];
+    let ciphertext = "";
+    if (encpass === 'userepokey') {
+      ciphertext = Crypto.AES.encrypt(JSON.stringify(json), this.sessionsub.getSessionStorageItem(report_info.report_id));
+    } else {
+      ciphertext = Crypto.AES.encrypt(JSON.stringify(json), encpass);
+    }
 
-
-    const ciphertext = Crypto.AES.encrypt(JSON.stringify(json), this.sessionsub.getSessionStorageItem(report_info.report_id));
 
     this.http.get('/assets/html_report_v2_template.html?v=' + new Date(), { responseType: 'text' }).subscribe(res => {
 
@@ -2339,5 +2363,28 @@ IP   | hostname | role | comments\n\
     this.poc_editor_hide[id] = !this.poc_editor_hide[id];
     this.prev_hide[id] = !this.prev_hide[id];
   }
+
+  saveTemplate(dec_data): void {
+
+      const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
+        width: '800px',
+        disableClose: false,
+        data: {
+          "title": dec_data.title,
+          "poc": "",
+          "desc": dec_data.desc,
+          "severity": dec_data.severity,
+          "ref": dec_data.ref,
+          "cvss": dec_data.cvss,
+          "cvss_vector": dec_data.cvss_vector,
+          "cve": dec_data.cve
+      }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The add custom template dialog was closed');
+      });
+  
+    }
 
 }

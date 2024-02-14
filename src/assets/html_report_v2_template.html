@@ -448,7 +448,7 @@
 			} else if (type.includes('video')) {
 
 				if (isembed) {
-					fil = fil + '<video width="100%" height="600" controls><source src="' + DOMPurify.sanitize(data) + '" type="' + DOMPurify.sanitize(type) + '">Your browser does not support the video tag.</video>';
+					fil = fil + '<video width="100%" height="600" controls><source src="' + DOMPurify.sanitize(data) + '" type="' + DOMPurify.sanitize(type) + '">Your browser does not support the video tag.</video><br>Download <a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
 				} else {
 					fil = fil + '<a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
 				}

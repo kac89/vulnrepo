@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dialog-addreportprofile.component';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { CurrentdateService } from '../currentdate.service';
+import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
 
 export interface ApiList {
   apikey: string;
@@ -51,10 +52,14 @@ export class SettingsComponent implements OnInit {
   max_storage: any;
   status = 'Not connected!';
   reportProfileList = [];
+  reportTemplateList = [];
   reportProfileList_int = [];
 
   ReportProfilesdisplayedColumns: string[] = ['source', 'profile_name', 'profile_settings'];
   ReportProfilesdataSource = new MatTableDataSource([]);
+
+  ReportTemplatesdataSource = new MatTableDataSource([]);
+  ReportTemplatesdisplayedColumns: string[] = ['template_name', 'template_settings'];
 
   displayedColumns: string[] = ['apiname', 'organisation', 'status', 'created', 'expires', 'storage', 'settings'];
   dataSource = new MatTableDataSource([]);
@@ -72,6 +77,8 @@ export class SettingsComponent implements OnInit {
         this.reportProfileList = this.ReportProfilesdataSource.data;
       }
     });
+
+    this.getTemplates();
 
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
@@ -103,6 +110,15 @@ export class SettingsComponent implements OnInit {
 
   }
   
+getTemplates(): void {
+  this.indexeddbService.retrieveReportTemplates().then(ret => {
+    if (ret) {
+      this.ReportTemplatesdataSource = new MatTableDataSource(ret);
+      this.reportTemplateList = this.ReportTemplatesdataSource.data;
+    }
+  });
+}
+
   wipeDatachanged() {
 
     if (this.wipechecked === true) {
@@ -116,6 +132,7 @@ export class SettingsComponent implements OnInit {
 
 
   wipealldata() {
+    indexedDB.deleteDatabase('vulnrepo-templates');
     indexedDB.deleteDatabase('vulnrepo-settings');
     indexedDB.deleteDatabase('vulnrepo-api');
     indexedDB.deleteDatabase('vulnrepo-db');
@@ -537,6 +554,38 @@ getAPIReportProfiles() {
 
   }
 
+
+  openDialogReportTemplates(): void {
+
+    const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
+      width: '800px',
+      disableClose: false,
+      data: []
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The add custom template dialog was closed');
+      this.getTemplates();
+    });
+
+  }
+
+  removeTemplate(item: any): void {
+
+    const index: number = this.reportTemplateList.indexOf(item);
+    if (index !== -1) {
+
+      this.reportTemplateList.splice(index, 1);
+      this.ReportTemplatesdataSource.data = this.reportTemplateList;
+
+      this.indexeddbService.deleteTemplate(item).then(ret => {
+        this.getTemplates();
+      });
+      
+    }
+
+  }
+
   removeProfileItem(item: any): void {
     const index: number = this.reportProfileList.indexOf(item as never);
     if (index !== -1) {
@@ -657,6 +706,55 @@ downloadProfileItem(element) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+exporttemplates() {
+
+  this.indexeddbService.retrieveReportTemplates().then(ret => {
+    if (ret) {
+      const blob = new Blob([JSON.stringify(ret)], { type: 'application/json' });
+      const link = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'Backup Report Templates (vulnrepo.com).vulnt');
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  });
+}
+
+importReportTemplates(input: HTMLInputElement) {
+  console.log('import templates');
+
+  const files = input.files;
+  if (files && files.length) {
+
+    const fileToRead = files[0];
+    const fileReader = new FileReader();
+    fileReader.onload = this.onFileLoad;
+
+    fileReader.onload = (e) => {
+      this.parsetemplate(fileReader.result);
+      
+    };
+
+    fileReader.readAsText(fileToRead, 'UTF-8');
+  }
+
+}
+
+parsetemplate(template){
+  const parsed = JSON.parse(template);
+  this.reportTemplateList = this.reportProfileList.concat(parsed);
+  this.ReportTemplatesdataSource.data = this.reportTemplateList;
+
+  for (let item of this.reportTemplateList) {
+    this.indexeddbService.saveReportTemplateinDB(item).then(ret => {});
+  }     
+
+  this.getTemplates();
 }
 
 }

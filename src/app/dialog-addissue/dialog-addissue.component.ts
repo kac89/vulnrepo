@@ -12,6 +12,7 @@ import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
 import { CurrentdateService } from '../currentdate.service';
+import { IndexeddbService } from '../indexeddb.service';
 
 export interface Vulns {
   title: string;
@@ -84,7 +85,8 @@ export class DialogAddissueComponent implements OnInit {
   constructor(public router: Router,
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
     private currentdateService: CurrentdateService,
-    private apiService: ApiService, private datePipe: DatePipe) {
+    private apiService: ApiService, private datePipe: DatePipe,
+    private indexeddbService: IndexeddbService) {
 
     this.filteredOptions = this.customissueform.valueChanges
       .pipe(
@@ -206,8 +208,12 @@ export class DialogAddissueComponent implements OnInit {
 
   ngOnInit() {
 
-    this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-      this.options = res;
+    this.indexeddbService.retrieveReportTemplates().then(ret => {
+      if (ret) {
+        this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+          this.options = [...res,...ret];
+        });
+      }
     });
 
     this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {

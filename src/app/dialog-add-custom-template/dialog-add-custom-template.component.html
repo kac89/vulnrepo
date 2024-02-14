@@ -1,0 +1,89 @@
+<mat-card appearance="outlined">
+    <mat-card-header>
+        
+      <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">add_circle</mat-icon>
+      <mat-card-title>VULNRΞPO</mat-card-title>
+      <mat-card-subtitle>Add custom template</mat-card-subtitle>
+
+      <div style="margin-left: auto;margin-right: 0;">
+        <button mat-raised-button color="accent" (click)="addtomaster()"><mat-icon>link</mat-icon>Save to community</button>
+      </div>
+      
+    </mat-card-header>
+    
+    <mat-card-content>
+
+        <div fxLayout="column" fxLayoutGap="10px grid">
+            <div fxLayoutAlign="start center">
+                <mat-form-field class="example-full-width" color="accent">
+                    <mat-label>Template name</mat-label>
+                    <input matInput [formControl]="templatename" placeholder="e.g: [FPD] Full Path Disclosure">
+                  </mat-form-field>
+            </div>
+            <div fxLayoutAlign="start center">
+                <mat-form-field class="example-full-width" color="accent">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput [formControl]="description" placeholder="e.g: Full Path Disclosure (FPD) vulnerabilities enable the attacker to see the path to the webroot/file. e.g.: /home/omg/htdocs/file/. Certain vulnerabilities, such as using the load_file() (within a SQL Injection) query to view the page source, require the attacker to have the full path to the file they wish to view."></textarea>
+                  </mat-form-field>
+            </div>
+            <div fxLayoutAlign="start center">
+                <mat-form-field class="example-full-width" color="accent">
+                    <mat-label>References</mat-label>
+                    <textarea matInput [formControl]="references" placeholder="e.g: https://owasp.org/www-community/attacks/Full_Path_Disclosure"></textarea>
+                  </mat-form-field>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="start">
+
+                <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                    <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                        <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>Select an severity</mat-label>
+                            <mat-select [formControl]="severity">
+                                @for (sev of tablecon; track sev) {
+                                  <mat-option [value]="sev.name">{{sev.name}}</mat-option>
+                                }
+                              </mat-select>
+                          </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                        <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>CVE</mat-label>
+                            <input matInput [formControl]="cve" placeholder="CVE">
+                          </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                    <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                        <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>CVSS base score</mat-label>
+                            <input [formControl]="cvss" matInput placeholder="e.g: 5">
+                            <button mat-button (click)="openDialogCVSS()" style="line-height: 25px;" color="accent" matSuffix>
+                                CVSS
+                            </button>
+                          </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                        <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>CVSS vector</mat-label>
+                            <input [formControl]="cvss_vector" matInput placeholder="CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_">
+                          </mat-form-field>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="10px grid">
+            <div fxLayoutAlign="start center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                <button mat-raised-button color="primary" (click)="cancel()">Close</button>
+            </div>
+            <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                <button mat-raised-button color="accent" (click)="savelocally()"><mat-icon>save_as</mat-icon>Save locally</button>
+            </div>
+        </div>
+
+        
+    </mat-card-content>
+  </mat-card>

@@ -153,6 +153,59 @@
         
     </mat-card>
 
+    <br>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">settings_applications</mat-icon>
+        <mat-card-title>Report Templates</mat-card-title>
+        <mat-card-subtitle>Your custom issues templates</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <table mat-table *ngIf="reportTemplateList.length > 0" style="width: 100%;" [dataSource]="ReportTemplatesdataSource" class="mat-elevation-z8">
+
+          <ng-container matColumnDef="template_name">
+            <th mat-header-cell *matHeaderCellDef> <b>Template name</b> </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="template_settings">
+            <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
+            <td mat-cell *matCellDef="let element">
+
+              <a [routerLink]="[]" (click)="removeTemplate(element)" title="Remove template"><mat-icon color="warn" class="vertical-align-middle">delete_forever</mat-icon></a>
+
+            </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="ReportTemplatesdisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: ReportTemplatesdisplayedColumns;"></tr>
+        </table>
+        <br>
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
+
+            <button mat-mini-fab (click)="openDialogReportTemplates()" color="primary" title="Add report template">
+              <i class="material-icons">add_circle</i>
+            </button>
+
+          </div>
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end">
+            <button mat-raised-button color="primary"(click)="imreporttemplatess.click()" title="Import report templates">
+              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
+            </button>
+            &nbsp;
+            <button *ngIf="reportTemplateList.length > 0" mat-raised-button color="primary" (click)="exporttemplates()" title="Export report templates">
+              <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Export
+            </button>
+            <input hidden type="file" accept=".vulnt" #imreporttemplatess (change)="importReportTemplates($event.target)"/>
+          </div>
+        </div>
+
+      </mat-card-content>
+        
+    </mat-card>
   </div>
 
 </div>

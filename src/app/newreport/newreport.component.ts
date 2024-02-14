@@ -9,6 +9,7 @@ import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
+import { UtilsService } from '../utils.service';
 
 @Component({
   selector: 'app-newreport',
@@ -41,7 +42,7 @@ export class NewreportComponent implements OnInit {
   apireportprofiles = [];
   apireportprofilesList = [];
   constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService, private apiService: ApiService, public dialog: MatDialog,  
-    public router: Router, public sessionsub: SessionstorageserviceService) {
+    public router: Router, public sessionsub: SessionstorageserviceService,private utilsService: UtilsService) {
 
     // get report profiles
     this.indexeddbService.retrieveReportProfile().then(ret => {
@@ -129,24 +130,7 @@ export class NewreportComponent implements OnInit {
   }
 
   generatePassword() {
-    const length = 20;
-    const string = 'abcdefghijklmnopqrstuvwxyz';
-    const numeric = '0123456789';
-    const punctuation = '!@#$%^&*()_+~`|}{[]\:;?><,./-=';
-    let password = '', character = '', ent1 = 0, ent2 = 0, ent3 = 0, hold = '', pass = '';
-    while ( password.length < length ) {
-        ent1 = Math.ceil(string.length * Math.random() * Math.random());
-        ent2 = Math.ceil(numeric.length * Math.random() * Math.random());
-        ent3 = Math.ceil(punctuation.length * Math.random() * Math.random());
-        hold = string.charAt( ent1 );
-        hold = (password.length % 2 === 0) ? (hold.toUpperCase()) : (hold);
-        character += hold;
-        character += numeric.charAt( ent2 );
-        character += punctuation.charAt( ent3 );
-        password = character;
-    }
-    password = password.split('').sort(function() {return 0.5 - Math.random(); }).join('');
-    pass = password.substr(0, length);
+    const pass = this.utilsService.generatePassword(64);
     // set gen pass
     this.pass1model.setValue(pass);
     this.pass2model.setValue(pass);
