@@ -12,7 +12,6 @@
     </div>
 
     <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
           <mat-form-field color="accent" appearance="fill">
             <mat-label>Select a source</mat-label>
           
@@ -27,15 +26,19 @@
               <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
             </mat-select>
           </mat-form-field>
-
     </div>
 
   </div>
 
   <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-    <div *ngIf="sourceSelect == 'VULNREPO'">List contains issues templates used during creating a report, source name: "VULNRΞPO". You can share own templates use <a class="active-link"
-        target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/src/assets/vulns.json">vulns.json</a>, is
-      super easy! Push your changes to your fork and submit a pull request on github.</div>
+    <div *ngIf="sourceSelect == 'VULNREPO'">
+      <p>
+        List contains issues templates used during creating a report, source name: "VULNRΞPO". Share your templates on: 
+      <button mat-button color="accent" (click)="create_issue()">
+        <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>add_circle</mat-icon> Add custom template
+      </button> or directly edit /assets/vulns.json and make Pull Request to `dev` branch.
+      </p>
+    </div>
   
     <div class="mat-elevation-z8">
   

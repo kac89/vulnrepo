@@ -41,4 +41,26 @@ export class UtilsService {
     return severity;
   }
 
+
+  generatePassword(length) {
+    const string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numeric = '0123456789';
+    const punctuation = '!@#$%^&*()_+~`|}{[]\:;?><,./-=';
+    let password = '', character = '', ent1 = 0, ent2 = 0, ent3 = 0, hold = '', pass = '';
+    while ( password.length < length ) {
+        ent1 = Math.ceil(string.length * Math.random() * Math.random());
+        ent2 = Math.ceil(numeric.length * Math.random() * Math.random());
+        ent3 = Math.ceil(punctuation.length * Math.random() * Math.random());
+        hold = string.charAt( ent1 );
+        hold = (password.length % 2 === 0) ? (hold.toUpperCase()) : (hold);
+        character += hold;
+        character += numeric.charAt( ent2 );
+        character += punctuation.charAt( ent3 );
+        password = character;
+    }
+    password = password.split('').sort(function() {return 0.5 - Math.random(); }).join('');
+    pass = password.substr(0, length);
+    return pass
+  }
+
 }

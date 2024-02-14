@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
 import { MatSort } from '@angular/material/sort';
+import { IndexeddbService } from '../indexeddb.service';
 import {
   animate,
   state,
@@ -10,6 +11,8 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 export interface VulnsList {
   title: string;
@@ -49,20 +52,29 @@ export class TemplatesListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,public dialog: MatDialog,private indexeddbService: IndexeddbService) { }
 
   ngOnInit() {
     this.getvulnlistStatus = 'Loading...';
-    this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
 
-      this.dataSource = new MatTableDataSource<VulnsList[]>(res);
-      this.countvulns = res;
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.getvulnlistStatus = '';
+    // get report profiles
+    this.gettemplates();
 
+  }
+
+  gettemplates() {
+    this.indexeddbService.retrieveReportTemplates().then(ret => {
+      if (ret) {
+        this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+          let xxx = [...res,...ret];
+          this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
+          this.countvulns = xxx;
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.getvulnlistStatus = '';
+        });
+      }
     });
-
   }
 
   changeselect() {
@@ -70,15 +82,7 @@ export class TemplatesListComponent implements OnInit {
     if (this.sourceSelect === "VULNREPO") {
       
       this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-  
-        this.dataSource = new MatTableDataSource<VulnsList[]>(res);
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-  
-      });
+      this.gettemplates();
 
 
     } else if (this.sourceSelect === "CWE") {
@@ -180,6 +184,21 @@ export class TemplatesListComponent implements OnInit {
 
 
     }
+
+  }
+
+  create_issue(): void {
+
+    const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
+      width: '800px',
+      disableClose: false,
+      data: []
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The add custom template dialog was closed');
+      this.gettemplates();
+    });
 
   }
 
