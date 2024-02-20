@@ -63,13 +63,18 @@ tr {
 .cardissues {
   color: #FFFFFF !important;
   background-color: #000000 !important;
-  border-top: 1px dashed #fff;
+  border-color: #212529 !important;
 }
+
+.card-header {
+  border-bottom: 1px solid #212529;
+}
+
 
 .cardissuesattach {
   color: #FFFFFF !important;
   background-color: #000000 !important;
-  border-top: 1px dashed #fff;
+  border-color: #212529 !important;
 }
 
 .titlecolor {
