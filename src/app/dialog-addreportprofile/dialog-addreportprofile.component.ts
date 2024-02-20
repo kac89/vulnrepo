@@ -3,6 +3,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogReportcssComponent } from '../dialog-reportcss/dialog-reportcss.component';
+import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
 
 @Component({
   selector: 'app-dialog-addreportprofile',
@@ -36,7 +39,8 @@ export class DialogAddreportprofileComponent implements OnInit {
   ResWeb = new UntypedFormControl();
   origi = [];
 
-  constructor(private http: HttpClient, public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(private http: HttpClient, public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+  public dialog: MatDialog) { }
 
   ngOnInit(): void {
 
@@ -185,12 +189,41 @@ export class DialogAddreportprofileComponent implements OnInit {
         original: this.origi
       });
   }
+  
+  OpenDialogCSS(): void {
 
-  selectcss(event) {
-    if (event.value === 'monospace') {
-      this.http.get('/assets/report-css/monospace.css', { responseType: 'text' }).subscribe(ret => {
-        this.report_css.setValue(ret);
-      });
-    }
+    const dialogRef = this.dialog.open(DialogReportcssComponent, {
+      width: '600px',
+      disableClose: true,
+      data: this.report_css.value
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Report Custom CSS dialog was closed');
+      if (result || result === "") {
+        this.report_css.setValue(result);
+      }
+
+    });
+
   }
+
+  OpenDialogCustomContent(): void {
+
+    const dialogRef = this.dialog.open(DialogCustomcontentComponent, {
+      width: '600px',
+      disableClose: true,
+      data: this.report_custom_content.value
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Report Custom CSS dialog was closed');
+      if (result || result === "") {
+        this.report_custom_content.setValue(result);
+      }
+
+    });
+
+  }
+
 }

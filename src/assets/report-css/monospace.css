@@ -1,6 +1,6 @@
 body {
-	font: 1rem/1.5 var(--bs-font-sans-serif);
-	font-family: Monospace, sans-serif;
+	font: 1rem/1.5 var(--bs-font-monospace);
+	font-family: "monospace";
 	background-color: #FFFFFF;
 	color: #000;
 }
