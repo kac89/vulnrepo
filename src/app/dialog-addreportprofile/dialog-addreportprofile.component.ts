@@ -17,7 +17,6 @@ export class DialogAddreportprofileComponent implements OnInit {
   profile_name = new UntypedFormControl();
   report_css = new UntypedFormControl();
   report_custom_content = new UntypedFormControl();
-  profile_theme = new UntypedFormControl();
   logow = new UntypedFormControl();
   logoh = new UntypedFormControl();
   uploadlogoprev = '';
@@ -43,60 +42,59 @@ export class DialogAddreportprofileComponent implements OnInit {
   public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    
+    if(this.data) {
+      if (this.data === 'open') {
 
-    if (this.data === 'open') {
-
-      this.logow.setValue(600);
-      this.logoh.setValue(500);
-      this.video_embed.setValue(true);
-      this.profile_theme.setValue('white');
-      this.remove_lastpage.setValue(false);
-      this.remove_issueStatus.setValue(false);
-      this.remove_issuecvss.setValue(true);
-      this.remove_issuecve.setValue(true);
-      this.remove_researcher.setValue(false);
-      this.remove_changelog.setValue(false);
-      this.remove_tags.setValue(false);
-      this.report_parsing_desc.setValue(false);
-      this.report_parsing_poc_markdown.setValue(true);
-      this.report_remove_attach_name.setValue(false);
-      this.ResName.setValue('');
-      this.ResEmail.setValue('');
-      this.ResSocial.setValue('');
-      this.ResWeb.setValue('');
-      this.report_css.setValue('');
-      this.report_custom_content.setValue('');
-      
-    } else {
-
-      this.origi.push(this.data);
-      this.profile_name.setValue(this.data.profile_name);
-
-      this.uploadlogoprev = '<img src="' + this.data.logo + '" width="100px">';
-      this.advlogo = this.data.logo;
-
-      this.logow.setValue(this.data.logow);
-      this.logoh.setValue(this.data.logoh);
-      this.video_embed.setValue(this.data.video_embed);
-      this.profile_theme.setValue(this.data.theme);
-      this.remove_lastpage.setValue(this.data.remove_lastpage);
-      this.remove_issueStatus.setValue(this.data.remove_issueStatus);
-      this.remove_issuecvss.setValue(this.data.remove_issuecvss);
-      this.remove_issuecve.setValue(this.data.remove_issuecve);
-      this.remove_researcher.setValue(this.data.remove_researcher);
-      this.remove_changelog.setValue(this.data.remove_changelog);
-      this.remove_tags.setValue(this.data.remove_tags);
-      this.report_parsing_desc.setValue(this.data.report_parsing_desc);
-      this.report_parsing_poc_markdown.setValue(this.data.report_parsing_poc_markdown);
-      this.report_remove_attach_name.setValue(this.data.report_remove_attach_name);
-      this.ResName.setValue(this.data.ResName);
-      this.ResEmail.setValue(this.data.ResEmail);
-      this.ResSocial.setValue(this.data.ResSocial);
-      this.ResWeb.setValue(this.data.ResWeb);
-      this.report_css.setValue(this.data.report_css);
-      this.report_custom_content.setValue(this.data.report_custom_content);
+        this.logow.setValue(600);
+        this.logoh.setValue(500);
+        this.video_embed.setValue(true);
+        this.remove_lastpage.setValue(false);
+        this.remove_issueStatus.setValue(false);
+        this.remove_issuecvss.setValue(true);
+        this.remove_issuecve.setValue(true);
+        this.remove_researcher.setValue(false);
+        this.remove_changelog.setValue(false);
+        this.remove_tags.setValue(false);
+        this.report_parsing_desc.setValue(false);
+        this.report_parsing_poc_markdown.setValue(true);
+        this.report_remove_attach_name.setValue(false);
+        this.ResName.setValue('');
+        this.ResEmail.setValue('');
+        this.ResSocial.setValue('');
+        this.ResWeb.setValue('');
+        this.report_css.setValue('');
+        this.report_custom_content.setValue('');
+        
+      } else {
+  
+        this.origi.push(this.data);
+        this.profile_name.setValue(this.data.profile_name);
+  
+        this.uploadlogoprev = '<img src="' + this.data.logo + '" width="100px">';
+        this.advlogo = this.data.logo;
+  
+        this.logow.setValue(this.data.logow);
+        this.logoh.setValue(this.data.logoh);
+        this.video_embed.setValue(this.data.video_embed);
+        this.remove_lastpage.setValue(this.data.remove_lastpage);
+        this.remove_issueStatus.setValue(this.data.remove_issueStatus);
+        this.remove_issuecvss.setValue(this.data.remove_issuecvss);
+        this.remove_issuecve.setValue(this.data.remove_issuecve);
+        this.remove_researcher.setValue(this.data.remove_researcher);
+        this.remove_changelog.setValue(this.data.remove_changelog);
+        this.remove_tags.setValue(this.data.remove_tags);
+        this.report_parsing_desc.setValue(this.data.report_parsing_desc);
+        this.report_parsing_poc_markdown.setValue(this.data.report_parsing_poc_markdown);
+        this.report_remove_attach_name.setValue(this.data.report_remove_attach_name);
+        this.ResName.setValue(this.data.ResName);
+        this.ResEmail.setValue(this.data.ResEmail);
+        this.ResSocial.setValue(this.data.ResSocial);
+        this.ResWeb.setValue(this.data.ResWeb);
+        this.report_css.setValue(this.data.report_css);
+        this.report_custom_content.setValue(this.data.report_custom_content);
+      }
     }
-
 
   }
 
@@ -141,7 +139,6 @@ export class DialogAddreportprofileComponent implements OnInit {
         logo: this.advlogo,
         logow: this.logow.value,
         logoh: this.logoh.value,
-        theme: this.profile_theme.value,
         video_embed: this.video_embed.value,
         remove_lastpage: this.remove_lastpage.value,
         remove_issueStatus: this.remove_issueStatus.value,
@@ -170,7 +167,6 @@ export class DialogAddreportprofileComponent implements OnInit {
         logo: this.advlogo,
         logow: this.logow.value,
         logoh: this.logoh.value,
-        theme: this.profile_theme.value,
         video_embed: this.video_embed.value,
         remove_lastpage: this.remove_lastpage.value,
         remove_issueStatus: this.remove_issueStatus.value,
