@@ -3,8 +3,7 @@
     <div mat-dialog-content>
 
         <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <textarea [formControl]="report_custom_content" rows="8" matInput placeholder="HTML content"
-                value="{{data.report_settings.report_html}}"></textarea>
+            <textarea [formControl]="report_custom_content" rows="8" matInput placeholder="HTML content"></textarea>
             <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
         </mat-form-field>
 

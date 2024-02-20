@@ -15,7 +15,12 @@ export class DialogReportcssComponent implements OnInit {
   constructor(private http: HttpClient, public dialogRef: MatDialogRef<DialogReportcssComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-    this.report_css.setValue(this.data.report_settings.report_css);
+    if(this.data.report_settings) {
+      this.report_css.setValue(this.data.report_settings.report_css);
+    } else {
+      this.report_css.setValue(this.data);
+    }
+    
   }
 
   cancel(): void {
@@ -27,8 +32,16 @@ export class DialogReportcssComponent implements OnInit {
   }
 
   selectcss(event) {
+    if (event.value === 'none') {
+      this.report_css.setValue('');
+    }
     if (event.value === 'monospace') {
       this.http.get('/assets/report-css/monospace.css', { responseType: 'text' }).subscribe(ret => {
+        this.report_css.setValue(ret);
+      });
+    }
+    if (event.value === 'cypher') {
+      this.http.get('/assets/report-css/cypher.css', { responseType: 'text' }).subscribe(ret => {
         this.report_css.setValue(ret);
       });
     }

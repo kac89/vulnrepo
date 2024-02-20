@@ -14,7 +14,14 @@ export class DialogCustomcontentComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DialogCustomcontentComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-    this.report_custom_content.setValue(this.data.report_settings.report_html);
+
+
+    if(this.data.report_settings) {
+      this.report_custom_content.setValue(this.data.report_settings.report_html);
+    } else {
+      this.report_custom_content.setValue(this.data);
+    }
+
   }
 
   cancel(): void {

@@ -5,10 +5,12 @@
             <h1 mat-dialog-title>Custom CSS</h1>
         </div>
         <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end end">
-            <mat-form-field appearance="outline" color="accent" style="width: 150px; font-size:11px;">
+            <mat-form-field appearance="outline" color="accent" style="width: 250px; font-size:11px;">
                 <mat-label>Example CSS style</mat-label>
                 <mat-select (selectionChange)="selectcss($event)">
+                    <mat-option value="none">None</mat-option>
                     <mat-option value="monospace">Monospace</mat-option>
+                    <mat-option value="cypher">Cypher</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

@@ -75,6 +75,9 @@
 			word-wrap: break-word;       /* Internet Explorer 5.5+ */
 			color: var(--bs-code-color);
 		}
+		ul {
+			  padding-left: 40px !important;
+		}
 	</style>
 	<style>
 
@@ -97,7 +100,7 @@
 <body>
 	<div class="container py-4 px-3 mx-auto" id="reportdetal">
 		<header class="d-flex justify-content-between align-items-md-center pb-3 mb-5 border-bottom">
-			<h1 class="h4">
+			<h1 class="h4 headertext">
 				IT Security Report
 			</h1>
 			<div class="p-3 mb-2 bg-danger text-white">CONFIDENTIAL</div>
@@ -294,7 +297,7 @@
 			</table><br>Our Risk rating is based on this calculation: <b>Risk = Likelihood * Impact</b>.</p>
 			<br><br>
 			<h2 id="Issues" class="report_vulns_h2"></h2><br>
-			<div class="row report_vulns"></div>
+			<div class="row report_vulns bg-d"></div>
 
 			<br>
 			<h2 id="Report summary" class="report_summary_h2"></h2>
@@ -499,9 +502,9 @@
 
 			if (obj.report_settings.report_logo.logo != "") {
 				if (obj.report_settings.report_logo.width != "" || obj.report_settings.report_logo.height != "") {
-					$(".logo").prepend('<img width="' + DOMPurify.sanitize(obj.report_settings.report_logo.width) + '" height="' + DOMPurify.sanitize(obj.report_settings.report_logo.height) + '" src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
+					$(".logo").prepend('<img class="logo" width="' + DOMPurify.sanitize(obj.report_settings.report_logo.width) + '" height="' + DOMPurify.sanitize(obj.report_settings.report_logo.height) + '" src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
 				} else {
-					$(".logo").prepend('<img src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
+					$(".logo").prepend('<img class="logo" src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
 				}
 			}
 
@@ -648,7 +651,7 @@
 				}
 
 				var issues = `
-				<div id="` + index + `" class="card bg-light mb-3">
+				<div id="` + index + `" class="card cardissues bg-light mb-3">
 					<div class="card-header"><div class="d-flex flex-sm-row flex-column justify-content-between"><div><span class="label ` + DOMPurify.sanitize(element.severity) + `">` + DOMPurify.sanitize(element.severity) + `</span> ` + DOMPurify.sanitize(element.title) + `</div><div> <span>`+elementissuestatus+`</span></div></div></div>
 					<div class="card-body">
 						<div class="card-text">
@@ -675,7 +678,7 @@
 
 						files = files + `
 
-									<div class="card bg-light mb-3">
+									<div class="card cardissuesattach bg-light mb-3">
 									<div class="card-header">
 										<div class="d-flex flex-sm-row flex-column justify-content-between">
 											<div><b>` + ((!obj.report_settings.report_remove_attach_name) ? DOMPurify.sanitize(ele.title) : '') + `</b> (` + DOMPurify.sanitize(ele.size) + ` bytes)</div>
