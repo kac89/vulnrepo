@@ -51,7 +51,6 @@
     "@types/marked": "^5.0.2",
     "@types/node": "^20.11.19",
     "@types/xml2js": "^0.4.14",
-    "codelyzer": "^6.0.2",
     "jasmine-core": "~5.1.2",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "^6.4.2",
