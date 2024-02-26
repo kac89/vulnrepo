@@ -939,7 +939,7 @@ export class IndexeddbService {
     return new Promise<any>((resolve, reject) => {
       // indexeddb communication
       const indexedDB = window.indexedDB;
-      const open = indexedDB.open('vulnrepo-settings', 1);
+      const open = indexedDB.open('vulnrepo-profiles', 1);
 
       open.onupgradeneeded = function () {
         const db = open.result;
@@ -951,7 +951,7 @@ export class IndexeddbService {
         const tx = db.transaction('report-profiles', 'readwrite');
         const store = tx.objectStore('report-profiles');
 
-        store.put(key, 'vulnrepo-report-profiles-items');
+        store.put(key);
 
         tx.oncomplete = function () {
           db.close();
@@ -966,7 +966,7 @@ export class IndexeddbService {
     return new Promise<any>((resolve, reject) => {
 
       const indexedDB = window.indexedDB;
-      const open = indexedDB.open('vulnrepo-settings', 1);
+      const open = indexedDB.open('vulnrepo-profiles', 1);
 
       open.onupgradeneeded = function () {
         const db = open.result;
@@ -979,10 +979,143 @@ export class IndexeddbService {
         const store = tx.objectStore('report-profiles');
 
         // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
-        const request = store.get('vulnrepo-report-profiles-items');
+        const request = store.openCursor();
+        const arr = [];
+        request.onsuccess = function (evt) {
+          let cursor = request.result;
+          if (cursor) {
+              let key = cursor.primaryKey;
+              let value = cursor.value;
+              const ret = Object.assign({}, {"_key":key}, value);
+              arr.push(ret)
+              cursor.continue();
+          }
+          else {
+              // no more results
+              
+          }
+          
+        };
+
+        tx.oncomplete = function () {
+          resolve(arr);
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+  getkeybyProfileID(keyid) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-profiles', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-profiles', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-profiles', 'readwrite');
+        const store = tx.objectStore('report-profiles');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.openCursor();
 
         request.onsuccess = function (evt) {
-          resolve(request.result);
+
+          const cursor = request.result;
+          if (cursor) {
+            const key = cursor.primaryKey;
+            const value = cursor.value;
+
+            if (key === keyid) {
+              const finded = { key, value };
+              resolve(finded);
+            }
+            cursor.continue();
+          } else {
+            // no more results
+
+          }
+
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve({ 'NotFound': 'NOOK' });
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+  deleteProfile(item: any) {
+    return new Promise<any>((resolve, reject) => {
+      this.getkeybyProfileID(item._key).then(data => {
+        if (data) {
+
+          if (data.NotFound === 'NOOK') {
+            console.log('no locally profile');
+          } else {
+            // indexeddb communication
+            const indexedDB = window.indexedDB;
+            const open = indexedDB.open('vulnrepo-profiles', 1);
+
+            open.onupgradeneeded = function () {
+              const db = open.result;
+              db.createObjectStore('report-profiles', { autoIncrement: true });
+            };
+
+            open.onsuccess = function () {
+              const db = open.result;
+              const tx = db.transaction('report-profiles', 'readwrite');
+              const store = tx.objectStore('report-profiles');
+
+              store.delete(data.key);
+
+              tx.oncomplete = function () {
+                db.close();
+                resolve(true);
+              };
+            };
+          }
+
+        }
+      });
+    });
+  }
+
+  updateProfile(newvalue, key) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-profiles', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-profiles', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-profiles', 'readwrite');
+        const store = tx.objectStore('report-profiles');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.put(newvalue, key);
+
+        request.onsuccess = function (evt) {
+          resolve(true);
         };
 
         tx.oncomplete = function () {
@@ -996,7 +1129,7 @@ export class IndexeddbService {
     });
   }
 
-  saveReportTemplateinDB(key) {
+  saveReportTemplateinDB(item) {
     return new Promise<any>((resolve, reject) => {
       // indexeddb communication
       const indexedDB = window.indexedDB;
@@ -1012,7 +1145,7 @@ export class IndexeddbService {
         const tx = db.transaction('report-templates', 'readwrite');
         const store = tx.objectStore('report-templates');
 
-        store.put(key);
+        store.put(item);
 
         tx.oncomplete = function () {
           db.close();
@@ -1035,31 +1168,42 @@ export class IndexeddbService {
       };
 
       open.onsuccess = function () {
-
         const db = open.result;
         const tx = db.transaction('report-templates', 'readwrite');
         const store = tx.objectStore('report-templates');
 
         // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
-        const request = store.getAll();
-
+        const request = store.openCursor();
+        const arr = [];
         request.onsuccess = function (evt) {
-          resolve(request.result);
+          let cursor = request.result;
+          if (cursor) {
+              let key = cursor.primaryKey;
+              let value = cursor.value;
+              const ret = Object.assign({}, {"_key":key}, value);
+              arr.push(ret)
+              cursor.continue();
+          }
+          else {
+              // no more results
+              
+          }
+          
         };
 
         tx.oncomplete = function () {
+          resolve(arr);
           db.close();
         };
         request.onerror = function (e) {
           reject(e);
         };
-
       };
 
     });
   }
 
-  getkeybyTemplateID(title) {
+  getkeybyTemplateID(keyid) {
     return new Promise<any>((resolve, reject) => {
 
       const indexedDB = window.indexedDB;
@@ -1085,7 +1229,7 @@ export class IndexeddbService {
             const key = cursor.primaryKey;
             const value = cursor.value.title;
 
-            if (title === value) {
+            if (key === keyid) {
               const finded = { key, value };
               resolve(finded);
             }
@@ -1111,7 +1255,7 @@ export class IndexeddbService {
 
   deleteTemplate(item: any) {
     return new Promise<any>((resolve, reject) => {
-      this.getkeybyTemplateID(item.title).then(data => {
+      this.getkeybyTemplateID(item._key).then(data => {
         if (data) {
 
           if (data.NotFound === 'NOOK') {
@@ -1144,5 +1288,40 @@ export class IndexeddbService {
       });
     });
   }
+
+
+    updateTemplate(newvalue, key) {
+      return new Promise<any>((resolve, reject) => {
+  
+        const indexedDB = window.indexedDB;
+        const open = indexedDB.open('vulnrepo-templates', 1);
+  
+        open.onupgradeneeded = function () {
+          const db = open.result;
+          db.createObjectStore('report-templates', { autoIncrement: true });
+        };
+  
+        open.onsuccess = function () {
+          const db = open.result;
+          const tx = db.transaction('report-templates', 'readwrite');
+          const store = tx.objectStore('report-templates');
+  
+          // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+          const request = store.put(newvalue, key);
+  
+          request.onsuccess = function (evt) {
+            resolve(true);
+          };
+  
+          tx.oncomplete = function () {
+            db.close();
+          };
+          request.onerror = function (e) {
+            reject(e);
+          };
+        };
+  
+      });
+    }
 
 }

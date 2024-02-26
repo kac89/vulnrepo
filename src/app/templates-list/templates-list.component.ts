@@ -190,7 +190,7 @@ export class TemplatesListComponent implements OnInit {
   create_issue(): void {
 
     const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
-      width: '800px',
+      width: '600px',
       disableClose: false,
       data: []
     });

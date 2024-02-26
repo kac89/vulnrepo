@@ -130,8 +130,9 @@ export class DialogAddreportprofileComponent implements OnInit {
   }
 
   addNewProfile() {
+
     console.log('add new profile');
-    this.dialogRef.close([
+    this.dialogRef.close(
       {
         profile_name: this.profile_name.value,
         report_css: this.report_css.value,
@@ -155,11 +156,11 @@ export class DialogAddreportprofileComponent implements OnInit {
         ResSocial: this.ResSocial.value,
         ResWeb: this.ResWeb.value
       }
-    ]);
+    );
   }
 
-  saveNewProfile() {
-    console.log('add new profile');
+  editProfile() {
+    console.log('edit profile');
     this.dialogRef.close({
         profile_name: this.profile_name.value,
         report_css: this.report_css.value,

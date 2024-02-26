@@ -105,10 +105,10 @@
 <br>
 <div md-dialog-actions>
   <div>
-    <button mat-flat-button color="accent" *ngIf="data == 'open'" (click)="addNewProfile()">Add</button>
-    <button mat-flat-button color="accent" *ngIf="data !== 'open'" (click)="saveNewProfile()">Save</button>
+    <button mat-flat-button color="accent" *ngIf="data == 'open'" (click)="addNewProfile()"><mat-icon>save_as</mat-icon> Add</button>
+    <button mat-flat-button color="accent" *ngIf="data !== 'open'" (click)="editProfile()"><mat-icon>save_as</mat-icon> Save</button>
     &nbsp;
-    <button mat-flat-button color="primary" (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
   </div>
 </div>
 </div>

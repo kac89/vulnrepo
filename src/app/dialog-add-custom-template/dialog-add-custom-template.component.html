@@ -71,16 +71,34 @@
 
                 </div>
 
+                <div fxLayoutAlign="start center">
+
+                    <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                        <mat-label>TAGs</mat-label>
+                        <mat-chip-grid #tagList aria-label="Tags">
+                          <mat-chip-row *ngFor="let tag of tags" [(ngModel)]="tags" [selectable]="selectable"
+                            [removable]="removable" (removed)="TAGremove(tag)" ngDefaultControl>
+                            {{tag.name}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                          </mat-chip-row>
+                          <input placeholder="New tag..." [matChipInputFor]="tagList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                            (matChipInputTokenEnd)="TAGadd($event)">
+                        </mat-chip-grid>
+                      </mat-form-field>
+
+                </div>
+
             </div>
 
         </div>
 
         <div fxLayout="row" fxLayoutGap="10px grid">
-            <div fxLayoutAlign="start center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <button mat-raised-button color="primary" (click)="cancel()">Close</button>
-            </div>
-            <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <button mat-raised-button color="accent" (click)="savelocally()"><mat-icon>save_as</mat-icon>Save locally</button>
+            <div fxLayoutAlign="start center" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                <button mat-raised-button color="accent" *ngIf="data.length == 0" (click)="savelocally()"><mat-icon>save_as</mat-icon> Save locally</button>
+                <button mat-raised-button color="accent" *ngIf="data.length > 0" (click)="edit(data)"><mat-icon>save_as</mat-icon> Edit</button>
+                &nbsp;
+                <button mat-raised-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
             </div>
         </div>
 

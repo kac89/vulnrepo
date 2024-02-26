@@ -2367,7 +2367,7 @@ IP   | hostname | role | comments\n\
   saveTemplate(dec_data): void {
 
     const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
-      width: '800px',
+      width: '600px',
       disableClose: false,
       data: {
         "title": dec_data.title,
@@ -2377,7 +2377,8 @@ IP   | hostname | role | comments\n\
         "ref": dec_data.ref,
         "cvss": dec_data.cvss,
         "cvss_vector": dec_data.cvss_vector,
-        "cve": dec_data.cve
+        "cve": dec_data.cve,
+        "tags": dec_data.tags
       }
     });
 
