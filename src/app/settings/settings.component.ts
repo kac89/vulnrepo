@@ -34,6 +34,7 @@ export class SettingsComponent implements OnInit {
 
   @ViewChild('paginprofiles') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  
 
   @ViewChild('pagintemplates') paginator2: MatPaginator;
   @ViewChild(MatSort) sort2: MatSort;
@@ -170,7 +171,6 @@ export class SettingsComponent implements OnInit {
 
 
 getTemplates(): void {
-  const arr = [];
   this.indexeddbService.retrieveReportTemplates().then(ret => {
     if (ret) {
       this.ReportTemplatesdataSource = new MatTableDataSource(ret);
@@ -689,10 +689,6 @@ getAPIReportProfiles() {
       console.log('The add custom template dialog was closed');
 
       if (result) {
-        
-
-        this.reportTemplateList = this.reportTemplateList.concat(result);
-        this.ReportTemplatesdataSource.data = this.reportTemplateList;
         this.indexeddbService.saveReportTemplateinDB(result).then(ret => {
           if (ret) {
             console.log("custom template added");

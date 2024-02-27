@@ -15,7 +15,12 @@ export interface Tags {
   selector: 'app-dialog-add-custom-template',
   standalone: false,
   templateUrl: './dialog-add-custom-template.component.html',
-  styleUrl: './dialog-add-custom-template.component.scss'
+  styleUrl: './dialog-add-custom-template.component.scss',
+  host: {
+    '[style.display]': '"flex"',
+    '[style.flex-direction]': '"column"',
+    '[style.overflow]': '"hidden"'
+  }
 })
 export class DialogAddCustomTemplateComponent implements OnInit {
 
