@@ -10,12 +10,7 @@ import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-cus
 @Component({
   selector: 'app-dialog-addreportprofile',
   templateUrl: './dialog-addreportprofile.component.html',
-  styleUrls: ['./dialog-addreportprofile.component.scss'],
-  host: {
-    '[style.display]': '"flex"',
-    '[style.flex-direction]': '"column"',
-    '[style.overflow]': '"hidden"'
-  }
+  styleUrls: ['./dialog-addreportprofile.component.scss']
 })
 export class DialogAddreportprofileComponent implements OnInit {
 
