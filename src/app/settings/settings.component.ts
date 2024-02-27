@@ -263,7 +263,7 @@ getTemplates(): void {
   parseMyBackupfile(array) {
 
     const parsed = JSON.parse(array);
-    if(parsed.vault.length > 0 && parsed.vault !== undefined) {
+    if(parsed.vault !== undefined && parsed.vault.length > 0) {
         this.indexeddbService.saveKEYinDB(parsed.vault);
         this.foundvault(true);
         this.showregapi = true;
