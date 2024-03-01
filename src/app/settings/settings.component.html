@@ -119,13 +119,13 @@
         <mat-paginator #paginprofiles color="accent" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of profiles"></mat-paginator>
 
         <br>
-        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
+        <div fxLayout="row" fxLayoutGap="10px grid">
+          <div fxFlex="100%" fxLayoutAlign="start">
             <button mat-mini-fab color="primary" (click)="openDialogReportProfiles('open')" title="Add report profile">
               <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon>
             </button>
           </div>
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end">
+          <div fxFlex="100%" fxLayoutAlign="end">
             <button mat-raised-button color="primary"(click)="imreportprofiles.click()" title="Import report profile">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
             </button>
@@ -208,7 +208,7 @@
         <mat-paginator #pagintemplates color="accent" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of templates"></mat-paginator>
 
         <br>
-        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+        <div fxLayout="row" fxLayoutGap="10px grid">
           <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
 
             <button mat-mini-fab (click)="openDialogReportTemplates()" color="primary" title="Add report template">
