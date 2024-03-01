@@ -2369,7 +2369,7 @@ IP   | hostname | role | comments\n\
     const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
       width: '600px',
       disableClose: false,
-      data: {
+      data: [{
         "title": dec_data.title,
         "poc": "",
         "desc": dec_data.desc,
@@ -2379,11 +2379,16 @@ IP   | hostname | role | comments\n\
         "cvss_vector": dec_data.cvss_vector,
         "cve": dec_data.cve,
         "tags": dec_data.tags,
-      }
+      }]
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The add custom template dialog was closed');
+
+      if(result) {
+        this.indexeddbService.saveReportTemplateinDB({"title": result[0].title,"poc": "","desc": result[0].desc,"severity": result[0].severity,"ref": result[0].ref,"cvss": result[0].cvss,"cvss_vector": result[0].cvss_vector,"cve": result[0].cve, "tags": result[0].tags});
+      }
+
     });
 
   }
