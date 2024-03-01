@@ -73,7 +73,7 @@
         </mat-form-field>
 
         <div class="mat-elevation-z8">
-          <table mat-table *ngIf="reportProfileList.length > 0" style="width: 100%;" [dataSource]="ReportProfilesdataSource" matSort>
+          <table mat-table *ngIf="reportProfileList.length > 0" style="width: 100%;" [dataSource]="ReportProfilesdataSource" matSort matSortActive="profile_name">
 
             <ng-container matColumnDef="source">
               <th mat-header-cell *matHeaderCellDef>
@@ -86,7 +86,7 @@
             </ng-container>
 
             <ng-container matColumnDef="profile_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name"> Profile name </th>
               <td mat-cell *matCellDef="let element"> {{element.profile_name}} </td>
             </ng-container>
           
@@ -119,13 +119,13 @@
         <mat-paginator #paginprofiles color="accent" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of profiles"></mat-paginator>
 
         <br>
-        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
+        <div fxLayout="row" fxLayoutGap="10px grid">
+          <div fxFlex="100%" fxLayoutAlign="start">
             <button mat-mini-fab color="primary" (click)="openDialogReportProfiles('open')" title="Add report profile">
               <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon>
             </button>
           </div>
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end">
+          <div fxFlex="100%" fxLayoutAlign="end">
             <button mat-raised-button color="primary"(click)="imreportprofiles.click()" title="Import report profile">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
             </button>
@@ -160,7 +160,7 @@
         </mat-form-field>
 
         <div class="mat-elevation-z8">
-          <table mat-table *ngIf="reportTemplateList.length > 0" style="width: 100%;" [dataSource]="ReportTemplatesdataSource" matSort>
+          <table mat-table *ngIf="reportTemplateList.length > 0" style="width: 100%;" [dataSource]="ReportTemplatesdataSource" matSort matSortActive="title">
 
 
             <ng-container matColumnDef="source">
@@ -173,7 +173,7 @@
               </td>
             </ng-container>
   
-            <ng-container matColumnDef="template_name">
+            <ng-container matColumnDef="title">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Template name </th>
               <td mat-cell *matCellDef="let element"> {{element.title}} </td>
             </ng-container>
@@ -208,7 +208,7 @@
         <mat-paginator #pagintemplates color="accent" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of templates"></mat-paginator>
 
         <br>
-        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+        <div fxLayout="row" fxLayoutGap="10px grid">
           <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
 
             <button mat-mini-fab (click)="openDialogReportTemplates()" color="primary" title="Add report template">

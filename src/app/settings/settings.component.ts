@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IndexeddbService } from '../indexeddb.service';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
@@ -30,14 +30,33 @@ export interface ApiList {
   styleUrls: ['./settings.component.scss']
 })
 
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, AfterViewInit {
 
   @ViewChild('paginprofiles') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  @ViewChild(MatSort) set matSort2(ms: MatSort) {
+    this.sort2 = ms;
+    this.reporttemplatesort();
+  }
   
+  reporttemplatesort() {
+    this.ReportTemplatesdataSource.paginator = this.paginator2;
+    this.ReportTemplatesdataSource.sort = this.sort2;
+  }
 
   @ViewChild('pagintemplates') paginator2: MatPaginator;
   @ViewChild(MatSort) sort2: MatSort;
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.reportprofilesort();
+  }
+  
+  reportprofilesort() {
+    this.ReportProfilesdataSource.paginator = this.paginator;
+    this.ReportProfilesdataSource.sort = this.sort;
+  }
 
   color = 'accent';
   info = '';
@@ -71,7 +90,7 @@ export class SettingsComponent implements OnInit {
   ReportProfilesdataSource = new MatTableDataSource([]);
 
   ReportTemplatesdataSource = new MatTableDataSource([]);
-  ReportTemplatesdisplayedColumns: string[] = ['source','template_name', 'template_settings'];
+  ReportTemplatesdisplayedColumns: string[] = ['source','title', 'template_settings'];
 
   vaultListdataSource = new MatTableDataSource([]);
   vaultListdisplayedColumns: string[] = ['vault_name', 'vault_settings'];
@@ -84,8 +103,7 @@ export class SettingsComponent implements OnInit {
     public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService) { }
 
 
-  ngOnInit() {
-
+  ngAfterViewInit () {
     //get report profiles from local at init
     this.indexeddbService.retrieveReportProfile().then(ret => {
       if (ret) {
@@ -99,6 +117,14 @@ export class SettingsComponent implements OnInit {
     this.getTemplates();
 
     this.getVault();
+
+    this.ReportProfilesdataSource.sort = this.sort;
+
+    }
+
+  ngOnInit() {
+
+
 
   }
   
@@ -949,5 +975,6 @@ editTemplateItem(item: any): void {
   });
 
 }
+
 
 }
