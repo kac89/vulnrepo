@@ -73,7 +73,7 @@
         </mat-form-field>
 
         <div class="mat-elevation-z8">
-          <table mat-table *ngIf="reportProfileList.length > 0" style="width: 100%;" [dataSource]="ReportProfilesdataSource" matSort>
+          <table mat-table *ngIf="reportProfileList.length > 0" style="width: 100%;" [dataSource]="ReportProfilesdataSource" matSort matSortActive="profile_name">
 
             <ng-container matColumnDef="source">
               <th mat-header-cell *matHeaderCellDef>
@@ -86,7 +86,7 @@
             </ng-container>
 
             <ng-container matColumnDef="profile_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name"> Profile name </th>
               <td mat-cell *matCellDef="let element"> {{element.profile_name}} </td>
             </ng-container>
           
@@ -160,7 +160,7 @@
         </mat-form-field>
 
         <div class="mat-elevation-z8">
-          <table mat-table *ngIf="reportTemplateList.length > 0" style="width: 100%;" [dataSource]="ReportTemplatesdataSource" matSort>
+          <table mat-table *ngIf="reportTemplateList.length > 0" style="width: 100%;" [dataSource]="ReportTemplatesdataSource" matSort matSortActive="title">
 
 
             <ng-container matColumnDef="source">
@@ -173,7 +173,7 @@
               </td>
             </ng-container>
   
-            <ng-container matColumnDef="template_name">
+            <ng-container matColumnDef="title">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Template name </th>
               <td mat-cell *matCellDef="let element"> {{element.title}} </td>
             </ng-container>
