@@ -9,26 +9,30 @@
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">restore</mat-icon>
         <mat-card-title>Backup & Import</mat-card-title>
-        <mat-card-subtitle>Save or import saved "My Reports"</mat-card-subtitle>
+        <mat-card-subtitle>Save or import saved "My Reports, Report Profiles, Report Templates and Vault"</mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
+        <p>Note: Restoring the backup will add items to the current configuration!</p>
       <div fxLayout="row" fxLayoutGap="10px grid">
-        <div fxFlex="50%" fxLayoutAlign="start">
-          <button mat-raised-button color="primary" (click)="dumpallmyreports()">
-            <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Backup
-          </button>
-        </div>
-        <div fxFlex="50%" fxLayoutAlign="end end">
+        <div fxFlex="100%" fxLayoutAlign="start">
           <button mat-raised-button type="button" color="primary" (click)="myreportimporall.click()">
-            <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
+            <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Restore
           </button>
-          <input hidden type="file" accept=".txt" #myreportimporall (change)="restoreMyReports($event.target)"/>
+          <input hidden type="file" accept=".vulnrepo-backup" #myreportimporall (change)="restoreMybackup($event.target)"/>
+          &nbsp;
+          </div>
+          <div fxFlex="100%" fxLayoutAlign="end">
+          <button mat-raised-button color="primary" (click)="dumpallmyreports()">
+            <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Backup all
+          </button>
         </div>
       </div>
     </mat-card-content>
     </mat-card>
     <br>
+
+
     <mat-card appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">delete_forever</mat-icon>
@@ -53,40 +57,7 @@
 
     <br>
 
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">public</mat-icon>
-        <mat-card-title>VULNRΞPO API VAULT ACCESS</mat-card-title>
-        <mat-card-subtitle>Save your reports on external API</mat-card-subtitle>
-      </mat-card-header>
 
-      <mat-card-content>
-        <div *ngIf="listkey">
-          <h3>Found existing vault access!
-            <button mat-icon-button color="warn" (click)="removeapikey()" title="Remove current Vault">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </h3>
-          
-      </div>
-      <div fxLayout="row" fxLayoutGap="10px grid">
-        <div fxFlex="50%" fxLayoutAlign="start">
-          <button *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="accent" (click)="openDialogAPIADD()"><mat-icon class="vertical-align-middle padding-bottom-3">cloud_upload</mat-icon> Add API</button>
-          <button *ngIf="tryconnectdb" mat-raised-button color="accent" (click)="tryconnect()"><mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon> Access to Vault</button> <br><br>
-          <button *ngIf="apiconneted" mat-raised-button color="warn" (click)="apidisconnect()">Disconnect</button>
-
-        </div>
-        <div fxFlex="50%" fxLayoutAlign="end end">
-          <button *ngIf="apiconneted || tryconnectdb" mat-raised-button color="primary" (click)="exportvault()"><mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Export Vault</button>&nbsp;&nbsp;
-          <button type="button" *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="primary" (click)="VaultFileInput.click()"><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import Vault</button>
-          <input hidden type="file" accept=".json" #VaultFileInput (change)="importvault($event.target)"/>
-        </div>
-      </div>
-      </mat-card-content>
-    </mat-card>
-
-  </div>
-  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
     <mat-card appearance="outlined">
       <mat-card-header>
@@ -96,40 +67,57 @@
       </mat-card-header>
 
       <mat-card-content>
-        <table mat-table *ngIf="reportProfileList.length > 0" style="width: 100%;" [dataSource]="ReportProfilesdataSource" class="mat-elevation-z8">
+        <mat-form-field color="accent" class="example-full-width">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilterProfiles($event)" #inputree placeholder="Ex. My profile">
+        </mat-form-field>
 
-          <ng-container matColumnDef="source">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-icon title="Where profiles are stored">folder</mat-icon>
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <mat-icon *ngIf="!element.api" title="Local Host">computer</mat-icon>
-              <mat-icon *ngIf="element.api == 'remote'" color="accent" title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon>
-            </td>
-          </ng-container>
+        <div class="mat-elevation-z8">
+          <table mat-table *ngIf="reportProfileList.length > 0" style="width: 100%;" [dataSource]="ReportProfilesdataSource" matSort>
 
-          <ng-container matColumnDef="profile_name">
-            <th mat-header-cell *matHeaderCellDef> Name </th>
-            <td mat-cell *matCellDef="let element"> {{element.profile_name}} </td>
-          </ng-container>
-        
-          <ng-container matColumnDef="profile_settings">
-            <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
-            <td mat-cell *matCellDef="let element">
+            <ng-container matColumnDef="source">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-icon title="Where profiles are stored">folder</mat-icon>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-icon *ngIf="!element.api" title="Local Host">computer</mat-icon>
+                <mat-icon *ngIf="element.api == 'remote'" color="accent" title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon>
+              </td>
+            </ng-container>
 
-              <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="reportprofilesettings"><mat-icon>more_vert</mat-icon></button>
-              <mat-menu #reportprofilesettings="matMenu">
-                <a [routerLink]="[]" (click)="downloadProfileItem(element)" class="active-link" title="Download" mat-menu-item><mat-icon class="vertical-align-middle">file_download</mat-icon> Download profile</a>
-                <a *ngIf="!element.api" [routerLink]="[]" (click)="editProfileItem(element)" class="active-link" title="Edit" mat-menu-item><mat-icon class="vertical-align-middle">edit</mat-icon> Edit profile</a>
-                <a *ngIf="!element.api" [routerLink]="[]" (click)="removeProfileItem(element)" class="active-link" title="Remove" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove</a>
-              </mat-menu>
+            <ng-container matColumnDef="profile_name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.profile_name}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="profile_settings">
+              <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
+              <td mat-cell *matCellDef="let element">
 
-            </td>
-          </ng-container>
-        
-          <tr mat-header-row *matHeaderRowDef="ReportProfilesdisplayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: ReportProfilesdisplayedColumns;"></tr>
-        </table>
+                <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="reportprofilesettings"><mat-icon>more_vert</mat-icon></button>
+                <mat-menu #reportprofilesettings="matMenu">
+                  <a [routerLink]="[]" (click)="downloadProfileItem(element)" class="active-link" title="Download" mat-menu-item><mat-icon class="vertical-align-middle">file_download</mat-icon> Download profile</a>
+                  <a *ngIf="!element.api" [routerLink]="[]" (click)="editProfileItem(element)" class="active-link" title="Edit" mat-menu-item><mat-icon class="vertical-align-middle">edit</mat-icon> Edit profile</a>
+                  <a *ngIf="!element.api" [routerLink]="[]" (click)="removeProfileItem(element)" class="active-link" title="Remove" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove</a>
+                </mat-menu>
+
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="ReportProfilesdisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: ReportProfilesdisplayedColumns;"></tr>
+                <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="3">No data matching the filter "{{inputree.value}}"</td>
+            </tr>
+          </table>
+        </div>
+        <div *ngIf="reportProfileList.length == 0">
+          No profiles found! <mat-icon>sentiment_dissatisfied</mat-icon>
+          </div>
+        <br>
+        <mat-paginator #paginprofiles color="accent" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of profiles"></mat-paginator>
+
         <br>
         <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
           <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
@@ -145,7 +133,7 @@
             <button *ngIf="reportProfileList.length > 0" mat-raised-button color="primary" (click)="exportprofiles()" title="Export report profiles">
               <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Export
             </button>
-            <input hidden type="file" accept=".json" #imreportprofiles (change)="importReportProfile($event.target)"/>
+            <input hidden type="file" accept=".vulnrepo-profiles" #imreportprofiles (change)="importReportProfile($event.target)"/>
           </div>
         </div>
 
@@ -153,35 +141,72 @@
         
     </mat-card>
 
-    <br>
+
+  </div>
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
     <mat-card appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon>
         <mat-card-title>Report Templates</mat-card-title>
-        <mat-card-subtitle>Save your custom issues templates</mat-card-subtitle>
+        <mat-card-subtitle>Save custom issue templates</mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
-        <table mat-table *ngIf="reportTemplateList.length > 0" style="width: 100%;" [dataSource]="ReportTemplatesdataSource" class="mat-elevation-z8">
 
-          <ng-container matColumnDef="template_name">
-            <th mat-header-cell *matHeaderCellDef> <b>Template name</b> </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-          </ng-container>
-        
-          <ng-container matColumnDef="template_settings">
-            <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
-            <td mat-cell *matCellDef="let element">
+        <mat-form-field color="accent" class="example-full-width">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilterTemplates($event)" placeholder="Ex. My template" #inputtemplates>
+        </mat-form-field>
 
-              <a [routerLink]="[]" (click)="removeTemplate(element)" title="Remove template"><mat-icon color="warn" class="vertical-align-middle">delete_forever</mat-icon></a>
+        <div class="mat-elevation-z8">
+          <table mat-table *ngIf="reportTemplateList.length > 0" style="width: 100%;" [dataSource]="ReportTemplatesdataSource" matSort>
 
-            </td>
-          </ng-container>
-        
-          <tr mat-header-row *matHeaderRowDef="ReportTemplatesdisplayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: ReportTemplatesdisplayedColumns;"></tr>
-        </table>
+
+            <ng-container matColumnDef="source">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-icon title="Where templates are stored">folder</mat-icon>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-icon *ngIf="!element.api" title="Local Host">computer</mat-icon>
+                <mat-icon *ngIf="element.api == 'remote'" color="accent" title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon>
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="template_name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Template name </th>
+              <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="template_settings">
+              <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
+              <td mat-cell *matCellDef="let element">
+  
+                <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="templatessettings"><mat-icon>more_vert</mat-icon></button>
+                <mat-menu #templatessettings="matMenu">
+                  <a [routerLink]="[]" (click)="downloadTemplateItem(element)" class="active-link" title="Download" mat-menu-item><mat-icon class="vertical-align-middle">file_download</mat-icon> Download template</a>
+                  <a *ngIf="!element.api" [routerLink]="[]" (click)="editTemplateItem(element)" class="active-link" title="Edit template" mat-menu-item><mat-icon class="vertical-align-middle">edit</mat-icon> Edit template</a>
+                  <a *ngIf="!element.api" [routerLink]="[]" color="warn" (click)="removeTemplate(element)" class="active-link" title="Remove template" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove</a>
+                </mat-menu>
+  
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="ReportTemplatesdisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: ReportTemplatesdisplayedColumns;"></tr>
+                            <!-- Row shown when there is no matching data. -->
+                            <tr class="mat-row" *matNoDataRow>
+                              <td class="mat-cell" colspan="3">No data matching the filter "{{inputtemplates.value}}"</td>
+                            </tr>
+          </table>
+          
+        </div>
+        <div *ngIf="reportTemplateList.length == 0">
+          No custom templates found! <mat-icon>sentiment_dissatisfied</mat-icon>
+          </div>
+        <br>
+        <mat-paginator #pagintemplates color="accent" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of templates"></mat-paginator>
+
         <br>
         <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
           <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
@@ -199,13 +224,66 @@
             <button *ngIf="reportTemplateList.length > 0" mat-raised-button color="primary" (click)="exporttemplates()" title="Export report templates">
               <mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Export
             </button>
-            <input hidden type="file" accept=".vulnt" #imreporttemplatess (change)="importReportTemplates($event.target)"/>
+            <input hidden type="file" accept=".vulnrepo-templates" #imreporttemplatess (change)="importReportTemplates($event.target)"/>
           </div>
         </div>
 
       </mat-card-content>
         
     </mat-card>
+
+    <br>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">public</mat-icon>
+        <mat-card-title>VULNRΞPO API VAULT ACCESS</mat-card-title>
+        <mat-card-subtitle>Create vault to store in browser access to external API</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div *ngIf="listkey">
+          <table mat-table *ngIf="vaultList.length > 0" style="width: 100%;" [dataSource]="vaultListdataSource" class="mat-elevation-z8">
+  
+            <ng-container matColumnDef="vault_name">
+              <th mat-header-cell *matHeaderCellDef> Vault name </th>
+              <td mat-cell *matCellDef="let element"> {{element.vault_name}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="vault_settings">
+              <th mat-header-cell *matHeaderCellDef> <mat-icon title="Settings">settings</mat-icon> </th>
+              <td mat-cell *matCellDef="let element">
+  
+                <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="vaultsettings"><mat-icon>more_vert</mat-icon></button>
+                <mat-menu #vaultsettings="matMenu">
+                  <a *ngIf="!element.api" [routerLink]="[]" color="warn" (click)="removeapikey()" class="active-link" title="Remove current Vault" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove</a>
+                </mat-menu>
+  
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="vaultListdisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: vaultListdisplayedColumns;"></tr>
+          </table>
+
+      </div>
+      <br>
+      <div fxLayout="row" fxLayoutGap="10px grid">
+        <div fxFlex="50%" fxLayoutAlign="start">
+          <button *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="accent" (click)="openDialogAPIADD()"><mat-icon class="vertical-align-middle padding-bottom-3">cloud_upload</mat-icon> Create Vault</button>
+          <button *ngIf="tryconnectdb" mat-raised-button color="accent" (click)="tryconnect()"><mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon> Access to Vault</button> <br><br>
+          <button *ngIf="apiconneted" mat-raised-button color="warn" (click)="apidisconnect()">Disconnect</button>
+
+        </div>
+        <div fxFlex="50%" fxLayoutAlign="end end">
+          <button *ngIf="apiconneted || tryconnectdb" mat-raised-button color="primary" (click)="exportvault()"><mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Export Vault</button>
+          <button type="button" *ngIf="!apiconneted && !tryconnectdb" mat-raised-button color="primary" (click)="VaultFileInput.click()"><mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import Vault</button>
+          <input hidden type="file" accept=".vulnrepo-vault" #VaultFileInput (change)="importvault($event.target)"/>
+        </div>
+      </div>
+      </mat-card-content>
+    </mat-card>
+
   </div>
 
 </div>

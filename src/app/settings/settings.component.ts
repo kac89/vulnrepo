@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { IndexeddbService } from '../indexeddb.service';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
 import { DialogApiaddComponent } from '../dialog-apiadd/dialog-apiadd.component';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule} from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dialog-addreportprofile.component';
@@ -29,6 +31,14 @@ export interface ApiList {
 })
 
 export class SettingsComponent implements OnInit {
+
+  @ViewChild('paginprofiles') paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  
+
+  @ViewChild('pagintemplates') paginator2: MatPaginator;
+  @ViewChild(MatSort) sort2: MatSort;
+
   color = 'accent';
   info = '';
   msg = '';
@@ -51,6 +61,8 @@ export class SettingsComponent implements OnInit {
   current_storage: any;
   max_storage: any;
   status = 'Not connected!';
+
+  vaultList = [];
   reportProfileList = [];
   reportTemplateList = [];
   reportProfileList_int = [];
@@ -59,7 +71,10 @@ export class SettingsComponent implements OnInit {
   ReportProfilesdataSource = new MatTableDataSource([]);
 
   ReportTemplatesdataSource = new MatTableDataSource([]);
-  ReportTemplatesdisplayedColumns: string[] = ['template_name', 'template_settings'];
+  ReportTemplatesdisplayedColumns: string[] = ['source','template_name', 'template_settings'];
+
+  vaultListdataSource = new MatTableDataSource([]);
+  vaultListdisplayedColumns: string[] = ['vault_name', 'vault_settings'];
 
   displayedColumns: string[] = ['apiname', 'organisation', 'status', 'created', 'expires', 'storage', 'settings'];
   dataSource = new MatTableDataSource([]);
@@ -68,6 +83,7 @@ export class SettingsComponent implements OnInit {
   constructor(public router: Router, private indexeddbService: IndexeddbService, private apiService: ApiService,
     public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService) { }
 
+
   ngOnInit() {
 
     //get report profiles from local at init
@@ -75,18 +91,58 @@ export class SettingsComponent implements OnInit {
       if (ret) {
         this.ReportProfilesdataSource = new MatTableDataSource(ret);
         this.reportProfileList = this.ReportProfilesdataSource.data;
+        this.ReportProfilesdataSource.paginator = this.paginator;
+        this.ReportProfilesdataSource.sort = this.sort;
       }
     });
 
     this.getTemplates();
 
+    this.getVault();
+
+  }
+  
+  foundvault(bool: boolean): boolean {
+
+    this.listkey = bool;
+
+    if(bool) {
+      this.vaultListdataSource = new MatTableDataSource([{"vault_name": "Main Vault"}]);
+      this.vaultList = this.vaultListdataSource.data;
+    } else {
+      this.vaultList = [];
+      this.vaultListdataSource = new MatTableDataSource([]);
+    }
+
+    return bool
+  }
+
+  applyFilterTemplates(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.ReportTemplatesdataSource.filter = filterValue.trim().toLowerCase();
+    if (this.ReportTemplatesdataSource.paginator) {
+      this.ReportTemplatesdataSource.paginator.firstPage();
+    }
+  }
+
+  applyFilterProfiles(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.ReportProfilesdataSource.filter = filterValue.trim().toLowerCase();
+    if (this.ReportProfilesdataSource.paginator) {
+      this.ReportProfilesdataSource.paginator.firstPage();
+    }
+  }
+
+  getVault(): void {
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
 
       console.log('Key found');
       this.apiconnect(localkey);
-      this.listkey = true;
+      this.foundvault(true);
       this.showregapi = false;
+
+
 
     } else {
 
@@ -94,7 +150,11 @@ export class SettingsComponent implements OnInit {
       this.indexeddbService.retrieveAPIkey().then(ret => {
         if (ret) {
           this.tryconnectdb = true;
-          this.listkey = true;
+          this.foundvault(true);
+
+          this.vaultListdataSource = new MatTableDataSource([{"vault_name": "Main Vault"}]);
+          this.vaultList = this.vaultListdataSource.data;
+
           this.showregapi = false;
           
           if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
@@ -107,14 +167,16 @@ export class SettingsComponent implements OnInit {
       });
 
     }
-
   }
-  
+
+
 getTemplates(): void {
   this.indexeddbService.retrieveReportTemplates().then(ret => {
     if (ret) {
       this.ReportTemplatesdataSource = new MatTableDataSource(ret);
       this.reportTemplateList = this.ReportTemplatesdataSource.data;
+      this.ReportTemplatesdataSource.paginator = this.paginator2;
+      this.ReportTemplatesdataSource.sort = this.sort2;
     }
   });
 }
@@ -132,52 +194,114 @@ getTemplates(): void {
 
 
   wipealldata() {
-    indexedDB.deleteDatabase('vulnrepo-templates');
     indexedDB.deleteDatabase('vulnrepo-settings');
+    indexedDB.deleteDatabase('vulnrepo-templates');
+    indexedDB.deleteDatabase('vulnrepo-profiles');
     indexedDB.deleteDatabase('vulnrepo-api');
     indexedDB.deleteDatabase('vulnrepo-db');
+    indexedDB.deleteDatabase('testindexeddb');
     window.location.href = window.location.protocol + '//' + window.location.host;
   }
 
-  dumpallmyreports() {
 
-    this.indexeddbService.getReports().then(data => {
-      if (data) {
+  getdumps(){
+
+
+    let pro, tem, rep, vau: any;
+
+    Promise.all([
+      this.indexeddbService.retrieveReportProfile().then(ret => {
+        if (ret) {
+          pro = ret;
+        }
+      }),
+      this.indexeddbService.retrieveAPIkey().then(data => {
+        if (data) {
+          vau = data;
+        }
+      }),
+      this.indexeddbService.retrieveReportTemplates().then(ret => {
+        if (ret) {
+          tem = ret;
+        }
+      }),
+      this.indexeddbService.getReports().then(data => {
+        if (data) {
+          rep = data;
+        }
+      }),
+    ]).then(values => {
+      if (values) {
+
         // download dump
-        const blob = new Blob([JSON.stringify(data)], { type: 'text/plain' });
+        const blob = new Blob([JSON.stringify({
+          reports: rep,
+          templates: tem,
+          profiles: pro,
+          vault: vau
+        })], { type: 'text/plain' });
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', 'Dumped My Reports (vulnrepo.com).txt');
+        link.setAttribute('download', 'Dumped My Reports (vulnrepo.com).vulnrepo-backup');
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
-      } else {
-        console.log('DB read error');
       }
-
     });
 
+
   }
 
-  parseandrestorereports(array) {
-    const parsed = JSON.parse(array);
-    for (let _i = 0; _i < parsed.length; _i++) {
-        const num = parsed[_i];
-        console.log(num);
-        this.indexeddbService.importReportfromfileSettings(num);
+  dumpallmyreports() {
+    this.getdumps();
 
-        if (_i + 1 === parsed.length) {
-          this.router.navigate(['/my-reports']);
-        }
+  }
+
+  parseMyBackupfile(array) {
+
+    const parsed = JSON.parse(array);
+    if(parsed.vault !== undefined && parsed.vault.length > 0) {
+        this.indexeddbService.saveKEYinDB(parsed.vault);
+        this.foundvault(true);
+        this.showregapi = true;
+        this.tryconnectdb = true;
     }
 
+    if(parsed.reports.length > 0) {
+      for (let _i = 0; _i < parsed.reports.length; _i++) {
+        const num = parsed.reports[_i];
+        this.indexeddbService.importReportfromfileSettings(num);
+      }
+    }
 
+    if(parsed.templates.length > 0) {
+      for (let _i = 0; _i < parsed.templates.length; _i++) {
+        const num = parsed.templates[_i];
+
+        this.reportTemplateList = this.reportProfileList.concat(num);
+        this.ReportTemplatesdataSource.data = this.reportTemplateList;
+      
+        for (let item of this.reportTemplateList) {
+          this.indexeddbService.saveReportTemplateinDB(item);
+        }     
+
+      }
+    }
+
+    if(parsed.profiles.length > 0) {
+      for (let _i = 0; _i < parsed.profiles.length; _i++) {
+        const num = parsed.profiles[_i];
+        this.reportProfileList = this.reportProfileList.concat(num);
+        this.ReportProfilesdataSource.data = this.reportProfileList;
+        this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+      }
+    }
   }
 
-  restoreMyReports(input: HTMLInputElement) {
+  restoreMybackup(input: HTMLInputElement) {
 
     const files = input.files;
     if (files && files.length) {
@@ -185,7 +309,7 @@ getTemplates(): void {
       const fileToRead = files[0];
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
-       this.parseandrestorereports(fileReader.result);
+       this.parseMyBackupfile(fileReader.result);
 
       };
       fileReader.readAsText(fileToRead, 'UTF-8');
@@ -217,7 +341,7 @@ getTemplates(): void {
         this.apiService.APISend(element.value, element.apikey, 'apiconnect', '').then(resp => {
             if (resp !== undefined && resp !== null && resp.AUTH === 'OK') {
               this.apiconneted = true;
-              this.listkey = false;
+              this.foundvault(false);
               this.createdate = resp.CREATEDATE;
               this.expirydate = resp.EXPIRYDATE;
               this.remain = this.gettimebetweendates(this.today, this.expirydate);
@@ -264,7 +388,7 @@ getTemplates(): void {
 
     indexedDB.deleteDatabase('vulnrepo-api');
     this.showregapi = true;
-    this.listkey = false;
+    this.foundvault(false);
     this.apiconneted = false;
     this.tryconnectdb = false;
     this.status = 'Not connected!';
@@ -273,7 +397,7 @@ getTemplates(): void {
   apidisconnect() {
     this.sessionsub.removeSessionStorageItem('VULNREPO-API');
     this.showregapi = false;
-    this.listkey = true;
+    this.foundvault(true);
     this.apiconneted = false;
     this.status = 'Not connected!';
     this.tryconnectdb = true;
@@ -283,7 +407,7 @@ getTemplates(): void {
   tryconnect() {
     this.indexeddbService.retrieveAPIkey().then(ret => {
       if (ret) {
-        this.listkey = true;
+        this.foundvault(true);
         this.showregapi = false;
         this.tryconnectdb = true;
         setTimeout(_ => this.openDialog(ret));
@@ -329,7 +453,7 @@ getTemplates(): void {
       if (result === 'OK') {
         this.apiconneted = true;
         this.tryconnectdb = false;
-        this.listkey = false;
+        this.foundvault(false);
         this.showregapi = false;
 
         const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
@@ -412,7 +536,7 @@ getTemplates(): void {
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', 'VULNREPO Vault Dump ' + today + ' (vulnrepo.com).json');
+        link.setAttribute('download', 'VULNREPO Vault Dump ' + today + ' (vulnrepo.com).vulnrepo-vault');
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -426,8 +550,7 @@ getTemplates(): void {
 
   }
 
-  onFileLoad(fileLoadedEvent) {
-  }
+
 
   importvault(input: HTMLInputElement) {
     console.log('import vault');
@@ -437,7 +560,6 @@ getTemplates(): void {
 
       const fileToRead = files[0];
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.Processimportfile(fileReader.result);
@@ -535,7 +657,7 @@ getAPIReportProfiles() {
   openDialogReportProfiles(data: any): void {
 
     const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
-      width: '800px',
+      width: '700px',
       //height: '600px',
       disableClose: true,
       data: data
@@ -546,7 +668,7 @@ getAPIReportProfiles() {
       if (result) {
         this.reportProfileList = this.reportProfileList.concat(result);
         this.ReportProfilesdataSource.data = this.reportProfileList;
-        this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+        this.indexeddbService.saveReportProfileinDB(result).then(ret => {});
         this.getReportProfiles();
       }
 
@@ -558,20 +680,30 @@ getAPIReportProfiles() {
   openDialogReportTemplates(): void {
 
     const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
-      width: '800px',
+      width: '600px',
       disableClose: false,
       data: []
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The add custom template dialog was closed');
+
+      if (result) {
+        this.indexeddbService.saveReportTemplateinDB(result).then(ret => {
+          if (ret) {
+            console.log("custom template added");
+          }
+        });
+    
+      }
+
       this.getTemplates();
     });
 
   }
 
   removeTemplate(item: any): void {
-
+    console.log(item);
     const index: number = this.reportTemplateList.indexOf(item);
     if (index !== -1) {
 
@@ -588,17 +720,21 @@ getAPIReportProfiles() {
 
   removeProfileItem(item: any): void {
     const index: number = this.reportProfileList.indexOf(item as never);
+
     if (index !== -1) {
       this.reportProfileList.splice(index, 1);
       this.ReportProfilesdataSource.data = this.reportProfileList;
-      this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
-      this.getReportProfiles();
+
+      this.indexeddbService.deleteProfile(item).then(ret => {
+        this.getReportProfiles();
+      });
+      
     }
   }
 
   editProfileItem(item: any): void {
     const dialogRef = this.dialog.open(DialogAddreportprofileComponent, {
-      width: '800px',
+      width: '700px',
       disableClose: true,
       data: item
     });
@@ -607,6 +743,7 @@ getAPIReportProfiles() {
     dialogRef.afterClosed().subscribe(result => {
       console.log('Report Settings Profile dialog was closed');
       if (result) {
+
         const index: number = this.reportProfileList.indexOf(result.original[0]);
         if (index !== -1) {
           this.reportProfileList[index] = {
@@ -619,6 +756,7 @@ getAPIReportProfiles() {
             remove_lastpage: result.remove_lastpage,
             report_parsing_desc: result.report_parsing_desc,
             report_parsing_poc_markdown: result.report_parsing_poc_markdown,
+            report_remove_attach_name: result.report_remove_attach_name,
             remove_issueStatus: result.remove_issueStatus,
             remove_issuecvss: result.remove_issuecvss,
             remove_issuecve: result.remove_issuecve,
@@ -633,7 +771,7 @@ getAPIReportProfiles() {
             report_custom_content: result.report_custom_content
           };
           this.ReportProfilesdataSource.data = this.reportProfileList;
-          this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+          this.indexeddbService.updateProfile(this.reportProfileList[index], result.original[0]._key).then(ret => {});
           this.getReportProfiles();
         }
       }
@@ -650,7 +788,7 @@ getAPIReportProfiles() {
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', 'Backup Report Profiles (vulnrepo.com).json');
+        link.setAttribute('download', 'Backup Report Profiles (vulnrepo.com).vulnrepo-profiles');
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -669,7 +807,6 @@ getAPIReportProfiles() {
 
       const fileToRead = files[0];
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parseprofile(fileReader.result);
@@ -683,9 +820,15 @@ getAPIReportProfiles() {
 
 parseprofile(profile){
   const parsed = JSON.parse(profile);
-  this.reportProfileList = this.reportProfileList.concat(parsed);
-  this.ReportProfilesdataSource.data = this.reportProfileList;
-  this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+
+  if(Array.isArray(parsed)){
+    parsed.forEach((item) => {
+      this.indexeddbService.saveReportProfileinDB(item).then(ret => {});
+    });
+  } else {
+    this.indexeddbService.saveReportProfileinDB(parsed).then(ret => {});
+  }
+
   this.getReportProfiles();
 }
 
@@ -694,13 +837,33 @@ downloadProfileItem(element) {
   delete element.api;
   delete element.apikey;
   delete element.apiname;
+  delete element._key;
   delete element.apiurl;
 
   const blob = new Blob([JSON.stringify(element)], { type: 'application/json' });
   const link = document.createElement('a');
   const url = window.URL.createObjectURL(blob);
   link.setAttribute('href', url);
-  link.setAttribute('download', '' + element.profile_name + ' settings profile (vulnrepo.com).json');
+  link.setAttribute('download', '' + element.profile_name + ' settings profile (vulnrepo.com).vulnrepo-profiles');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+downloadTemplateItem(element) {
+
+  delete element.api;
+  delete element._key;
+  delete element.apikey;
+  delete element.apiname;
+  delete element.apiurl;
+
+  const blob = new Blob([JSON.stringify(element)], { type: 'application/json' });
+  const link = document.createElement('a');
+  const url = window.URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', '' + element.title + ' template (vulnrepo.com).vulnrepo-templates');
   link.style.visibility = 'hidden';
   document.body.appendChild(link);
   link.click();
@@ -715,7 +878,7 @@ exporttemplates() {
       const link = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      link.setAttribute('download', 'Backup Report Templates (vulnrepo.com).vulnt');
+      link.setAttribute('download', 'Backup Report Templates (vulnrepo.com).vulnrepo-templates');
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
@@ -732,7 +895,6 @@ importReportTemplates(input: HTMLInputElement) {
 
     const fileToRead = files[0];
     const fileReader = new FileReader();
-    fileReader.onload = this.onFileLoad;
 
     fileReader.onload = (e) => {
       this.parsetemplate(fileReader.result);
@@ -746,14 +908,46 @@ importReportTemplates(input: HTMLInputElement) {
 
 parsetemplate(template){
   const parsed = JSON.parse(template);
-  this.reportTemplateList = this.reportProfileList.concat(parsed);
-  this.ReportTemplatesdataSource.data = this.reportTemplateList;
 
-  for (let item of this.reportTemplateList) {
-    this.indexeddbService.saveReportTemplateinDB(item).then(ret => {});
-  }     
-
+  if(Array.isArray(parsed)){
+    parsed.forEach((item) => {
+      this.indexeddbService.saveReportTemplateinDB(item).then(ret => {});    
+    });
+  } else {
+    this.indexeddbService.saveReportTemplateinDB(parsed).then(ret => {});
+  }
   this.getTemplates();
+
+}
+
+
+
+editTemplateItem(item: any): void {
+  const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
+    width: '600px',
+    disableClose: true,
+    data: [item,{edit: true}]
+  });
+
+
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('Report Settings Templates edit dialog was closed');
+    if (result) {
+
+      const index: number = this.reportTemplateList.indexOf(result[1].original[0]);
+      if (index !== -1) {
+        const ndd = {"title": result[0].title,"poc": "","desc": result[0].desc,"severity": result[0].severity,"ref": result[0].ref,"cvss": result[0].cvss,"cvss_vector": result[0].cvss_vector,"cve": result[0].cve, "tags": result[0].tags};
+        this.reportTemplateList[index] = ndd;
+  
+        this.indexeddbService.updateTemplate(ndd, result[1].original[0]._key).then(ret => {});
+        this.ReportTemplatesdataSource.data = this.reportTemplateList;
+
+      }
+
+    }
+
+  });
+
 }
 
 }

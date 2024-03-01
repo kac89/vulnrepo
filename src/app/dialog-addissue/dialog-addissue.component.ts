@@ -14,6 +14,10 @@ import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/mate
 import { CurrentdateService } from '../currentdate.service';
 import { IndexeddbService } from '../indexeddb.service';
 
+export interface Tags {
+  name: string;
+}
+
 export interface Vulns {
   title: string;
   cve: string;
@@ -23,6 +27,7 @@ export interface Vulns {
   poc: string;
   ref: string;
   severity: string;
+  tags:Array<Tags>
 }
 
 export interface PCI {
@@ -286,7 +291,7 @@ export class DialogAddissueComponent implements OnInit {
                 cvss: found.cvss,
                 cvss_vector: found.cvss_vector,
                 cve: found.cve,
-                tags: [],
+                tags: found.tags,
                 bounty: [],
                 date: this.getcurrentDate()
               };

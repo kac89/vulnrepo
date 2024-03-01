@@ -2182,7 +2182,7 @@ Date   | Description
       ResWeb: this.decryptedReportDataChanged.researcher[0].reporterwww
     };
     this.ReportProfilesList = this.ReportProfilesList.concat(profile);
-    this.indexeddbService.saveReportProfileinDB(this.ReportProfilesList).then(ret => { });
+    this.indexeddbService.saveReportProfileinDB(profile).then(ret => { });
     this.getReportProfiles();
   }
 
@@ -2367,9 +2367,9 @@ IP   | hostname | role | comments\n\
   saveTemplate(dec_data): void {
 
     const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
-      width: '800px',
+      width: '600px',
       disableClose: false,
-      data: {
+      data: [{
         "title": dec_data.title,
         "poc": "",
         "desc": dec_data.desc,
@@ -2377,12 +2377,18 @@ IP   | hostname | role | comments\n\
         "ref": dec_data.ref,
         "cvss": dec_data.cvss,
         "cvss_vector": dec_data.cvss_vector,
-        "cve": dec_data.cve
-      }
+        "cve": dec_data.cve,
+        "tags": dec_data.tags,
+      }]
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The add custom template dialog was closed');
+
+      if(result) {
+        this.indexeddbService.saveReportTemplateinDB({"title": result[0].title,"poc": "","desc": result[0].desc,"severity": result[0].severity,"ref": result[0].ref,"cvss": result[0].cvss,"cvss_vector": result[0].cvss_vector,"cve": result[0].cve, "tags": result[0].tags});
+      }
+
     });
 
   }

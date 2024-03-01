@@ -190,13 +190,23 @@ export class TemplatesListComponent implements OnInit {
   create_issue(): void {
 
     const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
-      width: '800px',
+      width: '600px',
       disableClose: false,
       data: []
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The add custom template dialog was closed');
+
+
+      if (result) {
+
+        console.log(result);
+
+        this.indexeddbService.saveReportTemplateinDB({"title": result.title,"poc": "","desc": result.desc,"severity": result.severity,"ref": result.ref,"cvss": result.cvss,"cvss_vector": result.cvss_vector,"cve": result.cve, "tags": result.tags});
+
+      }
+
       this.gettemplates();
     });
 
