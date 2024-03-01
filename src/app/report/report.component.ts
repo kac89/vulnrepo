@@ -2182,7 +2182,7 @@ Date   | Description
       ResWeb: this.decryptedReportDataChanged.researcher[0].reporterwww
     };
     this.ReportProfilesList = this.ReportProfilesList.concat(profile);
-    this.indexeddbService.saveReportProfileinDB(this.ReportProfilesList).then(ret => { });
+    this.indexeddbService.saveReportProfileinDB(profile).then(ret => { });
     this.getReportProfiles();
   }
 
@@ -2378,7 +2378,7 @@ IP   | hostname | role | comments\n\
         "cvss": dec_data.cvss,
         "cvss_vector": dec_data.cvss_vector,
         "cve": dec_data.cve,
-        "tags": dec_data.tags
+        "tags": dec_data.tags,
       }
     });
 
