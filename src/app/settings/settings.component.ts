@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IndexeddbService } from '../indexeddb.service';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
@@ -30,33 +30,13 @@ export interface ApiList {
   styleUrls: ['./settings.component.scss']
 })
 
-export class SettingsComponent implements OnInit, AfterViewInit {
+export class SettingsComponent implements OnInit {
 
   @ViewChild('paginprofiles') paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-  @ViewChild(MatSort) set matSort2(ms: MatSort) {
-    this.sort2 = ms;
-    this.reporttemplatesort();
-  }
-  
-  reporttemplatesort() {
-    this.ReportTemplatesdataSource.paginator = this.paginator2;
-    this.ReportTemplatesdataSource.sort = this.sort2;
-  }
-
   @ViewChild('pagintemplates') paginator2: MatPaginator;
-  @ViewChild(MatSort) sort2: MatSort;
 
-  @ViewChild(MatSort) set matSort(ms: MatSort) {
-    this.sort = ms;
-    this.reportprofilesort();
-  }
-  
-  reportprofilesort() {
-    this.ReportProfilesdataSource.paginator = this.paginator;
-    this.ReportProfilesdataSource.sort = this.sort;
-  }
+  @ViewChild('table1', { read: MatSort }) sort: MatSort;
+  @ViewChild('table2', { read: MatSort }) sort2: MatSort;
 
   color = 'accent';
   info = '';
@@ -103,27 +83,13 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService) { }
 
 
-  ngAfterViewInit () {
-    //get report profiles from local at init
-    this.indexeddbService.retrieveReportProfile().then(ret => {
-      if (ret) {
-        this.ReportProfilesdataSource = new MatTableDataSource(ret);
-        this.reportProfileList = this.ReportProfilesdataSource.data;
-        this.ReportProfilesdataSource.paginator = this.paginator;
-        this.ReportProfilesdataSource.sort = this.sort;
-      }
-    });
+  ngOnInit() {
+
+    this.getProfiles();
 
     this.getTemplates();
 
     this.getVault();
-
-    this.ReportProfilesdataSource.sort = this.sort;
-
-    }
-
-  ngOnInit() {
-
 
 
   }
@@ -195,6 +161,18 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+getProfiles(): void {
+    //get report profiles from local at init
+    this.indexeddbService.retrieveReportProfile().then(ret => {
+      if (ret) {
+        this.ReportProfilesdataSource = new MatTableDataSource(ret);
+        this.reportProfileList = this.ReportProfilesdataSource.data;
+        this.ReportProfilesdataSource.paginator = this.paginator;
+        this.ReportProfilesdataSource.sort = this.sort;
+      }
+    });
+}
 
 getTemplates(): void {
   this.indexeddbService.retrieveReportTemplates().then(ret => {
@@ -692,12 +670,15 @@ getAPIReportProfiles() {
     dialogRef.afterClosed().subscribe(result => {
       console.log('Report Settings Profile dialog was closed');
       if (result) {
-        this.reportProfileList = this.reportProfileList.concat(result);
-        this.ReportProfilesdataSource.data = this.reportProfileList;
-        this.indexeddbService.saveReportProfileinDB(result).then(ret => {});
-        this.getReportProfiles();
+
+        this.indexeddbService.saveReportProfileinDB(result).then(ret => {
+          if (ret) {
+            console.log("profile added");
+          }
+        });
       }
 
+      this.getProfiles();
     });
 
   }
@@ -729,7 +710,6 @@ getAPIReportProfiles() {
   }
 
   removeTemplate(item: any): void {
-    console.log(item);
     const index: number = this.reportTemplateList.indexOf(item);
     if (index !== -1) {
 
