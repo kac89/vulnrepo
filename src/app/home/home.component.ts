@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
+  items = ['Screenshots'];
+  expandedIndex = 0;
+
   constructor() { }
 
   ngOnInit() {

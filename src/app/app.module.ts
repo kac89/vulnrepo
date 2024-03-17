@@ -82,7 +82,7 @@ import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogIssuesEditComponent } from './dialog-issues-edit/dialog-issues-edit.component';
 import { DialogAddCustomTemplateComponent } from './dialog-add-custom-template/dialog-add-custom-template.component';
 import { DialogEncryptReportComponent } from './dialog-encrypt-report/dialog-encrypt-report.component';
-
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 @NgModule({
     declarations: [
         AppComponent,
@@ -160,7 +160,8 @@ import { DialogEncryptReportComponent } from './dialog-encrypt-report/dialog-enc
         MatProgressBarModule,
         NgxChartsModule,
         ClipboardModule,
-        MatTooltipModule
+        MatTooltipModule,
+        CdkAccordionModule
     ],
     providers: [MessageService, IndexeddbService, DatePipe],
     exports: [],
