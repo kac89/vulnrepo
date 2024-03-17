@@ -24,37 +24,69 @@
 <hr style="border: 0;height: 2px; background-image: linear-gradient(to right, #000000, #69f0ae, #000000);">
 <br>
 
-<div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
 
-  <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-    <a target="_blank" href="assets/screen1.png"><img style="width: 250px" src="assets/screen1.png"></a>
-  </div>
+<cdk-accordion class="example-accordion">
+  @for (item of items; track item; let index = $index) {
+    <cdk-accordion-item
 
-  <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-    <a target="_blank" href="assets/screen2.png"><img style="width: 250px" src="assets/screen2.png"></a>
-  </div>
+      #accordionItem="cdkAccordionItem"
+      class="example-accordion-item"
+      role="button"
+      tabindex="0"
+      [attr.id]="'accordion-header-' + index"
+      [attr.aria-expanded]="accordionItem.expanded"
+      [attr.aria-controls]="'accordion-body-' + index">
+      <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+        <h3><mat-icon>photo_library</mat-icon>{{ item }}</h3>
+        <span class="example-accordion-item-description">
+          Click to {{ accordionItem.expanded ? 'close' : 'open' }}
+        </span>
+      </div>
+      <div
+        class="example-accordion-item-body"
+        role="region"
+        [style.display]="accordionItem.expanded ? '' : 'none'"
+        [attr.id]="'accordion-body-' + index"
+        [attr.aria-labelledby]="'accordion-header-' + index">
 
-  <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-    <a target="_blank" href="assets/screen5.png"><img style="width: 250px" src="assets/screen5.png"></a>
-  </div>
 
-</div>
+        <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
 
-<div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
+          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+            <a target="_blank" href="assets/screen1.png"><img style="width: 250px" src="assets/screen1.png"></a>
+          </div>
+        
+          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+            <a target="_blank" href="assets/screen2.png"><img style="width: 250px" src="assets/screen2.png"></a>
+          </div>
+        
+          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+            <a target="_blank" href="assets/screen5.png"><img style="width: 250px" src="assets/screen5.png"></a>
+          </div>
+        
+        </div>
+        
+        <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
+        
+          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+            <a target="_blank" href="assets/screen3.png"><img style="width: 250px" src="assets/screen3.png"></a>
+          </div>
+        
+          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+            <a target="_blank" href="assets/screen4.png"><img style="width: 250px" src="assets/screen4.png"></a>
+          </div>
+        
+          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper_red">
+            <a target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU"><img style="width: 350px" src="assets/yt_screen.jpg"></a>
+          </div>
+        
+        </div>
+      </div>
+    </cdk-accordion-item>
+  }
+</cdk-accordion>
 
-  <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-    <a target="_blank" href="assets/screen3.png"><img style="width: 250px" src="assets/screen3.png"></a>
-  </div>
 
-  <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-    <a target="_blank" href="assets/screen4.png"><img style="width: 250px" src="assets/screen4.png"></a>
-  </div>
-
-  <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper_red">
-    <a target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU"><img style="width: 350px" src="assets/yt_screen.jpg"></a>
-  </div>
-
-</div>
 
 <br>
 <mat-card class="my-card-content">
