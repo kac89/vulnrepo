@@ -26,18 +26,22 @@
 
 
 <cdk-accordion class="example-accordion">
-  @for (item of items; track item; let index = $index) {
     <cdk-accordion-item
 
       #accordionItem="cdkAccordionItem"
       class="example-accordion-item"
       role="button"
       tabindex="0"
-      [attr.id]="'accordion-header-' + index"
+      [attr.id]="'accordion-header-0'"
       [attr.aria-expanded]="accordionItem.expanded"
-      [attr.aria-controls]="'accordion-body-' + index">
+      [attr.aria-controls]="'accordion-body-0'">
       <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-        <h3><mat-icon>photo_library</mat-icon>{{ item }}</h3>
+        <span>
+          <h3>
+            <mat-icon>photo_library</mat-icon> Screenshots & Video
+          </h3>
+        </span>
+        
         <span class="example-accordion-item-description">
           Click to {{ accordionItem.expanded ? 'close' : 'open' }}
         </span>
@@ -46,8 +50,8 @@
         class="example-accordion-item-body"
         role="region"
         [style.display]="accordionItem.expanded ? '' : 'none'"
-        [attr.id]="'accordion-body-' + index"
-        [attr.aria-labelledby]="'accordion-header-' + index">
+        [attr.id]="'accordion-body-0'"
+        [attr.aria-labelledby]="'accordion-header-0'">
 
 
         <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
@@ -83,7 +87,6 @@
         </div>
       </div>
     </cdk-accordion-item>
-  }
 </cdk-accordion>
 
 
