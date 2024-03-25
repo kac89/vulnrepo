@@ -81,7 +81,8 @@
   
   .example-accordion-item-header:hover {
     cursor: pointer;
-    background-image: linear-gradient(to right, #000000, #69f0ae, #000000);
+    background-image: linear-gradient(#000000 50%, #16bf6e 100%);
+    
   }
   
   .example-accordion-item:first-child {
