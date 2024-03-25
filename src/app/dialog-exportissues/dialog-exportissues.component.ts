@@ -17,8 +17,7 @@ export class DialogExportissuesComponent implements OnInit {
   multicurlcmd = '';
   curlcmd = '';
   hide = true;
-  fields_prop = `
-  "project": {
+  fields_prop = `"project": {
     "key": "$key"
   },
   "summary": "$title",
@@ -228,8 +227,7 @@ done`;
     ]
   }`;
 
-this.curlcmd = `
-curl \
+this.curlcmd = `curl \
 -D- \
 -u ` + jira_c_email + ` \
 -X POST \
@@ -247,7 +245,6 @@ curl \
 
     if (pass === pass2) {
 
-
       if (this.isReturn.length > 0) {
         this.data = this.isReturn;
       }
@@ -258,17 +255,20 @@ curl \
 
       const element = document.createElement('a');
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));
-      element.setAttribute('download', 'Vulnrepo issues export.vuln');
+      element.setAttribute('download', 'VULNREPO issues export.vuln');
       element.style.display = 'none';
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
     }
 
-
   }
 
   splitfile(event) {
+
+    this.curlhide = false;
+    this.multipartcurl = false;
+
     if (event.checked === false) {
       this.splitfilereport = false;
     }
@@ -277,5 +277,23 @@ curl \
     }
   }
 
+
+  downloaddecryptedJSON() {
+
+      if (this.isReturn.length > 0) {
+        this.data = this.isReturn;
+      }
+
+      const json = JSON.stringify(this.data);
+
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
+      element.setAttribute('download', 'VULNREPO issues export.json');
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+
+  }
 
 }

@@ -59,16 +59,27 @@
                     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
                         <mat-form-field class="pola" color="accent">
                             <input matInput placeholder="User e-mail/login*" #jira_c_email value="">
+                            <mat-hint>For JIRA cloud use e-mail.</mat-hint>
                         </mat-form-field>
                     </div>
 
-                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="center center"
-                        style="border: 1px solid #ccc !important;border-radius: 16px;">
-                        <mat-checkbox [checked]="splitfilereport" (change)="splitfile($event)">Split the
-                            file<br>(smaller parts)</mat-checkbox>
-                        &nbsp;&nbsp;&nbsp;&nbsp;:<input style="width: 40px;" matInput
-                            placeholder="How many issue to split the file?" #splitcount value="2" maxlength="4" size="4"
-                            title="How many issue to split the file?">
+                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+                        <div fxLayout="row" fxLayoutGap="0px">
+
+                            <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="70%">
+                                <mat-checkbox [checked]="splitfilereport" (change)="splitfile($event)">Split the
+                                    file<br>(smaller parts)</mat-checkbox>
+                            </div>
+                            <div [hidden]="!splitfilereport" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="20%">
+                                <mat-form-field [style.width.px]="50" appearance="outline" color="accent">
+                                    <input matInput placeholder="How many issues to split a file?" #splitcount value="49"
+                                        maxlength="4" size="2" title="How many issues to split a file?">
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -87,17 +98,35 @@
                 <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 
                 <br><br>
+
                 <div *ngIf="curlhide">
-                    <p>Download data.json file and in the same folder run curl:</p>
-                    <pre style="white-space:pre-wrap;">{{curlcmd}}</pre>
-                    <p>cURL should prompt to enter your user password to jira.</p>
-                </div>
-                <div *ngIf="multipartcurl">
-                    <p>Download data[0-9].json files and in the same folder run curl:</p>
-                    <textarea matInput placeholder="Ex. It makes me feel...">{{multicurlcmd}}</textarea>
-                    <p>cURL should prompt to enter your user password to JIRA.</p>
+
+                    <mat-form-field class="example-full-width" color="accent">
+                        <textarea matInput value="{{curlcmd}}"></textarea>
+                        <mat-hint>Download data.json file and in the same folder run curl
+                            <mat-icon>arrow_upward</mat-icon></mat-hint>
+                    </mat-form-field>
+
                 </div>
 
+                <div *ngIf="multipartcurl">
+
+                    <mat-form-field class="example-full-width" color="accent">
+                        <textarea matInput value="{{multicurlcmd}}"></textarea>
+                        <mat-hint>Download data[0-9].json files and in the same folder run cmd
+                            <mat-icon>arrow_upward</mat-icon></mat-hint>
+                    </mat-form-field>
+
+                </div>
+
+                <p *ngIf="curlhide || multipartcurl">cURL should prompt to enter your user password or access token to JIRA.</p>
+
+            </mat-tab>
+
+            <mat-tab label="Decrypted JSON">
+                <br>
+                <button mat-raised-button color="accent"
+                    (click)="downloaddecryptedJSON()">Download as decrypted JSON</button>
             </mat-tab>
 
         </mat-tab-group>
