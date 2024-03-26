@@ -7,7 +7,7 @@
 
     <mat-card-content>
         <div fxLayout="row wrap" fxLayoutGap="10px grid">
-            <div fxLayoutAlign="start center" fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+            <div fxLayoutAlign="start center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
                 <mat-form-field color="accent" style="width: 100%;">
                     <mat-label>Set severity</mat-label>
                     <mat-select [(value)]="selseverity">
@@ -18,7 +18,7 @@
                     </mat-select>
                   </mat-form-field>
             </div>
-            <div fxLayoutAlign="start center" fxFlex="40%" fxFlex.sm="40%" fxFlex.xs="100%">
+            <div fxLayoutAlign="start start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
                 <mat-form-field color="accent" style="width: 100%;">
                     <mat-label>Set status</mat-label>
                     <mat-select [(value)]="selstatus">
@@ -29,12 +29,12 @@
                     </mat-select>
                   </mat-form-field>
             </div>
-            <div fxLayoutAlign="end center" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
-                <button mat-raised-button color="accent" (click)="applychanges()" style="width: 100%;"><mat-icon>save</mat-icon> Apply</button>
-            </div>
+
         </div>
         <p>
             <button mat-raised-button color="primary" (click)="closedialog()">Close</button>
+            &nbsp;&nbsp;
+            <button mat-raised-button color="accent" (click)="applychanges()"><mat-icon>save</mat-icon> Apply changes</button>
         </p>
         
     </mat-card-content>

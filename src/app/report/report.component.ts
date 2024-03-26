@@ -590,7 +590,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   openissuesedit(array) {
 
     const dialogRef = this.dialog.open(DialogIssuesEditComponent, {
-      width: '600px',
+      width: '450px',
       data: { sel: array, orig: this.decryptedReportDataChanged.report_vulns }
     });
 
