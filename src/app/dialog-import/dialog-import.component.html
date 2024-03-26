@@ -55,7 +55,10 @@
         <p *ngIf="jiraxmlplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
         <input *ngIf="selected_source == 'decrypted_json'" cdkFocusInitial type="file" accept=".json" (change)="decryptedjsononFileSelect($event.target)" name="myfile">
-        <p *ngIf="jiraxmlplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+        <p *ngIf="decryptedjsonplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+
+        <input *ngIf="selected_source == 'npm_audit'" cdkFocusInitial type="file" accept=".json" (change)="npmauditjsononFileSelect($event.target)" name="myfile">
+        <p *ngIf="npmauditplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
         <br>
         <br>

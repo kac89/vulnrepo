@@ -48,6 +48,9 @@ export class DialogImportComponent implements OnInit {
   public decryptedjsonshow_input = true;
   public decryptedjsonplease_wait = false;
 
+  public npmauditshow_input = true;
+  public npmauditplease_wait = false;
+
   file: any;
   hide = true;
   sour: Importsource[] = [
@@ -60,7 +63,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
     { value: 'trivy', viewValue: 'Trivy (.JSON)' },
     { value: 'jira_xml', viewValue: 'Jira (.XML)' },
-    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)' }
+    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)' },
+    { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
@@ -216,15 +220,15 @@ export class DialogImportComponent implements OnInit {
   }
 
 
-  
+
   parsebugcrowd(csv) {
-    
+
     const csvData = csv || '';
     let m: any;
     const issuelist = [];
     let text = csvData.substring(csvData.indexOf("\n") + 1);
-    text = text.replace(/, /g,'. ');
-    
+    text = text.replace(/, /g, '. ');
+
 
     function setseverity(severity: string) {
 
@@ -246,27 +250,27 @@ export class DialogImportComponent implements OnInit {
 
     const regex = /(.*),(.*),(.*),(.*),(.*),(.*),([\S\s]*?),([\S\s]*?),(.*),(.*),(.*),(.*),(.*)/gm;
     while ((m = regex.exec(text)) !== null) {
-        // This is necessary to avoid infinite loops with zero-width matches
-        if (m.index === regex.lastIndex) {
-            regex.lastIndex++;
-        }
-        
-        const def = {
-          title: m[4],
-          poc: m[6] + "\n\n" + m[8],
-          files: [],
-          desc: m[7],
-          severity: setseverity(m[11]),
-          ref: 'https://bugcrowd.com/vulnerability-rating-taxonomy',
-          cvss: '',
-          cvss_vector: '',
-          cve: '',
-          tags: [{name: 'bugcrowd'}],
-          bounty: [],
-          date: this.currentdateService.getcurrentDate()
-        };
+      // This is necessary to avoid infinite loops with zero-width matches
+      if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+      }
 
-        issuelist.push(def);
+      const def = {
+        title: m[4],
+        poc: m[6] + "\n\n" + m[8],
+        files: [],
+        desc: m[7],
+        severity: setseverity(m[11]),
+        ref: 'https://bugcrowd.com/vulnerability-rating-taxonomy',
+        cvss: '',
+        cvss_vector: '',
+        cve: '',
+        tags: [{ name: 'bugcrowd' }],
+        bounty: [],
+        date: this.currentdateService.getcurrentDate()
+      };
+
+      issuelist.push(def);
 
     }
     this.dialogRef.close(issuelist);
@@ -301,11 +305,10 @@ export class DialogImportComponent implements OnInit {
     }
 
 
-    function stripHtml(html)
-    {
-       let tmp = document.createElement("DIV");
-       tmp.innerHTML = html;
-       return tmp.textContent || tmp.innerText || "";
+    function stripHtml(html) {
+      let tmp = document.createElement("DIV");
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
     }
 
     function setcvss(severity) {
@@ -443,21 +446,21 @@ export class DialogImportComponent implements OnInit {
 
   parseOpenvasxml(xml) {
 
-function isarr(arr) {
-  return Array.isArray(arr)
-}
+    function isarr(arr) {
+      return Array.isArray(arr)
+    }
 
     const info = xml.map((res, key) => {
       let zref = "";
-      if(res.nvt[0].xref || res.nvt[0].refs) {
+      if (res.nvt[0].xref || res.nvt[0].refs) {
 
         let references = res.nvt[0].xref ?? res.nvt[0].refs[0].ref;
         references.forEach(function (value) {
-          if(value.$.id) {
-            zref = zref + value.$.id +"\n"
+          if (value.$.id) {
+            zref = zref + value.$.id + "\n"
           }
-          
-        }); 
+
+        });
 
       }
 
@@ -531,11 +534,11 @@ function isarr(arr) {
 
     function getSafe(fn, defaultVal) {
       try {
-          return fn();
+        return fn();
       } catch (e) {
-          return defaultVal;
+        return defaultVal;
       }
-  }
+    }
 
     this.xmltojson = [];
     const issues = [];
@@ -551,12 +554,12 @@ function isarr(arr) {
 
           myarrdeep.ReportItem.forEach((itemissue) => {
 
+            // tslint:disable-next-line:max-line-length
+            type MyArrayType = Array<{ ip: string, port: string, protocol: string, hostfqdn: string, hostname: string, pluginout: string }>;
+            const arr: MyArrayType = [
               // tslint:disable-next-line:max-line-length
-              type MyArrayType = Array<{ ip: string, port: string, protocol: string, hostfqdn: string, hostname: string, pluginout: string }>;
-              const arr: MyArrayType = [
-                // tslint:disable-next-line:max-line-length
-                { ip: myarrdeep.$.name, port: itemissue.$.port, protocol: itemissue.$.protocol, hostfqdn: getSafe(() => myarrdeep.HostProperties[0].tag[2]._, ''), hostname: getSafe(() => myarrdeep.HostProperties[0].tag[14]._, ''), pluginout: itemissue.plugin_output }
-              ];
+              { ip: myarrdeep.$.name, port: itemissue.$.port, protocol: itemissue.$.protocol, hostfqdn: getSafe(() => myarrdeep.HostProperties[0].tag[2]._, ''), hostname: getSafe(() => myarrdeep.HostProperties[0].tag[14]._, ''), pluginout: itemissue.plugin_output }
+            ];
 
             if (myarrdeep.HostProperties[0].tag[2]._) {
 
@@ -719,19 +722,19 @@ function isarr(arr) {
 
   vulnrepojson(json, pass) {
 
-      try {
-        // Decrypt
-        const bytes = Crypto.AES.decrypt(json.toString(), pass);
-        const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
+    try {
+      // Decrypt
+      const bytes = Crypto.AES.decrypt(json.toString(), pass);
+      const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
 
-        if (decryptedData) {
-          this.dialogRef.close(decryptedData);
-        }
-
-      } catch (except) {
-        this.vulnrepojsonplease_wait = false;
-        this.vulnrepowrongpass = true;
+      if (decryptedData) {
+        this.dialogRef.close(decryptedData);
       }
+
+    } catch (except) {
+      this.vulnrepojsonplease_wait = false;
+      this.vulnrepowrongpass = true;
+    }
 
   }
 
@@ -767,13 +770,13 @@ function isarr(arr) {
       json = result.nmaprun;
       hosts = result.nmaprun.host;
     });
-    
+
     // only state up ip's
-    if(this.checked) {
+    if (this.checked) {
       const getUp = hosts.filter(function (el) {
         return (el.status[0]['$'].state === 'up');
       });
-      hosts=getUp;
+      hosts = getUp;
     }
 
     const info = hosts.map((res, key) => {
@@ -785,8 +788,8 @@ function isarr(arr) {
       }
 
       let hostt = '';
-      if(res.hostnames) {
-        if(res.hostnames[0].hostname) {
+      if (res.hostnames) {
+        if (res.hostnames[0].hostname) {
           if (res.hostnames[0].hostname[0]['$'].name !== undefined) {
             hostt = ' - ' + res.hostnames[0].hostname[0]['$'].name;
           } else {
@@ -829,12 +832,12 @@ function isarr(arr) {
             } else {
               service = service_name + ' - ' + service_product;
             }
-            
+
             ports = ports + myObject['$'].protocol + '/' + myObject['$'].portid + ' - ' + service + '\n';
           });
-  
+
         }
-      
+
         if (res.ports[0].extraports !== undefined) {
           const title = '\nFiltered ports:\n';
           res.ports[0].extraports.forEach((myObject, index) => {
@@ -842,7 +845,7 @@ function isarr(arr) {
           });
           filteredports = title + filteredports;
         }
-    }
+      }
 
       let osdetect = '';
       if (res.os) {
@@ -903,7 +906,7 @@ function isarr(arr) {
   }
 
   trivyparse(json) {
-    
+
     const data = JSON.parse(json);
     const issuelist = [];
 
@@ -934,14 +937,14 @@ function isarr(arr) {
         if (Object.values(intvulns).indexOf(myObject2.VulnerabilityID) > -1) {
           // console.log('has VulnerabilityID');
         } else {
-          const reff = myObject2.References.join("\n"); 
+          const reff = myObject2.References.join("\n");
           let cvss = '';
 
           if (typeof myObject2.CVSS !== 'undefined') {
             if (typeof myObject2.CVSS.nvd !== 'undefined') {
               cvss = myObject2.CVSS.nvd.V3Score;
             }
-  
+
           }
 
           const def = {
@@ -958,13 +961,13 @@ function isarr(arr) {
             bounty: [],
             date: this.currentdateService.getcurrentDate()
           };
-  
+
           intvulns.push(myObject2.VulnerabilityID);
           issuelist.push(def);
         }
-        
+
       });
-      
+
     });
 
 
@@ -1105,10 +1108,77 @@ function isarr(arr) {
 
   parsedecryptedJSON(json) {
     const data = JSON.parse(json);
-    if(data) {
+    if (data) {
       this.dialogRef.close(data);
     }
-    
+
   }
+
+
+  npmauditjsononFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.npmauditshow_input = false;
+      this.npmauditplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parsenpmauditJSON(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parsenpmauditJSON(json) {
+    const data = JSON.parse(json);
+    if (data.vulnerabilities) {
+
+      function setseverity(severity) {
+
+        if (severity === 'moderate') {
+          severity = 'Medium';
+        }
+
+        let result = severity.charAt(0).toUpperCase() + severity.slice(1);
+
+        return result
+      }
+
+      const arr = [];
+      for (const [key, value] of Object.entries(data.vulnerabilities)) {
+
+        value["via"].forEach((item, index) => {
+
+          const def = {
+            title: item.name + ' ' + item.range + ' ' + item.title,
+            poc: 'Result of execution command: $ npm audit --json',
+            files: [],
+            desc: 'Full description on: ' + item.url,
+            severity: setseverity(item.severity),
+            ref: item.url,
+            cvss: '',
+            cvss_vector: '',
+            cve: '',
+            tags: [],
+            bounty: [],
+            date: this.currentdateService.getcurrentDate()
+          };
+
+          arr.push(def);
+        });
+
+      }
+
+      this.dialogRef.close(arr);
+    }
+  }
+
 
 }

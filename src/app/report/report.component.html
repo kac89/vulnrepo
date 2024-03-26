@@ -231,55 +231,60 @@
           *ngFor="let dec_data of decryptedReportDataChanged.report_vulns; let i=index" (opened)="panelOpenState = true"
           (closed)="panelOpenState = false" cdkDrag>
 
-          <mat-expansion-panel-header cdkDragHandle>
+          <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
             <mat-panel-title fxLayoutAlign="start">
               <div style="white-space: nowrap;">
-                <mat-checkbox style="margin-left: 5px;" [(ngModel)]="selected3[i]" (change)="toggle()"
+                <mat-checkbox [(ngModel)]="selected3[i]" (change)="toggle()"
                   (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
                 <span
-                  class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>&nbsp;&nbsp;{{dec_data.title}}
+                  class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
+                  &nbsp;&nbsp;{{dec_data.title}}
               </div>
             </mat-panel-title>
-            <mat-panel-description fxLayoutAlign="center center">
-              <span style="pointer-events:none;">
-                <mat-chip-listbox>
-                  <mat-chip-option *ngFor="let tag of dec_data.tags" [selectable]="false" ngDefaultControl>
-                    {{tag.name}}
-                  </mat-chip-option>
-                </mat-chip-listbox>
-              </span>
-              &nbsp; {{ (dec_data.cve.length>30) ? (dec_data.cve | slice:0:30)+'..':(dec_data.cve) }}
-            </mat-panel-description>
+
 
             <mat-panel-description fxLayoutAlign="end center">
-              <div>
 
+              <div>
+                <div fxLayoutAlign="center start" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxHide.xs fxHide.sm>
+                  <mat-chip-listbox style="white-space: nowrap;">
+                    <mat-chip-option *ngFor="let tag of dec_data.tags.slice(0, 3);" [selectable]="false" ngDefaultControl>
+                      {{tag.name}}
+                    </mat-chip-option>
+                  </mat-chip-listbox>
+                </div>
+                </div>
+
+              &nbsp;
+              <div *ngIf="dec_data?.bounty" fxHide.xs fxHide.sm>
+                <mat-icon *ngIf="dec_data?.bounty.length > 0" title="Found bug-bounty program related to the issue"
+                  color="accent">attach_money</mat-icon>
+              </div>
+              <div *ngIf="dec_data?.status === 1" fxHide.xs fxHide.sm>
+                <mat-icon style="color:red" title="Issue status: Open (Waiting for review)"
+                  class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon>
+              </div>
+              <div *ngIf="dec_data?.status === 2" fxHide.xs fxHide.sm>
+                <mat-icon style="color:yellow" title="Issue status: Fix In Progress"
+                  class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon>
+              </div>
+              <div *ngIf="dec_data?.status === 3" fxHide.xs fxHide.sm>
+                <mat-icon style="color:green" title="Issue status: Fixed"
+                  class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+              </div>
+              <div *ngIf="dec_data?.status === 4" fxHide.xs fxHide.sm>
+                <mat-icon style="color:grey" title="Issue status: Won't Fix"
+                  class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+              </div>
+
+              &nbsp;
+              <div>
                 <button mat-icon-button style="width: 30px; height: 30px; line-height: 5px; border-radius: 70%;padding: 0px;" *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
                   (click)="editissuetitle(dec_data);$event.stopPropagation();">
                   <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
                 </button>
-              </div>&nbsp;
-              
-              <div *ngIf="dec_data?.bounty">
-                <mat-icon *ngIf="dec_data?.bounty.length > 0" title="Found bug-bounty program related to the issue"
-                  color="accent">attach_money</mat-icon>
               </div>
-              <div *ngIf="dec_data?.status === 1">
-                <mat-icon style="color:red" title="Issue status: Open (Waiting for review)"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon>
-              </div>
-              <div *ngIf="dec_data?.status === 2">
-                <mat-icon style="color:yellow" title="Issue status: Fix In Progress"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon>
-              </div>
-              <div *ngIf="dec_data?.status === 3">
-                <mat-icon style="color:green" title="Issue status: Fixed"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
-              </div>
-              <div *ngIf="dec_data?.status === 4">
-                <mat-icon style="color:grey" title="Issue status: Won't Fix"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
-              </div>
+
               <mat-icon *ngIf="dec_data.files.length > 0" title="Attached file" style="color:grey" class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
             </mat-panel-description>
 
