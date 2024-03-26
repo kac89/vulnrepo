@@ -1234,7 +1234,7 @@ Sample code here\n\
   editreporttitle(item) {
 
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      width: '350px',
+      width: '450px',
       data: item
     });
 
@@ -1299,7 +1299,7 @@ Sample code here\n\
 
   editissuetitle(item) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      width: '350px',
+      width: '450px',
       data: item
     });
 
