@@ -36,6 +36,7 @@
       [attr.aria-expanded]="accordionItem.expanded"
       [attr.aria-controls]="'accordion-body-0'">
       <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+        <span></span>
         <span>
           <h3>
             <mat-icon>photo_library</mat-icon> Screenshots & Video
@@ -43,7 +44,7 @@
         </span>
         
         <span class="example-accordion-item-description">
-          Click to {{ accordionItem.expanded ? 'close' : 'open' }}
+          Click to {{ accordionItem.expanded ? 'close' : 'open' }} <mat-icon>{{ accordionItem.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
         </span>
       </div>
       <div
