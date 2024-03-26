@@ -36,14 +36,15 @@
       [attr.aria-expanded]="accordionItem.expanded"
       [attr.aria-controls]="'accordion-body-0'">
       <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-        <span>
+        <span fxLayoutAlign="start start" fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="33%"></span>
+        <span fxLayoutAlign="center center" fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="33%">
           <h3>
             <mat-icon>photo_library</mat-icon> Screenshots & Video
           </h3>
         </span>
         
-        <span class="example-accordion-item-description">
-          Click to {{ accordionItem.expanded ? 'close' : 'open' }}
+        <span fxFlex="33%" fxLayoutAlign="end center" fxFlex.sm="33%" fxFlex.xs="33%" class="example-accordion-item-description">
+          Click to {{ accordionItem.expanded ? 'close' : 'open' }} <mat-icon>{{ accordionItem.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
         </span>
       </div>
       <div
