@@ -2,7 +2,7 @@
   <h1 mat-dialog-title>Import issues from:</h1>
   <div mat-dialog-content>
   
-      <mat-form-field color="accent">
+      <mat-form-field color="accent" class="example-full-width">
         <mat-label>Select source</mat-label>
         <mat-select [(value)]="selected_source" >
           <mat-option *ngFor="let Importsource of sour" [value]="Importsource.value">

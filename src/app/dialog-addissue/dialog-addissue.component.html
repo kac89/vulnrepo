@@ -1,24 +1,36 @@
 <div class="mdc-card my-card-content">
 
-  <h1 mat-dialog-title><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue from:
-    <mat-form-field appearance="outline" color="accent" style="float: inline-end; width: 250px; font-size:11px;">
-      <mat-label>Templates source</mat-label>
-      <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
-        <mat-option value="VULNREPO">VULNRΞPO</mat-option>
-        <mat-option value="CVE">CVE (ONLINE DB)</mat-option>
-        <mat-option value="CWE">CWE Research Concepts</mat-option>
-        <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-        <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
-        <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
-        <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
-        <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
-        <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
-        <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
-      </mat-select>
-    </mat-form-field>
-    </h1>
+
+
+    <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="5px">
+        
+      <div fxLayoutAlign="start start" fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue
+      </div>
+    
+      <div fxLayoutAlign="end end" fxFlex="65%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <mat-form-field appearance="outline" color="accent" class="example-full-width">
+          <mat-label>Templates source</mat-label>
+          <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
+            <mat-option value="VULNREPO">VULNRΞPO</mat-option>
+            <mat-option value="CVE">CVE (ONLINE DB)</mat-option>
+            <mat-option value="CWE">CWE Research Concepts</mat-option>
+            <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+            <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+            <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
+            <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
+            <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
+            <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
+            <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    
+
+    </div>
+
+
     <div>
-    <br>
       <div *ngIf="sourceSelect == 'VULNREPO'">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Issue title</mat-label>
