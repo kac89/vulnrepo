@@ -2,7 +2,7 @@
   <h1 mat-dialog-title>Import issues from:</h1>
   <div mat-dialog-content>
   
-      <mat-form-field color="accent">
+      <mat-form-field color="accent" class="example-full-width">
         <mat-label>Select source</mat-label>
         <mat-select [(value)]="selected_source" >
           <mat-option *ngFor="let Importsource of sour" [value]="Importsource.value">
@@ -53,6 +53,10 @@
 
         <input *ngIf="selected_source == 'jira_xml'" cdkFocusInitial type="file" accept=".xml" (change)="jiraxmlonFileSelect($event.target)" name="myfile">
         <p *ngIf="jiraxmlplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+
+        <input *ngIf="selected_source == 'decrypted_json'" cdkFocusInitial type="file" accept=".json" (change)="decryptedjsononFileSelect($event.target)" name="myfile">
+        <p *ngIf="jiraxmlplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+
         <br>
         <br>
     <button *ngIf="selected_source != 'vulnrepojson'" mat-raised-button color="primary" (click)="cancel()">Cancel</button>

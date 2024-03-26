@@ -45,6 +45,9 @@ export class DialogImportComponent implements OnInit {
   public jiraxmlshow_input = true;
   public jiraxmlplease_wait = false;
 
+  public decryptedjsonshow_input = true;
+  public decryptedjsonplease_wait = false;
+
   file: any;
   hide = true;
   sour: Importsource[] = [
@@ -56,7 +59,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' },
     { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
     { value: 'trivy', viewValue: 'Trivy (.JSON)' },
-    { value: 'jira_xml', viewValue: 'Jira (.XML)' }
+    { value: 'jira_xml', viewValue: 'Jira (.XML)' },
+    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
@@ -1075,6 +1079,36 @@ function isarr(arr) {
 
     this.dialogRef.close(info);
 
+  }
+
+
+  decryptedjsononFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.decryptedjsonshow_input = false;
+      this.decryptedjsonplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parsedecryptedJSON(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parsedecryptedJSON(json) {
+    const data = JSON.parse(json);
+    if(data) {
+      this.dialogRef.close(data);
+    }
+    
   }
 
 }
