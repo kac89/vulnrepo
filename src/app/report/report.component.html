@@ -707,14 +707,14 @@
 
         <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
           <mat-form-field class="example-full-width" color="accent">
-            <mat-label>Social links</mat-label>
+            <mat-label>Social link</mat-label>
             <input matInput [(ngModel)]="researchers.reportersocial"
               value="{{researchers.reportersocial}}">
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
         </div>
 
-        <div fxFlex="24%" fxFlex.sm="44%" fxFlex.xs="94%">
+        <div fxFlex="24%" fxFlex.sm="42%" fxFlex.xs="90%">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Website</mat-label>
             <input matInput [(ngModel)]="researchers.reporterwww"
@@ -723,8 +723,8 @@
           </mat-form-field>
         </div>
 
-        <div fxFlex="4%" fxFlex.sm="4%" fxFlex.xs="4%">
-          <button mat-icon-button color="warn" (click)="removeresearcher(researchers)" title="Remove researcher">
+        <div fxLayoutAlign="center center" fxFlex="4%" fxFlex.sm="6%" fxFlex.xs="10%">
+          <button mat-mini-fab color="warn" matSuffix  (click)="removeresearcher(researchers)" title="Remove researcher">
             <mat-icon>delete_forever</mat-icon>
           </button>
         </div>
@@ -891,9 +891,9 @@
 
               <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
 
-                <button mat-flat-button style="margin-right: 10px!important;" (click)="fileuploadInput.click()"
+                <button mat-fab style="margin-right: 10px!important;" class="mdc-elevation--z11" (click)="fileuploadInput.click()"
                   color="primary" title="Upload report logo">
-                  <i class="material-icons">attach_file</i> HTML Report logo
+                  <i class="material-icons">attach_file</i>
                   <input type="file" #fileuploadInput id="file" accept="image/*" (change)="importlogo($event.target)"
                     name="myfiles" style="display:none;">
                 </button>
