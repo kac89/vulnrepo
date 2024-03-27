@@ -687,7 +687,7 @@
 
       <div *ngFor="let researchers of decryptedReportDataChanged.researcher" fxLayout="row wrap"
         fxLayoutGap="10px grid">
-        <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Name</mat-label>
             <input matInput [(ngModel)]="researchers.reportername"
@@ -696,7 +696,7 @@
           </mat-form-field>
         </div>
 
-        <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>E-mail</mat-label>
             <input matInput [(ngModel)]="researchers.reporteremail"
@@ -705,7 +705,7 @@
           </mat-form-field>
         </div>
 
-        <div fxFlex="24%" fxFlex.sm="49%" fxFlex.xs="99%">
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Social link</mat-label>
             <input matInput [(ngModel)]="researchers.reportersocial"
@@ -714,20 +714,19 @@
           </mat-form-field>
         </div>
 
-        <div fxFlex="24%" fxFlex.sm="42%" fxFlex.xs="90%">
-          <mat-form-field class="example-full-width" color="accent">
+        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+          <mat-form-field style="width: 75%;" color="accent">
             <mat-label>Website</mat-label>
             <input matInput [(ngModel)]="researchers.reporterwww"
               value="{{researchers.reporterwww}}">
             <mat-icon matSuffix>public</mat-icon>
           </mat-form-field>
-        </div>
-
-        <div fxLayoutAlign="center center" fxFlex="4%" fxFlex.sm="6%" fxFlex.xs="10%">
-          <button mat-mini-fab color="warn" matSuffix  (click)="removeresearcher(researchers)" title="Remove researcher">
+          &nbsp;
+          <button mat-mini-fab color="warn" (click)="removeresearcher(researchers)" title="Remove researcher">
             <mat-icon>delete_forever</mat-icon>
           </button>
         </div>
+
 
       </div>
 
