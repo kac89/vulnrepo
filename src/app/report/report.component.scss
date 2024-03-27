@@ -136,3 +136,13 @@ tr.mat-mdc-footer-row td {
   border-radius: 100%;
   border-width: 0px;
 }
+
+::ng-deep.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-value {
+  margin-top: 1px!important;
+}
+
+
+::ng-deep.legend-item:hover {
+
+  color: #16bf6e!important;
+}
