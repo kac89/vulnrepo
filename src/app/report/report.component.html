@@ -818,7 +818,7 @@
 
         </div>
 
-        <div fxFlex="70%" fxFlex.sm="80%" fxFlex.xs="90%" *ngIf="listchangelog != 0">
+        <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" [hidden]="listchangelog == 0">
           <p>
             <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
           </p>
