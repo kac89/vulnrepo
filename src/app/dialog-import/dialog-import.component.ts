@@ -58,6 +58,7 @@ export class DialogImportComponent implements OnInit {
   hide = true;
   sour: Importsource[] = [
     { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)' },
+    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)' },
     { value: 'burp', viewValue: 'Burp Suite (.XML)' },
     { value: 'bugcrowd', viewValue: 'Bugcrowd (.CSV)' },
     { value: 'nmap', viewValue: 'Nmap (.XML)' },
@@ -66,7 +67,6 @@ export class DialogImportComponent implements OnInit {
     { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
     { value: 'trivy', viewValue: 'Trivy (.JSON)' },
     { value: 'jira_xml', viewValue: 'Jira (.XML)' },
-    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)' },
     { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)' },
     { value: 'semgrep', viewValue: 'Semgrep (.JSON)' }
   ];
