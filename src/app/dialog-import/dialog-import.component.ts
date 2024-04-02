@@ -16,6 +16,7 @@ interface Importsource {
   styleUrls: ['./dialog-import.component.scss']
 })
 export class DialogImportComponent implements OnInit {
+  
   selected = '';
   selected_source = '';
   csvContent: string;
@@ -44,12 +45,14 @@ export class DialogImportComponent implements OnInit {
   public nmapwrongpass = false;
   public jiraxmlshow_input = true;
   public jiraxmlplease_wait = false;
-
   public decryptedjsonshow_input = true;
   public decryptedjsonplease_wait = false;
-
   public npmauditshow_input = true;
   public npmauditplease_wait = false;
+
+  public semgrepshow_input = true;
+  public semgrepplease_wait = false;
+  semgrepinportjson_count = 0;
 
   file: any;
   hide = true;
@@ -64,7 +67,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'trivy', viewValue: 'Trivy (.JSON)' },
     { value: 'jira_xml', viewValue: 'Jira (.XML)' },
     { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)' },
-    { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)' }
+    { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)' },
+    { value: 'semgrep', viewValue: 'Semgrep (.JSON)' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
@@ -190,7 +194,8 @@ export class DialogImportComponent implements OnInit {
         cvss: res[2],
         cvss_vector: '',
         cve: res[1],
-        tags: [],
+        tags: [{name: "nessus"}],
+        status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
       };
@@ -266,6 +271,7 @@ export class DialogImportComponent implements OnInit {
         cvss_vector: '',
         cve: '',
         tags: [{ name: 'bugcrowd' }],
+        status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
       };
@@ -389,7 +395,8 @@ export class DialogImportComponent implements OnInit {
         cvss: setcvss(res.severity[0]),
         cvss_vector: '',
         cve: '',
-        tags: [],
+        tags: [{name: "burp"}],
+        status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
       };
@@ -497,7 +504,8 @@ export class DialogImportComponent implements OnInit {
         cvss: res.severity[0],
         cvss_vector: '',
         cve: '',
-        tags: [],
+        tags: [{name: "openvas"}],
+        status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
       };
@@ -691,7 +699,8 @@ export class DialogImportComponent implements OnInit {
         cvss: res[3],
         cvss_vector: '',
         cve: '',
-        tags: [],
+        tags: [{name: "npm-audit"}],
+        status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
       };
@@ -871,7 +880,8 @@ export class DialogImportComponent implements OnInit {
         cvss: '',
         cvss_vector: '',
         cve: '',
-        tags: [],
+        tags: [{name: "nmap"}],
+        status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
       };
@@ -957,7 +967,8 @@ export class DialogImportComponent implements OnInit {
             cvss: cvss,
             cvss_vector: '',
             cve: '',
-            tags: [],
+            tags: [{name: "trivy"}],
+            status: 1,
             bounty: [],
             date: this.currentdateService.getcurrentDate()
           };
@@ -1072,7 +1083,8 @@ export class DialogImportComponent implements OnInit {
         cvss: '',
         cvss_vector: '',
         cve: '',
-        tags: [],
+        tags: [{name: "jira"}],
+        status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
       };
@@ -1166,7 +1178,8 @@ export class DialogImportComponent implements OnInit {
             cvss: '',
             cvss_vector: '',
             cve: '',
-            tags: [],
+            tags: [{name: "npm-audit"}],
+            status: 1,
             bounty: [],
             date: this.currentdateService.getcurrentDate()
           };
@@ -1180,5 +1193,70 @@ export class DialogImportComponent implements OnInit {
     }
   }
 
+
+  semgreponFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.npmauditshow_input = false;
+      this.npmauditplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parseSemgrep(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+
+  parseSemgrep(json) {
+    
+
+  function setseverity(severity) {
+    if (severity === 'HIGH') {
+      severity = 'High';
+    } else if (severity === 'MEDIUM') {
+      severity = 'Medium';
+    } else if (severity === 'LOW') {
+      severity = 'Low';
+    }
+    return severity
+  }
+
+    const data = JSON.parse(json);
+    const arr = [];
+    this.semgrepinportjson_count = data.results.length;
+    for (const [key, value] of Object.entries(data.results)) {
+
+      const def = {
+        title: value["check_id"],
+        poc: value["path"] + ":"+value["start"]["line"]+"\n\n`"+value["extra"]["lines"]+"`",
+        files: [],
+        desc: value["extra"]["message"],
+        severity: setseverity(value["extra"]["metadata"]["impact"]),
+        ref: value["extra"]["metadata"]["source"],
+        status: 1,
+        cvss: '',
+        cvss_vector: '',
+        cve: '',
+        tags: [{name: "semgrep"}],
+        bounty: [],
+        date: this.currentdateService.getcurrentDate()
+      };
+
+      arr.push(def);
+
+    }
+
+    this.dialogRef.close(arr);
+
+  }
 
 }

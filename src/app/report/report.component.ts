@@ -5,7 +5,7 @@ import { IndexeddbService } from '../indexeddb.service';
 import { DialogPassComponent } from '../dialog-pass/dialog-pass.component';
 import { DialogAddissueComponent } from '../dialog-addissue/dialog-addissue.component';
 import { Router } from '@angular/router';
-import { Subscription, of, concatMap } from 'rxjs';
+import { Subscription, of, concatMap, Observable } from 'rxjs';
 import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
@@ -39,6 +39,7 @@ import { DatePipe } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
 import { DialogEncryptReportComponent } from '../dialog-encrypt-report/dialog-encrypt-report.component';
+import { PageEvent } from '@angular/material/paginator';
 
 export interface Tags {
   name: string;
@@ -73,8 +74,19 @@ export class ReportComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['date', 'desc', 'settings'];
   dataSource = new MatTableDataSource();
   listchangelog: any[];
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+
+  @ViewChild('paginatorIssues') paginator: MatPaginator;
+  @ViewChild('paginatorchangelog') paginator2: MatPaginator;
+
+  @ViewChild('table2', { read: MatSort }) sort: MatSort;
+
+  issesTable = new MatTableDataSource();
+  selectedResult: any;
+  length: number;
+  pageSize = 20;
+  pageEvent: PageEvent;
+
   @ViewChild(MatCalendar) calendar: MatCalendar<Date>;
   advhtml = '';
   report_css: any;
@@ -213,6 +225,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     });
 
+
   }
 
   ngOnInit() {
@@ -298,7 +311,6 @@ export class ReportComponent implements OnInit, OnDestroy {
           });
 
           this.getReportProfiles();
-
 
         }
       }
@@ -763,12 +775,23 @@ Sample code here\n\
       { name: 'Info', value: info.length }
     ];
 
+    this.issesTable = new MatTableDataSource(this.decryptedReportDataChanged.report_vulns);
+    this.issesTable.paginator = this.paginator;
+    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(0, this.pageSize);
+
     this.listchangelog = this.decryptedReportData.report_changelog;
     this.dataSource = new MatTableDataSource(this.decryptedReportData.report_changelog);
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator2;
+
+    setTimeout(() => this.issesTable.paginator = this.paginator);
+    setTimeout(() => this.issesTable.paginator = this.paginator);
+
     setTimeout(() => this.dataSource.sort = this.sort);
-    setTimeout(() => this.dataSource.paginator = this.paginator);
+    setTimeout(() => this.dataSource.paginator = this.paginator2);
+
+    
+    
     if (this.decryptedReportDataChanged.report_vulns.length > 0) {
       setTimeout(() => this.calendar.updateTodaysDate());
     }
@@ -776,6 +799,11 @@ Sample code here\n\
 
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
 
+  }
+
+  getData( event?: PageEvent) {
+    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(event.pageIndex * event.pageSize, event.pageIndex * event.pageSize + event.pageSize);
+    return event;
   }
 
   renderdateformat(inputdate) {
@@ -930,6 +958,7 @@ Sample code here\n\
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.decryptedReportDataChanged.report_vulns, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.selectedResult, event.previousIndex, event.currentIndex);
     moveItemInArray(this.selecteditems, event.previousIndex, event.currentIndex);
     moveItemInArray(this.selected3, event.previousIndex, event.currentIndex);
     moveItemInArray(this.scopePreviewHTML, event.previousIndex, event.currentIndex);
@@ -1163,34 +1192,45 @@ Sample code here\n\
 
   sortbycvss() {
     this.deselectall();
-    this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);
+    //this.decryptedReportDataChanged.report_vulns = this.decryptedReportDataChanged.report_vulns.sort((a, b) => b.cvss - a.cvss);
+    this.selectedResult = this.selectedResult.sort((a, b) => b.cvss - a.cvss);
   }
 
   sortbyseverity() {
+
     this.deselectall();
 
-    const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Critical');
-    });
+    const critical = [];
 
-    const high = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'High');
-    });
+    const high = [];
 
-    const medium = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Medium');
-    });
+    const medium = [];
 
-    const low = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Low');
-    });
+    const low = [];
 
-    const info = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Info');
-    });
+    const info = [];
+
+    for (const [key, value] of Object.entries(this.decryptedReportDataChanged.report_vulns)) {
+
+      if(value["severity"] === "Critical") {
+        critical.push(value);
+      } else if (value["severity"] === "High") {
+        high.push(value);
+      } else if (value["severity"] === "Medium") {
+        medium.push(value);
+      } else if (value["severity"] === "Low") {
+        low.push(value);
+      } else if (value["severity"] === "Info") {
+        info.push(value);
+      }
+    }
 
     const merge = [...critical, ...high, ...medium, ...low, ...info];
+
     this.decryptedReportDataChanged.report_vulns = merge;
+
+    this.selectedResult = merge.slice(0, this.pageSize);
+    
   }
 
   addCustomcontent(item) {
