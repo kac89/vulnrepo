@@ -161,7 +161,9 @@
         </div>
 
         <div class="mat-mdc-card-title" style="padding-left: 16px;">
-          <span matBadge="{{decryptedReportDataChanged.report_vulns.length}}" matBadgeOverlap="false">Issues</span>
+          <span>Issues
+            <span class="labelissues">{{decryptedReportDataChanged.report_vulns.length}}</span>
+          </span>
         </div>
         <div style="flex-grow: 1"></div>
        
@@ -225,10 +227,16 @@
       </div>
 
     <mat-card-content>
+
+      <div [hidden]="decryptedReportDataChanged.report_vulns.length == 0">
+        <mat-paginator #paginatorIssues color="accent" [pageSizeOptions]="[20, 50, 100, 250]" (page)="pageEvent=getData($event)" showFirstLastButtons></mat-paginator>
+        <br>
+      </div>
+      
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
 
-        <mat-expansion-panel class="mat-elevation-z9"
-          *ngFor="let dec_data of decryptedReportDataChanged.report_vulns; let i=index" (opened)="panelOpenState = true"
+        <mat-expansion-panel *ngFor="let dec_data of selectedResult; let i=index" class="mat-elevation-z9"
+           (opened)="panelOpenState = true"
           (closed)="panelOpenState = false" cdkDrag>
 
           <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
@@ -557,46 +565,46 @@
 
         </mat-expansion-panel>
 
-        <div *ngIf="pok == 1">
-          <br>
-          <mat-expansion-panel class="mat-elevation-z9" disabled>
-            <mat-expansion-panel-header>
-              <mat-panel-title fxLayoutAlign="start center" style="margin-left: 13px;">
-                <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
-                  settings</mat-icon>
 
-
-                <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
-                  <mat-icon>done_all</mat-icon>
-                  Select all
-                </button>
-
-                &nbsp;
-
-                <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
-                  <mat-icon>done_all</mat-icon>
-                  Unselect all
-                </button>
-
-                &nbsp;
-
-                <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selected3)">
-                  <mat-icon>edit</mat-icon>
-                  Edit ({{ selected3_true.length }})
-                </button>
-
-                &nbsp;&nbsp;
-
-                <button mat-stroked-button color="warn" (click)="removeSelecteditems(selected3)">
-                  <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE ({{ selected3_true.length }})
-                </button>
-
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-          </mat-expansion-panel>
-        </div>
       </mat-accordion>
+      <div *ngIf="pok == 1">
+        <br>
+        <mat-expansion-panel class="mat-elevation-z9" disabled>
+          <mat-expansion-panel-header>
+            <mat-panel-title fxLayoutAlign="start center" style="margin-left: 13px;">
+              <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
+                settings</mat-icon>
 
+
+              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                <mat-icon>done_all</mat-icon>
+                Select all
+              </button>
+
+              &nbsp;
+
+              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                <mat-icon>done_all</mat-icon>
+                Unselect all
+              </button>
+
+              &nbsp;
+
+              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selected3)">
+                <mat-icon>edit</mat-icon>
+                Edit ({{ selected3_true.length }})
+              </button>
+
+              &nbsp;&nbsp;
+
+              <button mat-stroked-button color="warn" (click)="removeSelecteditems(selected3)">
+                <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE ({{ selected3_true.length }})
+              </button>
+
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </div>
       <br>
 
       <div class="banner">
@@ -759,7 +767,7 @@
     </mat-card-header>
     <mat-card-content>
 
-      <table *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort
+      <table #table2 *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort
         matSortActive="date" matSortDirection="desc" class="mat-elevation-z8">
 
         <ng-container matColumnDef="date">
@@ -812,7 +820,7 @@
 
         <div fxFlex="70%" fxFlex.sm="80%" fxFlex.xs="90%" *ngIf="listchangelog != 0">
           <p>
-            <mat-paginator color="accent" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
           </p>
         </div>
 

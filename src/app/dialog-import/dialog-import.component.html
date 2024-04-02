@@ -60,6 +60,11 @@
         <input *ngIf="selected_source == 'npm_audit'" cdkFocusInitial type="file" accept=".json" (change)="npmauditjsononFileSelect($event.target)" name="myfile">
         <p *ngIf="npmauditplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
+        <input *ngIf="selected_source == 'semgrep'" cdkFocusInitial type="file" accept=".json" (change)="semgreponFileSelect($event.target)" name="myfile">
+        <p *ngIf="semgrepinportjson_count != 0">Items: {{semgrepinportjson_count}}</p>
+        <p *ngIf="semgrepplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+
+
         <br>
         <br>
     <button *ngIf="selected_source != 'vulnrepojson'" mat-raised-button color="primary" (click)="cancel()">Cancel</button>

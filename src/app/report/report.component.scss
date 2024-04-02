@@ -15,6 +15,16 @@ table {
   width: 100%;
 }
 
+.labelissues {
+  font-size: medium;
+  color: #16bf6e;
+  display: inline;
+  font-family: verdana, sans-serif;
+  padding: 2px;
+  border-color: #212121; 
+  background-color: #212121;
+}
+
 .label {
   color: white;
   display: inline-block;
@@ -145,4 +155,9 @@ tr.mat-mdc-footer-row td {
 ::ng-deep.legend-item:hover {
 
   color: #16bf6e!important;
+}
+
+mat-paginator {
+  display: flex;
+  justify-content: left;
 }
