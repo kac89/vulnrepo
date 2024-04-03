@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import * as xml2js from 'xml2js';
 import * as Crypto from 'crypto-js';
 import { CurrentdateService } from '../currentdate.service';
+import { UntypedFormControl } from '@angular/forms';
 
 interface Importsource {
   value: string;
@@ -16,7 +17,7 @@ interface Importsource {
   styleUrls: ['./dialog-import.component.scss']
 })
 export class DialogImportComponent implements OnInit {
-  
+
   selected = '';
   selected_source = '';
   csvContent: string;
@@ -52,7 +53,7 @@ export class DialogImportComponent implements OnInit {
 
   public semgrepshow_input = true;
   public semgrepplease_wait = false;
-  semgrepinportjson_count = 0;
+  mergeperpath = new UntypedFormControl();
 
   file: any;
   hide = true;
@@ -75,6 +76,7 @@ export class DialogImportComponent implements OnInit {
     private currentdateService: CurrentdateService) { }
 
   ngOnInit() {
+    this.mergeperpath.setValue(true);
   }
 
   onFileLoad(fileLoadedEvent) {
@@ -194,7 +196,7 @@ export class DialogImportComponent implements OnInit {
         cvss: res[2],
         cvss_vector: '',
         cve: res[1],
-        tags: [{name: "nessus"}],
+        tags: [{ name: "nessus" }],
         status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
@@ -395,7 +397,7 @@ export class DialogImportComponent implements OnInit {
         cvss: setcvss(res.severity[0]),
         cvss_vector: '',
         cve: '',
-        tags: [{name: "burp"}],
+        tags: [{ name: "burp" }],
         status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
@@ -504,7 +506,7 @@ export class DialogImportComponent implements OnInit {
         cvss: res.severity[0],
         cvss_vector: '',
         cve: '',
-        tags: [{name: "openvas"}],
+        tags: [{ name: "openvas" }],
         status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
@@ -699,7 +701,7 @@ export class DialogImportComponent implements OnInit {
         cvss: res[3],
         cvss_vector: '',
         cve: '',
-        tags: [{name: "npm-audit"}],
+        tags: [{ name: "npm-audit" }],
         status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
@@ -880,7 +882,7 @@ export class DialogImportComponent implements OnInit {
         cvss: '',
         cvss_vector: '',
         cve: '',
-        tags: [{name: "nmap"}],
+        tags: [{ name: "nmap" }],
         status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
@@ -967,7 +969,7 @@ export class DialogImportComponent implements OnInit {
             cvss: cvss,
             cvss_vector: '',
             cve: '',
-            tags: [{name: "trivy"}],
+            tags: [{ name: "trivy" }],
             status: 1,
             bounty: [],
             date: this.currentdateService.getcurrentDate()
@@ -1083,7 +1085,7 @@ export class DialogImportComponent implements OnInit {
         cvss: '',
         cvss_vector: '',
         cve: '',
-        tags: [{name: "jira"}],
+        tags: [{ name: "jira" }],
         status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
@@ -1178,7 +1180,7 @@ export class DialogImportComponent implements OnInit {
             cvss: '',
             cvss_vector: '',
             cve: '',
-            tags: [{name: "npm-audit"}],
+            tags: [{ name: "npm-audit" }],
             status: 1,
             bounty: [],
             date: this.currentdateService.getcurrentDate()
@@ -1217,45 +1219,129 @@ export class DialogImportComponent implements OnInit {
 
 
   parseSemgrep(json) {
-    
 
-  function setseverity(severity) {
-    if (severity === 'HIGH') {
-      severity = 'High';
-    } else if (severity === 'MEDIUM') {
-      severity = 'Medium';
-    } else if (severity === 'LOW') {
-      severity = 'Low';
+
+    function setseverity(severity) {
+      if (severity === 'HIGH') {
+        severity = 'High';
+      } else if (severity === 'MEDIUM') {
+        severity = 'Medium';
+      } else if (severity === 'LOW') {
+        severity = 'Low';
+      }
+      return severity
     }
-    return severity
-  }
+
+    function gethigherseverity(array) {
+
+      let severityret = '';
+
+      if (array.includes('HIGH')) {
+        severityret = 'High';
+      } else if (array.includes('MEDIUM')) {
+        severityret = 'Medium';
+      } else if (array.includes('LOW')) {
+        severityret = 'Low';
+      }
+
+      return severityret
+    }
 
     const data = JSON.parse(json);
-    const arr = [];
-    this.semgrepinportjson_count = data.results.length;
-    for (const [key, value] of Object.entries(data.results)) {
 
-      const def = {
-        title: value["check_id"],
-        poc: value["path"] + ":"+value["start"]["line"]+"\n\n`"+value["extra"]["lines"]+"`",
-        files: [],
-        desc: value["extra"]["message"],
-        severity: setseverity(value["extra"]["metadata"]["impact"]),
-        ref: value["extra"]["metadata"]["source"],
-        status: 1,
-        cvss: '',
-        cvss_vector: '',
-        cve: '',
-        tags: [{name: "semgrep"}],
-        bounty: [],
-        date: this.currentdateService.getcurrentDate()
-      };
+    if (this.mergeperpath.value) {
+      const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {});
+      const grouped = groupBy(data.results, v => v.path);
+      const arr = [];
+      for (const [key, value] of Object.entries(grouped)) {
 
-      arr.push(def);
+        const ref = [];
+        const poc = [];
+        const desc = [];
+        const severity = [];
+        const vuln_class = [];
+        for (const [subkey, subvalue] of Object.entries(value)) {
+
+
+          if (!ref.includes(subvalue["extra"]["metadata"]["source"])) {
+            ref.push(subvalue["extra"]["metadata"]["source"]);
+          }
+
+          if (!poc.includes(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"] + "`")) {
+            poc.push(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"] + "`");
+          }
+
+          if (!desc.includes(subvalue["extra"]["message"])) {
+            desc.push(subvalue["extra"]["message"]);
+          }
+
+          if (!severity.includes(subvalue["extra"]["metadata"]["impact"])) {
+            severity.push(subvalue["extra"]["metadata"]["impact"]);
+          }
+
+          if (!vuln_class.includes(subvalue["extra"]["metadata"]["vulnerability_class"].join(", "))) {
+            vuln_class.push(subvalue["extra"]["metadata"]["vulnerability_class"].join(", "));
+          }
+
+        }
+
+
+        const def = {
+          title: 'File: ' + key + ' ' + vuln_class.join(", "),
+          poc: poc.join("\n\n"),
+          files: [],
+          desc: desc.join("\n\n"),
+          severity: gethigherseverity(severity),
+          ref: ref.join("\n"),
+          status: 1,
+          cvss: '',
+          cvss_vector: '',
+          cve: '',
+          tags: [{ name: "semgrep" }],
+          bounty: [],
+          date: this.currentdateService.getcurrentDate()
+        };
+
+        arr.push(def);
+
+      }
+
+      this.dialogRef.close(arr);
+
+
+    } else {
+
+      const arr = [];
+
+      for (const [key, value] of Object.entries(data.results)) {
+
+        const def = {
+          title: value["check_id"],
+          poc: value["path"] + ":" + value["start"]["line"] + "\n\n`" + value["extra"]["lines"] + "`",
+          files: [],
+          desc: value["extra"]["message"],
+          severity: setseverity(value["extra"]["metadata"]["impact"]),
+          ref: value["extra"]["metadata"]["source"],
+          status: 1,
+          cvss: '',
+          cvss_vector: '',
+          cve: '',
+          tags: [{ name: "semgrep" }],
+          bounty: [],
+          date: this.currentdateService.getcurrentDate()
+        };
+
+        arr.push(def);
+
+      }
+
+
+      this.dialogRef.close(arr);
+
 
     }
 
-    this.dialogRef.close(arr);
+
 
   }
 
