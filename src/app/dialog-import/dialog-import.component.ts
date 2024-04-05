@@ -9,6 +9,7 @@ import { UntypedFormControl } from '@angular/forms';
 interface Importsource {
   value: string;
   viewValue: string;
+  viewImg: string;
 }
 
 @Component({
@@ -63,19 +64,19 @@ export class DialogImportComponent implements OnInit {
   file: any;
   hide = true;
   sour: Importsource[] = [
-    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)' },
-    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)' },
-    { value: 'burp', viewValue: 'Burp Suite (.XML)' },
-    { value: 'bugcrowd', viewValue: 'Bugcrowd (.CSV)' },
-    { value: 'nmap', viewValue: 'Nmap (.XML)' },
-    { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)' },
-    { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)' },
-    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)' },
-    { value: 'trivy', viewValue: 'Trivy (.JSON)' },
-    { value: 'jira_xml', viewValue: 'Jira (.XML)' },
-    { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)' },
-    { value: 'semgrep', viewValue: 'Semgrep (.JSON)' },
-    { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)' }
+    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)', viewImg: '/assets/logo/vulnrepo_logo.png' },
+    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/assets/logo/vulnrepo_logo.png' },
+    { value: 'burp', viewValue: 'Burp Suite (.XML)', viewImg: '' },
+    { value: 'bugcrowd', viewValue: 'Bugcrowd (.CSV)', viewImg: '' },
+    { value: 'nmap', viewValue: 'Nmap (.XML)', viewImg: '/assets/vendors/nmap-logo.png' },
+    { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)', viewImg: '' },
+    { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)', viewImg: '' },
+    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)', viewImg: '' },
+    { value: 'trivy', viewValue: 'Trivy (.JSON)', viewImg: '/assets/vendors/trivy-logo.png' },
+    { value: 'jira_xml', viewValue: 'Jira (.XML)', viewImg: '' },
+    { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)', viewImg: '/assets/vendors/npm-logo.png' },
+    { value: 'semgrep', viewValue: 'Semgrep (.JSON)', viewImg: '/assets/vendors/semgrep-logo.png' },
+    { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)', viewImg: '/assets/vendors/Logo-composer-transparent.png' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,

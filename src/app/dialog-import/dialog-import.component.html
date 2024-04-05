@@ -6,10 +6,11 @@
         <mat-label>Select source</mat-label>
         <mat-select [(value)]="selected_source" >
           <mat-option *ngFor="let Importsource of sour" [value]="Importsource.value">
+            <img with="20" height="20" [src]="Importsource.viewImg">
             {{Importsource.viewValue}}
           </mat-option>
         </mat-select>
-      </mat-form-field>&nbsp;&nbsp;&nbsp;
+      </mat-form-field>
   
       <span *ngIf="selected_source == 'vulnrepojson'">
         <p><input type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
@@ -24,22 +25,12 @@
         <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
       </span>
   
-      <input *ngIf="selected_source == 'trivy'" cdkFocusInitial type="file" accept=".json" (change)="trivyonFileSelect($event.target)" name="myfile">
-      <p *ngIf="please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
         <input *ngIf="selected_source == 'bugcrowd'" cdkFocusInitial type="file" accept=".csv" (change)="bugcrowdonFileSelect($event.target)" name="myfile">
         <p *ngIf="bugcrowdplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
   
         <input *ngIf="selected_source == 'burp'" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
         <p *ngIf="burpplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-  
-        <input *ngIf="selected_source == 'nmap'" cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile">
-        <span *ngIf="selected_source == 'nmap'">
-          <hr>
-          <mat-checkbox [(ngModel)]="checked">Remove state down ip's</mat-checkbox>
-        </span>
-        
-        <p *ngIf="nmapplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
   
         <input *ngIf="selected_source == 'openvas'" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
         <p *ngIf="selected_source == 'openvas'">Import results-*.xml file.</p>
@@ -57,23 +48,63 @@
         <input *ngIf="selected_source == 'decrypted_json'" cdkFocusInitial type="file" accept=".json" (change)="decryptedjsononFileSelect($event.target)" name="myfile">
         <p *ngIf="decryptedjsonplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
-        <div *ngIf="selected_source == 'npm_audit'">
-          <code>$ npm audit --json</code>
+
+        <div *ngIf="selected_source == 'nmap'">
+          
+          <small>Open source utility for network discovery and security auditing: <a class="active-link" target="_blank" href="https://nmap.org/">Nmap</a>, example run:</small>
           <br><br>
+          <code>$ <span class="greenfocus">nmap -T4 -Pn -oX r.xml 1.1.1.1</span></code>
+          <br><br>
+          <mat-checkbox [(ngModel)]="checked">Remove state down ip's</mat-checkbox>
+          <hr>
+          <input cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile">
+          <p *ngIf="nmapplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+        </div>
+
+
+        <div *ngIf="selected_source == 'trivy'">
+
+          <small>Open source security scanner: <a class="active-link" target="_blank" href="https://trivy.dev/">Trivy</a>, example run:</small>
+          <br><br>
+          <code>$ <span class="greenfocus">trivy fs . -f json -o r.json</span></code>
+          <br><br>
+          <hr>
+          <input cdkFocusInitial type="file" accept=".json" (change)="trivyonFileSelect($event.target)" name="myfile">
+          <p *ngIf="please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>    
+
+        </div>
+
+
+        <div *ngIf="selected_source == 'npm_audit'">
+
+          <small>JavaScript Package Manager: <a class="active-link" target="_blank" href="https://www.npmjs.com/">NPM</a>, example run:</small>
+          <br><br>
+          <code>$ <span class="greenfocus">npm audit --json</span></code>
+          <br><br>
+          <hr>
           <input cdkFocusInitial type="file" accept=".json" (change)="npmauditjsononFileSelect($event.target)" name="myfile">
         <p *ngIf="npmauditplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
         </div>
 
         <div *ngIf="selected_source == 'semgrep'">
-          <mat-checkbox [formControl]="mergeperpath">Group results by path?</mat-checkbox>
+        
+
+          <small>Open source static analysis tool: <a class="active-link" target="_blank" href="https://semgrep.dev/">Semgrep</a>, example run:</small>
           <br><br>
+          <code>$ <span class="greenfocus">semgrep scan --json</span></code>
+          <br><br>
+          <mat-checkbox [formControl]="mergeperpath">Group results by path?</mat-checkbox>
+          <hr>
           <input cdkFocusInitial type="file" accept=".json" (change)="semgreponFileSelect($event.target)" name="myfile">
           <p *ngIf="semgrepplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
         </div>
 
         <div *ngIf="selected_source == 'composer'">
-          <code>$ composer audit --format=json</code>
+          <small>A Dependency Manager for PHP: <a class="active-link" target="_blank" href="https://getcomposer.org/">Composer</a>, example run:</small>
           <br><br>
+          <code>$ <span class="greenfocus">composer audit --format=json</span></code>
+          <br><br>
+          <hr>
           <input cdkFocusInitial type="file" accept=".json" (change)="composeronFileSelect($event.target)" name="myfile">
           <p *ngIf="composerplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
         </div>

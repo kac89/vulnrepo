@@ -1,3 +1,17 @@
 .example-full-width {
     width: 100%;
   }
+
+code {
+  font-size: 20px;
+  background-color: black;
+  //border: 2px solid grey;
+  width: 100%;
+  border-left: 12px solid #16bf6e;
+  border-radius: 5px;
+  padding: 14px;
+}
+
+.greenfocus {
+  color: #16bf6e;
+}
