@@ -24,7 +24,6 @@
         <br>
         <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
       </span>
-  
 
         <input *ngIf="selected_source == 'bugcrowd'" cdkFocusInitial type="file" accept=".csv" (change)="bugcrowdonFileSelect($event.target)" name="myfile">
         <p *ngIf="bugcrowdplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>

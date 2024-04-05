@@ -64,16 +64,16 @@ export class DialogImportComponent implements OnInit {
   file: any;
   hide = true;
   sour: Importsource[] = [
-    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)', viewImg: '/assets/logo/vulnrepo_logo.png' },
-    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/assets/logo/vulnrepo_logo.png' },
-    { value: 'burp', viewValue: 'Burp Suite (.XML)', viewImg: '' },
-    { value: 'bugcrowd', viewValue: 'Bugcrowd (.CSV)', viewImg: '' },
+    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)', viewImg: '/favicon-32x32.png' },
+    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/favicon-32x32.png' },
+    { value: 'burp', viewValue: 'Burp Suite (.XML)', viewImg: '/assets/vendors/burp-logo.png' },
+    { value: 'bugcrowd', viewValue: 'Bugcrowd (.CSV)', viewImg: '/assets/vendors/bugcrowd-logo.png' },
     { value: 'nmap', viewValue: 'Nmap (.XML)', viewImg: '/assets/vendors/nmap-logo.png' },
-    { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)', viewImg: '' },
-    { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)', viewImg: '' },
-    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)', viewImg: '' },
+    { value: 'openvas', viewValue: 'OpenVAS 9 (.XML)', viewImg: '/assets/vendors/openvas-logo.png' },
+    { value: 'nessus_xml', viewValue: 'Tenable Nessus (.NESSUS)', viewImg: '/assets/vendors/nessus-logo.png' },
+    { value: 'nessus', viewValue: 'Tenable Nessus (.CSV)', viewImg: '/assets/vendors/nessus-logo.png' },
     { value: 'trivy', viewValue: 'Trivy (.JSON)', viewImg: '/assets/vendors/trivy-logo.png' },
-    { value: 'jira_xml', viewValue: 'Jira (.XML)', viewImg: '' },
+    { value: 'jira_xml', viewValue: 'Atlassian Jira (.XML)', viewImg: '/assets/vendors/jira-logo.png' },
     { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)', viewImg: '/assets/vendors/npm-logo.png' },
     { value: 'semgrep', viewValue: 'Semgrep (.JSON)', viewImg: '/assets/vendors/semgrep-logo.png' },
     { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)', viewImg: '/assets/vendors/Logo-composer-transparent.png' }
