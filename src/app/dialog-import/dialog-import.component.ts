@@ -51,9 +51,14 @@ export class DialogImportComponent implements OnInit {
   public npmauditshow_input = true;
   public npmauditplease_wait = false;
 
+  
+
   public semgrepshow_input = true;
   public semgrepplease_wait = false;
   mergeperpath = new UntypedFormControl();
+
+  public composershow_input = true;
+  public composerplease_wait = false;
 
   file: any;
   hide = true;
@@ -69,7 +74,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'trivy', viewValue: 'Trivy (.JSON)' },
     { value: 'jira_xml', viewValue: 'Jira (.XML)' },
     { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)' },
-    { value: 'semgrep', viewValue: 'Semgrep (.JSON)' }
+    { value: 'semgrep', viewValue: 'Semgrep (.JSON)' },
+    { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
@@ -1268,7 +1274,7 @@ export class DialogImportComponent implements OnInit {
           }
 
           if (!poc.includes(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"] + "`")) {
-            poc.push(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"] + "`");
+            poc.push(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"].replaceAll("`", "'") + "`");
           }
 
           if (!desc.includes(subvalue["extra"]["message"])) {
@@ -1342,6 +1348,77 @@ export class DialogImportComponent implements OnInit {
     }
 
 
+
+  }
+
+  composeronFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.npmauditshow_input = false;
+      this.npmauditplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parseComposer(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+
+  parseComposer(json){
+    const data = JSON.parse(json);
+
+    function setseverity(severity) {
+      if (severity === 'critical') {
+        severity = 'Critical';
+      } else if (severity === 'high') {
+        severity = 'High';
+      } else if (severity === 'medium') {
+        severity = 'Medium';
+      } else if (severity === 'low') {
+        severity = 'Low';
+      } else if (severity === 'none') {
+        severity = 'Info';
+      }
+      return severity
+    }
+
+    const arr = [];
+    for (const [key, value] of Object.entries(data.advisories)) {
+
+      for (const [subkey, subvalue] of Object.entries(value)) {
+
+        const def = {
+          title: subvalue.title,
+          poc: 'Package Name: '+subvalue.packageName+'\nAffected Versions: '+subvalue.affectedVersions,
+          files: [],
+          desc: 'All details information: '+subvalue.link,
+          severity: setseverity(subvalue.severity),
+          ref: subvalue.link,
+          status: 1,
+          cvss: '',
+          cvss_vector: '',
+          cve: subvalue.cve,
+          tags: [{ name: "composer" }],
+          bounty: [],
+          date: this.currentdateService.getcurrentDate()
+        };
+
+        arr.push(def);
+
+      }
+
+    }
+
+    this.dialogRef.close(arr);
 
   }
 

@@ -67,8 +67,9 @@
           <p *ngIf="semgrepplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
         </div>
         
+        <input *ngIf="selected_source == 'composer'" cdkFocusInitial type="file" accept=".json" (change)="composeronFileSelect($event.target)" name="myfile">
+        <p *ngIf="composerplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 
-        
 
 
         <br>
