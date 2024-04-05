@@ -1,7 +1,7 @@
 <div class="mdc-card my-card-content">
 
   <h1 class="mat-display">
-    <mat-icon class="vertical-align-middle size-45">explore</mat-icon> CVE Info (Online DB)
+    <mat-icon class="vertical-align-middle size-45">explore</mat-icon> CVE Info (Online)
 </h1>
 <mat-dialog-content>
 
@@ -12,7 +12,7 @@
 
     <div *ngIf="results">
 
-        <div style="width: 100%;" fxLayout.xs="column" fxLayoutGap="10px" ngClass.gt-xs="ml-10">
+        <div style="width: 100%;" fxLayout.xs="column" fxLayoutGap="10px">
             <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.Published" fxFlex><b>Published:</b><br>{{ results?.Published }}</div>
             <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.Modified" fxFlex><b>Modified:</b><br>{{ results?.Modified }}</div>
             <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.assigner" fxFlex><b>Assigner:</b><br>{{ results?.assigner }}</div>
@@ -55,26 +55,30 @@
                            aria-label="Select page of periodic elements">
             </mat-paginator>
           </div>
-          
-          <h2 *ngIf="results?.references.length != 0">References</h2>
+                
+      <div *ngIf="results?.references">
+        <h2 *ngIf="results?.references.length != 0">References</h2>
 
-          <div *ngIf="results?.references">
-              <table mat-table [dataSource]="dataSource2">
-            
-                <ng-container matColumnDef="url">
-                  <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
-                  <td mat-cell *matCellDef="let element"> {{element}} </td>
-                </ng-container>
-            
-                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-              </table>
-            
-              <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]"
-                             showFirstLastButtons 
-                             aria-label="Select page of periodic elements">
-              </mat-paginator>
-            </div>
+        <div *ngIf="results?.references">
+            <table mat-table [dataSource]="dataSource2">
+          
+              <ng-container matColumnDef="url">
+                <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
+                <td mat-cell *matCellDef="let element"> {{element}} </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+            </table>
+          
+            <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]"
+                          showFirstLastButtons 
+                          aria-label="Select page of periodic elements">
+            </mat-paginator>
+          </div>
+      </div>
+
+
 
     </div>
 
