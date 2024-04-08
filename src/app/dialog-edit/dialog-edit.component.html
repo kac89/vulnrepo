@@ -25,6 +25,7 @@
         <h3 *ngIf="col3">{{data[1].item.title}}</h3>
         <h3 *ngIf="col4">{{data[1].item.desc}}</h3>
         <h3 *ngIf="col5">{{data[1].item.report_name}}</h3>
+        <h3 *ngIf="col6">Remove all events from the changelog?</h3>
       </div>
   </div>
 
@@ -34,6 +35,7 @@
       <button *ngIf="col5" mat-raised-button color="warn" (click)="removeReport(data[1].item)">Remove</button>
       <button *ngIf="col4" mat-raised-button color="warn" (click)="removechangelog(data[1].item)">Remove</button>
       <button *ngIf="col3" mat-raised-button color="warn" (click)="removeissue(data[1].item)">Remove</button>
+      <button *ngIf="col6" mat-raised-button color="warn" (click)="removechangelogall()">Remove all</button>
       <button mat-raised-button color="primary" (click)="cancel()">Close</button>
   </div>
 </div>

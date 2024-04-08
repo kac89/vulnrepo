@@ -15,6 +15,7 @@ export class DialogEditComponent implements OnInit {
   col3 = false;
   col4 = false;
   col5 = false;
+  col6 = false;
 
   constructor(public dialogRef: MatDialogRef<DialogEditComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -39,6 +40,9 @@ export class DialogEditComponent implements OnInit {
       if (this.data[0].remo === 'changelog') {
         this.col4 = true;
       }
+      if (this.data[0].remo === 'changelog_wipe') {
+        this.col6 = true;
+      }
       if (this.data[0].remo === 'removereport') {
         this.col5 = true;
       }
@@ -52,6 +56,10 @@ export class DialogEditComponent implements OnInit {
   }
   removechangelog(item): void {
     this.dialogRef.close(item);
+  }
+
+  removechangelogall(): void {
+    this.dialogRef.close(true);
   }
   removeReport(item): void {
     this.dialogRef.close(item);

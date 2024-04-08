@@ -762,6 +762,10 @@
             mat-menu-item>
             <mat-icon class="vertical-align-middle">add</mat-icon> Add event to changelog
           </a>
+          <a [routerLink]="[]" (click)="removeallfromchangelog()" class="active-link" title="Remove all events from changelog"
+          mat-menu-item>
+          <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove all events
+        </a>
         </mat-menu>
       </mat-card-title>
     </mat-card-header>
@@ -812,8 +816,8 @@
       <div fxLayout="row wrap" fxLayoutGap="10">
         <div fxFlex="30%" fxFlex.sm="20%" fxFlex.xs="10%">
 
-          <div *ngIf="listchangelog == 0">
-            <p>Your changelog list is empty :-( </p>
+          <div *ngIf="listchangelog == 0" class="mdc-typography--body1">
+            <h3>Changelog is empty  <mat-icon>sentiment_dissatisfied</mat-icon></h3>
           </div>
 
         </div>
