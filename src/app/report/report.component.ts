@@ -1455,7 +1455,28 @@ Sample code here\n\
     });
   }
 
+  removeallfromchangelog() {
 
+
+    const remo = 'changelog_wipe';
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      width: '350px',
+      data: [{ remo }],
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result) {
+        this.decryptedReportDataChanged.report_changelog = [];
+        this.doStats();
+      }
+    });
+
+
+
+
+
+  }
   removeIssiue(item) {
     const remo = 'remove';
     const dialogRef = this.dialog.open(DialogEditComponent, {
