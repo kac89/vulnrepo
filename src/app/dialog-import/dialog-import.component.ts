@@ -708,7 +708,7 @@ export class DialogImportComponent implements OnInit {
         cvss: res[3],
         cvss_vector: '',
         cve: '',
-        tags: [{ name: "npm-audit" }],
+        tags: [{ name: "nessus" }],
         status: 1,
         bounty: [],
         date: this.currentdateService.getcurrentDate()
