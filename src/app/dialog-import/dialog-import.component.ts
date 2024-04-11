@@ -350,13 +350,12 @@ export class DialogImportComponent implements OnInit {
 
 
     const emp = [];
-
     this.xmltojson.map((res, key) => {
 
-      if (!emp.find(x => x.type[0] === res.type[0])) {
+      if (!emp.find(x => x.serialNumber[0] === res.serialNumber[0])) {
         emp.push(res);
       } else {
-        const index = emp.findIndex(x => x.type[0] === res.type[0]);
+        const index = emp.findIndex(x => x.serialNumber[0] === res.serialNumber[0]);
 
         emp[index].location.push(res.location[0]);
         emp[index].path.push(res.path[0]);
@@ -390,15 +389,23 @@ export class DialogImportComponent implements OnInit {
         itemrem = '';
       }
 
+
+      let itemback = '';
+      if (res.issueBackground !== undefined) {
+        itemback = stripHtml(res.issueBackground[0]);
+      } else {
+        itemback = '';
+      }
+
       if (res.severity[0] === 'Information') {
         res.severity[0] = 'Info';
       }
 
       const def = {
         title: res.name[0],
-        poc: itempoc + '\n\n' + returnhost(res.host, res.path),
+        poc:  returnhost(res.host, res.path),
         files: [],
-        desc: stripHtml(res.issueBackground[0]) + '\n\n' + itemrem,
+        desc: itempoc + '\n\n' + itemback + '\n\n' + itemrem,
         severity: res.severity[0],
         ref: item,
         cvss: setcvss(res.severity[0]),
