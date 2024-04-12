@@ -2,6 +2,12 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as Crypto from 'crypto-js';
 
+interface Exportsource {
+  value: string;
+  viewValue: string;
+  viewImg: string;
+}
+
 @Component({
   selector: 'app-dialog-exportissues',
   templateUrl: './dialog-exportissues.component.html',
@@ -16,6 +22,7 @@ export class DialogExportissuesComponent implements OnInit {
   multipartcurl = false;
   multicurlcmd = '';
   curlcmd = '';
+  selected_export = 'vulnrepojson';
   hide = true;
   fields_prop = `"project": {
     "key": "$key"
@@ -31,6 +38,12 @@ export class DialogExportissuesComponent implements OnInit {
   "labels": [
     "$label"
   ]`;
+
+  sour: Exportsource[] = [
+    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)', viewImg: '/favicon-32x32.png' },
+    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/favicon-32x32.png' },
+    { value: 'jira', viewValue: 'Atlassian Jira', viewImg: '/assets/vendors/jira-logo.png' }
+  ];
 
   constructor(public dialogRef: MatDialogRef<DialogExportissuesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
