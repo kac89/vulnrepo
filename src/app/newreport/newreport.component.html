@@ -18,7 +18,18 @@
         <md-card fxFlex="50%" fxFlex.xs="100%" appearance="outlined" class="mdc-card my-card-content">
           <mat-form-field class="example-full-width" color="accent">
             <input [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            
+
+
+            <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
+              <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <button matSuffix mat-icon-button aria-label="Generate security key" title="Generate security key" color="accent" (click)="generatePassword()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">
+              <mat-icon>casino</mat-icon>
+            </button>
+            <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy security key" title="Copy security key" color="accent" [cdkCopyToClipboard]="pass1model.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">
+              <mat-icon>content_copy</mat-icon>
+            </button>
             <mat-error *ngIf="pass1model.hasError('tooweakpass')">
               <strong>Security key is too weak!</strong>
             </mat-error>
@@ -29,7 +40,15 @@
   
           <mat-form-field class="example-full-width" color="accent">
             <input [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'">
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
+              <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <button matSuffix mat-icon-button aria-label="Generate security key" title="Generate security key" color="accent" (click)="generatePassword()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">
+              <mat-icon>casino</mat-icon>
+            </button>
+            <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy security key" title="Copy security key" color="accent" [cdkCopyToClipboard]="pass2model.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">
+              <mat-icon>content_copy</mat-icon>
+            </button>
             <mat-error *ngIf="pass2model.hasError('tooweakpass')">
               <strong>Security key is too weak!</strong>
             </mat-error>
@@ -66,13 +85,14 @@
         <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center">
           <div style="width: 100%">
 
+            <div *ngIf="str != ''">
+              <p fxLayoutAlign="center">Strength validation: {{str}}.</p>
+              <mat-progress-bar [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
+              <br>
+            </div>
+
+
             <div fxLayoutAlign="center" class="label warning"><mat-icon style="margin-right: 10px;" class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> <b>Do not lose your security key!<br> Access to the report will be impossible!</b></div>
-  
-            <p *ngIf="str != ''" fxLayoutAlign="center">Strength validation: {{str}}.</p>
-            <mat-progress-bar *ngIf="str != ''" [color]="color" [mode]="mode" [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
-            <p fxLayoutAlign="center">
-              <a class="active-link" [routerLink]="[]" (click)="generatePassword()"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">casino</mat-icon> Generate strong key!</a>
-            </p>
   
           </div>
         </md-card>
@@ -80,6 +100,8 @@
   
       <mat-dialog-actions>
         <button mat-raised-button color="accent" (click)="addnewReport(title.value,pass.value,pass2.value)"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">save</mat-icon> Create new report</button>
+        &nbsp;
+        <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
       </mat-dialog-actions>
 
     </mat-card>
