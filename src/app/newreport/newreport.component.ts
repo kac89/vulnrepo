@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IndexeddbService } from '../indexeddb.service';
 import { SeckeyValidatorService } from '../seckey-validator.service';
 import { ThemePalette } from '@angular/material/core';
@@ -10,6 +10,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { UtilsService } from '../utils.service';
+import { MatTooltip } from '@angular/material/tooltip';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-newreport',
@@ -17,6 +19,7 @@ import { UtilsService } from '../utils.service';
   styleUrls: ['./newreport.component.scss']
 })
 export class NewreportComponent implements OnInit {
+  @ViewChild('tooltip') tooltip: MatTooltip;
   dialogRef: MatDialogRef<DialogApikeyComponent>;
   hide = true;
   localkeys = [];
@@ -41,7 +44,7 @@ export class NewreportComponent implements OnInit {
   profileSettingsselected: any;
   apireportprofiles = [];
   apireportprofilesList = [];
-  constructor(private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService, private apiService: ApiService, public dialog: MatDialog,  
+  constructor(private _location: Location, private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService, private apiService: ApiService, public dialog: MatDialog,  
     public router: Router, public sessionsub: SessionstorageserviceService,private utilsService: UtilsService) {
 
     // get report profiles
@@ -130,12 +133,11 @@ export class NewreportComponent implements OnInit {
   }
 
   generatePassword() {
-    const pass = this.utilsService.generatePassword(64);
+    const pass = this.utilsService.generatePassword(256);
     // set gen pass
     this.pass1model.setValue(pass);
     this.pass2model.setValue(pass);
     this.passCheck(pass);
-    this.hide = false;
   }
 
   openDialog(data: any): void {
@@ -250,6 +252,21 @@ export class NewreportComponent implements OnInit {
       this.profileSettingsselected = event.value;
     }
 
+  }
+
+  copyText() {
+    setTimeout(() => {
+      this.tooltip.show();
+      this.tooltip.message = "Copied!";
+    });
+    setTimeout(() => {
+      this.tooltip.hide();
+      this.tooltip.message = "Copy to clipboard";
+    }, 2000);
+  }
+
+  cancel(): void {
+    this._location.back();
   }
 
 }
