@@ -3,6 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-customcontent',
   templateUrl: './dialog-customcontent.component.html',
   styleUrls: ['./dialog-customcontent.component.scss']

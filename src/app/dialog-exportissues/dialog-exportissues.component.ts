@@ -9,6 +9,8 @@ interface Exportsource {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-exportissues',
   templateUrl: './dialog-exportissues.component.html',
   styleUrls: ['./dialog-exportissues.component.scss']

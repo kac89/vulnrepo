@@ -46,6 +46,8 @@ export interface PCITesting {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-addissue',
   templateUrl: './dialog-addissue.component.html',
   styleUrls: ['./dialog-addissue.component.scss'],

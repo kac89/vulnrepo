@@ -23,6 +23,8 @@ export interface MyReportElement {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-myreports',
   templateUrl: './myreports.component.html',
   styleUrls: ['./myreports.component.scss']

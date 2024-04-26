@@ -25,6 +25,8 @@ export interface ApiList {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']

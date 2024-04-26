@@ -14,6 +14,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import {Location} from '@angular/common';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-newreport',
   templateUrl: './newreport.component.html',
   styleUrls: ['./newreport.component.scss']

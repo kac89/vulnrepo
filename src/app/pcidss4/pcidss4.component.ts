@@ -13,6 +13,8 @@ export interface pcidssElement {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-pcidss4',
   templateUrl: './pcidss4.component.html',
   styleUrls: ['./pcidss4.component.scss']

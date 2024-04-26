@@ -6,6 +6,8 @@ import { DatePipe } from '@angular/common';
 import { CurrentdateService } from '../currentdate.service';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-asvs4',
   templateUrl: './dialog-asvs4.component.html',
   styleUrls: ['./dialog-asvs4.component.scss']

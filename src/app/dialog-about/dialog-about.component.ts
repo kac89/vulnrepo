@@ -3,6 +3,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { version } from "../../version";
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-about',
   templateUrl: './dialog-about.component.html',
   styleUrls: ['./dialog-about.component.scss']

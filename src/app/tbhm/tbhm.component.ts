@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-tbhm',
   templateUrl: './tbhm.component.html',
   styleUrls: ['./tbhm.component.scss']
