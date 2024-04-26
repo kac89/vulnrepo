@@ -6,6 +6,8 @@ import { UntypedFormControl } from '@angular/forms';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-apikey',
   templateUrl: './dialog-apikey.component.html',
   styleUrls: ['./dialog-apikey.component.scss']

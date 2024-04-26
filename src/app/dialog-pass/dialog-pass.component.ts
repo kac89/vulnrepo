@@ -6,6 +6,8 @@ import { IndexeddbService } from '../indexeddb.service';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-pass',
   templateUrl: './dialog-pass.component.html',
   styleUrls: ['./dialog-pass.component.scss']

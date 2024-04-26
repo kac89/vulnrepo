@@ -3,6 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-edit',
   templateUrl: './dialog-edit.component.html',
   styleUrls: ['./dialog-edit.component.scss']

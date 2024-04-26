@@ -3,6 +3,8 @@ import { IndexeddbService } from '../indexeddb.service';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-import-report',
   templateUrl: './import-report.component.html',
   styleUrls: ['./import-report.component.scss']

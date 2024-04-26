@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-reportcss',
   templateUrl: './dialog-reportcss.component.html',
   styleUrls: ['./dialog-reportcss.component.scss']

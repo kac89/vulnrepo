@@ -8,6 +8,8 @@ import { DialogReportcssComponent } from '../dialog-reportcss/dialog-reportcss.c
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-addreportprofile',
   templateUrl: './dialog-addreportprofile.component.html',
   styleUrls: ['./dialog-addreportprofile.component.scss']

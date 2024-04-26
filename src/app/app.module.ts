@@ -83,6 +83,9 @@ import { DialogIssuesEditComponent } from './dialog-issues-edit/dialog-issues-ed
 import { DialogAddCustomTemplateComponent } from './dialog-add-custom-template/dialog-add-custom-template.component';
 import { DialogEncryptReportComponent } from './dialog-encrypt-report/dialog-encrypt-report.component';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
+import { CveSearchComponent } from './cve-search/cve-search.component';
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -119,7 +122,8 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
         DialogAboutComponent,
         DialogIssuesEditComponent,
         DialogAddCustomTemplateComponent,
-        DialogEncryptReportComponent
+        DialogEncryptReportComponent,
+        CveSearchComponent
     ],
     imports: [
         BrowserModule,

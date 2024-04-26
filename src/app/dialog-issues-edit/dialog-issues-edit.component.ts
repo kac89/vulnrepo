@@ -3,10 +3,11 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { UtilsService } from '../utils.service';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-issues-edit',
   templateUrl: './dialog-issues-edit.component.html',
-  styleUrl: './dialog-issues-edit.component.scss',
-  standalone: false
+  styleUrl: './dialog-issues-edit.component.scss'
 })
 export class DialogIssuesEditComponent implements OnInit {
 

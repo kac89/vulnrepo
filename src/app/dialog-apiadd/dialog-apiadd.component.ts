@@ -11,6 +11,8 @@ interface Apisource {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-apiadd',
   templateUrl: './dialog-apiadd.component.html',
   styleUrls: ['./dialog-apiadd.component.scss']

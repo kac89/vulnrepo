@@ -5,8 +5,9 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-dialog-encrypt-report',
   standalone: false,
+  //imports: [],
+  selector: 'app-dialog-encrypt-report',
   templateUrl: './dialog-encrypt-report.component.html',
   styleUrl: './dialog-encrypt-report.component.scss'
 })

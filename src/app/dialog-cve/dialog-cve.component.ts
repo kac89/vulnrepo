@@ -6,6 +6,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-cve',
   templateUrl: './dialog-cve.component.html',
   styleUrls: ['./dialog-cve.component.scss']

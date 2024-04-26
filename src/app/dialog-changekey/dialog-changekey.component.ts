@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-changekey',
   templateUrl: './dialog-changekey.component.html',
   styleUrls: ['./dialog-changekey.component.scss']

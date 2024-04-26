@@ -6,6 +6,8 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-cvss',
   templateUrl: './dialog-cvss.component.html',
   styleUrls: ['./dialog-cvss.component.scss']

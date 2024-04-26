@@ -13,6 +13,7 @@ import { DeactivateGuardService } from './deactivate-guard.service';
 import { AsvsComponent } from './asvs/asvs.component';
 import { TbhmComponent } from './tbhm/tbhm.component';
 import { Pcidss4Component } from './pcidss4/pcidss4.component';
+import { CveSearchComponent } from './cve-search/cve-search.component';
 
 const routes: Routes = [{
   path: 'home',
@@ -38,6 +39,11 @@ const routes: Routes = [{
   path: 'asvs4',
   pathMatch: 'full',
   component: AsvsComponent
+},
+{
+  path: 'cve-search',
+  pathMatch: 'full',
+  component: CveSearchComponent
 },
 {
   path: 'pcidss4',

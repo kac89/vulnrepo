@@ -12,8 +12,9 @@ export interface Tags {
 }
 
 @Component({
-  selector: 'app-dialog-add-custom-template',
   standalone: false,
+  //imports: [],
+  selector: 'app-dialog-add-custom-template',
   templateUrl: './dialog-add-custom-template.component.html',
   styleUrl: './dialog-add-custom-template.component.scss'
 })

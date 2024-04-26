@@ -46,6 +46,8 @@ export interface Tags {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']

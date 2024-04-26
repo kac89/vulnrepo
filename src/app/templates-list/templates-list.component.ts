@@ -26,6 +26,8 @@ export interface VulnsList {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-templates-list',
   templateUrl: './templates-list.component.html',
   styleUrls: ['./templates-list.component.scss'],

@@ -13,6 +13,8 @@ interface Importsource {
 }
 
 @Component({
+  standalone: false,
+  //imports: [],
   selector: 'app-dialog-import',
   templateUrl: './dialog-import.component.html',
   styleUrls: ['./dialog-import.component.scss']
