@@ -324,6 +324,17 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   entestdateChanged() {
     this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
+
+    //jump to specific date
+    if (this.decryptedReportDataChanged.report_metadata.starttest && this.calendar) {
+      this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.starttest), 'month');
+    }
+    
+    if (this.decryptedReportDataChanged.report_metadata.endtest && this.calendar) {
+      this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.endtest), 'month');
+    }
+    
+
   }
 
   onDateChangeReportstart(event) {
@@ -349,9 +360,29 @@ export class ReportComponent implements OnInit, OnDestroy {
     return (date: Date): MatCalendarCellCssClasses => {
       const issuearr_success = [];
       const issuearr_critical = [];
+      const issuearr_high = [];
+      const issuearr_medium = [];
+      const issuearr_low = [];
+      const issuearr_info = [];
 
       const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
         return (el.severity === 'Critical');
+      });
+
+      const high = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+        return (el.severity === 'High');
+      });
+
+      const medium = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+        return (el.severity === 'Medium');
+      });
+
+      const low = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+        return (el.severity === 'Low');
+      });
+
+      const info = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
+        return (el.severity === 'Info');
       });
 
       critical.forEach((item, index) => {
@@ -360,11 +391,35 @@ export class ReportComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.decryptedReportDataChanged.report_vulns.forEach((item, index) => {
-        if (issuearr_success.indexOf(item) === -1) {
-          issuearr_success.push(item.date);
+      high.forEach((item, index) => {
+        if (issuearr_high.indexOf(item) === -1) {
+          issuearr_high.push(item.date);
         }
       });
+
+      medium.forEach((item, index) => {
+        if (issuearr_medium.indexOf(item) === -1) {
+          issuearr_medium.push(item.date);
+        }
+      });
+
+      low.forEach((item, index) => {
+        if (issuearr_low.indexOf(item) === -1) {
+          issuearr_low.push(item.date);
+        }
+      });
+
+      info.forEach((item, index) => {
+        if (issuearr_info.indexOf(item) === -1) {
+          issuearr_info.push(item.date);
+        }
+      });
+
+     // this.decryptedReportDataChanged.report_vulns.forEach((item, index) => {
+     //   if (issuearr_success.indexOf(item) === -1) {
+     //     issuearr_success.push(item.date);
+     //   }
+     // });
 
       const successdate = issuearr_success
         .map(strDate => new Date(strDate))
@@ -374,10 +429,34 @@ export class ReportComponent implements OnInit, OnDestroy {
         .map(strDate => new Date(strDate))
         .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
 
+        const specialdatehigh = issuearr_high
+        .map(strDate => new Date(strDate))
+        .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+
+        const specialdatemedium = issuearr_medium
+        .map(strDate => new Date(strDate))
+        .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+
+        const specialdatelow = issuearr_low
+        .map(strDate => new Date(strDate))
+        .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+
+        const specialdateinfo = issuearr_info
+        .map(strDate => new Date(strDate))
+        .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+
       if (specialdate) {
         return 'special-date'
       } else if (successdate) {
         return 'success-date'
+      } else if (specialdatehigh) {
+        return 'special-date-high'
+      } else if (specialdatemedium) {
+        return 'special-date-medium'
+      } else if (specialdatelow) {
+        return 'special-date-low'
+      } else if (specialdateinfo) {
+        return 'special-date-info'
       } else {
         return ''
       }
