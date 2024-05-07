@@ -135,6 +135,40 @@ tr.mat-mdc-footer-row td {
 ::ng-deep.special-date {
   border-color: #FF0039!important;
   background-color: #FF0039!important;
+  opacity: 0.6;
+  border-radius: 100%;
+  border-width: 0px;
+}
+
+::ng-deep.special-date-high {
+  border-color: #FF7518!important;
+  background-color: #FF7518!important;
+  opacity: 0.6;
+  border-radius: 100%;
+  border-width: 0px;
+}
+
+::ng-deep.special-date-medium {
+  border-color: #F9EE06!important;
+  background-color: #F9EE06!important;
+  opacity: 0.6;
+  color: #000!important;
+  border-radius: 100%;
+  border-width: 0px;
+}
+
+::ng-deep.special-date-low {
+  border-color: #3FB618!important;
+  background-color: #3FB618!important;
+  opacity: 0.6;
+  border-radius: 100%;
+  border-width: 0px;
+}
+
+::ng-deep.special-date-info {
+  border-color: #2780E3!important;
+  background-color: #2780E3!important;
+  opacity: 0.6;
   border-radius: 100%;
   border-width: 0px;
 }
