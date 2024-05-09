@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
@@ -53,7 +53,7 @@ export interface Tags {
   styleUrls: ['./report.component.scss']
 })
 
-export class ReportComponent implements OnInit, OnDestroy {
+export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Pie
   public pieChartLabels: string[] = ['Critical', 'High', 'Medium', 'Low', 'Info'];
@@ -228,6 +228,10 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
 
+  }
+
+  ngAfterViewInit() {
+    this.entestdateChanged();
   }
 
   ngOnInit() {
@@ -865,9 +869,8 @@ Sample code here\n\
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator2;
 
-    setTimeout(() => this.issesTable.paginator = this.paginator);
-    setTimeout(() => this.issesTable.paginator = this.paginator);
 
+    setTimeout(() => this.issesTable.paginator = this.paginator);
     setTimeout(() => this.dataSource.sort = this.sort);
     setTimeout(() => this.dataSource.paginator = this.paginator2);
 
@@ -877,7 +880,6 @@ Sample code here\n\
       setTimeout(() => this.calendar.updateTodaysDate());
     }
     this.entestdateChanged();
-
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
 
   }
