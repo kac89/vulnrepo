@@ -225,9 +225,11 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
       while (i < this.decryptedReportDataChanged.report_vulns.length);
 
+      this.calendarDateChanged();
+
     });
 
-
+    
   }
 
   ngOnInit() {
@@ -318,11 +320,9 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
     });
 
-
-
   }
 
-  entestdateChanged() {
+  calendarDateChanged() {
     this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
 
     //jump to specific date
@@ -330,23 +330,18 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.starttest), 'month');
     }
     
-    if (this.decryptedReportDataChanged.report_metadata.endtest && this.calendar) {
-      this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.endtest), 'month');
-    }
-    
-
   }
 
   onDateChangeReportstart(event) {
     const newdate = new Date(event.value).getTime();
     this.decryptedReportDataChanged.report_metadata.starttest = newdate;
-    this.entestdateChanged();
+    this.calendarDateChanged();
   }
 
   onDateChangeReportend(event) {
     const newdate = new Date(event.value).getTime();
     this.decryptedReportDataChanged.report_metadata.endtest = newdate;
-    this.entestdateChanged();
+    this.calendarDateChanged();
   }
 
   canDeactivate() {
@@ -865,9 +860,8 @@ Sample code here\n\
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator2;
 
-    setTimeout(() => this.issesTable.paginator = this.paginator);
-    setTimeout(() => this.issesTable.paginator = this.paginator);
 
+    setTimeout(() => this.issesTable.paginator = this.paginator);
     setTimeout(() => this.dataSource.sort = this.sort);
     setTimeout(() => this.dataSource.paginator = this.paginator2);
 
@@ -876,8 +870,8 @@ Sample code here\n\
     if (this.decryptedReportDataChanged.report_vulns.length > 0) {
       setTimeout(() => this.calendar.updateTodaysDate());
     }
-    this.entestdateChanged();
 
+    
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
 
   }
