@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
@@ -53,7 +53,7 @@ export interface Tags {
   styleUrls: ['./report.component.scss']
 })
 
-export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ReportComponent implements OnInit, OnDestroy {
 
   // Pie
   public pieChartLabels: string[] = ['Critical', 'High', 'Medium', 'Low', 'Info'];
@@ -225,13 +225,11 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       while (i < this.decryptedReportDataChanged.report_vulns.length);
 
+      this.calendarDateChanged();
+
     });
 
-
-  }
-
-  ngAfterViewInit() {
-    this.entestdateChanged();
+    
   }
 
   ngOnInit() {
@@ -324,26 +322,26 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  entestdateChanged() {
+  calendarDateChanged() {
     this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
 
     //jump to specific date
     if (this.decryptedReportDataChanged.report_metadata.starttest && this.calendar) {
       this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.starttest), 'month');
     }
-
+    
   }
 
   onDateChangeReportstart(event) {
     const newdate = new Date(event.value).getTime();
     this.decryptedReportDataChanged.report_metadata.starttest = newdate;
-    this.entestdateChanged();
+    this.calendarDateChanged();
   }
 
   onDateChangeReportend(event) {
     const newdate = new Date(event.value).getTime();
     this.decryptedReportDataChanged.report_metadata.endtest = newdate;
-    this.entestdateChanged();
+    this.calendarDateChanged();
   }
 
   canDeactivate() {
@@ -872,7 +870,8 @@ Sample code here\n\
     if (this.decryptedReportDataChanged.report_vulns.length > 0) {
       setTimeout(() => this.calendar.updateTodaysDate());
     }
-    this.entestdateChanged();
+
+    
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
 
   }
