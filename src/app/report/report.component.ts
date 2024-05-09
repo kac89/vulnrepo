@@ -322,8 +322,6 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
-
-
   }
 
   entestdateChanged() {
@@ -333,11 +331,6 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.decryptedReportDataChanged.report_metadata.starttest && this.calendar) {
       this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.starttest), 'month');
     }
-    
-    if (this.decryptedReportDataChanged.report_metadata.endtest && this.calendar) {
-      this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.endtest), 'month');
-    }
-    
 
   }
 
