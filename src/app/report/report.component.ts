@@ -2494,6 +2494,10 @@ IP   | hostname | role | comments\n\
       return xx;
     };
 
+    renderer.link = function( href, title, text ) {
+      return '<a target="_blank" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
+    }
+    
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
     this.scopePreviewHTML[id] = marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc, { renderer: renderer });
     this.poc_editor_hide[id] = !this.poc_editor_hide[id];
