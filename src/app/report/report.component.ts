@@ -2488,14 +2488,23 @@ IP   | hostname | role | comments\n\
     // add Markdown rendering
     const renderer = new marked.Renderer();
     renderer.code = function (code, infostring, escaped) {
-      const xx = `
-          <code style="white-space: pre-wrap;word-wrap: break-word;">` + DOMPurify.sanitize(code) + `</code>
-      `;
-      return xx;
+      return `<code>` + DOMPurify.sanitize(code) + `</code>`;
     };
 
     renderer.link = function( href, title, text ) {
-      return '<a target="_blank" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
+
+    try {
+      var prot = decodeURIComponent(unescape(href))
+        .replace(/[^\w:]/g, '')
+        .toLowerCase();
+    } catch (e) {
+      return text;
+    }
+    if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+      return text;
+    }
+
+      return '<a target="_blank" rel="nofollow" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
     }
     
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
