@@ -2488,7 +2488,7 @@ IP   | hostname | role | comments\n\
     // add Markdown rendering
     const renderer = new marked.Renderer();
     renderer.code = function (code, infostring, escaped) {
-      return `<code style="white-space: pre-wrap;word-wrap: break-word;">` + DOMPurify.sanitize(code) + `</code>`;
+      return `<code>` + DOMPurify.sanitize(code) + `</code>`;
     };
 
     renderer.link = function( href, title, text ) {
