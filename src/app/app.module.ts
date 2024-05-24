@@ -42,7 +42,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { IndexeddbService } from './indexeddb.service';
 import { MatChipsModule } from '@angular/material/chips';
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatePipe } from '@angular/common';
@@ -86,8 +86,7 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { CveSearchComponent } from './cve-search/cve-search.component';
 
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         HomeComponent,
         MyreportsComponent,
@@ -125,8 +124,8 @@ import { CveSearchComponent } from './cve-search/cve-search.component';
         DialogEncryptReportComponent,
         CveSearchComponent
     ],
-    imports: [
-        BrowserModule,
+    exports: [],
+    bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         MatButtonModule,
@@ -154,7 +153,6 @@ import { CveSearchComponent } from './cve-search/cve-search.component';
         MatSlideToggleModule,
         MatChipsModule,
         MatSnackBarModule,
-        HttpClientModule,
         MatSelectModule,
         DragDropModule,
         MatTabsModule,
@@ -165,12 +163,7 @@ import { CveSearchComponent } from './cve-search/cve-search.component';
         NgxChartsModule,
         ClipboardModule,
         MatTooltipModule,
-        CdkAccordionModule
-    ],
-    providers: [MessageService, IndexeddbService, DatePipe],
-    exports: [],
-    bootstrap: [AppComponent]
-})
+        CdkAccordionModule], providers: [MessageService, IndexeddbService, DatePipe, provideHttpClient(withInterceptorsFromDi())] })
 
 export class AppModule {
   // Diagnostic only: inspect router configuration
