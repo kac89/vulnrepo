@@ -304,9 +304,9 @@
             <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
                 <mat-label>Proof of Concept</mat-label>
-                <div style="white-space: pre-wrap;word-wrap: break-word;" [innerHtml]="scopePreviewHTML[i] | noSanitize" [hidden]="!prev_hide[i]"></div>
+                <div [style]="'white-space: pre-wrap;word-wrap: break-word; overflow-y: auto; max-height: '+prev_height+'px;'" [innerHtml]="scopePreviewHTML[i] | noSanitize" [hidden]="!prev_hide[i]"></div>
                 <div [hidden]="poc_editor_hide[i]">
-                  <textarea (select)="selectionchangepoc($event)"
+                  <textarea #textareaheight (select)="selectionchangepoc($event)"
                   (click)="clickselectionchangepoc($event)" [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)"
                   matInput rows="8"></textarea>
                 </div>

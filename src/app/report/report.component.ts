@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
@@ -77,7 +77,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource();
   listchangelog: any[];
 
-
+  @ViewChild("textareaheight") textareaheight: ElementRef;
   @ViewChild('paginatorIssues') paginator: MatPaginator;
   @ViewChild('paginatorchangelog') paginator2: MatPaginator;
 
@@ -113,6 +113,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   scopePreviewHTML = [];
   RaportsTags = [];
   pok = 0;
+  prev_height = 190;
   timerCounter = 0;
   savemsg = '';
   report_decryption_in_progress: boolean;
@@ -2511,6 +2512,11 @@ IP   | hostname | role | comments\n\
     this.scopePreviewHTML[id] = marked.parse(this.decryptedReportDataChanged.report_vulns[index].poc, { renderer: renderer });
     this.poc_editor_hide[id] = !this.poc_editor_hide[id];
     this.prev_hide[id] = !this.prev_hide[id];
+
+    if(this.textareaheight.nativeElement.offsetHeight !== 0) {
+      this.prev_height = this.textareaheight.nativeElement.offsetHeight;
+    }
+    
   }
 
   saveTemplate(dec_data): void {
