@@ -1,0 +1,43 @@
+
+.example-full {
+    width: 100%;
+    height: 100%;
+  }
+
+html, body, textarea {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.textareaeditor {
+  width: 47vw;
+  height: 85vh;
+  padding-top: 15px;
+}
+
+.textareaeditor_show {
+  width: 96vw;
+  height: 85vh;
+  padding-top: 15px;
+}
+
+.space {
+  background-image: linear-gradient(to bottom, #424242, #69f0ae, #424242);
+  width: 100%;
+  height: 100%;
+  max-width: 1px;
+}
+
+.textprev {
+    white-space: pre-wrap;
+    width: 100%;
+    height: 85vh;
+    word-wrap: break-word; 
+    overflow-y: scroll;
+}
+
+[hidden] {
+  display: none !important;
+}
+
