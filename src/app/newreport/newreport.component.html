@@ -16,10 +16,9 @@
       <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
   
         <md-card fxFlex="50%" fxFlex.xs="100%" appearance="outlined" class="mdc-card my-card-content">
-          <mat-form-field class="example-full-width" color="accent">
-            <input [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
-            
 
+          <mat-form-field class="example-full-width" color="accent">
+            <input (keydown.enter)="$event.preventDefault()" [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
 
             <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
               <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -39,7 +38,8 @@
           </mat-form-field>
   
           <mat-form-field class="example-full-width" color="accent">
-            <input [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'">
+            <input (keydown.enter)="$event.preventDefault()" [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'">
+            
             <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
               <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
