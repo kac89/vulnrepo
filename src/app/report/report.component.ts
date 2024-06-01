@@ -23,7 +23,6 @@ import { DialogCveComponent } from '../dialog-cve/dialog-cve.component';
 import { DialogCustomcontentComponent } from '../dialog-customcontent/dialog-customcontent.component';
 import { DialogReportcssComponent } from '../dialog-reportcss/dialog-reportcss.component';
 import { DialogApierrorComponent } from '../dialog-apierror/dialog-apierror.component';
-import { marked } from 'marked'
 import { sha256 } from 'js-sha256';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -165,7 +164,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   // options stats activity
   selectedRangeValue: DateRange<Date> | null;
-
+  startDate:any;
   visible = true;
   selectable = true;
   removable = true;
@@ -224,9 +223,8 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
       while (i < this.decryptedReportDataChanged.report_vulns.length);
 
-      setTimeout(() => {
-        this.calendarDateChanged();
-      });
+      this.calendarDateChanged();
+      this.startDate = new Date(this.decryptedReportDataChanged.report_metadata.starttest);
 
     });
 
@@ -328,7 +326,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     //jump to specific date
     if (this.decryptedReportDataChanged.report_metadata.starttest && this.calendar) {
-      this.calendar._goToDateInView(new Date(this.decryptedReportDataChanged.report_metadata.starttest), 'month');
+      this.calendar.activeDate = new Date(this.decryptedReportDataChanged.report_metadata.starttest);
+      this.calendar.updateTodaysDate(); // update calendar state
     }
     
   }
@@ -928,10 +927,6 @@ Sample code here\n\
         } else {
           this.mergeissue(result);
         }
-
-      setTimeout(() => {
-        this.calendarDateChanged();
-      });
 
       } else {
 
