@@ -193,3 +193,25 @@ mat-icon.size-45 {
 ::ng-deep.mat-drawer-container {
   background-color: #000!important;
 }
+
+.tablemd {
+	width:100%;
+	border: 0px;
+  border-collapse: collapse;
+  border: 1px solid #4a4a4a;
+}
+
+thead.tablemd {
+  border: 1px solid #4a4a4a;
+  background-color: #4a4a4a;
+  padding: 8px;
+}
+
+blockquote p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 50px;
+  padding-left: 15px;
+  border-left: 3px solid #ccc;
+} 
+

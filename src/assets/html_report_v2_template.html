@@ -87,9 +87,20 @@
 			word-wrap: break-word;       /* Internet Explorer 5.5+ */
 			color: var(--bs-code-color);
 		}
+
 		ul {
 			  padding-left: 40px !important;
 		}
+
+		blockquote p {
+			margin-top: 10px;
+			margin-bottom: 10px;
+			margin-left: 50px;
+			padding-left: 15px;
+			border-left: 3px solid #ccc;
+		}
+
+
 	</style>
 	<style>
 
@@ -499,6 +510,11 @@
 
 			// add Markdown rendering
 			const renderer = new marked.Renderer();
+
+			renderer.code = function (code, infostring, escaped) {
+				return `<code>` + DOMPurify.sanitize(code) + `</code>`;
+			};
+
 			renderer.table = function (header, body) {
 				const table = `
 				<table class="table">
@@ -509,6 +525,25 @@
 				return table;
 			};
 
+			renderer.blockquote = function (quote) {
+				return `<blockquote>` + DOMPurify.sanitize(quote) + `</blockquote>`;
+			};
+
+			renderer.link = function( href, title, text ) {
+
+				try {
+					var prot = decodeURIComponent(unescape(href))
+						.replace(/[^\w:]/g, '')
+						.toLowerCase();
+				} catch (e) {
+					return text;
+				}
+				if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+					return text;
+				}
+
+					return '<a target="_blank" rel="nofollow" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
+			}
 
 			$("title").text(obj.report_name);
 

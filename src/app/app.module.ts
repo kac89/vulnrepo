@@ -70,7 +70,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogAddreportprofileComponent } from './dialog-addreportprofile/dialog-addreportprofile.component';
 import { DialogApierrorComponent } from './dialog-apierror/dialog-apierror.component';
 import { DialogReportcssComponent } from './dialog-reportcss/dialog-reportcss.component';
-import { NoSanitizePipe } from './nosanitizerpipe';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AsvsComponent } from './asvs/asvs.component';
@@ -85,6 +84,7 @@ import { DialogEncryptReportComponent } from './dialog-encrypt-report/dialog-enc
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { CveSearchComponent } from './cve-search/cve-search.component';
 
+import { DialogEditorFullscreenComponent } from './dialog-editor-fullscreen/dialog-editor-fullscreen.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -112,7 +112,6 @@ import { CveSearchComponent } from './cve-search/cve-search.component';
         DialogApierrorComponent,
         DialogReportcssComponent,
         TemplatesListComponent,
-        NoSanitizePipe,
         AsvsComponent,
         DialogAsvs4Component,
         TbhmComponent,
@@ -122,7 +121,8 @@ import { CveSearchComponent } from './cve-search/cve-search.component';
         DialogIssuesEditComponent,
         DialogAddCustomTemplateComponent,
         DialogEncryptReportComponent,
-        CveSearchComponent
+        CveSearchComponent,
+        DialogEditorFullscreenComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,
