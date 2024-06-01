@@ -1,67 +1,70 @@
 <div style="display: flex;padding: 15px;">
 
-    <mat-form-field appearance="outline" class="example-full" color="accent">
-        <mat-label>Text Editor</mat-label>
-    
-        <div style="margin-top: 16px;" class="example-button-row">
+  <mat-form-field appearance="outline" class="example-full" color="accent">
+    <mat-label>Text Editor</mat-label>
 
-    
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Bold Format" (click)="parseBold(data)">
-          <mat-icon>format_bold</mat-icon>
-        </button>
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Italic Format" (click)="parseItalic(data)">
-          <mat-icon>format_italic</mat-icon>
-        </button>
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Heading Format" (click)="parseHeading(data)">
-          <mat-icon>title</mat-icon>
-        </button>
-        <button  mat-icon-button style="padding: 0px;" color="primary" title="Strikethrough Format" (click)="parseStrikethrough(data)">
-          <mat-icon>strikethrough_s</mat-icon>
-        </button>
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Link Format" (click)="parseLink(data)">
-          <mat-icon>link</mat-icon>
-        </button>
-        <button mat-icon-button style="padding: 0px;" color="primary" title="List Format" (click)="parseList(data)">
-          <mat-icon>list</mat-icon>
-        </button>
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Code Format" (click)="parseCode(data)">
-          <mat-icon>code</mat-icon>
-        </button>
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Quote Format" (click)="parseQuote(data)">
-          <mat-icon>format_quote</mat-icon>
-        </button>
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Table Format" (click)="parseTable(data)">
-          <mat-icon>table</mat-icon>
-        </button>
+    <div style="margin-top: 16px;" class="example-button-row">
 
-        <button mat-icon-button style="padding: 0px;" color="primary" title="Show/Close preview" (click)="showprev=!showprev">
-          <mat-icon>{{showprev ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Bold Format" (click)="parseBold(data)">
+        <mat-icon>format_bold</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Italic Format" (click)="parseItalic(data)">
+        <mat-icon>format_italic</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Heading Format" (click)="parseHeading(data)">
+        <mat-icon>title</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Strikethrough Format"
+        (click)="parseStrikethrough(data)">
+        <mat-icon>strikethrough_s</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Link Format" (click)="parseLink(data)">
+        <mat-icon>link</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="List Format" (click)="parseList(data)">
+        <mat-icon>list</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Code Format" (click)="parseCode(data)">
+        <mat-icon>code</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Quote Format" (click)="parseQuote(data)">
+        <mat-icon>format_quote</mat-icon>
+      </button>
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Table Format" (click)="parseTable(data)">
+        <mat-icon>table</mat-icon>
+      </button>
+
+      <button mat-icon-button style="padding: 0px;" color="primary" title="Show/Close preview"
+        (click)="showprev=!showprev">
+        <mat-icon>{{showprev ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
 
       <button mat-icon-button style="padding: 0px;" color="warn" title="Save and Close fullscreen" (click)="cancel()">
-          <mat-icon>fullscreen</mat-icon>
+        <mat-icon>fullscreen</mat-icon>
       </button>
-        
+
+    </div>
+    <mat-divider></mat-divider>
+
+    <div [hidden]="showprev" fxLayout="row wrap" fxLayoutGap="10px grid">
+      <div fxFlex="49%" fxFlex.sm="99%" fxFlex.xs="99%">
+        <textarea #textareaEl [(ngModel)]="data" (ngModelChange)="onChange($event)" matInput class="textareaeditor"
+          (select)="select($event)" (click)="onclick($event)" cdkFocusInitial ></textarea>
       </div>
-      <mat-divider></mat-divider>
+      <div fxFlex="1%" fxFlex.sm="1%" fxFlex.xs="1%">
+        <div class="space"></div>
+      </div>
+      <div fxFlex="49%" fxFlex.sm="99%" fxFlex.xs="99%">
+        <div class="textprev" [innerHtml]="saniteizeme(previewfield.value)"></div>
+      </div>
+    </div>
 
-        <div [hidden]="showprev" fxLayout="row wrap" fxLayoutGap="10px grid">
-            <div fxFlex="49%" fxFlex.sm="99%" fxFlex.xs="99%">
-                <textarea #textareaEl [(ngModel)]="data" (ngModelChange)="onChange($event)" matInput class="textareaeditor" (select)="select($event)" (click)="onclick($event)"></textarea>
-            </div>
-            <div fxFlex="1%" fxFlex.sm="1%" fxFlex.xs="1%">
-                <div class="space"></div>
-            </div>
-            <div fxFlex="49%" fxFlex.sm="99%" fxFlex.xs="99%">
-                <div class="textprev" [innerHtml]="saniteizeme(previewfield.value)"></div>
-            </div>
-        </div>
+    <div fxLayout="row wrap" fxLayoutGap="1px grid">
+      <div [hidden]="!showprev" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <textarea [(ngModel)]="data" (ngModelChange)="onChange(data)" matInput class="textareaeditor_show"
+          (select)="select($event)" (click)="onclick($event)"></textarea>
+      </div>
+    </div>
 
-        <div  fxLayout="row wrap" fxLayoutGap="1px grid">
-            <div [hidden]="!showprev" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <textarea [(ngModel)]="data" (ngModelChange)="onChange(data)" matInput class="textareaeditor_show" (select)="select($event)" (click)="onclick($event)"></textarea>
-            </div>
-        </div>
-      
-    </mat-form-field>
+  </mat-form-field>
 </div>
