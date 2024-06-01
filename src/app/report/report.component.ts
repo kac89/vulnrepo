@@ -224,7 +224,9 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
       while (i < this.decryptedReportDataChanged.report_vulns.length);
 
-      this.calendarDateChanged();
+      setTimeout(() => {
+        this.calendarDateChanged();
+      });
 
     });
 
@@ -926,6 +928,10 @@ Sample code here\n\
         } else {
           this.mergeissue(result);
         }
+
+      setTimeout(() => {
+        this.calendarDateChanged();
+      });
 
       } else {
 
