@@ -65,7 +65,7 @@ export class DialogEditorFullscreenComponent implements OnInit {
       return text;
     }
 
-      return '<a target="_blank" rel="nofollow" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
+      return '<a target="_blank" class="active-link" rel="nofollow" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
     }
 
     renderer.table = function(header, body) {
