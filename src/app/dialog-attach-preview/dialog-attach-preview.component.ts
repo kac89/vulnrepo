@@ -14,19 +14,14 @@ export class DialogAttachPreviewComponent implements OnInit {
   defaultIndex = 0;
   allAttachCount = 0;
   allAttach:any;
+  dec_data:any;
+  arrsa = [];
   constructor(public dialogRef: MatDialogRef<DialogAttachPreviewComponent>,@Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {
     this.defaultAttach = this.data[0];
-
-    const arr = [];
-    for (let item of this.data[1]) {
-      if (item.type.includes('image') || item.type.includes('video') && item.data.length <= 30000000) {
-        arr.push(item);
-      }
-    }
-    this.allAttach = arr;
-
+    this.allAttach = this.data[1];
+    this.dec_data = this.data[2];
     const index: number = this.allAttach.indexOf(this.defaultAttach);
     this.defaultIndex = index;
 
@@ -34,7 +29,7 @@ export class DialogAttachPreviewComponent implements OnInit {
   }
 
   closedialog(): void {
-    this.dialogRef.close();
+    this.dialogRef.close([this.allAttach,this.arrsa, this.dec_data]);
   }
 
 
@@ -96,11 +91,13 @@ export class DialogAttachPreviewComponent implements OnInit {
 
   removeAttach(data) {
 
+    
     const index: number = this.allAttach.indexOf(data);
     if (index !== -1) {
+      this.arrsa.push(this.allAttach[index]);
       this.allAttach.splice(index, 1);
       this.allAttachCount = this.allAttach.length - 1;
-
+      
       if(this.allAttach[this.defaultIndex]) {
         this.defaultAttach = this.allAttach[this.defaultIndex];
       }else if(this.allAttach[this.defaultIndex - 1]) {
@@ -109,11 +106,9 @@ export class DialogAttachPreviewComponent implements OnInit {
       }
 
       if(this.allAttachCount === -1) {
-        this.dialogRef.close();
+        this.dialogRef.close([this.allAttach,this.arrsa,this.dec_data]);
       }
 
-    }else{
-      this.dialogRef.close();
     }
   }
 

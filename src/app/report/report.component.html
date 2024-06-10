@@ -480,7 +480,7 @@
                   <div matListItemTitle>{{key.title}}</div>
                   <div matListItemLine>Date: {{key.date | date:'dd.MM.yyyy'}} | Size: {{key.size | filesize }} </div>
                   <div matListItemMeta>
-                    <button mat-icon-button *ngIf="key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000" (click)="openattachfullscreen(key, dec_data.files)" title="Preview file">
+                    <button mat-icon-button *ngIf="key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000" (click)="openattachfullscreen(key, dec_data)" title="Preview file">
                       <mat-icon color="accent">search</mat-icon>
                     </button>
                     <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">

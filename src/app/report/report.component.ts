@@ -2467,7 +2467,15 @@ Date   | Description
   }
 
 
-  openattachfullscreen(file, arrayofattach){
+  openattachfullscreen(file, dec_data){
+
+    const arr = [];
+    for (let item of dec_data.files) {
+      if (item.type.includes('image') || item.type.includes('video') && item.data.length <= 30000000) {
+        arr.push(item);
+      }
+    }
+
 
     const dialogRef = this.dialog.open(DialogAttachPreviewComponent, {
       maxWidth: '100vw',
@@ -2475,13 +2483,22 @@ Date   | Description
       height: '100%',
       width: '100%',
       disableClose: false,
-      data: [file,arrayofattach]
+      data: [file,arr,dec_data]
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Attach-Preview dialog was closed');
       if(result){
-        console.log(result);
+
+        const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(result[2]);
+        for (let file of result[1]) {
+          const ind: number = this.decryptedReportDataChanged.report_vulns[index].files.indexOf(file);
+          if (ind !== -1) {
+            this.decryptedReportDataChanged.report_vulns[index].files.splice(ind, 1);
+            this.afterDetectionNow();
+          }
+        }
+
       }
     });
 
