@@ -40,6 +40,7 @@ import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/
 import { DialogEncryptReportComponent } from '../dialog-encrypt-report/dialog-encrypt-report.component';
 import { PageEvent } from '@angular/material/paginator';
 import { DialogEditorFullscreenComponent } from '../dialog-editor-fullscreen/dialog-editor-fullscreen.component';
+import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-attach-preview.component';
 
 export interface Tags {
   name: string;
@@ -2409,7 +2410,7 @@ Date   | Description
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Editor-fullscreen dialog was closed');
-      if(result){
+      if(result || result == ''){
         this.decryptedReportDataChanged.report_vulns[index].poc = result;
       }
     });
@@ -2465,4 +2466,42 @@ Date   | Description
 
   }
 
+
+  openattachfullscreen(file, dec_data){
+
+    const arr = [];
+    for (let item of dec_data.files) {
+      if (item.type.includes('image') || item.type.includes('video') && item.data.length <= 30000000) {
+        arr.push(item);
+      }
+    }
+
+
+    const dialogRef = this.dialog.open(DialogAttachPreviewComponent, {
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      height: '100%',
+      width: '100%',
+      disableClose: false,
+      data: [file,arr,dec_data]
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The Attach-Preview dialog was closed');
+      if(result){
+
+        const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(result[2]);
+        for (let file of result[1]) {
+          const ind: number = this.decryptedReportDataChanged.report_vulns[index].files.indexOf(file);
+          if (ind !== -1) {
+            this.decryptedReportDataChanged.report_vulns[index].files.splice(ind, 1);
+            this.afterDetectionNow();
+          }
+        }
+
+      }
+    });
+
+
+  }
 }
