@@ -83,8 +83,9 @@ import { DialogAddCustomTemplateComponent } from './dialog-add-custom-template/d
 import { DialogEncryptReportComponent } from './dialog-encrypt-report/dialog-encrypt-report.component';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { CveSearchComponent } from './cve-search/cve-search.component';
-
 import { DialogEditorFullscreenComponent } from './dialog-editor-fullscreen/dialog-editor-fullscreen.component';
+import { DialogAttachPreviewComponent } from './dialog-attach-preview/dialog-attach-preview.component';
+import { FilesizePipe } from './filesize.pipe';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -122,7 +123,9 @@ import { DialogEditorFullscreenComponent } from './dialog-editor-fullscreen/dial
         DialogAddCustomTemplateComponent,
         DialogEncryptReportComponent,
         CveSearchComponent,
-        DialogEditorFullscreenComponent
+        DialogEditorFullscreenComponent,
+        DialogAttachPreviewComponent,
+        FilesizePipe
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,

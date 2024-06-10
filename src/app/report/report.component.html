@@ -437,7 +437,6 @@
                   </mat-form-field>
                 </div>
 
-
                 <div fxLayout="row wrap" fxLayoutGap="5px grid" *ngIf="dec_data?.bounty" fxFlex="100%" fxFlex.sm="100%"
                   fxFlex.xs="100%">
 
@@ -467,7 +466,38 @@
             </div>
 
           </div>
+          <div fxLayout="row wrap" fxLayoutGap="10px grid">
 
+
+
+          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+            <div *ngFor="let key of dec_data.files">
+
+              <mat-list>
+                <mat-list-item class="mat-elevation-z4" fxLayout="row">
+                                  
+                  <div matListItemTitle>{{key.title}}</div>
+                  <div matListItemLine>Date: {{key.date | date:'dd.MM.yyyy'}} | Size: {{key.size | filesize }} </div>
+                  <div matListItemMeta>
+                    <button mat-icon-button *ngIf="key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000" (click)="openattachfullscreen(key, dec_data.files)" title="Preview file">
+                      <mat-icon color="accent">search</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
+                      <mat-icon color="accent">file_download</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
+                      <mat-icon color="warn">delete_forever</mat-icon>
+                    </button>
+                  </div>
+
+                </mat-list-item>
+              </mat-list>
+            
+            </div>
+
+          </div>
+          </div>
 
           <mat-action-row align="end">
 
@@ -495,48 +525,6 @@
 
           </mat-action-row>
 
-          <div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="10px grid">
-            <div *ngFor="let key of dec_data.files">
-
-              <div *ngIf="key.type.includes('image')" class="mat-elevation-z4"
-                style="padding: 5px; text-align: center;">
-                <img [src]="key.data" title="{{key.title}}" width="200px" height="100px"><br>
-                <a [routerLink]="[]" class="active-link" (click)="downloadAttach(key.data, key.title)" title="Download file">
-                  <mat-hint>
-                    <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>get_app</mat-icon> {{key.title}}
-                  </mat-hint>
-                </a>&nbsp;<a style="float: right;" [routerLink]="[]" (click)="removeAttach(key, dec_data)"
-                  title="Remove file">
-                  <mat-icon style="color: red">delete_forever</mat-icon>
-                </a>
-              </div>
-              <div *ngIf="key.type.includes('video')" class="mat-elevation-z4"
-              style="padding: 5px; text-align: center;">
-              <video width="400px" height="100%" controls><source [src]="key.data" type="{{key.type}}">Your browser does not support the video tag.</video>
-              <br>
-              <a [routerLink]="[]" class="active-link" (click)="downloadAttach(key.data, key.title)" title="Download file">
-                <mat-hint>
-                  <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>get_app</mat-icon> {{key.title}}
-                </mat-hint>
-              </a>&nbsp;<a style="float: right;" [routerLink]="[]" (click)="removeAttach(key, dec_data)"
-                title="Remove file">
-                <mat-icon style="color: red">delete_forever</mat-icon>
-              </a>
-            </div>
-              <div *ngIf="!key.type.includes('image') && !key.type.includes('video')" class="mat-elevation-z4"
-                style="padding: 5px; text-align: center;">
-                <img src="/assets/file.png" title="{{key.title}}" width="80px" height="100px"><br>
-                <a class="active-link" [routerLink]="[]" (click)="downloadAttach(key.data, key.title)" title="Download file">
-                  <mat-hint>
-                    <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>get_app</mat-icon> {{key.title}}
-                  </mat-hint>
-                </a>&nbsp;<a style="float: right;" [routerLink]="[]" (click)="removeAttach(key, dec_data)"
-                  title="Remove file">
-                  <mat-icon style="color: red">delete_forever</mat-icon>
-                </a>
-              </div>
-            </div>
-          </div>
 
         </mat-expansion-panel>
 
