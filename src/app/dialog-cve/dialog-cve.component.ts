@@ -4,6 +4,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: false,
@@ -36,7 +37,7 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
 
 
   constructor(private apiService: ApiService,
-    public dialogRef: MatDialogRef<DialogCveComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    public dialogRef: MatDialogRef<DialogCveComponent>, @Inject(MAT_DIALOG_DATA) public data: any,public router: Router,) {
         this.mycve.setValue(this.data.cve);
      }
 
@@ -106,5 +107,14 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
     this.dialogRef.close(this.data);
   }
 
+  openInNewWindow() {
+    // Converts the route into a string that can be used 
+    // with the window.open() function
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([`/cve-search`])
+    );
+  
+    window.open(url, '_blank');
+  }
 
 }

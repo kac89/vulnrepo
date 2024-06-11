@@ -417,22 +417,22 @@
                   </mat-form-field>
                 </div>
 
-                <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
                     <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
                     <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent"
-                      matSuffix>
-                      CVSS
+                      matSuffix title="Calculate CVSS">
+                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon> CVSS
                     </button>
                   </mat-form-field>
                 </div>
 
-                <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                <div fxFlex="60%" fxFlex.sm="50%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
                     <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
                     <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent"
-                      matSuffix>
-                      CVE
+                      matSuffix title="Search CVE">
+                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon> CVE
                     </button>
                   </mat-form-field>
                 </div>
