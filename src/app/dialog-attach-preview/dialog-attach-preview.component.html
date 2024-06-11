@@ -3,7 +3,7 @@
     <mat-card-header>
       <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon>
       <mat-card-title>{{defaultAttach.title}}</mat-card-title>
-      <mat-card-subtitle>Date: {{defaultAttach.date | date:'dd.MM.yyyy'}} | Size: {{defaultAttach.size | filesize }} </mat-card-subtitle>
+      <mat-card-subtitle><b>Date:</b> {{defaultAttach.date | date:'medium'}} | <b>Size:</b> {{defaultAttach.size | filesize }} </mat-card-subtitle>
     </mat-card-header>
     
     <mat-card-content>
@@ -27,14 +27,13 @@
 
             &nbsp;&nbsp;
 
-            <button *ngIf="defaultIndex != 0" mat-mini-fab color="primary" (click)="changePreview('minus')"  title="Move Back">
+            <button [disabled]="defaultIndex == 0" mat-mini-fab color="primary" (click)="changePreview('minus')"  title="Move Back">
                 <mat-icon>arrow_back</mat-icon>
             </button>
 
-            <button *ngIf="defaultIndex != allAttachCount" mat-mini-fab color="primary" (click)="changePreview('plus')"  title="Move Forward">
+            <button [disabled]="defaultIndex == allAttachCount" mat-mini-fab color="primary" (click)="changePreview('plus')"  title="Move Forward">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
-
             
         </p>
 
