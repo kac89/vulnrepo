@@ -13,16 +13,16 @@
     <div *ngIf="results">
 
         <div style="width: 100%;" fxLayout.xs="column" fxLayoutGap="10px">
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.Published" fxFlex><b>Published:</b><br>{{ results?.Published }}</div>
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.Modified" fxFlex><b>Modified:</b><br>{{ results?.Modified }}</div>
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.published" fxFlex><b>Published:</b><br>{{ results?.published }}</div>
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.modified" fxFlex><b>Modified:</b><br>{{ results?.modified }}</div>
             <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.assigner" fxFlex><b>Assigner:</b><br>{{ results?.assigner }}</div>
         </div>
         
-        <p *ngIf="results?.summary"><b>Summary:</b> {{ results?.summary }}</p>
+        <p *ngIf="results?.descriptions"><b>Description:</b> {{ results?.descriptions[0].value }}</p>
         <p>
             <mat-chip-listbox>
-                <mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option>
-                <a *ngIf="results?.cwe" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.cwe }}"><mat-chip-option>{{ results?.cwe }}</mat-chip-option></a>
+                <!--<mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option> -->
+                <a *ngIf="results?.weaknesses" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.weaknesses[0].description[0].value }}"><mat-chip-option>{{ results?.weaknesses[0].description[0].value }}</mat-chip-option></a>
             </mat-chip-listbox>
         </p>
 
@@ -64,7 +64,7 @@
           
               <ng-container matColumnDef="url">
                 <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
-                <td mat-cell *matCellDef="let element"> {{element}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.url}} </td>
               </ng-container>
           
               <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
@@ -77,8 +77,6 @@
             </mat-paginator>
           </div>
       </div>
-
-
 
     </div>
 
