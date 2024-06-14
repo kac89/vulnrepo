@@ -59,22 +59,25 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
 
           if (resp !== null && resp !== undefined) {
             // if everything OK
-            if (resp.id) {
-                this.results = resp;
+
+            if (resp.vulnerabilities[0].cve.id) {
+                this.results = resp.vulnerabilities[0].cve;
                 this.show = false;
-                this.gbug = this.results.githubpoc;
+                this.gbug = resp.githubpoc;
                 
                 this.dataSource = new MatTableDataSource(this.gbug.items);
                 setTimeout(() => this.dataSource.paginator = this.paginator);
+
+                this.results.references = [...this.results.references];
 
                 this.dataSource2 = new MatTableDataSource(this.results.references);
                 setTimeout(() => this.dataSource2.paginator = this.paginator2);
 
             } else {
 
-              this.results = resp;
+              this.results = resp.vulnerabilities[0].cve;
               this.show = false;
-              this.gbug = this.results.githubpoc;
+              this.gbug = resp.githubpoc;
               this.dataSource = new MatTableDataSource(this.gbug.items);
               setTimeout(() => this.dataSource.paginator = this.paginator);
 

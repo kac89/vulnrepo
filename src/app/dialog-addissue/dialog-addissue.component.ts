@@ -383,6 +383,8 @@ export class DialogAddissueComponent implements OnInit {
   addCVE() {
     this.err_msg = '';
     let severity = 'Info';
+    let cvss = '';
+    let cvssv = '';
     const severityRatings = [{
       name: 'Info',
       bottom: 0.0,
@@ -416,57 +418,51 @@ export class DialogAddissueComponent implements OnInit {
 
           if (resp !== null && resp !== undefined) {
             // if everything OK
-            if (resp.id) {
+
+            
+
+            if (resp.vulnerabilities[0].cve.id) {
               let cvetitle = '';
-
-              if (resp.refmap) {
-
-                if (resp.refmap.xf) {
-                  cvetitle = resp.refmap.xf;
-                }
-                if (resp.refmap.vupen) {
-                  cvetitle = resp.refmap.vupen;
-                }
-                if (resp.refmap.mlist) {
-                  cvetitle = resp.refmap.mlist[0];
-                }
-                if (resp.refmap.bugtraq) {
-                  cvetitle = resp.refmap.bugtraq[0];
-                }
-                if (resp.refmap.idefense) {
-                  cvetitle = resp.refmap.idefense;
-                }
-
-              }
-
-              if (resp.saint) {
-                cvetitle = resp.saint[0].description;
-              }
-
-              if (resp.redhat) {
-                if (resp.redhat.advisories) {
-                  if (resp.redhat.advisories[0].bugzilla) {
-                    cvetitle = resp.redhat.advisories[0].bugzilla.title;
-                  }
-                }
+              if (resp.vulnerabilities[0].cve.cisaVulnerabilityName) {
+                cvetitle = resp.vulnerabilities[0].cve.cisaVulnerabilityName;
               }
 
               if (cvetitle === '') {
-                cvetitle = resp.id;
+                cvetitle = resp.vulnerabilities[0].cve.id;
               }
 
-              if (resp.cvss) {
-                for (let _i = 0; _i < severityRatings.length; _i++) {
-                  if (severityRatings[_i].bottom <= resp.cvss && severityRatings[_i].top >= resp.cvss) {
-                    severity = severityRatings[_i].name;
+              if (resp.vulnerabilities[0].cve.metrics) {
+
+
+
+                if(resp.vulnerabilities[0].cve.metrics.cvssMetricV30) {
+
+                  for (let _i = 0; _i < severityRatings.length; _i++) {
+                    if (severityRatings[_i].bottom <= resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.baseScore && severityRatings[_i].top >= resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.baseScore) {
+                      severity = severityRatings[_i].name;
+                      cvss = resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.baseScore;
+                      cvssv = resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.vectorString;
+                    }
                   }
-                }
-              }
-              let refer = '';
-              if (resp.references) {
 
-                for (let _i = 0; _i < resp.references.length; _i++) {
-                  refer += resp.references[_i] + '\n';
+                } else if (resp.vulnerabilities[0].cve.metrics.cvssMetricV2) {
+
+
+                  for (let _i = 0; _i < severityRatings.length; _i++) {
+                    if (severityRatings[_i].bottom <= resp.vulnerabilities[0].cve.metrics.cvssMetricV2[0].cvssData.baseScore && severityRatings[_i].top >= resp.vulnerabilities[0].cve.metrics.cvssMetricV2[0].cvssData.baseScore) {
+                      severity = severityRatings[_i].name;
+                      cvss = resp.vulnerabilities[0].cve.metrics.cvssMetricV2[0].cvssData.baseScore;
+                    }
+                  }
+
+                }
+
+              }
+
+              let refer = '';
+              if (resp.vulnerabilities[0].cve.references) {
+                for (let _i = 0; _i < resp.vulnerabilities[0].cve.references.length; _i++) {
+                  refer += resp.vulnerabilities[0].cve.references[_i].url + '\n';
                 }
 
               }
@@ -480,13 +476,13 @@ export class DialogAddissueComponent implements OnInit {
                 title: cvetitle,
                 poc: pocgithub,
                 files: [],
-                desc: resp.summary,
+                desc: resp.vulnerabilities[0].cve.descriptions[0].value,
                 severity: severity,
                 status: 1,
                 ref: refer,
-                cvss: resp.cvss,
-                cvss_vector: '',
-                cve: resp.id,
+                cvss: cvss,
+                cvss_vector: cvssv,
+                cve: resp.vulnerabilities[0].cve.id,
                 bounty: [],
                 tags: [],
                 date: this.getcurrentDate()

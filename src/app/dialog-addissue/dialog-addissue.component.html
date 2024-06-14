@@ -80,7 +80,7 @@
       <div *ngIf="sourceSelect == 'CVE'">
         <mat-form-field class="example-full-width" color="accent">
           <mat-label>CVE</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2016-0077" [formControl]="mycve">
+          <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2024-5961" [formControl]="mycve">
           <mat-error *ngIf="mycve.hasError('notempty')">
             <strong>CVE must not be empty!</strong>
           </mat-error>
@@ -91,7 +91,7 @@
             <strong>CVE not found!</strong>
           </mat-error>
         </mat-form-field>
-        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://cve.circl.lu/">cve.circl.lu</a></small></span>
+        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://nvd.nist.gov/">nvd.nist.gov</a></small></span>
     </div>
     
     <div *ngIf="sourceSelect == 'MMOBILE'">
