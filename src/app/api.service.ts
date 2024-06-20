@@ -18,6 +18,15 @@ export class ApiService {
               });
   }
 
+//  getCVENVD(cve: string): Promise<any> {
+//    return this.http.get<any>('https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=' + cve)
+//               .toPromise()
+//               .then(response => response)
+//               .catch(error => {
+//                console.log('CVE error: ', error);
+//              });
+//  }
+
   getCVEbyCPE(cpe: string): Promise<any> {
     return this.http.get<any>('https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=' + cpe)
                .toPromise()
