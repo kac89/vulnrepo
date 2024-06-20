@@ -94,7 +94,7 @@ export class DialogEditorFullscreenComponent implements OnInit {
 
       const body = token.rows.map((res:any) => {
         return "<tr>" + res.map((res2:any) => {
-          return "<td>"+DOMPurify.sanitize(res2.text)+"</td>";
+          return "<td class='tableb'>"+DOMPurify.sanitize(res2.text)+"</td>";
         }).join("") + "</tr>";
       }).join("");
 
