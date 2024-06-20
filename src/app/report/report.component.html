@@ -93,7 +93,7 @@
             <div style="position:relative;">
               <textarea matInput style="display:block;" rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope" value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
 
-              <div style="position:absolute;bottom: 10px; right: 10px;">
+              <div style="position:absolute;top: 10px; right: 10px;">
                 <button mat-icon-button color="accent" (click)="editorFullscreenScope()" title="Fullscreen Editor">
                   <mat-icon>fullscreen</mat-icon>
                 </button>
@@ -320,7 +320,7 @@
                 <div style="position:relative;">
                   <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8" style="display:block;"></textarea>
 
-                  <div style="position:absolute;bottom: 10px; right: 10px;">
+                  <div style="position:absolute;top: 10px; right: 10px;">
     
                     <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)" title="Fullscreen Editor">
                       <mat-icon>fullscreen</mat-icon>

@@ -4,6 +4,24 @@ import { UntypedFormControl } from '@angular/forms';
 import { marked } from 'marked'
 import * as DOMPurify from 'dompurify';
 
+export interface Table {
+  type: 'table';
+  raw: string;
+  align: Array<'center' | 'left' | 'right' | null>;
+  header: TableCell[];
+  rows: TableCell[][];
+}
+
+export interface TableRow {
+  text: string;
+}
+
+export interface TableCell {
+  text: string;
+  header: boolean;
+  align: 'center' | 'left' | 'right' | null;
+}
+
 @Component({
   selector: 'app-dialog-editor-fullscreen',
   standalone: false,
@@ -44,43 +62,44 @@ export class DialogEditorFullscreenComponent implements OnInit {
 
     // add Markdown rendering
     const renderer = new marked.Renderer();
-    renderer.code = function (code, infostring, escaped) {
-      return `<code>` + DOMPurify.sanitize(code) + `</code>`;
+    renderer.code = function (token) {
+      return `<code>` + DOMPurify.sanitize(token.text) + `</code>`;
     };
 
-    renderer.blockquote = function (quote) {
-      return `<blockquote>` + DOMPurify.sanitize(quote) + `</blockquote>`;
+    renderer.blockquote = function (token) {
+      return `<blockquote><p>` + DOMPurify.sanitize(token.text) + `</p></blockquote>`;
     };
 
-    renderer.link = function( href, title, text ) {
+    renderer.link = function( token: any ) {
 
     try {
-      var prot = decodeURIComponent(unescape(href))
+      var prot = decodeURIComponent(unescape(token.href))
         .replace(/[^\w:]/g, '')
         .toLowerCase();
     } catch (e) {
-      return text;
+      return token.text;
     }
     if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
-      return text;
+      return token.text;
     }
 
-      return '<a target="_blank" class="active-link" rel="nofollow" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
+      return '<a target="_blank" class="active-link" rel="nofollow" href="'+ DOMPurify.sanitize(token.href) +'" title="' + DOMPurify.sanitize(token.title) + '">' + DOMPurify.sanitize(token.text) + '</a>';
     }
 
-    renderer.table = function(header, body) {
-      return "<div class='table-responsive'>"
-      + "<table class='tablemd'>"
-          + "<thead class='tablemd'>"
-          + header
-          + "</thead>"
-          + "<tbody>"
-          + body
-          + "</tbody>"
-      + "</table>"
-  + "</div>";
-    }
+    renderer.table = function(token: any) {
 
+      const header = token.header.map((res:any) => {
+        return "<th>"+DOMPurify.sanitize(res.text)+"</th>";
+      }).join("");
+
+      const body = token.rows.map((res:any) => {
+        return "<tr>" + res.map((res2:any) => {
+          return "<td>"+DOMPurify.sanitize(res2.text)+"</td>";
+        }).join("") + "</tr>";
+      }).join("");
+
+        return "<div class='table-responsive'><table class='tablemd'><thead class='tablemd'><tr>" + header + "</tr></thead><tbody>" + body + "</tr></tbody></table></div>";      
+    }
 
     this.previewfield.setValue(marked.parse(value, { renderer: renderer }));
   }
