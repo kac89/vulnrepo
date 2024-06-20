@@ -89,7 +89,7 @@ export class DialogEditorFullscreenComponent implements OnInit {
     renderer.table = function(token: any) {
 
       const header = token.header.map((res:any) => {
-        return "<th>"+DOMPurify.sanitize(res.text)+"</th>";
+        return "<th class='titlepad'>"+DOMPurify.sanitize(res.text)+"</th>";
       }).join("");
 
       const body = token.rows.map((res:any) => {
