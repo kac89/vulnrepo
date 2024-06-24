@@ -330,19 +330,21 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.calendar.activeDate = new Date(this.decryptedReportDataChanged.report_metadata.starttest);
       this.calendar.updateTodaysDate(); // update calendar state
     }
-    
+
   }
 
   onDateChangeReportstart(event) {
     const newdate = new Date(event.value).getTime();
     this.decryptedReportDataChanged.report_metadata.starttest = newdate;
     this.calendarDateChanged();
+    this.sureYouWanttoLeave();
   }
 
   onDateChangeReportend(event) {
     const newdate = new Date(event.value).getTime();
     this.decryptedReportDataChanged.report_metadata.endtest = newdate;
     this.calendarDateChanged();
+    this.sureYouWanttoLeave();
   }
 
   canDeactivate() {
@@ -1357,6 +1359,7 @@ Sample code here\n\
       if (result) {
         if (result !== 'nochanges') {
           this.report_info.report_name = result;
+          this.sureYouWanttoLeave();
         }
       }
     });
