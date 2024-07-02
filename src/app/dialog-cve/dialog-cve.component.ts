@@ -60,28 +60,27 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
           if (resp !== null && resp !== undefined) {
             // if everything OK
 
-            if (resp.vulnerabilities[0].cve.id) {
-                this.results = resp.vulnerabilities[0].cve;
-                this.show = false;
-                this.gbug = resp.githubpoc;
-                
-                this.dataSource = new MatTableDataSource(this.gbug.items);
-                setTimeout(() => this.dataSource.paginator = this.paginator);
+            let githubcve = resp.githubcve;
+            let githubpoc = resp.githubpoc;
 
-                this.results.references = [...this.results.references];
+            this.show = false;
 
-                this.dataSource2 = new MatTableDataSource(this.results.references);
-                setTimeout(() => this.dataSource2.paginator = this.paginator2);
-
+            if (githubpoc.total_count === 0 && Object.keys(githubcve).length === 0) {
+              this.show = false;
+              this.err_msg = 'CVE not found.';
             } else {
 
-              this.results = resp.vulnerabilities[0].cve;
-              this.show = false;
-              this.gbug = resp.githubpoc;
-              this.dataSource = new MatTableDataSource(this.gbug.items);
-              setTimeout(() => this.dataSource.paginator = this.paginator);
+              this.results = [];
+              this.results.descriptions = githubcve.containers.cna.descriptions;
+              this.results.references = githubcve.containers.cna.references;
 
+              this.dataSource2 = new MatTableDataSource(this.results.references);
+              setTimeout(() => this.dataSource2.paginator = this.paginator2);
+
+              this.dataSource = new MatTableDataSource(githubpoc.items);
+              setTimeout(() => this.dataSource.paginator = this.paginator);
             }
+
 
             if (resp.error) {
               this.err_msg = resp.error;
