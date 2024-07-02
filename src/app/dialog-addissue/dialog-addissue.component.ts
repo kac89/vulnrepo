@@ -419,39 +419,39 @@ export class DialogAddissueComponent implements OnInit {
           if (resp !== null && resp !== undefined) {
             // if everything OK
 
-            
+            let githubcve = resp.githubcve;
+            let githubpoc = resp.githubpoc;
 
-            if (resp.vulnerabilities[0].cve.id) {
+            if (githubcve.cveMetadata.cveId) {
               let cvetitle = '';
-              if (resp.vulnerabilities[0].cve.cisaVulnerabilityName) {
-                cvetitle = resp.vulnerabilities[0].cve.cisaVulnerabilityName;
+
+              
+              if (githubcve.containers.cna.title) {
+                cvetitle = githubcve.containers.cna.title;
               }
 
-              if (cvetitle === '') {
-                cvetitle = resp.vulnerabilities[0].cve.id;
+              if (cvetitle === '' || cvetitle === undefined) {
+                cvetitle = githubcve.cveMetadata.cveId;
               }
 
-              if (resp.vulnerabilities[0].cve.metrics) {
+              if (githubcve.containers.cna.metrics) {
 
-
-
-                if(resp.vulnerabilities[0].cve.metrics.cvssMetricV30) {
+                if(githubcve.containers.cna.metrics.cvssMetricV30) {
 
                   for (let _i = 0; _i < severityRatings.length; _i++) {
-                    if (severityRatings[_i].bottom <= resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.baseScore && severityRatings[_i].top >= resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.baseScore) {
+                    if (severityRatings[_i].bottom <= githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.baseScore && severityRatings[_i].top >= githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.baseScore) {
                       severity = severityRatings[_i].name;
-                      cvss = resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.baseScore;
-                      cvssv = resp.vulnerabilities[0].cve.metrics.cvssMetricV30[0].cvssData.vectorString;
+                      cvss = githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.baseScore;
+                      cvssv = githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.vectorString;
                     }
                   }
 
-                } else if (resp.vulnerabilities[0].cve.metrics.cvssMetricV2) {
-
+                } else if (githubcve.containers.cna.metrics.cvssMetricV2) {
 
                   for (let _i = 0; _i < severityRatings.length; _i++) {
-                    if (severityRatings[_i].bottom <= resp.vulnerabilities[0].cve.metrics.cvssMetricV2[0].cvssData.baseScore && severityRatings[_i].top >= resp.vulnerabilities[0].cve.metrics.cvssMetricV2[0].cvssData.baseScore) {
+                    if (severityRatings[_i].bottom <= githubcve.containers.cna.metrics.cvssMetricV2[0].cvssData.baseScore && severityRatings[_i].top >= githubcve.containers.cna.metrics.cvssMetricV2[0].cvssData.baseScore) {
                       severity = severityRatings[_i].name;
-                      cvss = resp.vulnerabilities[0].cve.metrics.cvssMetricV2[0].cvssData.baseScore;
+                      cvss = githubcve.containers.cna.metrics.cvssMetricV2[0].cvssData.baseScore;
                     }
                   }
 
@@ -460,29 +460,29 @@ export class DialogAddissueComponent implements OnInit {
               }
 
               let refer = '';
-              if (resp.vulnerabilities[0].cve.references) {
-                for (let _i = 0; _i < resp.vulnerabilities[0].cve.references.length; _i++) {
-                  refer += resp.vulnerabilities[0].cve.references[_i].url + '\n';
+              if (githubcve.containers.cna.references) {
+                for (let _i = 0; _i < githubcve.containers.cna.references.length; _i++) {
+                  refer += githubcve.containers.cna.references[_i].url + '\n';
                 }
 
               }
 
               let pocgithub = '';
-              for (let _i = 0; _i < resp.githubpoc.items.length; _i++) {
-                pocgithub += resp.githubpoc.items[_i].html_url + '\n';
+              for (let _i = 0; _i < githubpoc.items.length; _i++) {
+                pocgithub += githubpoc.items[_i].html_url + '\n';
               }
 
               const def = {
                 title: cvetitle,
                 poc: pocgithub,
                 files: [],
-                desc: resp.vulnerabilities[0].cve.descriptions[0].value,
+                desc: githubcve.containers.cna.descriptions[0].value,
                 severity: severity,
                 status: 1,
                 ref: refer,
                 cvss: cvss,
                 cvss_vector: cvssv,
-                cve: resp.vulnerabilities[0].cve.id,
+                cve: githubcve.cveMetadata.cveId,
                 bounty: [],
                 tags: [],
                 date: this.getcurrentDate()
