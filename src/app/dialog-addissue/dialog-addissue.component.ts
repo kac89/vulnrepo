@@ -436,23 +436,23 @@ export class DialogAddissueComponent implements OnInit {
 
               if (githubcve.containers.cna.metrics) {
 
-                if(githubcve.containers.cna.metrics.cvssMetricV30) {
+                for (let _i = 0; _i < githubcve.containers.cna.metrics.length; _i++) {
+                  const ss = Object.keys(githubcve.containers.cna.metrics[_i]);
+                  for (let x = 0; x < ss.length; x++) {
 
-                  for (let _i = 0; _i < severityRatings.length; _i++) {
-                    if (severityRatings[_i].bottom <= githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.baseScore && severityRatings[_i].top >= githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.baseScore) {
-                      severity = severityRatings[_i].name;
-                      cvss = githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.baseScore;
-                      cvssv = githubcve.containers.cna.metrics.cvssMetricV30[0].cvssData.vectorString;
+                    if (githubcve.containers.cna.metrics[_i][ss[x]].baseScore !== undefined) {
+                      cvss = githubcve.containers.cna.metrics[_i][ss[x]].baseScore;
                     }
-                  }
+                    if (githubcve.containers.cna.metrics[_i][ss[x]].baseSeverity !== undefined) {
 
-                } else if (githubcve.containers.cna.metrics.cvssMetricV2) {
+                      function FirstLetter(string) {
+                        string = string.toLowerCase();
+                        return string.charAt(0).toUpperCase() + string.slice(1);
+                      }
 
-                  for (let _i = 0; _i < severityRatings.length; _i++) {
-                    if (severityRatings[_i].bottom <= githubcve.containers.cna.metrics.cvssMetricV2[0].cvssData.baseScore && severityRatings[_i].top >= githubcve.containers.cna.metrics.cvssMetricV2[0].cvssData.baseScore) {
-                      severity = severityRatings[_i].name;
-                      cvss = githubcve.containers.cna.metrics.cvssMetricV2[0].cvssData.baseScore;
+                      severity = FirstLetter(githubcve.containers.cna.metrics[_i][ss[x]].baseSeverity);
                     }
+                    
                   }
 
                 }
