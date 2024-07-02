@@ -73,7 +73,10 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
               this.results = [];
               this.results.descriptions = githubcve.containers.cna.descriptions;
               this.results.references = githubcve.containers.cna.references;
-
+              this.results.assigner = githubcve.cveMetadata.assignerShortName;
+              this.results.published = githubcve.cveMetadata.datePublished;
+              this.results.modified = githubcve.cveMetadata.dateUpdated;
+              
               this.dataSource2 = new MatTableDataSource(this.results.references);
               setTimeout(() => this.dataSource2.paginator = this.paginator2);
 

@@ -19,12 +19,15 @@
         </div>
         
         <p *ngIf="results?.descriptions"><b>Description:</b> {{ results?.descriptions[0].value }}</p>
-        <p>
+        
+       <!-- 
+       <p>
             <mat-chip-listbox>
-                <!--<mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option> -->
-                <a *ngIf="results?.weaknesses" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.weaknesses[0].description[0].value }}"><mat-chip-option>{{ results?.weaknesses[0].description[0].value }}</mat-chip-option></a>
+                <mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option>
+                <a *ngIf="results?.weaknesses" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.weaknesses.descriptions[0].cweId }}"><mat-chip-option>{{ results?.weaknesses.descriptions[0].cweId }}</mat-chip-option></a>
             </mat-chip-listbox>
-        </p>
+        </p> 
+       --> 
 
         <h2 *ngIf="dataSource.data.length != 0">Github POCs</h2>
 
