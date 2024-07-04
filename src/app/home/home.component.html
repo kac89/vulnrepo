@@ -21,210 +21,184 @@
 
 </div>
 
+
+<br>
+
+<mat-accordion>
+
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title> <mat-icon>list</mat-icon> Features list </mat-panel-title>
+      <mat-panel-description>
+        The list includes only some of the basic features
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div fxLayout="row wrap" fxLayoutGap="10px grid">
+      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+  
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">security</mat-icon>
+              <mat-card-title>Security</mat-card-title>
+              <mat-card-subtitle>
+                Project use browser for encrypt/decrypt (AES) and store data in locally. Full confidentiality of data,
+                <span style="text-decoration: underline;text-decoration-color: #69f0ae">end-to-end encryption</span>, by
+                default nothing is sent out. No backend system, only front-end technology, pure JS client.
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+        <br>
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">share</mat-icon>
+              <mat-card-title>Share report</mat-card-title>
+              <mat-card-subtitle>
+                You can share your report using AES encryption by default.
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+        <br>
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">cloud_download</mat-icon>
+              <mat-card-title>TXT & HTML & PDF & JSON</mat-card-title>
+              <mat-card-subtitle>
+                You can download report in TXT, HTML formats!. If you need PDF just 'print as PDF' html report. The JSON
+                format opens up completely new possibilities for processing report data.
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+        <br>
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">attach_file</mat-icon>
+              <mat-card-title>Attachments</mat-card-title>
+              <mat-card-subtitle>
+                You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically doing
+                checksum sha256 of attached file.
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+  
+      </div>
+  
+      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">info</mat-icon>
+              <mat-card-title>Issues templates!</mat-card-title>
+              <mat-card-subtitle>
+                Create own templates or use default. The use of templates greatly speeds up the work for pentester or
+                security auditor. Import CVE, CWE, MITRE ATT&CK or PCI DSS data also possible.
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+        <br>
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
+              <mat-card-title>Import issues from security scanners</mat-card-title>
+              <mat-card-subtitle>
+                Supported import from: Nmap, Nessus, Burp, OpenVAS, Bugcrowd, Trivy. After importing, easily manage and
+                edit vulnerabilities.
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+        <br>
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">track_changes</mat-icon>
+              <mat-card-title>Changelog</mat-card-title>
+              <mat-card-subtitle>
+                All important changes in report will be logged in to changelog and update to the next version of the
+                report.
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+        <br>
+        <div class="mdc-elevation--z11">
+          <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
+              <mat-card-title>Export Issues</mat-card-title>
+              <mat-card-subtitle>
+                You can export issues to popular bugtrackers like Atlassian JIRA or use secure way to share only issues.
+                Using JSON format, you can write your own integration into any system, like LaTeX, MS docs etc...
+              </mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+  
+  
+      </div>
+  
+    </div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title> <mat-icon>photo_library</mat-icon> Screenshots & Video </mat-panel-title>
+      <mat-panel-description>
+        Some screenshots of the report creation process and video tutorial to watch!
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
+
+      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+        <a target="_blank" href="assets/screen1.png"><img style="width: 250px" src="assets/screen1.png"></a>
+      </div>
+    
+      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+        <a target="_blank" href="assets/screen2.png"><img style="width: 250px" src="assets/screen2.png"></a>
+      </div>
+    
+      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+        <a target="_blank" href="assets/screen5.png"><img style="width: 250px" src="assets/screen5.png"></a>
+      </div>
+    
+    </div>
+    
+    <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
+    
+      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+        <a target="_blank" href="assets/screen3.png"><img style="width: 250px" src="assets/screen3.png"></a>
+      </div>
+    
+      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
+        <a target="_blank" href="assets/screen4.png"><img style="width: 250px" src="assets/screen4.png"></a>
+      </div>
+    
+      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper_red">
+        <a target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU"><img style="width: 350px" src="assets/yt_screen.jpg"></a>
+      </div>
+    
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<br>
 <hr style="border: 0;height: 2px; background-image: linear-gradient(to right, #000000, #69f0ae, #000000);">
-<br>
-
-
-<cdk-accordion class="example-accordion">
-    <cdk-accordion-item
-
-      #accordionItem="cdkAccordionItem"
-      class="example-accordion-item"
-      role="button"
-      tabindex="0"
-      [attr.id]="'accordion-header-0'"
-      [attr.aria-expanded]="accordionItem.expanded"
-      [attr.aria-controls]="'accordion-body-0'">
-      <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-        <span fxLayoutAlign="start start" fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="33%"></span>
-        <span fxLayoutAlign="center center" fxFlex="33%" fxFlex.sm="33%" fxFlex.xs="33%">
-          <h3>
-            <mat-icon>photo_library</mat-icon> Screenshots & Video
-          </h3>
-        </span>
-        
-        <span fxFlex="33%" fxLayoutAlign="end center" fxFlex.sm="33%" fxFlex.xs="33%" class="example-accordion-item-description">
-          Click to {{ accordionItem.expanded ? 'close' : 'open' }} <mat-icon>{{ accordionItem.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
-        </span>
-      </div>
-      <div
-        class="example-accordion-item-body"
-        role="region"
-        [style.display]="accordionItem.expanded ? '' : 'none'"
-        [attr.id]="'accordion-body-0'"
-        [attr.aria-labelledby]="'accordion-header-0'">
-
-
-        <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
-
-          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-            <a target="_blank" href="assets/screen1.png"><img style="width: 250px" src="assets/screen1.png"></a>
-          </div>
-        
-          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-            <a target="_blank" href="assets/screen2.png"><img style="width: 250px" src="assets/screen2.png"></a>
-          </div>
-        
-          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-            <a target="_blank" href="assets/screen5.png"><img style="width: 250px" src="assets/screen5.png"></a>
-          </div>
-        
-        </div>
-        
-        <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
-        
-          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-            <a target="_blank" href="assets/screen3.png"><img style="width: 250px" src="assets/screen3.png"></a>
-          </div>
-        
-          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-            <a target="_blank" href="assets/screen4.png"><img style="width: 250px" src="assets/screen4.png"></a>
-          </div>
-        
-          <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper_red">
-            <a target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU"><img style="width: 350px" src="assets/yt_screen.jpg"></a>
-          </div>
-        
-        </div>
-      </div>
-    </cdk-accordion-item>
-</cdk-accordion>
-
-
-
-<br>
-<mat-card class="my-card-content">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <mat-icon>list</mat-icon>
-    </div>
-    <mat-card-title style="display: contents">Features list</mat-card-title>
-  </mat-card-header>
-  <div fxLayout="row wrap" fxLayoutGap="10px grid">
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">security</mat-icon>
-            <mat-card-title>Security</mat-card-title>
-            <mat-card-subtitle>
-              Project use browser for encrypt/decrypt (AES) and store data in locally. Full confidentiality of data,
-              <span style="text-decoration: underline;text-decoration-color: #69f0ae">end-to-end encryption</span>, by
-              default nothing is sent out. No backend system, only front-end technology, pure JS client.
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-      <br>
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">share</mat-icon>
-            <mat-card-title>Share report</mat-card-title>
-            <mat-card-subtitle>
-              You can share your report using AES encryption by default.
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-      <br>
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">cloud_download</mat-icon>
-            <mat-card-title>TXT & HTML & PDF & JSON</mat-card-title>
-            <mat-card-subtitle>
-              You can download report in TXT, HTML formats!. If you need PDF just 'print as PDF' html report. The JSON
-              format opens up completely new possibilities for processing report data.
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-      <br>
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">attach_file</mat-icon>
-            <mat-card-title>Attachments</mat-card-title>
-            <mat-card-subtitle>
-              You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically doing
-              checksum sha256 of attached file.
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-
-    </div>
-
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">info</mat-icon>
-            <mat-card-title>Issues templates!</mat-card-title>
-            <mat-card-subtitle>
-              Create own templates or use default. The use of templates greatly speeds up the work for pentester or
-              security auditor. Import CVE, CWE, MITRE ATT&CK or PCI DSS data also possible.
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-      <br>
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
-            <mat-card-title>Import issues from security scanners</mat-card-title>
-            <mat-card-subtitle>
-              Supported import from: Nmap, Nessus, Burp, OpenVAS, Bugcrowd, Trivy. After importing, easily manage and
-              edit vulnerabilities.
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-      <br>
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">track_changes</mat-icon>
-            <mat-card-title>Changelog</mat-card-title>
-            <mat-card-subtitle>
-              All important changes in report will be logged in to changelog and update to the next version of the
-              report.
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-      <br>
-      <div class="mdc-elevation--z11">
-        <mat-card appearance="outlined" style="padding: 12px;">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">import_export</mat-icon>
-            <mat-card-title>Export Issues</mat-card-title>
-            <mat-card-subtitle>
-              You can export issues to popular bugtrackers like Atlassian JIRA or use secure way to share only issues.
-              Using JSON format, you can write your own integration into any system, like LaTeX, MS docs etc...
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-
-
-    </div>
-
-  </div>
-
-</mat-card>
-
-<br>
 <br>
 
 <div fxLayout="column" fxLayoutGap="5px grid">
@@ -238,10 +212,5 @@
   </div>
   
 </div>
-<br>
-<hr style="border: 0;height: 2px; background-image: linear-gradient(to right, #000000, #69f0ae, #000000);">
-<br>
-<br>
-<br>
 <br>
 <br>
