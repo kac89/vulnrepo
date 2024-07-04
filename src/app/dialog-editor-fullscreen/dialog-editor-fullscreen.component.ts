@@ -70,6 +70,12 @@ export class DialogEditorFullscreenComponent implements OnInit {
       return `<blockquote><p>` + DOMPurify.sanitize(token.text) + `</p></blockquote>`;
     };
 
+    renderer.image = function (token) {
+      //return `<img src="` + DOMPurify.sanitize(token.href) + `" alt="` + DOMPurify.sanitize(token.text) + `" title="` + DOMPurify.sanitize(token.title) + `">`;
+      //disable image parse
+      return DOMPurify.sanitize(token.href);
+    };
+
     renderer.link = function( token: any ) {
 
     try {
