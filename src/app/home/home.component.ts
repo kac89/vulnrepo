@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,signal } from '@angular/core';
 
 @Component({
   standalone: false,
@@ -11,7 +11,7 @@ export class HomeComponent implements OnInit {
 
   items = ['Screenshots'];
   expandedIndex = 0;
-
+  readonly panelOpenState = signal(false);
   constructor() { }
 
   ngOnInit() {
