@@ -13,7 +13,7 @@
           <mat-label>Templates source</mat-label>
           <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
             <mat-option value="VULNREPO">VULNRΞPO</mat-option>
-            <mat-option value="CVE">CVE (ONLINE DB)</mat-option>
+            <mat-option value="CVE"><mat-icon color="accent">public</mat-icon> CVE (ONLINE Database)</mat-option>
             <mat-option value="CWE">CWE Research Concepts</mat-option>
             <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
             <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
@@ -26,7 +26,6 @@
         </mat-form-field>
       </div>
     
-
     </div>
 
 
@@ -91,7 +90,6 @@
             <strong>CVE not found!</strong>
           </mat-error>
         </mat-form-field>
-        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://nvd.nist.gov/">nvd.nist.gov</a></small></span>
     </div>
     
     <div *ngIf="sourceSelect == 'MMOBILE'">

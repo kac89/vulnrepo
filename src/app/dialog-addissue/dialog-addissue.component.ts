@@ -416,15 +416,13 @@ export class DialogAddissueComponent implements OnInit {
         this.show = true;
         this.apiService.getCVE(data).then(resp => {
 
-          if (resp !== null && resp !== undefined) {
+          if (resp !== null && resp !== undefined && Object.keys(resp.githubcve).length !== 0) {
             // if everything OK
-
             let githubcve = resp.githubcve;
             let githubpoc = resp.githubpoc;
 
             if (githubcve.cveMetadata.cveId) {
               let cvetitle = '';
-
               
               if (githubcve.containers.cna.title) {
                 cvetitle = githubcve.containers.cna.title;
