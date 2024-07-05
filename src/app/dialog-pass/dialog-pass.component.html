@@ -1,9 +1,6 @@
-<div class="mdc-card my-card-content">
-  <h1 class="mat-display">
-    <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report
-  </h1>
-
-
+<h2 mat-dialog-title>
+  <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report</h2>
+<mat-dialog-content>
   <div>
 
     <form class="example-form">
@@ -25,16 +22,19 @@
       </div>
     </form>
   </div>
-  <br>
-  <div md-dialog-actions>
-    <div fxLayout="row" fxLayoutGap="10px grid">
-      <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="start">
-        <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)"><mat-icon>check</mat-icon>
-          Decrypt</button>
-      </div>
-      <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="end">
-        <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
-      </div>
+</mat-dialog-content>
+<mat-dialog-actions style="padding-left: 24px;">
+
+  <div fxLayout="row" fxLayoutGap="1px grid">
+
+    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="start">
+      <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)"><mat-icon>check</mat-icon>
+        Decrypt</button>
     </div>
+
+    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="end">
+      <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
+    </div>
+
   </div>
-</div>
+</mat-dialog-actions>
