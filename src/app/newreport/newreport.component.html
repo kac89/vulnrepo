@@ -20,15 +20,10 @@
           <mat-form-field class="example-full-width" color="accent">
             <input (keydown.enter)="$event.preventDefault()" [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
 
-            <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
-              <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <button matSuffix mat-icon-button aria-label="Generate security key" title="Generate security key" color="accent" (click)="generatePassword()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">
-              <mat-icon>casino</mat-icon>
-            </button>
-            <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy security key" title="Copy security key" color="accent" [cdkCopyToClipboard]="pass1model.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">
-              <mat-icon>content_copy</mat-icon>
-            </button>
+            <mat-icon matSuffix (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-icon matSuffix (click)="generatePassword()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
+            <mat-icon matSuffix #tooltip="matTooltip" [cdkCopyToClipboard]="pass1model.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">content_copy</mat-icon>
+            
             <mat-error *ngIf="pass1model.hasError('tooweakpass')">
               <strong>Security key is too weak!</strong>
             </mat-error>
@@ -40,15 +35,10 @@
           <mat-form-field class="example-full-width" color="accent">
             <input (keydown.enter)="$event.preventDefault()" [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput placeholder="Re-enter report security key (min. 8 char length)" #pass2 [type]="hide ? 'password' : 'text'">
             
-            <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
-              <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <button matSuffix mat-icon-button aria-label="Generate security key" title="Generate security key" color="accent" (click)="generatePassword()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">
-              <mat-icon>casino</mat-icon>
-            </button>
-            <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy security key" title="Copy security key" color="accent" [cdkCopyToClipboard]="pass2model.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">
-              <mat-icon>content_copy</mat-icon>
-            </button>
+            <mat-icon matSuffix (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-icon matSuffix (click)="generatePassword()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
+            <mat-icon matSuffix #tooltip="matTooltip" [cdkCopyToClipboard]="pass2model.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">content_copy</mat-icon>
+
             <mat-error *ngIf="pass2model.hasError('tooweakpass')">
               <strong>Security key is too weak!</strong>
             </mat-error>
