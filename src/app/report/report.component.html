@@ -172,9 +172,9 @@
         </div>
 
         <div class="mat-mdc-card-title" style="padding-left: 16px;">
-          <span>Issues
-            <span class="labelissues">{{decryptedReportDataChanged.report_vulns.length}}</span>
-          </span>
+          <span>
+            Issues <span class="labelissues">{{decryptedReportDataChanged.report_vulns.length}}</span>
+        </span>
         </div>
         <div style="flex-grow: 1"></div>
        
@@ -570,9 +570,11 @@
       <br>
 
       <div class="banner">
-        <div class="center-me"><button class="mat-elevation-z9" mat-raised-button color="accent" (click)="addissue()">
+        <div class="center-me">
+          <button class="mat-elevation-z9" mat-fab extended color="accent" (click)="addissue()">
             <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add new issue
-          </button></div>
+          </button>
+        </div>
       </div>
     </mat-card-content>
 
@@ -972,7 +974,7 @@
         <div fxLayoutAlign="center start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
             <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <button style="width: 100%;" class="mdc-elevation--z11" mat-raised-button [matMenuTriggerFor]="aboveMenu2" color="accent">
+              <button style="width: 100%;" class="mdc-elevation--z11" mat-fab extended [matMenuTriggerFor]="aboveMenu2" color="accent">
                 <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon> Download encrypted
               </button>
               <mat-menu #aboveMenu2="matMenu" yPosition="above">
@@ -995,7 +997,7 @@
 
             <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-              <button mat-raised-button style="width: 100%;" class="mat-elevation-z9" color="warn" [matMenuTriggerFor]="aboveMenu">
+              <button mat-fab extended style="width: 100%;" class="mat-elevation-z9" color="warn" [matMenuTriggerFor]="aboveMenu">
                 <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
