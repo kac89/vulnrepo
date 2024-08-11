@@ -1947,6 +1947,7 @@ Date   | Description
     const buildchangelog = () => {
       let changelogArray = [];
 
+
       for (var i = 0; i < this.decryptedReportDataChanged.report_changelog.length; i++) {
 
         changelogArray.push(
@@ -1970,10 +1971,83 @@ Date   | Description
           }),
         );
 
+
       }
+
       return changelogArray;
     };
 
+
+    const buildmainauthors = () => {
+      let authorArray = [];
+
+      if (this.decryptedReportDataChanged.report_settings.report_remove_researchers === false) {
+
+        authorArray.push(
+          new Paragraph({
+            text: "Researcher",
+            heading: HeadingLevel.HEADING_1,
+            pageBreakBefore: true,
+            spacing: {
+              after: 200,
+              before: 200,
+            },
+          }),
+
+          ...buildauthors(),
+        );
+
+      }
+      return authorArray;
+    };
+
+    const buildmainchangelog = () => {
+      let authorArray = [];
+
+      if (this.decryptedReportDataChanged.report_settings.report_changelog_page === false) {
+
+        for (var i = 0; i < this.decryptedReportDataChanged.researcher.length; i++) {
+
+          authorArray.push(
+            new Paragraph({
+              text: "Changelog",
+              heading: HeadingLevel.HEADING_1,
+              spacing: {
+                after: 200,
+                before: 200,
+              },
+            }),
+
+            new Table({
+              columnWidths: [1500, 7510],
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      width: {
+                        size: 1500,
+                        type: WidthType.DXA,
+                      },
+                      children: [new Paragraph("Date")],
+                    }),
+                    new TableCell({
+                      width: {
+                        size: 7510,
+                        type: WidthType.DXA,
+                      },
+                      children: [new Paragraph("Description")],
+                    }),
+                  ],
+                }),
+                ...buildchangelog(),
+              ],
+            })
+          );
+
+        }
+      }
+      return authorArray;
+    };
 
     const buildauthors = () => {
       let authorArray = [];
@@ -2158,6 +2232,26 @@ Date   | Description
       return (el.severity === 'Info');
     });
 
+    const buildlogo = () => {
+      let logoArray = [];
+
+      if (this.decryptedReportDataChanged.report_settings.report_logo.logo) {
+        logoArray.push(
+
+          new ImageRun({
+            data: this.decryptedReportDataChanged.report_settings.report_logo.logo,
+            transformation: {
+              width: this.decryptedReportDataChanged.report_settings.report_logo.width,
+              height: this.decryptedReportDataChanged.report_settings.report_logo.height,
+            },
+          }),
+
+        );
+      }
+
+      return logoArray;
+    };
+
     const doc = new Document({
       sections: [
         {
@@ -2190,13 +2284,7 @@ Date   | Description
           children: [
             new Paragraph({
               children: [
-                new ImageRun({
-                  data: this.decryptedReportDataChanged.report_settings.report_logo.logo,
-                  transformation: {
-                    width: this.decryptedReportDataChanged.report_settings.report_logo.width,
-                    height: this.decryptedReportDataChanged.report_settings.report_logo.height,
-                  },
-                }),
+                ...buildlogo(),
               ],
             }),
             new Paragraph({
@@ -2673,51 +2761,9 @@ Date   | Description
             /// issues start
             ...buildParagraphissues(),
             /// issues end
-            new Paragraph({
-              text: "Researcher",
-              heading: HeadingLevel.HEADING_1,
-              pageBreakBefore: true,
-              spacing: {
-                after: 200,
-                before: 200,
-              },
-            }),
+            ...buildmainauthors(),
 
-            ...buildauthors(),
-
-            new Paragraph({
-              text: "Changelog",
-              heading: HeadingLevel.HEADING_1,
-              spacing: {
-                after: 200,
-                before: 200,
-              },
-            }),
-
-            new Table({
-              columnWidths: [1500, 7510],
-              rows: [
-                new TableRow({
-                  children: [
-                    new TableCell({
-                      width: {
-                        size: 1500,
-                        type: WidthType.DXA,
-                      },
-                      children: [new Paragraph("Date")],
-                    }),
-                    new TableCell({
-                      width: {
-                        size: 7510,
-                        type: WidthType.DXA,
-                      },
-                      children: [new Paragraph("Description")],
-                    }),
-                  ],
-                }),
-                ...buildchangelog(),
-              ],
-            })
+            ...buildmainchangelog(),
           ],
         },
       ],

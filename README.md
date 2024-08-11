@@ -15,8 +15,8 @@ Video walkthrough/Tutorial:
     - The use of templates greatly speeds up the work for pentester or security auditor. Import CVE, CWE, MITRE ATT&CK or PCI DSS data also possible.
  - Import issues from security scanners
     - Supported import from: Nmap, Nessus, Burp, OpenVAS, Bugcrowd, Trivy, NPM, Semgrep, Composer. After importing, easily manage and edit vulnerabilities.
- - TXT & HTML & PDF
-    - You can download report in TXT, HTML formats!. Also encrypted version of HTML report! If you need PDF just 'print as PDF' html report.
+ - TXT & HTML & DOCX & PDF
+    - You can download report in TXT, HTML, DOCX formats!. Also encrypted version of HTML report! If you need PDF just 'print as PDF' html report.
  - Attachments
     - You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically doing checksum sha256 of attached file.
  - Changelog
