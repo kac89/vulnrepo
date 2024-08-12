@@ -228,6 +228,18 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.calendarDateChanged();
       this.startDate = new Date(this.decryptedReportDataChanged.report_metadata.starttest);
 
+      // get css style
+      this.http.get('/assets/bootstrap.min.css', { responseType: 'text' }).subscribe(res => {
+        this.report_css = res;
+      });
+
+      // get bug bountys programs list, full credits: https://github.com/projectdiscovery/public-bugbounty-programs
+      this.http.get<any>('/assets/chaos-bugbounty-list.json?v=' + + new Date()).subscribe(res => {
+        this.bugbountylist = res.programs;
+      });
+
+      this.getReportProfiles();
+
     });
 
 
@@ -304,18 +316,6 @@ export class ReportComponent implements OnInit, OnDestroy {
               });
             }
           });
-
-          // get css style
-          this.http.get('/assets/bootstrap.min.css', { responseType: 'text' }).subscribe(res => {
-            this.report_css = res;
-          });
-
-          // get bug bountys programs list, full credits: https://github.com/projectdiscovery/public-bugbounty-programs
-          this.http.get<any>('/assets/chaos-bugbounty-list.json?v=' + + new Date()).subscribe(res => {
-            this.bugbountylist = res.programs;
-          });
-
-          this.getReportProfiles();
 
         }
       }
