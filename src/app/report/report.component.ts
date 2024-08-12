@@ -238,6 +238,8 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.bugbountylist = res.programs;
       });
 
+      this.getReportProfiles();
+
     });
 
 
@@ -314,8 +316,6 @@ export class ReportComponent implements OnInit, OnDestroy {
               });
             }
           });
-
-          this.getReportProfiles();
 
         }
       }
