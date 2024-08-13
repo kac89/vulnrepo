@@ -2101,6 +2101,13 @@ Date   | Description
       for (var i = 0; i < this.decryptedReportDataChanged.report_vulns[x].files.length; i++) {
 
         if (this.decryptedReportDataChanged.report_vulns[x].files[i].type.includes('image')) {
+
+          let filename = "";
+          filename = this.decryptedReportDataChanged.report_vulns[x].files[i].title;
+          if (this.decryptedReportDataChanged.report_settings.report_remove_attach_name === true) {
+            filename = "";
+          }
+
           filesArray.push(
 
             new ImageRun({
@@ -2110,7 +2117,18 @@ Date   | Description
                 height: 400,
               },
             }),
-
+            new TextRun({
+              text: 'sha256: ' + this.decryptedReportDataChanged.report_vulns[x].files[i].sha256checksum,
+              break: 1,
+            }),
+            new TextRun({
+              text: filename,
+              break: 1,
+            }),
+            new TextRun({
+              text: '',
+              break: 1,
+            })
           );
         }
 
@@ -2179,16 +2197,16 @@ Date   | Description
 
         let sev = "";
         if (this.decryptedReportDataChanged.report_vulns[i].severity.length > 0) {
-          sev = "Severity: "+this.decryptedReportDataChanged.report_vulns[i].severity;
+          sev = "Severity: " + this.decryptedReportDataChanged.report_vulns[i].severity;
           farr.push(sev);
         }
 
         if (this.decryptedReportDataChanged.report_settings.report_remove_issuestatus === false) {
-          if(this.decryptedReportDataChanged.report_vulns[i].status){
+          if (this.decryptedReportDataChanged.report_vulns[i].status) {
             const result = this.utilsService.issueStatustable.filter((sev) => sev.value === this.decryptedReportDataChanged.report_vulns[i].status);
             let stat = "";
             if (result[0].status) {
-              stat = "Issue status: "+result[0].status;
+              stat = "Issue status: " + result[0].status;
               farr.push(stat);
             }
           }
@@ -2197,7 +2215,7 @@ Date   | Description
         if (this.decryptedReportDataChanged.report_settings.report_remove_issuecvss === false) {
           let cvss = "";
           if (this.decryptedReportDataChanged.report_vulns[i].cvss.length > 0) {
-            cvss = "CVSS: "+this.decryptedReportDataChanged.report_vulns[i].cvss;
+            cvss = "CVSS: " + this.decryptedReportDataChanged.report_vulns[i].cvss;
             farr.push(cvss);
           }
         }
@@ -2205,7 +2223,7 @@ Date   | Description
         if (this.decryptedReportDataChanged.report_settings.report_remove_issuecve === false) {
           let cve = "";
           if (this.decryptedReportDataChanged.report_vulns[i].cve.length > 0) {
-            cve = "CVE: "+this.decryptedReportDataChanged.report_vulns[i].cve;
+            cve = "CVE: " + this.decryptedReportDataChanged.report_vulns[i].cve;
             farr.push(cve);
           }
         }
