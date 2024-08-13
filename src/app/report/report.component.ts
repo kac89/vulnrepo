@@ -2907,10 +2907,9 @@ Date   | Description
             /// issues start
             ...buildParagraphissues(),
             /// issues end
-            ...buildmainauthors(),
-
-            ...buildmainchangelog(),
             ...buildreportsummary(),
+            ...buildmainauthors(),
+            ...buildmainchangelog(),
           ],
         },
       ],
