@@ -201,6 +201,18 @@
 					</a>
 					</div>
 
+					<div class="list_summary">
+						<a href="#Summary" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+						aria-current="true">
+						<i style="font-size: 2rem;" class="bi bi-chat-square-text"></i>
+						<div class="d-flex gap-2 w-100 justify-content-between">
+							<div>
+								<h6 class="mb-0">Report summary</h6>
+								<p class="mb-0 opacity-75">Short comments from researcher.</p>
+							</div>
+						</div>
+					</a>
+					</div>
 
 					<div class="list_changelog">
 						<a href="#Changelog" class="list-group-item list-group-item-action d-flex gap-3 py-3"
@@ -323,7 +335,7 @@
 			<div class="row report_vulns bg-d"></div>
 
 			<br>
-			<h2 id="Report summary" class="report_summary_h2"></h2>
+			<h2 id="Summary" class="report_summary_h2"></h2>
 			<div class="report_summary"></div>
 
 			<br>
@@ -376,6 +388,7 @@
 		$('#reportdetal').hide();
         $('.wrongpass').hide();
 		$('.list_changelog').hide();
+		$('.list_summary').hide();
 		$('.list_researcher').hide();
 		$('.list_copyright').hide();
 		
@@ -813,7 +826,7 @@
 
 			// report summary
 			if (obj.report_summary !== "") {
-				$(".report_summary_h2").append('<i class="bi bi-card-heading"></i> Report summary');
+				$(".report_summary_h2").append('<i class="bi bi-chat-square-text"></i> Report summary');
 				const markedreport_summary = marked.parse(obj.report_summary, { renderer: renderer });
 				$(".report_summary").html(DOMPurify.sanitize(markedreport_summary));
 			}
@@ -881,6 +894,11 @@
 
 			if (obj.report_settings.report_remove_lastpage === false) {
 				$('.list_copyright').show();
+			}
+
+
+			if(obj.report_summary.length > 0) {
+				$('.list_summary').show();
 			}
 
 			//back to top
