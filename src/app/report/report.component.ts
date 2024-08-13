@@ -42,7 +42,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { DialogEditorFullscreenComponent } from '../dialog-editor-fullscreen/dialog-editor-fullscreen.component';
 import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-attach-preview.component';
 import { AlignmentType, Document, Footer, Header, Packer, PageBreak, HeadingLevel, ImageRun, PageNumber, NumberFormat, Paragraph, TextRun, TableOfContents, Table, TableCell, TableRow, WidthType } from "docx";
-
+import { UtilsService } from '../utils.service';
 export interface Tags {
   name: string;
 }
@@ -185,7 +185,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     public sessionsub: SessionstorageserviceService,
     private datePipe: DatePipe,
-    private dateAdapter: DateAdapter<Date>) {
+    private dateAdapter: DateAdapter<Date>,
+    private utilsService: UtilsService) {
     //console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
@@ -1977,6 +1978,32 @@ Date   | Description
       return changelogArray;
     };
 
+    const buildreportsummary = () => {
+      let authorArray = [];
+
+      if (this.decryptedReportDataChanged.report_summary.length > 0) {
+
+        authorArray.push(
+          new Paragraph({
+            text: "Report summary",
+            heading: HeadingLevel.HEADING_1,
+            pageBreakBefore: true,
+            spacing: {
+              after: 200,
+              before: 200,
+            },
+          }),
+          new Paragraph({
+            text: this.decryptedReportDataChanged.report_summary,
+            spacing: {
+              after: 200,
+            },
+          })
+        );
+
+      }
+      return authorArray;
+    };
 
     const buildmainauthors = () => {
       let authorArray = [];
@@ -2006,7 +2033,7 @@ Date   | Description
 
       if (this.decryptedReportDataChanged.report_settings.report_changelog_page === false) {
 
-        for (var i = 0; i < this.decryptedReportDataChanged.researcher.length; i++) {
+        if (this.decryptedReportDataChanged.report_changelog.length > 0) {
 
           authorArray.push(
             new Paragraph({
@@ -2093,6 +2120,31 @@ Date   | Description
       return filesArray;
     };
 
+    const buildtags = (x) => {
+      let tagsArray = [];
+
+      const tags = [];
+      for (var i = 0; i < this.decryptedReportDataChanged.report_vulns[x].tags.length; i++) {
+        tags.push(this.decryptedReportDataChanged.report_vulns[x].tags[i].name);
+      }
+      const xy = tags.join(", ");
+
+      tagsArray.push(
+        new TextRun({
+          text: xy,
+          break: 1,
+        }),
+        new TextRun({
+          text: '',
+          break: 1,
+        })
+
+      );
+
+
+      return tagsArray;
+    };
+
     const buildrefs = (x) => {
       let refArray = [];
       const ref = this.decryptedReportDataChanged.report_vulns[x].ref.split('\n');
@@ -2121,6 +2173,60 @@ Date   | Description
             before: 200,
           }
         }),
+        );
+
+        const farr = [];
+
+        let sev = "";
+        if (this.decryptedReportDataChanged.report_vulns[i].severity.length > 0) {
+          sev = "Severity: "+this.decryptedReportDataChanged.report_vulns[i].severity;
+          farr.push(sev);
+        }
+
+        if (this.decryptedReportDataChanged.report_settings.report_remove_issuestatus === false) {
+          if(this.decryptedReportDataChanged.report_vulns[i].status){
+            const result = this.utilsService.issueStatustable.filter((sev) => sev.value === this.decryptedReportDataChanged.report_vulns[i].status);
+            let stat = "";
+            if (result[0].status) {
+              stat = "Issue status: "+result[0].status;
+              farr.push(stat);
+            }
+          }
+        }
+
+        if (this.decryptedReportDataChanged.report_settings.report_remove_issuecvss === false) {
+          let cvss = "";
+          if (this.decryptedReportDataChanged.report_vulns[i].cvss.length > 0) {
+            cvss = "CVSS: "+this.decryptedReportDataChanged.report_vulns[i].cvss;
+            farr.push(cvss);
+          }
+        }
+
+        if (this.decryptedReportDataChanged.report_settings.report_remove_issuecve === false) {
+          let cve = "";
+          if (this.decryptedReportDataChanged.report_vulns[i].cve.length > 0) {
+            cve = "CVE: "+this.decryptedReportDataChanged.report_vulns[i].cve;
+            farr.push(cve);
+          }
+        }
+
+        const info = farr.join(", ");
+        paragraphArray.push(
+
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: info,
+                bold: false,
+                break: 1,
+              }),
+              new TextRun({
+                text: "",
+                break: 1,
+              }),
+            ],
+          }),
+
         );
 
         paragraphArray.push(
@@ -2160,6 +2266,28 @@ Date   | Description
             }
           })
         );
+
+        if (this.decryptedReportDataChanged.report_settings.report_remove_issuetags === false) {
+          if (this.decryptedReportDataChanged.report_vulns[i].tags.length > 0) {
+            paragraphArray.push(
+
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: "TAGs:",
+                    bold: true,
+                  })
+                ],
+              }),
+
+
+              new Paragraph({
+                children: buildtags(i),
+              }),
+
+            );
+          }
+        }
 
         paragraphArray.push(
 
@@ -2764,6 +2892,7 @@ Date   | Description
             ...buildmainauthors(),
 
             ...buildmainchangelog(),
+            ...buildreportsummary(),
           ],
         },
       ],
