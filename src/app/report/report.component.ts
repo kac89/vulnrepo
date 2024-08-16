@@ -2165,18 +2165,21 @@ Date   | Description
 
     const buildrefs = (x) => {
       let refArray = [];
-      const ref = this.decryptedReportDataChanged.report_vulns[x].ref.split('\n');
-      for (var i = 0; i < ref.length; i++) {
-        refArray.push(
+      if(this.decryptedReportDataChanged.report_vulns[x].ref.length > 0) {
+        const ref = this.decryptedReportDataChanged.report_vulns[x].ref.toString().split('\n');
+        for (var i = 0; i < ref.length; i++) {
+          refArray.push(
 
-          new TextRun({
-            text: ref[i],
-            break: 1,
-          })
+            new TextRun({
+              text: ref[i],
+              break: 1,
+            })
 
-        );
+          );
 
+        }
       }
+
       return refArray;
     };
 
