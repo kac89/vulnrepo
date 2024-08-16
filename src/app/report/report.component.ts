@@ -2463,7 +2463,10 @@ Date   | Description
               alignment: AlignmentType.CENTER,
               shading: { fill: 'FF0039', color: 'FFFFFF' }
             }),
-
+            new Paragraph({
+              text: "",
+              pageBreakBefore: true,
+          }),
             new TableOfContents("Summary", {
               hyperlink: true,
               headingStyleRange: "1-5",
