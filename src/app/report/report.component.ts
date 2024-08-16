@@ -2165,7 +2165,7 @@ Date   | Description
 
     const buildrefs = (x) => {
       let refArray = [];
-      if(this.decryptedReportDataChanged.report_vulns[x].ref.length > 0) {
+      if (this.decryptedReportDataChanged.report_vulns[x].ref.length > 0) {
         const ref = this.decryptedReportDataChanged.report_vulns[x].ref.toString().split('\n');
         for (var i = 0; i < ref.length; i++) {
           refArray.push(
@@ -2464,9 +2464,14 @@ Date   | Description
               shading: { fill: 'FF0039', color: 'FFFFFF' }
             }),
             new Paragraph({
-              text: "",
+              text: "Table of Contents",
+              heading: HeadingLevel.HEADING_1,
               pageBreakBefore: true,
-          }),
+              spacing: {
+                after: 200,
+                before: 200,
+              },
+            }),
             new TableOfContents("Summary", {
               hyperlink: true,
               headingStyleRange: "1-5",
