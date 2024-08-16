@@ -470,11 +470,16 @@ export class DialogAddissueComponent implements OnInit {
                 pocgithub += githubpoc.items[_i].html_url + '\n';
               }
 
+              let gdesc = '';
+              if (githubcve.containers.cna.descriptions) {
+                gdesc = githubcve.containers.cna.descriptions[0].value;
+              } 
+
               const def = {
                 title: cvetitle,
                 poc: pocgithub,
                 files: [],
-                desc: githubcve.containers.cna.descriptions[0].value,
+                desc: gdesc,
                 severity: severity,
                 status: 1,
                 ref: refer,
