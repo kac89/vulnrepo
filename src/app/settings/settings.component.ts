@@ -67,7 +67,7 @@ export class SettingsComponent implements OnInit {
   reportProfileList = [];
   reportTemplateList = [];
   reportProfileList_int = [];
-
+  reportTemplateList_int = [];
   ReportProfilesdisplayedColumns: string[] = ['source', 'profile_name', 'profile_settings'];
   ReportProfilesdataSource = new MatTableDataSource([]);
 
@@ -388,6 +388,7 @@ getTemplates(): void {
   this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(vaultobj));
   
   this.getReportProfiles();
+  this.getReportTemplates();
   }
 
   removeapikey() {
@@ -958,5 +959,53 @@ editTemplateItem(item: any): void {
 
 }
 
+getReportTemplates() {
+  this.indexeddbService.retrieveReportTemplates().then(ret => {
+    if (ret) {
+      this.ReportTemplatesdataSource = new MatTableDataSource(ret);
+      this.reportTemplateList = this.ReportTemplatesdataSource.data;
+    }
+    this.getAPITemplates();
+  });
+}
+
+getAPITemplates() {
+
+  const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+  if (localkey) {
+    this.msg = 'API connection please wait...';
+
+    const vaultobj = JSON.parse(localkey);
+
+    vaultobj.forEach( (element) => {
+
+      this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
+        this.reportTemplateList_int = [];
+        if (resp.length > 0) {
+          resp.forEach((ele) => {
+            ele.api = 'remote';
+            ele.apiurl = element.value;
+            ele.apikey = element.apikey;
+            ele.apiname = element.viewValue;
+          });
+          this.reportTemplateList_int.push(...resp);
+        }
+
+      }).then(() => {
+        this.ReportTemplatesdataSource.data = [...this.reportTemplateList, ...this.reportTemplateList_int];
+        this.reportTemplateList = this.ReportTemplatesdataSource.data;
+
+        this.msg = '';
+      }).catch(() => {});
+
+      setTimeout(() => {
+        // console.log('hide progress timeout');
+        this.msg = '';
+      }, 10000);
+
+  });
+
+  }
+}
 
 }
