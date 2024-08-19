@@ -53,11 +53,12 @@ export class TemplatesListComponent implements OnInit {
   expandedElement: VulnsList | null;
   sourceSelect = 'VULNREPO';
   reportTemplateList_int = [];
+  reportTemplateList = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient,public dialog: MatDialog,private indexeddbService: IndexeddbService,
+  constructor(private http: HttpClient, public dialog: MatDialog, private indexeddbService: IndexeddbService,
     private apiService: ApiService, public sessionsub: SessionstorageserviceService) { }
 
   ngOnInit() {
@@ -72,8 +73,9 @@ export class TemplatesListComponent implements OnInit {
     this.indexeddbService.retrieveReportTemplates().then(ret => {
       if (ret) {
         this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-          let xxx = [...res,...ret];
+          let xxx = [...res, ...ret];
           this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
+          this.reportTemplateList = this.dataSource.data;
           this.countvulns = xxx;
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
@@ -89,11 +91,11 @@ export class TemplatesListComponent implements OnInit {
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       //this.msg = 'API connection please wait...';
-  
+
       const vaultobj = JSON.parse(localkey);
-  
-      vaultobj.forEach( (element) => {
-  
+
+      vaultobj.forEach((element) => {
+
         this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
           this.reportTemplateList_int = [];
           if (resp.length > 0) {
@@ -105,37 +107,34 @@ export class TemplatesListComponent implements OnInit {
             });
             this.reportTemplateList_int.push(...resp);
           }
-  
+
         }).then(() => {
 
-          this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-            let xxx = [...res,...this.reportTemplateList_int];
-
-            this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
-            this.countvulns = xxx;
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-            this.getvulnlistStatus = '';
-          });
+          let xxx = [...this.reportTemplateList, ...this.reportTemplateList_int];
+          this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
+          this.countvulns = xxx;
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.getvulnlistStatus = '';
 
 
           //this.msg = '';
-        }).catch(() => {});
-  
+        }).catch(() => { });
+
         //setTimeout(() => {
-          // console.log('hide progress timeout');
-          //this.msg = '';
+        // console.log('hide progress timeout');
+        //this.msg = '';
         //}, 10000);
-  
-    });
-  
+
+      });
+
     }
   }
 
   changeselect() {
 
     if (this.sourceSelect === "VULNREPO") {
-      
+
       this.getvulnlistStatus = 'Loading...';
       this.gettemplates();
 
@@ -144,13 +143,13 @@ export class TemplatesListComponent implements OnInit {
 
       this.getvulnlistStatus = 'Loading...';
       this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
-  
+
         this.dataSource.data = res;
         this.countvulns = res;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.getvulnlistStatus = '';
-  
+
       });
 
 
@@ -158,13 +157,13 @@ export class TemplatesListComponent implements OnInit {
 
       this.getvulnlistStatus = 'Loading...';
       this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
-  
+
         this.dataSource.data = res;
         this.countvulns = res;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.getvulnlistStatus = '';
-  
+
       });
 
 
@@ -172,13 +171,13 @@ export class TemplatesListComponent implements OnInit {
 
       this.getvulnlistStatus = 'Loading...';
       this.http.get<any>('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
-  
+
         this.dataSource.data = res;
         this.countvulns = res;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.getvulnlistStatus = '';
-  
+
       });
 
 
@@ -186,13 +185,13 @@ export class TemplatesListComponent implements OnInit {
 
       this.getvulnlistStatus = 'Loading...';
       this.http.get<any>('/assets/OWASPtop102017.json?v=' + + new Date()).subscribe(res => {
-  
+
         this.dataSource.data = res;
         this.countvulns = res;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.getvulnlistStatus = '';
-  
+
       });
 
 
@@ -200,13 +199,13 @@ export class TemplatesListComponent implements OnInit {
 
       this.getvulnlistStatus = 'Loading...';
       this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date()).subscribe(res => {
-  
+
         this.dataSource.data = res;
         this.countvulns = res;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.getvulnlistStatus = '';
-  
+
       });
 
 
@@ -214,13 +213,13 @@ export class TemplatesListComponent implements OnInit {
 
       this.getvulnlistStatus = 'Loading...';
       this.http.get<any>('/assets/OWASPtop10cicd.json?v=' + + new Date()).subscribe(res => {
-  
+
         this.dataSource.data = res;
         this.countvulns = res;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.getvulnlistStatus = '';
-  
+
       });
 
 
@@ -228,13 +227,13 @@ export class TemplatesListComponent implements OnInit {
 
       this.getvulnlistStatus = 'Loading...';
       this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date()).subscribe(res => {
-  
+
         this.dataSource.data = res;
         this.countvulns = res;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.getvulnlistStatus = '';
-  
+
       });
 
 
@@ -258,7 +257,7 @@ export class TemplatesListComponent implements OnInit {
 
         console.log(result);
 
-        this.indexeddbService.saveReportTemplateinDB({"title": result.title,"poc": "","desc": result.desc,"severity": result.severity,"ref": result.ref,"cvss": result.cvss,"cvss_vector": result.cvss_vector,"cve": result.cve, "tags": result.tags});
+        this.indexeddbService.saveReportTemplateinDB({ "title": result.title, "poc": "", "desc": result.desc, "severity": result.severity, "ref": result.ref, "cvss": result.cvss, "cvss_vector": result.cvss_vector, "cve": result.cve, "tags": result.tags });
 
       }
 

@@ -6,10 +6,10 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatAutocompleteSelectedEvent, MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CurrentdateService } from '../currentdate.service';
 import { IndexeddbService } from '../indexeddb.service';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
@@ -28,7 +28,7 @@ export interface Vulns {
   poc: string;
   ref: string;
   severity: string;
-  tags:Array<Tags>
+  tags: Array<Tags>
 }
 
 export interface PCI {
@@ -66,6 +66,7 @@ export class DialogAddissueComponent implements OnInit {
   myOWASPTOP10CICD = new UntypedFormControl();
   myOWASPTOP10k8s = new UntypedFormControl();
   options: Vulns[] = [];
+  optionsv = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];
   mitreenterprise: Vulns[] = [];
@@ -131,28 +132,28 @@ export class DialogAddissueComponent implements OnInit {
         map(value => this._filterPCI(value))
       );
 
-      this.filteredOptionsOWASPtop2017 = this.myOWASP2017.valueChanges
+    this.filteredOptionsOWASPtop2017 = this.myOWASP2017.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filterOWASP2017(title) : this.owasptop2017.slice())
       );
 
-      this.filteredOptionsOWASPtop2021 = this.myOWASP2021.valueChanges
+    this.filteredOptionsOWASPtop2021 = this.myOWASP2021.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filterOWASP2021(title) : this.owasptop2021.slice())
       );
 
-      this.filteredOptionsOWASPTOP10CICD = this.myOWASPTOP10CICD.valueChanges
+    this.filteredOptionsOWASPTOP10CICD = this.myOWASPTOP10CICD.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filterOWASPTOP10CICD(title) : this.OWASPTOP10CICD.slice())
       );
 
-      this.filteredOptionsOWASPTOP10k8s = this.myOWASPTOP10k8s.valueChanges
+    this.filteredOptionsOWASPTOP10k8s = this.myOWASPTOP10k8s.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
@@ -220,7 +221,8 @@ export class DialogAddissueComponent implements OnInit {
     this.indexeddbService.retrieveReportTemplates().then(ret => {
       if (ret) {
         this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-          this.options = [...res,...ret];
+          this.options = [...res, ...ret];
+          this.optionsv = this.options;
         });
       }
       this.getAPITemplates();
@@ -273,11 +275,11 @@ export class DialogAddissueComponent implements OnInit {
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       //this.msg = 'API connection please wait...';
-  
+
       const vaultobj = JSON.parse(localkey);
-  
-      vaultobj.forEach( (element) => {
-  
+
+      vaultobj.forEach((element) => {
+
         this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
           this.reportTemplateList_int = [];
           if (resp.length > 0) {
@@ -289,23 +291,21 @@ export class DialogAddissueComponent implements OnInit {
             });
             this.reportTemplateList_int.push(...resp);
           }
-  
+
         }).then(() => {
 
-          this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-            this.options = [...this.options,...this.reportTemplateList_int];
-          });
+          this.options = [...this.optionsv, ...this.reportTemplateList_int];
 
           //this.msg = '';
-        }).catch(() => {});
-  
+        }).catch(() => { });
+
         //setTimeout(() => {
-          // console.log('hide progress timeout');
-          //this.msg = '';
+        // console.log('hide progress timeout');
+        //this.msg = '';
         //}, 10000);
-  
-    });
-  
+
+      });
+
     }
   }
 
@@ -318,61 +318,61 @@ export class DialogAddissueComponent implements OnInit {
     let exitel = [];
     if (this.chipsissue.length > 0) {
       for (var datael of this.chipsissue) {
-  
-          const found = this.options.find((obj) => {
-            return obj.title === datael;
-          });
-          
-          if (found !== undefined) {
-  
-            if (found.title === datael) {
-              const def = {
-                title: found.title,
-                poc: found.poc,
-                files: [],
-                desc: found.desc,
-                severity: found.severity,
-                status: 1,
-                ref: found.ref,
-                cvss: found.cvss,
-                cvss_vector: found.cvss_vector,
-                cve: found.cve,
-                tags: found.tags,
-                bounty: [],
-                date: this.getcurrentDate()
-              };
-              exitel.push(def);
-  
-            } 
-  
-  
-          } else {
-  
+
+        const found = this.options.find((obj) => {
+          return obj.title === datael;
+        });
+
+        if (found !== undefined) {
+
+          if (found.title === datael) {
             const def = {
-              title: datael,
-              poc: '',
+              title: found.title,
+              poc: found.poc,
               files: [],
-              desc: '',
-              severity: 'Info',
+              desc: found.desc,
+              severity: found.severity,
               status: 1,
-              ref: '',
-              cvss: '',
-              cvss_vector: '',
-              cve: '',
-              tags: [],
+              ref: found.ref,
+              cvss: found.cvss,
+              cvss_vector: found.cvss_vector,
+              cve: found.cve,
+              tags: found.tags,
               bounty: [],
               date: this.getcurrentDate()
             };
             exitel.push(def);
+
           }
+
+
+        } else {
+
+          const def = {
+            title: datael,
+            poc: '',
+            files: [],
+            desc: '',
+            severity: 'Info',
+            status: 1,
+            ref: '',
+            cvss: '',
+            cvss_vector: '',
+            cve: '',
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          exitel.push(def);
+        }
       }
 
       this.dialogRef.close(exitel);
 
 
     } else {
-      this.customissueform.setErrors({'notempty': true});
-      this.gridaction.setErrors({'notempty': true});
+      this.customissueform.setErrors({ 'notempty': true });
+      this.gridaction.setErrors({ 'notempty': true });
     }
 
   }
@@ -404,13 +404,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.cwecontrol.setErrors({'cantfind': true});
+            this.cwecontrol.setErrors({ 'cantfind': true });
           }
 
         }
       }
     } else {
-      this.cwecontrol.setErrors({'notempty': true});
+      this.cwecontrol.setErrors({ 'notempty': true });
     }
 
   }
@@ -467,7 +467,7 @@ export class DialogAddissueComponent implements OnInit {
 
             if (githubcve.cveMetadata.cveId) {
               let cvetitle = '';
-              
+
               if (githubcve.containers.cna.title) {
                 cvetitle = githubcve.containers.cna.title;
               }
@@ -494,7 +494,7 @@ export class DialogAddissueComponent implements OnInit {
 
                       severity = FirstLetter(githubcve.containers.cna.metrics[_i][ss[x]].baseSeverity);
                     }
-                    
+
                   }
 
                 }
@@ -517,7 +517,7 @@ export class DialogAddissueComponent implements OnInit {
               let gdesc = '';
               if (githubcve.containers.cna.descriptions) {
                 gdesc = githubcve.containers.cna.descriptions[0].value;
-              } 
+              }
 
               const def = {
                 title: cvetitle,
@@ -545,19 +545,19 @@ export class DialogAddissueComponent implements OnInit {
 
           } else {
             this.show = false;
-            this.mycve.setErrors({'cve_notfound': true});
+            this.mycve.setErrors({ 'cve_notfound': true });
           }
 
         });
 
       } else {
         this.show = false;
-        this.mycve.setErrors({'cve_format_error': true});
+        this.mycve.setErrors({ 'cve_format_error': true });
       }
 
     } else {
       this.show = false;
-      this.mycve.setErrors({'notempty': true});
+      this.mycve.setErrors({ 'notempty': true });
     }
 
   }
@@ -589,13 +589,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.mymobilemitre.setErrors({'cantfind': true});
+            this.mymobilemitre.setErrors({ 'cantfind': true });
           }
 
         }
       }
     } else {
-      this.mymobilemitre.setErrors({'notempty': true});
+      this.mymobilemitre.setErrors({ 'notempty': true });
     }
 
 
@@ -628,13 +628,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.myenterprisemitre.setErrors({'cantfind': true});
+            this.myenterprisemitre.setErrors({ 'cantfind': true });
           }
 
         }
       }
     } else {
-      this.myenterprisemitre.setErrors({'notempty': true});
+      this.myenterprisemitre.setErrors({ 'notempty': true });
     }
 
 
@@ -656,7 +656,7 @@ export class DialogAddissueComponent implements OnInit {
 
               let tytul = this.pcidssv3[key].items[ile].title;
 
-               tytul = tytul.split(':')[0];
+              tytul = tytul.split(':')[0];
 
               if (tytul.length >= 100) {
                 tytul = tytul.substring(0, 100);
@@ -688,7 +688,7 @@ export class DialogAddissueComponent implements OnInit {
               break;
 
             } else {
-              this.myPCI.setErrors({'cantfind': true});
+              this.myPCI.setErrors({ 'cantfind': true });
             }
 
           }
@@ -696,7 +696,7 @@ export class DialogAddissueComponent implements OnInit {
         }
       }
     } else {
-      this.myPCI.setErrors({'notempty': true});
+      this.myPCI.setErrors({ 'notempty': true });
     }
 
   }
@@ -728,13 +728,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.myOWASP2017.setErrors({'cantfind': true});
+            this.myOWASP2017.setErrors({ 'cantfind': true });
           }
 
         }
       }
     } else {
-      this.myOWASP2017.setErrors({'notempty': true});
+      this.myOWASP2017.setErrors({ 'notempty': true });
     }
 
   }
@@ -765,13 +765,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.myOWASP2021.setErrors({'cantfind': true});
+            this.myOWASP2021.setErrors({ 'cantfind': true });
           }
 
         }
       }
     } else {
-      this.myOWASP2021.setErrors({'notempty': true});
+      this.myOWASP2021.setErrors({ 'notempty': true });
     }
 
   }
@@ -803,13 +803,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.myOWASPTOP10CICD.setErrors({'cantfind': true});
+            this.myOWASPTOP10CICD.setErrors({ 'cantfind': true });
           }
 
         }
       }
     } else {
-      this.myOWASPTOP10CICD.setErrors({'notempty': true});
+      this.myOWASPTOP10CICD.setErrors({ 'notempty': true });
     }
 
   }
@@ -840,13 +840,13 @@ export class DialogAddissueComponent implements OnInit {
             break;
 
           } else {
-            this.myOWASPTOP10k8s.setErrors({'cantfind': true});
+            this.myOWASPTOP10k8s.setErrors({ 'cantfind': true });
           }
 
         }
       }
     } else {
-      this.myOWASPTOP10k8s.setErrors({'notempty': true});
+      this.myOWASPTOP10k8s.setErrors({ 'notempty': true });
     }
 
   }
