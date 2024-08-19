@@ -13,6 +13,8 @@ import {
 } from '@angular/animations';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SessionstorageserviceService } from "../sessionstorageservice.service"
+import { ApiService } from '../api.service';
 
 export interface VulnsList {
   title: string;
@@ -50,11 +52,13 @@ export class TemplatesListComponent implements OnInit {
   countvulns = [];
   expandedElement: VulnsList | null;
   sourceSelect = 'VULNREPO';
+  reportTemplateList_int = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient,public dialog: MatDialog,private indexeddbService: IndexeddbService) { }
+  constructor(private http: HttpClient,public dialog: MatDialog,private indexeddbService: IndexeddbService,
+    private apiService: ApiService, public sessionsub: SessionstorageserviceService) { }
 
   ngOnInit() {
     this.getvulnlistStatus = 'Loading...';
@@ -76,7 +80,56 @@ export class TemplatesListComponent implements OnInit {
           this.getvulnlistStatus = '';
         });
       }
+      this.getAPITemplates();
     });
+  }
+
+  getAPITemplates() {
+
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+    if (localkey) {
+      //this.msg = 'API connection please wait...';
+  
+      const vaultobj = JSON.parse(localkey);
+  
+      vaultobj.forEach( (element) => {
+  
+        this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
+          this.reportTemplateList_int = [];
+          if (resp.length > 0) {
+            resp.forEach((ele) => {
+              ele.api = 'remote';
+              ele.apiurl = element.value;
+              ele.apikey = element.apikey;
+              ele.apiname = element.viewValue;
+            });
+            this.reportTemplateList_int.push(...resp);
+          }
+  
+        }).then(() => {
+
+          this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+            let xxx = [...res,...this.reportTemplateList_int];
+
+            this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
+            this.countvulns = xxx;
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.getvulnlistStatus = '';
+          });
+
+
+          //this.msg = '';
+        }).catch(() => {});
+  
+        //setTimeout(() => {
+          // console.log('hide progress timeout');
+          //this.msg = '';
+        //}, 10000);
+  
+    });
+  
+    }
   }
 
   changeselect() {

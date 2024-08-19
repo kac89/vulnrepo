@@ -47,7 +47,9 @@
         matSortDirection="desc">
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
-          <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon *ngIf="element.api == 'remote'" color="accent"
+            title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon> {{element.title}} </td>
         </ng-container>
   
         <ng-container matColumnDef="severity">

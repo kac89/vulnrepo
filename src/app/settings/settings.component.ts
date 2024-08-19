@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component';
 import { DialogApiaddComponent } from '../dialog-apiadd/dialog-apiadd.component';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dialog-addreportprofile.component';
@@ -72,7 +72,7 @@ export class SettingsComponent implements OnInit {
   ReportProfilesdataSource = new MatTableDataSource([]);
 
   ReportTemplatesdataSource = new MatTableDataSource([]);
-  ReportTemplatesdisplayedColumns: string[] = ['source','title', 'template_settings'];
+  ReportTemplatesdisplayedColumns: string[] = ['source', 'title', 'template_settings'];
 
   vaultListdataSource = new MatTableDataSource([]);
   vaultListdisplayedColumns: string[] = ['vault_name', 'vault_settings'];
@@ -95,13 +95,13 @@ export class SettingsComponent implements OnInit {
 
 
   }
-  
+
   foundvault(bool: boolean): boolean {
 
     this.listkey = bool;
 
-    if(bool) {
-      this.vaultListdataSource = new MatTableDataSource([{"vault_name": "Main Vault"}]);
+    if (bool) {
+      this.vaultListdataSource = new MatTableDataSource([{ "vault_name": "Main Vault" }]);
       this.vaultList = this.vaultListdataSource.data;
     } else {
       this.vaultList = [];
@@ -140,17 +140,17 @@ export class SettingsComponent implements OnInit {
 
     } else {
 
-      
+
       this.indexeddbService.retrieveAPIkey().then(ret => {
         if (ret) {
           this.tryconnectdb = true;
           this.foundvault(true);
 
-          this.vaultListdataSource = new MatTableDataSource([{"vault_name": "Main Vault"}]);
+          this.vaultListdataSource = new MatTableDataSource([{ "vault_name": "Main Vault" }]);
           this.vaultList = this.vaultListdataSource.data;
 
           this.showregapi = false;
-          
+
           if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
             setTimeout(_ => this.openDialog(ret));
           }
@@ -164,7 +164,7 @@ export class SettingsComponent implements OnInit {
   }
 
 
-getProfiles(): void {
+  getProfiles(): void {
     //get report profiles from local at init
     this.indexeddbService.retrieveReportProfile().then(ret => {
       if (ret) {
@@ -174,18 +174,18 @@ getProfiles(): void {
         this.ReportProfilesdataSource.sort = this.sort;
       }
     });
-}
+  }
 
-getTemplates(): void {
-  this.indexeddbService.retrieveReportTemplates().then(ret => {
-    if (ret) {
-      this.ReportTemplatesdataSource = new MatTableDataSource(ret);
-      this.reportTemplateList = this.ReportTemplatesdataSource.data;
-      this.ReportTemplatesdataSource.paginator = this.paginator2;
-      this.ReportTemplatesdataSource.sort = this.sort2;
-    }
-  });
-}
+  getTemplates(): void {
+    this.indexeddbService.retrieveReportTemplates().then(ret => {
+      if (ret) {
+        this.ReportTemplatesdataSource = new MatTableDataSource(ret);
+        this.reportTemplateList = this.ReportTemplatesdataSource.data;
+        this.ReportTemplatesdataSource.paginator = this.paginator2;
+        this.ReportTemplatesdataSource.sort = this.sort2;
+      }
+    });
+  }
 
   wipeDatachanged() {
 
@@ -210,7 +210,7 @@ getTemplates(): void {
   }
 
 
-  getdumps(){
+  getdumps() {
 
 
     let pro, tem, rep, vau: any;
@@ -269,40 +269,40 @@ getTemplates(): void {
   parseMyBackupfile(array) {
 
     const parsed = JSON.parse(array);
-    if(parsed.vault !== undefined && parsed.vault.length > 0) {
-        this.indexeddbService.saveKEYinDB(parsed.vault);
-        this.foundvault(true);
-        this.showregapi = true;
-        this.tryconnectdb = true;
+    if (parsed.vault !== undefined && parsed.vault.length > 0) {
+      this.indexeddbService.saveKEYinDB(parsed.vault);
+      this.foundvault(true);
+      this.showregapi = true;
+      this.tryconnectdb = true;
     }
 
-    if(parsed.reports.length > 0) {
+    if (parsed.reports.length > 0) {
       for (let _i = 0; _i < parsed.reports.length; _i++) {
         const num = parsed.reports[_i];
         this.indexeddbService.importReportfromfileSettings(num);
       }
     }
 
-    if(parsed.templates.length > 0) {
+    if (parsed.templates.length > 0) {
       for (let _i = 0; _i < parsed.templates.length; _i++) {
         const num = parsed.templates[_i];
 
         this.reportTemplateList = this.reportProfileList.concat(num);
         this.ReportTemplatesdataSource.data = this.reportTemplateList;
-      
+
         for (let item of this.reportTemplateList) {
           this.indexeddbService.saveReportTemplateinDB(item);
-        }     
+        }
 
       }
     }
 
-    if(parsed.profiles.length > 0) {
+    if (parsed.profiles.length > 0) {
       for (let _i = 0; _i < parsed.profiles.length; _i++) {
         const num = parsed.profiles[_i];
         this.reportProfileList = this.reportProfileList.concat(num);
         this.ReportProfilesdataSource.data = this.reportProfileList;
-        this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => {});
+        this.indexeddbService.saveReportProfileinDB(this.reportProfileList).then(ret => { });
       }
     }
   }
@@ -315,7 +315,7 @@ getTemplates(): void {
       const fileToRead = files[0];
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
-       this.parseMyBackupfile(fileReader.result);
+        this.parseMyBackupfile(fileReader.result);
 
       };
       fileReader.readAsText(fileToRead, 'UTF-8');
@@ -340,55 +340,55 @@ getTemplates(): void {
     const elementlist: ApiList[] = [];
     const vaultobj = JSON.parse(vault);
 
-    vaultobj.forEach( (element) => {
+    vaultobj.forEach((element) => {
 
       if (element.apikey !== undefined && element.apikey !== '') {
 
         this.apiService.APISend(element.value, element.apikey, 'apiconnect', '').then(resp => {
-            if (resp !== undefined && resp !== null && resp.AUTH === 'OK') {
-              this.apiconneted = true;
-              this.foundvault(false);
-              this.createdate = resp.CREATEDATE;
-              this.expirydate = resp.EXPIRYDATE;
-              this.remain = this.gettimebetweendates(this.today, this.expirydate);
-              this.user = resp.WELCOME;
-              this.max_storage = resp.MAX_STORAGE;
-              this.current_storage = resp.CURRENT_STORAGE;
-              const stor = this.current_storage / this.max_storage * 100;
+          if (resp !== undefined && resp !== null && resp.AUTH === 'OK') {
+            this.apiconneted = true;
+            this.foundvault(false);
+            this.createdate = resp.CREATEDATE;
+            this.expirydate = resp.EXPIRYDATE;
+            this.remain = this.gettimebetweendates(this.today, this.expirydate);
+            this.user = resp.WELCOME;
+            this.max_storage = resp.MAX_STORAGE;
+            this.current_storage = resp.CURRENT_STORAGE;
+            const stor = this.current_storage / this.max_storage * 100;
 
+            // tslint:disable-next-line:max-line-length
+            const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: this.user, status: 'Connected', created: resp.CREATEDATE, expires: resp.EXPIRYDATE + ' (' + this.remain + ' days left)', current_storage: stor };
+            elementlist.push(elementdata);
+            this.dataSource.data = elementlist;
+            this.tryconnectdb = false;
+          } else {
+
+            if (resp === null) {
               // tslint:disable-next-line:max-line-length
-              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: this.user, status: 'Connected', created: resp.CREATEDATE, expires: resp.EXPIRYDATE + ' (' + this.remain + ' days left)', current_storage: stor };
+              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: '', status: 'Not connected: wrong API key?', created: '', expires: '', current_storage: 0 };
               elementlist.push(elementdata);
               this.dataSource.data = elementlist;
-              this.tryconnectdb = false;
             } else {
-
-              if (resp === null) {
-                // tslint:disable-next-line:max-line-length
-                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: '', status: 'Not connected: wrong API key?', created: '', expires: '', current_storage: 0 };
-                elementlist.push(elementdata);
-                this.dataSource.data = elementlist;
-              } else {
-                // tslint:disable-next-line:max-line-length
-                const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: '', status: 'Not connected', created: '', expires: '', current_storage: 0 };
-                elementlist.push(elementdata);
-                this.dataSource.data = elementlist;
-              }
-
+              // tslint:disable-next-line:max-line-length
+              const elementdata = { apikey: element.apikey, apiname: element.viewValue, apiurl: element.value, organisation: '', status: 'Not connected', created: '', expires: '', current_storage: 0 };
+              elementlist.push(elementdata);
+              this.dataSource.data = elementlist;
             }
+
+          }
 
         }).catch(error => {
           console.log('API error: ', error);
         });
       }
 
-  });
+    });
 
 
-  this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(vaultobj));
-  
-  this.getReportProfiles();
-  this.getReportTemplates();
+    this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(vaultobj));
+
+    this.getReportProfiles();
+    this.getReportTemplates();
   }
 
   removeapikey() {
@@ -437,7 +437,7 @@ getTemplates(): void {
       if (result) {
         this.apiconnect(result);
         if (data) {
-          this.indexeddbService.saveKEYinDB(data).then(ret => {});
+          this.indexeddbService.saveKEYinDB(data).then(ret => { });
         }
         this.tryconnectdb = false;
         this.showregapi = false;
@@ -518,9 +518,9 @@ getTemplates(): void {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-          this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(drem));
-          this.saveAPIKEY(drem, result);
-          this.apiconnect(JSON.stringify(drem));
+        this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(drem));
+        this.saveAPIKEY(drem, result);
+        this.apiconnect(JSON.stringify(drem));
       }
     });
 
@@ -532,12 +532,12 @@ getTemplates(): void {
       if (data) {
         let today = '';
         if (navigator.language) {
-           today = new Date(this.currentdateService.getcurrentDate()).toLocaleDateString(navigator.language);
+          today = new Date(this.currentdateService.getcurrentDate()).toLocaleDateString(navigator.language);
         } else {
-           today = String(Date.now());
+          today = String(Date.now());
         }
-        
-        
+
+
         // download dump
         const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
         const link = document.createElement('a');
@@ -587,7 +587,7 @@ getTemplates(): void {
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
     if (localkey) {
       const result = JSON.parse(localkey);
-      const index = result.map(function(e) { return e.apikey; }).indexOf(element);
+      const index = result.map(function (e) { return e.apikey; }).indexOf(element);
       if (index !== -1) {
         this.openDialogAPIremove(result);
         result.splice(index, 1);
@@ -601,64 +601,64 @@ getTemplates(): void {
 
     this.indexeddbService.encryptKEY(JSON.stringify(key), pass).then(data => {
       if (data) {
-        this.indexeddbService.saveKEYinDB(data).then(ret => {});
+        this.indexeddbService.saveKEYinDB(data).then(ret => { });
       }
     });
 
   }
 
 
-getReportProfiles() {
-  this.indexeddbService.retrieveReportProfile().then(ret => {
-    if (ret) {
-      this.ReportProfilesdataSource = new MatTableDataSource(ret);
-      this.reportProfileList = this.ReportProfilesdataSource.data;
-    }
-    this.getAPIReportProfiles();
-  });
-}
-
-
-getAPIReportProfiles() {
-
-  const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
-  if (localkey) {
-    this.msg = 'API connection please wait...';
-
-    const vaultobj = JSON.parse(localkey);
-
-    vaultobj.forEach( (element) => {
-
-      this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
-        this.reportProfileList_int = [];
-        if (resp.length > 0) {
-          resp.forEach((ele) => {
-            ele.api = 'remote';
-            ele.apiurl = element.value;
-            ele.apikey = element.apikey;
-            ele.apiname = element.viewValue;
-          });
-          this.reportProfileList_int.push(...resp);
-        }
-
-      }).then(() => {
-
-        this.ReportProfilesdataSource.data = [...this.reportProfileList, ...this.reportProfileList_int];
-        this.ReportProfilesdataSource.paginator = this.paginator;
-        this.ReportProfilesdataSource.sort = this.sort;
-        this.msg = '';
-      }).catch(() => {});
-
-
-      setTimeout(() => {
-        // console.log('hide progress timeout');
-        this.msg = '';
-      }, 10000);
-
-  });
-
+  getReportProfiles() {
+    this.indexeddbService.retrieveReportProfile().then(ret => {
+      if (ret) {
+        this.ReportProfilesdataSource = new MatTableDataSource(ret);
+        this.reportProfileList = this.ReportProfilesdataSource.data;
+      }
+      this.getAPIReportProfiles();
+    });
   }
-}
+
+
+  getAPIReportProfiles() {
+
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+    if (localkey) {
+      this.msg = 'API connection please wait...';
+
+      const vaultobj = JSON.parse(localkey);
+
+      vaultobj.forEach((element) => {
+
+        this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
+          this.reportProfileList_int = [];
+          if (resp.length > 0) {
+            resp.forEach((ele) => {
+              ele.api = 'remote';
+              ele.apiurl = element.value;
+              ele.apikey = element.apikey;
+              ele.apiname = element.viewValue;
+            });
+            this.reportProfileList_int.push(...resp);
+          }
+
+        }).then(() => {
+
+          this.ReportProfilesdataSource.data = [...this.reportProfileList, ...this.reportProfileList_int];
+          this.ReportProfilesdataSource.paginator = this.paginator;
+          this.ReportProfilesdataSource.sort = this.sort;
+          this.msg = '';
+        }).catch(() => { });
+
+
+        setTimeout(() => {
+          // console.log('hide progress timeout');
+          this.msg = '';
+        }, 10000);
+
+      });
+
+    }
+  }
 
 
   openDialogReportProfiles(data: any): void {
@@ -704,7 +704,7 @@ getAPIReportProfiles() {
             console.log("custom template added");
           }
         });
-    
+
       }
 
       this.getTemplates();
@@ -722,7 +722,7 @@ getAPIReportProfiles() {
       this.indexeddbService.deleteTemplate(item).then(ret => {
         this.getTemplates();
       });
-      
+
     }
 
   }
@@ -737,7 +737,7 @@ getAPIReportProfiles() {
       this.indexeddbService.deleteProfile(item).then(ret => {
         this.getReportProfiles();
       });
-      
+
     }
   }
 
@@ -780,7 +780,7 @@ getAPIReportProfiles() {
             report_custom_content: result.report_custom_content
           };
           this.ReportProfilesdataSource.data = this.reportProfileList;
-          this.indexeddbService.updateProfile(this.reportProfileList[index], result.original[0]._key).then(ret => {});
+          this.indexeddbService.updateProfile(this.reportProfileList[index], result.original[0]._key).then(ret => { });
           this.getReportProfiles();
         }
       }
@@ -819,7 +819,7 @@ getAPIReportProfiles() {
 
       fileReader.onload = (e) => {
         this.parseprofile(fileReader.result);
-        
+
       };
 
       fileReader.readAsText(fileToRead, 'UTF-8');
@@ -827,186 +827,186 @@ getAPIReportProfiles() {
 
   }
 
-parseprofile(profile){
-  const parsed = JSON.parse(profile);
+  parseprofile(profile) {
+    const parsed = JSON.parse(profile);
 
-  if(Array.isArray(parsed)){
-    parsed.forEach((item) => {
-      this.indexeddbService.saveReportProfileinDB(item).then(ret => {});
-    });
-  } else {
-    this.indexeddbService.saveReportProfileinDB(parsed).then(ret => {});
-  }
-
-  this.getReportProfiles();
-}
-
-downloadProfileItem(element) {
-
-  delete element.api;
-  delete element.apikey;
-  delete element.apiname;
-  delete element._key;
-  delete element.apiurl;
-
-  const blob = new Blob([JSON.stringify(element)], { type: 'application/json' });
-  const link = document.createElement('a');
-  const url = window.URL.createObjectURL(blob);
-  link.setAttribute('href', url);
-  link.setAttribute('download', '' + element.profile_name + ' settings profile (vulnrepo.com).vulnrepo-profiles');
-  link.style.visibility = 'hidden';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-downloadTemplateItem(element) {
-
-  delete element.api;
-  delete element._key;
-  delete element.apikey;
-  delete element.apiname;
-  delete element.apiurl;
-
-  const blob = new Blob([JSON.stringify(element)], { type: 'application/json' });
-  const link = document.createElement('a');
-  const url = window.URL.createObjectURL(blob);
-  link.setAttribute('href', url);
-  link.setAttribute('download', '' + element.title + ' template (vulnrepo.com).vulnrepo-templates');
-  link.style.visibility = 'hidden';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-exporttemplates() {
-
-  this.indexeddbService.retrieveReportTemplates().then(ret => {
-    if (ret) {
-      const blob = new Blob([JSON.stringify(ret)], { type: 'application/json' });
-      const link = document.createElement('a');
-      const url = window.URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', 'Backup Report Templates (vulnrepo.com).vulnrepo-templates');
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    if (Array.isArray(parsed)) {
+      parsed.forEach((item) => {
+        this.indexeddbService.saveReportProfileinDB(item).then(ret => { });
+      });
+    } else {
+      this.indexeddbService.saveReportProfileinDB(parsed).then(ret => { });
     }
-  });
-}
 
-importReportTemplates(input: HTMLInputElement) {
-  console.log('import templates');
-
-  const files = input.files;
-  if (files && files.length) {
-
-    const fileToRead = files[0];
-    const fileReader = new FileReader();
-
-    fileReader.onload = (e) => {
-      this.parsetemplate(fileReader.result);
-      
-    };
-
-    fileReader.readAsText(fileToRead, 'UTF-8');
+    this.getReportProfiles();
   }
 
-}
+  downloadProfileItem(element) {
 
-parsetemplate(template){
-  const parsed = JSON.parse(template);
+    delete element.api;
+    delete element.apikey;
+    delete element.apiname;
+    delete element._key;
+    delete element.apiurl;
 
-  if(Array.isArray(parsed)){
-    parsed.forEach((item) => {
-      this.indexeddbService.saveReportTemplateinDB(item).then(ret => {});    
+    const blob = new Blob([JSON.stringify(element)], { type: 'application/json' });
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', '' + element.profile_name + ' settings profile (vulnrepo.com).vulnrepo-profiles');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  downloadTemplateItem(element) {
+
+    delete element.api;
+    delete element._key;
+    delete element.apikey;
+    delete element.apiname;
+    delete element.apiurl;
+
+    const blob = new Blob([JSON.stringify(element)], { type: 'application/json' });
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', '' + element.title + ' template (vulnrepo.com).vulnrepo-templates');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  exporttemplates() {
+
+    this.indexeddbService.retrieveReportTemplates().then(ret => {
+      if (ret) {
+        const blob = new Blob([JSON.stringify(ret)], { type: 'application/json' });
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'Backup Report Templates (vulnrepo.com).vulnrepo-templates');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     });
-  } else {
-    this.indexeddbService.saveReportTemplateinDB(parsed).then(ret => {});
   }
-  this.getTemplates();
 
-}
+  importReportTemplates(input: HTMLInputElement) {
+    console.log('import templates');
+
+    const files = input.files;
+    if (files && files.length) {
+
+      const fileToRead = files[0];
+      const fileReader = new FileReader();
+
+      fileReader.onload = (e) => {
+        this.parsetemplate(fileReader.result);
+
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parsetemplate(template) {
+    const parsed = JSON.parse(template);
+
+    if (Array.isArray(parsed)) {
+      parsed.forEach((item) => {
+        this.indexeddbService.saveReportTemplateinDB(item).then(ret => { });
+      });
+    } else {
+      this.indexeddbService.saveReportTemplateinDB(parsed).then(ret => { });
+    }
+    this.getTemplates();
+
+  }
 
 
 
-editTemplateItem(item: any): void {
-  const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
-    width: '600px',
-    disableClose: true,
-    data: [item,{edit: true}]
-  });
+  editTemplateItem(item: any): void {
+    const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
+      width: '600px',
+      disableClose: true,
+      data: [item, { edit: true }]
+    });
 
 
-  dialogRef.afterClosed().subscribe(result => {
-    console.log('Report Settings Templates edit dialog was closed');
-    if (result) {
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Report Settings Templates edit dialog was closed');
+      if (result) {
 
-      const index: number = this.reportTemplateList.indexOf(result[1].original[0]);
-      if (index !== -1) {
-        const ndd = {"title": result[0].title,"poc": "","desc": result[0].desc,"severity": result[0].severity,"ref": result[0].ref,"cvss": result[0].cvss,"cvss_vector": result[0].cvss_vector,"cve": result[0].cve, "tags": result[0].tags};
-        this.reportTemplateList[index] = ndd;
-  
-        this.indexeddbService.updateTemplate(ndd, result[1].original[0]._key).then(ret => {});
-        this.ReportTemplatesdataSource.data = this.reportTemplateList;
+        const index: number = this.reportTemplateList.indexOf(result[1].original[0]);
+        if (index !== -1) {
+          const ndd = { "title": result[0].title, "poc": "", "desc": result[0].desc, "severity": result[0].severity, "ref": result[0].ref, "cvss": result[0].cvss, "cvss_vector": result[0].cvss_vector, "cve": result[0].cve, "tags": result[0].tags };
+          this.reportTemplateList[index] = ndd;
+
+          this.indexeddbService.updateTemplate(ndd, result[1].original[0]._key).then(ret => { });
+          this.ReportTemplatesdataSource.data = this.reportTemplateList;
+
+        }
 
       }
 
-    }
-
-  });
-
-}
-
-getReportTemplates() {
-  this.indexeddbService.retrieveReportTemplates().then(ret => {
-    if (ret) {
-      this.ReportTemplatesdataSource = new MatTableDataSource(ret);
-      this.reportTemplateList = this.ReportTemplatesdataSource.data;
-    }
-    this.getAPITemplates();
-  });
-}
-
-getAPITemplates() {
-
-  const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
-  if (localkey) {
-    this.msg = 'API connection please wait...';
-
-    const vaultobj = JSON.parse(localkey);
-
-    vaultobj.forEach( (element) => {
-
-      this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
-        this.reportTemplateList_int = [];
-        if (resp.length > 0) {
-          resp.forEach((ele) => {
-            ele.api = 'remote';
-            ele.apiurl = element.value;
-            ele.apikey = element.apikey;
-            ele.apiname = element.viewValue;
-          });
-          this.reportTemplateList_int.push(...resp);
-        }
-
-      }).then(() => {
-        this.ReportTemplatesdataSource.data = [...this.reportTemplateList, ...this.reportTemplateList_int];
-        this.reportTemplateList = this.ReportTemplatesdataSource.data;
-        this.ReportTemplatesdataSource.paginator = this.paginator2;
-        this.ReportTemplatesdataSource.sort = this.sort2;
-        this.msg = '';
-      }).catch(() => {});
-
-      setTimeout(() => {
-        // console.log('hide progress timeout');
-        this.msg = '';
-      }, 10000);
-
-  });
+    });
 
   }
-}
+
+  getReportTemplates() {
+    this.indexeddbService.retrieveReportTemplates().then(ret => {
+      if (ret) {
+        this.ReportTemplatesdataSource = new MatTableDataSource(ret);
+        this.reportTemplateList = this.ReportTemplatesdataSource.data;
+      }
+      this.getAPITemplates();
+    });
+  }
+
+  getAPITemplates() {
+
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+    if (localkey) {
+      this.msg = 'API connection please wait...';
+
+      const vaultobj = JSON.parse(localkey);
+
+      vaultobj.forEach((element) => {
+
+        this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
+          this.reportTemplateList_int = [];
+          if (resp.length > 0) {
+            resp.forEach((ele) => {
+              ele.api = 'remote';
+              ele.apiurl = element.value;
+              ele.apikey = element.apikey;
+              ele.apiname = element.viewValue;
+            });
+            this.reportTemplateList_int.push(...resp);
+          }
+
+        }).then(() => {
+          this.ReportTemplatesdataSource.data = [...this.reportTemplateList, ...this.reportTemplateList_int];
+          this.reportTemplateList = this.ReportTemplatesdataSource.data;
+          this.ReportTemplatesdataSource.paginator = this.paginator2;
+          this.ReportTemplatesdataSource.sort = this.sort2;
+          this.msg = '';
+        }).catch(() => { });
+
+        setTimeout(() => {
+          // console.log('hide progress timeout');
+          this.msg = '';
+        }, 10000);
+
+      });
+
+    }
+  }
 
 }
