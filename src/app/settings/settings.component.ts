@@ -644,8 +644,8 @@ getAPIReportProfiles() {
       }).then(() => {
 
         this.ReportProfilesdataSource.data = [...this.reportProfileList, ...this.reportProfileList_int];
-        //this.dataSource.sort = this.sort;
-        //this.dataSource.paginator = this.paginator;
+        this.ReportProfilesdataSource.paginator = this.paginator;
+        this.ReportProfilesdataSource.sort = this.sort;
         this.msg = '';
       }).catch(() => {});
 
@@ -994,7 +994,8 @@ getAPITemplates() {
       }).then(() => {
         this.ReportTemplatesdataSource.data = [...this.reportTemplateList, ...this.reportTemplateList_int];
         this.reportTemplateList = this.ReportTemplatesdataSource.data;
-
+        this.ReportTemplatesdataSource.paginator = this.paginator2;
+        this.ReportTemplatesdataSource.sort = this.sort2;
         this.msg = '';
       }).catch(() => {});
 
