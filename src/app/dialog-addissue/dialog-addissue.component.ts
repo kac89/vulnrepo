@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -13,6 +12,8 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
 import { CurrentdateService } from '../currentdate.service';
 import { IndexeddbService } from '../indexeddb.service';
+import { SessionstorageserviceService } from "../sessionstorageservice.service"
+
 
 export interface Tags {
   name: string;
@@ -88,11 +89,12 @@ export class DialogAddissueComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   announcer = inject(LiveAnnouncer);
   chipsissue: string[] = [];
+  reportTemplateList_int = [];
 
   constructor(public router: Router,
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
     private currentdateService: CurrentdateService,
-    private apiService: ApiService, private datePipe: DatePipe,
+    private apiService: ApiService, public sessionsub: SessionstorageserviceService,
     private indexeddbService: IndexeddbService) {
 
     this.filteredOptions = this.customissueform.valueChanges
@@ -221,6 +223,7 @@ export class DialogAddissueComponent implements OnInit {
           this.options = [...res,...ret];
         });
       }
+      this.getAPITemplates();
     });
 
     this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
@@ -263,6 +266,47 @@ export class DialogAddissueComponent implements OnInit {
 
   getcurrentDate(): number {
     return this.currentdateService.getcurrentDate();
+  }
+
+  getAPITemplates() {
+
+    const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+    if (localkey) {
+      //this.msg = 'API connection please wait...';
+  
+      const vaultobj = JSON.parse(localkey);
+  
+      vaultobj.forEach( (element) => {
+  
+        this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
+          this.reportTemplateList_int = [];
+          if (resp.length > 0) {
+            resp.forEach((ele) => {
+              ele.api = 'remote';
+              ele.apiurl = element.value;
+              ele.apikey = element.apikey;
+              ele.apiname = element.viewValue;
+            });
+            this.reportTemplateList_int.push(...resp);
+          }
+  
+        }).then(() => {
+
+          this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+            this.options = [...this.options,...this.reportTemplateList_int];
+          });
+
+          //this.msg = '';
+        }).catch(() => {});
+  
+        //setTimeout(() => {
+          // console.log('hide progress timeout');
+          //this.msg = '';
+        //}, 10000);
+  
+    });
+  
+    }
   }
 
   addIssue() {

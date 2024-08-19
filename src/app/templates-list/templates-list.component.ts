@@ -122,10 +122,10 @@ export class TemplatesListComponent implements OnInit {
           //this.msg = '';
         }).catch(() => {});
   
-        setTimeout(() => {
+        //setTimeout(() => {
           // console.log('hide progress timeout');
           //this.msg = '';
-        }, 10000);
+        //}, 10000);
   
     });
   
