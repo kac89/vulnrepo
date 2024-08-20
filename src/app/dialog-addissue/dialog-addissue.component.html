@@ -44,7 +44,7 @@
             <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="customissueform" [matAutocomplete]="auto" [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
-                  {{option.title}}
+                  <mat-icon *ngIf="option.api" color="accent" title="Remote API: {{option.apiname}} - [{{option.apiurl}}] ">public</mat-icon> {{option.title}}
                 </mat-option>
               </mat-autocomplete>
             <mat-error *ngIf="customissueform.hasError('notempty')">

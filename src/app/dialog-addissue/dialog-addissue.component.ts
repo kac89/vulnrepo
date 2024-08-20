@@ -223,9 +223,9 @@ export class DialogAddissueComponent implements OnInit {
         this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
           this.options = [...res, ...ret];
           this.optionsv = this.options;
+          this.getAPITemplates();
         });
       }
-      this.getAPITemplates();
     });
 
     this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {

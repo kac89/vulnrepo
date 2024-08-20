@@ -54,7 +54,8 @@ export class TemplatesListComponent implements OnInit {
   sourceSelect = 'VULNREPO';
   reportTemplateList_int = [];
   reportTemplateList = [];
-
+  local = [];
+  json = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -63,32 +64,41 @@ export class TemplatesListComponent implements OnInit {
 
     this.getvulnlistStatus = 'Loading...';
 
-    // get report profiles
+
+  }
+
+  ngOnInit() {
+
     this.gettemplates();
 
   }
 
-  ngOnInit() { }
-
   gettemplates() {
+
     this.indexeddbService.retrieveReportTemplates().then(ret => {
       if (ret) {
+        this.local = ret;
+
         this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-          let xxx = [...res, ...ret];
-          this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
-          this.reportTemplateList = this.dataSource.data;
-          this.countvulns = xxx;
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-          this.getvulnlistStatus = '';
+          if (res) {
+            this.json = res;
+
+            let xxx = [...this.local, ...this.json];
+            this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
+            this.reportTemplateList = this.dataSource.data;
+            this.countvulns = xxx;
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.getvulnlistStatus = '';
+
+            this.getAPITemplates();
+          }
         });
+
       }
+    });
 
-    }).then(() => {
 
-      this.getAPITemplates();
-
-    }).catch(() => { });
   }
 
   getAPITemplates() {
