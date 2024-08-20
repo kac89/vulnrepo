@@ -59,15 +59,16 @@ export class TemplatesListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private http: HttpClient, public dialog: MatDialog, private indexeddbService: IndexeddbService,
-    private apiService: ApiService, public sessionsub: SessionstorageserviceService) { }
+    private apiService: ApiService, public sessionsub: SessionstorageserviceService) {
 
-  ngOnInit() {
     this.getvulnlistStatus = 'Loading...';
 
     // get report profiles
     this.gettemplates();
 
   }
+
+  ngOnInit() { }
 
   gettemplates() {
     this.indexeddbService.retrieveReportTemplates().then(ret => {
@@ -82,8 +83,12 @@ export class TemplatesListComponent implements OnInit {
           this.getvulnlistStatus = '';
         });
       }
+
+    }).then(() => {
+
       this.getAPITemplates();
-    });
+
+    }).catch(() => { });
   }
 
   getAPITemplates() {
@@ -116,7 +121,6 @@ export class TemplatesListComponent implements OnInit {
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
           this.getvulnlistStatus = '';
-
 
           //this.msg = '';
         }).catch(() => { });
