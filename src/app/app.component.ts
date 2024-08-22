@@ -21,8 +21,8 @@ export class AppComponent implements OnInit, OnDestroy {
   arr_oreports = [];
   dialogRef: MatDialogRef<DialogAboutComponent>;
 
-  constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService,public dialog: MatDialog) {
-    this.sessionsub.storageChange.subscribe( data => {
+  constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService, public dialog: MatDialog) {
+    this.sessionsub.storageChange.subscribe(data => {
       // console.log(data);
       this.getopenreports();
     });
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }
     });
-    
+
     this.getopenreports();
   }
 
@@ -82,29 +82,40 @@ export class AppComponent implements OnInit, OnDestroy {
 
   getopenreports() {
     this.arr_oreports = [];
-    
-    for (const key of Object.keys(sessionStorage)) {
-      this.indexeddbService.checkifreportexist(key).then(data => {
-        if (data) {
-          this.show_active_reports = true;
-          this.arr_oreports.push({"report_id": data.report_id, "report_name": data.report_name});
-        } else {
 
-          this.indexeddbService.checkAPIreport(key).then(data => {
-            if (data) {
-              this.show_active_reports = true;
-              this.arr_oreports.push({"report_id": data.report_id, "report_name": data.report_name, "report_source": 'api'});
-            }
-          });
+    for (const [report_id, value] of Object.entries(sessionStorage)) {
 
-        }
+      if (report_id !== 'VULNREPO-API') {
+        this.indexeddbService.checkifreportexist(report_id).then(data => {
+          if (data) {
+            this.show_active_reports = true;
+            this.arr_oreports.push({ "report_id": data.report_id, "report_name": data.report_name });
+          }
 
-        this.arr_oreports = [...this.arr_oreports.reduce((map, obj) => map.set(obj.report_id, obj), new Map()).values()];
+          const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+          if (localkey) {
 
-      });
+            const vaultobj = JSON.parse(localkey);
+            vaultobj.forEach((element) => {
+
+              this.indexeddbService.checkAPIreport_single(report_id, element.value, element.apikey).then(data => {
+                if (data) {
+                  this.show_active_reports = true;
+                  this.arr_oreports.push({ "report_id": data.report_id, "report_name": data.report_name, "report_source": 'api' });
+                }
+              });
+
+            });
+
+          }
+
+        });
+      }
+
     };
 
-    
+    this.arr_oreports = [...this.arr_oreports.reduce((map, obj) => map.set(obj.report_id, obj), new Map()).values()];
+
   }
 
 }

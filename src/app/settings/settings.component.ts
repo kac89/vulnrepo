@@ -613,8 +613,9 @@ export class SettingsComponent implements OnInit {
       if (ret) {
         this.ReportProfilesdataSource = new MatTableDataSource(ret);
         this.reportProfileList = this.ReportProfilesdataSource.data;
+        this.getAPIReportProfiles();
       }
-      this.getAPIReportProfiles();
+      
     });
   }
 
@@ -626,11 +627,11 @@ export class SettingsComponent implements OnInit {
       this.msg = 'API connection please wait...';
 
       const vaultobj = JSON.parse(localkey);
-
+      this.reportProfileList_int = [];
       vaultobj.forEach((element) => {
 
         this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
-          this.reportProfileList_int = [];
+
           if (resp.length > 0) {
             resp.forEach((ele) => {
               ele.api = 'remote';
@@ -646,9 +647,8 @@ export class SettingsComponent implements OnInit {
           this.ReportProfilesdataSource.data = [...this.reportProfileList, ...this.reportProfileList_int];
           this.ReportProfilesdataSource.paginator = this.paginator;
           this.ReportProfilesdataSource.sort = this.sort;
-          this.msg = '';
-        }).catch(() => { });
 
+        }).catch(() => { });
 
         setTimeout(() => {
           // console.log('hide progress timeout');
@@ -656,6 +656,7 @@ export class SettingsComponent implements OnInit {
         }, 10000);
 
       });
+
 
     }
   }

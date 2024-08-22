@@ -81,15 +81,18 @@ export class MyreportsComponent implements OnInit {
   getAPIallreports() {
     this.apilist = [];
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+
     if (localkey) {
       this.msg = 'API connection please wait...';
 
       this.keyfound = true;
       const vaultobj = JSON.parse(localkey);
-
+      let x = 0;
       vaultobj.forEach( (element) => {
+        x=x+1;
 
         this.apilist.push({value: element.value, apikey: element.apikey, viewValue: element.viewValue});
+
         this.apiService.APISend(element.value, element.apikey, 'getreportslist', '').then(resp => {
 
           if (resp.length > 0) {
@@ -106,15 +109,16 @@ export class MyreportsComponent implements OnInit {
           this.dataSource.data = this.list;
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
-          this.msg = '';
         }).catch(() => {});
 
-
-        setTimeout(() => {
-          // console.log('hide progress timeout');
-          this.msg = '';
-        }, 10000);
-
+        //progress bar on api reports
+        if(vaultobj.length === x) {
+          setTimeout(() => {
+            // console.log('hide progress timeout');
+            this.msg = '';
+          }, 1000);
+        }
+        
     });
 
 

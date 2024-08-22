@@ -63,7 +63,11 @@ export class ApiService {
                     duration: 3000,
                     panelClass: ['notify-snackbar-fail']
                   });
+                 } else if (reason.status === 404) {
+                    //nothing to do
                  } else {
+                  
+
                   this.snackBar.open('CAN\'T CONNECT TO API: ' + apiurl, 'OK', {
                     duration: 3000,
                     panelClass: ['notify-snackbar-fail']

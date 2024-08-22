@@ -215,3 +215,28 @@ Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `API-ACCESS-KEY` | `string` | **Required**. Your API key |
+
+#### getreporttemplates: Get all issue templates
+
+Request:
+```http
+POST /api/ HTTP/2
+Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Action: getreporttemplates
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+```
+
+Response:
+```http
+HTTP/2 200 OK
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+
+[{"[trunked]"}]
+
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
