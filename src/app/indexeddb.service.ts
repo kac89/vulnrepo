@@ -832,6 +832,24 @@ export class IndexeddbService {
     });
   }
 
+  checkAPIreport_single(reportid, url, key) {
+    return new Promise<any>((resolve, reject) => {
+
+      this.apiService.APISend(url, key, 'getreport', 'reportid=' + reportid).then(resp => {
+        if (resp) {
+          if (resp.length > 0) {
+            console.log('Report exist in API: OK');
+            resolve(resp[0]);
+          }
+        } else {
+          resolve(false);
+        }
+
+      });
+
+    });
+  }
+
   checkAPIreport(reportid) {
     return new Promise<any>((resolve, reject) => {
 
@@ -839,16 +857,12 @@ export class IndexeddbService {
       if (localkey) {
 
         const vaultobj = JSON.parse(localkey);
-
         vaultobj.forEach((element) => {
           this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
-
             if (resp) {
               if (resp.length > 0) {
                 console.log('Report exist in API: OK');
                 resolve(resp[0]);
-              } else {
-                resolve(false);
               }
             }
 
@@ -858,6 +872,7 @@ export class IndexeddbService {
 
       } else {
         resolve(false);
+
       }
 
 
@@ -874,16 +889,12 @@ export class IndexeddbService {
 
         vaultobj.forEach((element) => {
           this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
-
             if (resp) {
               if (resp.length > 0) {
-                console.log('Report exist in API: OK');
+                console.log('Report exist in API changes: OK');
                 resolve(resp[0]);
-              } else {
-                resolve(false);
               }
             }
-
           });
 
         });
@@ -907,24 +918,19 @@ export class IndexeddbService {
 
         vaultobj.forEach((element) => {
 
-          let check = false;
-
           this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
 
             if (resp) {
               if (resp.length > 0) {
-                check = true;
                 console.log('Report exist in API: OK');
                 resolve({ data: resp[0], api: element.value, apikey: element.apikey });
               }
-            } else {
-              check = false;
             }
 
           }).then((resp) => {
-            if (check !== true) {
-              resolve('API_ERROR');
-            }
+            //if (check !== true) {
+            //resolve('API_ERROR');
+            //}
           });
 
         });
@@ -984,17 +990,17 @@ export class IndexeddbService {
         request.onsuccess = function (evt) {
           let cursor = request.result;
           if (cursor) {
-              let key = cursor.primaryKey;
-              let value = cursor.value;
-              const ret = Object.assign({}, {"_key":key}, value);
-              arr.push(ret)
-              cursor.continue();
+            let key = cursor.primaryKey;
+            let value = cursor.value;
+            const ret = Object.assign({}, { "_key": key }, value);
+            arr.push(ret)
+            cursor.continue();
           }
           else {
-              // no more results
-              
+            // no more results
+
           }
-          
+
         };
 
         tx.oncomplete = function () {
@@ -1178,17 +1184,17 @@ export class IndexeddbService {
         request.onsuccess = function (evt) {
           let cursor = request.result;
           if (cursor) {
-              let key = cursor.primaryKey;
-              let value = cursor.value;
-              const ret = Object.assign({}, {"_key":key}, value);
-              arr.push(ret)
-              cursor.continue();
+            let key = cursor.primaryKey;
+            let value = cursor.value;
+            const ret = Object.assign({}, { "_key": key }, value);
+            arr.push(ret)
+            cursor.continue();
           }
           else {
-              // no more results
-              
+            // no more results
+
           }
-          
+
         };
 
         tx.oncomplete = function () {
@@ -1290,38 +1296,38 @@ export class IndexeddbService {
   }
 
 
-    updateTemplate(newvalue, key) {
-      return new Promise<any>((resolve, reject) => {
-  
-        const indexedDB = window.indexedDB;
-        const open = indexedDB.open('vulnrepo-templates', 1);
-  
-        open.onupgradeneeded = function () {
-          const db = open.result;
-          db.createObjectStore('report-templates', { autoIncrement: true });
+  updateTemplate(newvalue, key) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-templates', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-templates', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-templates', 'readwrite');
+        const store = tx.objectStore('report-templates');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.put(newvalue, key);
+
+        request.onsuccess = function (evt) {
+          resolve(true);
         };
-  
-        open.onsuccess = function () {
-          const db = open.result;
-          const tx = db.transaction('report-templates', 'readwrite');
-          const store = tx.objectStore('report-templates');
-  
-          // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
-          const request = store.put(newvalue, key);
-  
-          request.onsuccess = function (evt) {
-            resolve(true);
-          };
-  
-          tx.oncomplete = function () {
-            db.close();
-          };
-          request.onerror = function (e) {
-            reject(e);
-          };
+
+        tx.oncomplete = function () {
+          db.close();
         };
-  
-      });
-    }
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
 
 }
