@@ -87,12 +87,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getProfiles();
-
-    this.getTemplates();
-
     this.getVault();
-
 
   }
 
@@ -173,6 +168,7 @@ export class SettingsComponent implements OnInit {
         this.ReportProfilesdataSource.paginator = this.paginator;
         this.ReportProfilesdataSource.sort = this.sort;
       }
+      this.getAPIReportProfiles();
     });
   }
 
@@ -184,6 +180,7 @@ export class SettingsComponent implements OnInit {
         this.ReportTemplatesdataSource.paginator = this.paginator2;
         this.ReportTemplatesdataSource.sort = this.sort2;
       }
+      this.getAPITemplates();
     });
   }
 
@@ -387,8 +384,8 @@ export class SettingsComponent implements OnInit {
 
     this.sessionsub.setSessionStorageItem('VULNREPO-API', JSON.stringify(vaultobj));
 
-    this.getReportProfiles();
-    this.getReportTemplates();
+    this.getProfiles();
+    this.getTemplates();
   }
 
   removeapikey() {
@@ -408,7 +405,7 @@ export class SettingsComponent implements OnInit {
     this.apiconneted = false;
     this.status = 'Not connected!';
     this.tryconnectdb = true;
-    this.getReportProfiles();
+    this.getProfiles();
   }
 
   tryconnect() {
@@ -608,18 +605,6 @@ export class SettingsComponent implements OnInit {
   }
 
 
-  getReportProfiles() {
-    this.indexeddbService.retrieveReportProfile().then(ret => {
-      if (ret) {
-        this.ReportProfilesdataSource = new MatTableDataSource(ret);
-        this.reportProfileList = this.ReportProfilesdataSource.data;
-        this.getAPIReportProfiles();
-      }
-      
-    });
-  }
-
-
   getAPIReportProfiles() {
 
     const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
@@ -736,7 +721,7 @@ export class SettingsComponent implements OnInit {
       this.ReportProfilesdataSource.data = this.reportProfileList;
 
       this.indexeddbService.deleteProfile(item).then(ret => {
-        this.getReportProfiles();
+        this.getProfiles();
       });
 
     }
@@ -782,7 +767,7 @@ export class SettingsComponent implements OnInit {
           };
           this.ReportProfilesdataSource.data = this.reportProfileList;
           this.indexeddbService.updateProfile(this.reportProfileList[index], result.original[0]._key).then(ret => { });
-          this.getReportProfiles();
+          this.getProfiles();
         }
       }
 
@@ -839,7 +824,7 @@ export class SettingsComponent implements OnInit {
       this.indexeddbService.saveReportProfileinDB(parsed).then(ret => { });
     }
 
-    this.getReportProfiles();
+    this.getProfiles();
   }
 
   downloadProfileItem(element) {
@@ -958,16 +943,6 @@ export class SettingsComponent implements OnInit {
 
     });
 
-  }
-
-  getReportTemplates() {
-    this.indexeddbService.retrieveReportTemplates().then(ret => {
-      if (ret) {
-        this.ReportTemplatesdataSource = new MatTableDataSource(ret);
-        this.reportTemplateList = this.ReportTemplatesdataSource.data;
-      }
-      this.getAPITemplates();
-    });
   }
 
   getAPITemplates() {
