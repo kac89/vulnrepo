@@ -31,7 +31,7 @@ jobs:
           npm run build -- -c production
     
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.0.0
+      uses: actions/upload-artifact@v4
       with:
         name: deploy_dist
         path: dist
@@ -50,6 +50,8 @@ jobs:
       - name: Download build
         uses: actions/download-artifact@v4
         with:
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.TOKEN }}
           name: deploy_dist
           path: .
           
