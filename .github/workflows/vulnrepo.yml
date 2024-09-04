@@ -54,6 +54,7 @@ jobs:
           github-token: ${{ secrets.TOKEN }}
           name: deploy_dist
           path: .
+          merge-multiple: true
           
       - name: cmd run
         run: ls -la
