@@ -31,7 +31,7 @@ jobs:
           npm run build -- -c production
     
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.0.0
+      uses: actions/upload-artifact@v3
       with:
         name: deploy_dist
         path: dist
@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           
       - name: Download build
-        uses: actions/download-artifact@v3.0.0
+        uses: actions/download-artifact@v3
         with:
           name: deploy_dist
           path: .

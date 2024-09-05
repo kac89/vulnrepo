@@ -41,25 +41,25 @@
 
       <div *ngIf="decryptedReportDataChanged" style="text-align: center;" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-        <span
+        <p
           *ngIf="reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == ''">
-          {{savemsg}}<br>Last release: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
-        </span>
-        <span *ngIf="lastsavereportdata !== ''">
-          {{savemsg}}<br>Last release: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
-        </span>
+          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
+      </p>
+        <p *ngIf="lastsavereportdata !== ''">
+          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
+        </p>
 
         <div>
-          <br>
+
           <button mat-fab extended class="mat-elevation-z9" color="primary" (click)="saveReportChanges(reportdesc.report_id)">
             <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save changes and release a new version
           </button>
         </div>
-        <br>
-        <span *ngIf="youhaveunsavedchanges">
+
+        <div class="youhaveunsavedchanges" *ngIf="youhaveunsavedchanges">
           <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon> You have unsaved
           changes! <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
-        </span>
+        </div>
 
       </div>
 
