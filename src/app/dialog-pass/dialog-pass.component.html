@@ -2,25 +2,22 @@
   <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report</h2>
 <mat-dialog-content>
   <div>
-
-    <form class="example-form">
-
-      <mat-form-field class="example-full-width" color="accent">
-        <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
-          (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
-        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-        <mat-error *ngIf="insertpass.hasError('incorrect')">
-          <strong>
-            <mat-icon class="vertical-align-middle size-45">https</mat-icon> Security key is incorrect!
-          </strong>
-        </mat-error>
-      </mat-form-field>
-      <br>
-      <div *ngIf="msg != ''">
-        {{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-        <br>
-      </div>
-    </form>
+  <form class="example-form">
+    <mat-form-field class="example-full-width" color="accent">
+      <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
+        (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <mat-error *ngIf="insertpass.hasError('incorrect')">
+        <strong>
+          <mat-icon class="vertical-align-middle size-45">https</mat-icon> Security key is incorrect!
+        </strong>
+      </mat-error>
+    </mat-form-field>
+    
+    <div *ngIf="msg != ''">
+      {{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+    </div>
+  </form>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions style="padding-left: 24px;">
