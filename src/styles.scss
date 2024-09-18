@@ -2,8 +2,6 @@
 
 @use '@angular/material' as mat;
 
-@use "@material/card";
-@use "@material/elevation/mdc-elevation";
 @import '~material-design-icons/iconfont/material-icons.css';
 
 $my-typography: mat.m2-define-typography-config(
