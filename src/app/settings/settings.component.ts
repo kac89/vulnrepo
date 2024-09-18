@@ -155,6 +155,9 @@ export class SettingsComponent implements OnInit {
         }
       });
 
+      this.getProfiles();
+      this.getTemplates();
+
     }
   }
 
@@ -168,6 +171,7 @@ export class SettingsComponent implements OnInit {
         this.ReportProfilesdataSource.paginator = this.paginator;
         this.ReportProfilesdataSource.sort = this.sort;
       }
+
       this.getAPIReportProfiles();
     });
   }
