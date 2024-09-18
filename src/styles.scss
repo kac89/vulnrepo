@@ -1,24 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
 @use '@angular/material' as mat;
+
 @use "@material/card";
 @use "@material/elevation/mdc-elevation";
-@use "@material/typography/mdc-typography";
-
-@use "@material/button/styles";
 @import '~material-design-icons/iconfont/material-icons.css';
-
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
-/* TODO(mdc-migration): Remove all-legacy-component-typographies once all legacy components are migrated */
-
-/* TODO(mdc-migration): Remove legacy-core once all legacy components are migrated */
 
 $my-typography: mat.m2-define-typography-config(
   $font-family: 'Roboto,Helvetica Neue,sans-serif',
@@ -39,18 +25,16 @@ $dark-theme: mat.m2-define-dark-theme((
 ));
 
 :root {
+
+  @include mat.all-component-themes($dark-theme);
+  @include mat.all-component-typographies($my-typography);
+  @include mat.typography-hierarchy($my-typography);
+
   --mat-sidenav-content-background-color: #000;
+  
 }
 
-$mdc-typography-styles-headline1: (  font-family: unquote("Roboto"),  font-size: 96);$mdc-typography-styles-headline2: (  font-family: unquote("Roboto"),  font-size: 60);$mdc-typography-styles-headline3: (  font-family: unquote("Roboto"),  font-size: 48);$mdc-typography-styles-headline4: (  font-family: unquote("Roboto"),  font-size: 34);$mdc-typography-styles-headline5: (  font-family: unquote("Roboto"),  font-size: 24);$mdc-typography-styles-headline6: (  font-family: unquote("Roboto"),  font-size: 20);$mdc-typography-styles-body1: (  font-family: unquote("Roboto"),  font-size: 16);$mdc-typography-styles-body2: (  font-family: unquote("Roboto"),  font-size: 14);$mdc-typography-styles-subtitle1: (  font-family: unquote("Roboto"),  font-size: 16);$mdc-typography-styles-subtitle2: (  font-family: unquote("Roboto"),  font-size: 14);$mdc-typography-styles-button: (  font-family: unquote("Roboto"),  font-size: 14);$mdc-typography-styles-overline: (  font-family: unquote("Roboto"),  font-size: 10);$mdc-typography-styles-caption: (  font-family: unquote("Roboto"),  font-size: 12);
-
-/* TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated */
 @include mat.core();
-@include mat.all-component-themes($dark-theme);
-@include mat.all-component-typographies($my-typography);
-@include mat.typography-hierarchy($my-typography);
-
-
 // custom css
 
 body, html{
@@ -223,3 +207,13 @@ blockquote p {
   border-left: 3px solid #ccc;
 } 
 
+.mdc-typography--body1 {
+  font-family: Roboto,sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+  letter-spacing: .03125em;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: inherit;
+}
