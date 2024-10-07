@@ -14,7 +14,11 @@
       </mat-card-header>
 
       <mat-card-content>
-        <input cdkFocusInitial type="file" accept=".vulnr" (change)="onFileSelect($event.target)" name="myfiles" multiple>
+        <button mat-raised-button color="primary" (click)="importreports.click()" title="Import reports">
+          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
+        </button>
+        <input hidden type="file" accept=".vulnr" #importreports (change)="onFileSelect($event.target)" name="myfiles" multiple />
+
       </mat-card-content>
       
     </mat-card>
@@ -38,7 +42,7 @@
       </mat-card-content>
 
       <mat-card-actions>
-        <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="accent"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">playlist_add</mat-icon> Import</button>
+        <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="primary"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">playlist_add</mat-icon> Import</button>
       </mat-card-actions>
 
       
