@@ -53,15 +53,13 @@ export class DialogImportComponent implements OnInit {
   public decryptedjsonplease_wait = false;
   public npmauditshow_input = true;
   public npmauditplease_wait = false;
-
-  
-
   public semgrepshow_input = true;
   public semgrepplease_wait = false;
   mergeperpath = new UntypedFormControl();
-
   public composershow_input = true;
   public composerplease_wait = false;
+  public zaproxyshow_input = true;
+  public zaproxyplease_wait = false;
 
   file: any;
   hide = true;
@@ -78,7 +76,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'jira_xml', viewValue: 'Atlassian Jira (.XML)', viewImg: '/assets/vendors/jira-logo.png' },
     { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)', viewImg: '/assets/vendors/npm-logo.png' },
     { value: 'semgrep', viewValue: 'Semgrep (.JSON)', viewImg: '/assets/vendors/semgrep-logo.png' },
-    { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)', viewImg: '/assets/vendors/Logo-composer-transparent.png' }
+    { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)', viewImg: '/assets/vendors/Logo-composer-transparent.png' },
+    { value: 'zaproxy', viewValue: 'ZAP (.JSON)', viewImg: '/assets/vendors/zap-by-checkmarx.svg' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
@@ -405,7 +404,7 @@ export class DialogImportComponent implements OnInit {
 
       const def = {
         title: res.name[0],
-        poc:  returnhost(res.host, res.path),
+        poc: returnhost(res.host, res.path),
         files: [],
         desc: itempoc + '\n\n' + itemback + '\n\n' + itemrem,
         severity: res.severity[0],
@@ -1383,7 +1382,7 @@ export class DialogImportComponent implements OnInit {
   }
 
 
-  parseComposer(json){
+  parseComposer(json) {
     const data = JSON.parse(json);
 
     function setseverity(severity) {
@@ -1408,9 +1407,9 @@ export class DialogImportComponent implements OnInit {
 
         const def = {
           title: subvalue.title,
-          poc: 'Package Name: '+subvalue.packageName+'\nAffected Versions: '+subvalue.affectedVersions,
+          poc: 'Package Name: ' + subvalue.packageName + '\nAffected Versions: ' + subvalue.affectedVersions,
           files: [],
-          desc: 'All details information: '+subvalue.link,
+          desc: 'All details information: ' + subvalue.link,
           severity: setseverity(subvalue.severity),
           ref: subvalue.link,
           status: 1,
@@ -1418,6 +1417,83 @@ export class DialogImportComponent implements OnInit {
           cvss_vector: '',
           cve: subvalue.cve,
           tags: [{ name: "composer" }],
+          bounty: [],
+          date: this.currentdateService.getcurrentDate()
+        };
+
+        arr.push(def);
+
+      }
+
+    }
+
+    this.dialogRef.close(arr);
+
+  }
+
+
+  zaproxyonFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.zaproxyshow_input = false;
+      this.zaproxyplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parsezaproxy(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parsezaproxy(json) {
+    const data = JSON.parse(json);
+
+    function setseverity(severity) {
+      if (severity === '4') {
+        severity = 'Critical';
+      } else if (severity === '3') {
+        severity = 'High';
+      } else if (severity === '2') {
+        severity = 'Medium';
+      } else if (severity === '1') {
+        severity = 'Low';
+      } else if (severity === '0') {
+        severity = 'Info';
+      }
+      return severity
+    }
+
+    const arr = [];
+    for (const [key, value] of Object.entries(data.site)) {
+
+      for (const [subkey, subvalue] of Object.entries(value['alerts'])) {
+
+
+        let scopedesc = "";
+        if (subvalue['instances']) {
+          scopedesc = "Request header:\n" + subvalue['instances'][0]['method'] + " " + subvalue['instances'][0]['uri'];
+        }
+
+        const def = {
+          title: subvalue['alert'],
+          poc: scopedesc,
+          files: [],
+          desc: subvalue['desc'] + "\n\n" + subvalue['otherinfo'],
+          severity: setseverity(subvalue['riskcode']),
+          ref: subvalue['reference'],
+          status: 1,
+          cvss: '',
+          cvss_vector: '',
+          cve: '',
+          tags: [{ name: "zaproxy" }],
           bounty: [],
           date: this.currentdateService.getcurrentDate()
         };
