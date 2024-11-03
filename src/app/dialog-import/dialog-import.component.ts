@@ -1471,6 +1471,22 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
+    function parseit(text) {
+      var html = text;
+      var div = document.createElement("div");
+      div.innerHTML = html;
+      text = div.textContent || div.innerText || "";
+      return text
+    }
+    function parseref(text) {
+
+      text = text.replaceAll('</p><p>', '</p>\n<p>')
+      var html = text;
+      var div = document.createElement("div");
+      div.innerHTML = html;
+      text = div.textContent || div.innerText || "";
+      return text
+    }
     const arr = [];
     for (const [key, value] of Object.entries(data.site)) {
 
@@ -1482,13 +1498,17 @@ export class DialogImportComponent implements OnInit {
           scopedesc = "Request header:\n" + subvalue['instances'][0]['method'] + " " + subvalue['instances'][0]['uri'];
         }
 
+
+
+
+
         const def = {
           title: subvalue['alert'],
           poc: scopedesc,
           files: [],
-          desc: subvalue['desc'] + "\n\n" + subvalue['otherinfo'],
+          desc: parseit(subvalue['desc']) + "\n\n" + parseit(subvalue['otherinfo']),
           severity: setseverity(subvalue['riskcode']),
-          ref: subvalue['reference'],
+          ref: parseref(subvalue['reference']),
           status: 1,
           cvss: '',
           cvss_vector: '',
