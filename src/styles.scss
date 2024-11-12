@@ -149,11 +149,13 @@ mat-icon.size-45 {
 pre code.hljs {
   display: block;
   overflow-x: auto;
-  padding: 1em
+  padding: 1em;
+  
 }
 
 code.hljs {
-  padding: 3px 5px
+  padding: 3px 5px;
+  word-wrap: break-word;
 }
 
 
@@ -263,13 +265,16 @@ pre.hljs code {
   }
   .code-line {
     padding-left: 7px;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: break-spaces;
   }
   .line-number {
     min-width: 22px;
     text-align: left;
     width: 1%;
     color: #ccc;
-    border-right: 1px solid #16bf6e
+    border-right: 1px solid #16bf6e;
   }
 }
 
