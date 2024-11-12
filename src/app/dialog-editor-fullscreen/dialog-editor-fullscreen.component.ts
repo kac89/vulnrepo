@@ -3,6 +3,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
 import { marked } from 'marked'
 import * as DOMPurify from 'dompurify';
+import { markedHighlight } from "marked-highlight";
+import hljs from 'highlight.js';
+import { Marked } from "marked";
 
 export interface Table {
   type: 'table';
@@ -59,6 +62,17 @@ export class DialogEditorFullscreenComponent implements OnInit {
   }
 
   poc_preview_funct(value): void {
+
+    const marked = new Marked(
+      markedHighlight({
+      emptyLangClass: 'hljs',
+        langPrefix: 'hljs language-',
+        highlight(code, lang, info) {
+          const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+          return hljs.highlight(code, { language }).value;
+        }
+      })
+    );
 
     // add Markdown rendering
     const renderer = new marked.Renderer();
