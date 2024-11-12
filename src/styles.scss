@@ -156,10 +156,6 @@ code.hljs {
   padding: 3px 5px
 }
 
-.hljs {
-  background: #1e1e1e;
-  color: #dcdcdc
-}
 
 .hljs-keyword,
 .hljs-literal,
@@ -258,6 +254,23 @@ code.hljs {
   background-color: #600;
   display: inline-block;
   width: 100%
+}
+
+pre.hljs code {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .code-line {
+    padding-left: 7px;
+  }
+  .line-number {
+    min-width: 22px;
+    text-align: left;
+    width: 1%;
+    color: #ccc;
+    border-right: 1px solid #16bf6e
+  }
 }
 
 /////////////////////// marked highlight end

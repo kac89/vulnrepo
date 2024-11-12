@@ -74,10 +74,28 @@ export class DialogEditorFullscreenComponent implements OnInit {
       })
     );
 
+    const applyLineNumbers = (code: string) => {
+        const lines = code.trim().split('\n');
+      
+        const rows = lines.map((line, idx) => {
+          const lineNumber = idx + 1;
+      
+          let html = '<tr>';
+    	    html += `<td class="line-number">${lineNumber}</td>`;
+          html += `<td class="code-line">${line}</td>`;
+      	    html += '</tr>';
+      	    return html;
+        });
+      	
+        return `<table><tbody>${rows.join('')}</tbody></table>`;
+      };
+
+
     // add Markdown rendering
     const renderer = new marked.Renderer();
     renderer.code = function (token) {
-      return `<code>` + DOMPurify.sanitize(token.text) + `</code>`;
+      token.text = applyLineNumbers(token.text);
+      return `<pre class="hljs"><code>` + DOMPurify.sanitize(token.text) + `</code></pre>`;
     };
 
     renderer.blockquote = function (token) {
