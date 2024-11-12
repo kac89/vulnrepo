@@ -3022,6 +3022,7 @@ Date   | Description
       { "filename": "marked/4.2.5/marked.min.js", "integrity": "sha512-5JZDwulT+S/K8p/KO4tikNKA5t6Ebb+tqPwT7Ma+lVpJuS4G+Z0lSktWcl8hymXeFqCprGEuKGOCrKjyulql/A==" },
       { "filename": "dompurify/2.4.1/purify.min.js", "integrity": "sha512-uHOKtSfJWScGmyyFr2O2+efpDx2nhwHU2v7MVeptzZoiC7bdF6Ny/CmZhN2AwIK1oCFiVQQ5DA/L9FSzyPNu6Q==" },
       { "filename": "Chart.js/4.4.0/chart.umd.js", "integrity": "sha512-6HrPqAvK+lZElIZ4mZ64fyxIBTsaX5zAFZg2V/2WT+iKPrFzTzvx6QAsLW2OaLwobhMYBog/+bvmIEEGXi0p1w==" }
+
     ];
     let ciphertext = "";
     if (encpass === 'userepokey') {
