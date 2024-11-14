@@ -69,14 +69,16 @@
 			font-size: 15px;
 			background-color: #f0f1f2;
 			display: block;
-			white-space: pre;
 			-webkit-overflow-scrolling: touch;
-			overflow-x: scroll;
 			max-width: 100%;
 			min-width: 100px;
 			padding-left: 5px;
-			border-left: 12px solid #16bf6e;
 			border-radius: 5px;
+			white-space: pre-wrap;       /* Since CSS 2.1 */
+			white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+			white-space: -pre-wrap;      /* Opera 4-6 */
+			white-space: -o-pre-wrap;    /* Opera 7 */
+			word-wrap: break-word;       /* Internet Explorer 5.5+ */
 		}
 
 		pre {
@@ -100,6 +102,30 @@
 			border-left: 3px solid #ccc;
 		}
 
+		/* highlight.js style*/
+		pre code.hljs{display:block;padding:1em}code.hljs{padding:3px 5px}.hljs{background:#fff;color:#000}.hljs-comment,.hljs-quote,.hljs-variable{color:green}.hljs-built_in,.hljs-keyword,.hljs-name,.hljs-selector-tag,.hljs-tag{color:#00f}.hljs-addition,.hljs-attribute,.hljs-literal,.hljs-section,.hljs-string,.hljs-template-tag,.hljs-template-variable,.hljs-title,.hljs-type{color:#a31515}.hljs-deletion,.hljs-meta,.hljs-selector-attr,.hljs-selector-pseudo{color:#2b91af}.hljs-doctag{color:grey}.hljs-attr{color:red}.hljs-bullet,.hljs-link,.hljs-symbol{color:#00b0e8}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}
+		
+		.tablemd {
+			width: 100%;
+			border: 0px;
+			border-collapse: collapse;
+			border: 1px solid #f0f1f2;
+		}
+
+		thead.tablemd {
+			border: 1px solid #f0f1f2;
+			background-color: #f0f1f2;
+			padding: 8px;
+		}
+
+		.tableb {
+			border: 1px solid #f0f1f2;
+			padding: 8px;
+		}
+
+		.titlepad {
+			padding-left: 10px;
+		}
 
 	</style>
 	<style>
@@ -520,44 +546,66 @@
 		function genreport(obj) {
 
 			// console.log(obj);
+			const { Marked } = globalThis.marked;
+			const { markedHighlight } = globalThis.markedHighlight;
 
+			const marked = new Marked(
+			markedHighlight({
+			emptyLangClass: 'hljs',
+				langPrefix: 'hljs language-',
+				highlight(code, lang, info) {
+				const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+				return hljs.highlight(code, { language }).value;
+				}
+			})
+			);
 			// add Markdown rendering
 			const renderer = new marked.Renderer();
 
-			renderer.code = function (code, infostring, escaped) {
-				return `<code>` + DOMPurify.sanitize(code) + `</code>`;
+			renderer.code = function (token) {
+			return `<pre class="hljs"><code>` + DOMPurify.sanitize(token.text) + `</code></pre>`;
 			};
 
-			renderer.table = function (header, body) {
-				const table = `
-				<table class="table">
-					<thead>${header}</thead>
-					<tbody>${body}</tbody>
-				</table>
-			`;
-				return table;
+			renderer.blockquote = function (token) {
+      			return `<blockquote><p>` + DOMPurify.sanitize(token.text) + `</p></blockquote>`;
+    		};
+
+			renderer.image = function (token) {
+			//return `<img src="` + DOMPurify.sanitize(token.href) + `" alt="` + DOMPurify.sanitize(token.text) + `" title="` + DOMPurify.sanitize(token.title) + `">`;
+			//disable image parse
+				return DOMPurify.sanitize(token.href);
 			};
 
-			renderer.blockquote = function (quote) {
-				return `<blockquote>` + DOMPurify.sanitize(quote) + `</blockquote>`;
-			};
+			renderer.link = function( token ) {
 
-			renderer.link = function( href, title, text ) {
-
-				try {
-					var prot = decodeURIComponent(unescape(href))
-						.replace(/[^\w:]/g, '')
-						.toLowerCase();
-				} catch (e) {
-					return text;
-				}
-				if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
-					return text;
-				}
-
-					return '<a target="_blank" rel="nofollow" href="'+ DOMPurify.sanitize(href) +'" title="' + DOMPurify.sanitize(title) + '">' + DOMPurify.sanitize(text) + '</a>';
+			try {
+			var prot = decodeURIComponent(unescape(token.href))
+				.replace(/[^\w:]/g, '')
+				.toLowerCase();
+			} catch (e) {
+			return token.text;
+			}
+			if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+			return token.text;
 			}
 
+			return '<a target="_blank" class="active-link" rel="nofollow" href="'+ DOMPurify.sanitize(token.href) +'" title="' + DOMPurify.sanitize(token.title) + '">' + DOMPurify.sanitize(token.text) + '</a>';
+			}
+
+			renderer.table = function(token) {
+
+			const header = token.header.map((res) => {
+				return "<th class='titlepad'>"+DOMPurify.sanitize(res.text)+"</th>";
+			}).join("");
+
+			const body = token.rows.map((res) => {
+				return "<tr>" + res.map((res2) => {
+				return "<td class='tableb'>"+DOMPurify.sanitize(res2.text)+"</td>";
+				}).join("") + "</tr>";
+			}).join("");
+
+				return "<div class='table-responsive'><table class='tablemd'><thead class='tablemd'><tr>" + header + "</tr></thead><tbody>" + body + "</tr></tbody></table></div>";      
+			}
 			$("title").text(obj.report_name);
 
 			if (obj.report_settings.report_logo.logo != "") {
