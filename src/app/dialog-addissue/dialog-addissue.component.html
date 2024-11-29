@@ -12,7 +12,7 @@
         <mat-form-field appearance="outline" color="accent" class="example-full-width">
           <mat-label>Templates source</mat-label>
           <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
-            <mat-option value="VULNREPO">VULNRΞPO</mat-option>
+            <mat-option value="VULNREPO"><img with="20" height="20" src="/favicon-32x32.png"> VULNRΞPO</mat-option>
             <mat-option value="CVE"><mat-icon color="accent">public</mat-icon> CVE (ONLINE Database)</mat-option>
             <mat-option value="CWE">CWE Research Concepts</mat-option>
             <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
@@ -22,6 +22,7 @@
             <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
             <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
             <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
+            <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -227,6 +228,36 @@
       <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
     </div>
     
+    <div *ngIf="sourceSelect == 'OWASP_mobile'">
+      <mat-form-field class="example-full-width" color="accent">
+        <mat-label>OWASP Mobile Top 10 2024</mat-label>
+
+        <mat-chip-grid #mobilechipGrid aria-label="Issue title" [formControl]="mobilegridaction">
+          <mat-chip-row *ngFor="let isitemw of mobilechipsissue" (removed)="removemobile(isitemw)">
+            {{isitemw}}
+            <button matChipRemove [attr.aria-label]="'remove ' + isitemw">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+
+        <input cdkFocusInitial type="text" matInput placeholder="e.g.: insecure validation" [formControl]="mobilecustomissueform" [matAutocomplete]="auto10" [matChipInputFor]="mobilechipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addmobile($event)">
+        <mat-autocomplete #auto10="matAutocomplete" (optionSelected)="mobileselected($event)">
+          <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmobile | async" [value]="option.title">
+            {{option.title}}
+          </mat-option>
+          </mat-autocomplete>
+        <mat-error *ngIf="mobilecustomissueform.hasError('notempty')">
+          <strong>Title must not be empty!</strong>
+        </mat-error>
+        <mat-error *ngIf="mobilecustomissueform.hasError('cantfind')">
+          <strong>Can not be found!</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-mobile-top-10/">owasp.org</a></small></span>
+  </div>
+
     <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
         <span style="color: red;">{{err_msg}}</span>
     </div>
@@ -241,6 +272,7 @@
       <button *ngIf="sourceSelect == 'OWASPTOP2021'" mat-raised-button color="accent" (click)="addOWASPtop2021()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 2021</button>
       <button *ngIf="sourceSelect == 'OWASPTOP10CICD'" mat-raised-button color="accent" (click)="addOWASPTOP10CICD()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 CI/CD Security Risks</button>
       <button *ngIf="sourceSelect == 'OWASPTOP10k8s'" mat-raised-button color="accent" (click)="addOWASPTOP10k8s()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Kubernetes Top 10</button>
+      <button *ngIf="sourceSelect == 'OWASP_mobile'" mat-raised-button color="accent" (click)="addOWASP_mobile()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Mobile Top 10</button>
       &nbsp;
       <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
     </div>

@@ -30,7 +30,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { HttpClient } from '@angular/common/http';
 import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
-import * as DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify';
 import { ApiService } from '../api.service';
 import { MatCalendar, MatCalendarCellCssClasses, DateRange } from '@angular/material/datepicker';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
