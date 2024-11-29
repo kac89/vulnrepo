@@ -55,7 +55,9 @@ export interface PCITesting {
 })
 export class DialogAddissueComponent implements OnInit {
   customissueform = new UntypedFormControl();
+  mobilecustomissueform = new UntypedFormControl();
   gridaction = new UntypedFormControl();
+  mobilegridaction = new UntypedFormControl();
   cwecontrol = new UntypedFormControl();
   mycve = new UntypedFormControl();
   mymobilemitre = new UntypedFormControl();
@@ -66,6 +68,7 @@ export class DialogAddissueComponent implements OnInit {
   myOWASPTOP10CICD = new UntypedFormControl();
   myOWASPTOP10k8s = new UntypedFormControl();
   options: Vulns[] = [];
+  mobileoptions: Vulns[] = [];
   optionsv = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];
@@ -76,6 +79,7 @@ export class DialogAddissueComponent implements OnInit {
   OWASPTOP10CICD: Vulns[] = [];
   OWASPTOP10k8s: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
+  filteredOptionsmobile: Observable<Vulns[]>;
   filteredOptionsCWE: Observable<Vulns[]>;
   filteredOptionsmitremobile: Observable<Vulns[]>;
   filteredOptionsmitreenterprise: Observable<Vulns[]>;
@@ -90,6 +94,7 @@ export class DialogAddissueComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   announcer = inject(LiveAnnouncer);
   chipsissue: string[] = [];
+  mobilechipsissue: string[] = [];
   reportTemplateList_int = [];
 
   constructor(public router: Router,
@@ -104,7 +109,12 @@ export class DialogAddissueComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filter(title) : this.options.slice())
       );
-
+      this.filteredOptionsmobile = this.mobilecustomissueform.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filtermobile(title) : this.mobileoptions.slice())
+      );
     this.filteredOptionsCWE = this.cwecontrol.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
@@ -164,6 +174,10 @@ export class DialogAddissueComponent implements OnInit {
   private _filter(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
     return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+  private _filtermobile(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.mobileoptions.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
   private _filterCWE(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
@@ -228,6 +242,10 @@ export class DialogAddissueComponent implements OnInit {
       }
     });
 
+    this.http.get<any>('/assets/owasp_mobile_2024.json?v=' + + new Date()).subscribe(res => {
+      this.mobileoptions = res;
+    });
+    
     this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
       this.cwe = res;
     });
@@ -852,6 +870,104 @@ export class DialogAddissueComponent implements OnInit {
   }
 
 
+  addOWASP_mobile() {
+
+    if (this.mobilecustomissueform.value !== "" && this.mobilecustomissueform.value !== null) {
+      this.mobilechipsissue.push(this.mobilecustomissueform.value);
+    }
+
+    let exitel = [];
+    if (this.mobilechipsissue.length > 0) {
+      for (var datael of this.mobilechipsissue) {
+
+        const found = this.mobileoptions.find((obj) => {
+          return obj.title === datael;
+        });
+
+        if (found !== undefined) {
+
+          if (found.title === datael) {
+            const def = {
+              title: found.title,
+              poc: found.poc,
+              files: [],
+              desc: found.desc,
+              severity: found.severity,
+              status: 1,
+              ref: found.ref,
+              cvss: found.cvss,
+              cvss_vector: found.cvss_vector,
+              cve: found.cve,
+              tags: found.tags,
+              bounty: [],
+              date: this.getcurrentDate()
+            };
+            exitel.push(def);
+
+          }
+
+
+        } else {
+
+          const def = {
+            title: datael,
+            poc: '',
+            files: [],
+            desc: '',
+            severity: 'High',
+            status: 1,
+            ref: '',
+            cvss: 7,
+            cvss_vector: '',
+            cve: '',
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          exitel.push(def);
+        }
+      }
+
+      this.dialogRef.close(exitel);
+
+
+    } else {
+      this.customissueform.setErrors({ 'notempty': true });
+      this.gridaction.setErrors({ 'notempty': true });
+    }
+
+  }
+
+  addmobile(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value) {
+      this.mobilechipsissue.push(value);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+
+    this.mobilecustomissueform.setValue('');
+  }
+
+  removemobile(item: string): void {
+    const index = this.mobilechipsissue.indexOf(item);
+
+    if (index >= 0) {
+      this.mobilechipsissue.splice(index, 1);
+
+      this.announcer.announce(`Removed ${item}`);
+    }
+  }
+
+  mobileselected(event: MatAutocompleteSelectedEvent): void {
+    this.mobilechipsissue.push(event.option.viewValue);
+    //this.fruitInput.nativeElement.value = '';
+    this.mobilecustomissueform.setValue('');
+  }
+
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
@@ -875,6 +991,8 @@ export class DialogAddissueComponent implements OnInit {
       this.announcer.announce(`Removed ${fruit}`);
     }
   }
+
+
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.chipsissue.push(event.option.viewValue);

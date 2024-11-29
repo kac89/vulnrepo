@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
-import { marked } from 'marked'
-import * as DOMPurify from 'dompurify';
+
+import DOMPurify from 'dompurify';
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
 import { Marked } from "marked";
