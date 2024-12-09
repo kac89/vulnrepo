@@ -44,13 +44,7 @@ export class ApiService {
     return this.http.get<any>('https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=' + encodeURI(keyword) + '&keywordExactMatch&resultsPerPage='+String(resultsPerPage)+'&startIndex='+String(startIndex))
                .toPromise()
                .then(response => response)
-               .catch(error => {
-                console.log('CVE error: ', error);
-                this.snackBar.open('API Response ERROR, wait 30sec and try again!', 'OK', {
-                  duration: 5000,
-                  panelClass: ['notify-snackbar-fail']
-                });
-              });
+               .catch(error => error);
   }
 
   APISend(apiurl: string, apikey: string, action: string, body: string): Promise<any> {
