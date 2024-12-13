@@ -56,17 +56,17 @@ jobs:
       - name: cmd run
         run: ls -la
       - name: Angular create 404.html
-        run: cd vulnrepo-app;cp index.html 404.html;ls -la
+        run: cd vulnrepo-app/browser;cp index.html 404.html;ls -la
         
       - name: Add CNAME
-        run: cd vulnrepo-app;echo "vulnrepo.com" > CNAME;ls -la
+        run: cd vulnrepo-app/browser;echo "vulnrepo.com" > CNAME;ls -la
         
       - name: Add README.md
-        run: cd vulnrepo-app;printf "# vulnrepo-build-prod\n\nAutomatic build of the https://github.com/kac89/vulnrepo application." > README.md
+        run: cd vulnrepo-app/browser;printf "# vulnrepo-build-prod\n\nAutomatic build of the https://github.com/kac89/vulnrepo application." > README.md
         
       - name: Commit build
         run: |
-          cd vulnrepo-app
+          cd vulnrepo-app/browser
           git init
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'kac89@users.noreply.github.com'
