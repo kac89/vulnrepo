@@ -15,9 +15,10 @@ export interface PeriodicElement {
 }
 
 @Component({
-  selector: 'app-asvs',
-  templateUrl: './asvs.component.html',
-  styleUrls: ['./asvs.component.scss'],
+    selector: 'app-asvs',
+    templateUrl: './asvs.component.html',
+    styleUrls: ['./asvs.component.scss'],
+    standalone: false
 })
 export class AsvsComponent implements OnInit {
 
