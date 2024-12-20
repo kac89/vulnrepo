@@ -32,10 +32,6 @@ export class DialogRemoveitemsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  removeallfromreport() {
-    this.dialogRef.close(this.isReturn);
-  }
-
   removefromreport() {
     this.dialogRef.close(this.isReturn);
   }
