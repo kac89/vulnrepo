@@ -14,21 +14,26 @@ export class DialogRemoveitemsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.data.sel.forEach((item, index) => {
-      if (item.data) {
-        
-        const index2: number = this.data.orig.findIndex(i => i === item.data)
-        if (index2 !== -1) {
-          this.isReturn.push(this.data.orig[index2]);
+    if(this.data.sel) {
+      this.data.sel.forEach((item, index) => {
+        if (item.data) {
+          
+          const index2: number = this.data.orig.findIndex(i => i === item.data)
+          if (index2 !== -1) {
+            this.isReturn.push(this.data.orig[index2]);
+          }
+  
         }
-
-      }
-  });
-
+    });
+    }
   }
 
   cancel(): void {
     this.dialogRef.close();
+  }
+
+  removeallfromreport() {
+    this.dialogRef.close(this.isReturn);
   }
 
   removefromreport() {

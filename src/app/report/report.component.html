@@ -537,25 +537,44 @@
               <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
                 settings</mat-icon>
 
-              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selectedIssues)">
-                <mat-icon>edit</mat-icon>
-                Edit ({{ selectedIssues.length }})
-              </button>
 
-              &nbsp;
 
-              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
-                <mat-icon>done_all</mat-icon>
-                Clear selected ({{ selectedIssues.length }})
-              </button>
+                <div fxLayout="row wrap" fxLayoutGap="0px" class="example-full-width">
+        
+                  <div fxLayoutAlign="start start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selectedIssues)">
+                      <mat-icon>edit</mat-icon>
+                      Edit ({{ selectedIssues.length }})
+                    </button>
 
-              
+                    &nbsp;
+      
+                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                      <mat-icon>done_all</mat-icon>
+                      Select all
+                    </button>
 
-              &nbsp;&nbsp;
+                    &nbsp;
+      
+                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                      <mat-icon>done_all</mat-icon>
+                      Clear selected ({{ selectedIssues.length }})
+                    </button>
 
-              <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)">
-                <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> Remove ({{ selectedIssues.length }})
-              </button>
+                  </div>
+                
+                  <div fxLayoutAlign="end end" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+                    <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)" [matMenuTriggerFor]="trewwertwe">
+                      <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> Remove ({{ selectedIssues.length }})
+                    </button>
+
+                  </div>
+                
+
+
+
+                </div>
 
             </mat-panel-title>
           </mat-expansion-panel-header>

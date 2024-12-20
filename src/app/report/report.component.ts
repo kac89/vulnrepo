@@ -731,6 +731,22 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
+  selectall() {
+
+    this.pok = 1;
+    this.selectedIssues = [];
+
+
+
+    this.decryptedReportDataChanged.report_vulns.forEach((element, ind) => {
+
+      this.selectedIssues.push({"index": ind, "data": element});
+
+    });
+
+
+  }
+
   deselectall() {
 
 
@@ -879,7 +895,11 @@ Sample code here\n\
     this.dataSource.paginator = this.paginator2;
 
     if (this.decryptedReportDataChanged.report_vulns.length > 0) {
-      setTimeout(() => this.calendar.updateTodaysDate());
+      setTimeout(() => {
+        if (this.calendar){
+          this.calendar.updateTodaysDate();
+        }
+      });
     }
 
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
