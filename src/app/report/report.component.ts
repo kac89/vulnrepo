@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
@@ -55,7 +55,7 @@ export interface Tags {
   styleUrls: ['./report.component.scss']
 })
 
-export class ReportComponent implements OnInit, OnDestroy {
+export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Pie
   public pieChartLabels: string[] = ['Critical', 'High', 'Medium', 'Low', 'Info'];
@@ -89,6 +89,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   selectedResult: any;
   length: number;
   pageSize = 20;
+  pageIndex = 1;
   pageEvent: PageEvent;
 
   @ViewChild(MatCalendar) calendar: MatCalendar<Date>;
@@ -102,13 +103,12 @@ export class ReportComponent implements OnInit, OnDestroy {
   reportdesc: any;
   selecteditem = false;
   BBmsg = '';
-  selecteditems = [];
+
   textarea_selected = ""
   textarea_selected_start: any;
   textarea_selected_end: any;
   textarea_click: any;
-  selected3 = [];
-  selected3_true = [];
+  selectedIssues = [];
   ReportProfilesList = [];
   scopePreviewHTML = [];
   RaportsTags = [];
@@ -219,13 +219,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
       this.doStats();
 
-      let i = 0;
-      do {
-        this.selected3.push(false);
-        i++;
-      }
-      while (i < this.decryptedReportDataChanged.report_vulns.length);
-
       this.calendarDateChanged();
       this.startDate = new Date(this.decryptedReportDataChanged.report_metadata.starttest);
 
@@ -241,8 +234,16 @@ export class ReportComponent implements OnInit, OnDestroy {
 
       this.getReportProfiles();
 
-    });
 
+      this.issesTable = new MatTableDataSource(this.decryptedReportDataChanged.report_vulns);
+      this.issesTable.paginator = this.paginator;
+      this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(0, this.pageSize);
+
+      setTimeout(() => this.issesTable.paginator = this.paginator);
+      setTimeout(() => this.dataSource.sort = this.sort);
+      setTimeout(() => this.dataSource.paginator = this.paginator2);
+
+    });
 
   }
 
@@ -323,6 +324,9 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
 
   }
+
+
+  ngAfterViewInit() {}
 
   calendarDateChanged() {
     this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
@@ -670,14 +674,44 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
-  toggle() {
-    this.selected3_true = this.selected3.filter(item => item === true);
-    if (this.selected3.indexOf(true) !== -1) {
+  toggle(event, checked) {
+
+    const ret = this.selectedResult[event];
+    const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(ret);
+    if (index !== -1) {
+      if(checked === true) {
+        this.selectedIssues.push({"index": index, "data": ret});
+
+      } else if(checked === false) {
+            const index2: number = this.selectedIssues.findIndex(i => i.data === ret)
+            if (index2 !== -1) {
+              this.selectedIssues.splice(index2, 1);
+            }
+      }
+
+    }
+
+
+    if (this.selectedIssues.length > 0) {
+
       this.pok = 1;
     } else {
       this.pok = 0;
     }
 
+  }
+
+  checkcheckbox(i) {
+
+      let returnVal = false;
+      const ret = this.selectedResult[i];
+
+      const index2: number = this.selectedIssues.findIndex(i => i.data === ret)
+      if (index2 !== -1) {
+        returnVal = true;
+      }
+
+    return returnVal
   }
 
   openissuesedit(array) {
@@ -691,36 +725,17 @@ export class ReportComponent implements OnInit, OnDestroy {
 
       if (result) {
         console.log('Dialog edit issue closed');
+        this.doStats();
       }
     });
 
   }
 
-  selectall() {
-    this.selecteditems = [];
-    this.selected3 = [];
-    this.selected3_true = [];
-    let i = 0;
-    do {
-      this.selected3.push(true);
-      this.selected3_true.push(true);
-      i++;
-    }
-    while (i < this.decryptedReportDataChanged.report_vulns.length);
-
-  }
-
   deselectall() {
-    this.selecteditems = [];
-    this.selected3 = [];
-    this.selected3_true = [];
+
+
     this.pok = 0;
-    let i = 0;
-    do {
-      this.selected3.push(false);
-      i++;
-    }
-    while (i < this.decryptedReportDataChanged.report_vulns.length);
+    this.selectedIssues = [];
 
   }
 
@@ -856,34 +871,32 @@ Sample code here\n\
       { name: 'Info', value: info.length }
     ];
 
-    this.issesTable = new MatTableDataSource(this.decryptedReportDataChanged.report_vulns);
-    this.issesTable.paginator = this.paginator;
-    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(0, this.pageSize);
+
 
     this.listchangelog = this.decryptedReportData.report_changelog;
     this.dataSource = new MatTableDataSource(this.decryptedReportData.report_changelog);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator2;
 
-
-    setTimeout(() => this.issesTable.paginator = this.paginator);
-    setTimeout(() => this.dataSource.sort = this.sort);
-    setTimeout(() => this.dataSource.paginator = this.paginator2);
-
-
-
     if (this.decryptedReportDataChanged.report_vulns.length > 0) {
       setTimeout(() => this.calendar.updateTodaysDate());
     }
 
-
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
+    this.issesTable = new MatTableDataSource(this.decryptedReportDataChanged.report_vulns);
+    this.issesTable.paginator = this.paginator;
+    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
 
   }
 
   getData(event?: PageEvent) {
-    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(event.pageIndex * event.pageSize, event.pageIndex * event.pageSize + event.pageSize);
+
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+
+    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
     return event;
+    
   }
 
   renderdateformat(inputdate) {
@@ -1007,22 +1020,21 @@ Sample code here\n\
     }
   }
 
-  export_issues(selected, original) {
+  export_issues(original, type) {
     console.log('Export issues');
 
-    const selecteditems = selected.find(i => i === true);
-    if (selecteditems) {
+    if (type === 'selected') {
 
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
         width: '500px',
-        data: { sel: selected, orig: original }
+        data: { sel: this.selectedIssues, orig: original }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
       });
 
-    } else {
+    } else if (type === 'all') {
 
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
         width: '500px',
@@ -1039,8 +1051,6 @@ Sample code here\n\
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.decryptedReportDataChanged.report_vulns, event.previousIndex, event.currentIndex);
     moveItemInArray(this.selectedResult, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.selecteditems, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.selected3, event.previousIndex, event.currentIndex);
     moveItemInArray(this.scopePreviewHTML, event.previousIndex, event.currentIndex);
   }
 
@@ -1229,12 +1239,7 @@ Sample code here\n\
 
   }
 
-  getselectedissues(items) {
-    const ret = items.filter(function (el) {
-      return (el === true);
-    });
-    return ret.length;
-  }
+
   getTags(items) {
     const ret = items.filter(function (el) {
       return (el.tags.length !== 0);
