@@ -12,7 +12,6 @@ import { UtilsService } from '../utils.service';
 export class DialogIssuesEditComponent implements OnInit {
 
   isReturn = [];
-  selected_items_true = [];
   selseverity = '';
   selstatus = '';
 
@@ -25,14 +24,17 @@ export class DialogIssuesEditComponent implements OnInit {
 
 
   ngOnInit() {
-
     this.data.sel.forEach((item, index) => {
-      if (item === true) {
-        this.isReturn.push(this.data.orig[index]);
+      if (item.data) {
+        
+        const index2: number = this.data.orig.findIndex(i => i === item.data)
+        if (index2 !== -1) {
+          this.isReturn.push(this.data.orig[index2]);
+        }
+
       }
   });
 
-  this.selected_items_true = this.data.sel.filter(item => item === true);
 
   this.tableseverity = this.utilsService.severitytable;
   this.tablestatus = this.utilsService.issueStatustable;

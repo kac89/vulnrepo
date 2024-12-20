@@ -193,8 +193,8 @@
             </button>
 
             <mat-menu #dropdownMenuOne="matMenu">
-              <button *ngIf="getselectedissues(selected3) == 0" mat-menu-item (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">Export all</button>
-              <button *ngIf="getselectedissues(selected3) >= 1" mat-menu-item (click)="export_issues(selected3, decryptedReportDataChanged.report_vulns)">Export selected ({{getselectedissues(selected3)}})</button>
+              <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'all')">Export all</button>
+              <button *ngIf="selectedIssues.length >= 1" mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'selected')">Export selected ({{selectedIssues.length}})</button>
               <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
               <button *ngIf="getTags(decryptedReportDataChanged.report_vulns) >= 1" mat-menu-item [matMenuTriggerFor]="bytag">Export by Tag</button>
             </mat-menu>
@@ -253,7 +253,7 @@
           <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
             <mat-panel-title fxLayoutAlign="start">
               <div style="white-space: nowrap;">
-                <mat-checkbox [(ngModel)]="selected3[i]" (change)="toggle()"
+                <mat-checkbox [checked]="checkcheckbox(i)" (change)="toggle(i,$event.checked)"
                   (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
                 <span
                   class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
@@ -538,30 +538,43 @@
                 settings</mat-icon>
 
 
-              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
-                <mat-icon>done_all</mat-icon>
-                Select all
-              </button>
 
-              &nbsp;
+                <div fxLayout="row wrap" fxLayoutGap="0px" class="example-full-width">
+        
+                  <div fxLayoutAlign="start start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selectedIssues)">
+                      <mat-icon>edit</mat-icon>
+                      Edit ({{ selectedIssues.length }})
+                    </button>
 
-              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
-                <mat-icon>done_all</mat-icon>
-                Unselect all
-              </button>
+                    &nbsp;
+      
+                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                      <mat-icon>done_all</mat-icon>
+                      Select all
+                    </button>
 
-              &nbsp;
+                    &nbsp;
+      
+                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                      <mat-icon>done_all</mat-icon>
+                      Clear selected ({{ selectedIssues.length }})
+                    </button>
 
-              <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selected3)">
-                <mat-icon>edit</mat-icon>
-                Edit ({{ selected3_true.length }})
-              </button>
+                  </div>
+                
+                  <div fxLayoutAlign="end end" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-              &nbsp;&nbsp;
+                    <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)" [matMenuTriggerFor]="trewwertwe">
+                      <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> Remove ({{ selectedIssues.length }})
+                    </button>
 
-              <button mat-stroked-button color="warn" (click)="removeSelecteditems(selected3)">
-                <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> REMOVE ({{ selected3_true.length }})
-              </button>
+                  </div>
+                
+
+
+
+                </div>
 
             </mat-panel-title>
           </mat-expansion-panel-header>

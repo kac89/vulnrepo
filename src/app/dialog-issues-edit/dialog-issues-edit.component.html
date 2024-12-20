@@ -1,7 +1,7 @@
 <mat-card appearance="outlined">
     <mat-card-header>
       <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">edit</mat-icon>
-      <mat-card-title>Edit selected ({{selected_items_true.length}})</mat-card-title>
+      <mat-card-title>Edit selected ({{data.sel.length}})</mat-card-title>
       <mat-card-subtitle>Make changes on multiple issues</mat-card-subtitle>
     </mat-card-header>
 
@@ -32,9 +32,10 @@
 
         </div>
         <p>
-            <button mat-raised-button color="primary" (click)="closedialog()">Close</button>
+          <button mat-raised-button color="accent" (click)="applychanges()"><mat-icon>save</mat-icon> Apply changes</button>
+            
             &nbsp;&nbsp;
-            <button mat-raised-button color="accent" (click)="applychanges()"><mat-icon>save</mat-icon> Apply changes</button>
+            <button mat-raised-button color="primary" (click)="closedialog()">Close</button>
         </p>
         
     </mat-card-content>
