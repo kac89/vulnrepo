@@ -89,7 +89,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedResult: any;
   length: number;
   pageSize = 20;
-  pageIndex = 1;
+  pageIndex = 0;
   pageEvent: PageEvent;
 
   @ViewChild(MatCalendar) calendar: MatCalendar<Date>;
