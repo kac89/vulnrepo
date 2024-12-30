@@ -37,7 +37,7 @@ export class DialogPassComponent implements OnInit {
   }
 
   decrypt(pass: string, report_id: string) {
-    this.msg = 'Report is decrypted please wait...';
+    this.msg = 'Report is decrypted, please wait...';
 
     this.indexeddbService.decrypt(pass, report_id).then(returned => {
       if (returned) {
