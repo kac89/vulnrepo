@@ -7,6 +7,11 @@
       <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
         (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <mat-hint>
+        <strong *ngIf="msg != ''">
+          <mat-icon class="vertical-align-middle size-45">https</mat-icon> {{msg}}
+        </strong>
+      </mat-hint>
       <mat-error *ngIf="insertpass.hasError('incorrect')">
         <strong>
           <mat-icon class="vertical-align-middle size-45">https</mat-icon> Security key is incorrect!
@@ -14,9 +19,7 @@
       </mat-error>
     </mat-form-field>
     
-    <div *ngIf="msg != ''">
-      {{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-    </div>
+
   </form>
   </div>
 </mat-dialog-content>
@@ -35,3 +38,6 @@
 
   </div>
 </mat-dialog-actions>
+<div *ngIf="msg != ''">
+  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+</div>
