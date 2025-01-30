@@ -48,14 +48,16 @@
           Templates List
         </a>
 
-        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
-          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
-          Methodology
-        </a>
         <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
           CVE Search
         </a>
+
+        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
+          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
+          Checklists
+        </a>
+
         <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
           Settings
@@ -138,20 +140,20 @@
         <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
         Templates List
       </a>
-      <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
-        <mat-icon class="vertical-align-middle padding-bottom-3">help</mat-icon>
-        Methodology
-      </a>
       <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
         CVE Search
+      </a>
+      <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
+        <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
+        Checklists
       </a>
       <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
         Settings
       </a>
       <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon>
+        <mat-icon class="vertical-align-middle padding-bottom-3">live_help</mat-icon>
         FAQ
       </a>
       <button mat-menu-item (click)="goAbout()"><mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
