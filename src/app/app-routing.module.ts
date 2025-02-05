@@ -15,6 +15,9 @@ import { TbhmComponent } from './tbhm/tbhm.component';
 import { Pcidss4Component } from './pcidss4/pcidss4.component';
 import { CveSearchComponent } from './cve-search/cve-search.component';
 
+import { BbListComponent } from './bb-list/bb-list.component';
+
+
 const routes: Routes = [{
   path: 'home',
   pathMatch: 'full',
@@ -84,6 +87,11 @@ const routes: Routes = [{
   path: 'templates-list',
   pathMatch: 'full',
   component: TemplatesListComponent
+},
+{
+  path: 'bugbounty-list',
+  pathMatch: 'full',
+  component: BbListComponent
 },
 {
   path: '**',
