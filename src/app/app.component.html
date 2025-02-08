@@ -48,25 +48,16 @@
           Templates List
         </a>
 
-        <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
-          <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
-          CVE Search
-        </a>
-
-        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
-          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
-          Checklists
-        </a>
-
-        <a routerLink="/bugbounty-list" routerLinkActive="active-link" href="/bugbounty-list" mat-menu-item>
-          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
-          Bug Bounty List
-        </a>
-
         <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
           Settings
         </a>
+
+        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="tools">
+          <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
+          Tools
+        </a>
+
         <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">live_help
           </mat-icon>
@@ -83,7 +74,7 @@
 
           <button mat-menu-item disabled>
             <mat-icon>lock_open</mat-icon>
-            <span>Active open reports</span>
+            <span>Open reports</span>
           </button>
 
           <span *ngFor="let activreport of arr_oreports">
@@ -94,6 +85,26 @@
           </span>
 
         </div>
+
+      </mat-menu>
+
+      <mat-menu #tools="matMenu" xPosition="after" yPosition="above">
+
+        <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
+          CVE Search
+        </a>
+
+        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
+          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
+          Checklists
+        </a>
+
+        <a routerLink="/bugbounty-list" routerLinkActive="active-link" href="/bugbounty-list" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
+          Bug Bounty List
+        </a>
+
 
       </mat-menu>
 
@@ -145,6 +156,12 @@
         <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
         Templates List
       </a>
+
+      <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
+        Settings
+      </a>
+
       <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
         CVE Search
@@ -159,10 +176,6 @@
         Bug Bounty List
       </a>
 
-      <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
-        Settings
-      </a>
       <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">live_help</mat-icon>
         FAQ
