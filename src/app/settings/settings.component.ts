@@ -12,6 +12,7 @@ import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dial
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { CurrentdateService } from '../currentdate.service';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
+import {OllamaServiceService} from '../ollama-service.service';
 
 export interface ApiList {
   apikey: string;
@@ -63,6 +64,12 @@ export class SettingsComponent implements OnInit {
   max_storage: any;
   status = 'Not connected!';
 
+  aiselectedValue: string;
+  ai_tags = [];
+  ollamaurl = "http://localhost:11434";
+  models:any;
+  aiconnected = false;
+
   vaultList = [];
   reportProfileList = [];
   reportTemplateList = [];
@@ -82,12 +89,20 @@ export class SettingsComponent implements OnInit {
 
 
   constructor(public router: Router, private indexeddbService: IndexeddbService, private apiService: ApiService,
-    public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService) { }
+    public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService,private ollamaService: OllamaServiceService) { }
 
 
   ngOnInit() {
 
     this.getVault();
+
+    this.indexeddbService.getkeybyAiintegration().then(ret => {
+      
+      if(ret[0]) {
+        this.models = ret[0];
+        this.connectAI();
+      }
+     });
 
   }
 
@@ -207,6 +222,7 @@ export class SettingsComponent implements OnInit {
     indexedDB.deleteDatabase('vulnrepo-api');
     indexedDB.deleteDatabase('vulnrepo-db');
     indexedDB.deleteDatabase('testindexeddb');
+    indexedDB.deleteDatabase('vulnrepo-ollama');
     window.location.href = window.location.protocol + '//' + window.location.host;
   }
 
@@ -989,4 +1005,32 @@ export class SettingsComponent implements OnInit {
     }
   }
 
+  connectAI() {
+
+  if(this.models) {
+    this.aiselectedValue = this.models.model;
+    this.ollamaurl = this.models.ollama_url;
+  }
+
+    this.ollamaService.checktags(this.ollamaurl).then(resp => {
+      if (resp) {
+       this.ai_tags = resp.models;
+       this.aiconnected = true;
+      }
+    });
+
+  }
+
+  disconnectAI() {
+    this.aiconnected = false;
+    indexedDB.deleteDatabase('vulnrepo-ollama');
+  }
+
+  selectcmodel(event){
+
+    if(event.value) {
+      this.indexeddbService.updateAiintegration({"model":event.value, "ollama_url":this.ollamaurl}, 0).then(ret => { });
+    }
+
+  }
 }

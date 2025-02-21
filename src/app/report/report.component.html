@@ -144,10 +144,19 @@
 
             <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <mat-label>Report summary comment</mat-label>
-                <textarea matInput rows="2" [(ngModel)]="decryptedReportDataChanged.report_summary"
+                <mat-label>Report summary</mat-label>
+                <div style="position:relative;">
+                  <textarea matInput rows="2" [(ngModel)]="decryptedReportDataChanged.report_summary"
                   value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
+                  <div *ngIf="aiconnected" style="position:absolute;top: 10px; right: 10px;">
+                    <button mat-icon-button color="accent" (click)="aiasist()" title="Call AI model assistant">
+                      <mat-icon>insert_comment</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                
               </mat-form-field>
+              <mat-progress-bar *ngIf="aiprogress" color="accent" mode="indeterminate"></mat-progress-bar>
             </div>
 
           </div>

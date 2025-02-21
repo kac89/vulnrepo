@@ -27,7 +27,7 @@ import { sha256 } from 'js-sha256';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
 import DOMPurify from 'dompurify';
@@ -43,6 +43,8 @@ import { DialogEditorFullscreenComponent } from '../dialog-editor-fullscreen/dia
 import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-attach-preview.component';
 import { AlignmentType, Document, Footer, Header, Packer, PageBreak, HeadingLevel, ImageRun, PageNumber, NumberFormat, Paragraph, TextRun, TableOfContents, Table, TableCell, TableRow, WidthType } from "docx";
 import { UtilsService } from '../utils.service';
+import {OllamaServiceService} from '../ollama-service.service';
+
 export interface Tags {
   name: string;
 }
@@ -173,9 +175,13 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
+  aiprogress = false;
+  aiconnected = false;
+  models:any;
 
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
+    private ollamaService: OllamaServiceService,
     private http: HttpClient,
     private indexeddbService: IndexeddbService,
     private differs: KeyValueDiffers,
@@ -323,6 +329,14 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
+
+    this.indexeddbService.getkeybyAiintegration().then(ret => {
+      
+      if(ret[0]) {
+        this.aiconnected = true;
+        this.models = ret[0];
+      }
+     });
   }
 
 
@@ -3544,4 +3558,54 @@ Date   | Description
 
 
   }
+
+
+  aiasist(){
+    console.log('AI start chat');
+    this.aiprogress = true;
+
+    const json = {
+      "report_name": this.report_info.report_name,
+      "report_id": this.report_info.report_id,
+      "report_createdate": this.report_info.report_createdate,
+      "report_lastupdate": this.report_info.report_lastupdate,
+      //"report_changelog": this.decryptedReportDataChanged.report_changelog,
+      "researcher": this.decryptedReportDataChanged.researcher,
+      "report_vulns": this.decryptedReportDataChanged.report_vulns,
+      "report_version": this.decryptedReportDataChanged.report_version,
+      "report_summary": this.decryptedReportDataChanged.report_summary,
+      "report_metadata": this.decryptedReportDataChanged.report_metadata,
+      "report_scope": this.decryptedReportDataChanged.report_scope
+      //"report_settings": this.decryptedReportDataChanged.report_settings
+    };
+
+    const msgin = `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, can you prepare a report summary for a company as a document, with issue is most important and fix recommendation for board of company ?, mention scope if provided on JSON key "report_scope", mention researcher if provided on JSON key "researcher".
+    
+    <ATTACHMENT_FILE>
+    <FILE_INDEX>File 1</FILE_INDEX>
+    <FILE_NAME>`+this.report_info.report_name+`</FILE_NAME>
+    <FILE_CONTENT>
+    `+JSON.stringify(json)+`
+    </FILE_CONTENT>
+    </ATTACHMENT_FILE>
+    `;
+
+    this.decryptedReportDataChanged.report_summary = "";
+
+    this.ollamaService.chatStream(this.models.ollama_url, msgin, this.models.model).subscribe({
+      next: (text) => {
+        this.decryptedReportDataChanged.report_summary += text;
+      },
+      complete: () => {
+        console.log('AI end chat');
+        this.aiprogress = false;
+      },
+      error: () => {
+  
+      }
+    });
+
+
+  }
+
 }

@@ -1330,4 +1330,75 @@ export class IndexeddbService {
     });
   }
 
+  updateAiintegration(newvalue, key) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-ollama', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-ollama', { autoIncrement: false });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-ollama', 'readwrite');
+        const store = tx.objectStore('report-ollama');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.put(newvalue, key);
+
+        request.onsuccess = function (evt) {
+          resolve(true);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+
+  getkeybyAiintegration() {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-ollama', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('report-ollama', { autoIncrement: false });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('report-ollama', 'readwrite');
+        const store = tx.objectStore('report-ollama');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.getAll();
+
+        request.onsuccess = function (evt) {
+          resolve(request.result);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+
+
 }
