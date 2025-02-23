@@ -1,0 +1,35 @@
+.example-full-width {
+    width: 100%;
+  }
+
+  .header-image-ai {
+    background-image: url('/assets/logo/vulnrepo_logo.png');
+    background-size: cover;
+  }
+
+  ::ng-deep code {
+    font-family: Consolas, "Courier New", Courier, monospace;
+    font-size: 15px;
+    background-color: black;
+    display: block;
+    white-space: inherit;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: scroll;
+    max-width: 100%;
+    min-width: 100px;
+    padding-left: 5px;
+    border-radius: 5px;
+  }
+
+  pre code.hljs{display:block;padding:1em}code.hljs{padding:3px 5px}.hljs{background:#fff;color:#000}.hljs-comment,.hljs-quote,.hljs-variable{color:green}.hljs-built_in,.hljs-keyword,.hljs-name,.hljs-selector-tag,.hljs-tag{color:#00f}.hljs-addition,.hljs-attribute,.hljs-literal,.hljs-section,.hljs-string,.hljs-template-tag,.hljs-template-variable,.hljs-title,.hljs-type{color:#a31515}.hljs-deletion,.hljs-meta,.hljs-selector-attr,.hljs-selector-pseudo{color:#2b91af}.hljs-doctag{color:grey}.hljs-attr{color:red}.hljs-bullet,.hljs-link,.hljs-symbol{color:#00b0e8}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}
+
+  .dialog-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  ::ng-deep details.think {
+    background-color: rgba(110, 106, 106, 0.4);
+    padding: 10px;
+  }

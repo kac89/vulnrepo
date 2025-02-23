@@ -167,6 +167,79 @@
 
     </mat-card>
 
+    <br>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">account_circle</mat-icon>
+        <mat-card-title>AI Asisstant</mat-card-title>
+        <mat-card-subtitle>Add your favorite local and private LLM!</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        
+
+        <mat-form-field *ngIf="aiconnected == false" color="accent" class="example-full-width">
+          <mat-label>Ollama API</mat-label>
+          <input matInput type="text" [(ngModel)]="ollamaurl" [formControl]="ollamaurlinput">
+          <mat-error *ngIf="ollamaurlinput.hasError('wrongscheme')">
+            <strong>Wrong URL, only http or https!</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="aiconnected">
+          <mat-form-field color="accent" class="example-full-width">
+            <mat-label>Model</mat-label>
+            <mat-select [(ngModel)]="aiselectedValue" name="ai_tags" (selectionChange)="selectcmodel($event)">
+              @for (item of ai_tags; track item) {
+                <mat-option [value]="item.model">{{item.name}}</mat-option>
+              }
+            </mat-select>
+            
+          </mat-form-field>
+          
+          <p>Selected model: {{aiselectedValue}} </p>
+
+
+          <div class="example-label-container">
+            <label id="example-name-label" class="example-name-label">Temperature:</label>&nbsp;
+            <label class="example-value-label">{{temperature}}</label>
+          </div>
+          <mat-slider color="accent" 
+              class="example-width"
+              [max]="2"
+              [min]="0"
+              [step]="0.1">
+            <input matSliderThumb [(ngModel)]="temperature">
+          </mat-slider>
+
+        </div>
+
+       <br>
+
+
+
+        <div fxLayout="row" fxLayoutGap="10px grid">
+          <div fxFlex="100%" fxLayoutAlign="start">
+            <button *ngIf="aiconnected != true" mat-raised-button color="primary"  (click)="connectAI()">
+              <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Connect
+            </button>
+            <button *ngIf="aiconnected" mat-raised-button color="warn" (click)="disconnectAI()">
+              Disconnect
+            </button>
+          </div>
+          <div fxFlex="100%" fxLayoutAlign="end">
+            <a class="active-link" href="/faq?q=Private-LLM"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">help</mat-icon></a>
+          </div>
+        </div>
+
+
+        <br>
+
+
+
+      </mat-card-content>
+    </mat-card>
 
   </div>
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">

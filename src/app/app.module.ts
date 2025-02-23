@@ -86,6 +86,8 @@ import { CveSearchComponent } from './cve-search/cve-search.component';
 import { DialogEditorFullscreenComponent } from './dialog-editor-fullscreen/dialog-editor-fullscreen.component';
 import { DialogAttachPreviewComponent } from './dialog-attach-preview/dialog-attach-preview.component';
 import { FilesizePipe } from './filesize.pipe';
+import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -125,7 +127,8 @@ import { FilesizePipe } from './filesize.pipe';
         CveSearchComponent,
         DialogEditorFullscreenComponent,
         DialogAttachPreviewComponent,
-        FilesizePipe
+        FilesizePipe,
+        DialogOllamaComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,
@@ -166,6 +169,7 @@ import { FilesizePipe } from './filesize.pipe';
         NgxChartsModule,
         ClipboardModule,
         MatTooltipModule,
+        MatSliderModule,
         CdkAccordionModule], providers: [MessageService, IndexeddbService, DatePipe, provideHttpClient(withInterceptorsFromDi())] })
 
 export class AppModule {
