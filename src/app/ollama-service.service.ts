@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { SessionstorageserviceService } from "./sessionstorageservice.service"
 
 @Injectable({
   providedIn: 'root'
 })
 export class OllamaServiceService {
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private sessionsub: SessionstorageserviceService) { }
 
   checktags(url): Promise<any> {
     return this.http.get<any>(url+'/api/tags')
@@ -26,13 +27,20 @@ export class OllamaServiceService {
 
   chatStream(url,msg,model) {
 
+    const localchat = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-MSG-H');
+    let tarr = [];
+    if (localchat) {
+      tarr = JSON.parse(localchat);
+    }
+
     return new Observable<string>(observer => {
       fetch(url+'/api/chat', {
         method: 'POST',
         body: JSON.stringify({ 
           "model": model, 
           "messages": [
-              { "role": "system", "content": "You are a helpful assistant." }, 
+              { "role": "system", "content": "You are a helpful assistant." },
+              ...tarr,
               { "role": "user", "content": msg }
             ], 
             "stream": true,

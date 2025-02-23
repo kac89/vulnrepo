@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { SessionstorageserviceService } from "./sessionstorageservice.service"
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
+import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
 
 @Component({
     selector: 'app-root',
@@ -60,6 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.getopenreports();
+
   }
 
   ngOnDestroy() {
@@ -80,6 +82,21 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
   }
+
+  goAI(): void {
+
+    const dialogRef = this.dialog.open(DialogOllamaComponent, {
+      width: '800px',
+      disableClose: true,
+      data: []
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The AI dialog was closed');
+    });
+
+  }
+
 
   getopenreports() {
     this.arr_oreports = [];

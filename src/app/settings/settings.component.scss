@@ -51,3 +51,21 @@
   }
 
 
+  .example-label-container {
+    display: flex;
+    margin: 10px 0px 0;
+    max-width: 284px;
+  }
+  
+  .example-result-card .example-value-label {
+    font-weight: 600;
+  }
+
+  .example-margin {
+    margin: 8px;
+  }
+  
+  .example-width {
+    max-width: 400px;
+    width: 100%;
+  }

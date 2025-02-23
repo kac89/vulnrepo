@@ -13,6 +13,7 @@ import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { CurrentdateService } from '../currentdate.service';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
 import {OllamaServiceService} from '../ollama-service.service';
+import { UntypedFormControl } from '@angular/forms';
 
 export interface ApiList {
   apikey: string;
@@ -69,6 +70,8 @@ export class SettingsComponent implements OnInit {
   ollamaurl = "http://localhost:11434";
   models:any;
   aiconnected = false;
+  temperature = 0.7;
+  ollamaurlinput = new UntypedFormControl();
 
   vaultList = [];
   reportProfileList = [];
@@ -1007,17 +1010,29 @@ export class SettingsComponent implements OnInit {
 
   connectAI() {
 
-  if(this.models) {
-    this.aiselectedValue = this.models.model;
-    this.ollamaurl = this.models.ollama_url;
-  }
+    const test = this.ollamaurl.toLowerCase().slice(0, 5);
 
-    this.ollamaService.checktags(this.ollamaurl).then(resp => {
-      if (resp) {
-       this.ai_tags = resp.models;
-       this.aiconnected = true;
+    if(test === 'http:' || test === 'https') {
+
+      if(this.models) {
+        this.aiselectedValue = this.models.model;
+        this.ollamaurl = this.models.ollama_url;
       }
-    });
+    
+        this.ollamaService.checktags(this.ollamaurl).then(resp => {
+          if (resp) {
+           this.ai_tags = resp.models;
+           this.aiconnected = true;
+          }
+        });
+
+    }else{
+      
+      this.ollamaurlinput.setErrors({ 'wrongscheme': true });
+    }
+
+
+
 
   }
 

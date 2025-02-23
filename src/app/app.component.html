@@ -90,6 +90,8 @@
 
       <mat-menu #tools="matMenu" xPosition="after" yPosition="above">
 
+        <button mat-menu-item (click)="goAI()"><mat-icon class="vertical-align-middle padding-bottom-3">account_circle</mat-icon> AI assistant</button>
+
         <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
           CVE Search

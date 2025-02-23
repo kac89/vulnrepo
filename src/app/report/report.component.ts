@@ -3592,12 +3592,24 @@ Date   | Description
 
     this.decryptedReportDataChanged.report_summary = "";
 
+    let tempx = "";
     this.ollamaService.chatStream(this.models.ollama_url, msgin, this.models.model).subscribe({
       next: (text) => {
         this.decryptedReportDataChanged.report_summary += text;
+        tempx += text;
       },
       complete: () => {
         console.log('AI end chat');
+
+        if (tempx.includes("<think>")) {
+          const words = tempx.split("</think>");
+          this.decryptedReportDataChanged.report_summary = words[1];
+        } else {
+          this.decryptedReportDataChanged.report_summary = tempx;
+        }
+
+        
+
         this.aiprogress = false;
       },
       error: () => {
