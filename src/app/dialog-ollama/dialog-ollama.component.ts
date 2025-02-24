@@ -26,6 +26,7 @@ export class DialogOllamaComponent implements OnInit {
   aiselectedValue: string;
   ai_tags = [];
   models:any;
+  aiconnected = false;
   ollamaurl = "http://localhost:11434";
 
   constructor(public dialogRef: MatDialogRef<DialogOllamaComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
@@ -54,8 +55,13 @@ export class DialogOllamaComponent implements OnInit {
      });
 
      this.ollamaService.checktags(this.ollamaurl).then(resp => {
+
       if (resp) {
        this.ai_tags = resp.models;
+       this.aiconnected = true;
+      } else {
+        this.router.navigate(['/settings']);
+        this.dialogRef.close();
       }
     });
 
