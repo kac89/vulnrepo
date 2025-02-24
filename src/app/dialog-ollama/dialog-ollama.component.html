@@ -3,14 +3,18 @@
     <h2 style="padding-left: 10px;">AI assistant</h2>
   </div>
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
-    <button mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove chat</button>
+    <button *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove chat</button>
   </div>
 </div>
 
 <mat-dialog-content class="mat-typography" id="chat">
-<div class="example-full-width" >
+
+<div *ngIf="!aiconnected" class="example-full-width">
+  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+</div>
 
 
+<div class="example-full-width" *ngIf="aiconnected">
       
   @for (item of chatmsg; track item) {
     <mat-card class="example-card" appearance="outlined">
@@ -52,7 +56,7 @@
 </div>
 </mat-dialog-content>
 
-<div style="padding: 10px;">
+<div style="padding: 10px;" *ngIf="aiconnected">
   <mat-form-field color="accent" class="example-full-width">
     <mat-label>Ask anything</mat-label>
     <textarea matInput [formControl]="questioninput" cdkFocusInitial></textarea>
@@ -62,7 +66,7 @@
   </mat-form-field>
 </div>
 
-<mat-dialog-actions>
+<mat-dialog-actions *ngIf="aiconnected">
 
   <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
