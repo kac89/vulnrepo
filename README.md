@@ -31,6 +31,8 @@ Video walkthrough/Tutorial:
     - New version of HTML report allow easy template edit or CSS.
  - Methodology
     - Use the audit tool to make sure nothing is missing in the report when doing your research!
+ - AI/LLM
+    - Use in local your favorite and private LLM model!
 
 
 ## Development server
