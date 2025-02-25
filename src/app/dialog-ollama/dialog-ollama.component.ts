@@ -28,6 +28,7 @@ export class DialogOllamaComponent implements OnInit {
   models:any;
   aiconnected = false;
   ollamaurl = "http://localhost:11434";
+  temperature = 0.7;
 
   constructor(public dialogRef: MatDialogRef<DialogOllamaComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
               private currentdateService: CurrentdateService, private ollamaService: OllamaServiceService,
@@ -46,6 +47,7 @@ export class DialogOllamaComponent implements OnInit {
 
         this.aiselectedValue = this.models.model;
         this.ollamaurl = this.models.ollama_url;
+        this.temperature = this.models.temperature;
         
       } else {
 

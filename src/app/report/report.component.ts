@@ -3608,8 +3608,6 @@ Date   | Description
           this.decryptedReportDataChanged.report_summary = tempx;
         }
 
-        
-
         this.aiprogress = false;
       },
       error: () => {

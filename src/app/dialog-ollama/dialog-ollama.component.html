@@ -3,7 +3,7 @@
     <h2 style="padding-left: 10px;">AI assistant</h2>
   </div>
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
-    <button *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove chat</button>
+    <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove chat</button>
   </div>
 </div>
 
@@ -57,7 +57,7 @@
 </mat-dialog-content>
 
 <div style="padding: 10px;" *ngIf="aiconnected">
-  <mat-form-field color="accent" class="example-full-width">
+  <mat-form-field color="accent" class="example-full-width" appearance="outline">
     <mat-label>Ask anything</mat-label>
     <textarea matInput [formControl]="questioninput" cdkFocusInitial></textarea>
     <mat-error *ngIf="questioninput.hasError('notempty')">
@@ -80,6 +80,24 @@
         </mat-select>
         
       </mat-form-field>
+<!--
+      <div style="padding: 10px;">
+        <button mat-icon-button style="padding: 0px;"  title="Attach image" >
+          <mat-icon>image</mat-icon>
+        </button>
+      
+        <button mat-icon-button style="padding: 0px;" title="Attach file" >
+          <mat-icon>attach_file</mat-icon>
+        </button>
+
+        <button mat-icon-button style="padding: 0px;" title="Settings" >
+          <mat-icon>settings</mat-icon>
+        </button>
+
+      </div>
+-->
+
+
     </div>
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
       

@@ -33,6 +33,14 @@ export class OllamaServiceService {
       tarr = JSON.parse(localchat);
     }
 
+    let temperature = 0.7;
+    const temperaturet = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-SET-TEMP');
+
+    if (temperaturet) {
+      temperature = Number(temperaturet);
+    }
+    
+
     return new Observable<string>(observer => {
       fetch(url+'/api/chat', {
         method: 'POST',
@@ -45,7 +53,7 @@ export class OllamaServiceService {
             ], 
             "stream": true,
             "options": { 
-              "temperature": 0.7
+              "temperature": temperature
             }
           }),
         headers: {
