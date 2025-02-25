@@ -107,6 +107,12 @@ export class SettingsComponent implements OnInit {
       }
      });
 
+     const temperaturet = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-SET-TEMP');
+ 
+     if (temperaturet) {
+       this.temperature = Number(temperaturet);
+     }
+
   }
 
   foundvault(bool: boolean): boolean {
@@ -1044,8 +1050,13 @@ export class SettingsComponent implements OnInit {
   selectcmodel(event){
 
     if(event.value) {
-      this.indexeddbService.updateAiintegration({"model":event.value, "ollama_url":this.ollamaurl}, 0).then(ret => { });
+      this.indexeddbService.updateAiintegration({"model":event.value, "ollama_url":this.ollamaurl, "temperature": this.temperature}, 0).then(ret => { });
     }
 
+  }
+
+  savetemp() {
+    this.indexeddbService.updateAiintegration({"model":this.aiselectedValue, "ollama_url":this.ollamaurl, "temperature": this.temperature}, 0).then(ret => { });
+    this.sessionsub.setSessionStorageItem('VULNREPO-OLLAMA-CHAT-SET-TEMP', this.temperature);
   }
 }
