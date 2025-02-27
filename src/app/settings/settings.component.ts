@@ -14,6 +14,7 @@ import { CurrentdateService } from '../currentdate.service';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
 import {OllamaServiceService} from '../ollama-service.service';
 import { UntypedFormControl } from '@angular/forms';
+import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
 
 export interface ApiList {
   apikey: string;
@@ -1019,16 +1020,21 @@ export class SettingsComponent implements OnInit {
     const test = this.ollamaurl.toLowerCase().slice(0, 5);
 
     if(test === 'http:' || test === 'https') {
-
+    let check = false;
       if(this.models) {
         this.aiselectedValue = this.models.model;
         this.ollamaurl = this.models.ollama_url;
+        check = true;
       }
     
         this.ollamaService.checktags(this.ollamaurl).then(resp => {
           if (resp) {
            this.ai_tags = resp.models;
            this.aiconnected = true;
+           if(!check){
+            this.showaisettings();
+           }
+           
           }
         });
 
@@ -1046,17 +1052,17 @@ export class SettingsComponent implements OnInit {
     this.aiconnected = false;
     indexedDB.deleteDatabase('vulnrepo-ollama');
   }
-
-  selectcmodel(event){
-
-    if(event.value) {
-      this.indexeddbService.updateAiintegration({"model":event.value, "ollama_url":this.ollamaurl, "temperature": this.temperature}, 0).then(ret => { });
-    }
-
+  showaisettings() {
+    const dialogRef = this.dialog.open(DialogOllamaSettingsComponent, {
+      width: '600px',
+      disableClose: false,
+      data: []
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The AI-Settings dialog was closed');
+    });
   }
 
-  savetemp() {
-    this.indexeddbService.updateAiintegration({"model":this.aiselectedValue, "ollama_url":this.ollamaurl, "temperature": this.temperature}, 0).then(ret => { });
-    this.sessionsub.setSessionStorageItem('VULNREPO-OLLAMA-CHAT-SET-TEMP', this.temperature);
-  }
+
 }

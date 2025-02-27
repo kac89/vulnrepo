@@ -10,6 +10,7 @@ import DOMPurify from 'dompurify';
 import { IndexeddbService } from '../indexeddb.service';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { Router } from '@angular/router';
+import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
 
 @Component({
   selector: 'app-dialog-ollama',
@@ -29,11 +30,15 @@ export class DialogOllamaComponent implements OnInit {
   aiconnected = false;
   ollamaurl = "http://localhost:11434";
   temperature = 0.7;
+  attachedIMG = [];
+  attachedIMG_b64 = [];
+  attachedFILES = [];
+  defaultprompt = "You are a helpful assistant.";
 
   constructor(public dialogRef: MatDialogRef<DialogOllamaComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
               private currentdateService: CurrentdateService, private ollamaService: OllamaServiceService,
               private indexeddbService: IndexeddbService, private sessionsub: SessionstorageserviceService,
-              public router: Router,) {
+              public router: Router,public dialog: MatDialog) {
 
   }
 
@@ -48,6 +53,7 @@ export class DialogOllamaComponent implements OnInit {
         this.aiselectedValue = this.models.model;
         this.ollamaurl = this.models.ollama_url;
         this.temperature = this.models.temperature;
+        this.defaultprompt = this.models.defaultprompt;
         
       } else {
 
@@ -78,9 +84,21 @@ export class DialogOllamaComponent implements OnInit {
 
   sendmsg() {
 
-    if(this.questioninput.value !== null && this.questioninput.value !== '') {
+    const inputmsg = this.questioninput.value;
+    const attarr = this.attachedIMG;
+    const attarr_b64 = this.attachedIMG_b64;
+    const attfiles = this.attachedFILES;
 
-      this.chatmsg.push({"question": this.questioninput.value, "response": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue});
+    this.questioninput.setValue('');
+    this.attachedIMG = [];
+    this.attachedIMG_b64 = [];
+    this.attachedFILES = [];
+
+    
+
+    if(inputmsg !== null && inputmsg !== '') {
+
+      this.chatmsg.push({"question": inputmsg, "response": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue, "images": attarr, "files": attfiles});
 
       const marked = new Marked(
         markedHighlight({
@@ -105,13 +123,12 @@ export class DialogOllamaComponent implements OnInit {
           };
   
       let temps = "";
-  
-      this.updatemsg('user', this.questioninput.value);
-      this.ollamaService.chatStream(this.ollamaurl, this.questioninput.value, this.aiselectedValue).subscribe({
+  console.log(this.defaultprompt);
+      //this.updatemsg('user', inputmsg);
+      this.ollamaService.chatStream(this.ollamaurl, inputmsg, this.aiselectedValue, attarr_b64, attfiles, this.defaultprompt).subscribe({
         next: (text) => {
           this.chatmsg[this.chatmsg.length-1].response += text;
           temps += text;
-          this.questioninput.setValue('');
   
           if(text.includes(".\n")||text.includes(". \n")){
             this.chatmsg[this.chatmsg.length-1].response = marked.parse(this.chatmsg[this.chatmsg.length-1].response, { renderer: renderer });
@@ -175,15 +192,79 @@ clearmsg() {
   this.sessionsub.removeSessionStorageItem('VULNREPO-OLLAMA-CHAT-MSG-H');
 }
 
-selectcmodel(event){
 
-  if(event.value) {
-    this.indexeddbService.updateAiintegration({"model":event.value, "ollama_url":this.ollamaurl}, 0).then(ret => { });
+onImageLoad(fileLoadedEvent) {}
 
-    this.aiselectedValue = event.value;
+onImageSelect(input: HTMLInputElement) {
+  const files = input.files;
+
+  Object.keys(files).forEach(key => {
+
+    const fileToRead = files[key];
+    const fileReader = new FileReader();
+    fileReader.onload = this.onImageLoad;
+
+    fileReader.onload = (e) => {
+
+      const res: string = fileReader.result as string;
+
+      this.attachedIMG.push('data:image/png;base64,' + btoa(res) );
+      this.attachedIMG_b64.push(btoa(res) );
+
+    };
+
+    fileReader.readAsBinaryString(fileToRead);
+
+  });
 
 
-  }
+}
+
+removeAttach(){
+  this.attachedIMG = [];
+  this.attachedIMG_b64 = [];
+}
+
+onFileLoad(fileLoadedEvent) {}
+
+onFileSelect(input: HTMLInputElement) {
+  const files = input.files;
+
+  Object.keys(files).forEach(key => {
+
+    const fileToRead = files[key];
+    const fileReader = new FileReader();
+    fileReader.onload = this.onImageLoad;
+
+    fileReader.onload = (e) => {
+
+      const res: string = fileReader.result as string;
+
+      this.attachedFILES.push({"filename": files[key].name, "filetype": files[key].type, "file": btoa(res)} );
+
+    };
+
+    fileReader.readAsBinaryString(fileToRead);
+
+  });
+
+
+}
+
+removeAttachfile(){
+  this.attachedFILES = [];
+}
+
+opensettings() {
+  const dialogRef = this.dialog.open(DialogOllamaSettingsComponent, {
+    width: '600px',
+    disableClose: false,
+    data: []
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('The AI-Settings dialog was closed');
+  });
 
 }
 

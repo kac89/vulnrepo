@@ -149,9 +149,15 @@
                   <textarea matInput rows="2" [(ngModel)]="decryptedReportDataChanged.report_summary"
                   value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
                   <div *ngIf="aiconnected" style="position:absolute;top: 10px; right: 10px;">
-                    <button mat-icon-button color="accent" (click)="aiasist()" title="AI report summary">
+                    <button mat-icon-button color="accent" title="AI report summary" [matMenuTriggerFor]="menu">
                       <mat-icon>insert_comment</mat-icon>
                     </button>
+
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="aiasist()"><mat-icon class="vertical-align-middle padding-bottom-3">description</mat-icon> AI report summary</button>
+                      <button mat-menu-item (click)="goaisettings()"><mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings</button>
+                    </mat-menu>
+
                   </div>
                 </div>
                 
