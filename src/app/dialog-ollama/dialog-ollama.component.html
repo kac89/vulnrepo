@@ -28,6 +28,24 @@
         <p>
           {{item.question}}
         </p>
+
+        <div>    
+          <mat-list>
+            @for (item of item.files; track item) {
+              <mat-list-item style="max-width:400px;">
+                {{item.filename}} 
+              </mat-list-item>
+            }
+           </mat-list>       
+        </div>
+
+        <p>
+          @for (item of item.images; track item) {
+            <img src="{{item}}" width="100px">
+          }
+        </p>
+
+
       </mat-card-content>
     </mat-card>
 
@@ -66,36 +84,65 @@
   </mat-form-field>
 </div>
 
+<div style="padding: 20px;">
+  @for (item of attachedIMG; track item) {
+
+
+    <div style="position:relative">    
+      <img src="{{item}}" width="100px">
+      <div style="position:absolute;left:-10px;top:-20px;">
+        <button mat-icon-button (click)="removeAttach()" title="Remove image">
+          <mat-icon color="warn">delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+  }
+
+  @for (item of attachedFILES; track item) {
+
+
+    <div>    
+      <mat-list>
+        <mat-list-item style="max-width:400px;">
+
+          <button mat-icon-button (click)="removeAttachfile()" title="Remove file">
+            <mat-icon color="warn">delete_forever</mat-icon>
+          </button>
+
+          {{item.filename}} 
+        </mat-list-item>
+       </mat-list>       
+      
+    </div>
+    
+  }
+
+</div>
+
 <mat-dialog-actions *ngIf="aiconnected">
 
   <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
 
-      <mat-form-field color="accent">
-        <mat-label>Model</mat-label>
-        <mat-select [(ngModel)]="aiselectedValue" name="ai_tags" (selectionChange)="selectcmodel($event)">
-          @for (item of ai_tags; track item) {
-            <mat-option [value]="item.model">{{item.name}}</mat-option>
-          }
-        </mat-select>
-        
-      </mat-form-field>
-<!--
       <div style="padding: 10px;">
-        <button mat-icon-button style="padding: 0px;"  title="Attach image" >
-          <mat-icon>image</mat-icon>
-        </button>
-      
-        <button mat-icon-button style="padding: 0px;" title="Attach file" >
-          <mat-icon>attach_file</mat-icon>
-        </button>
 
-        <button mat-icon-button style="padding: 0px;" title="Settings" >
+        <button mat-icon-button style="padding: 0px;" (click)="opensettings()" title="Settings" >
           <mat-icon>settings</mat-icon>
         </button>
 
+        <button mat-icon-button style="padding: 0px;" (click)="attachimg.click()"  title="Attach image" *ngIf="attachedIMG.length == 0">
+          <mat-icon>image</mat-icon>
+        </button>
+        <input hidden type="file" accept="image/*" #attachimg (change)="onImageSelect($event.target)" name="myimages" />
+
+        <button mat-icon-button style="padding: 0px;" title="Attach file" (click)="attachfile.click()" >
+          <mat-icon>attach_file</mat-icon>
+        </button>
+        <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles" multiple/>
+
       </div>
--->
+
 
 
     </div>

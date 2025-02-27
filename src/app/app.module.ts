@@ -87,6 +87,7 @@ import { DialogEditorFullscreenComponent } from './dialog-editor-fullscreen/dial
 import { DialogAttachPreviewComponent } from './dialog-attach-preview/dialog-attach-preview.component';
 import { FilesizePipe } from './filesize.pipe';
 import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
+import { DialogOllamaSettingsComponent } from './dialog-ollama-settings/dialog-ollama-settings.component';
 import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({ declarations: [
@@ -128,7 +129,8 @@ import {MatSliderModule} from '@angular/material/slider';
         DialogEditorFullscreenComponent,
         DialogAttachPreviewComponent,
         FilesizePipe,
-        DialogOllamaComponent
+        DialogOllamaComponent,
+        DialogOllamaSettingsComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,

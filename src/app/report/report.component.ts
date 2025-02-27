@@ -44,6 +44,7 @@ import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-at
 import { AlignmentType, Document, Footer, Header, Packer, PageBreak, HeadingLevel, ImageRun, PageNumber, NumberFormat, Paragraph, TextRun, TableOfContents, Table, TableCell, TableRow, WidthType } from "docx";
 import { UtilsService } from '../utils.service';
 import {OllamaServiceService} from '../ollama-service.service';
+import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
 
 export interface Tags {
   name: string;
@@ -3593,7 +3594,7 @@ Date   | Description
     this.decryptedReportDataChanged.report_summary = "";
 
     let tempx = "";
-    this.ollamaService.chatStream(this.models.ollama_url, msgin, this.models.model).subscribe({
+    this.ollamaService.chatStream(this.models.ollama_url, msgin, this.models.model, [], [],this.models.defaultprompt).subscribe({
       next: (text) => {
         this.decryptedReportDataChanged.report_summary += text;
         tempx += text;
@@ -3615,6 +3616,30 @@ Date   | Description
       }
     });
 
+
+  }
+
+  goaisettings() {
+
+    const dialogRef = this.dialog.open(DialogOllamaSettingsComponent, {
+      width: '600px',
+      disableClose: false,
+      data: []
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The AI-Settings dialog was closed');
+      if (result) {
+
+        this.indexeddbService.getkeybyAiintegration().then(ret => {
+      
+          if(ret[0]) {
+            this.models = ret[0];
+          }
+         });
+
+      }
+    });
 
   }
 

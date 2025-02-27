@@ -25,7 +25,7 @@ export class OllamaServiceService {
   }
 
 
-  chatStream(url,msg,model) {
+  chatStream(url,msg,model,imgs,files,defaultprompt) {
 
     const localchat = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-MSG-H');
     let tarr = [];
@@ -39,17 +39,36 @@ export class OllamaServiceService {
     if (temperaturet) {
       temperature = Number(temperaturet);
     }
-    
 
+    let addfile = "";
+
+    if(files.length > 0) {
+
+      files.forEach(function (value, index) {
+
+        addfile = addfile + `\n\n
+        <ATTACHMENT_FILE>
+        <FILE_INDEX>File `+(index+1)+`</FILE_INDEX>
+        <FILE_NAME>`+value.filename+`</FILE_NAME>
+        <FILE_TYPE>`+value.filetype+`</FILE_TYPE>
+        <FILE_CONTENT>
+        `+atob(value.file)+`
+        </FILE_CONTENT>
+        </ATTACHMENT_FILE>\n
+        `;
+        
+    });
+    }
+    
     return new Observable<string>(observer => {
       fetch(url+'/api/chat', {
         method: 'POST',
         body: JSON.stringify({ 
           "model": model, 
           "messages": [
-              { "role": "system", "content": "You are a helpful assistant." },
+              { "role": "system", "content": defaultprompt },
               ...tarr,
-              { "role": "user", "content": msg }
+              { "role": "user", "content": msg+addfile, "images": imgs}
             ], 
             "stream": true,
             "options": { 
