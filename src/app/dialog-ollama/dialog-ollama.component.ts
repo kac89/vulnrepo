@@ -98,7 +98,7 @@ export class DialogOllamaComponent implements OnInit {
 
     if(inputmsg !== null && inputmsg !== '') {
 
-      this.chatmsg.push({"question": inputmsg, "response": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue, "images": attarr, "files": attfiles});
+      this.chatmsg.push({"question": inputmsg, "response": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue,"temperature": this.temperature, "images": attarr, "files": attfiles});
 
       const marked = new Marked(
         markedHighlight({
@@ -264,6 +264,24 @@ opensettings() {
 
   dialogRef.afterClosed().subscribe(result => {
     console.log('The AI-Settings dialog was closed');
+
+    this.indexeddbService.getkeybyAiintegration().then(ret => {
+      
+      if(ret[0]) {
+        this.models = ret[0];
+
+        this.aiselectedValue = this.models.model;
+        this.ollamaurl = this.models.ollama_url;
+        this.temperature = this.models.temperature;
+        this.defaultprompt = this.models.defaultprompt;
+        
+      } else {
+
+        this.router.navigate(['/settings']);
+        this.dialogRef.close();
+      }
+     });
+
   });
 
 }
