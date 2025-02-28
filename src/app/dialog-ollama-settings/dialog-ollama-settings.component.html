@@ -1,4 +1,4 @@
-<div mat-dialog-title class="example-full-width">
+<div mat-dialog-title class="example-full-width" style="display: flex;">
     <h2>AI settings</h2>
 </div>
 
@@ -16,13 +16,21 @@
         
       </mat-form-field>
 
-    <div class="example-label-container">
-        <label id="example-name-label" class="example-name-label">Temperature:</label>&nbsp;
-        <label class="example-value-label">{{temperature}}</label>
-    </div>
-    <mat-slider color="accent" class="example-width" [max]="2" [min]="0" [step]="0.1">
-        <input matSliderThumb [(ngModel)]="temperature" (change)="savetemp()">
-    </mat-slider>
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="example-label-container">
+            <label id="example-name-label" class="example-name-label">Temperature:</label>&nbsp;
+            <label class="example-value-label">{{temperature}}</label>
+        </div>
+        <mat-slider color="accent" class="example-width" [max]="2" [min]="0" [step]="0.1">
+            <input matSliderThumb [(ngModel)]="temperature" (change)="savetemp()">
+        </mat-slider>
+        <p>*Increasing the temperature will make the model answer more creatively.</p>
+        </mat-card-content>
+      </mat-card>
+      
+<br>
+
 
 <div>
     <mat-form-field color="accent" class="example-full-width" >
@@ -36,7 +44,13 @@
 
 <mat-dialog-actions>
 
+  <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
 
-    <button mat-raised-button color="primary" mat-dialog-close>Close</button>
+    </div>
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" mat-dialog-close>Close</button>
+  </div>
+  </div>
 
 </mat-dialog-actions>

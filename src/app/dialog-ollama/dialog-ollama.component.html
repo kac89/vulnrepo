@@ -53,7 +53,7 @@
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">account_circle</mat-icon>
         <mat-card-title>AI</mat-card-title>
-        <mat-card-subtitle>Model: {{item.model}}</mat-card-subtitle>
+        <mat-card-subtitle>Model: {{item.model}}, Temperature: {{item.temperature}}</mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content style="color: white;">
@@ -78,6 +78,7 @@
   <mat-form-field color="accent" class="example-full-width" appearance="outline">
     <mat-label>Ask anything</mat-label>
     <textarea matInput [formControl]="questioninput" cdkFocusInitial></textarea>
+    <mat-hint>Selected model: {{aiselectedValue}}</mat-hint>
     <mat-error *ngIf="questioninput.hasError('notempty')">
       <strong>Please provide some data!</strong>
     </mat-error>
@@ -149,7 +150,7 @@
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
       
       <button mat-raised-button (click)="sendmsg()" color="accent">Send</button>
-      <button mat-raised-button mat-dialog-close>Close</button>
+      <button mat-raised-button mat-dialog-close color="primary">Close</button>
     </div>
   </div>
 
