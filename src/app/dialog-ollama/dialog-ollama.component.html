@@ -3,20 +3,21 @@
     <h2 style="padding-left: 10px;">AI assistant</h2>
   </div>
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
-    <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove chat</button>
+    <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove
+      chat</button>
   </div>
 </div>
 
 <mat-dialog-content class="mat-typography" id="chat">
 
-<div *ngIf="!aiconnected" class="example-full-width">
-  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-</div>
+  <div *ngIf="!aiconnected" class="example-full-width">
+    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+  </div>
 
 
-<div class="example-full-width" *ngIf="aiconnected">
-      
-  @for (item of chatmsg; track item) {
+  <div class="example-full-width" *ngIf="aiconnected">
+
+    @for (item of chatmsg; track item) {
     <mat-card class="example-card" appearance="outlined">
       <mat-card-header style="align-self: last baseline;">
         <div mat-card-avatar class="header-image-ai"></div>
@@ -29,27 +30,33 @@
           {{item.question}}
         </p>
 
-        <div>    
+        <div>
           <mat-list>
             @for (item of item.files; track item) {
-              <mat-list-item style="max-width:400px;">
-                {{item.filename}} 
-              </mat-list-item>
+            <mat-list-item style="max-width:400px;">
+              {{item.filename}}
+            </mat-list-item>
             }
-           </mat-list>       
+          </mat-list>
         </div>
 
         <p>
           @for (item of item.images; track item) {
-            <img src="{{item}}" width="100px">
+          <img src="{{item}}" width="100px">
           }
         </p>
 
 
       </mat-card-content>
+      <mat-card-actions>
+        <!-- <button mat-icon-button life="1000" tooltipEvent="focus" matTooltip="Reply again" matTooltipPosition="below"><mat-icon>reply</mat-icon></button> -->
+        <button mat-icon-button [cdkCopyToClipboard]="item.question" (click)="copyTextuser()" life="1000"
+          tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
+          #tooltip="matTooltip"><mat-icon>content_copy</mat-icon></button>
+      </mat-card-actions>
     </mat-card>
 
-  <mat-card class="example-card" appearance="outlined">
+    <mat-card class="example-card" appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">account_circle</mat-icon>
         <mat-card-title>AI</mat-card-title>
@@ -63,15 +70,19 @@
         <div [innerHtml]="saniteizeme(item.response)"></div>
 
       </mat-card-content>
-
+      <mat-card-actions>
+        <button mat-icon-button [cdkCopyToClipboard]="prepAIcopy(saniteizeme(item.response))" (click)="copyTextAI()"
+          life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
+          #tooltip2="matTooltip"><mat-icon>content_copy</mat-icon></button>
+      </mat-card-actions>
     </mat-card>
 
     <br>
-  }
+    }
 
 
 
-</div>
+  </div>
 </mat-dialog-content>
 
 <div style="padding: 10px;" *ngIf="aiconnected">
@@ -89,34 +100,34 @@
   @for (item of attachedIMG; track item) {
 
 
-    <div style="position:relative">    
-      <img src="{{item}}" width="100px">
-      <div style="position:absolute;left:-10px;top:-20px;">
-        <button mat-icon-button (click)="removeAttach()" title="Remove image">
-          <mat-icon color="warn">delete_forever</mat-icon>
-        </button>
-      </div>
+  <div style="position:relative">
+    <img src="{{item}}" width="100px">
+    <div style="position:absolute;left:-10px;top:-20px;">
+      <button mat-icon-button (click)="removeAttach()" title="Remove image">
+        <mat-icon color="warn">delete_forever</mat-icon>
+      </button>
     </div>
-    
+  </div>
+
   }
 
   @for (item of attachedFILES; track item) {
 
 
-    <div>    
-      <mat-list>
-        <mat-list-item style="max-width:400px;">
+  <div>
+    <mat-list>
+      <mat-list-item style="max-width:400px;">
 
-          <button mat-icon-button (click)="removeAttachfile()" title="Remove file">
-            <mat-icon color="warn">delete_forever</mat-icon>
-          </button>
+        <button mat-icon-button (click)="removeAttachfile()" title="Remove file">
+          <mat-icon color="warn">delete_forever</mat-icon>
+        </button>
 
-          {{item.filename}} 
-        </mat-list-item>
-       </mat-list>       
-      
-    </div>
-    
+        {{item.filename}}
+      </mat-list-item>
+    </mat-list>
+
+  </div>
+
   }
 
 </div>
@@ -128,19 +139,21 @@
 
       <div style="padding: 10px;">
 
-        <button mat-icon-button style="padding: 0px;" (click)="opensettings()" title="Settings" >
+        <button mat-icon-button style="padding: 0px;" (click)="opensettings()" title="Settings">
           <mat-icon>settings</mat-icon>
         </button>
 
-        <button mat-icon-button style="padding: 0px;" (click)="attachimg.click()"  title="Attach image" *ngIf="attachedIMG.length == 0">
+        <button mat-icon-button style="padding: 0px;" (click)="attachimg.click()" title="Attach image"
+          *ngIf="attachedIMG.length == 0">
           <mat-icon>image</mat-icon>
         </button>
         <input hidden type="file" accept="image/*" #attachimg (change)="onImageSelect($event.target)" name="myimages" />
 
-        <button mat-icon-button style="padding: 0px;" title="Attach file" (click)="attachfile.click()" >
+        <button mat-icon-button style="padding: 0px;" title="Attach file" (click)="attachfile.click()">
           <mat-icon>attach_file</mat-icon>
         </button>
-        <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles" multiple/>
+        <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles"
+          multiple />
 
       </div>
 
@@ -148,7 +161,7 @@
 
     </div>
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
-      
+
       <button mat-raised-button (click)="sendmsg()" color="accent">Send</button>
       <button mat-raised-button mat-dialog-close color="primary">Close</button>
     </div>
