@@ -108,6 +108,11 @@
           <p *ngIf="composerplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
         </div>
         
+        <div *ngIf="selected_source == 'wiz'">
+          <input cdkFocusInitial type="file" accept=".csv" (change)="wizonFileSelect($event.target)" name="myfile">
+          <p *ngIf="wizplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+        </div>
+
         <input *ngIf="selected_source == 'zaproxy'" cdkFocusInitial type="file" accept=".json" (change)="zaproxyonFileSelect($event.target)" name="myfile">
         <p *ngIf="zaproxyplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
 

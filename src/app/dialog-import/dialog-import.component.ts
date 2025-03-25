@@ -5,6 +5,7 @@ import * as xml2js from 'xml2js';
 import * as Crypto from 'crypto-js';
 import { CurrentdateService } from '../currentdate.service';
 import { UntypedFormControl } from '@angular/forms';
+import { UtilsService } from '../utils.service';
 
 interface Importsource {
   value: string;
@@ -58,14 +59,18 @@ export class DialogImportComponent implements OnInit {
   mergeperpath = new UntypedFormControl();
   public composershow_input = true;
   public composerplease_wait = false;
+
+  public wizshow_input = true;
+  public wizplease_wait = false;
+
   public zaproxyshow_input = true;
   public zaproxyplease_wait = false;
 
   file: any;
   hide = true;
   sour: Importsource[] = [
-    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)', viewImg: '/favicon-32x32.png' },
-    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/favicon-32x32.png' },
+    { value: 'vulnrepojson', viewValue: 'VULNRΞPO Encrypted (.VULN)', viewImg: '/favicon-32x32.png' },
+    { value: 'decrypted_json', viewValue: 'VULNRΞPO Decrypted Issue (.JSON)', viewImg: '/favicon-32x32.png' },
     { value: 'burp', viewValue: 'Burp Suite (.XML)', viewImg: '/assets/vendors/burp-logo.png' },
     { value: 'bugcrowd', viewValue: 'Bugcrowd (.CSV)', viewImg: '/assets/vendors/bugcrowd-logo.png' },
     { value: 'nmap', viewValue: 'Nmap (.XML)', viewImg: '/assets/vendors/nmap-logo.png' },
@@ -77,11 +82,12 @@ export class DialogImportComponent implements OnInit {
     { value: 'npm_audit', viewValue: 'NPM-AUDIT (.JSON)', viewImg: '/assets/vendors/npm-logo.png' },
     { value: 'semgrep', viewValue: 'Semgrep (.JSON)', viewImg: '/assets/vendors/semgrep-logo.png' },
     { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)', viewImg: '/assets/vendors/Logo-composer-transparent.png' },
+    { value: 'wiz', viewValue: 'WIZ ISSUES (.CSV)', viewImg: '/assets/vendors/wiz.jpeg' },
     { value: 'zaproxy', viewValue: 'ZAP (.JSON)', viewImg: '/assets/vendors/zap-by-checkmarx.svg' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
-    private currentdateService: CurrentdateService) { }
+    private currentdateService: CurrentdateService,private utilsService: UtilsService) { }
 
   ngOnInit() {
     this.mergeperpath.setValue(true);
@@ -1492,15 +1498,10 @@ export class DialogImportComponent implements OnInit {
 
       for (const [subkey, subvalue] of Object.entries(value['alerts'])) {
 
-
         let scopedesc = "";
         if (subvalue['instances']) {
           scopedesc = "Request header:\n" + subvalue['instances'][0]['method'] + " " + subvalue['instances'][0]['uri'];
         }
-
-
-
-
 
         const def = {
           title: subvalue['alert'],
@@ -1526,6 +1527,78 @@ export class DialogImportComponent implements OnInit {
 
     this.dialogRef.close(arr);
 
+  }
+
+  wizonFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.zaproxyshow_input = false;
+      this.zaproxyplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parsewiz(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parsewiz(csv) {
+
+    const csvData = csv || '';
+    let m: any;
+    const issuelist = [];
+    let text = csvData.substring(csvData.indexOf("\n") + 1);
+    text = text.replace(/, /g, '. ');
+
+    const issues = this.utilsService.parseCSV(text);
+
+    function setseverity(severity) {
+      if (severity === 'CRITICAL') {
+        severity = 'Critical';
+      } else if (severity === 'HIGH') {
+        severity = 'High';
+      } else if (severity === 'MEDIUM') {
+        severity = 'Medium';
+      } else if (severity === 'LOW') {
+        severity = 'Low';
+      } else if (severity === 'INFORMATIONAL') {
+        severity = 'Info';
+      }
+      return severity
+    }
+
+    issues.forEach((myObject, index) => {
+
+      const def = {
+        title: myObject[1],
+        poc: myObject[27],
+        files: [],
+        desc: myObject[4] + '\n\n' + myObject[24].replaceAll("###","#"),
+        severity: setseverity(myObject[2]),
+        ref: myObject[26],
+        cvss: '',
+        cvss_vector: '',
+        cve: '',
+        tags: [{ name: "wiz" }],
+        status: 1,
+        bounty: [],
+        date: this.currentdateService.getcurrentDate()
+      };
+
+      issuelist.push(def);
+
+
+    });
+
+    this.dialogRef.close(issuelist);
   }
 
 }
