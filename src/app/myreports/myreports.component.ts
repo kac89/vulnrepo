@@ -36,8 +36,8 @@ export class MyreportsComponent implements OnInit {
   selection = new SelectionModel<MyReportElement>(true, []);
   msg = '';
   keyfound = false;
-  apilist = [];
-  list = [];
+  apilist:any = [];
+  list:any = [];
   private paginator: MatPaginator;
   private sort: MatSort;
 

@@ -16,10 +16,9 @@ export class DialogPassComponent implements OnInit {
   hide = true;
   msg = '';
   insertpass = new UntypedFormControl();
-
-  constructor(public router: Router, private indexeddbService: IndexeddbService,
-    public dialogRef: MatDialogRef<DialogPassComponent>,
-    @Inject(MAT_DIALOG_DATA) public data) {
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data, public router: Router, private indexeddbService: IndexeddbService,
+    public dialogRef: MatDialogRef<DialogPassComponent>) {
     }
 
   cancel(): void {

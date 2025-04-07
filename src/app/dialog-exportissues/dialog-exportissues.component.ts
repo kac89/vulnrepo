@@ -16,7 +16,7 @@ interface Exportsource {
   styleUrls: ['./dialog-exportissues.component.scss']
 })
 export class DialogExportissuesComponent implements OnInit {
-  isReturn = [];
+  isReturn:any = [];
   fields: any;
   issues: any;
   curlhide = false;
@@ -46,9 +46,8 @@ export class DialogExportissuesComponent implements OnInit {
     { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/favicon-32x32.png' },
     { value: 'jira', viewValue: 'Atlassian Jira', viewImg: '/assets/vendors/jira-logo.png' }
   ];
-
-  constructor(public dialogRef: MatDialogRef<DialogExportissuesComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogExportissuesComponent>) { }
 
     ngOnInit() {
 

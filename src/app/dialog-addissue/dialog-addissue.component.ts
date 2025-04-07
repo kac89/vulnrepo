@@ -69,7 +69,7 @@ export class DialogAddissueComponent implements OnInit {
   myOWASPTOP10k8s = new UntypedFormControl();
   options: Vulns[] = [];
   mobileoptions: Vulns[] = [];
-  optionsv = [];
+  optionsv: Vulns[] = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];
   mitreenterprise: Vulns[] = [];
@@ -95,7 +95,7 @@ export class DialogAddissueComponent implements OnInit {
   announcer = inject(LiveAnnouncer);
   chipsissue: string[] = [];
   mobilechipsissue: string[] = [];
-  reportTemplateList_int = [];
+  reportTemplateList_int: any[] = [];
 
   constructor(public router: Router,
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
@@ -333,7 +333,7 @@ export class DialogAddissueComponent implements OnInit {
       this.chipsissue.push(this.customissueform.value);
     }
 
-    let exitel = [];
+    let exitel: any[] = [];
     if (this.chipsissue.length > 0) {
       for (var datael of this.chipsissue) {
 
@@ -876,7 +876,7 @@ export class DialogAddissueComponent implements OnInit {
       this.mobilechipsissue.push(this.mobilecustomissueform.value);
     }
 
-    let exitel = [];
+    let exitel:any[] = [];
     if (this.mobilechipsissue.length > 0) {
       for (var datael of this.mobilechipsissue) {
 

@@ -25,20 +25,20 @@ export class DialogOllamaComponent implements OnInit {
 
   @ViewChild('tooltip') tooltip: MatTooltip;
   @ViewChild('tooltip2') tooltip2: MatTooltip;
-  chatmsg = [];
+  chatmsg: any = [];
 
   questioninput = new UntypedFormControl();
   aiselectedValue: string;
-  ai_tags = [];
+  ai_tags: any = [];
   models: any;
   aiconnected = false;
   ollamaurl = "http://localhost:11434";
   temperature = 0.7;
-  attachedIMG = [];
-  attachedIMG_b64 = [];
-  attachedFILES = [];
+  attachedIMG: any = [];
+  attachedIMG_b64: any = [];
+  attachedFILES: any = [];
   defaultprompt = "You are a helpful assistant.";
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogOllamaComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private currentdateService: CurrentdateService, private ollamaService: OllamaServiceService,
     private indexeddbService: IndexeddbService, private sessionsub: SessionstorageserviceService,
@@ -140,7 +140,10 @@ export class DialogOllamaComponent implements OnInit {
 
           //scroll bottom
           const element = document.getElementById('chat');
-          element.scrollTop = element.scrollHeight;
+          if (element) {
+            element.scrollTop = element.scrollHeight;
+          }
+
 
         },
         complete: () => {
@@ -172,7 +175,7 @@ export class DialogOllamaComponent implements OnInit {
 
   updatemsg(role, msg) {
     const localchat = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-MSG-H');
-    let tarr = [];
+    let tarr: any = [];
     if (localchat) {
       tarr = JSON.parse(localchat);
     }
@@ -201,25 +204,28 @@ export class DialogOllamaComponent implements OnInit {
 
   onImageSelect(input: HTMLInputElement) {
     const files = input.files;
+    if (files) {
+      Object.keys(files).forEach(key => {
 
-    Object.keys(files).forEach(key => {
+        const fileToRead = files[key];
+        const fileReader = new FileReader();
+        fileReader.onload = this.onImageLoad;
 
-      const fileToRead = files[key];
-      const fileReader = new FileReader();
-      fileReader.onload = this.onImageLoad;
+        fileReader.onload = (e) => {
 
-      fileReader.onload = (e) => {
+          const res: string = fileReader.result as string;
 
-        const res: string = fileReader.result as string;
+          this.attachedIMG.push('data:image/png;base64,' + btoa(res));
+          this.attachedIMG_b64.push(btoa(res));
 
-        this.attachedIMG.push('data:image/png;base64,' + btoa(res));
-        this.attachedIMG_b64.push(btoa(res));
+        };
 
-      };
+        fileReader.readAsBinaryString(fileToRead);
 
-      fileReader.readAsBinaryString(fileToRead);
+      });
+    }
 
-    });
+
 
 
   }
@@ -234,23 +240,25 @@ export class DialogOllamaComponent implements OnInit {
   onFileSelect(input: HTMLInputElement) {
     const files = input.files;
 
-    Object.keys(files).forEach(key => {
+    if (files) {
+      Object.keys(files).forEach(key => {
 
-      const fileToRead = files[key];
-      const fileReader = new FileReader();
-      fileReader.onload = this.onImageLoad;
+        const fileToRead = files[key];
+        const fileReader = new FileReader();
+        fileReader.onload = this.onImageLoad;
 
-      fileReader.onload = (e) => {
+        fileReader.onload = (e) => {
 
-        const res: string = fileReader.result as string;
+          const res: string = fileReader.result as string;
 
-        this.attachedFILES.push({ "filename": files[key].name, "filetype": files[key].type, "file": btoa(res) });
+          this.attachedFILES.push({ "filename": files[key].name, "filetype": files[key].type, "file": btoa(res) });
 
-      };
+        };
 
-      fileReader.readAsBinaryString(fileToRead);
+        fileReader.readAsBinaryString(fileToRead);
 
-    });
+      });
+    }
 
 
   }

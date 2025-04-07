@@ -34,31 +34,33 @@ export class ImportReportComponent implements OnInit {
   onFileSelect(input: HTMLInputElement) {
     const files = input.files;
     let ile = 0;
-    Object.keys(files).forEach(key => {
 
-      const fileToRead = files[key];
-      const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+    if(files) {
+      Object.keys(files).forEach(key => {
 
-      fileReader.onload = (e) => {
-        ile = ile + 1;
-        const res: string = fileReader.result as string;
-        let item = decodeURIComponent(res);
-        item = item.replace(/(\r\n|\n|\r| )/gm, '');
-        const decodedData = atob(item);
-        this.indexeddbService.importReportfromfile(decodedData);
-
-        if (files.length === ile) {
-          console.log('files end');
-          this.router.navigate(['/my-reports']);
-        }
-
-      };
-
-      fileReader.readAsText(fileToRead, 'UTF-8');
-
-    });
-
+        const fileToRead = files[key];
+        const fileReader = new FileReader();
+        fileReader.onload = this.onFileLoad;
+  
+        fileReader.onload = (e) => {
+          ile = ile + 1;
+          const res: string = fileReader.result as string;
+          let item = decodeURIComponent(res);
+          item = item.replace(/(\r\n|\n|\r| )/gm, '');
+          const decodedData = atob(item);
+          this.indexeddbService.importReportfromfile(decodedData);
+  
+          if (files.length === ile) {
+            console.log('files end');
+            this.router.navigate(['/my-reports']);
+          }
+  
+        };
+  
+        fileReader.readAsText(fileToRead, 'UTF-8');
+  
+      });
+    }
 
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   standalone: false,
@@ -27,13 +27,16 @@ export class FaqComponent implements OnInit {
 
     const node = document.getElementById(id);
     const yourHeight = 105 + 20;
-    
-    // scroll to your element
-    node.scrollIntoView(true);
-    
+
+    if (node) {
+      // scroll to your element
+      node.scrollIntoView(true);
+    }
+
+
     // now account for fixed header
     const scrolledY = window.scrollY;
-    
+
     if (scrolledY) {
       window.scroll(0, scrolledY - yourHeight);
     }

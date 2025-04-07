@@ -12,7 +12,7 @@ import { UntypedFormControl } from '@angular/forms';
 export class DialogCustomcontentComponent implements OnInit {
 
   report_custom_content = new UntypedFormControl();
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogCustomcontentComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {

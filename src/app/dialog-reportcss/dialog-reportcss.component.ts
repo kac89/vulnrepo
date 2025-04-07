@@ -13,7 +13,7 @@ import { UntypedFormControl } from '@angular/forms';
 export class DialogReportcssComponent implements OnInit {
 
   report_css = new UntypedFormControl();
-
+  // @ts-ignore
   constructor(private http: HttpClient, public dialogRef: MatDialogRef<DialogReportcssComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {

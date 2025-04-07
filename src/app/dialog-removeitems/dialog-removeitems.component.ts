@@ -9,7 +9,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./dialog-removeitems.component.scss']
 })
 export class DialogRemoveitemsComponent implements OnInit {
-  isReturn = [];
+  isReturn:any = [];
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogRemoveitemsComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {

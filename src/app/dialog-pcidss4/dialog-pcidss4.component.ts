@@ -22,7 +22,7 @@ export class DialogPcidss4Component {
   pass = new UntypedFormControl();
   pass2 = new UntypedFormControl();
 
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogPcidss4Component>, @Inject(MAT_DIALOG_DATA) public data: any, public datePipe: DatePipe,
   private currentdateService: CurrentdateService) {
 

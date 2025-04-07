@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   enc_status: any;
   subscription: Subscription;
   show_active_reports = false;
-  arr_oreports = [];
+  arr_oreports:any = [];
   dialogRef: MatDialogRef<DialogAboutComponent>;
 
   constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService, public dialog: MatDialog) {

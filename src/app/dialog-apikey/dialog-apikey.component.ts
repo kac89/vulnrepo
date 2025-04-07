@@ -17,9 +17,9 @@ export class DialogApikeyComponent implements OnInit {
   alert = '';
   removedialog = false;
   insertkeypass = new UntypedFormControl();
-
-  constructor(public dialogRef: MatDialogRef<DialogApikeyComponent>,
-    @Inject(MAT_DIALOG_DATA) public data, private indexeddbService: IndexeddbService, public sessionsub: SessionstorageserviceService) { }
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data, public dialogRef: MatDialogRef<DialogApikeyComponent>,
+    private indexeddbService: IndexeddbService, public sessionsub: SessionstorageserviceService) { }
 
   ngOnInit(): void {
     this.insertkeypass.setValue("");

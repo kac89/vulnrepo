@@ -12,7 +12,7 @@ export class DialogChangelogComponent implements OnInit {
 
   mydata: any;
   today = Date.now();
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogChangelogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
