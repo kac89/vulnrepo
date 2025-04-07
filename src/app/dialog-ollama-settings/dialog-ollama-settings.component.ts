@@ -29,7 +29,7 @@ export class DialogOllamaSettingsComponent {
 
   ngOnInit() {
 
-    this.defaultprompt.setValue('You are a helpful assistant.');
+    this.defaultprompt.setValue('You are a helpful cyber security assistant.');
 
     this.indexeddbService.getkeybyAiintegration().then(ret => {
       
