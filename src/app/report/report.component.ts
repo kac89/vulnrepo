@@ -45,6 +45,7 @@ import { AlignmentType, Document, Footer, Header, Packer, PageBreak, HeadingLeve
 import { UtilsService } from '../utils.service';
 import {OllamaServiceService} from '../ollama-service.service';
 import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
+import { DialogOllamaComponent } from '../dialog-ollama/dialog-ollama.component';
 
 export interface Tags {
   name: string;
@@ -3647,5 +3648,37 @@ Date   | Description
     });
 
   }
+
+  goAIsummary(): void {
+
+    const res: any = {
+      "report_name": this.report_info.report_name,
+      "report_id": this.report_info.report_id,
+      "report_createdate": this.report_info.report_createdate,
+      "report_lastupdate": this.report_info.report_lastupdate,
+      //"report_changelog": this.decryptedReportDataChanged.report_changelog,
+      "researcher": this.decryptedReportDataChanged.researcher,
+      "report_vulns": this.decryptedReportDataChanged.report_vulns,
+      "report_version": this.decryptedReportDataChanged.report_version,
+      "report_summary": this.decryptedReportDataChanged.report_summary,
+      "report_metadata": this.decryptedReportDataChanged.report_metadata,
+      "report_scope": this.decryptedReportDataChanged.report_scope
+      //"report_settings": this.decryptedReportDataChanged.report_settings
+    };
+
+    const xxx = JSON.stringify(res);
+
+    const dialogRef = this.dialog.open(DialogOllamaComponent, {
+      width: '800px',
+      disableClose: true,
+      data: [{"prompt": `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, can you prepare a report summary and remediations for a company as a document, with issue is most important and fix recommendation for board of company ?, mention scope if provided on JSON key "report_scope", mention researcher if provided on JSON key "researcher".`, "files": [{ "filename": "[attach report data]", "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": []}]
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The AI dialog was closed');
+    });
+
+  }
+
 
 }

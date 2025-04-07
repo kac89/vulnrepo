@@ -74,6 +74,11 @@
         <button mat-icon-button [cdkCopyToClipboard]="prepAIcopy(saniteizeme(item.response))" (click)="copyTextAI()"
           life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
           #tooltip2="matTooltip"><mat-icon>content_copy</mat-icon></button>
+
+          <button mat-icon-button (click)="downloadAIText(item.response_md)"
+          life="1000" tooltipEvent="focus" matTooltip="Download" matTooltipPosition="below"
+          #tooltip2="matTooltip"><mat-icon>file_download</mat-icon></button>
+
       </mat-card-actions>
     </mat-card>
 
@@ -89,7 +94,7 @@
   <mat-form-field color="accent" class="example-full-width" appearance="outline">
     <mat-label>Ask anything</mat-label>
     <textarea matInput [formControl]="questioninput" cdkFocusInitial></textarea>
-    <mat-hint>Selected model: {{aiselectedValue}}</mat-hint>
+    <mat-hint>Selected model: {{aiselectedValue}}, Temperature: {{temperature}}</mat-hint>
     <mat-error *ngIf="questioninput.hasError('notempty')">
       <strong>Please provide some data!</strong>
     </mat-error>

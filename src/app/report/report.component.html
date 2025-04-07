@@ -1069,6 +1069,11 @@
                 <button mat-menu-item (click)="DownloadJSON(report_info)" title="Decrypted JSON report format">
                   <mat-icon>code</mat-icon>JSON
                 </button>
+
+                <button *ngIf="aiconnected" mat-menu-item (click)="goAIsummary()" title="Decrypted AI Summary Markdown report format">
+                  <mat-icon>subtitles</mat-icon>AI Summary
+                </button>
+
                 <button mat-menu-item (click)="DownloadMarkdown(report_info)" title="Decrypted Markdown report format">
                   <mat-icon>subtitles</mat-icon>Markdown
                 </button>

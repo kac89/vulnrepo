@@ -84,6 +84,24 @@ export class DialogOllamaComponent implements OnInit {
     }
 
 
+
+    if (this.data) {
+
+
+      if (this.data[0]) {
+
+        if (this.data[0].prompt) {
+          this.questioninput.setValue(this.data[0].prompt);
+        }
+
+
+        if (this.data[0].files.length > 0) {
+          this.attachedFILES = this.data[0].files;
+        }
+      }
+
+    }
+
   }
 
   sendmsg() {
@@ -102,7 +120,7 @@ export class DialogOllamaComponent implements OnInit {
 
     if (inputmsg !== null && inputmsg !== '') {
 
-      this.chatmsg.push({ "question": inputmsg, "response": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue, "temperature": this.temperature, "images": attarr, "files": attfiles });
+      this.chatmsg.push({ "question": inputmsg, "response": "", "response_md": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue, "temperature": this.temperature, "images": attarr, "files": attfiles });
 
       const marked = new Marked(
         markedHighlight({
@@ -149,11 +167,14 @@ export class DialogOllamaComponent implements OnInit {
         complete: () => {
           console.log('AI end chat');
 
+
+          this.chatmsg[this.chatmsg.length - 1].response_md = temps;
+
           if (temps.includes('<think>')) {
             temps = temps.replaceAll(/<think>/g, "<details class='think'><summary>Think details</summary>").replaceAll(/<\/think>/gi, "</details><br>");
           }
 
-          this.chatmsg[this.chatmsg.length - 1].response = marked.parse(temps, { renderer: renderer })
+          this.chatmsg[this.chatmsg.length - 1].response = marked.parse(temps, { renderer: renderer });
 
           this.sessionsub.setSessionStorageItem('VULNREPO-OLLAMA-CHAT', JSON.stringify(this.chatmsg));
 
@@ -318,6 +339,21 @@ export class DialogOllamaComponent implements OnInit {
       this.tooltip2.hide();
       this.tooltip2.message = "Copy to clipboard";
     }, 2000);
+  }
+
+  downloadAIText(response) {
+
+    // download JSON report
+    const blob = new Blob([JSON.stringify(response)], { type: 'text/markdown' });
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'AI Response (vulnrepo.com) ' + String(this.currentdateService.getcurrentDate()) + '.md');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
   }
 
   prepAIcopy(str) {
