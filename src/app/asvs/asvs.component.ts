@@ -30,7 +30,7 @@ asvsdata = [];
 selectlevel: string;
 param:any;
 renderedData:any;
-localstorageasvs4 = JSON.parse(localStorage.getItem("asvs4"));
+localstorageasvs4 = JSON.parse(localStorage.getItem("asvs4") || '{}');
 dialogRef: MatDialogRef<DialogAsvs4Component>;
 
 constructor(private http: HttpClient, public dialog: MatDialog){
@@ -67,7 +67,7 @@ openasvs4dialog(): void {
 }
 
 onChangeSelect(){
-  let out = [];
+  let out:any = [];
 
   this.dataSource.data = this.asvsdata;
   if (this.selectlevel === 'All') {

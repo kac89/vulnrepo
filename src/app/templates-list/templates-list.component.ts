@@ -49,11 +49,11 @@ export class TemplatesListComponent implements OnInit {
   displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve'];
   dataSource = new MatTableDataSource<VulnsList[]>();
   getvulnlistStatus = '';
-  countvulns = [];
+  countvulns:any = [];
   expandedElement: VulnsList | null;
   sourceSelect = 'VULNREPO';
-  reportTemplateList_int = [];
-  reportTemplateList = [];
+  reportTemplateList_int:any = [];
+  reportTemplateList:any = [];
   local = [];
   json = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;

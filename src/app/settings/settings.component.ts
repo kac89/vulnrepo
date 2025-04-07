@@ -74,22 +74,22 @@ export class SettingsComponent implements OnInit {
   temperature = 0.7;
   ollamaurlinput = new UntypedFormControl();
 
-  vaultList = [];
-  reportProfileList = [];
-  reportTemplateList = [];
-  reportProfileList_int = [];
-  reportTemplateList_int = [];
+  vaultList:any = [];
+  reportProfileList:any = [];
+  reportTemplateList:any = [];
+  reportProfileList_int:any = [];
+  reportTemplateList_int:any = [];
   ReportProfilesdisplayedColumns: string[] = ['source', 'profile_name', 'profile_settings'];
-  ReportProfilesdataSource = new MatTableDataSource([]);
+  ReportProfilesdataSource = new MatTableDataSource<any>([]);
 
-  ReportTemplatesdataSource = new MatTableDataSource([]);
+  ReportTemplatesdataSource = new MatTableDataSource<any>([]);
   ReportTemplatesdisplayedColumns: string[] = ['source', 'title', 'template_settings'];
 
-  vaultListdataSource = new MatTableDataSource([]);
+  vaultListdataSource = new MatTableDataSource<any>([]);
   vaultListdisplayedColumns: string[] = ['vault_name', 'vault_settings'];
 
   displayedColumns: string[] = ['apiname', 'organisation', 'status', 'created', 'expires', 'storage', 'settings'];
-  dataSource = new MatTableDataSource([]);
+  dataSource = new MatTableDataSource<any>([]);
 
 
   constructor(public router: Router, private indexeddbService: IndexeddbService, private apiService: ApiService,
@@ -121,11 +121,11 @@ export class SettingsComponent implements OnInit {
     this.listkey = bool;
 
     if (bool) {
-      this.vaultListdataSource = new MatTableDataSource([{ "vault_name": "Main Vault" }]);
+      this.vaultListdataSource = new MatTableDataSource<any>([{ "vault_name": "Main Vault" }]);
       this.vaultList = this.vaultListdataSource.data;
     } else {
       this.vaultList = [];
-      this.vaultListdataSource = new MatTableDataSource([]);
+      this.vaultListdataSource = new MatTableDataSource<any>([]);
     }
 
     return bool

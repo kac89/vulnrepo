@@ -14,7 +14,7 @@ export class DialogAboutComponent implements OnInit {
   app_ver = '';
   app_ver_short = '';
 
-  constructor(public dialogRef: MatDialogRef<DialogAboutComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(public dialogRef: MatDialogRef<DialogAboutComponent>) {
 
   }
 

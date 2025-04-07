@@ -986,7 +986,7 @@ export class IndexeddbService {
 
         // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
         const request = store.openCursor();
-        const arr = [];
+        const arr:any = [];
         request.onsuccess = function (evt) {
           let cursor = request.result;
           if (cursor) {
@@ -1180,7 +1180,7 @@ export class IndexeddbService {
 
         // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
         const request = store.openCursor();
-        const arr = [];
+        const arr:any = [];
         request.onsuccess = function (evt) {
           let cursor = request.result;
           if (cursor) {

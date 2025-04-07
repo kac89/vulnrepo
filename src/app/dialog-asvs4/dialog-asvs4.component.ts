@@ -21,6 +21,7 @@ export class DialogAsvs4Component implements OnInit {
   unselected = [];
   pass = new UntypedFormControl();
   pass2 = new UntypedFormControl();
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogAsvs4Component>, @Inject(MAT_DIALOG_DATA) public data: any, public datePipe: DatePipe,
   private currentdateService: CurrentdateService) {
 

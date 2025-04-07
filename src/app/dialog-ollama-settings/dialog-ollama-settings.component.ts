@@ -16,11 +16,11 @@ export class DialogOllamaSettingsComponent {
 
   aiselectedValue = "";
   temperature = 0.1;
-  ai_tags = [];
+  ai_tags:any = [];
   ollamaurl = "http://localhost:11434";
   models:any;
   defaultprompt = new UntypedFormControl();
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogOllamaSettingsComponent>, @Inject(MAT_DIALOG_DATA) public data: any,private ollamaService: OllamaServiceService,
   private indexeddbService: IndexeddbService, public sessionsub: SessionstorageserviceService) {
 

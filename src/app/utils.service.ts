@@ -67,7 +67,7 @@ export class UtilsService {
 
   parseCSV(str) {
 
-    const arr = [];
+    const arr:any = [];
     let quote = false;  // 'true' means we're inside a quoted field
 
     // Iterate over each character, keep track of current row and column (of the returned array)

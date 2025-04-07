@@ -38,9 +38,10 @@ export class DialogAddreportprofileComponent implements OnInit {
   ResEmail = new UntypedFormControl();
   ResSocial = new UntypedFormControl();
   ResWeb = new UntypedFormControl();
-  origi = [];
-
-  constructor(private http: HttpClient, public dialogRef: MatDialogRef<DialogAddreportprofileComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+  origi:any = [];
+  
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, public dialogRef: MatDialogRef<DialogAddreportprofileComponent>,
   public dialog: MatDialog) { }
 
   ngOnInit(): void {

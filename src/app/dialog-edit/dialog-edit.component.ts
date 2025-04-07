@@ -18,7 +18,7 @@ export class DialogEditComponent implements OnInit {
   col4 = false;
   col5 = false;
   col6 = false;
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogEditComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
 
 

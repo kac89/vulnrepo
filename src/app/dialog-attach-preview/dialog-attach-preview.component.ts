@@ -15,7 +15,8 @@ export class DialogAttachPreviewComponent implements OnInit {
   allAttachCount = 0;
   allAttach:any;
   dec_data:any;
-  arrsa = [];
+  arrsa:any = [];
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogAttachPreviewComponent>,@Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {

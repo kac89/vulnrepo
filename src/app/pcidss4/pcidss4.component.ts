@@ -26,7 +26,7 @@ export class Pcidss4Component implements OnInit {
   dataSource = new MatTableDataSource<pcidssElement>();
   selection = new SelectionModel<pcidssElement>(true, []);
   pcidssdata = [];
-  localstoragepcidss4 = JSON.parse(localStorage.getItem("pcidss4"));
+  localstoragepcidss4 = JSON.parse(localStorage.getItem("pcidss4") || '{}');
   pcidss:any;
   renderedData:any;
   dialogRef: MatDialogRef<DialogPcidss4Component>;
@@ -177,7 +177,7 @@ export class Pcidss4Component implements OnInit {
   }
 
   onChangeSelect(){
-    let out = [];
+    let out:any = [];
     this.selection.clear();
     this.dataSource.data = this.pcidssdata;
     if (this.selectsaq !== 'All' && this.selectlevel !== 'All') {

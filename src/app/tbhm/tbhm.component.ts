@@ -13,7 +13,7 @@ export class TbhmComponent implements OnInit {
   
   allreq:any;
   allreqstored:any;
-  selecteditems = [];
+  selecteditems:any = [];
   groupdef = {
     r1: false,
     r2: false,
@@ -95,7 +95,7 @@ export class TbhmComponent implements OnInit {
 
   ngOnInit() {
 
-    this.allreqstored = JSON.parse(localStorage.getItem("tbhm"));
+    this.allreqstored = JSON.parse(localStorage.getItem("tbhm") || '{}');
 
     if(this.allreqstored === undefined || this.allreqstored === null){
       this.allreq = this._formBuilder.group(this.groupdef);

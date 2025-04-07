@@ -42,7 +42,7 @@ export class DialogEditorFullscreenComponent implements OnInit {
   selectedtextarea_end: any;
 
   @ViewChild('textareaEl', { static: false}) textareaElement: ElementRef<HTMLTextAreaElement>;
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogEditorFullscreenComponent>,@Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {

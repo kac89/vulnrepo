@@ -87,7 +87,7 @@ export class DialogImportComponent implements OnInit {
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
-    private currentdateService: CurrentdateService,private utilsService: UtilsService) { }
+    private currentdateService: CurrentdateService, private utilsService: UtilsService) { }
 
   ngOnInit() {
     this.mergeperpath.setValue(true);
@@ -127,13 +127,13 @@ export class DialogImportComponent implements OnInit {
     const csvData = imp || '';
     const allTextLines = csvData.split(/\r\n/);
     const headers = allTextLines[0].split(',');
-    const lines = [];
+    const lines: any = [];
 
     for (let i = 0; i < allTextLines.length; i++) {
       // split content based on comma
       const data = allTextLines[i].split('","');
 
-      const tarr = [];
+      const tarr: any = [];
       for (let j = 0; j < headers.length; j++) {
         tarr.push(data[j]);
       }
@@ -149,10 +149,10 @@ export class DialogImportComponent implements OnInit {
 
     function group_issues(array) {
 
-      const ret = [];
+      const ret: any = [];
       array.forEach((item, index) => {
 
-        ret.forEach((retit, retindex) => {
+        ret.forEach((retit: any, retindex) => {
 
           if (retit[0] === item[0]) {
 
@@ -246,7 +246,7 @@ export class DialogImportComponent implements OnInit {
 
     const csvData = csv || '';
     let m: any;
-    const issuelist = [];
+    const issuelist: any = [];
     let text = csvData.substring(csvData.indexOf("\n") + 1);
     text = text.replace(/, /g, '. ');
 
@@ -356,7 +356,7 @@ export class DialogImportComponent implements OnInit {
     });
 
 
-    const emp = [];
+    const emp: any = [];
     this.xmltojson.map((res, key) => {
 
       if (!emp.find(x => x.serialNumber[0] === res.serialNumber[0])) {
@@ -572,7 +572,7 @@ export class DialogImportComponent implements OnInit {
     }
 
     this.xmltojson = [];
-    const issues = [];
+    const issues: any = [];
     const parser = new xml2js.Parser({ strict: true, trim: true });
 
     parser.parseString(xml, (err, result) => {
@@ -604,7 +604,7 @@ export class DialogImportComponent implements OnInit {
     });
 
 
-    const uniq_items = [];
+    const uniq_items: any = [];
     issues.forEach((myissues, index) => {
 
       if (!uniq_items.some((item) => item[1] === myissues[1])) {
@@ -795,7 +795,7 @@ export class DialogImportComponent implements OnInit {
   parseNmap(xml) {
 
     let json = '';
-    let hosts = [];
+    let hosts: any = [];
     const parser = new xml2js.Parser({ strict: true, trim: true });
 
     parser.parseString(xml, (err, result) => {
@@ -941,7 +941,7 @@ export class DialogImportComponent implements OnInit {
   trivyparse(json) {
 
     const data = JSON.parse(json);
-    const issuelist = [];
+    const issuelist: any = [];
 
     function setseverity(severity: string) {
 
@@ -963,7 +963,7 @@ export class DialogImportComponent implements OnInit {
 
     data.Results.forEach((myObject, index) => {
 
-      const intvulns = [];
+      const intvulns: any = [];
       myObject.Vulnerabilities.forEach((myObject2, index) => {
 
 
@@ -1040,7 +1040,7 @@ export class DialogImportComponent implements OnInit {
       xmltojson = result.rss.channel[0].item;
     });
 
-    const info = xmltojson.map((res, key) => {
+    const info = xmltojson.map((res: any, key) => {
 
       //severity
       if (res.priority[0]._.toString() === 'Blocker') {
@@ -1186,29 +1186,31 @@ export class DialogImportComponent implements OnInit {
         return result
       }
 
-      const arr = [];
+      const arr: any = [];
       for (const [key, value] of Object.entries(data.vulnerabilities)) {
+        if (value) {
+          value["via"].forEach((item, index) => {
 
-        value["via"].forEach((item, index) => {
+            const def = {
+              title: item.name + ' ' + item.range + ' ' + item.title,
+              poc: 'Result of execution command: $ npm audit --json',
+              files: [],
+              desc: 'Full description on: ' + item.url,
+              severity: setseverity(item.severity),
+              ref: item.url,
+              cvss: '',
+              cvss_vector: '',
+              cve: '',
+              tags: [{ name: "npm-audit" }],
+              status: 1,
+              bounty: [],
+              date: this.currentdateService.getcurrentDate()
+            };
 
-          const def = {
-            title: item.name + ' ' + item.range + ' ' + item.title,
-            poc: 'Result of execution command: $ npm audit --json',
-            files: [],
-            desc: 'Full description on: ' + item.url,
-            severity: setseverity(item.severity),
-            ref: item.url,
-            cvss: '',
-            cvss_vector: '',
-            cve: '',
-            tags: [{ name: "npm-audit" }],
-            status: 1,
-            bounty: [],
-            date: this.currentdateService.getcurrentDate()
-          };
+            arr.push(def);
+          });
+        }
 
-          arr.push(def);
-        });
 
       }
 
@@ -1273,38 +1275,44 @@ export class DialogImportComponent implements OnInit {
     if (this.mergeperpath.value) {
       const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {});
       const grouped = groupBy(data.results, v => v.path);
-      const arr = [];
+      const arr: any = [];
       for (const [key, value] of Object.entries(grouped)) {
 
-        const ref = [];
-        const poc = [];
-        const desc = [];
-        const severity = [];
-        const vuln_class = [];
-        for (const [subkey, subvalue] of Object.entries(value)) {
+        const ref: any = [];
+        const poc: any = [];
+        const desc: any = [];
+        const severity: any = [];
+        const vuln_class: any = [];
+
+        if (value) {
+          for (const [subkey, subvalue] of Object.entries(value)) {
 
 
-          if (!ref.includes(subvalue["extra"]["metadata"]["source"])) {
-            ref.push(subvalue["extra"]["metadata"]["source"]);
+
+            if (!ref.includes(subvalue["extra"]["metadata"]["source"])) {
+              ref.push(subvalue["extra"]["metadata"]["source"]);
+            }
+
+            if (!poc.includes(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"] + "`")) {
+              poc.push(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"].replaceAll("`", "'") + "`");
+            }
+
+            if (!desc.includes(subvalue["extra"]["message"])) {
+              desc.push(subvalue["extra"]["message"]);
+            }
+
+            if (!severity.includes(subvalue["extra"]["metadata"]["impact"])) {
+              severity.push(subvalue["extra"]["metadata"]["impact"]);
+            }
+
+            if (!vuln_class.includes(subvalue["extra"]["metadata"]["vulnerability_class"].join(", "))) {
+              vuln_class.push(subvalue["extra"]["metadata"]["vulnerability_class"].join(", "));
+            }
+
           }
-
-          if (!poc.includes(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"] + "`")) {
-            poc.push(subvalue["path"] + ":" + subvalue["start"]["line"] + "\n\n`" + subvalue["extra"]["lines"].replaceAll("`", "'") + "`");
-          }
-
-          if (!desc.includes(subvalue["extra"]["message"])) {
-            desc.push(subvalue["extra"]["message"]);
-          }
-
-          if (!severity.includes(subvalue["extra"]["metadata"]["impact"])) {
-            severity.push(subvalue["extra"]["metadata"]["impact"]);
-          }
-
-          if (!vuln_class.includes(subvalue["extra"]["metadata"]["vulnerability_class"].join(", "))) {
-            vuln_class.push(subvalue["extra"]["metadata"]["vulnerability_class"].join(", "));
-          }
-
         }
+
+
 
 
         const def = {
@@ -1332,27 +1340,32 @@ export class DialogImportComponent implements OnInit {
 
     } else {
 
-      const arr = [];
+      const arr: any = [];
 
       for (const [key, value] of Object.entries(data.results)) {
 
-        const def = {
-          title: value["check_id"],
-          poc: value["path"] + ":" + value["start"]["line"] + "\n\n`" + value["extra"]["lines"] + "`",
-          files: [],
-          desc: value["extra"]["message"],
-          severity: setseverity(value["extra"]["metadata"]["impact"]),
-          ref: value["extra"]["metadata"]["source"],
-          status: 1,
-          cvss: '',
-          cvss_vector: '',
-          cve: '',
-          tags: [{ name: "semgrep" }],
-          bounty: [],
-          date: this.currentdateService.getcurrentDate()
-        };
 
-        arr.push(def);
+        if (value) {
+          const def = {
+            title: value["check_id"],
+            poc: value["path"] + ":" + value["start"]["line"] + "\n\n`" + value["extra"]["lines"] + "`",
+            files: [],
+            desc: value["extra"]["message"],
+            severity: setseverity(value["extra"]["metadata"]["impact"]),
+            ref: value["extra"]["metadata"]["source"],
+            status: 1,
+            cvss: '',
+            cvss_vector: '',
+            cve: '',
+            tags: [{ name: "semgrep" }],
+            bounty: [],
+            date: this.currentdateService.getcurrentDate()
+          };
+
+          arr.push(def);
+        }
+
+
 
       }
 
@@ -1406,30 +1419,38 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
-    const arr = [];
+    const arr: any = [];
     for (const [key, value] of Object.entries(data.advisories)) {
 
-      for (const [subkey, subvalue] of Object.entries(value)) {
+      if (value) {
+        for (const [subkey, subvalue] of Object.entries(value)) {
 
-        const def = {
-          title: subvalue.title,
-          poc: 'Package Name: ' + subvalue.packageName + '\nAffected Versions: ' + subvalue.affectedVersions,
-          files: [],
-          desc: 'All details information: ' + subvalue.link,
-          severity: setseverity(subvalue.severity),
-          ref: subvalue.link,
-          status: 1,
-          cvss: '',
-          cvss_vector: '',
-          cve: subvalue.cve,
-          tags: [{ name: "composer" }],
-          bounty: [],
-          date: this.currentdateService.getcurrentDate()
-        };
+          if (subvalue) {
 
-        arr.push(def);
+            const def = {
+              title: subvalue.title,
+              poc: 'Package Name: ' + subvalue.packageName + '\nAffected Versions: ' + subvalue.affectedVersions,
+              files: [],
+              desc: 'All details information: ' + subvalue.link,
+              severity: setseverity(subvalue.severity),
+              ref: subvalue.link,
+              status: 1,
+              cvss: '',
+              cvss_vector: '',
+              cve: subvalue.cve,
+              tags: [{ name: "composer" }],
+              bounty: [],
+              date: this.currentdateService.getcurrentDate()
+            };
 
+            arr.push(def);
+          }
+
+
+        }
       }
+
+
 
     }
 
@@ -1493,35 +1514,43 @@ export class DialogImportComponent implements OnInit {
       text = div.textContent || div.innerText || "";
       return text
     }
-    const arr = [];
+    const arr: any = [];
     for (const [key, value] of Object.entries(data.site)) {
 
-      for (const [subkey, subvalue] of Object.entries(value['alerts'])) {
+      if (value) {
+        for (const [subkey, subvalue] of Object.entries(value['alerts'])) {
 
-        let scopedesc = "";
-        if (subvalue['instances']) {
-          scopedesc = "Request header:\n" + subvalue['instances'][0]['method'] + " " + subvalue['instances'][0]['uri'];
+          if (subvalue) {
+            let scopedesc = "";
+            if (subvalue['instances']) {
+              scopedesc = "Request header:\n" + subvalue['instances'][0]['method'] + " " + subvalue['instances'][0]['uri'];
+            }
+
+            const def = {
+              title: subvalue['alert'],
+              poc: scopedesc,
+              files: [],
+              desc: parseit(subvalue['desc']) + "\n\n" + parseit(subvalue['otherinfo']),
+              severity: setseverity(subvalue['riskcode']),
+              ref: parseref(subvalue['reference']),
+              status: 1,
+              cvss: '',
+              cvss_vector: '',
+              cve: '',
+              tags: [{ name: "zaproxy" }],
+              bounty: [],
+              date: this.currentdateService.getcurrentDate()
+            };
+
+            arr.push(def);
+          }
+
+
+
         }
-
-        const def = {
-          title: subvalue['alert'],
-          poc: scopedesc,
-          files: [],
-          desc: parseit(subvalue['desc']) + "\n\n" + parseit(subvalue['otherinfo']),
-          severity: setseverity(subvalue['riskcode']),
-          ref: parseref(subvalue['reference']),
-          status: 1,
-          cvss: '',
-          cvss_vector: '',
-          cve: '',
-          tags: [{ name: "zaproxy" }],
-          bounty: [],
-          date: this.currentdateService.getcurrentDate()
-        };
-
-        arr.push(def);
-
       }
+
+
 
     }
 
@@ -1554,7 +1583,7 @@ export class DialogImportComponent implements OnInit {
 
     const csvData = csv || '';
     let m: any;
-    const issuelist = [];
+    const issuelist: any = [];
     let text = csvData.substring(csvData.indexOf("\n") + 1);
     text = text.replace(/, /g, '. ');
 
@@ -1575,25 +1604,29 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
-    issues.forEach((myObject, index) => {
+    issues.forEach((myObject:any, index) => {
 
-      const def = {
-        title: myObject[1],
-        poc: myObject[27],
-        files: [],
-        desc: myObject[4] + '\n\n' + myObject[24].replaceAll("###","#"),
-        severity: setseverity(myObject[2]),
-        ref: myObject[26],
-        cvss: '',
-        cvss_vector: '',
-        cve: '',
-        tags: [{ name: "wiz" }],
-        status: 1,
-        bounty: [],
-        date: this.currentdateService.getcurrentDate()
-      };
+      if (myObject) {
+        const def = {
+          title: myObject[1],
+          poc: myObject[27],
+          files: [],
+          desc: myObject[4] + '\n\n' + myObject[24].replaceAll("###", "#"),
+          severity: setseverity(myObject[2]),
+          ref: myObject[26],
+          cvss: '',
+          cvss_vector: '',
+          cve: '',
+          tags: [{ name: "wiz" }],
+          status: 1,
+          bounty: [],
+          date: this.currentdateService.getcurrentDate()
+        };
 
-      issuelist.push(def);
+        issuelist.push(def);
+      }
+
+
 
 
     });

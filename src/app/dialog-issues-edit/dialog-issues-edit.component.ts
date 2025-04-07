@@ -11,13 +11,13 @@ import { UtilsService } from '../utils.service';
 })
 export class DialogIssuesEditComponent implements OnInit {
 
-  isReturn = [];
+  isReturn:any = [];
   selseverity = '';
   selstatus = '';
 
-  tableseverity = [];
-  tablestatus = [];
-
+  tableseverity:any = [];
+  tablestatus:any = [];
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogIssuesEditComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private utilsService: UtilsService) {
 
   }

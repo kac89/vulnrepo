@@ -30,9 +30,9 @@ export class DialogApiaddComponent implements OnInit {
     { value: '', viewValue: 'Custom API' },
   ];
   selectedAPIDEF = this.sour[0];
-
-  constructor(public dialogRef: MatDialogRef<DialogApiaddComponent>, private apiService: ApiService,
-    private indexeddbService: IndexeddbService, @Inject(MAT_DIALOG_DATA) public data, public sessionsub: SessionstorageserviceService) { }
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data:any, public dialogRef: MatDialogRef<DialogApiaddComponent>, private apiService: ApiService,
+    private indexeddbService: IndexeddbService, public sessionsub: SessionstorageserviceService) { }
 
   ngOnInit(): void {
 
@@ -112,7 +112,7 @@ export class DialogApiaddComponent implements OnInit {
           this.apiconneted = true;
 
           const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
-          let list = [];
+          let list:any = [];
           const savejson = { apikey: apik, value: url.hostname, viewValue: setapiname };
 
           if (localkey) {

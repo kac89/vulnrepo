@@ -35,9 +35,9 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
     setTimeout(() => this.dataSource2.paginator = this.paginator2);
   }
 
-
-  constructor(private apiService: ApiService,
-    public dialogRef: MatDialogRef<DialogCveComponent>, @Inject(MAT_DIALOG_DATA) public data: any,public router: Router,) {
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private apiService: ApiService,
+    public dialogRef: MatDialogRef<DialogCveComponent>,public router: Router,) {
         this.mycve.setValue(this.data.cve);
      }
 

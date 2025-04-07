@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./dialog-apierror.component.scss']
 })
 export class DialogApierrorComponent implements OnInit {
-
+  // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogApierrorComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {

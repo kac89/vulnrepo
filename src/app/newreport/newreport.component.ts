@@ -41,11 +41,11 @@ export class NewreportComponent implements OnInit {
   pass1model = new UntypedFormControl();
   pass2model = new UntypedFormControl();
   selected_profilefin = '';
-  ReportProfilesList = [];
+  ReportProfilesList:any = [];
   apiReports = [];
   profileSettingsselected: any;
   apireportprofiles = [];
-  apireportprofilesList = [];
+  apireportprofilesList:any = [];
   constructor(private _location: Location, private indexeddbService: IndexeddbService, private passwordService: SeckeyValidatorService, private apiService: ApiService, public dialog: MatDialog,  
     public router: Router, public sessionsub: SessionstorageserviceService,private utilsService: UtilsService) {
 

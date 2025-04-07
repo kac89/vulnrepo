@@ -61,9 +61,8 @@ export class DialogCvssComponent implements OnInit {
   A: any[] = [['High (H)', 'There is total loss of availability, resulting in the attacker being able to fully deny access to resources in the impacted component; this loss is either sustained (while the attacker continues to deliver the attack) or persistent (the condition persists even after the attack has completed). Alternatively, the attacker has the ability to deny some availability, but the loss of availability presents a direct, serious consequence to the impacted component (e.g., the attacker cannot disrupt existing connections, but can prevent new connections; the attacker can repeatedly exploit a vulnerability that, in each instance of a successful attack, leaks a only small amount of memory, but after repeated exploitation causes a service to become completely unavailable).', 0.56, 'H', false],
              ['Low (L)', 'There is reduced performance or interruptions in resource availability. Even if repeated exploitation of the vulnerability is possible, the attacker does not have the ability to completely deny service to legitimate users. The resources in the impacted component are either partially available all of the time, or fully available only some of the time, but overall there is no direct, serious consequence to the impacted component.', 0.22, 'L', false],
              ['None (N)', 'There is no impact to availability within the impacted component.', 0, 'N', false]];
-
-  constructor(public router: Router, public dialogRef: MatDialogRef<DialogCvssComponent>,
-    @Inject(MAT_DIALOG_DATA) public data) { }
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data, public router: Router, public dialogRef: MatDialogRef<DialogCvssComponent>) { }
 
   ngOnInit() {
     window.onresize = () => this.mobile = window.innerWidth <= 1024;

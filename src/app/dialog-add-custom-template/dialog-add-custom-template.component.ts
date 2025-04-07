@@ -28,15 +28,15 @@ export class DialogAddCustomTemplateComponent implements OnInit {
   cvss = new UntypedFormControl();
   cvss_vector = new UntypedFormControl();
   cve = new UntypedFormControl();
-  tags = [];
+  tags:any = [];
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   visible = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
-
-  constructor(public dialogRef: MatDialogRef<DialogAddCustomTemplateComponent>, private utilsService: UtilsService, private indexeddbService: IndexeddbService,
-    @Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog){}
+  // @ts-ignore
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogAddCustomTemplateComponent>, private utilsService: UtilsService, private indexeddbService: IndexeddbService,
+    public dialog: MatDialog){}
 
   ngOnInit() {
 
@@ -112,7 +112,11 @@ Please add template:
 to \`/assets/vulns.json\`.
 
     `;
-    window.open("https://github.com/kac89/vulnrepo/issues/new?title="+encodeURI(title)+"&body="+encodeURI(body)+"&labels=add-custom-template", '_blank').focus();
+    
+    const w = window.open("https://github.com/kac89/vulnrepo/issues/new?title="+encodeURI(title)+"&body="+encodeURI(body)+"&labels=add-custom-template", '_blank');
+    if (w) {
+      w.focus();
+  }
   }
 
   cancel(): void {

@@ -99,7 +99,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   advhtml = '';
   report_css: any;
   bugbountylist = [];
-  reportProfileList_int = [];
+  reportProfileList_int: string[] = [];
   report_id: string;
   report_info: any;
   lastsavereportdata = '';
@@ -111,10 +111,10 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   textarea_selected_start: any;
   textarea_selected_end: any;
   textarea_click: any;
-  selectedIssues = [];
-  ReportProfilesList = [];
+  selectedIssues: any[] = [];
+  ReportProfilesList: any[] = [];
   scopePreviewHTML = [];
-  RaportsTags = [];
+  RaportsTags: any[] = [];
   pok = 0;
   prev_height = 190;
   timerCounter = 0;
@@ -377,12 +377,12 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dateClass() {
     return (date: Date): MatCalendarCellCssClasses => {
-      const issuearr_success = [];
-      const issuearr_critical = [];
-      const issuearr_high = [];
-      const issuearr_medium = [];
-      const issuearr_low = [];
-      const issuearr_info = [];
+      const issuearr_success: string[] = [];
+      const issuearr_critical: string[] = [];
+      const issuearr_high: string[] = [];
+      const issuearr_medium: string[] = [];
+      const issuearr_low: string[] = [];
+      const issuearr_info: string[] = [];
 
       const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
         return (el.severity === 'Critical');
@@ -926,8 +926,10 @@ Sample code here\n\
 
   getData(event?: PageEvent) {
 
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
+    if(event) {
+      this.pageSize = event.pageSize;
+      this.pageIndex = event.pageIndex;
+    }
 
     this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
     return event;
@@ -1092,7 +1094,7 @@ Sample code here\n\
   saveReportChanges(report_id: any) {
     this.report_encryption_in_progress = true;
     this.savemsg = 'Please wait, report is encrypted...';
-    const pass = this.sessionsub.getSessionStorageItem(report_id);
+    const pass = this.sessionsub.getSessionStorageItem(report_id) || '';
     let useAPI = false;
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
@@ -1290,7 +1292,7 @@ Sample code here\n\
     });
 
     if (rettag.length > 0) {
-      const xxx = [];
+      const xxx: any[] = [];
       this.RaportsTags = [];
       rettag.forEach(function (value) {
         value.tags.forEach(function (tagval) {
@@ -1318,29 +1320,32 @@ Sample code here\n\
 
     this.deselectall();
 
-    const critical = [];
+    const critical: any[] = [];
 
-    const high = [];
+    const high: any[] = [];
 
-    const medium = [];
+    const medium: any[] = [];
 
-    const low = [];
+    const low: any[] = [];
 
-    const info = [];
+    const info: any[] = [];
 
     for (const [key, value] of Object.entries(this.decryptedReportDataChanged.report_vulns)) {
 
-      if (value["severity"] === "Critical") {
-        critical.push(value);
-      } else if (value["severity"] === "High") {
-        high.push(value);
-      } else if (value["severity"] === "Medium") {
-        medium.push(value);
-      } else if (value["severity"] === "Low") {
-        low.push(value);
-      } else if (value["severity"] === "Info") {
-        info.push(value);
+      if(value) {
+        if (value["severity"] === "Critical") {
+          critical.push(value);
+        } else if (value["severity"] === "High") {
+          high.push(value);
+        } else if (value["severity"] === "Medium") {
+          medium.push(value);
+        } else if (value["severity"] === "Low") {
+          low.push(value);
+        } else if (value["severity"] === "Info") {
+          info.push(value);
+        }
       }
+
     }
 
     const merge = [...critical, ...high, ...medium, ...low, ...info];
@@ -1986,7 +1991,7 @@ Date   | Description
     }
 
     const buildchangelog = () => {
-      let changelogArray = [];
+      let changelogArray: any[] = [];
 
 
       for (var i = 0; i < this.decryptedReportDataChanged.report_changelog.length; i++) {
@@ -2019,7 +2024,7 @@ Date   | Description
     };
 
     const buildreportsummary = () => {
-      let authorArray = [];
+      let authorArray: any[] = [];
 
       if (this.decryptedReportDataChanged.report_summary.length > 0) {
 
@@ -2046,7 +2051,7 @@ Date   | Description
     };
 
     const buildmainauthors = () => {
-      let authorArray = [];
+      let authorArray: any[] = [];
 
       if (this.decryptedReportDataChanged.report_settings.report_remove_researchers === false) {
 
@@ -2069,7 +2074,7 @@ Date   | Description
     };
 
     const buildmainchangelog = () => {
-      let authorArray = [];
+      let authorArray: any[] = [];
 
       if (this.decryptedReportDataChanged.report_settings.report_changelog_page === false) {
 
@@ -2117,7 +2122,7 @@ Date   | Description
     };
 
     const buildauthors = () => {
-      let authorArray = [];
+      let authorArray: any[] = [];
 
       for (var i = 0; i < this.decryptedReportDataChanged.researcher.length; i++) {
 
@@ -2136,7 +2141,7 @@ Date   | Description
     };
 
     const buildfiles = (x) => {
-      let filesArray = [];
+      let filesArray: any[] = [];
 
       for (var i = 0; i < this.decryptedReportDataChanged.report_vulns[x].files.length; i++) {
 
@@ -2179,9 +2184,9 @@ Date   | Description
     };
 
     const buildtags = (x) => {
-      let tagsArray = [];
+      let tagsArray: any[] = [];
 
-      const tags = [];
+      const tags: any[] = [];
       for (var i = 0; i < this.decryptedReportDataChanged.report_vulns[x].tags.length; i++) {
         tags.push(this.decryptedReportDataChanged.report_vulns[x].tags[i].name);
       }
@@ -2204,7 +2209,7 @@ Date   | Description
     };
 
     const buildrefs = (x) => {
-      let refArray = [];
+      let refArray: any[] = [];
       if (this.decryptedReportDataChanged.report_vulns[x].ref.length > 0) {
         const ref = this.decryptedReportDataChanged.report_vulns[x].ref.toString().split('\n');
         for (var i = 0; i < ref.length; i++) {
@@ -2224,7 +2229,7 @@ Date   | Description
     };
 
     const buildParagraphissues = () => {
-      let paragraphArray = [];
+      let paragraphArray: any[] = [];
       for (var i = 0; i < this.decryptedReportDataChanged.report_vulns.length; i++) {
         paragraphArray.push(new Paragraph({
           text: '[' + this.decryptedReportDataChanged.report_vulns[i].severity + '] ' + this.decryptedReportDataChanged.report_vulns[i].title,
@@ -2236,7 +2241,7 @@ Date   | Description
         }),
         );
 
-        const farr = [];
+        const farr: any[] = [];
 
         let sev = "";
         if (this.decryptedReportDataChanged.report_vulns[i].severity.length > 0) {
@@ -2422,7 +2427,7 @@ Date   | Description
     });
 
     const buildlogo = () => {
-      let logoArray = [];
+      let logoArray: any[] = [];
 
       if (this.decryptedReportDataChanged.report_settings.report_logo.logo) {
         logoArray.push(
@@ -3167,7 +3172,7 @@ Date   | Description
     // sha256 file checksum
     const reader = new FileReader();
     reader.onloadend = (e) => {
-      file_sha2 = sha256(reader.result);
+      file_sha2 = sha256(reader.result || '');
 
       this.proccessUpload(dataurl, file.name, file.type, file.size, file_sha2, dec_data);
     };
@@ -3382,14 +3387,14 @@ Date   | Description
 
   fastsearchBB(poc, showsnack) {
     this.BBmsg = 'Please wait, searching...';
-    let scope = [];
-    this.bugbountylist.forEach(function (item) {
+    let scope=[];
+    this.bugbountylist.forEach(function (item:any) {
       scope = scope.concat(item.domains);
     });
 
     const regex = /(?:[\w-]+\.)+[\w-]+/g;
     let m;
-    const arr = [];
+    const arr: any[] = [];
     while ((m = regex.exec(poc.poc)) !== null) {
       // This is necessary to avoid infinite loops with zero-width matches
       if (m.index === regex.lastIndex) {
@@ -3400,7 +3405,7 @@ Date   | Description
         // get only scope & search
         const findedbounty = scope.find(x => x == match);
         if (findedbounty) {
-          this.bugbountylist.forEach(function (item) {
+          this.bugbountylist.forEach(function (item:any) {
             const findedbounty2 = item.domains.find(x => x == findedbounty);
             if (findedbounty2) {
               arr.push(item);
@@ -3524,7 +3529,7 @@ Date   | Description
 
   openattachfullscreen(file, dec_data) {
 
-    const arr = [];
+    const arr: any[] = [];
     for (let item of dec_data.files) {
       if (item.type.includes('image') || item.type.includes('video') && item.data.length <= 30000000) {
         arr.push(item);
