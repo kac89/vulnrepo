@@ -1,6 +1,6 @@
 <div mat-dialog-title fxLayout="row wrap" fxLayoutGap="10px grid" class="example-full-width">
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-    <h2 style="padding-left: 10px;">AI assistant</h2>
+    <h2 style="padding-left: 10px;"><mat-icon inline="true">speaker_notes</mat-icon> AI assistant</h2>
   </div>
   <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
     <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove
@@ -75,8 +75,8 @@
           life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
           #tooltip2="matTooltip"><mat-icon>content_copy</mat-icon></button>
 
-          <button mat-icon-button (click)="downloadAIText(item.response_md)"
-          life="1000" tooltipEvent="focus" matTooltip="Download" matTooltipPosition="below"
+        <button mat-icon-button (click)="downloadAIText(item.response_md)" life="1000" tooltipEvent="focus"
+          matTooltip="Download" matTooltipPosition="below"
           #tooltip2="matTooltip"><mat-icon>file_download</mat-icon></button>
 
       </mat-card-actions>
@@ -102,13 +102,14 @@
 </div>
 
 <div style="padding: 20px;">
+
   @for (item of attachedIMG; track item) {
 
 
   <div style="position:relative">
     <img src="{{item}}" width="100px">
     <div style="position:absolute;left:-10px;top:-20px;">
-      <button mat-icon-button (click)="removeAttach()" title="Remove image">
+      <button matListItemMeta mat-icon-button (click)="removeAttach()" title="Remove image">
         <mat-icon color="warn">delete_forever</mat-icon>
       </button>
     </div>
@@ -119,19 +120,21 @@
   @for (item of attachedFILES; track item) {
 
 
-  <div>
-    <mat-list>
-      <mat-list-item style="max-width:400px;">
+  <mat-list>
+    <mat-list-item>
+
+      <div matListItemTitle>{{item.filename}} 
 
         <button mat-icon-button (click)="removeAttachfile()" title="Remove file">
           <mat-icon color="warn">delete_forever</mat-icon>
         </button>
 
-        {{item.filename}}
-      </mat-list-item>
-    </mat-list>
+      </div>
+      <div matListItemLine>{{item.date | date:'medium'}}</div>
+      
+    </mat-list-item>
+  </mat-list>
 
-  </div>
 
   }
 
