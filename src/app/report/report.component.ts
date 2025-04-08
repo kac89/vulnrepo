@@ -46,6 +46,7 @@ import { UtilsService } from '../utils.service';
 import {OllamaServiceService} from '../ollama-service.service';
 import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
 import { DialogOllamaComponent } from '../dialog-ollama/dialog-ollama.component';
+import { CurrentdateService } from '../currentdate.service';
 
 export interface Tags {
   name: string;
@@ -194,7 +195,8 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     public sessionsub: SessionstorageserviceService,
     private datePipe: DatePipe,
     private dateAdapter: DateAdapter<Date>,
-    private utilsService: UtilsService) {
+    private utilsService: UtilsService,
+    private currentdateService: CurrentdateService) {
     //console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
@@ -3671,7 +3673,7 @@ Date   | Description
     const dialogRef = this.dialog.open(DialogOllamaComponent, {
       width: '800px',
       disableClose: true,
-      data: [{"prompt": `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, can you prepare a report summary and remediations for a company as a document, with issue is most important and fix recommendation for board of company ?, mention scope if provided on JSON key "report_scope", mention researcher if provided on JSON key "researcher".`, "files": [{ "filename": "[attach report data]", "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": []}]
+      data: [{"prompt": `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, can you prepare a report summary and remediation's for a company as a document, with issue is most important and fix recommendation for company board, mention scope if provided on JSON key "report_scope", mention researcher if provided on JSON key "researcher".`, "files": [{ "filename": this.report_info.report_name + ".json", "date": String(this.currentdateService.getcurrentDate()), "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": []}]
     });
 
     dialogRef.afterClosed().subscribe(result => {

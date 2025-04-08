@@ -272,7 +272,7 @@ export class DialogOllamaComponent implements OnInit {
 
           const res: string = fileReader.result as string;
 
-          this.attachedFILES.push({ "filename": files[key].name, "filetype": files[key].type, "file": btoa(res) });
+          this.attachedFILES.push({ "filename": files[key].name, "date": String(this.currentdateService.getcurrentDate()), "filetype": files[key].type, "file": btoa(res) });
 
         };
 
