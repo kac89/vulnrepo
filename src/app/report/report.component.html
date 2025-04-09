@@ -23,14 +23,15 @@
   <mat-card-content>
 
     <div fxLayout="row wrap" fxLayoutGap="10px grid">
-      <p *ngIf="api_connection_status">API connection please wait...<mat-progress-bar
-        style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <p *ngIf="api_connection_status">API connection please wait...<mat-progress-bar style="width: 300px;"
+          color="accent" mode="indeterminate"></mat-progress-bar></p>
       <div *ngIf="!api_connection_status" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-        <p *ngIf="!report_decryption_in_progress">Report ID: {{reportdesc?.report_id}} <mat-icon *ngIf="report_source_api"color="accent">public</mat-icon></p>
+        <p *ngIf="!report_decryption_in_progress">Report ID: {{reportdesc?.report_id}} <mat-icon
+            *ngIf="report_source_api" color="accent">public</mat-icon></p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
         </p>
         <p *ngIf="!report_decryption_in_progress">Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
-        
+
         <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar
             style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
@@ -43,16 +44,22 @@
 
         <p
           *ngIf="reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == ''">
-          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b><i>{{reportdesc?.report_lastupdate | date: 'medium'}}</i></b>
-      </p>
+          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br
+            *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b><i>{{reportdesc?.report_lastupdate | date:
+              'medium'}}</i></b>
+        </p>
         <p *ngIf="lastsavereportdata !== ''">
-          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b class="active-link"><i>{{lastsavereportdata | date: 'medium'}}</i></b>
+          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br
+            *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b class="active-link"><i>{{lastsavereportdata |
+              date: 'medium'}}</i></b>
         </p>
 
         <div>
 
-          <button mat-fab extended class="mat-elevation-z9" color="primary" (click)="saveReportChanges(reportdesc.report_id)">
-            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save changes and release a new version
+          <button mat-fab extended class="mat-elevation-z9" color="primary"
+            (click)="saveReportChanges(reportdesc.report_id)">
+            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save changes and release a new
+            version
           </button>
         </div>
 
@@ -90,7 +97,8 @@
 
 
             <div style="position:relative;">
-              <textarea matInput style="display:block;" rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope" value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
+              <textarea matInput style="display:block;" rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
+                value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
 
               <div style="position:absolute;top: 10px; right: 10px;">
                 <button mat-icon-button color="accent" (click)="editorFullscreenScope()" title="Fullscreen Text Editor">
@@ -100,7 +108,7 @@
 
             </div>
 
-            
+
             <mat-hint>You can use Markdown or HTML.
               <a class="active-link" href="javascript:void(0);" (click)="addtablescope()"
                 title="Insert table to scope.">[T]</a>&nbsp;
@@ -121,8 +129,8 @@
                 <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Research start date</mat-label>
-                    <input matInput [matDatepicker]="picker" 
-                    (dateChange)="onDateChangeReportstart($event)" [value]="renderdateformat(decryptedReportDataChanged.report_metadata.starttest)">
+                    <input matInput [matDatepicker]="picker" (dateChange)="onDateChangeReportstart($event)"
+                      [value]="renderdateformat(decryptedReportDataChanged.report_metadata.starttest)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -131,8 +139,8 @@
                 <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Research end date</mat-label>
-                    <input matInput [matDatepicker]="pickerend" 
-                    (dateChange)="onDateChangeReportend($event)" [value]="renderdateformat(decryptedReportDataChanged.report_metadata.endtest)">
+                    <input matInput [matDatepicker]="pickerend" (dateChange)="onDateChangeReportend($event)"
+                      [value]="renderdateformat(decryptedReportDataChanged.report_metadata.endtest)">
                     <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
                     <mat-datepicker #pickerend></mat-datepicker>
                   </mat-form-field>
@@ -147,20 +155,23 @@
                 <mat-label>Report summary</mat-label>
                 <div style="position:relative;">
                   <textarea matInput rows="2" [(ngModel)]="decryptedReportDataChanged.report_summary"
-                  value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
+                    value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
                   <div *ngIf="aiconnected" style="position:absolute;top: 10px; right: 10px;">
                     <button mat-icon-button color="accent" title="AI report summary" [matMenuTriggerFor]="menu">
                       <mat-icon>insert_comment</mat-icon>
                     </button>
 
                     <mat-menu #menu="matMenu">
-                      <button mat-menu-item (click)="aiasist()"><mat-icon class="vertical-align-middle padding-bottom-3">description</mat-icon> AI report summary</button>
-                      <button mat-menu-item (click)="goaisettings()"><mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings</button>
+                      <button mat-menu-item (click)="aiasist()"><mat-icon
+                          class="vertical-align-middle padding-bottom-3">description</mat-icon> AI report
+                        summary</button>
+                      <button mat-menu-item (click)="goaisettings()"><mat-icon
+                          class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings</button>
                     </mat-menu>
 
                   </div>
                 </div>
-                
+
               </mat-form-field>
               <mat-progress-bar *ngIf="aiprogress" color="accent" mode="indeterminate"></mat-progress-bar>
             </div>
@@ -180,99 +191,103 @@
   <mat-card appearance="outlined">
 
 
-      <div fxLayout="row wrap" style="display:flex;padding: 16px 16px 0;">
+    <div fxLayout="row wrap" style="display:flex;padding: 16px 16px 0;">
 
-        <div class="mat-mdc-card-avatar">
-          <mat-icon>bug_report</mat-icon>
-        </div>
+      <div class="mat-mdc-card-avatar">
+        <mat-icon>bug_report</mat-icon>
+      </div>
 
-        <div class="mat-mdc-card-title" style="padding-left: 16px;">
-          <span>
-            Issues <span class="labelissues">{{decryptedReportDataChanged.report_vulns.length}}</span>
+      <div class="mat-mdc-card-title" style="padding-left: 16px;">
+        <span>
+          Issues <span class="labelissues">{{decryptedReportDataChanged.report_vulns.length}}</span>
         </span>
-        </div>
-        <div style="flex-grow: 1"></div>
-       
-        <div fxLayoutAlign="end" fxLayoutGap="5px grid">
+      </div>
+      <div style="flex-grow: 1"></div>
 
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <button style="width: 100%" mat-button (click)="import_issues()">
-              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
-            </button>
-          </div>
+      <div fxLayoutAlign="end" fxLayoutGap="5px grid">
 
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-            <button [matMenuTriggerFor]="dropdownMenuOne" style="width: 100%" *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
-              <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export
-            </button>
-
-            <mat-menu #dropdownMenuOne="matMenu">
-              <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'all')">Export all</button>
-              <button *ngIf="selectedIssues.length >= 1" mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'selected')">Export selected ({{selectedIssues.length}})</button>
-              <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
-              <button *ngIf="getTags(decryptedReportDataChanged.report_vulns) >= 1" mat-menu-item [matMenuTriggerFor]="bytag">Export by Tag</button>
-            </mat-menu>
-
-            <mat-menu #bysev="matMenu">
-              <button mat-menu-item
-                (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Critical')">Critical</button>
-              <button mat-menu-item
-                (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'High')">High</button>
-              <button mat-menu-item
-                (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Medium')">Medium</button>
-              <button mat-menu-item
-                (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
-              <button mat-menu-item
-                (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
-            </mat-menu>
-            <mat-menu #bytag="matMenu">
-              <span *ngFor="let tagsin of getAllTAgs()">
-                <button mat-menu-item (click)="export_by_tag(tagsin)">
-                  {{tagsin}}
-                </button>
-              </span>
-            </mat-menu>
-          </div>
-
-          <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-            <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu">
-              <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="sortbyseverity()">Severity</button>
-              <button mat-menu-item (click)="sortbycvss()">CVSS</button>
-            </mat-menu>
-
-          </div>
-
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+          <button style="width: 100%" mat-button (click)="import_issues()">
+            <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
+          </button>
         </div>
 
+        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+          <button [matMenuTriggerFor]="dropdownMenuOne" style="width: 100%"
+            *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
+            <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export
+          </button>
+
+          <mat-menu #dropdownMenuOne="matMenu">
+            <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'all')">Export
+              all</button>
+            <button *ngIf="selectedIssues.length >= 1" mat-menu-item
+              (click)="export_issues(decryptedReportDataChanged.report_vulns, 'selected')">Export selected
+              ({{selectedIssues.length}})</button>
+            <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
+            <button *ngIf="getTags(decryptedReportDataChanged.report_vulns) >= 1" mat-menu-item
+              [matMenuTriggerFor]="bytag">Export by Tag</button>
+          </mat-menu>
+
+          <mat-menu #bysev="matMenu">
+            <button mat-menu-item
+              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Critical')">Critical</button>
+            <button mat-menu-item
+              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'High')">High</button>
+            <button mat-menu-item
+              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Medium')">Medium</button>
+            <button mat-menu-item
+              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
+            <button mat-menu-item
+              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
+          </mat-menu>
+          <mat-menu #bytag="matMenu">
+            <span *ngFor="let tagsin of getAllTAgs()">
+              <button mat-menu-item (click)="export_by_tag(tagsin)">
+                {{tagsin}}
+              </button>
+            </span>
+          </mat-menu>
+        </div>
+
+        <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+          <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu">
+            <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="sortbyseverity()">Severity</button>
+            <button mat-menu-item (click)="sortbycvss()">CVSS</button>
+          </mat-menu>
+
+        </div>
 
       </div>
+
+
+    </div>
 
     <mat-card-content>
 
       <div [hidden]="decryptedReportDataChanged.report_vulns.length == 0">
-        <mat-paginator #paginatorIssues color="accent" [pageSizeOptions]="[20, 50, 100, 250]" (page)="pageEvent=getData($event)" showFirstLastButtons></mat-paginator>
+        <mat-paginator #paginatorIssues color="accent" [pageSizeOptions]="[20, 50, 100, 250]"
+          (page)="pageEvent=getData($event)" showFirstLastButtons></mat-paginator>
         <br>
       </div>
-      
+
       <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
 
         <mat-expansion-panel *ngFor="let dec_data of selectedResult; let i=index" class="mat-elevation-z9"
-           (opened)="panelOpenState = true"
-          (closed)="panelOpenState = false" cdkDrag>
+          (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag>
 
           <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
             <mat-panel-title fxLayoutAlign="start">
               <div style="white-space: nowrap;">
                 <mat-checkbox [checked]="checkcheckbox(i)" (change)="toggle(i,$event.checked)"
                   (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
-                <span
-                  class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
-                  &nbsp;&nbsp;{{dec_data.title}}
+                <span class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
+                &nbsp;&nbsp;{{dec_data.title}}
               </div>
             </mat-panel-title>
 
@@ -282,12 +297,13 @@
               <div>
                 <div fxLayoutAlign="center start" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxHide.xs fxHide.sm>
                   <mat-chip-listbox style="white-space: nowrap;">
-                    <mat-chip-option *ngFor="let tag of dec_data.tags.slice(0, 3);" [selectable]="false" ngDefaultControl>
+                    <mat-chip-option *ngFor="let tag of dec_data.tags.slice(0, 3);" [selectable]="false"
+                      ngDefaultControl>
                       {{tag.name}}
                     </mat-chip-option>
                   </mat-chip-listbox>
                 </div>
-                </div>
+              </div>
 
               &nbsp;
               <div *ngIf="dec_data?.bounty" fxHide.xs fxHide.sm>
@@ -313,13 +329,16 @@
 
               &nbsp;
               <div>
-                <button mat-icon-button style="width: 30px; height: 30px; line-height: 5px; border-radius: 70%;padding: 0px;" *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
+                <button mat-icon-button
+                  style="width: 30px; height: 30px; line-height: 5px; border-radius: 70%;padding: 0px;"
+                  *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
                   (click)="editissuetitle(dec_data);$event.stopPropagation();">
                   <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
                 </button>
               </div>
 
-              <mat-icon *ngIf="dec_data.files.length > 0" title="Attached file" style="color:grey" class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
+              <mat-icon *ngIf="dec_data.files.length > 0" title="Attached file" style="color:grey"
+                class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
             </mat-panel-description>
 
           </mat-expansion-panel-header>
@@ -332,15 +351,17 @@
                 <mat-label>Proof of Concept</mat-label>
 
                 <div style="position:relative;">
-                  <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8" style="display:block;"></textarea>
+                  <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"
+                    style="display:block;"></textarea>
 
                   <div style="position:absolute;top: 10px; right: 10px;">
-    
-                    <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)" title="Fullscreen Text Editor">
+
+                    <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)"
+                      title="Fullscreen Text Editor">
                       <mat-icon>fullscreen</mat-icon>
                     </button>
                   </div>
-  
+
                 </div>
 
 
@@ -379,7 +400,8 @@
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
                   <mat-form-field class="example-full-width" color="accent">
                     <mat-label>Create issue date</mat-label>
-                    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)" [value]="renderdateformat(dec_data.date)">
+                    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
+                      [value]="renderdateformat(dec_data.date)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -406,8 +428,9 @@
                 <mat-form-field appearance="outline" class="example-tags-list" color="accent">
                   <mat-label>TAGs</mat-label>
                   <mat-chip-grid #tagList aria-label="Tags">
-                    <mat-chip-row *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags" [selectable]="selectable"
-                      [removable]="removable" (removed)="TAGremove(tag, dec_data)" ngDefaultControl>
+                    <mat-chip-row *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags"
+                      [selectable]="selectable" [removable]="removable" (removed)="TAGremove(tag, dec_data)"
+                      ngDefaultControl>
                       {{tag.name}}
                       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                     </mat-chip-row>
@@ -436,7 +459,8 @@
                     <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
                     <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent"
                       matSuffix title="Calculate CVSS">
-                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon> CVSS
+                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon>
+                      CVSS
                     </button>
                   </mat-form-field>
                 </div>
@@ -484,33 +508,36 @@
 
 
 
-          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-            <div *ngFor="let key of dec_data.files">
+              <div *ngFor="let key of dec_data.files">
 
-              <mat-list>
-                <mat-list-item class="mat-elevation-z4" fxLayout="row">
-                                  
-                  <div matListItemTitle>{{key.title}}</div>
-                  <div matListItemLine><b>Date:</b> {{key.date | date:'medium'}} | <b>Size:</b> {{key.size | filesize }} </div>
-                  <div matListItemMeta>
-                    <button mat-icon-button *ngIf="key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000" (click)="openattachfullscreen(key, dec_data)" title="Preview file">
-                      <mat-icon color="accent">search</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
-                      <mat-icon color="accent">file_download</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
-                      <mat-icon color="warn">delete_forever</mat-icon>
-                    </button>
-                  </div>
+                <mat-list>
+                  <mat-list-item class="mat-elevation-z4" fxLayout="row">
 
-                </mat-list-item>
-              </mat-list>
-            
+                    <div matListItemTitle>{{key.title}}</div>
+                    <div matListItemLine><b>Date:</b> {{key.date | date:'medium'}} | <b>Size:</b> {{key.size | filesize
+                      }} </div>
+                    <div matListItemMeta>
+                      <button mat-icon-button
+                        *ngIf="key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000"
+                        (click)="openattachfullscreen(key, dec_data)" title="Preview file">
+                        <mat-icon color="accent">search</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
+                        <mat-icon color="accent">file_download</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
+                        <mat-icon color="warn">delete_forever</mat-icon>
+                      </button>
+                    </div>
+
+                  </mat-list-item>
+                </mat-list>
+
+              </div>
+
             </div>
-
-          </div>
           </div>
 
           <mat-action-row align="end">
@@ -554,42 +581,53 @@
 
 
 
-                <div fxLayout="row wrap" fxLayoutGap="0px" class="example-full-width">
-        
-                  <div fxLayoutAlign="start start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selectedIssues)">
-                      <mat-icon>edit</mat-icon>
-                      Edit ({{ selectedIssues.length }})
-                    </button>
+              <div fxLayout="row wrap" fxLayoutGap="0px" class="example-full-width">
 
-                    &nbsp;
-      
-                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
-                      <mat-icon>done_all</mat-icon>
-                      Select all
-                    </button>
+                <div fxLayoutAlign="start start" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
 
-                    &nbsp;
-      
-                    <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
-                      <mat-icon>done_all</mat-icon>
-                      Clear selected ({{ selectedIssues.length }})
-                    </button>
+                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                    <mat-icon>done_all</mat-icon>
+                    Select all
+                  </button>
 
-                  </div>
-                
-                  <div fxLayoutAlign="end end" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                  &nbsp;
 
-                    <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)" [matMenuTriggerFor]="trewwertwe">
-                      <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> Remove ({{ selectedIssues.length }})
-                    </button>
+                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                    <mat-icon>done_all</mat-icon>
+                    Clear selected ({{ selectedIssues.length }})
+                  </button>
 
-                  </div>
-                
+                  &nbsp;
 
+                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selectedIssues)">
+                    <mat-icon>edit</mat-icon>
+                    Edit ({{ selectedIssues.length }})
+                  </button>
 
+                  &nbsp;
+
+                  <button *ngIf="selectedIssues.length >= 2" mat-stroked-button color="accent" [routerLink]="[]"
+                    (click)="openissuesmerge(selectedIssues)">
+                    <mat-icon>low_priority</mat-icon>
+                    Merge ({{ selectedIssues.length }})
+                  </button>
 
                 </div>
+
+                <div fxLayoutAlign="end end" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
+
+                  <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)"
+                    [matMenuTriggerFor]="trewwertwe">
+                    <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> Remove
+                    ({{ selectedIssues.length }})
+                  </button>
+
+                </div>
+
+
+
+
+              </div>
 
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -624,21 +662,14 @@
         <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
           <div style="display: block; width: 100%; height: 300px;">
-            <ngx-charts-advanced-pie-chart
-              [scheme]="colorScheme"
-              [results]="severitytable"
-              >
+            <ngx-charts-advanced-pie-chart [scheme]="colorScheme" [results]="severitytable">
             </ngx-charts-advanced-pie-chart>
           </div>
 
           <div style="height: 50%;">
 
-            <ngx-charts-bar-vertical
-            [view]="view"
-            [scheme]="colorScheme"
-            [results]="severitytable"
-            [gradient]="gradient"
-            >
+            <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="severitytable"
+              [gradient]="gradient">
             </ngx-charts-bar-vertical>
 
           </div>
@@ -650,14 +681,11 @@
         <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
           <mat-card>
-            <mat-calendar class="mat-elevation-z9" 
-              [dateClass]="dateClass()"
-              [selected]="selectedRangeValue"
-              [startAt]="startDate"
-              >
+            <mat-calendar class="mat-elevation-z9" [dateClass]="dateClass()" [selected]="selectedRangeValue"
+              [startAt]="startDate">
             </mat-calendar>
           </mat-card>
-          
+
         </div>
 
       </div>
@@ -691,8 +719,7 @@
         <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Name</mat-label>
-            <input matInput [(ngModel)]="researchers.reportername"
-              value="{{researchers.reportername}}">
+            <input matInput [(ngModel)]="researchers.reportername" value="{{researchers.reportername}}">
             <mat-icon matSuffix>person_pin</mat-icon>
           </mat-form-field>
         </div>
@@ -700,8 +727,7 @@
         <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>E-mail</mat-label>
-            <input matInput [(ngModel)]="researchers.reporteremail"
-              value="{{researchers.reporteremail}}">
+            <input matInput [(ngModel)]="researchers.reporteremail" value="{{researchers.reporteremail}}">
             <mat-icon matSuffix>email</mat-icon>
           </mat-form-field>
         </div>
@@ -709,8 +735,7 @@
         <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Social link</mat-label>
-            <input matInput [(ngModel)]="researchers.reportersocial"
-              value="{{researchers.reportersocial}}">
+            <input matInput [(ngModel)]="researchers.reportersocial" value="{{researchers.reportersocial}}">
             <mat-icon matSuffix>share</mat-icon>
           </mat-form-field>
         </div>
@@ -718,8 +743,7 @@
         <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
           <mat-form-field style="width: 75%;" color="accent">
             <mat-label>Website</mat-label>
-            <input matInput [(ngModel)]="researchers.reporterwww"
-              value="{{researchers.reporterwww}}">
+            <input matInput [(ngModel)]="researchers.reporterwww" value="{{researchers.reporterwww}}">
             <mat-icon matSuffix>public</mat-icon>
           </mat-form-field>
           &nbsp;
@@ -755,17 +779,17 @@
             mat-menu-item>
             <mat-icon class="vertical-align-middle">add</mat-icon> Add event to changelog
           </a>
-          <a [routerLink]="[]" (click)="removeallfromchangelog()" class="active-link" title="Remove all events from changelog"
-          mat-menu-item>
-          <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove all events
-        </a>
+          <a [routerLink]="[]" (click)="removeallfromchangelog()" class="active-link"
+            title="Remove all events from changelog" mat-menu-item>
+            <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove all events
+          </a>
         </mat-menu>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
-      <table #table2 *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort
-        matSortActive="date" matSortDirection="desc" class="mat-elevation-z8">
+      <table #table2 *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort matSortActive="date"
+        matSortDirection="desc" class="mat-elevation-z8">
 
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
@@ -810,14 +834,15 @@
         <div fxFlex="30%" fxFlex.sm="20%" fxFlex.xs="10%">
 
           <div *ngIf="listchangelog == 0" class="mdc-typography--body1">
-            <h3>Changelog is empty  <mat-icon>sentiment_dissatisfied</mat-icon></h3>
+            <h3>Changelog is empty <mat-icon>sentiment_dissatisfied</mat-icon></h3>
           </div>
 
         </div>
 
         <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" [hidden]="listchangelog == 0">
           <p>
-            <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]"
+              showFirstLastButtons></mat-paginator>
           </p>
         </div>
 
@@ -836,24 +861,24 @@
 
       <mat-card-title style="display: flex" fxLayoutAlign="start">Settings
         &nbsp;
-        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="Settingsmenu">
+        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;"
+          [matMenuTriggerFor]="Settingsmenu">
           <mat-icon>more_vert</mat-icon>
         </button>
-        
+
         <mat-menu #Settingsmenu="matMenu">
 
-          <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)"
-          title="Change report security key" mat-menu-item>
-          <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
-           </a>
+          <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" title="Change report security key"
+            mat-menu-item>
+            <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
+          </a>
 
           <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)"
             title="Add custom content to report" mat-menu-item>
             <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add custom content to report
           </a>
 
-          <a [routerLink]="[]" (click)="addCustomcss(decryptedReportDataChanged)"
-            title="Add custom css" mat-menu-item>
+          <a [routerLink]="[]" (click)="addCustomcss(decryptedReportDataChanged)" title="Add custom css" mat-menu-item>
             <mat-icon class="vertical-align-middle padding-bottom-3">palette</mat-icon> Custom CSS (HTML v2)
           </a>
 
@@ -864,7 +889,8 @@
           <button mat-menu-item (click)="savenewReportProfile()">
             <mat-icon title="Report settings profile">save</mat-icon> Save current settings
           </button>
-          <button *ngIf="ReportProfilesList.length > 0" mat-menu-item [matMenuTriggerFor]="reportProfiles">Select settings profile</button>
+          <button *ngIf="ReportProfilesList.length > 0" mat-menu-item [matMenuTriggerFor]="reportProfiles">Select
+            settings profile</button>
         </mat-menu>
 
         <mat-menu #reportProfiles="matMenu">
@@ -872,7 +898,8 @@
 
             <button mat-menu-item (click)="setReportProfile(profile)">
               <mat-icon *ngIf="!profile.api" title="Local Host">computer</mat-icon>
-              <mat-icon *ngIf="profile.api == 'remote'" color="accent" title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon>
+              <mat-icon *ngIf="profile.api == 'remote'" color="accent"
+                title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon>
               {{profile.profile_name}}
             </button>
           </span>
@@ -895,8 +922,8 @@
 
               <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
 
-                <button mat-fab style="margin-right: 10px!important;" class="mdc-elevation--z11" (click)="fileuploadInput.click()"
-                  color="primary" title="Attach report logo" extended>
+                <button mat-fab style="margin-right: 10px!important;" class="mdc-elevation--z11"
+                  (click)="fileuploadInput.click()" color="primary" title="Attach report logo" extended>
 
                   <i class="material-icons">attach_file</i>
                   Attach logo
@@ -949,18 +976,18 @@
                     <mat-card-title> HTML</mat-card-title>
                   </mat-card-header>
                   <mat-card-content>
-  
-                      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                        <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed"
-                          (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
-                      </div>
-                      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                        <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc"
-                          (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
-                        <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"
-                          (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
-                      </div>
-  
+
+                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed"
+                        (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
+                    </div>
+                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc"
+                        (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
+                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"
+                        (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
+                    </div>
+
                   </mat-card-content>
                 </mat-card>
 
@@ -974,7 +1001,7 @@
                     <mat-card-title> ALL formats</mat-card-title>
                   </mat-card-header>
                   <mat-card-content>
-  
+
                     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
                       <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page"
                         (change)="removechangelogpage($event)">Remove Changelog</mat-checkbox>
@@ -985,18 +1012,18 @@
                       <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecve"
                         (change)="removeIssuecve($event)">Remove Issue CVE</mat-checkbox>
                     </div>
-      
+
                     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
                       <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_researchers"
-                      (change)="removeResearchers($event)">Remove Researcher</mat-checkbox>
+                        (change)="removeResearchers($event)">Remove Researcher</mat-checkbox>
                       <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuetags"
                         (change)="removetagsfromreport($event)">Remove TAGs</mat-checkbox>
-                        <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_attach_name"
+                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_attach_name"
                         (change)="removeattachname($event)">Hide the filename of all attachments</mat-checkbox>
-                        <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_lastpage"
+                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_lastpage"
                         (change)="removeGeninfo($event)">Remove<br>(Generated by vulnrepo.com)</mat-checkbox>
                     </div>
-  
+
                   </mat-card-content>
                 </mat-card>
 
@@ -1029,63 +1056,74 @@
 
         <div fxLayoutAlign="center start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-            <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <button style="width: 100%;" class="mdc-elevation--z11" mat-fab extended [matMenuTriggerFor]="aboveMenu2" color="accent">
-                <mat-icon title="Encrypted report" class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon> Download encrypted
-              </button>
-              <mat-menu #aboveMenu2="matMenu" yPosition="above">
+          <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
+            <button style="width: 100%;" class="mdc-elevation--z11" mat-fab extended [matMenuTriggerFor]="aboveMenu2"
+              color="accent">
+              <mat-icon title="Encrypted report"
+                class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon> Download encrypted
+            </button>
+            <mat-menu #aboveMenu2="matMenu" yPosition="above">
 
-                <button mat-menu-item (click)="encrypt_reportv2(report_info, true, false)" title="Full report with all dependency, encrypted portable version for offline reader">
-                  <mat-icon>description</mat-icon>HTML
-                </button>
-                <button mat-menu-item (click)="encrypt_reportv2(report_info, true, 'mini')" title="Full report with linked external dependency, encrypted (small size of the report)">
-                  <mat-icon>description</mat-icon>HTML (mini)
-                </button>
-                <button mat-menu-item (click)="shareReport(report_info.report_id)" title="(VULNR) VULNRΞPO encrypted report format">
-                  <mat-icon>code</mat-icon>VULNR
-                </button>
-              </mat-menu>
-            </div>
+              <button mat-menu-item (click)="encrypt_reportv2(report_info, true, false)"
+                title="Full report with all dependency, encrypted portable version for offline reader">
+                <mat-icon>description</mat-icon>HTML
+              </button>
+              <button mat-menu-item (click)="encrypt_reportv2(report_info, true, 'mini')"
+                title="Full report with linked external dependency, encrypted (small size of the report)">
+                <mat-icon>description</mat-icon>HTML (mini)
+              </button>
+              <button mat-menu-item (click)="shareReport(report_info.report_id)"
+                title="(VULNR) VULNRΞPO encrypted report format">
+                <mat-icon>code</mat-icon>VULNR
+              </button>
+            </mat-menu>
+          </div>
 
         </div>
 
         <div fxLayoutAlign="center end" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-            <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
+          <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-              <button mat-fab extended style="width: 100%;" class="mat-elevation-z9" color="warn" [matMenuTriggerFor]="aboveMenu">
-                <mat-icon title="Unencrypted report" class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
+            <button mat-fab extended style="width: 100%;" class="mat-elevation-z9" color="warn"
+              [matMenuTriggerFor]="aboveMenu">
+              <mat-icon title="Unencrypted report"
+                class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
+            </button>
+            <mat-menu #aboveMenu="matMenu" yPosition="above">
+              <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false, '')"
+                title="Full report with all dependency, decrypted portable version for offline reader">
+                <mat-icon>description</mat-icon>HTML
               </button>
-              <mat-menu #aboveMenu="matMenu" yPosition="above">
-                <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false, '')" title="Full report with all dependency, decrypted portable version for offline reader">
-                  <mat-icon>description</mat-icon>HTML
-                </button>
-                <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, 'mini', '')" title="Full report with linked external dependency, decrypted (small size of the report)">
-                  <mat-icon>description</mat-icon>HTML (mini)
-                </button>
-                <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)" title="Decrypted ASCII report format">
-                  <mat-icon>description</mat-icon>TEXT
-                </button>
-                <button mat-menu-item (click)="DownloadJSON(report_info)" title="Decrypted JSON report format">
-                  <mat-icon>code</mat-icon>JSON
-                </button>
+              <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, 'mini', '')"
+                title="Full report with linked external dependency, decrypted (small size of the report)">
+                <mat-icon>description</mat-icon>HTML (mini)
+              </button>
+              <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)"
+                title="Decrypted ASCII report format">
+                <mat-icon>description</mat-icon>TEXT
+              </button>
+              <button mat-menu-item (click)="DownloadJSON(report_info)" title="Decrypted JSON report format">
+                <mat-icon>code</mat-icon>JSON
+              </button>
 
-                <button *ngIf="aiconnected" mat-menu-item (click)="goAIsummary()" title="Decrypted AI Summary Markdown report format">
-                  <mat-icon>speaker_notes</mat-icon>AI Summary
-                </button>
+              <button *ngIf="aiconnected" mat-menu-item (click)="goAIsummary()"
+                title="Decrypted AI Summary Markdown report format">
+                <mat-icon>speaker_notes</mat-icon>AI Summary
+              </button>
 
-                <button mat-menu-item (click)="DownloadMarkdown(report_info)" title="Decrypted Markdown report format">
-                  <mat-icon>subtitles</mat-icon>Markdown
-                </button>
-                <button mat-menu-item (click)="DownloadDOCX(report_info)" title="Decrypted DOCX report format">
-                  <mat-icon>description</mat-icon>DOCX
-                </button>
-                <a mat-menu-item target="_blank" href="/faq?q=How-to-create-PDF-report" title="Get PDF report format">
-                  <mat-icon>link</mat-icon>PDF
-                </a>
-              </mat-menu>
+              <button mat-menu-item (click)="DownloadMarkdown(report_info)" title="Decrypted Markdown report format">
+                <mat-icon>subtitles</mat-icon>Markdown
+              </button>
+              <button mat-menu-item (click)="DownloadDOCX(report_info)" title="Decrypted DOCX report format">
+                <mat-icon>description</mat-icon>DOCX
+              </button>
+              <a mat-menu-item target="_blank" href="/faq?q=How-to-create-PDF-report" title="Get PDF report format">
+                <mat-icon>link</mat-icon>PDF
+              </a>
+            </mat-menu>
 
-            </div>
+          </div>
 
         </div>
 

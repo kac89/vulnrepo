@@ -47,6 +47,7 @@ import {OllamaServiceService} from '../ollama-service.service';
 import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
 import { DialogOllamaComponent } from '../dialog-ollama/dialog-ollama.component';
 import { CurrentdateService } from '../currentdate.service';
+import { DialogMergeIssuesComponent } from '../dialog-merge-issues/dialog-merge-issues.component';
 
 export interface Tags {
   name: string;
@@ -743,6 +744,31 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (result) {
         console.log('Dialog edit issue closed');
+        this.doStats();
+      }
+    });
+
+  }
+
+  openissuesmerge(array) {
+
+    const dialogRef = this.dialog.open(DialogMergeIssuesComponent, {
+      width: '450px',
+      data: array
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result) {
+        result.forEach(eachObj => {
+          const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(eachObj);
+          if (index !== -1) {
+            this.decryptedReportDataChanged.report_vulns.splice(index, 1);
+            this.addtochangelog('Remove issue: ' + eachObj.title);
+            this.afterDetectionNow();
+          }
+        });
+        this.deselectall();
         this.doStats();
       }
     });

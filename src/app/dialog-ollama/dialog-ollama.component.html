@@ -1,12 +1,13 @@
-<div mat-dialog-title fxLayout="row wrap" fxLayoutGap="10px grid" class="example-full-width">
-  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-    <h2 style="padding-left: 10px;"><mat-icon inline="true">speaker_notes</mat-icon> AI assistant</h2>
-  </div>
-  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
-    <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove
-      chat</button>
-  </div>
-</div>
+<mat-card appearance="outlined">
+
+<mat-card-header>
+  <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">speaker_notes</mat-icon>
+  <mat-card-title>AI assistant</mat-card-title>
+  <mat-card-subtitle>Ask your local large language model (LLM).</mat-card-subtitle>
+  <div style="flex: 1"></div>
+  <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove
+    chat</button>
+</mat-card-header>
 
 <mat-dialog-content class="mat-typography" id="chat">
 
@@ -176,3 +177,5 @@
   </div>
 
 </mat-dialog-actions>
+
+</mat-card>
