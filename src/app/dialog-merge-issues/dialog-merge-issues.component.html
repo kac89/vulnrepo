@@ -1,0 +1,65 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">low_priority</mat-icon>
+    <mat-card-title>Merge selected ({{data.length}})</mat-card-title>
+    <mat-card-subtitle>Merge multiple issues</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div fxLayout="row wrap" fxLayoutGap="10px grid">
+
+      <mat-form-field color="accent" class="example-full-width">
+        <mat-label>Select a parent</mat-label>
+        <mat-select [(value)]="user_selected">
+          @for (item of selectedop; track item) {
+          <mat-option [value]="item">{{item.title}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div *ngIf="user_selected != ''" class="example-full-width">
+        <p>Then</p>
+
+        <mat-form-field class="example-full-width" color="accent">
+          <mat-label>Selected fields to merge</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Field selection">
+            @for (field of fields(); track $index) {
+            <mat-chip-row (removed)="remove(field)">
+              {{field}}
+              <button matChipRemove [attr.aria-label]="'remove ' + field">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input name="currentFruit" placeholder="Add field..." #fieldInput [(ngModel)]="currentFruit"
+            [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)" />
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); fieldInput.value = ''">
+            @for (item of filteredFruits(); track item) {
+            <mat-option [value]="item">{{item}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+    </div>
+    <p>
+      <button mat-raised-button color="accent" (click)="merge()">Merge</button>
+      &nbsp;
+      <button mat-raised-button color="primary" (click)="closedialog()">Close</button>
+    </p>
+
+  </mat-card-content>
+</mat-card>

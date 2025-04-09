@@ -89,6 +89,7 @@ import { FilesizePipe } from './filesize.pipe';
 import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
 import { DialogOllamaSettingsComponent } from './dialog-ollama-settings/dialog-ollama-settings.component';
 import {MatSliderModule} from '@angular/material/slider';
+import { DialogMergeIssuesComponent } from './dialog-merge-issues/dialog-merge-issues.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -130,7 +131,8 @@ import {MatSliderModule} from '@angular/material/slider';
         DialogAttachPreviewComponent,
         FilesizePipe,
         DialogOllamaComponent,
-        DialogOllamaSettingsComponent
+        DialogOllamaSettingsComponent,
+        DialogMergeIssuesComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,
