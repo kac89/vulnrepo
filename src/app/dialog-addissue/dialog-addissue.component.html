@@ -1,37 +1,35 @@
-<div class="mdc-card my-card-content">
+<mat-card appearance="outlined">
 
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">add</mat-icon>
+    <mat-card-title>Add Issue</mat-card-title>
+    <mat-card-subtitle>Use templates or custom</mat-card-subtitle>
+    <div style="flex: 1"></div>
+    <mat-form-field appearance="outline" color="accent" class="example-full-width">
+      <mat-label>Templates source</mat-label>
+      <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
+        <mat-option value="VULNREPO"><img with="20" height="20" src="/favicon-32x32.png"> VULNRΞPO</mat-option>
+        <mat-option value="CVE"><mat-icon color="accent">public</mat-icon> (CVE) Common Vulnerabilities and Exposures
+          (ONLINE)</mat-option>
+        <mat-option value="GHSA"><mat-icon color="accent">public</mat-icon> (GHSA) GitHub Advisory Database
+          (ONLINE)</mat-option>
+        <mat-option value="CWE">CWE Research Concepts</mat-option>
+        <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+        <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+        <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
+        <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
+        <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
+        <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
+        <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
+        <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card-header>
 
+  <mat-dialog-content class="mat-typography">
 
-    <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="5px">
-        
-      <div fxLayoutAlign="start start" fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
-        <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue
-      </div>
-    
-      <div fxLayoutAlign="end end" fxFlex="65%" fxFlex.sm="100%" fxFlex.xs="100%">
-        <mat-form-field appearance="outline" color="accent" class="example-full-width">
-          <mat-label>Templates source</mat-label>
-          <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()">
-            <mat-option value="VULNREPO"><img with="20" height="20" src="/favicon-32x32.png"> VULNRΞPO</mat-option>
-            <mat-option value="CVE"><mat-icon color="accent">public</mat-icon> CVE (ONLINE Database)</mat-option>
-            <mat-option value="CWE">CWE Research Concepts</mat-option>
-            <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-            <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
-            <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
-            <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
-            <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
-            <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
-            <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
-            <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    
-    </div>
-
-
-    <div>
-      <div *ngIf="sourceSelect == 'VULNREPO'">
+      <div>
+        <div *ngIf="sourceSelect == 'VULNREPO'">
           <mat-form-field class="example-full-width" color="accent">
             <mat-label>Issue title</mat-label>
             <mat-chip-grid #chipGrid aria-label="Issue title" [formControl]="gridaction">
@@ -42,239 +40,311 @@
                 </button>
               </mat-chip-row>
             </mat-chip-grid>
-            <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom" [formControl]="customissueform" [matAutocomplete]="auto" [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
+            <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom"
+              [formControl]="customissueform" [matAutocomplete]="auto" [matChipInputFor]="chipGrid"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
-                  <mat-icon *ngIf="option.api" color="accent" title="Remote API: {{option.apiname}} - [{{option.apiurl}}] ">public</mat-icon> {{option.title}}
-                </mat-option>
-              </mat-autocomplete>
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
+                <mat-icon *ngIf="option.api" color="accent"
+                  title="Remote API: {{option.apiname}} - [{{option.apiurl}}] ">public</mat-icon> {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngIf="customissueform.hasError('notempty')">
               <strong>Title must not be empty!</strong>
             </mat-error>
           </mat-form-field>
 
-          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates List</a></small></span>
-      </div>
-      
-    
-      <div *ngIf="sourceSelect == 'CWE'">
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>CWE title</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="type: CWE-20 or bypass, injection" [formControl]="cwecontrol" [matAutocomplete]="auto2">
-          <mat-autocomplete #auto2="matAutocomplete">
-              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsCWE | async" [value]="option.title">
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates
+                List</a></small></span>
+        </div>
+
+
+        <div *ngIf="sourceSelect == 'CWE'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>CWE title</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="type: CWE-20 or bypass, injection"
+              [formControl]="cwecontrol" [matAutocomplete]="auto2">
+            <mat-autocomplete #auto2="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsCWE | async"
+                [value]="option.title">
                 {{option.title}}
               </mat-option>
             </mat-autocomplete>
-          <mat-error *ngIf="cwecontrol.hasError('notempty')">
-            <strong>Title must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="cwecontrol.hasError('cantfind')">
-            <strong>Can not be found!</strong>
-          </mat-error>
-        </mat-form-field>
-        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://cwe.mitre.org/data/index.html">cwe.mitre.org</a></small></span>
-    </div>
-    
-    
-      <div *ngIf="sourceSelect == 'CVE'">
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>CVE</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2024-5961" [formControl]="mycve">
-          <mat-error *ngIf="mycve.hasError('notempty')">
-            <strong>CVE must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="mycve.hasError('cve_format_error')">
-            <strong>CVE format error!</strong>
-          </mat-error>
-          <mat-error *ngIf="mycve.hasError('cve_notfound')">
-            <strong>CVE not found!</strong>
-          </mat-error>
-        </mat-form-field>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'MMOBILE'">
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>ATT&CK Mobile</mat-label>
-        <input cdkFocusInitial type="text" matInput placeholder="e.g.: Application Discovery" [formControl]="mymobilemitre" [matAutocomplete]="auto3">
-        <mat-autocomplete #auto3="matAutocomplete">
-            <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitremobile | async" [value]="option.title">
-              {{option.title}}
-            </mat-option>
-          </mat-autocomplete>
-        <mat-error *ngIf="mymobilemitre.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="mymobilemitre.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></small></span>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'MENTERPRISE'">
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>ATT&CK Enterprise</mat-label>
-        <input cdkFocusInitial type="text" matInput placeholder="e.g.: DNS Server" [formControl]="myenterprisemitre" [matAutocomplete]="auto4">
-        <mat-autocomplete #auto4="matAutocomplete">
-            <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitreenterprise | async" [value]="option.title">
-              {{option.title}}
-            </mat-option>
-          </mat-autocomplete>
-        <mat-error *ngIf="myenterprisemitre.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="myenterprisemitre.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://attack.mitre.org/techniques/enterprise/">attack.mitre.org</a></small></span>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'PCIDSS'" >
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>PCI DSS Requirements v3.2.1</mat-label>
-        <input cdkFocusInitial type="text" matInput placeholder="e.g.: Firewall" [formControl]="myPCI" [matAutocomplete]="auto5">
-        <mat-autocomplete #auto5="matAutocomplete">
-          <mat-optgroup *ngFor="let group of filteredOptionsPCIDSS | async" [label]="group.maincategory" [title]="group.maincategory">
-            <mat-option *ngFor="let item of group.items" [value]="item.title" [title]="item.title">
-              {{item.title}}
-            </mat-option>
-        </mat-optgroup>
-          </mat-autocomplete>
-        <mat-error *ngIf="myPCI.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="myPCI.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'OWASPTOP2017'">
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>OWASP category</mat-label>
-        <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2017" [matAutocomplete]="auto6">
-        <mat-autocomplete #auto6="matAutocomplete">
-          <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop2017 | async" [value]="option.title">
-            {{option.title}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="myOWASP2017.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="myOWASP2017.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'OWASPTOP2021'">
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>OWASP category</mat-label>
-        <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2021" [matAutocomplete]="auto7">
-        <mat-autocomplete #auto7="matAutocomplete">
-          <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop2021 | async" [value]="option.title">
-            {{option.title}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="myOWASP2021.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="myOWASP2021.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'OWASPTOP10CICD'">
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>OWASP category</mat-label>
-        <input cdkFocusInitial type="text" matInput placeholder="type: Insufficient" [formControl]="myOWASPTOP10CICD" [matAutocomplete]="auto8">
-        <mat-autocomplete #auto8="matAutocomplete">
-          <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPTOP10CICD | async" [value]="option.title">
-            {{option.title}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="myOWASPTOP10CICD.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="myOWASPTOP10CICD.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'OWASPTOP10k8s'">
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>OWASP category</mat-label>
-        <input cdkFocusInitial type="text" matInput placeholder="type: Kube" [formControl]="myOWASPTOP10k8s" [matAutocomplete]="auto9">
-        <mat-autocomplete #auto9="matAutocomplete">
-          <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPTOP10k8s | async" [value]="option.title">
-            {{option.title}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="myOWASPTOP10k8s.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="myOWASPTOP10k8s.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
-    </div>
-    
-    <div *ngIf="sourceSelect == 'OWASP_mobile'">
-      <mat-form-field class="example-full-width" color="accent">
-        <mat-label>OWASP Mobile Top 10 2024</mat-label>
+            <mat-error *ngIf="cwecontrol.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="cwecontrol.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://cwe.mitre.org/data/index.html">cwe.mitre.org</a></small></span>
+        </div>
 
-        <mat-chip-grid #mobilechipGrid aria-label="Issue title" [formControl]="mobilegridaction">
-          <mat-chip-row *ngFor="let isitemw of mobilechipsissue" (removed)="removemobile(isitemw)">
-            {{isitemw}}
-            <button matChipRemove [attr.aria-label]="'remove ' + isitemw">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-        </mat-chip-grid>
 
-        <input cdkFocusInitial type="text" matInput placeholder="e.g.: insecure validation" [formControl]="mobilecustomissueform" [matAutocomplete]="auto10" [matChipInputFor]="mobilechipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addmobile($event)">
-        <mat-autocomplete #auto10="matAutocomplete" (optionSelected)="mobileselected($event)">
-          <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmobile | async" [value]="option.title">
-            {{option.title}}
-          </mat-option>
-          </mat-autocomplete>
-        <mat-error *ngIf="mobilecustomissueform.hasError('notempty')">
-          <strong>Title must not be empty!</strong>
-        </mat-error>
-        <mat-error *ngIf="mobilecustomissueform.hasError('cantfind')">
-          <strong>Can not be found!</strong>
-        </mat-error>
-      </mat-form-field>
+        <div *ngIf="sourceSelect == 'CVE'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>CVE</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2024-5961" [formControl]="mycve">
+            <mat-error *ngIf="mycve.hasError('notempty')">
+              <strong>CVE must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="mycve.hasError('cve_format_error')">
+              <strong>CVE format error!</strong>
+            </mat-error>
+            <mat-error *ngIf="mycve.hasError('cve_notfound')">
+              <strong>CVE not found!</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-      <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="https://owasp.org/www-project-mobile-top-10/">owasp.org</a></small></span>
-  </div>
+        <div *ngIf="sourceSelect == 'GHSA'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>GHSA</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="e.g.: GHSA-xxxx-xxxx-xxxx" [formControl]="myghsa">
+            <mat-error *ngIf="myghsa.hasError('notempty')">
+              <strong>GHSA must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myghsa.hasError('ghsa_format_error')">
+              <strong>GHSA format error!</strong>
+            </mat-error>
+            <mat-error *ngIf="myghsa.hasError('ghsa_notfound')">
+              <strong>GHSA not found!</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-    <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
+        <div *ngIf="sourceSelect == 'MMOBILE'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>ATT&CK Mobile</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="e.g.: Application Discovery"
+              [formControl]="mymobilemitre" [matAutocomplete]="auto3">
+            <mat-autocomplete #auto3="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitremobile | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="mymobilemitre.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="mymobilemitre.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></small></span>
+        </div>
+
+        <div *ngIf="sourceSelect == 'MENTERPRISE'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>ATT&CK Enterprise</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="e.g.: DNS Server" [formControl]="myenterprisemitre"
+              [matAutocomplete]="auto4">
+            <mat-autocomplete #auto4="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitreenterprise | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="myenterprisemitre.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myenterprisemitre.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://attack.mitre.org/techniques/enterprise/">attack.mitre.org</a></small></span>
+        </div>
+
+        <div *ngIf="sourceSelect == 'PCIDSS'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>PCI DSS Requirements v3.2.1</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="e.g.: Firewall" [formControl]="myPCI"
+              [matAutocomplete]="auto5">
+            <mat-autocomplete #auto5="matAutocomplete">
+              <mat-optgroup *ngFor="let group of filteredOptionsPCIDSS | async" [label]="group.maincategory"
+                [title]="group.maincategory">
+                <mat-option *ngFor="let item of group.items" [value]="item.title" [title]="item.title">
+                  {{item.title}}
+                </mat-option>
+              </mat-optgroup>
+            </mat-autocomplete>
+            <mat-error *ngIf="myPCI.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myPCI.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
+        </div>
+
+        <div *ngIf="sourceSelect == 'OWASPTOP2017'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>OWASP category</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2017"
+              [matAutocomplete]="auto6">
+            <mat-autocomplete #auto6="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop2017 | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="myOWASP2017.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myOWASP2017.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
+        </div>
+
+        <div *ngIf="sourceSelect == 'OWASPTOP2021'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>OWASP category</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="type: Injection" [formControl]="myOWASP2021"
+              [matAutocomplete]="auto7">
+            <mat-autocomplete #auto7="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPtop2021 | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="myOWASP2021.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myOWASP2021.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
+        </div>
+
+        <div *ngIf="sourceSelect == 'OWASPTOP10CICD'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>OWASP category</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="type: Insufficient"
+              [formControl]="myOWASPTOP10CICD" [matAutocomplete]="auto8">
+            <mat-autocomplete #auto8="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPTOP10CICD | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="myOWASPTOP10CICD.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myOWASPTOP10CICD.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
+        </div>
+
+        <div *ngIf="sourceSelect == 'OWASPTOP10k8s'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>OWASP category</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="type: Kube" [formControl]="myOWASPTOP10k8s"
+              [matAutocomplete]="auto9">
+            <mat-autocomplete #auto9="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsOWASPTOP10k8s | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="myOWASPTOP10k8s.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myOWASPTOP10k8s.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
+        </div>
+
+        <div *ngIf="sourceSelect == 'OWASP_mobile'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>OWASP Mobile Top 10 2024</mat-label>
+
+            <mat-chip-grid #mobilechipGrid aria-label="Issue title" [formControl]="mobilegridaction">
+              <mat-chip-row *ngFor="let isitemw of mobilechipsissue" (removed)="removemobile(isitemw)">
+                {{isitemw}}
+                <button matChipRemove [attr.aria-label]="'remove ' + isitemw">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+
+            <input cdkFocusInitial type="text" matInput placeholder="e.g.: insecure validation"
+              [formControl]="mobilecustomissueform" [matAutocomplete]="auto10" [matChipInputFor]="mobilechipGrid"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addmobile($event)">
+            <mat-autocomplete #auto10="matAutocomplete" (optionSelected)="mobileselected($event)">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmobile | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="mobilecustomissueform.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="mobilecustomissueform.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://owasp.org/www-project-mobile-top-10/">owasp.org</a></small></span>
+        </div>
+
+        <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
         <span style="color: red;">{{err_msg}}</span>
-    </div>
-    <div mat-dialog-actions>
-      <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button>
-      <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CWE</button>
-      <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CVE</button>
-      <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Mobile</button>
-      <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent" (click)="addattackEnterprise()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Enterprise</button>
-      <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
-      <button *ngIf="sourceSelect == 'OWASPTOP2017'" mat-raised-button color="accent" (click)="addOWASPtop2017()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 2017</button>
-      <button *ngIf="sourceSelect == 'OWASPTOP2021'" mat-raised-button color="accent" (click)="addOWASPtop2021()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 2021</button>
-      <button *ngIf="sourceSelect == 'OWASPTOP10CICD'" mat-raised-button color="accent" (click)="addOWASPTOP10CICD()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top 10 CI/CD Security Risks</button>
-      <button *ngIf="sourceSelect == 'OWASPTOP10k8s'" mat-raised-button color="accent" (click)="addOWASPTOP10k8s()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Kubernetes Top 10</button>
-      <button *ngIf="sourceSelect == 'OWASP_mobile'" mat-raised-button color="accent" (click)="addOWASP_mobile()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Mobile Top 10</button>
-      &nbsp;
-      <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-    </div>
-    
-</div>
+      </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+
+    <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()"><mat-icon
+        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button>
+    <button *ngIf="sourceSelect == 'CWE'" mat-raised-button color="accent" (click)="addIssueCWE()"><mat-icon
+        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CWE</button>
+    <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()"><mat-icon
+        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CVE</button>
+    <button *ngIf="sourceSelect == 'GHSA'" mat-raised-button color="accent" (click)="addGHSA()"><mat-icon
+        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from GHSA</button>
+    <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()"><mat-icon
+        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Mobile</button>
+    <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent"
+      (click)="addattackEnterprise()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from
+      ATT&CK Enterprise</button>
+    <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon
+        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
+    <button *ngIf="sourceSelect == 'OWASPTOP2017'" mat-raised-button color="accent"
+      (click)="addOWASPtop2017()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top
+      10 2017</button>
+    <button *ngIf="sourceSelect == 'OWASPTOP2021'" mat-raised-button color="accent"
+      (click)="addOWASPtop2021()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP Top
+      10 2021</button>
+    <button *ngIf="sourceSelect == 'OWASPTOP10CICD'" mat-raised-button color="accent"
+      (click)="addOWASPTOP10CICD()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP
+      Top 10 CI/CD Security Risks</button>
+    <button *ngIf="sourceSelect == 'OWASPTOP10k8s'" mat-raised-button color="accent"
+      (click)="addOWASPTOP10k8s()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP
+      Kubernetes Top 10</button>
+    <button *ngIf="sourceSelect == 'OWASP_mobile'" mat-raised-button color="accent"
+      (click)="addOWASP_mobile()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP
+      Mobile Top 10</button>
+    &nbsp;
+    <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+
+  </mat-dialog-actions>
+
+</mat-card>

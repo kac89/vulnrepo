@@ -18,6 +18,15 @@ export class ApiService {
               });
   }
 
+  getGHSA(ghsa_id: string): Promise<any> {
+    return this.http.get<any>('https://api.github.com/advisories/' + ghsa_id)
+               .toPromise()
+               .then(response => response)
+               .catch(error => {
+                console.log('GHSA error: ', error);
+              });
+  }
+
 //  getCVENVD(cve: string): Promise<any> {
 //    return this.http.get<any>('https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=' + cve)
 //               .toPromise()

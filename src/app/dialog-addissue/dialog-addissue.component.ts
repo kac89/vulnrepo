@@ -60,6 +60,7 @@ export class DialogAddissueComponent implements OnInit {
   mobilegridaction = new UntypedFormControl();
   cwecontrol = new UntypedFormControl();
   mycve = new UntypedFormControl();
+  myghsa = new UntypedFormControl();
   mymobilemitre = new UntypedFormControl();
   myenterprisemitre = new UntypedFormControl();
   myPCI = new UntypedFormControl();
@@ -440,6 +441,75 @@ export class DialogAddissueComponent implements OnInit {
   changeselect() {
     this.err_msg = '';
     this.show = false;
+  }
+
+  addGHSA() {
+    
+    const data = this.myghsa.value;
+
+    
+    if (data !== '' && data !== null) {
+      
+      const reg = new RegExp(/GHSA(-[23456789cfghjmpqrvwx]{4}){3}/, 'i');
+      if (reg.test(data)) {
+
+        this.show = true;
+
+        this.apiService.getGHSA(data).then(resp => {
+          
+          if (resp !== null && resp !== undefined) {
+
+            function prepseverity(text) {
+
+              if(text === 'moderate'){
+                text = "medium";
+              }
+
+              return text.charAt(0).toUpperCase() + text.slice(1);
+            }
+
+
+            const def = {
+              title: resp.summary,
+              poc: "",
+              files: [],
+              desc: resp.description,
+              severity: prepseverity(resp.severity),
+              status: 1,
+              ref: resp.references.join("\n"),
+              cvss: resp.cvss.score,
+              cvss_vector: resp.cvss.vector_string,
+              cve: resp.cve_id,
+              bounty: [],
+              tags: [],
+              date: this.getcurrentDate()
+            };
+
+            this.show = false;
+            this.dialogRef.close(def);
+
+
+
+
+          } else {
+            this.show = false;
+            this.myghsa.setErrors({ 'ghsa_notfound': true });
+          }
+
+
+        });
+
+
+      } else {
+        this.show = false;
+        this.myghsa.setErrors({ 'ghsa_format_error': true });
+      }
+
+    } else {
+      this.show = false;
+      this.myghsa.setErrors({ 'notempty': true });
+    }
+
   }
 
   addCVE() {
