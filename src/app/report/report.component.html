@@ -28,7 +28,7 @@
       <div *ngIf="!api_connection_status" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
         <p *ngIf="!report_decryption_in_progress">Report ID: {{reportdesc?.report_id}} <mat-icon
             *ngIf="report_source_api" color="accent">public</mat-icon></p>
-        <p *ngIf="decryptedReportDataChanged">Report Version: <b>V.{{decryptedReportDataChanged?.report_version}}</b>
+        <p *ngIf="decryptedReportDataChanged">Report Version: <b class="labelversion">{{decryptedReportDataChanged?.report_version}}</b> 
         </p>
         <p *ngIf="!report_decryption_in_progress">Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
 
@@ -199,7 +199,7 @@
 
       <div class="mat-mdc-card-title" style="padding-left: 16px;">
         <span>
-          Issues <span class="labelissues">{{decryptedReportDataChanged.report_vulns.length}}</span>
+          Issues ({{decryptedReportDataChanged.report_vulns.length}})
         </span>
       </div>
       <div style="flex-grow: 1"></div>
