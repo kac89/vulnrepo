@@ -90,6 +90,7 @@ import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
 import { DialogOllamaSettingsComponent } from './dialog-ollama-settings/dialog-ollama-settings.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { DialogMergeIssuesComponent } from './dialog-merge-issues/dialog-merge-issues.component';
+import { DialogReportHistoryComponent } from './dialog-report-history/dialog-report-history.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -132,7 +133,8 @@ import { DialogMergeIssuesComponent } from './dialog-merge-issues/dialog-merge-i
         FilesizePipe,
         DialogOllamaComponent,
         DialogOllamaSettingsComponent,
-        DialogMergeIssuesComponent
+        DialogMergeIssuesComponent,
+        DialogReportHistoryComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,
