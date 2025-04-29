@@ -4,6 +4,7 @@ import { IndexeddbService } from '../indexeddb.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dialog-report-history',
@@ -28,7 +29,7 @@ export class DialogReportHistoryComponent implements OnInit {
 
 
   // @ts-ignore
-  constructor(public dialogRef: MatDialogRef<DialogReportcssComponent>, private indexeddbService: IndexeddbService, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(public router: Router,public dialogRef: MatDialogRef<DialogReportcssComponent>, private indexeddbService: IndexeddbService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
 
@@ -67,8 +68,13 @@ export class DialogReportHistoryComponent implements OnInit {
   replacereport(report): void {
 
     this.indexeddbService.deleteReport(report, false).then(data => {
+
       this.indexeddbService.importReport(JSON.stringify(report));
-      window.location.href = window.location.href;
+
+      this.router.navigate(['report/', report.report_id]).then(() => {
+        window.location.reload();
+      });
+
     });
 
   }
