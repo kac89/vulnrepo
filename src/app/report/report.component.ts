@@ -48,6 +48,7 @@ import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ol
 import { DialogOllamaComponent } from '../dialog-ollama/dialog-ollama.component';
 import { CurrentdateService } from '../currentdate.service';
 import { DialogMergeIssuesComponent } from '../dialog-merge-issues/dialog-merge-issues.component';
+import { DialogReportHistoryComponent } from '../dialog-report-history/dialog-report-history.component';
 
 export interface Tags {
   name: string;
@@ -3704,6 +3705,21 @@ Date   | Description
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The AI dialog was closed');
+    });
+
+  }
+
+
+  showHistory(report_id): void {
+
+    const dialogRef = this.dialog.open(DialogReportHistoryComponent, {
+      width: '600px',
+      disableClose: false,
+      data: report_id
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The report history dialog was closed');
     });
 
   }

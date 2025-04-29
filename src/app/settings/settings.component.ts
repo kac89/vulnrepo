@@ -233,6 +233,7 @@ export class SettingsComponent implements OnInit {
     indexedDB.deleteDatabase('vulnrepo-db');
     indexedDB.deleteDatabase('testindexeddb');
     indexedDB.deleteDatabase('vulnrepo-ollama');
+    indexedDB.deleteDatabase('vulnrepo-db-history');
     window.location.href = window.location.protocol + '//' + window.location.host;
   }
 

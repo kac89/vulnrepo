@@ -436,7 +436,7 @@ export class IndexeddbService {
   }
 
 
-  deleteReport(item: any) {
+  deleteReport(item: any, removehistory: any) {
     return new Promise<any>((resolve, reject) => {
       this.getkeybyReportID(item.report_id).then(data => {
         if (data) {
@@ -444,6 +444,12 @@ export class IndexeddbService {
           if (data.NotFound === 'NOOK') {
             console.log('no locally report');
           } else {
+
+            if (removehistory) {
+              //remove from history
+              this.removeReporthistory(item.report_id).then(data => { });
+            }
+
             // indexeddb communication
             const indexedDB = window.indexedDB;
             const open = indexedDB.open('vulnrepo-db', 1);
@@ -594,6 +600,263 @@ export class IndexeddbService {
   }
 
 
+  deletesingleReporthistory(item: any) {
+    return new Promise<any>((resolve, reject) => {
+      this.getSinglekeybyReporthistoryID(item).then(data => {
+        if (data) {
+
+          // indexeddb communication
+          const indexedDB = window.indexedDB;
+          const open = indexedDB.open('vulnrepo-db-history', 1);
+
+          open.onupgradeneeded = function () {
+            const db = open.result;
+            db.createObjectStore('reports-history', { autoIncrement: true });
+          };
+
+          open.onsuccess = function () {
+            const db = open.result;
+            const tx = db.transaction('reports-history', 'readwrite');
+            const store = tx.objectStore('reports-history');
+
+            store.delete(data.key);
+
+            tx.oncomplete = function () {
+              db.close();
+              resolve(true);
+            };
+          };
+
+        }
+      });
+    });
+  }
+
+  getSinglekeybyReporthistoryID(report) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db-history', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports-history', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports-history', 'readwrite');
+        const store = tx.objectStore('reports-history');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.openCursor();
+
+        request.onsuccess = function (evt) {
+
+          const cursor = request.result;
+          if (cursor) {
+            const key = cursor.primaryKey;
+            const value = cursor.value.report_id;
+
+            if (report.report_id === value) {
+
+              if (JSON.stringify(report) === JSON.stringify(cursor.value)) {
+
+                const finded = { key, value };
+                resolve(finded);
+              }
+
+
+            }
+            cursor.continue();
+          } else {
+            // no more results
+
+          }
+
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve({ 'NotFound': 'NOOK' });
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+  getkeybyReporthistoryID(reportid) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db-history', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports-history', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports-history', 'readwrite');
+        const store = tx.objectStore('reports-history');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.openCursor();
+        const arr: any = [];
+
+        request.onsuccess = function (evt) {
+
+          const cursor = request.result;
+          if (cursor) {
+            const key = cursor.primaryKey;
+            const value = cursor.value.report_id;
+
+            if (reportid === value) {
+              const finded = { key, value };
+              arr.push(finded);
+            }
+            cursor.continue();
+          } else {
+            // no more results
+            resolve(arr);
+          }
+
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve({ 'NotFound': 'NOOK' });
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
+  deleteReporthistory(item: any) {
+    return new Promise<any>((resolve, reject) => {
+      this.getkeybyReporthistoryID(item.report_id).then(data => {
+        if (data) {
+
+          data.forEach(function (item) {
+
+            // indexeddb communication
+            const indexedDB = window.indexedDB;
+            const open = indexedDB.open('vulnrepo-db-history', 1);
+
+            open.onupgradeneeded = function () {
+              const db = open.result;
+              db.createObjectStore('reports-history', { autoIncrement: true });
+            };
+
+            open.onsuccess = function () {
+              const db = open.result;
+              const tx = db.transaction('reports-history', 'readwrite');
+              const store = tx.objectStore('reports-history');
+
+              store.delete(item.key);
+
+              tx.oncomplete = function () {
+                db.close();
+              };
+            };
+
+          });
+
+        }
+      });
+    });
+  }
+
+  removeReporthistory(report_id: string) {
+    return new Promise<any>((resolve, reject) => {
+
+      this.getReportsHistory(report_id).then(retdata => {
+        if (retdata.length > 0) {
+
+          retdata.forEach(function (item) {
+
+            this.deleteReporthistory(item).then(data => { });
+          }, this);
+
+        }
+      });
+
+    });
+  }
+
+
+  add_report_to_history(value) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db-history', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports-history', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports-history', 'readwrite');
+        const store = tx.objectStore('reports-history');
+
+        store.put(value);
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+      };
+
+    });
+  }
+
+  getReportsHistory(reportid) {
+    return new Promise<any>((resolve, reject) => {
+
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db-history', 1);
+
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports-history', { autoIncrement: true });
+      };
+
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports-history', 'readwrite');
+        const store = tx.objectStore('reports-history');
+
+        // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
+        const request = store.getAll();
+
+        request.onsuccess = function (evt) {
+
+          const historical_versions = request.result.filter(function (el) {
+            return (el.report_id === reportid);
+          });
+
+          resolve(historical_versions);
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+        request.onerror = function (e) {
+          reject(e);
+        };
+      };
+
+    });
+  }
+
   updatereportDB(key, value) {
     return new Promise<any>((resolve, reject) => {
 
@@ -641,6 +904,11 @@ export class IndexeddbService {
           report_lastupdate: now,
           encrypted_data: ciphertext.toString()
         };
+
+
+
+        //add to history
+        this.add_report_to_history(to_update).then(data => { });
 
 
         this.updatereportDB(reportorder, to_update).then(retu => {
@@ -986,7 +1254,7 @@ export class IndexeddbService {
 
         // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
         const request = store.openCursor();
-        const arr:any = [];
+        const arr: any = [];
         request.onsuccess = function (evt) {
           let cursor = request.result;
           if (cursor) {
@@ -1180,7 +1448,7 @@ export class IndexeddbService {
 
         // add, clear, count, delete, get, getAll, getAllKeys, getKey, put
         const request = store.openCursor();
-        const arr:any = [];
+        const arr: any = [];
         request.onsuccess = function (evt) {
           let cursor = request.result;
           if (cursor) {

@@ -36,8 +36,8 @@ export class MyreportsComponent implements OnInit {
   selection = new SelectionModel<MyReportElement>(true, []);
   msg = '';
   keyfound = false;
-  apilist:any = [];
-  list:any = [];
+  apilist: any = [];
+  list: any = [];
   private paginator: MatPaginator;
   private sort: MatSort;
 
@@ -88,10 +88,10 @@ export class MyreportsComponent implements OnInit {
       this.keyfound = true;
       const vaultobj = JSON.parse(localkey);
       let x = 0;
-      vaultobj.forEach( (element) => {
-        x=x+1;
+      vaultobj.forEach((element) => {
+        x = x + 1;
 
-        this.apilist.push({value: element.value, apikey: element.apikey, viewValue: element.viewValue});
+        this.apilist.push({ value: element.value, apikey: element.apikey, viewValue: element.viewValue });
 
         this.apiService.APISend(element.value, element.apikey, 'getreportslist', '').then(resp => {
 
@@ -109,20 +109,20 @@ export class MyreportsComponent implements OnInit {
           this.dataSource.data = this.list;
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
-        }).catch(() => {});
+        }).catch(() => { });
 
         //progress bar on api reports
-        if(vaultobj.length === x) {
+        if (vaultobj.length === x) {
           setTimeout(() => {
             // console.log('hide progress timeout');
             this.msg = '';
           }, 1000);
         }
-        
-    });
+
+      });
 
 
-     
+
 
     } else {
 
@@ -175,7 +175,7 @@ export class MyreportsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
 
       if (result) {
-        this.indexeddbService.deleteReport(result).then(data => {
+        this.indexeddbService.deleteReport(result, true).then(data => {
           if (data) {
             this.getallreports();
             this.selection.clear();
@@ -183,19 +183,19 @@ export class MyreportsComponent implements OnInit {
           }
         });
 
-          if (result.api && result.apiurl && result.apikey) {
+        if (result.api && result.apiurl && result.apikey) {
 
-            // tslint:disable-next-line:max-line-length
-            this.apiService.APISend(result.apiurl, result.apikey, 'removereport', 'reportid=' + result.report_id).then(resp => {
-              if (resp.REMOVE_REPORT === 'OK') {
-                this.getallreports();
-                this.selection.clear()
-              }
-            });
+          // tslint:disable-next-line:max-line-length
+          this.apiService.APISend(result.apiurl, result.apikey, 'removereport', 'reportid=' + result.report_id).then(resp => {
+            if (resp.REMOVE_REPORT === 'OK') {
+              this.getallreports();
+              this.selection.clear()
+            }
+          });
 
 
+        }
       }
-    }
 
     });
 
@@ -233,20 +233,20 @@ export class MyreportsComponent implements OnInit {
 
     item.report_id = uuid();
 
-      // tslint:disable-next-line:max-line-length
-      this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(item))).then(resp => {
-        if (resp) {
+    // tslint:disable-next-line:max-line-length
+    this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(item))).then(resp => {
+      if (resp) {
 
-          if (resp.STORAGE === 'NOSPACE') {
-            this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
-              duration: 3000,
-              panelClass: ['notify-snackbar-fail']
-            });
-          }
-
-          this.getallreports();
+        if (resp.STORAGE === 'NOSPACE') {
+          this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
+            duration: 3000,
+            panelClass: ['notify-snackbar-fail']
+          });
         }
-      });
+
+        this.getallreports();
+      }
+    });
 
   }
 

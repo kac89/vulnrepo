@@ -1,0 +1,76 @@
+<mat-card appearance="outlined">
+
+    <mat-card-header>
+        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">history</mat-icon>
+        <mat-card-title>Restore report version</mat-card-title>
+        <mat-card-subtitle>Restore old report from local history.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-dialog-content class="mat-typography">
+        <div [hidden]="anyreports">No saved versions of the report.</div>
+        <div [hidden]="!anyreports">
+
+            <table mat-table [dataSource]="dataSource" matSort matSortActive="report_lastupdate" matSortDirection="desc">
+
+                <ng-container matColumnDef="report_name">
+                    <th mat-header-cell *matHeaderCellDef>
+                        Name
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.report_name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="report_lastupdate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                        sortActionDescription="Sort by report_lastupdate">
+                        Last update
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.report_lastupdate | date:'medium'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="settings">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-icon title="Settings">settings</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+
+                            <button mat-menu-item (click)="replacereport(element)"><mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Replace current version of the report</button>
+                            <button mat-menu-item (click)="downloadhistoryreport(element)"><mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Download report</button>
+                            <button mat-menu-item (click)="removereporthistory(element)"><mat-icon class="vertical-align-middle padding-bottom-3">delete_forever</mat-icon> Remove report</button>
+                        
+                        </mat-menu>
+
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <br>
+            <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                aria-label="Select page of periodic elements">
+            </mat-paginator>
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+
+        <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
+            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
+
+
+            </div>
+            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
+
+                <button mat-raised-button mat-dialog-close color="primary">Close</button>
+            </div>
+        </div>
+
+    </mat-dialog-actions>
+
+</mat-card>
