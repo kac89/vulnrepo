@@ -30,7 +30,6 @@
             *ngIf="report_source_api" color="accent">public</mat-icon></p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b
             class="labelversion">{{decryptedReportDataChanged?.report_version}}</b>
-            <a title="Report history versions" class="active-link" [routerLink]="[]" (click)="showHistory(reportdesc.report_id)"><mat-icon class="vertical-align-middle padding-bottom-3">history</mat-icon></a>
 
         </p>
         <p *ngIf="!report_decryption_in_progress">Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
@@ -59,11 +58,21 @@
 
         <div>
 
+
+            
+
           <button mat-fab extended class="mat-elevation-z9" color="primary"
             (click)="saveReportChanges(reportdesc.report_id)">
             <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save changes and release a new
             version
           </button>
+
+          &nbsp;
+
+          <button mat-fab extended class="mat-elevation-z9" color="primary" (click)="showHistory(reportdesc.report_id)">
+            <mat-icon class="vertical-align-middle padding-bottom-3">history</mat-icon> History</button>
+
+
         </div>
 
         <div class="youhaveunsavedchanges" *ngIf="youhaveunsavedchanges">
