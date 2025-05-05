@@ -1,3 +1,18 @@
 table {
     width: 100%;
   }
+
+  .mat-column-report_name {
+    min-width: 20%;
+  }
+  
+  .mat-column-report_lastupdate {
+    min-width: 80%;
+  }
+  
+  .mat-column-settings {
+    text-align: right;
+    justify-content: flex-end;
+    min-width: 80px;
+    max-width: 100px;
+  }
