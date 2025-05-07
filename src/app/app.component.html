@@ -11,9 +11,9 @@
     <div *ngIf="show_status" class="title-center">
 
       <div *ngIf="enc_status">
-        <mat-icon class="vertical-align-middle padding-bottom-3 decrypted-color" matSuffix>no_encryption</mat-icon> Report is decrypted
+        <mat-icon color="warn" class="vertical-align-middle padding-bottom-3" matSuffix>no_encryption</mat-icon> Report is decrypted
       </div>
-      <div *ngIf="!enc_status"><mat-icon class="vertical-align-middle padding-bottom-3 encrypted-color" matSuffix>lock</mat-icon> Report is encrypted</div>
+      <div *ngIf="!enc_status"><mat-icon color="accent" class="vertical-align-middle padding-bottom-3" matSuffix>lock</mat-icon> Report is encrypted</div>
 
     </div>
     
