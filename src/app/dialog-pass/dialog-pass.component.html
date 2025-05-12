@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <div>
   <form class="example-form">
-    <mat-form-field class="example-full-width" color="accent">
+    <mat-form-field class="example-full-width" color="accent" appearance="outline">
       <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
         (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -23,7 +23,7 @@
   </form>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions style="padding-left: 24px;">
+<mat-dialog-actions style="padding-left: 25px;">
 
   <div fxLayout="row" fxLayoutGap="7px grid">
 

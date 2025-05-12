@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { IndexeddbService } from './indexeddb.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -9,10 +9,10 @@ import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: false
 })
 
 export class AppComponent implements OnInit, OnDestroy {
@@ -20,8 +20,20 @@ export class AppComponent implements OnInit, OnDestroy {
   enc_status: any;
   subscription: Subscription;
   show_active_reports = false;
-  arr_oreports:any = [];
+  arr_oreports: any = [];
   dialogRef: MatDialogRef<DialogAboutComponent>;
+
+  @HostListener('window:keydown.control.shift.y', ['$event'])
+  GoToNewReport(event: KeyboardEvent) {
+    event.preventDefault();
+    this.router.navigate(['/new-report']);
+  }
+
+  @HostListener('window:keydown.control.shift.u', ['$event'])
+  GoToSettings(event: KeyboardEvent) {
+    event.preventDefault();
+    this.router.navigate(['/my-reports']);
+  }
 
   constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService, public dialog: MatDialog) {
     this.sessionsub.storageChange.subscribe(data => {

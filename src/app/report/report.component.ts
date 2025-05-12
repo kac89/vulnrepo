@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
@@ -183,6 +183,12 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   aiprogress = false;
   aiconnected = false;
   models:any;
+
+  @HostListener('window:keydown.control.shift.l', ['$event'])
+  GoToNewReport(event: KeyboardEvent) {
+    event.preventDefault();
+    this.addissue();
+  }
 
   constructor(private route: ActivatedRoute,
     public dialog: MatDialog,
