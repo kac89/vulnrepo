@@ -11,6 +11,7 @@ import { DialogApikeyComponent } from '../dialog-apikey/dialog-apikey.component'
 import { ApiService } from '../api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
+import { Router } from '@angular/router';
 
 export interface MyReportElement {
   select: any;
@@ -57,7 +58,7 @@ export class MyreportsComponent implements OnInit {
   }
 
   constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService, private apiService: ApiService,
-    private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService) {
+    private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,public router: Router) {
 
   }
 
@@ -280,4 +281,14 @@ export class MyreportsComponent implements OnInit {
     }
 
   }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  Redirectme(url) {
+    this.router.navigate([url]);
+  }
+
 }

@@ -1,4 +1,3 @@
-
 <div fxLayout="row wrap" fxLayoutGap="5px grid">
 
   <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
@@ -7,71 +6,85 @@
     </h1>
   </div>
 
-  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-    <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
-
-      <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
-        <a style="width: 100%;" routerLink="/new-report" href="/new-report" mat-raised-button color="accent">
-          <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Create new report
-        </a>
-      </div>
-  
-      <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
-        <a style="width: 100%;" routerLink="/import-report" href="/import-report" mat-raised-button color="primary">
-          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
-        </a>
-      
-      </div>
-  
-  </div>
-
-  </div>
-  
-
 </div>
 <br>
 <mat-card appearance="outlined" class="mdc-card my-card-content">
 
+  <div fxLayout="row wrap" fxLayoutGap="10px grid">
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+      <mat-form-field appearance="outline" color="accent" class="full-width">
+        <mat-label>Filter reports</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. external pentest" #input>
+      </mat-form-field>
+    </div>
+    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-  <mat-table *ngIf="dataSource.data.length != 0" mat-table [dataSource]="dataSource" matSort matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
+      <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
 
-  <!-- Checkbox Column -->
-  <ng-container matColumnDef="select">
-    <mat-header-cell *matHeaderCellDef>
-      <mat-checkbox (change)="$event ? masterToggle() : null"
-                    [checked]="selection.hasValue() && isAllSelected()"
-                    [indeterminate]="selection.hasValue() && !isAllSelected()"
-                    [aria-label]="checkboxLabel()">
-      </mat-checkbox>
-    </mat-header-cell>
-    <mat-cell *matCellDef="let row">
-      <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="$event ? selection.toggle(row) : null"
-                    [checked]="selection.isSelected(row)"
-                    [aria-label]="checkboxLabel(row)">
-      </mat-checkbox>
-    </mat-cell>
-  </ng-container>
+        <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-  <ng-container matColumnDef="source">
-    <mat-header-cell *matHeaderCellDef><mat-icon title="Where reports are stored">folder</mat-icon></mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <span *ngIf="!element.api"><mat-icon title="Local Host">computer</mat-icon></span>
-      <span *ngIf="element.api == 'remote'"><mat-icon color="accent" title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon></span>
-    </mat-cell>
-  </ng-container>
+          <button (click)="Redirectme('/new-report')" style="width: 100%;" class="mdc-elevation--z11" mat-fab extended
+            color="accent">
+            <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Create new report
+          </button>
+
+        </div>
+
+        <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+          <button (click)="Redirectme('/import-report')" style="width: 100%;" class="mdc-elevation--z11" mat-fab
+            extended color="primary">
+            <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
+          </button>
+
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+  <mat-table *ngIf="dataSource.data.length != 0" mat-table [dataSource]="dataSource" matSort
+    matSortActive="report_createdate" matSortDirection="desc" class="mat-elevation-z8">
+
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="source">
+      <mat-header-cell *matHeaderCellDef><mat-icon title="Where reports are stored">folder</mat-icon></mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <span *ngIf="!element.api"><mat-icon title="Local Host">computer</mat-icon></span>
+        <span *ngIf="element.api == 'remote'"><mat-icon color="accent"
+            title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon></span>
+      </mat-cell>
+    </ng-container>
 
     <ng-container matColumnDef="report_name">
       <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-70 th-left'"> TITLE </mat-header-cell>
       <mat-cell *matCellDef="let element" [ngClass]="'w-70 th-left'">
-        <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/" href="#">{{element.report_name}}</a>
+        <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/"
+          href="#">{{element.report_name}}</a>
       </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="report_createdate">
       <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75 th-right'"> CREATE DATE </mat-header-cell>
-      <mat-cell *matCellDef="let element" [ngClass]="'w-75 th-right'"> 
+      <mat-cell *matCellDef="let element" [ngClass]="'w-75 th-right'">
         <span *ngIf="element.report_createdate == 0"></span>
         <span *ngIf="element.report_createdate != 0">{{element.report_createdate | date:'medium'}} </span>
       </mat-cell>
@@ -86,23 +99,35 @@
     </ng-container>
 
     <ng-container matColumnDef="settings">
-      <mat-header-cell *matHeaderCellDef class="mat-column-2"><mat-icon title="Settings">settings</mat-icon></mat-header-cell>
+      <mat-header-cell *matHeaderCellDef class="mat-column-2"><mat-icon
+          title="Settings">settings</mat-icon></mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button mat-icon-button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" [matMenuTriggerFor]="myreportssettings"><mat-icon>more_vert</mat-icon></button>
+        <button mat-icon-button
+          style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;"
+          [matMenuTriggerFor]="myreportssettings"><mat-icon>more_vert</mat-icon></button>
         <mat-menu #myreportssettings="matMenu">
-          <a [routerLink]="[]" (click)="shareReport(element.report_id)" class="active-link" title="Download report" mat-menu-item><mat-icon class="vertical-align-middle">cloud_download</mat-icon> Download report</a>
-          <a *ngIf="!element.api" [routerLink]="[]" (click)="cloneReport(element)" class="active-link" title="Clone report" mat-menu-item><mat-icon class="vertical-align-middle">flip_to_front</mat-icon> Clone report</a>
-          <a *ngIf="!element.api && keyfound" [routerLink]="[]" [matMenuTriggerFor]="fish" title="Save report on API" mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon> Save on API</a>
-          <a *ngIf="element.api" [routerLink]="[]" (click)="fromAPIcloneReport(element)" class="active-link" title="Save report locally" mat-menu-item><mat-icon class="vertical-align-middle">save_alt</mat-icon> Save locally</a>
-          <a [routerLink]="[]" (click)="removeReport(element)" class="active-link" title="Remove report" mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove report</a>
+          <a [routerLink]="[]" (click)="shareReport(element.report_id)" class="active-link" title="Download report"
+            mat-menu-item><mat-icon class="vertical-align-middle">cloud_download</mat-icon> Download report</a>
+          <a *ngIf="!element.api" [routerLink]="[]" (click)="cloneReport(element)" class="active-link"
+            title="Clone report" mat-menu-item><mat-icon class="vertical-align-middle">flip_to_front</mat-icon> Clone
+            report</a>
+          <a *ngIf="!element.api && keyfound" [routerLink]="[]" [matMenuTriggerFor]="fish" title="Save report on API"
+            mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon> Save on API</a>
+          <a *ngIf="element.api" [routerLink]="[]" (click)="fromAPIcloneReport(element)" class="active-link"
+            title="Save report locally" mat-menu-item><mat-icon class="vertical-align-middle">save_alt</mat-icon> Save
+            locally</a>
+          <a [routerLink]="[]" (click)="removeReport(element)" class="active-link" title="Remove report"
+            mat-menu-item><mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove report</a>
         </mat-menu>
         <mat-menu #fish="matMenu">
           <span *ngFor="let apis of apilist">
-            <a [routerLink]="[]" (click)="toAPIcloneReport(element, apis.value, apis.apikey)" class="active-link" title="API: {{apis.value}}" mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon> {{apis.viewValue}}</a>
+            <a [routerLink]="[]" (click)="toAPIcloneReport(element, apis.value, apis.apikey)" class="active-link"
+              title="API: {{apis.value}}" mat-menu-item><mat-icon class="vertical-align-middle">public</mat-icon>
+              {{apis.viewValue}}</a>
           </span>
-          
+
         </mat-menu>
-        
+
       </mat-cell>
     </ng-container>
 
@@ -117,7 +142,8 @@
       <div *ngIf="dataSource.data.length != 0 && selection.selected.length > 0" style="padding: 20px 0px 0px 20px;">
 
         <a mat-raised-button color="warn" title="Remove selected items" (click)="removeSelecteditems()">
-          <mat-icon class="vertical-align-middle padding-bottom-3">delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
+          <mat-icon class="vertical-align-middle padding-bottom-3">delete_forever</mat-icon> Remove selected
+          ({{selection.selected.length}})
         </a>
 
       </div>
@@ -130,10 +156,13 @@
 
     <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
       <br *ngIf="dataSource.data.length != 0">
-      <mat-paginator color="accent" *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+      <mat-paginator color="accent" *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 20, 30]"
+        showFirstLastButtons></mat-paginator>
     </div>
 
-</div>
+  </div>
 
-  <p *ngIf="dataSource.data.length == 0"><mat-icon title="sad :-(" class="vertical-align-middle padding-bottom-3 size-45">sentiment_very_dissatisfied</mat-icon> Your reports list is empty.</p>
+  <p *ngIf="dataSource.data.length == 0"><mat-icon title="sad :-("
+      class="vertical-align-middle padding-bottom-3 size-45">sentiment_very_dissatisfied</mat-icon> Your reports list is
+    empty.</p>
 </mat-card>
