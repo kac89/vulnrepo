@@ -432,8 +432,8 @@
               </div>
 
               <div *ngIf="dec_data.tags" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-form-field appearance="outline" class="example-tags-list" color="accent">
-                  <mat-label>TAGs</mat-label>
+                <mat-form-field class="example-tags-list" color="accent">
+                  <mat-label>Tags</mat-label>
                   <mat-chip-grid #tagList aria-label="Tags">
                     <mat-chip-row *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags"
                       [selectable]="selectable" [removable]="removable" (removed)="TAGremove(tag, dec_data)"
@@ -498,7 +498,7 @@
 
                   <div fxLayoutAlign="end start" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
                     <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}"
-                      matBadgeColor="accent" (click)="searchBounty(dec_data)" title="Search for bug bounty program">
+                      matBadgeColor="accent" (click)="searchBounty(dec_data)" title="Search for bug bounty program base on POC">
                       <mat-icon>attach_money</mat-icon>
                       <mat-icon>search</mat-icon>
                     </button>
