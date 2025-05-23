@@ -49,7 +49,7 @@ You can test our latest changes from dev branch, visit: https://dev.vulnrepo.com
 
 ## Docker Setup
 
-You can run the project as a docker build using the included docker-compose.yml. Just execute `docker-compose up` and access it on `http://localhost`
+Official docker image: https://hub.docker.com/r/kac89/vulnrepo
 
 ## Licencing
 
