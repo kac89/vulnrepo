@@ -38,7 +38,7 @@
       <mat-menu #menu="matMenu">
 
         <a routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
-          <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Create new report
+          <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> New report
         </a>
 
         <a routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
@@ -105,7 +105,7 @@
         </a>
 
         <a routerLink="/bugbounty-list" routerLinkActive="active-link" href="/bugbounty-list" mat-menu-item>
-          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
+          <mat-icon class="vertical-align-middle padding-bottom-3">format_list_bulleted</mat-icon>
           Bug Bounty List
         </a>
 
@@ -142,52 +142,55 @@
 <mat-sidenav-container fxFlexFill>
   <mat-sidenav #sidenav>
     <mat-nav-list>
-      <a routerLink="/home" routerLinkActive="active-link" href="/home" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon>
-        Home
-      </a>
-      <a routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon>
-        My Reports
-      </a>
-      <a routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> Create new report
-      </a>
-      <a routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
+
+      <button routerLink="/home" routerLinkActive="active-link" href="/home" mat-menu-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon> Home
+      </button>
+
+      <button routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-menu-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon> My Reports
+      </button>
+
+      <button routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> New report
+      </button>
+
+      <button routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
         <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
-      </a>
-      <a routerLink="/templates-list" routerLinkActive="active-link" href="/templates-list" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon>
-        Templates List
-      </a>
+      </button>
 
-      <a routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon>
-        Settings
-      </a>
+      <button routerLink="/templates-list" routerLinkActive="active-link" href="/templates-list" mat-menu-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon> Templates List
+      </button>
 
-      <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
-        CVE Search
-      </a>
-      <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
-        <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
-        Checklists
-      </a>
+      <button routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings
+      </button>
 
-      <a routerLink="/bugbounty-list" routerLinkActive="active-link" href="/bugbounty-list" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon>
-        Bug Bounty List
-      </a>
+      <button routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
+        <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon> CVE Search
+      </button>
 
-      <a routerLink="/faq" routerLinkActive="active-link" href="/faq" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">live_help</mat-icon>
-        FAQ
-      </a>
-      <button mat-menu-item (click)="goAbout()"><mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
-      <a (click)="sidenav.toggle()" mat-menu-item>
-        <mat-icon>close</mat-icon> Close
-      </a>
+      <button routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
+        <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon> Checklists
+      </button>
+
+      <button mat-menu-item routerLink="/bugbounty-list" routerLinkActive="active-link" href="/bugbounty-list">
+        <mat-icon class="vertical-align-middle padding-bottom-3">format_list_bulleted</mat-icon> Bug Bounty List
+      </button>
+
+      <button mat-menu-item routerLink="/faq" routerLinkActive="active-link" href="/faq">
+        <mat-icon class="vertical-align-middle padding-bottom-3">live_help</mat-icon> FAQ
+      </button>
+
+      <button mat-menu-item (click)="goAbout()">
+        <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About
+      </button>
+
+      <button mat-menu-item (click)="sidenav.toggle()">
+        <mat-icon class="vertical-align-middle padding-bottom-3">close</mat-icon> Close
+      </button>
+
     </mat-nav-list>
   </mat-sidenav>
 

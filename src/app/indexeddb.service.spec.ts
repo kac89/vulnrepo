@@ -6,7 +6,7 @@ describe('IndexeddbService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: IndexeddbService = TestBed.get(IndexeddbService);
+    const service: IndexeddbService = TestBed.inject(IndexeddbService);
     expect(service).toBeTruthy();
   });
 });
