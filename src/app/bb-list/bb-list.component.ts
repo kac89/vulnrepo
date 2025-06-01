@@ -5,18 +5,21 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { HttpClient } from '@angular/common/http';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-bb-list',
-  imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatTableModule],
+  standalone: false,
+  //imports: [],
+  //imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule],
   templateUrl: './bb-list.component.html',
   styleUrl: './bb-list.component.scss'
 })
-export class BbListComponent implements OnInit {
+export class BbListComponent implements OnInit  {
 
 
   ELEMENT_DATA:any = [];
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'bounty', 'domains'];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
@@ -30,6 +33,7 @@ export class BbListComponent implements OnInit {
 
         if(res['programs']) {
           this.dataSource = new MatTableDataSource(res['programs']);
+          this.dataSource.paginator = this.paginator;
         }
         
       }

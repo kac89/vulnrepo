@@ -91,6 +91,7 @@ import { DialogOllamaSettingsComponent } from './dialog-ollama-settings/dialog-o
 import {MatSliderModule} from '@angular/material/slider';
 import { DialogMergeIssuesComponent } from './dialog-merge-issues/dialog-merge-issues.component';
 import { DialogReportHistoryComponent } from './dialog-report-history/dialog-report-history.component';
+import { BbListComponent } from './bb-list/bb-list.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -134,7 +135,8 @@ import { DialogReportHistoryComponent } from './dialog-report-history/dialog-rep
         DialogOllamaComponent,
         DialogOllamaSettingsComponent,
         DialogMergeIssuesComponent,
-        DialogReportHistoryComponent
+        DialogReportHistoryComponent,
+        BbListComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,
