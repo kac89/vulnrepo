@@ -1,16 +1,31 @@
 <div>
 
     <h1 class="mat-headline-3">
-        <mat-icon class="vertical-align-middle padding-bottom-3 size-45">library_books</mat-icon> Bug Bounty List ({{this.dataSource.data.length}})
+        <mat-icon class="vertical-align-middle padding-bottom-3 size-45">format_list_bulleted</mat-icon> Bug Bounty List
+        ({{this.dataSource.data.length}})
     </h1>
 
     <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
 
-        <mat-form-field color="accent">
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. google" #input>
-        </mat-form-field>
-        
+
+        <div fxLayout="row wrap" fxLayoutGap="10px grid" class="full-width">
+            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
+
+                <mat-form-field color="accent" class="full-width">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. google" #input>
+                </mat-form-field>
+
+            </div>
+            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end">
+
+                <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page of users"></mat-paginator>
+
+            </div>
+        </div>
+
+
+
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
             <ng-container matColumnDef="name">
@@ -21,7 +36,9 @@
 
             <ng-container matColumnDef="bounty">
                 <th mat-header-cell *matHeaderCellDef> Bounty? </th>
-                <td mat-cell *matCellDef="let element"> <span [hidden]="!element.bounty"><mat-icon title="Money bounty">attach_money</mat-icon></span> <span [hidden]="!element.swag"><mat-icon title="SWAG">redeem</mat-icon></span> </td>
+                <td mat-cell *matCellDef="let element"> <span [hidden]="!element.bounty"><mat-icon
+                            title="Money bounty">attach_money</mat-icon></span> <span [hidden]="!element.swag"><mat-icon
+                            title="SWAG">redeem</mat-icon></span> </td>
             </ng-container>
 
             <ng-container matColumnDef="domains">
@@ -38,7 +55,8 @@
             </tr>
         </table>
 
-        <p>List provided and maintain by <a class="active-link" target="_blank" href="https://github.com/projectdiscovery/public-bugbounty-programs">projectdiscovery</a>.</p>
+        <p>List provided and maintain by <a class="active-link" target="_blank"
+                href="https://github.com/projectdiscovery/public-bugbounty-programs">projectdiscovery</a>.</p>
 
 
 
