@@ -169,43 +169,33 @@
 
   <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
     <mat-expansion-panel-header>
-      <mat-panel-title> <mat-icon>photo_library</mat-icon> &nbsp; Screenshots & Video </mat-panel-title>
+      <mat-panel-title> <mat-icon>photo_library</mat-icon> &nbsp; Youtube channel </mat-panel-title>
       <mat-panel-description>
-        Some screenshots of the report creation process and video tutorial to watch!
+        Video tutorials to watch!
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
 
-      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-        <a target="_blank" href="assets/screen1.png"><img style="width: 250px" src="assets/screen1.png"></a>
-      </div>
-    
-      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-        <a target="_blank" href="assets/screen2.png"><img style="width: 250px" src="assets/screen2.png"></a>
-      </div>
-    
-      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-        <a target="_blank" href="assets/screen5.png"><img style="width: 250px" src="assets/screen5.png"></a>
-      </div>
-    
-    </div>
-    
-    <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
-    
-      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-        <a target="_blank" href="assets/screen3.png"><img style="width: 250px" src="assets/screen3.png"></a>
-      </div>
-    
-      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper">
-        <a target="_blank" href="assets/screen4.png"><img style="width: 250px" src="assets/screen4.png"></a>
-      </div>
-    
-      <div fxLayoutAlign="center center" fxFlex="calc(33% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%" class="corner_wrapper_red">
-        <a target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU"><img style="width: 350px" src="assets/yt_screen.jpg"></a>
-      </div>
+      <a class="active-link" target="_blank" href="https://www.youtube.com/@vulnrepo"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> vulnrepo</a>
     
     </div>
   </mat-expansion-panel>
+
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title> <mat-icon>http</mat-icon> &nbsp; Local Server </mat-panel-title>
+      <mat-panel-description>
+        (Optional) Set up a local server for vulnrepo and store reports in one place
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
+
+      <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo-server"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> VULNRΞPO Server</a>
+      <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> VULNRΞPO API Reference</a>
+      
+    </div>
+  </mat-expansion-panel>
+
 </mat-accordion>
 
 <br>

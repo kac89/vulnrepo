@@ -1,23 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon'
-import { MatCardModule } from '@angular/material/card';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatTableDataSource} from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-bb-list',
   standalone: false,
-  //imports: [],
-  //imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule],
   templateUrl: './bb-list.component.html',
   styleUrl: './bb-list.component.scss'
 })
 export class BbListComponent implements OnInit  {
-
-
   ELEMENT_DATA:any = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'bounty', 'domains'];
