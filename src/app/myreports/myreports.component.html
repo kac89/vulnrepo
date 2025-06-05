@@ -1,9 +1,34 @@
 <div fxLayout="row wrap" fxLayoutGap="5px grid">
 
-  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
     <h1 class="mat-headline-3">
       <mat-icon class="vertical-align-middle padding-bottom-3 size-45">list_alt</mat-icon> My Reports
     </h1>
+  </div>
+
+  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+    <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
+
+      <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+        <button (click)="Redirectme('/new-report')" style="width: 100%;" class="mdc-elevation--z11" mat-fab extended
+          color="accent">
+          <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> New report
+        </button>
+
+      </div>
+
+      <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+        <button (click)="Redirectme('/import-report')" style="width: 100%;" class="mdc-elevation--z11" mat-fab extended
+          color="primary">
+          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
+        </button>
+
+      </div>
+
+    </div>
   </div>
 
 </div>
@@ -19,28 +44,8 @@
     </div>
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-      <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="flex-end">
-
-        <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-          <button (click)="Redirectme('/new-report')" style="width: 100%;" class="mdc-elevation--z11" mat-fab extended
-            color="accent">
-            <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> New report
-          </button>
-
-        </div>
-
-        <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-          <button (click)="Redirectme('/import-report')" style="width: 100%;" class="mdc-elevation--z11" mat-fab
-            extended color="primary">
-            <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
-          </button>
-
-
-        </div>
-
-      </div>
+      <mat-paginator color="accent" *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 50, 100]"
+        showFirstLastButtons></mat-paginator>
 
     </div>
   </div>
@@ -152,12 +157,6 @@
         {{msg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
       </div>
 
-    </div>
-
-    <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
-      <br *ngIf="dataSource.data.length != 0">
-      <mat-paginator color="accent" *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 20, 30]"
-        showFirstLastButtons></mat-paginator>
     </div>
 
   </div>
