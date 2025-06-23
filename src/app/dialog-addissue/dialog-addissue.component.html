@@ -13,6 +13,7 @@
           (ONLINE)</mat-option>
         <mat-option value="GHSA"><mat-icon color="accent">public</mat-icon> (GHSA) GitHub Advisory Database
           (ONLINE)</mat-option>
+        <mat-option value="AIVULNS">AI Systems Issues</mat-option>
         <mat-option value="CWE">CWE Research Concepts</mat-option>
         <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
         <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
@@ -113,6 +114,29 @@
             </mat-error>
           </mat-form-field>
         </div>
+
+        <div *ngIf="sourceSelect == 'AIVULNS'">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>AI category</mat-label>
+            <input cdkFocusInitial type="text" matInput placeholder="type: prompt" [formControl]="myAIVULNS"
+              [matAutocomplete]="auto11">
+            <mat-autocomplete #auto11="matAutocomplete">
+              <mat-option [title]="option.title" *ngFor="let option of filteredOptionsAIVULNS | async"
+                [value]="option.title">
+                {{option.title}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="myAIVULNS.hasError('notempty')">
+              <strong>Title must not be empty!</strong>
+            </mat-error>
+            <mat-error *ngIf="myAIVULNS.hasError('cantfind')">
+              <strong>Can not be found!</strong>
+            </mat-error>
+          </mat-form-field>
+          <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://www.microsoft.com/en-us/msrc/aibugbar">www.microsoft.com</a></small></span>
+        </div>
+
 
         <div *ngIf="sourceSelect == 'MMOBILE'">
           <mat-form-field class="example-full-width" color="accent">
@@ -342,6 +366,9 @@
     <button *ngIf="sourceSelect == 'OWASP_mobile'" mat-raised-button color="accent"
       (click)="addOWASP_mobile()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add OWASP
       Mobile Top 10</button>
+      <button *ngIf="sourceSelect == 'AIVULNS'" mat-raised-button color="accent"
+      (click)="addAIVULNS()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add AI Issue</button>
+
     &nbsp;
     <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
 
