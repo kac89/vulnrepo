@@ -1,0 +1,92 @@
+[
+    {
+        "title": "Inference Manipulation: Prompt Injection",
+        "poc": "",
+        "desc": "The ability to inject instructions that cause the model to generate unintended output resulting in a specific security impact.\n\nSecurity Impact\n\nAllows an attacker to exfiltrate another user’s data or perform privileged actions on behalf of another user, requiring no user interaction (e.g., zero click). Example: In an instruction-tuned language model, a textual prompt from an untrusted source contradicts the system prompt and is incorrectly prioritized above the system prompt, causing the model to change its behavior. ",
+        "severity": "Critical",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://arxiv.org/abs/2302.12173\nhttps://embracethered.com/blog/posts/2023/bing-chat-data-exfiltration-poc-and-fix/",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inference Manipulation: Input Perturbation",
+        "poc": "",
+        "desc": "The ability to perturb valid inputs such that the model produces incorrect outputs.\n\nAlso known as model evasion or adversarial examples.\n\nSecurity Impact\n\nAllows an attacker to exfiltrate another user’s data or perform privileged actions on behalf of another user, requiring no user interaction (e.g., zero click). \n\nExample: In an image classification model, an attacker perturbs the input image such that it is misclassified by the model. ",
+        "severity": "Critical",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://arxiv.org/abs/1312.6199\nhttps://arxiv.org/abs/1712.03141",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Model Manipulation: Model Poisoning or Data Poisoning",
+        "poc": "",
+        "desc": "The ability to poison the model by tampering with the model architecture, training code, hyperparameters, or training data.\n\nUse of impacted model\n\nUsed to make decisions that affect other users or generate content that is directly shown to other users.\n\nExample: An attacker adds poisoned data records to a dataset used to train or fine-tune a model, in order to introduce a backdoor (e.g., unintended model behavior that can be triggered by specific inputs). The trained model may be used by multiple users.",
+        "severity": "Critical",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://arxiv.org/abs/2302.10149",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inferential Information Disclosure: Targeting training data > Membership Inference",
+        "poc": "",
+        "desc": "The ability to infer whether specific data records, or groups of records, were part of the model’s training data.\n\nData classification of training data\n\nHighly Confidential or Confidential\n\nExample: An attacker guesses potential data records and then uses the outputs of the model to infer whether these were part of the training dataset, thus confirming the attacker’s guess. ",
+        "severity": "Medium",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://arxiv.org/abs/2112.03570",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inferential Information Disclosure: Targeting training data > Attribute Inference",
+        "poc": "",
+        "desc": "The ability to infer sensitive attributes of one or more records that were part of the training data.\n\nData classification of training data\n\nHighly Confidential or Confidential \n\nExample: An attacker guesses potential data records and then uses the outputs of the model to infer whether these were part of the training dataset, thus confirming the attacker’s guess. ",
+        "severity": "High",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://arxiv.org/abs/2112.03570\nhttps://arxiv.org/abs/2111.09679",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inferential Information Disclosure: Targeting training data > Training Data Reconstruction",
+        "poc": "",
+        "desc": "The ability to reconstruct individual data records from the training dataset.\n\nData classification of training data\n\nHighly Confidential or Confidential \n\nExample: An attacker can generate a sufficiently accurate copy of one or more records from the training data, which would not have been possible without access to the model. ",
+        "severity": "Medium",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://doi.org/10.1145/2810103.2813677\nhttps://arxiv.org/abs/2201.04845",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inferential Information Disclosure: Targeting training data > Property Inference",
+        "poc": "",
+        "desc": "The ability to infer sensitive properties about the training dataset.\n\nData classification of training data\n\nHighly Confidential or Confidential \n\nExample: An attacker can infer what proportion of data records in the training that belong to a sensitive class, which would not have been possible without access to the model. ",
+        "severity": "Medium",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://www.usenix.org/conference/usenixsecurity21/presentation/zhang-wanrong\nhttps://www.microsoft.com/en-us/research/publication/property-inference-from-poisoning/",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inferential Information Disclosure: Targeting model architecture/weights > Model Stealing",
+        "poc": "",
+        "desc": "The ability to infer/extract the architecture or weights of the trained model.\n\nData classification of model architecture/weights\n\nHighly Confidential or Confidential \n\nExample: An attacker is able to create a functionally equivalent copy of the target model using only inference responses from this model. ",
+        "severity": "Critical",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://arxiv.org/abs/1909.01838\nhttps://www.microsoft.com/en-us/research/publication/grey-box-extraction-of-natural-language-models/",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inferential Information Disclosure: Targeting prompt/inputs > Prompt Extraction",
+        "poc": "",
+        "desc": "The ability to extract or reconstruct the system prompt provided to the model by interacting with the model.\n\nData classification of system prompts/user input\n\nAny \n\nExample: In an instruction-tuned language model, an attacker uses a specially crafted input to cause the model to output (part of) its system prompt. ",
+        "severity": "Critical",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar\nhttps://arxiv.org/abs/2302.09923",
+        "cvss": "",
+        "cve": ""
+    },
+    {
+        "title": "Inferential Information Disclosure: Targeting prompt/inputs > Input Extraction",
+        "poc": "",
+        "desc": "The ability to extract or reconstruct other users’ inputs to the model.\n\nData classification of system prompts/user input\n\nHighly Confidential or Confidential \n\nExample: In an instruction-tuned language model, an attacker uses a specially crafted input that causes the model to reveal (part of) another user’s input to the attacker. ",
+        "severity": "Critical",
+        "ref": "https://www.microsoft.com/en-us/msrc/aibugbar",
+        "cvss": "",
+        "cve": ""
+    }
+]

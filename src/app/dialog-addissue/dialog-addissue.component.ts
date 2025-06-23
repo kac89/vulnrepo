@@ -68,6 +68,7 @@ export class DialogAddissueComponent implements OnInit {
   myOWASP2021 = new UntypedFormControl();
   myOWASPTOP10CICD = new UntypedFormControl();
   myOWASPTOP10k8s = new UntypedFormControl();
+  myAIVULNS = new UntypedFormControl();
   options: Vulns[] = [];
   mobileoptions: Vulns[] = [];
   optionsv: Vulns[] = [];
@@ -79,6 +80,7 @@ export class DialogAddissueComponent implements OnInit {
   owasptop2021: Vulns[] = [];
   OWASPTOP10CICD: Vulns[] = [];
   OWASPTOP10k8s: Vulns[] = [];
+  AIVULNS: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
   filteredOptionsmobile: Observable<Vulns[]>;
   filteredOptionsCWE: Observable<Vulns[]>;
@@ -89,6 +91,7 @@ export class DialogAddissueComponent implements OnInit {
   filteredOptionsOWASPtop2021: Observable<Vulns[]>;
   filteredOptionsOWASPTOP10CICD: Observable<Vulns[]>;
   filteredOptionsOWASPTOP10k8s: Observable<Vulns[]>;
+  filteredOptionsAIVULNS: Observable<Vulns[]>;
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
@@ -170,6 +173,14 @@ export class DialogAddissueComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filterOWASPTOP10k8s(title) : this.OWASPTOP10k8s.slice())
       );
+
+    this.filteredOptionsAIVULNS = this.myAIVULNS.valueChanges
+      .pipe(
+        startWith<string | Vulns>(''),
+        map(value => typeof value === 'string' ? value : value.title),
+        map(title => title ? this._filterAIVULNS(title) : this.AIVULNS.slice())
+      );
+
   }
 
   private _filter(name: string): Vulns[] {
@@ -231,6 +242,12 @@ export class DialogAddissueComponent implements OnInit {
     return this.OWASPTOP10k8s.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
+  private _filterAIVULNS(name: string): Vulns[] {
+    const filterValue = name.toLowerCase();
+    return this.AIVULNS.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
+
   ngOnInit() {
 
     this.indexeddbService.retrieveReportTemplates().then(ret => {
@@ -277,6 +294,10 @@ export class DialogAddissueComponent implements OnInit {
 
     this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date()).subscribe(res => {
       this.OWASPTOP10k8s = res;
+    });
+
+    this.http.get<any>('/assets/AIVULNS.json?v=' + + new Date()).subscribe(res => {
+      this.AIVULNS = res;
     });
 
   }
@@ -939,6 +960,42 @@ export class DialogAddissueComponent implements OnInit {
 
   }
 
+  addAIVULNS() {
+    const data = this.myAIVULNS.value;
+    if (data !== '' && data !== null) {
+      for (const key in this.AIVULNS) {
+        if (this.AIVULNS.hasOwnProperty(key)) {
+
+          if (this.AIVULNS[key].title === data) {
+            const def = {
+              title: this.AIVULNS[key].title,
+              poc: this.AIVULNS[key].poc,
+              files: [],
+              desc: this.AIVULNS[key].desc,
+              severity: this.AIVULNS[key].severity,
+              status: 1,
+              ref: this.AIVULNS[key].ref,
+              cvss: this.AIVULNS[key].cvss,
+              cvss_vector: '',
+              cve: this.AIVULNS[key].cve,
+              tags: [],
+              bounty: [],
+              date: this.getcurrentDate()
+            };
+            this.dialogRef.close(def);
+            break;
+
+          } else {
+            this.myAIVULNS.setErrors({ 'cantfind': true });
+          }
+
+        }
+      }
+    } else {
+      this.myAIVULNS.setErrors({ 'notempty': true });
+    }
+
+  }
 
   addOWASP_mobile() {
 
