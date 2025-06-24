@@ -27,7 +27,7 @@
         "cve": ""
     },
     {
-        "title": "Inferential Information Disclosure: Targeting training data > Membership Inference",
+        "title": "Inferential Information Disclosure: (Targeting training data) Membership Inference",
         "poc": "",
         "desc": "The ability to infer whether specific data records, or groups of records, were part of the model’s training data.\n\nData classification of training data\n\nHighly Confidential or Confidential\n\nExample: An attacker guesses potential data records and then uses the outputs of the model to infer whether these were part of the training dataset, thus confirming the attacker’s guess. ",
         "severity": "Medium",
@@ -36,7 +36,7 @@
         "cve": ""
     },
     {
-        "title": "Inferential Information Disclosure: Targeting training data > Attribute Inference",
+        "title": "Inferential Information Disclosure: (Targeting training data) Attribute Inference",
         "poc": "",
         "desc": "The ability to infer sensitive attributes of one or more records that were part of the training data.\n\nData classification of training data\n\nHighly Confidential or Confidential \n\nExample: An attacker guesses potential data records and then uses the outputs of the model to infer whether these were part of the training dataset, thus confirming the attacker’s guess. ",
         "severity": "High",
@@ -45,7 +45,7 @@
         "cve": ""
     },
     {
-        "title": "Inferential Information Disclosure: Targeting training data > Training Data Reconstruction",
+        "title": "Inferential Information Disclosure: (Targeting training data) Training Data Reconstruction",
         "poc": "",
         "desc": "The ability to reconstruct individual data records from the training dataset.\n\nData classification of training data\n\nHighly Confidential or Confidential \n\nExample: An attacker can generate a sufficiently accurate copy of one or more records from the training data, which would not have been possible without access to the model. ",
         "severity": "Medium",
@@ -54,7 +54,7 @@
         "cve": ""
     },
     {
-        "title": "Inferential Information Disclosure: Targeting training data > Property Inference",
+        "title": "Inferential Information Disclosure: (Targeting training data) Property Inference",
         "poc": "",
         "desc": "The ability to infer sensitive properties about the training dataset.\n\nData classification of training data\n\nHighly Confidential or Confidential \n\nExample: An attacker can infer what proportion of data records in the training that belong to a sensitive class, which would not have been possible without access to the model. ",
         "severity": "Medium",
@@ -63,7 +63,7 @@
         "cve": ""
     },
     {
-        "title": "Inferential Information Disclosure: Targeting model architecture/weights > Model Stealing",
+        "title": "Inferential Information Disclosure: (Targeting model architecture/weights) Model Stealing",
         "poc": "",
         "desc": "The ability to infer/extract the architecture or weights of the trained model.\n\nData classification of model architecture/weights\n\nHighly Confidential or Confidential \n\nExample: An attacker is able to create a functionally equivalent copy of the target model using only inference responses from this model. ",
         "severity": "Critical",
@@ -72,7 +72,7 @@
         "cve": ""
     },
     {
-        "title": "Inferential Information Disclosure: Targeting prompt/inputs > Prompt Extraction",
+        "title": "Inferential Information Disclosure: (Targeting prompt/inputs) Prompt Extraction",
         "poc": "",
         "desc": "The ability to extract or reconstruct the system prompt provided to the model by interacting with the model.\n\nData classification of system prompts/user input\n\nAny \n\nExample: In an instruction-tuned language model, an attacker uses a specially crafted input to cause the model to output (part of) its system prompt. ",
         "severity": "Critical",
@@ -81,7 +81,7 @@
         "cve": ""
     },
     {
-        "title": "Inferential Information Disclosure: Targeting prompt/inputs > Input Extraction",
+        "title": "Inferential Information Disclosure: (Targeting prompt/inputs) Input Extraction",
         "poc": "",
         "desc": "The ability to extract or reconstruct other users’ inputs to the model.\n\nData classification of system prompts/user input\n\nHighly Confidential or Confidential \n\nExample: In an instruction-tuned language model, an attacker uses a specially crafted input that causes the model to reveal (part of) another user’s input to the attacker. ",
         "severity": "Critical",

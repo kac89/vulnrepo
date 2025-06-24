@@ -113,7 +113,7 @@ export class DialogAddissueComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filter(title) : this.options.slice())
       );
-      this.filteredOptionsmobile = this.mobilecustomissueform.valueChanges
+    this.filteredOptionsmobile = this.mobilecustomissueform.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
@@ -263,7 +263,7 @@ export class DialogAddissueComponent implements OnInit {
     this.http.get<any>('/assets/owasp_mobile_2024.json?v=' + + new Date()).subscribe(res => {
       this.mobileoptions = res;
     });
-    
+
     this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
       this.cwe = res;
     });
@@ -421,10 +421,11 @@ export class DialogAddissueComponent implements OnInit {
   addIssueCWE() {
     const data = this.cwecontrol.value;
     if (data !== '' && data !== null) {
-      for (const key in this.cwe) {
-        if (this.cwe.hasOwnProperty(key)) {
 
-          if (this.cwe[key].title === data) {
+      let foundsh = false;
+      Object.keys(this.cwe).some(key => {
+
+        if (this.cwe[key].title === data) {
             const def = {
               title: this.cwe[key].title,
               poc: this.cwe[key].poc,
@@ -440,15 +441,18 @@ export class DialogAddissueComponent implements OnInit {
               bounty: [],
               date: this.getcurrentDate()
             };
+            foundsh = true;
             this.dialogRef.close(def);
-            break;
 
-          } else {
-            this.cwecontrol.setErrors({ 'cantfind': true });
           }
 
-        }
+      });
+
+      if (foundsh === false) {
+        this.cwecontrol.setErrors({ 'cantfind': true });
       }
+
+
     } else {
       this.cwecontrol.setErrors({ 'notempty': true });
     }
@@ -465,24 +469,24 @@ export class DialogAddissueComponent implements OnInit {
   }
 
   addGHSA() {
-    
+
     const data = this.myghsa.value;
 
-    
+
     if (data !== '' && data !== null) {
-      
+
       const reg = new RegExp(/GHSA(-[23456789cfghjmpqrvwx]{4}){3}/, 'i');
       if (reg.test(data)) {
 
         this.show = true;
 
         this.apiService.getGHSA(data).then(resp => {
-          
+
           if (resp !== null && resp !== undefined) {
 
             function prepseverity(text) {
 
-              if(text === 'moderate'){
+              if (text === 'moderate') {
                 text = "medium";
               }
 
@@ -675,34 +679,37 @@ export class DialogAddissueComponent implements OnInit {
 
     const data = this.mymobilemitre.value;
     if (data !== '' && data !== null) {
-      for (const key in this.mitremobile) {
-        if (this.mitremobile.hasOwnProperty(key)) {
 
-          if (this.mitremobile[key].title === data) {
-            const def = {
-              title: this.mitremobile[key].title,
-              poc: this.mitremobile[key].poc,
-              files: [],
-              desc: this.mitremobile[key].desc,
-              severity: this.mitremobile[key].severity,
-              status: 1,
-              ref: this.mitremobile[key].ref,
-              cvss: this.mitremobile[key].cvss,
-              cvss_vector: '',
-              cve: this.mitremobile[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            this.dialogRef.close(def);
-            break;
+      let foundsh = false;
+      Object.keys(this.mitremobile).some(key => {
 
-          } else {
-            this.mymobilemitre.setErrors({ 'cantfind': true });
-          }
+        if (this.mitremobile[key].title === data) {
+          const def = {
+            title: this.mitremobile[key].title,
+            poc: this.mitremobile[key].poc,
+            files: [],
+            desc: this.mitremobile[key].desc,
+            severity: this.mitremobile[key].severity,
+            status: 1,
+            ref: this.mitremobile[key].ref,
+            cvss: this.mitremobile[key].cvss,
+            cvss_vector: '',
+            cve: this.mitremobile[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
 
         }
+
+      });
+
+      if (foundsh === false) {
+        this.mymobilemitre.setErrors({ 'cantfind': true });
       }
+
     } else {
       this.mymobilemitre.setErrors({ 'notempty': true });
     }
@@ -714,34 +721,37 @@ export class DialogAddissueComponent implements OnInit {
 
     const data = this.myenterprisemitre.value;
     if (data !== '' && data !== null) {
-      for (const key in this.mitreenterprise) {
-        if (this.mitreenterprise.hasOwnProperty(key)) {
 
-          if (this.mitreenterprise[key].title === data) {
-            const def = {
-              title: this.mitreenterprise[key].title,
-              poc: this.mitreenterprise[key].poc,
-              files: [],
-              desc: this.mitreenterprise[key].desc,
-              severity: this.mitreenterprise[key].severity,
-              status: 1,
-              ref: this.mitreenterprise[key].ref,
-              cvss: this.mitreenterprise[key].cvss,
-              cvss_vector: '',
-              cve: this.mitreenterprise[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            this.dialogRef.close(def);
-            break;
+      let foundsh = false;
+      Object.keys(this.mitreenterprise).some(key => {
 
-          } else {
-            this.myenterprisemitre.setErrors({ 'cantfind': true });
-          }
+        if (this.mitreenterprise[key].title === data) {
+          const def = {
+            title: this.mitreenterprise[key].title,
+            poc: this.mitreenterprise[key].poc,
+            files: [],
+            desc: this.mitreenterprise[key].desc,
+            severity: this.mitreenterprise[key].severity,
+            status: 1,
+            ref: this.mitreenterprise[key].ref,
+            cvss: this.mitreenterprise[key].cvss,
+            cvss_vector: '',
+            cve: this.mitreenterprise[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
 
         }
+
+      });
+
+      if (foundsh === false) {
+        this.myenterprisemitre.setErrors({ 'cantfind': true });
       }
+
     } else {
       this.myenterprisemitre.setErrors({ 'notempty': true });
     }
@@ -814,34 +824,37 @@ export class DialogAddissueComponent implements OnInit {
   addOWASPtop2017() {
     const data = this.myOWASP2017.value;
     if (data !== '' && data !== null) {
-      for (const key in this.owasptop2017) {
-        if (this.owasptop2017.hasOwnProperty(key)) {
 
-          if (this.owasptop2017[key].title === data) {
-            const def = {
-              title: this.owasptop2017[key].title,
-              poc: this.owasptop2017[key].poc,
-              files: [],
-              desc: this.owasptop2017[key].desc,
-              severity: this.owasptop2017[key].severity,
-              status: 1,
-              ref: this.owasptop2017[key].ref,
-              cvss: this.owasptop2017[key].cvss,
-              cvss_vector: '',
-              cve: this.owasptop2017[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            this.dialogRef.close(def);
-            break;
+      let foundsh = false;
+      Object.keys(this.owasptop2017).some(key => {
 
-          } else {
-            this.myOWASP2017.setErrors({ 'cantfind': true });
-          }
+        if (this.owasptop2017[key].title === data) {
+          const def = {
+            title: this.owasptop2017[key].title,
+            poc: this.owasptop2017[key].poc,
+            files: [],
+            desc: this.owasptop2017[key].desc,
+            severity: this.owasptop2017[key].severity,
+            status: 1,
+            ref: this.owasptop2017[key].ref,
+            cvss: this.owasptop2017[key].cvss,
+            cvss_vector: '',
+            cve: this.owasptop2017[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
 
         }
+
+      });
+
+      if (foundsh === false) {
+        this.myOWASP2017.setErrors({ 'cantfind': true });
       }
+
     } else {
       this.myOWASP2017.setErrors({ 'notempty': true });
     }
@@ -851,34 +864,37 @@ export class DialogAddissueComponent implements OnInit {
   addOWASPtop2021() {
     const data = this.myOWASP2021.value;
     if (data !== '' && data !== null) {
-      for (const key in this.owasptop2021) {
-        if (this.owasptop2021.hasOwnProperty(key)) {
 
-          if (this.owasptop2021[key].title === data) {
-            const def = {
-              title: this.owasptop2021[key].title,
-              poc: this.owasptop2021[key].poc,
-              files: [],
-              desc: this.owasptop2021[key].desc,
-              severity: this.owasptop2021[key].severity,
-              status: 1,
-              ref: this.owasptop2021[key].ref,
-              cvss: this.owasptop2021[key].cvss,
-              cvss_vector: '',
-              cve: this.owasptop2021[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            this.dialogRef.close(def);
-            break;
+      let foundsh = false;
+      Object.keys(this.owasptop2021).some(key => {
 
-          } else {
-            this.myOWASP2021.setErrors({ 'cantfind': true });
-          }
+        if (this.owasptop2021[key].title === data) {
+          const def = {
+            title: this.owasptop2021[key].title,
+            poc: this.owasptop2021[key].poc,
+            files: [],
+            desc: this.owasptop2021[key].desc,
+            severity: this.owasptop2021[key].severity,
+            status: 1,
+            ref: this.owasptop2021[key].ref,
+            cvss: this.owasptop2021[key].cvss,
+            cvss_vector: '',
+            cve: this.owasptop2021[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
 
         }
+
+      });
+
+      if (foundsh === false) {
+        this.myOWASP2021.setErrors({ 'cantfind': true });
       }
+
     } else {
       this.myOWASP2021.setErrors({ 'notempty': true });
     }
@@ -889,34 +905,37 @@ export class DialogAddissueComponent implements OnInit {
   addOWASPTOP10CICD() {
     const data = this.myOWASPTOP10CICD.value;
     if (data !== '' && data !== null) {
-      for (const key in this.OWASPTOP10CICD) {
-        if (this.OWASPTOP10CICD.hasOwnProperty(key)) {
 
-          if (this.OWASPTOP10CICD[key].title === data) {
-            const def = {
-              title: this.OWASPTOP10CICD[key].title,
-              poc: this.OWASPTOP10CICD[key].poc,
-              files: [],
-              desc: this.OWASPTOP10CICD[key].desc,
-              severity: this.OWASPTOP10CICD[key].severity,
-              status: 1,
-              ref: this.OWASPTOP10CICD[key].ref,
-              cvss: this.OWASPTOP10CICD[key].cvss,
-              cvss_vector: '',
-              cve: this.OWASPTOP10CICD[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            this.dialogRef.close(def);
-            break;
+      let foundsh = false;
+      Object.keys(this.OWASPTOP10CICD).some(key => {
 
-          } else {
-            this.myOWASPTOP10CICD.setErrors({ 'cantfind': true });
-          }
+        if (this.OWASPTOP10CICD[key].title === data) {
+          const def = {
+            title: this.OWASPTOP10CICD[key].title,
+            poc: this.OWASPTOP10CICD[key].poc,
+            files: [],
+            desc: this.OWASPTOP10CICD[key].desc,
+            severity: this.OWASPTOP10CICD[key].severity,
+            status: 1,
+            ref: this.OWASPTOP10CICD[key].ref,
+            cvss: this.OWASPTOP10CICD[key].cvss,
+            cvss_vector: '',
+            cve: this.OWASPTOP10CICD[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
 
         }
+
+      });
+
+      if (foundsh === false) {
+        this.myOWASPTOP10CICD.setErrors({ 'cantfind': true });
       }
+
     } else {
       this.myOWASPTOP10CICD.setErrors({ 'notempty': true });
     }
@@ -926,34 +945,42 @@ export class DialogAddissueComponent implements OnInit {
   addOWASPTOP10k8s() {
     const data = this.myOWASPTOP10k8s.value;
     if (data !== '' && data !== null) {
-      for (const key in this.OWASPTOP10k8s) {
-        if (this.OWASPTOP10k8s.hasOwnProperty(key)) {
 
-          if (this.OWASPTOP10k8s[key].title === data) {
-            const def = {
-              title: this.OWASPTOP10k8s[key].title,
-              poc: this.OWASPTOP10k8s[key].poc,
-              files: [],
-              desc: this.OWASPTOP10k8s[key].desc,
-              severity: this.OWASPTOP10k8s[key].severity,
-              status: 1,
-              ref: this.OWASPTOP10k8s[key].ref,
-              cvss: this.OWASPTOP10k8s[key].cvss,
-              cvss_vector: '',
-              cve: this.OWASPTOP10k8s[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            this.dialogRef.close(def);
-            break;
 
-          } else {
-            this.myOWASPTOP10k8s.setErrors({ 'cantfind': true });
-          }
+      let foundsh = false;
+      Object.keys(this.OWASPTOP10k8s).some(key => {
+
+        if (this.OWASPTOP10k8s[key].title === data) {
+          const def = {
+            title: this.OWASPTOP10k8s[key].title,
+            poc: this.OWASPTOP10k8s[key].poc,
+            files: [],
+            desc: this.OWASPTOP10k8s[key].desc,
+            severity: this.OWASPTOP10k8s[key].severity,
+            status: 1,
+            ref: this.OWASPTOP10k8s[key].ref,
+            cvss: this.OWASPTOP10k8s[key].cvss,
+            cvss_vector: '',
+            cve: this.OWASPTOP10k8s[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
 
         }
+
+      });
+
+
+      if (foundsh === false) {
+        this.myOWASPTOP10k8s.setErrors({ 'cantfind': true });
       }
+
+
+
+
     } else {
       this.myOWASPTOP10k8s.setErrors({ 'notempty': true });
     }
@@ -963,34 +990,36 @@ export class DialogAddissueComponent implements OnInit {
   addAIVULNS() {
     const data = this.myAIVULNS.value;
     if (data !== '' && data !== null) {
-      for (const key in this.AIVULNS) {
-        if (this.AIVULNS.hasOwnProperty(key)) {
 
-          if (this.AIVULNS[key].title === data) {
-            const def = {
-              title: this.AIVULNS[key].title,
-              poc: this.AIVULNS[key].poc,
-              files: [],
-              desc: this.AIVULNS[key].desc,
-              severity: this.AIVULNS[key].severity,
-              status: 1,
-              ref: this.AIVULNS[key].ref,
-              cvss: this.AIVULNS[key].cvss,
-              cvss_vector: '',
-              cve: this.AIVULNS[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            this.dialogRef.close(def);
-            break;
-
-          } else {
-            this.myAIVULNS.setErrors({ 'cantfind': true });
-          }
-
+      let foundsh = false;
+      Object.keys(this.AIVULNS).some(key => {
+        if (this.AIVULNS[key].title === data) {
+          const def = {
+            title: this.AIVULNS[key].title,
+            poc: this.AIVULNS[key].poc,
+            files: [],
+            desc: this.AIVULNS[key].desc,
+            severity: this.AIVULNS[key].severity,
+            status: 1,
+            ref: this.AIVULNS[key].ref,
+            cvss: this.AIVULNS[key].cvss,
+            cvss_vector: '',
+            cve: this.AIVULNS[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
         }
+      });
+
+
+      if (foundsh === false) {
+        this.myAIVULNS.setErrors({ 'cantfind': true });
       }
+
+
     } else {
       this.myAIVULNS.setErrors({ 'notempty': true });
     }
@@ -1003,7 +1032,7 @@ export class DialogAddissueComponent implements OnInit {
       this.mobilechipsissue.push(this.mobilecustomissueform.value);
     }
 
-    let exitel:any[] = [];
+    let exitel: any[] = [];
     if (this.mobilechipsissue.length > 0) {
       for (var datael of this.mobilechipsissue) {
 
