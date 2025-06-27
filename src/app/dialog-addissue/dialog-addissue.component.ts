@@ -1,19 +1,20 @@
-import { Component, ElementRef, ViewChild, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatAutocompleteSelectedEvent, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { CurrentdateService } from '../currentdate.service';
 import { IndexeddbService } from '../indexeddb.service';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
-
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
 
 export interface Tags {
   name: string;
@@ -53,7 +54,7 @@ export interface PCITesting {
   templateUrl: './dialog-addissue.component.html',
   styleUrls: ['./dialog-addissue.component.scss'],
 })
-export class DialogAddissueComponent implements OnInit {
+export class DialogAddissueComponent implements OnInit, AfterViewInit {
   customissueform = new UntypedFormControl();
   mobilecustomissueform = new UntypedFormControl();
   gridaction = new UntypedFormControl();
@@ -64,13 +65,8 @@ export class DialogAddissueComponent implements OnInit {
   mymobilemitre = new UntypedFormControl();
   myenterprisemitre = new UntypedFormControl();
   myPCI = new UntypedFormControl();
-  myOWASP2017 = new UntypedFormControl();
-  myOWASP2021 = new UntypedFormControl();
-  myOWASPTOP10CICD = new UntypedFormControl();
-  myOWASPTOP10k8s = new UntypedFormControl();
-  myAIVULNS = new UntypedFormControl();
   options: Vulns[] = [];
-  mobileoptions: Vulns[] = [];
+
   optionsv: Vulns[] = [];
   cwe: Vulns[] = [];
   mitremobile: Vulns[] = [];
@@ -81,17 +77,17 @@ export class DialogAddissueComponent implements OnInit {
   OWASPTOP10CICD: Vulns[] = [];
   OWASPTOP10k8s: Vulns[] = [];
   AIVULNS: Vulns[] = [];
+  owaspmobile2024: Vulns[] = [];
   filteredOptions: Observable<Vulns[]>;
-  filteredOptionsmobile: Observable<Vulns[]>;
+
+  freeztype = true;
+
+
   filteredOptionsCWE: Observable<Vulns[]>;
   filteredOptionsmitremobile: Observable<Vulns[]>;
   filteredOptionsmitreenterprise: Observable<Vulns[]>;
   filteredOptionsPCIDSS: Observable<string[]>;
-  filteredOptionsOWASPtop2017: Observable<Vulns[]>;
-  filteredOptionsOWASPtop2021: Observable<Vulns[]>;
-  filteredOptionsOWASPTOP10CICD: Observable<Vulns[]>;
-  filteredOptionsOWASPTOP10k8s: Observable<Vulns[]>;
-  filteredOptionsAIVULNS: Observable<Vulns[]>;
+
   err_msg: string;
   sourceSelect = 'VULNREPO';
   show = false;
@@ -100,6 +96,12 @@ export class DialogAddissueComponent implements OnInit {
   chipsissue: string[] = [];
   mobilechipsissue: string[] = [];
   reportTemplateList_int: any[] = [];
+
+
+  displayedColumns: string[] = ['select', 'title'];
+
+  dataSource = new MatTableDataSource<any>([]);
+  selection = new SelectionModel<any>(true, []);
 
   constructor(public router: Router,
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
@@ -113,12 +115,7 @@ export class DialogAddissueComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filter(title) : this.options.slice())
       );
-    this.filteredOptionsmobile = this.mobilecustomissueform.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filtermobile(title) : this.mobileoptions.slice())
-      );
+
     this.filteredOptionsCWE = this.cwecontrol.valueChanges
       .pipe(
         startWith<string | Vulns>(''),
@@ -146,51 +143,45 @@ export class DialogAddissueComponent implements OnInit {
         map(value => this._filterPCI(value))
       );
 
-    this.filteredOptionsOWASPtop2017 = this.myOWASP2017.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filterOWASP2017(title) : this.owasptop2017.slice())
-      );
-
-    this.filteredOptionsOWASPtop2021 = this.myOWASP2021.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filterOWASP2021(title) : this.owasptop2021.slice())
-      );
-
-    this.filteredOptionsOWASPTOP10CICD = this.myOWASPTOP10CICD.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filterOWASPTOP10CICD(title) : this.OWASPTOP10CICD.slice())
-      );
-
-    this.filteredOptionsOWASPTOP10k8s = this.myOWASPTOP10k8s.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filterOWASPTOP10k8s(title) : this.OWASPTOP10k8s.slice())
-      );
-
-    this.filteredOptionsAIVULNS = this.myAIVULNS.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filterAIVULNS(title) : this.AIVULNS.slice())
-      );
-
   }
+
+  ngAfterViewInit() {
+    // this.freeztype = true;
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAllRows() {
+
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+
 
   private _filter(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
     return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
-  private _filtermobile(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.mobileoptions.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
+
   private _filterCWE(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
     return this.cwe.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
@@ -222,34 +213,8 @@ export class DialogAddissueComponent implements OnInit {
   }
   ////////////
 
-  private _filterOWASP2017(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.owasptop2017.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-  private _filterOWASP2021(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.owasptop2021.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-  private _filterOWASPTOP10CICD(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.OWASPTOP10CICD.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-  private _filterOWASPTOP10k8s(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.OWASPTOP10k8s.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-  private _filterAIVULNS(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.AIVULNS.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-
   ngOnInit() {
-
+    this.freeztype = true;
     this.indexeddbService.retrieveReportTemplates().then(ret => {
       if (ret) {
         this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
@@ -258,10 +223,6 @@ export class DialogAddissueComponent implements OnInit {
           this.getAPITemplates();
         });
       }
-    });
-
-    this.http.get<any>('/assets/owasp_mobile_2024.json?v=' + + new Date()).subscribe(res => {
-      this.mobileoptions = res;
     });
 
     this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
@@ -280,26 +241,30 @@ export class DialogAddissueComponent implements OnInit {
       this.pcidssv3 = res;
     });
 
-    this.http.get<any>('/assets/OWASPtop102017.json?v=' + + new Date()).subscribe(res => {
-      this.owasptop2017 = res;
-    });
+    this.retrieveSourcesTOP10();
+  }
 
-    this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date()).subscribe(res => {
-      this.owasptop2021 = res;
-    });
 
-    this.http.get<any>('/assets/OWASPtop10cicd.json?v=' + + new Date()).subscribe(res => {
-      this.OWASPTOP10CICD = res;
-    });
+  retrieveSourcesTOP10(): void {
+    const owasptop2017api = this.http.get<any>('/assets/OWASPtop102017.json?v=' + + new Date());
+    const owasptop2021api = this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date());
+    const OWASPTOP10CICDapi = this.http.get<any>('/assets/OWASPtop10cicd.json?v=' + + new Date());
+    const OWASPTOP10k8sapi = this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date());
+    const AIVULNSapi = this.http.get<any>('/assets/AIVULNS.json?v=' + + new Date());
+    const owaspmobile2024api = this.http.get<any>('/assets/owasp_mobile_2024.json?v=' + + new Date());
 
-    this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date()).subscribe(res => {
-      this.OWASPTOP10k8s = res;
-    });
-
-    this.http.get<any>('/assets/AIVULNS.json?v=' + + new Date()).subscribe(res => {
-      this.AIVULNS = res;
-    });
-
+    forkJoin([owasptop2017api, owasptop2021api, OWASPTOP10CICDapi, OWASPTOP10k8sapi, AIVULNSapi, owaspmobile2024api])
+      .subscribe(
+        result => {
+          this.owasptop2017 = result[0];
+          this.owasptop2021 = result[1];
+          this.OWASPTOP10CICD = result[2];
+          this.OWASPTOP10k8s = result[3];
+          this.AIVULNS = result[4];
+          this.owaspmobile2024 = result[5];
+          this.freeztype = false;
+        }
+      )
   }
 
   cancel(): void {
@@ -426,25 +391,25 @@ export class DialogAddissueComponent implements OnInit {
       Object.keys(this.cwe).some(key => {
 
         if (this.cwe[key].title === data) {
-            const def = {
-              title: this.cwe[key].title,
-              poc: this.cwe[key].poc,
-              files: [],
-              desc: this.cwe[key].desc,
-              severity: this.cwe[key].severity,
-              status: 1,
-              ref: this.cwe[key].ref,
-              cvss: this.cwe[key].cvss,
-              cvss_vector: '',
-              cve: this.cwe[key].cve,
-              tags: [],
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            foundsh = true;
-            this.dialogRef.close(def);
+          const def = {
+            title: this.cwe[key].title,
+            poc: this.cwe[key].poc,
+            files: [],
+            desc: this.cwe[key].desc,
+            severity: this.cwe[key].severity,
+            status: 1,
+            ref: this.cwe[key].ref,
+            cvss: this.cwe[key].cvss,
+            cvss_vector: '',
+            cve: this.cwe[key].cve,
+            tags: [],
+            bounty: [],
+            date: this.getcurrentDate()
+          };
+          foundsh = true;
+          this.dialogRef.close(def);
 
-          }
+        }
 
       });
 
@@ -466,6 +431,31 @@ export class DialogAddissueComponent implements OnInit {
   changeselect() {
     this.err_msg = '';
     this.show = false;
+    this.selection.clear();
+
+    if (this.sourceSelect === 'OWASP_mobile') {
+      this.dataSource.data = this.owaspmobile2024;
+    }
+
+    if (this.sourceSelect === 'OWASPTOP10k8s') {
+      this.dataSource.data = this.OWASPTOP10k8s;
+    }
+
+    if (this.sourceSelect === 'AIVULNS') {
+      this.dataSource.data = this.AIVULNS;
+    }
+
+    if (this.sourceSelect === 'OWASPTOP2021') {
+      this.dataSource.data = this.owasptop2021;
+    }
+
+    if (this.sourceSelect === 'OWASPTOP2017') {
+      this.dataSource.data = this.owasptop2017;
+    }
+
+    if (this.sourceSelect === 'OWASPTOP10CICD') {
+      this.dataSource.data = this.OWASPTOP10CICD;
+    }
   }
 
   addGHSA() {
@@ -820,308 +810,36 @@ export class DialogAddissueComponent implements OnInit {
 
   }
 
-
-  addOWASPtop2017() {
-    const data = this.myOWASP2017.value;
-    if (data !== '' && data !== null) {
-
-      let foundsh = false;
-      Object.keys(this.owasptop2017).some(key => {
-
-        if (this.owasptop2017[key].title === data) {
-          const def = {
-            title: this.owasptop2017[key].title,
-            poc: this.owasptop2017[key].poc,
-            files: [],
-            desc: this.owasptop2017[key].desc,
-            severity: this.owasptop2017[key].severity,
-            status: 1,
-            ref: this.owasptop2017[key].ref,
-            cvss: this.owasptop2017[key].cvss,
-            cvss_vector: '',
-            cve: this.owasptop2017[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-
-        }
-
-      });
-
-      if (foundsh === false) {
-        this.myOWASP2017.setErrors({ 'cantfind': true });
-      }
-
-    } else {
-      this.myOWASP2017.setErrors({ 'notempty': true });
-    }
-
-  }
-
-  addOWASPtop2021() {
-    const data = this.myOWASP2021.value;
-    if (data !== '' && data !== null) {
-
-      let foundsh = false;
-      Object.keys(this.owasptop2021).some(key => {
-
-        if (this.owasptop2021[key].title === data) {
-          const def = {
-            title: this.owasptop2021[key].title,
-            poc: this.owasptop2021[key].poc,
-            files: [],
-            desc: this.owasptop2021[key].desc,
-            severity: this.owasptop2021[key].severity,
-            status: 1,
-            ref: this.owasptop2021[key].ref,
-            cvss: this.owasptop2021[key].cvss,
-            cvss_vector: '',
-            cve: this.owasptop2021[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-
-        }
-
-      });
-
-      if (foundsh === false) {
-        this.myOWASP2021.setErrors({ 'cantfind': true });
-      }
-
-    } else {
-      this.myOWASP2021.setErrors({ 'notempty': true });
-    }
-
-  }
-
-
-  addOWASPTOP10CICD() {
-    const data = this.myOWASPTOP10CICD.value;
-    if (data !== '' && data !== null) {
-
-      let foundsh = false;
-      Object.keys(this.OWASPTOP10CICD).some(key => {
-
-        if (this.OWASPTOP10CICD[key].title === data) {
-          const def = {
-            title: this.OWASPTOP10CICD[key].title,
-            poc: this.OWASPTOP10CICD[key].poc,
-            files: [],
-            desc: this.OWASPTOP10CICD[key].desc,
-            severity: this.OWASPTOP10CICD[key].severity,
-            status: 1,
-            ref: this.OWASPTOP10CICD[key].ref,
-            cvss: this.OWASPTOP10CICD[key].cvss,
-            cvss_vector: '',
-            cve: this.OWASPTOP10CICD[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-
-        }
-
-      });
-
-      if (foundsh === false) {
-        this.myOWASPTOP10CICD.setErrors({ 'cantfind': true });
-      }
-
-    } else {
-      this.myOWASPTOP10CICD.setErrors({ 'notempty': true });
-    }
-
-  }
-
-  addOWASPTOP10k8s() {
-    const data = this.myOWASPTOP10k8s.value;
-    if (data !== '' && data !== null) {
-
-
-      let foundsh = false;
-      Object.keys(this.OWASPTOP10k8s).some(key => {
-
-        if (this.OWASPTOP10k8s[key].title === data) {
-          const def = {
-            title: this.OWASPTOP10k8s[key].title,
-            poc: this.OWASPTOP10k8s[key].poc,
-            files: [],
-            desc: this.OWASPTOP10k8s[key].desc,
-            severity: this.OWASPTOP10k8s[key].severity,
-            status: 1,
-            ref: this.OWASPTOP10k8s[key].ref,
-            cvss: this.OWASPTOP10k8s[key].cvss,
-            cvss_vector: '',
-            cve: this.OWASPTOP10k8s[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-
-        }
-
-      });
-
-
-      if (foundsh === false) {
-        this.myOWASPTOP10k8s.setErrors({ 'cantfind': true });
-      }
-
-
-
-
-    } else {
-      this.myOWASPTOP10k8s.setErrors({ 'notempty': true });
-    }
-
-  }
-
-  addAIVULNS() {
-    const data = this.myAIVULNS.value;
-    if (data !== '' && data !== null) {
-
-      let foundsh = false;
-      Object.keys(this.AIVULNS).some(key => {
-        if (this.AIVULNS[key].title === data) {
-          const def = {
-            title: this.AIVULNS[key].title,
-            poc: this.AIVULNS[key].poc,
-            files: [],
-            desc: this.AIVULNS[key].desc,
-            severity: this.AIVULNS[key].severity,
-            status: 1,
-            ref: this.AIVULNS[key].ref,
-            cvss: this.AIVULNS[key].cvss,
-            cvss_vector: '',
-            cve: this.AIVULNS[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-        }
-      });
-
-
-      if (foundsh === false) {
-        this.myAIVULNS.setErrors({ 'cantfind': true });
-      }
-
-
-    } else {
-      this.myAIVULNS.setErrors({ 'notempty': true });
-    }
-
-  }
-
-  addOWASP_mobile() {
-
-    if (this.mobilecustomissueform.value !== "" && this.mobilecustomissueform.value !== null) {
-      this.mobilechipsissue.push(this.mobilecustomissueform.value);
-    }
+  addtop10(items) {
 
     let exitel: any[] = [];
-    if (this.mobilechipsissue.length > 0) {
-      for (var datael of this.mobilechipsissue) {
+    if (items.length > 0) {
+      for (var datael of items) {
 
-        const found = this.mobileoptions.find((obj) => {
-          return obj.title === datael;
-        });
+        const def = {
+          title: datael.title,
+          poc: datael.poc,
+          files: [],
+          desc: datael.desc,
+          severity: datael.severity,
+          status: 1,
+          ref: datael.ref,
+          cvss: datael.cvss,
+          cvss_vector: "",
+          cve: datael.cve,
+          tags: [],
+          bounty: [],
+          date: this.getcurrentDate()
+        };
+        exitel.push(def);
 
-        if (found !== undefined) {
-
-          if (found.title === datael) {
-            const def = {
-              title: found.title,
-              poc: found.poc,
-              files: [],
-              desc: found.desc,
-              severity: found.severity,
-              status: 1,
-              ref: found.ref,
-              cvss: found.cvss,
-              cvss_vector: found.cvss_vector,
-              cve: found.cve,
-              tags: found.tags,
-              bounty: [],
-              date: this.getcurrentDate()
-            };
-            exitel.push(def);
-
-          }
-
-
-        } else {
-
-          const def = {
-            title: datael,
-            poc: '',
-            files: [],
-            desc: '',
-            severity: 'High',
-            status: 1,
-            ref: '',
-            cvss: 7,
-            cvss_vector: '',
-            cve: '',
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          exitel.push(def);
-        }
       }
 
       this.dialogRef.close(exitel);
 
 
-    } else {
-      this.customissueform.setErrors({ 'notempty': true });
-      this.gridaction.setErrors({ 'notempty': true });
     }
 
-  }
-
-  addmobile(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
-    if (value) {
-      this.mobilechipsissue.push(value);
-    }
-
-    // Clear the input value
-    event.chipInput!.clear();
-
-    this.mobilecustomissueform.setValue('');
-  }
-
-  removemobile(item: string): void {
-    const index = this.mobilechipsissue.indexOf(item);
-
-    if (index >= 0) {
-      this.mobilechipsissue.splice(index, 1);
-
-      this.announcer.announce(`Removed ${item}`);
-    }
-  }
-
-  mobileselected(event: MatAutocompleteSelectedEvent): void {
-    this.mobilechipsissue.push(event.option.viewValue);
-    //this.fruitInput.nativeElement.value = '';
-    this.mobilecustomissueform.setValue('');
   }
 
   add(event: MatChipInputEvent): void {

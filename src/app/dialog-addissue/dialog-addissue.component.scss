@@ -7,3 +7,16 @@
   .example-full-width {
     width: 100%;
   }
+
+
+.mat-mdc-header-cell:first-child,.mat-mdc-cell:first-child{
+  flex:5%;
+  text-align: center;
+  justify-content: center;
+}
+.mat-mdc-header-cell:nth-child(1),.mat-mdc-cell:nth-child(1){
+  flex:95%;
+  text-align: left;
+  justify-content: flex-start;
+  padding: 0 5px;
+}
