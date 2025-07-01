@@ -61,7 +61,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   mobilecustomissueform = new UntypedFormControl();
   gridaction = new UntypedFormControl();
   mobilegridaction = new UntypedFormControl();
-
+  filterinput = new UntypedFormControl();
   mycve = new UntypedFormControl();
   myghsa = new UntypedFormControl();
   mymobilemitre = new UntypedFormControl();
@@ -400,9 +400,11 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     this.err_msg = '';
     this.show = false;
     this.hidecwe = true;
-    this.selection.clear();
+    
     this.dataSource.data = [];
     this.setDataSourceAttributes();
+    this.filterinput.setValue("");
+    this.dataSource.filter = "";
 
 
     if (this.sourceSelect === 'OWASP_mobile') {
