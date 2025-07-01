@@ -405,7 +405,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     this.setDataSourceAttributes();
     this.filterinput.setValue("");
     this.dataSource.filter = "";
-
+    this.selection.clear();
 
     if (this.sourceSelect === 'OWASP_mobile') {
       this.dataSource.data = this.owaspmobile2024;
