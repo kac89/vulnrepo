@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormControl } from '@angular/forms';
@@ -15,6 +15,8 @@ import { IndexeddbService } from '../indexeddb.service';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 export interface Tags {
   name: string;
@@ -59,7 +61,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   mobilecustomissueform = new UntypedFormControl();
   gridaction = new UntypedFormControl();
   mobilegridaction = new UntypedFormControl();
-  cwecontrol = new UntypedFormControl();
+
   mycve = new UntypedFormControl();
   myghsa = new UntypedFormControl();
   mymobilemitre = new UntypedFormControl();
@@ -81,7 +83,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   filteredOptions: Observable<Vulns[]>;
 
   freeztype = true;
-
+  hidecwe = true;
 
   filteredOptionsCWE: Observable<Vulns[]>;
   filteredOptionsmitremobile: Observable<Vulns[]>;
@@ -102,6 +104,23 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<any>([]);
   selection = new SelectionModel<any>(true, []);
+  private paginator: MatPaginator;
+  private sort: MatSort;
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+
+  setDataSourceAttributes() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 
   constructor(public router: Router,
     public dialogRef: MatDialogRef<DialogAddissueComponent>, private http: HttpClient,
@@ -114,13 +133,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filter(title) : this.options.slice())
-      );
-
-    this.filteredOptionsCWE = this.cwecontrol.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filterCWE(title) : this.cwe.slice())
       );
 
     this.filteredOptionsmitremobile = this.mymobilemitre.valueChanges
@@ -146,17 +158,25 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.freeztype = true;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   toggleAllRows() {
 
     if (this.isAllSelected()) {
@@ -167,7 +187,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     this.selection.select(...this.dataSource.data);
   }
 
-  /** The label for the checkbox on the passed row */
   checkboxLabel(row?): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -175,16 +194,9 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-
-
   private _filter(name: string): Vulns[] {
     const filterValue = name.toLowerCase();
     return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-  private _filterCWE(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.cwe.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
   private _filtermitremobile(name: string): Vulns[] {
@@ -225,10 +237,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
-      this.cwe = res;
-    });
-
     this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
       this.mitremobile = res;
     });
@@ -252,8 +260,9 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     const OWASPTOP10k8sapi = this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date());
     const AIVULNSapi = this.http.get<any>('/assets/AIVULNS.json?v=' + + new Date());
     const owaspmobile2024api = this.http.get<any>('/assets/owasp_mobile_2024.json?v=' + + new Date());
+    const cweapi = this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date());
 
-    forkJoin([owasptop2017api, owasptop2021api, OWASPTOP10CICDapi, OWASPTOP10k8sapi, AIVULNSapi, owaspmobile2024api])
+    forkJoin([owasptop2017api, owasptop2021api, OWASPTOP10CICDapi, OWASPTOP10k8sapi, AIVULNSapi, owaspmobile2024api, cweapi])
       .subscribe(
         result => {
           this.owasptop2017 = result[0];
@@ -262,6 +271,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
           this.OWASPTOP10k8s = result[3];
           this.AIVULNS = result[4];
           this.owaspmobile2024 = result[5];
+          this.cwe = result[6];
           this.freeztype = false;
         }
       )
@@ -382,48 +392,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
 
   }
 
-
-  addIssueCWE() {
-    const data = this.cwecontrol.value;
-    if (data !== '' && data !== null) {
-
-      let foundsh = false;
-      Object.keys(this.cwe).some(key => {
-
-        if (this.cwe[key].title === data) {
-          const def = {
-            title: this.cwe[key].title,
-            poc: this.cwe[key].poc,
-            files: [],
-            desc: this.cwe[key].desc,
-            severity: this.cwe[key].severity,
-            status: 1,
-            ref: this.cwe[key].ref,
-            cvss: this.cwe[key].cvss,
-            cvss_vector: '',
-            cve: this.cwe[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-
-        }
-
-      });
-
-      if (foundsh === false) {
-        this.cwecontrol.setErrors({ 'cantfind': true });
-      }
-
-
-    } else {
-      this.cwecontrol.setErrors({ 'notempty': true });
-    }
-
-  }
-
   displayFn(template?: Vulns): string | undefined {
     return template ? template.title : undefined;
   }
@@ -431,7 +399,11 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   changeselect() {
     this.err_msg = '';
     this.show = false;
+    this.hidecwe = true;
     this.selection.clear();
+    this.dataSource.data = [];
+    this.setDataSourceAttributes();
+
 
     if (this.sourceSelect === 'OWASP_mobile') {
       this.dataSource.data = this.owaspmobile2024;
@@ -455,6 +427,15 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
 
     if (this.sourceSelect === 'OWASPTOP10CICD') {
       this.dataSource.data = this.OWASPTOP10CICD;
+    }
+
+    if (this.sourceSelect === 'CWE') {
+
+      this.hidecwe = false;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.data = this.cwe;
+
     }
   }
 
