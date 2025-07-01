@@ -84,7 +84,7 @@
 
         <mat-form-field class="example-full-width" color="accent">
           <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="type: CWE-20 or bypass, injection" #input>
+          <input [formControl]="filterinput" matInput (keyup)="applyFilter($event)" placeholder="type: CWE-20 or bypass, injection" #input>
         </mat-form-field>
 
 
