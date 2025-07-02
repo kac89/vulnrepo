@@ -64,8 +64,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   filterinput = new UntypedFormControl();
   mycve = new UntypedFormControl();
   myghsa = new UntypedFormControl();
-  mymobilemitre = new UntypedFormControl();
-  myenterprisemitre = new UntypedFormControl();
+
   myPCI = new UntypedFormControl();
   options: Vulns[] = [];
 
@@ -85,9 +84,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   freeztype = true;
   hidecwe = true;
 
-  filteredOptionsCWE: Observable<Vulns[]>;
-  filteredOptionsmitremobile: Observable<Vulns[]>;
-  filteredOptionsmitreenterprise: Observable<Vulns[]>;
   filteredOptionsPCIDSS: Observable<string[]>;
 
   err_msg: string;
@@ -99,8 +95,8 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   mobilechipsissue: string[] = [];
   reportTemplateList_int: any[] = [];
 
-
   displayedColumns: string[] = ['select', 'title'];
+  placeholder = "";
 
   dataSource = new MatTableDataSource<any>([]);
   selection = new SelectionModel<any>(true, []);
@@ -133,20 +129,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
         startWith<string | Vulns>(''),
         map(value => typeof value === 'string' ? value : value.title),
         map(title => title ? this._filter(title) : this.options.slice())
-      );
-
-    this.filteredOptionsmitremobile = this.mymobilemitre.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filtermitremobile(title) : this.mitremobile.slice())
-      );
-
-    this.filteredOptionsmitreenterprise = this.myenterprisemitre.valueChanges
-      .pipe(
-        startWith<string | Vulns>(''),
-        map(value => typeof value === 'string' ? value : value.title),
-        map(title => title ? this._filtermitreenterprise(title) : this.mitreenterprise.slice())
       );
 
     this.filteredOptionsPCIDSS = this.myPCI.valueChanges
@@ -199,16 +181,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     return this.options.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
-  private _filtermitremobile(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.mitremobile.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-  private _filtermitreenterprise(name: string): Vulns[] {
-    const filterValue = name.toLowerCase();
-    return this.mitreenterprise.filter(option => option.title.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
   ////////////
   private _filterPCI(value: string): string[] {
     if (value) {
@@ -237,14 +209,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
-      this.mitremobile = res;
-    });
-
-    this.http.get<any>('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
-      this.mitreenterprise = res;
-    });
-
     this.http.get<any>('/assets/pcidssv3.2.1.json?v=' + + new Date()).subscribe(res => {
       this.pcidssv3 = res;
     });
@@ -261,8 +225,10 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     const AIVULNSapi = this.http.get<any>('/assets/AIVULNS.json?v=' + + new Date());
     const owaspmobile2024api = this.http.get<any>('/assets/owasp_mobile_2024.json?v=' + + new Date());
     const cweapi = this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date());
+    const mitreenterpriseapi = this.http.get<any>('/assets/enterprise-attack.json?v=' + + new Date());
+    const mitremobileapi = this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date());
 
-    forkJoin([owasptop2017api, owasptop2021api, OWASPTOP10CICDapi, OWASPTOP10k8sapi, AIVULNSapi, owaspmobile2024api, cweapi])
+    forkJoin([owasptop2017api, owasptop2021api, OWASPTOP10CICDapi, OWASPTOP10k8sapi, AIVULNSapi, owaspmobile2024api, cweapi, mitreenterpriseapi, mitremobileapi])
       .subscribe(
         result => {
           this.owasptop2017 = result[0];
@@ -272,6 +238,8 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
           this.AIVULNS = result[4];
           this.owaspmobile2024 = result[5];
           this.cwe = result[6];
+          this.mitreenterprise = result[7];
+          this.mitremobile = result[8];
           this.freeztype = false;
         }
       )
@@ -437,8 +405,30 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.dataSource.data = this.cwe;
+      this.placeholder = "type: CWE-20 or bypass, injection";
 
     }
+
+    if (this.sourceSelect === 'MENTERPRISE') {
+
+      this.hidecwe = false;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.data = this.mitreenterprise;
+      this.placeholder = "e.g.: DNS Server";
+
+    }
+
+    if (this.sourceSelect === 'MMOBILE') {
+
+      this.hidecwe = false;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.data = this.mitremobile;
+      this.placeholder = "e.g.: Application Discovery";
+
+    }
+
   }
 
   addGHSA() {
@@ -645,90 +635,6 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
       this.show = false;
       this.mycve.setErrors({ 'notempty': true });
     }
-
-  }
-
-  addattackMobile() {
-
-    const data = this.mymobilemitre.value;
-    if (data !== '' && data !== null) {
-
-      let foundsh = false;
-      Object.keys(this.mitremobile).some(key => {
-
-        if (this.mitremobile[key].title === data) {
-          const def = {
-            title: this.mitremobile[key].title,
-            poc: this.mitremobile[key].poc,
-            files: [],
-            desc: this.mitremobile[key].desc,
-            severity: this.mitremobile[key].severity,
-            status: 1,
-            ref: this.mitremobile[key].ref,
-            cvss: this.mitremobile[key].cvss,
-            cvss_vector: '',
-            cve: this.mitremobile[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-
-        }
-
-      });
-
-      if (foundsh === false) {
-        this.mymobilemitre.setErrors({ 'cantfind': true });
-      }
-
-    } else {
-      this.mymobilemitre.setErrors({ 'notempty': true });
-    }
-
-
-  }
-
-  addattackEnterprise() {
-
-    const data = this.myenterprisemitre.value;
-    if (data !== '' && data !== null) {
-
-      let foundsh = false;
-      Object.keys(this.mitreenterprise).some(key => {
-
-        if (this.mitreenterprise[key].title === data) {
-          const def = {
-            title: this.mitreenterprise[key].title,
-            poc: this.mitreenterprise[key].poc,
-            files: [],
-            desc: this.mitreenterprise[key].desc,
-            severity: this.mitreenterprise[key].severity,
-            status: 1,
-            ref: this.mitreenterprise[key].ref,
-            cvss: this.mitreenterprise[key].cvss,
-            cvss_vector: '',
-            cve: this.mitreenterprise[key].cve,
-            tags: [],
-            bounty: [],
-            date: this.getcurrentDate()
-          };
-          foundsh = true;
-          this.dialogRef.close(def);
-
-        }
-
-      });
-
-      if (foundsh === false) {
-        this.myenterprisemitre.setErrors({ 'cantfind': true });
-      }
-
-    } else {
-      this.myenterprisemitre.setErrors({ 'notempty': true });
-    }
-
 
   }
 
