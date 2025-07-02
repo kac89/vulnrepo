@@ -15,14 +15,15 @@
           (ONLINE)</mat-option>
         <mat-option value="AIVULNS">AI Systems Issues</mat-option>
         <mat-option value="CWE">CWE Research Concepts</mat-option>
-        <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-        <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
-        <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
         <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
         <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
         <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
         <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
         <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
+        <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
+        <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+        <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+
       </mat-select>
     </mat-form-field>
   </mat-card-header>
@@ -61,30 +62,10 @@
 
 
       <div [hidden]="hidecwe">
-        <!-- 
-        
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>CWE title</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="type: CWE-20 or bypass, injection"
-            [formControl]="cwecontrol" [matAutocomplete]="auto2">
-          <mat-autocomplete #auto2="matAutocomplete">
-            <mat-option [title]="option.title" *ngFor="let option of filteredOptionsCWE | async" [value]="option.title">
-              {{option.title}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="cwecontrol.hasError('notempty')">
-            <strong>Title must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="cwecontrol.hasError('cantfind')">
-            <strong>Can not be found!</strong>
-          </mat-error>
-        </mat-form-field>
-        
-        -->
 
         <mat-form-field class="example-full-width" color="accent">
           <mat-label>Filter</mat-label>
-          <input [formControl]="filterinput" matInput (keyup)="applyFilter($event)" placeholder="type: CWE-20 or bypass, injection" #input>
+          <input [formControl]="filterinput" matInput (keyup)="applyFilter($event)" [placeholder]="placeholder" #input>
         </mat-form-field>
 
 
@@ -158,51 +139,6 @@
             <strong>GHSA not found!</strong>
           </mat-error>
         </mat-form-field>
-      </div>
-
-
-      <div *ngIf="sourceSelect == 'MMOBILE'">
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>ATT&CK Mobile</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="e.g.: Application Discovery"
-            [formControl]="mymobilemitre" [matAutocomplete]="auto3">
-          <mat-autocomplete #auto3="matAutocomplete">
-            <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitremobile | async"
-              [value]="option.title">
-              {{option.title}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="mymobilemitre.hasError('notempty')">
-            <strong>Title must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="mymobilemitre.hasError('cantfind')">
-            <strong>Can not be found!</strong>
-          </mat-error>
-        </mat-form-field>
-        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
-              href="https://attack.mitre.org/techniques/mobile/">attack.mitre.org</a></small></span>
-      </div>
-
-      <div *ngIf="sourceSelect == 'MENTERPRISE'">
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>ATT&CK Enterprise</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="e.g.: DNS Server" [formControl]="myenterprisemitre"
-            [matAutocomplete]="auto4">
-          <mat-autocomplete #auto4="matAutocomplete">
-            <mat-option [title]="option.title" *ngFor="let option of filteredOptionsmitreenterprise | async"
-              [value]="option.title">
-              {{option.title}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="myenterprisemitre.hasError('notempty')">
-            <strong>Title must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="myenterprisemitre.hasError('cantfind')">
-            <strong>Can not be found!</strong>
-          </mat-error>
-        </mat-form-field>
-        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
-              href="https://attack.mitre.org/techniques/enterprise/">attack.mitre.org</a></small></span>
       </div>
 
       <div *ngIf="sourceSelect == 'PCIDSS'">
@@ -293,16 +229,11 @@
         class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CVE</button>
     <button *ngIf="sourceSelect == 'GHSA'" mat-raised-button color="accent" (click)="addGHSA()"><mat-icon
         class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from GHSA</button>
-    <button *ngIf="sourceSelect == 'MMOBILE'" mat-raised-button color="accent" (click)="addattackMobile()"><mat-icon
-        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from ATT&CK Mobile</button>
-    <button *ngIf="sourceSelect == 'MENTERPRISE'" mat-raised-button color="accent"
-      (click)="addattackEnterprise()"><mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from
-      ATT&CK Enterprise</button>
     <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon
         class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
     <div *ngIf="selection.selected.length > 0">
       <button
-        *ngIf="sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE'"
+        *ngIf="sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE' || sourceSelect == 'MENTERPRISE' || sourceSelect == 'MMOBILE'"
         mat-raised-button color="accent" (click)="addtop10(selection.selected)"><mat-icon
           class="vertical-align-middle padding-bottom-3">add</mat-icon>
         Add
