@@ -51,7 +51,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
             <br>
-            <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            <mat-paginator color="accent" #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
                 aria-label="Select page of periodic elements">
             </mat-paginator>
 
@@ -61,10 +61,8 @@
     <mat-dialog-actions>
 
         <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
-            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-
-
-            </div>
+            <div cdkFocusInitial fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center"></div>
+            
             <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
 
                 <button mat-raised-button mat-dialog-close color="primary">Close</button>

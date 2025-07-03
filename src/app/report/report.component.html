@@ -30,7 +30,7 @@
             *ngIf="report_source_api" color="accent">public</mat-icon></p>
         <p *ngIf="decryptedReportDataChanged">Report Version: <b
             class="labelversion">{{decryptedReportDataChanged?.report_version}}</b>
-          &nbsp;&nbsp;<button mat-button (click)="showHistory(reportdesc.report_id)">
+          &nbsp;&nbsp;<button matButton="outlined" (click)="showHistory(reportdesc.report_id)">
             <mat-icon class="vertical-align-middle padding-bottom-3">history</mat-icon> History</button>
         </p>
         <p *ngIf="!report_decryption_in_progress">Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
