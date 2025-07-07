@@ -150,13 +150,22 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     return numSelected === numRows;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(event) {
 
+    const filterValue = (event.target as HTMLInputElement).value;
+    if (event.keyCode === 8 || event.keyCode === 13 || event.keyCode === 32) {
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+        this.selection.clear();
+      }
+    }
+
+    this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+
   }
 
   toggleAllRows() {
@@ -166,7 +175,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.dataSource.filteredData);
   }
 
   checkboxLabel(row?): string {
@@ -368,7 +377,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     this.err_msg = '';
     this.show = false;
     this.hidecwe = true;
-    
+
     this.dataSource.data = [];
     this.setDataSourceAttributes();
     this.filterinput.setValue("");
