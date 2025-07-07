@@ -153,26 +153,18 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   applyFilter(event) {
 
     const filterValue = (event.target as HTMLInputElement).value;
-
     if (event.keyCode === 8 || event.keyCode === 13 || event.keyCode === 32) {
       this.dataSource.filter = filterValue.trim().toLowerCase();
-      this.dataSource.data = this.dataSource.filteredData;
       if (this.dataSource.paginator) {
         this.dataSource.paginator.firstPage();
         this.selection.clear();
       }
     }
 
-    if (filterValue === '') {
-      this.dataSource.data = this.cwe;
-    } else {
-      this.dataSource.filter = filterValue.trim().toLowerCase();
-      this.dataSource.data = this.dataSource.filteredData;
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
-
 
   }
 
@@ -183,8 +175,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
       return;
     }
 
-
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.dataSource.filteredData);
   }
 
   checkboxLabel(row?): string {
