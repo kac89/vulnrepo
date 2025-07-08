@@ -314,8 +314,6 @@ export class DialogImportComponent implements OnInit {
     }
   }
 
-
-
   parseBurp(xml) {
 
     function returnhost(host, path) {
@@ -324,13 +322,6 @@ export class DialogImportComponent implements OnInit {
         ret = ret + res.$.ip + ' ' + res._ + path[key] + '\n';
       });
       return ret;
-    }
-
-
-    function stripHtml(html) {
-      let tmp = document.createElement("DIV");
-      tmp.innerHTML = html;
-      return tmp.textContent || tmp.innerText || "";
     }
 
     function setcvss(severity) {
@@ -377,21 +368,21 @@ export class DialogImportComponent implements OnInit {
 
       let item = '';
       if (res.vulnerabilityClassifications !== undefined) {
-        item = stripHtml(res.vulnerabilityClassifications[0]);
+        item = this.utilsService.removeHTMLTags(res.vulnerabilityClassifications[0]);
       } else {
         item = '';
       }
 
       let itempoc = '';
       if (res.issueDetail !== undefined) {
-        itempoc = stripHtml(res.issueDetail[0]);
+        itempoc = this.utilsService.removeHTMLTags(res.issueDetail[0]);
       } else {
         itempoc = '';
       }
 
       let itemrem = '';
       if (res.remediationBackground !== undefined) {
-        itemrem = stripHtml(res.remediationBackground[0]);
+        itemrem = this.utilsService.removeHTMLTags(res.remediationBackground[0]);
       } else {
         itemrem = '';
       }
@@ -399,7 +390,7 @@ export class DialogImportComponent implements OnInit {
 
       let itemback = '';
       if (res.issueBackground !== undefined) {
-        itemback = stripHtml(res.issueBackground[0]);
+        itemback = this.utilsService.removeHTMLTags(res.issueBackground[0]);
       } else {
         itemback = '';
       }
@@ -1069,13 +1060,8 @@ export class DialogImportComponent implements OnInit {
       }
 
       //remove HTML tags 
-      let html_desc = rrr[0];
-      let div = document.createElement("div");
-      div.innerHTML = html_desc;
-      let html_poc = nn2[0];
-      let div2 = document.createElement("div");
-      div2.innerHTML = html_poc;
-
+      let html_desc = this.utilsService.removeHTMLTags(rrr[0]);
+      let html_poc = this.utilsService.removeHTMLTags(nn2[0]);
 
       //extract ref
       const exref = res.description[0].split('Reference:');
@@ -1092,17 +1078,15 @@ export class DialogImportComponent implements OnInit {
         refn = "";
       }
 
-      let html_ref = refn;
-      let div3 = document.createElement("div");
-      div3.innerHTML = html_ref;
+      let html_ref = this.utilsService.removeHTMLTags(refn);
 
       const def = {
         title: res.summary[0],
-        poc: div2.innerText,
+        poc: html_poc,
         files: [],
-        desc: div.innerText,
+        desc: html_desc,
         severity: res.priority[0]._,
-        ref: div3.innerText + '\n' + res.link[0],
+        ref: html_ref + '\n' + res.link[0],
         cvss: '',
         cvss_vector: '',
         cve: '',
@@ -1498,21 +1482,12 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
-    function parseit(text) {
-      var html = text;
-      var div = document.createElement("div");
-      div.innerHTML = html;
-      text = div.textContent || div.innerText || "";
-      return text
+    function parseit(html) {
+      return this.utilsService.removeHTMLTags(html)
     }
-    function parseref(text) {
-
-      text = text.replaceAll('</p><p>', '</p>\n<p>')
-      var html = text;
-      var div = document.createElement("div");
-      div.innerHTML = html;
-      text = div.textContent || div.innerText || "";
-      return text
+    function parseref(html) {
+      html = html.replaceAll('</p><p>', '</p>\n<p>');
+      return this.utilsService.removeHTMLTags(html)
     }
     const arr: any = [];
     for (const [key, value] of Object.entries(data.site)) {

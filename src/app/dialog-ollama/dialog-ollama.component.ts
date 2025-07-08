@@ -12,6 +12,7 @@ import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { Router } from '@angular/router';
 import { DialogOllamaSettingsComponent } from '../dialog-ollama-settings/dialog-ollama-settings.component';
 import { MatTooltip } from '@angular/material/tooltip';
+import { UtilsService } from '../utils.service';
 
 @Component({
   selector: 'app-dialog-ollama',
@@ -42,7 +43,7 @@ export class DialogOllamaComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DialogOllamaComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private currentdateService: CurrentdateService, private ollamaService: OllamaServiceService,
     private indexeddbService: IndexeddbService, private sessionsub: SessionstorageserviceService,
-    public router: Router, public dialog: MatDialog) {
+    public router: Router, public dialog: MatDialog, private utilsService: UtilsService) {
 
   }
 
@@ -356,13 +357,8 @@ export class DialogOllamaComponent implements OnInit {
 
   }
 
-  prepAIcopy(str) {
-
-    var div = document.createElement("div");
-    div.innerHTML = str;
-    var text = div.textContent || div.innerText || "";
-
-    return text
+  prepAIcopy(html) {
+    return this.utilsService.removeHTMLTags(html);
   }
 
 }
