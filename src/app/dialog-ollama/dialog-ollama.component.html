@@ -1,181 +1,191 @@
 <mat-card appearance="outlined">
 
-<mat-card-header>
-  <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">speaker_notes</mat-icon>
-  <mat-card-title>AI assistant</mat-card-title>
-  <mat-card-subtitle>Ask your local large language model (LLM).</mat-card-subtitle>
-  <div style="flex: 1"></div>
-  <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove
-    chat</button>
-</mat-card-header>
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">speaker_notes</mat-icon>
+    <mat-card-title>AI assistant</mat-card-title>
+    <mat-card-subtitle>Ask your local large language model (LLM).</mat-card-subtitle>
+    <div style="flex: 1"></div>
+    <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove
+      chat</button>
+  </mat-card-header>
 
-<mat-dialog-content class="mat-typography" id="chat">
+  <mat-dialog-content class="mat-typography" id="chat">
 
-  <div *ngIf="!aiconnected" class="example-full-width">
-    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-  </div>
+    <div *ngIf="!aiconnected" class="example-full-width">
+      <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+    </div>
 
 
-  <div class="example-full-width" *ngIf="aiconnected">
+    <div class="example-full-width" *ngIf="aiconnected">
 
-    @for (item of chatmsg; track item) {
-    <mat-card class="example-card" appearance="outlined">
-      <mat-card-header style="align-self: last baseline;">
-        <div mat-card-avatar class="header-image-ai"></div>
-        <mat-card-title>You</mat-card-title>
-        <mat-card-subtitle>Date: {{item.date | date:'medium'}}</mat-card-subtitle>
-      </mat-card-header>
+      @for (item of chatmsg; track item) {
+      <mat-card class="example-card" appearance="outlined">
+        <mat-card-header style="align-self: last baseline;">
+          <div mat-card-avatar class="header-image-ai"></div>
+          <mat-card-title>You</mat-card-title>
+          <mat-card-subtitle>Date: {{item.date | date:'medium'}}</mat-card-subtitle>
+        </mat-card-header>
 
-      <mat-card-content style="color: white;">
-        <p>
-          {{item.question}}
-        </p>
+        <mat-card-content style="color: white;">
+          <p>
+            {{item.question}}
+          </p>
 
-        <div>
-          <mat-list>
-            @for (item of item.files; track item) {
-            <mat-list-item style="max-width:400px;">
-              {{item.filename}}
-            </mat-list-item>
+          <div>
+            <mat-list>
+              @for (item of item.files; track item) {
+              <mat-list-item style="max-width:400px;">
+                {{item.filename}}
+              </mat-list-item>
+              }
+            </mat-list>
+          </div>
+
+          <p>
+            @for (item of item.images; track item) {
+            <img src="{{item}}" width="100px">
             }
-          </mat-list>
-        </div>
-
-        <p>
-          @for (item of item.images; track item) {
-          <img src="{{item}}" width="100px">
-          }
-        </p>
+          </p>
 
 
-      </mat-card-content>
-      <mat-card-actions>
-        <!-- <button mat-icon-button life="1000" tooltipEvent="focus" matTooltip="Reply again" matTooltipPosition="below"><mat-icon>reply</mat-icon></button> -->
-        <button mat-icon-button [cdkCopyToClipboard]="item.question" (click)="copyTextuser()" life="1000"
-          tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
-          #tooltip="matTooltip"><mat-icon>content_copy</mat-icon></button>
-      </mat-card-actions>
-    </mat-card>
+        </mat-card-content>
+        <mat-card-actions>
+          <!-- <button mat-icon-button life="1000" tooltipEvent="focus" matTooltip="Reply again" matTooltipPosition="below"><mat-icon>reply</mat-icon></button> -->
+          <button mat-icon-button [cdkCopyToClipboard]="item.question" (click)="copyTextuser()" life="1000"
+            tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
+            #tooltip="matTooltip"><mat-icon>content_copy</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
 
-    <mat-card class="example-card" appearance="outlined">
-      <mat-card-header>
-        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">account_circle</mat-icon>
-        <mat-card-title>AI</mat-card-title>
-        <mat-card-subtitle>Model: {{item.model}}, Temperature: {{item.temperature}}</mat-card-subtitle>
-      </mat-card-header>
+      <mat-card class="example-card" appearance="outlined">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">account_circle</mat-icon>
+          <mat-card-title>AI</mat-card-title>
+          <mat-card-subtitle>Model: {{item.model}}, Temperature: {{item.temperature}}</mat-card-subtitle>
+        </mat-card-header>
 
-      <mat-card-content style="color: white;">
+        <mat-card-content style="color: white;">
 
-        <mat-progress-bar color="accent" *ngIf="item.response == ''" mode="indeterminate"></mat-progress-bar>
+          <mat-progress-bar color="accent" *ngIf="item.response == ''" mode="indeterminate"></mat-progress-bar>
 
-        <div [innerHtml]="saniteizeme(item.response)"></div>
+          <div [innerHtml]="saniteizeme(item.response)"></div>
 
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-icon-button [cdkCopyToClipboard]="prepAIcopy(saniteizeme(item.response))" (click)="copyTextAI()"
-          life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
-          #tooltip2="matTooltip"><mat-icon>content_copy</mat-icon></button>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-icon-button [cdkCopyToClipboard]="prepAIcopy(saniteizeme(item.response))" (click)="copyTextAI()"
+            life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
+            #tooltip2="matTooltip"><mat-icon>content_copy</mat-icon></button>
 
-        <button mat-icon-button (click)="downloadAIText(item.response_md)" life="1000" tooltipEvent="focus"
-          matTooltip="Download" matTooltipPosition="below"
-          #tooltip2="matTooltip"><mat-icon>file_download</mat-icon></button>
+          <button mat-icon-button (click)="downloadAIText(item.response_md)" life="1000" tooltipEvent="focus"
+            matTooltip="Download" matTooltipPosition="below"
+            #tooltip2="matTooltip"><mat-icon>file_download</mat-icon></button>
 
-      </mat-card-actions>
-    </mat-card>
+        </mat-card-actions>
+      </mat-card>
 
-    <br>
-    }
+      <br>
+      }
 
 
 
-  </div>
-</mat-dialog-content>
+    </div>
+  </mat-dialog-content>
 
-<div style="padding: 10px;" *ngIf="aiconnected">
-  <mat-form-field color="accent" class="example-full-width" appearance="outline">
-    <mat-label>Ask anything</mat-label>
-    <textarea matInput [formControl]="questioninput" cdkFocusInitial></textarea>
-    <mat-hint>Selected model: {{aiselectedValue}}, Temperature: {{temperature}}</mat-hint>
-    <mat-error *ngIf="questioninput.hasError('notempty')">
-      <strong>Please provide some data!</strong>
-    </mat-error>
-  </mat-form-field>
-</div>
+  <div style="padding: 10px;" *ngIf="aiconnected">
+    <mat-form-field color="accent" class="example-full-width" appearance="outline">
+      <mat-label>Model: {{aiselectedValue}}, Temperature: {{temperature}}</mat-label>
+      <textarea matInput [formControl]="questioninput" cdkFocusInitial></textarea>
+      <mat-error *ngIf="questioninput.hasError('notempty')">
+        <strong>Please provide some data!</strong>
+      </mat-error>
+    </mat-form-field>
 
-<div style="padding: 20px;">
+    <div *ngIf="myrep">
 
-  @for (item of attachedIMG; track item) {
-
-
-  <div style="position:relative">
-    <img src="{{item}}" width="100px">
-    <div style="position:absolute;left:-10px;top:-20px;">
-      <button matListItemMeta mat-icon-button (click)="removeAttach()" title="Remove image">
-        <mat-icon color="warn">delete_forever</mat-icon>
-      </button>
+      <button (click)="useAIprompt(0)" matButton="outlined">Create report summary for CEO</button>
+      <button (click)="useAIprompt(1)" matButton="outlined">List remediation steps</button>
+      <button (click)="useAIprompt(5)" matButton="outlined">Who can fix it</button>
+      <button (click)="useAIprompt(2)" matButton="outlined">Create technical summary for developer</button>
+      <button (click)="useAIprompt(3)" matButton="outlined">List all issues</button>
+      <button (click)="useAIprompt(4)" matButton="outlined">Sort by most important</button>
+      
     </div>
   </div>
 
-  }
+  <div style="padding: 20px;">
 
-  @for (item of attachedFILES; track item) {
+    @for (item of attachedIMG; track item) {
 
 
-  <mat-list>
-    <mat-list-item>
-
-      <div matListItemTitle>{{item.filename}} 
-
-        <button mat-icon-button (click)="removeAttachfile()" title="Remove file">
+    <div style="position:relative">
+      <img src="{{item}}" width="100px">
+      <div style="position:absolute;left:-10px;top:-20px;">
+        <button matListItemMeta mat-icon-button (click)="removeAttach()" title="Remove image">
           <mat-icon color="warn">delete_forever</mat-icon>
         </button>
-
       </div>
-      <div matListItemLine>{{item.date | date:'medium'}}</div>
-      
-    </mat-list-item>
-  </mat-list>
-
-
-  }
-
-</div>
-
-<mat-dialog-actions *ngIf="aiconnected">
-
-  <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-
-      <div style="padding: 10px;">
-
-        <button mat-icon-button style="padding: 0px;" (click)="opensettings()" title="Settings">
-          <mat-icon>settings</mat-icon>
-        </button>
-
-        <button mat-icon-button style="padding: 0px;" (click)="attachimg.click()" title="Attach image"
-          *ngIf="attachedIMG.length == 0">
-          <mat-icon>image</mat-icon>
-        </button>
-        <input hidden type="file" accept="image/*" #attachimg (change)="onImageSelect($event.target)" name="myimages" />
-
-        <button mat-icon-button style="padding: 0px;" title="Attach file" (click)="attachfile.click()">
-          <mat-icon>attach_file</mat-icon>
-        </button>
-        <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles"
-          multiple />
-
-      </div>
-
-
-
     </div>
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
 
-      <button mat-raised-button (click)="sendmsg()" color="accent">Send</button>
-      <button mat-raised-button mat-dialog-close color="primary">Close</button>
-    </div>
+    }
+
+    @for (item of attachedFILES; track item) {
+
+
+    <mat-list>
+      <mat-list-item>
+
+        <div matListItemTitle>{{item.filename}}
+
+          <button mat-icon-button (click)="removeAttachfile()" title="Remove file">
+            <mat-icon color="warn">delete_forever</mat-icon>
+          </button>
+
+        </div>
+        <div matListItemLine>{{item.date | date:'medium'}}</div>
+
+      </mat-list-item>
+    </mat-list>
+
+
+    }
+
   </div>
 
-</mat-dialog-actions>
+  <mat-dialog-actions *ngIf="aiconnected">
+
+    <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
+      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
+
+        <div style="padding: 10px;">
+
+          <button mat-icon-button style="padding: 0px;" (click)="opensettings()" title="Settings">
+            <mat-icon>settings</mat-icon>
+          </button>
+
+          <button mat-icon-button style="padding: 0px;" (click)="attachimg.click()" title="Attach image"
+            *ngIf="attachedIMG.length == 0">
+            <mat-icon>image</mat-icon>
+          </button>
+          <input hidden type="file" accept="image/*" #attachimg (change)="onImageSelect($event.target)"
+            name="myimages" />
+
+          <button mat-icon-button style="padding: 0px;" title="Attach file" (click)="attachfile.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+          <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles"
+            multiple />
+
+        </div>
+
+
+
+      </div>
+      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
+        <button mat-raised-button (click)="sendmsg()" color="accent">Ask</button>
+        <button mat-raised-button mat-dialog-close color="primary">Close</button>
+      </div>
+    </div>
+
+  </mat-dialog-actions>
 
 </mat-card>
