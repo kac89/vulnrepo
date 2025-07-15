@@ -38,7 +38,8 @@ export class DialogOllamaComponent implements OnInit {
   attachedIMG: any = [];
   attachedIMG_b64: any = [];
   attachedFILES: any = [];
-  defaultprompt = "You are a helpful assistant.";
+  myrep = false;
+  defaultprompt = "You are a helpful cyber security assistant.";
   // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogOllamaComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private currentdateService: CurrentdateService, private ollamaService: OllamaServiceService,
@@ -91,8 +92,8 @@ export class DialogOllamaComponent implements OnInit {
 
       if (this.data[0]) {
 
-        if (this.data[0].prompt) {
-          this.questioninput.setValue(this.data[0].prompt);
+        if (this.data[0].prompt === '') {
+          this.myrep = true;
         }
 
 
@@ -359,6 +360,22 @@ export class DialogOllamaComponent implements OnInit {
 
   prepAIcopy(html) {
     return this.utilsService.removeHTMLTags(html);
+  }
+
+
+  useAIprompt(index) {
+
+    const arr = [
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a report summary and remediation's for a company CEO as a document, mention scope if provided on JSON key "report_scope", mention researcher if provided on JSON key "researcher".`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a list remediation steps for provided issues.`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a technical summary for developer with remediations.`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please create a list with all issues.`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please select the most important issues to fix base on severity and potential impact.`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please select what kind a specialization and skills I need to have to solve these issues.`
+    ];
+
+    this.questioninput.setValue(arr[index]);
+
   }
 
 }

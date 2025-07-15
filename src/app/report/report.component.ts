@@ -3706,7 +3706,7 @@ Date   | Description
     const dialogRef = this.dialog.open(DialogOllamaComponent, {
       width: '800px',
       disableClose: true,
-      data: [{"prompt": `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, can you prepare a report summary and remediation's for a company as a document, with issue is most important and fix recommendation for company board, mention scope if provided on JSON key "report_scope", mention researcher if provided on JSON key "researcher".`, "files": [{ "filename": this.report_info.report_name + ".json", "date": String(this.currentdateService.getcurrentDate()), "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": []}]
+      data: [{"prompt": ``, "files": [{ "filename": this.report_info.report_name + ".json", "date": String(this.currentdateService.getcurrentDate()), "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": []}]
     });
 
     dialogRef.afterClosed().subscribe(result => {
