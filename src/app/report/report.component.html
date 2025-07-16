@@ -498,7 +498,8 @@
 
                   <div fxLayoutAlign="end start" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
                     <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}"
-                      matBadgeColor="accent" (click)="searchBounty(dec_data)" title="Search for bug bounty program base on POC">
+                      matBadgeColor="accent" (click)="searchBounty(dec_data)"
+                      title="Search for bug bounty program base on POC">
                       <mat-icon>attach_money</mat-icon>
                       <mat-icon>search</mat-icon>
                     </button>
@@ -1098,6 +1099,10 @@
                 class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
             </button>
             <mat-menu #aboveMenu="matMenu" yPosition="above">
+
+              <button *ngIf="aiconnected" mat-menu-item (click)="goAIsummary()" title="Decrypted AI report to LLM">
+                <mat-icon>speaker_notes</mat-icon>Attach to AI assistant
+              </button>
               <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false, '')"
                 title="Full report with all dependency, decrypted portable version for offline reader">
                 <mat-icon>description</mat-icon>HTML
@@ -1112,11 +1117,6 @@
               </button>
               <button mat-menu-item (click)="DownloadJSON(report_info)" title="Decrypted JSON report format">
                 <mat-icon>code</mat-icon>JSON
-              </button>
-
-              <button *ngIf="aiconnected" mat-menu-item (click)="goAIsummary()"
-                title="Decrypted AI report to LLM">
-                <mat-icon>speaker_notes</mat-icon>Attach to AI assistant
               </button>
 
               <button mat-menu-item (click)="DownloadMarkdown(report_info)" title="Decrypted Markdown report format">
