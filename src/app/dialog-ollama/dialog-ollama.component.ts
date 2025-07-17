@@ -376,6 +376,8 @@ export class DialogOllamaComponent implements OnInit {
 
     this.questioninput.setValue(arr[index]);
 
+    this.sendmsg();
+
   }
 
 }
