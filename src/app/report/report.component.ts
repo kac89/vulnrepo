@@ -43,12 +43,13 @@ import { DialogEditorFullscreenComponent } from '../dialog-editor-fullscreen/dia
 import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-attach-preview.component';
 import { AlignmentType, Document, Footer, Header, Packer, PageBreak, HeadingLevel, ImageRun, PageNumber, NumberFormat, Paragraph, TextRun, TableOfContents, Table, TableCell, TableRow, WidthType } from "docx";
 import { UtilsService } from '../utils.service';
-import {OllamaServiceService} from '../ollama-service.service';
-import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
+import { OllamaServiceService } from '../ollama-service.service';
+import { DialogOllamaSettingsComponent } from '../dialog-ollama-settings/dialog-ollama-settings.component';
 import { DialogOllamaComponent } from '../dialog-ollama/dialog-ollama.component';
 import { CurrentdateService } from '../currentdate.service';
 import { DialogMergeIssuesComponent } from '../dialog-merge-issues/dialog-merge-issues.component';
 import { DialogReportHistoryComponent } from '../dialog-report-history/dialog-report-history.component';
+import { DialogSpinnerComponent } from '../dialog-spinner/dialog-spinner.component';
 
 export interface Tags {
   name: string;
@@ -122,6 +123,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   pok = 0;
   prev_height = 190;
   timerCounter = 0;
+  spinner:any;
   savemsg = '';
   report_decryption_in_progress: boolean;
   report_encryption_in_progress: boolean;
@@ -182,7 +184,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   aiprogress = false;
   aiconnected = false;
-  models:any;
+  models: any;
 
   @HostListener('window:keydown.control.shift.l', ['$event'])
   GoToNewReport(event: KeyboardEvent) {
@@ -343,16 +345,16 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.indexeddbService.getkeybyAiintegration().then(ret => {
-      
-      if(ret[0]) {
+
+      if (ret[0]) {
         this.aiconnected = true;
         this.models = ret[0];
       }
-     });
+    });
   }
 
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   calendarDateChanged() {
     this.selectedRangeValue = new DateRange<Date>(new Date(this.decryptedReportDataChanged.report_metadata.starttest), new Date(this.decryptedReportDataChanged.report_metadata.endtest));
@@ -705,14 +707,14 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     const ret = this.selectedResult[event];
     const index: number = this.decryptedReportDataChanged.report_vulns.indexOf(ret);
     if (index !== -1) {
-      if(checked === true) {
-        this.selectedIssues.push({"index": index, "data": ret});
+      if (checked === true) {
+        this.selectedIssues.push({ "index": index, "data": ret });
 
-      } else if(checked === false) {
-            const index2: number = this.selectedIssues.findIndex(i => i.data === ret)
-            if (index2 !== -1) {
-              this.selectedIssues.splice(index2, 1);
-            }
+      } else if (checked === false) {
+        const index2: number = this.selectedIssues.findIndex(i => i.data === ret)
+        if (index2 !== -1) {
+          this.selectedIssues.splice(index2, 1);
+        }
       }
 
     }
@@ -729,13 +731,13 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   checkcheckbox(i) {
 
-      let returnVal = false;
-      const ret = this.selectedResult[i];
+    let returnVal = false;
+    const ret = this.selectedResult[i];
 
-      const index2: number = this.selectedIssues.findIndex(i => i.data === ret)
-      if (index2 !== -1) {
-        returnVal = true;
-      }
+    const index2: number = this.selectedIssues.findIndex(i => i.data === ret)
+    if (index2 !== -1) {
+      returnVal = true;
+    }
 
     return returnVal
   }
@@ -791,7 +793,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.decryptedReportDataChanged.report_vulns.forEach((element, ind) => {
 
-      this.selectedIssues.push({"index": ind, "data": element});
+      this.selectedIssues.push({ "index": ind, "data": element });
 
     });
 
@@ -947,7 +949,7 @@ Sample code here\n\
 
     if (this.decryptedReportDataChanged.report_vulns.length > 0) {
       setTimeout(() => {
-        if (this.calendar){
+        if (this.calendar) {
           this.calendar.updateTodaysDate();
         }
       });
@@ -962,14 +964,14 @@ Sample code here\n\
 
   getData(event?: PageEvent) {
 
-    if(event) {
+    if (event) {
       this.pageSize = event.pageSize;
       this.pageIndex = event.pageIndex;
     }
 
     this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
     return event;
-    
+
   }
 
   renderdateformat(inputdate) {
@@ -1368,7 +1370,7 @@ Sample code here\n\
 
     for (const [key, value] of Object.entries(this.decryptedReportDataChanged.report_vulns)) {
 
-      if(value) {
+      if (value) {
         if (value["severity"] === "Critical") {
           critical.push(value);
         } else if (value["severity"] === "High") {
@@ -3051,6 +3053,7 @@ Date   | Description
     link.setAttribute('download', report_info.report_name + ' ' + report_info.report_id + encryptedtext + ' (vulnrepo.com).html');
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
+    this.hidespinner();
     link.click();
     document.body.removeChild(link);
   }
@@ -3075,6 +3078,7 @@ Date   | Description
 
 
   DownloadHTMLv2(report_info, encrypted, type_dep, encpass): void {
+    this.showspinner();
     const json = {
       "report_name": report_info.report_name,
       "report_id": report_info.report_id,
@@ -3423,8 +3427,8 @@ Date   | Description
 
   fastsearchBB(poc, showsnack) {
     this.BBmsg = 'Please wait, searching...';
-    let scope=[];
-    this.bugbountylist.forEach(function (item:any) {
+    let scope = [];
+    this.bugbountylist.forEach(function (item: any) {
       scope = scope.concat(item.domains);
     });
 
@@ -3441,7 +3445,7 @@ Date   | Description
         // get only scope & search
         const findedbounty = scope.find(x => x == match);
         if (findedbounty) {
-          this.bugbountylist.forEach(function (item:any) {
+          this.bugbountylist.forEach(function (item: any) {
             const findedbounty2 = item.domains.find(x => x == findedbounty);
             if (findedbounty2) {
               arr.push(item);
@@ -3602,7 +3606,7 @@ Date   | Description
   }
 
 
-  aiasist(){
+  aiasist() {
     console.log('AI start chat');
     this.aiprogress = true;
 
@@ -3625,9 +3629,9 @@ Date   | Description
     
     <ATTACHMENT_FILE>
     <FILE_INDEX>File 1</FILE_INDEX>
-    <FILE_NAME>`+this.report_info.report_name+`</FILE_NAME>
+    <FILE_NAME>`+ this.report_info.report_name + `</FILE_NAME>
     <FILE_CONTENT>
-    `+JSON.stringify(json)+`
+    `+ JSON.stringify(json) + `
     </FILE_CONTENT>
     </ATTACHMENT_FILE>
     `;
@@ -3635,7 +3639,7 @@ Date   | Description
     this.decryptedReportDataChanged.report_summary = "";
 
     let tempx = "";
-    this.ollamaService.chatStream(this.models.ollama_url, msgin, this.models.model, [], [],this.models.defaultprompt).subscribe({
+    this.ollamaService.chatStream(this.models.ollama_url, msgin, this.models.model, [], [], this.models.defaultprompt).subscribe({
       next: (text) => {
         this.decryptedReportDataChanged.report_summary += text;
         tempx += text;
@@ -3653,7 +3657,7 @@ Date   | Description
         this.aiprogress = false;
       },
       error: () => {
-  
+
       }
     });
 
@@ -3667,17 +3671,17 @@ Date   | Description
       disableClose: false,
       data: []
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       console.log('The AI-Settings dialog was closed');
       if (result) {
 
         this.indexeddbService.getkeybyAiintegration().then(ret => {
-      
-          if(ret[0]) {
+
+          if (ret[0]) {
             this.models = ret[0];
           }
-         });
+        });
 
       }
     });
@@ -3706,11 +3710,28 @@ Date   | Description
     const dialogRef = this.dialog.open(DialogOllamaComponent, {
       width: '800px',
       disableClose: true,
-      data: [{"prompt": ``, "files": [{ "filename": this.report_info.report_name + ".json", "date": String(this.currentdateService.getcurrentDate()), "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": []}]
+      data: [{ "prompt": ``, "files": [{ "filename": this.report_info.report_name + ".json", "date": String(this.currentdateService.getcurrentDate()), "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": [] }]
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The AI dialog was closed');
+    });
+
+  }
+
+  hidespinner(): void {
+    this.spinner.close();
+  }
+  showspinner(): void {
+
+    this.spinner = this.dialog.open(DialogSpinnerComponent, {
+      maxWidth: '250px',
+      maxHeight: '250px',
+      height: '250px',
+      width: '250px',
+      disableClose: false,
+      panelClass: 'my-css-class-spinner',
+      data: ''
     });
 
   }

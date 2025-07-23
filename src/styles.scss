@@ -354,3 +354,23 @@ blockquote p {
 .mat-sidenav-content {
   background-color: #000 !important;
 }
+
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.my-css-class-spinner mat-dialog-container .mat-mdc-dialog-inner-container .mat-mdc-dialog-surface {
+  background-color: black;
+  border-radius: 50%;
+
+  width: 250px;
+} 
