@@ -3,7 +3,7 @@
   <mat-form-field appearance="outline" class="example-full" color="accent">
     <mat-label>Text Editor</mat-label>
 
-    <div style="margin-top: 16px;" class="example-button-row">
+    <div style="margin-top: 16px;display: flex;">
 
       <button mat-icon-button style="padding: 0px;" color="accent" title="Bold Format" (click)="parseBold(data)">
         <mat-icon>format_bold</mat-icon>
@@ -38,10 +38,10 @@
         (click)="showprev=!showprev">
         <mat-icon>{{showprev ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
+      <div style="flex: 1"></div>
+      <button matMiniFab style="padding: 0px;" color="primary" title="Save and Close fullscreen"
+        (click)="cancel()"><mat-icon>close</mat-icon></button>
 
-      <button mat-icon-button style="padding: 0px;" color="warn" title="Save and Close fullscreen" (click)="cancel()">
-        <mat-icon>fullscreen</mat-icon>
-      </button>
 
     </div>
     <mat-divider></mat-divider>
@@ -49,7 +49,7 @@
     <div [hidden]="showprev" fxLayout="row wrap" fxLayoutGap="10px grid">
       <div fxFlex="49%" fxFlex.sm="99%" fxFlex.xs="99%">
         <textarea #textareaEl [(ngModel)]="data" (ngModelChange)="onChange($event)" matInput class="textareaeditor"
-          (select)="select($event)" (click)="onclick($event)" cdkFocusInitial ></textarea>
+          (select)="select($event)" (click)="onclick($event)" cdkFocusInitial></textarea>
       </div>
       <div fxFlex="1%" fxFlex.sm="1%" fxFlex.xs="1%">
         <div class="space"></div>

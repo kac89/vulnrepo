@@ -4,13 +4,16 @@
         <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">history</mat-icon>
         <mat-card-title>Restore report version</mat-card-title>
         <mat-card-subtitle>Restore old report from local history.</mat-card-subtitle>
+        <div style="flex: 1"></div>
+        <button matMiniFab  mat-dialog-close color="primary"><mat-icon>close</mat-icon></button>
     </mat-card-header>
 
     <mat-dialog-content class="mat-typography">
         <div [hidden]="anyreports">No saved versions of the report.</div>
         <div [hidden]="!anyreports">
 
-            <table mat-table [dataSource]="dataSource" matSort matSortActive="report_lastupdate" matSortDirection="desc">
+            <table mat-table [dataSource]="dataSource" matSort matSortActive="report_lastupdate"
+                matSortDirection="desc">
 
                 <ng-container matColumnDef="report_name">
                     <th mat-header-cell *matHeaderCellDef>
@@ -33,15 +36,23 @@
                     </th>
                     <td mat-cell *matCellDef="let element">
 
-                        <button style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;" mat-icon-button [matMenuTriggerFor]="menu">
+                        <button
+                            style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;"
+                            mat-icon-button [matMenuTriggerFor]="menu">
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
 
-                            <button mat-menu-item (click)="replacereport(element)"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Replace with the current version of the report</button>
-                            <button mat-menu-item (click)="downloadhistoryreport(element)"><mat-icon class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Download report</button>
-                            <button mat-menu-item (click)="removereporthistory(element)"><mat-icon class="vertical-align-middle padding-bottom-3">delete_forever</mat-icon> Remove report</button>
-                        
+                            <button mat-menu-item (click)="replacereport(element)"><mat-icon
+                                    class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Replace with the
+                                current version of the report</button>
+                            <button mat-menu-item (click)="downloadhistoryreport(element)"><mat-icon
+                                    class="vertical-align-middle padding-bottom-3">file_download</mat-icon> Download
+                                report</button>
+                            <button mat-menu-item (click)="removereporthistory(element)"><mat-icon
+                                    class="vertical-align-middle padding-bottom-3">delete_forever</mat-icon> Remove
+                                report</button>
+
                         </mat-menu>
 
                     </td>
@@ -57,18 +68,5 @@
 
         </div>
     </mat-dialog-content>
-
-    <mat-dialog-actions>
-
-        <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
-            <div cdkFocusInitial fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center"></div>
-            
-            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
-
-                <button mat-raised-button mat-dialog-close color="primary">Close</button>
-            </div>
-        </div>
-
-    </mat-dialog-actions>
 
 </mat-card>
