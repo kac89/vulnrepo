@@ -37,7 +37,7 @@
 
   <div fxLayout="row wrap" fxLayoutGap="10px grid">
     <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <mat-form-field appearance="outline" color="accent" class="full-width">
+      <mat-form-field *ngIf="dataSource.data.length != 0" appearance="outline" color="accent" class="full-width">
         <mat-label>Filter reports</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ex. external pentest" #input>
       </mat-form-field>
