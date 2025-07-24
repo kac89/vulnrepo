@@ -357,7 +357,9 @@ export class IndexeddbService {
 
   }
 
+
   importReport(data) {
+    return new Promise<any>((resolve, reject) => {
     data = JSON.parse(data);
     // indexeddb communication
     const indexedDB = window.indexedDB;
@@ -377,12 +379,15 @@ export class IndexeddbService {
 
       tx.oncomplete = function () {
         db.close();
+        resolve(true);
       };
     };
 
-    this.router.navigate(['/my-reports']);
 
+    });
   }
+
+
 
   importReportfromfile(data) {
     data = JSON.parse(data);

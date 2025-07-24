@@ -29,7 +29,7 @@ export class DialogReportHistoryComponent implements OnInit {
 
 
   // @ts-ignore
-  constructor(public router: Router,public dialogRef: MatDialogRef<DialogReportcssComponent>, private indexeddbService: IndexeddbService, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(public router: Router, public dialogRef: MatDialogRef<DialogReportcssComponent>, private indexeddbService: IndexeddbService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
 
@@ -67,13 +67,20 @@ export class DialogReportHistoryComponent implements OnInit {
 
   replacereport(report): void {
 
-    this.indexeddbService.deleteReport(report, false).then(data => {
+    const importreport = report;
 
-      this.indexeddbService.importReport(JSON.stringify(report));
+    this.indexeddbService.deleteReport(importreport, false).then(data => {
 
-      this.router.navigate(['report/', report.report_id]).then(() => {
-        window.location.reload();
-      });
+
+      if (data) {
+        this.indexeddbService.importReport(JSON.stringify(importreport)).then(data => {
+
+          this.router.navigate(['report/', importreport.report_id]).then(() => {
+            window.location.reload();
+          });
+
+        });
+      }
 
     });
 
