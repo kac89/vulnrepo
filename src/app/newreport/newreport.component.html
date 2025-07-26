@@ -20,9 +20,8 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="example-full-width" color="accent">
-              <input (keydown.enter)="$event.preventDefault()" [formControl]="pass1model"
-                (keyup)="passCheck(pass.value)" matInput placeholder="Set report security key (min. 8 char length)"
-                #pass [type]="hide ? 'password' : 'text'">
+              <input [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput
+                placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
 
               <mat-icon matSuffix (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key"
                 matTooltipPosition="below">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -41,8 +40,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="example-full-width" color="accent">
-              <input (keydown.enter)="$event.preventDefault()" [formControl]="pass2model"
-                (keyup)="passCheck(pass2.value)" matInput
+              <input [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput
                 placeholder="Re-enter report security key (min. 8 char length)" #pass2
                 [type]="hide ? 'password' : 'text'">
 
