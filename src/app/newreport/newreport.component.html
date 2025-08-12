@@ -98,9 +98,13 @@
               </div>
 
 
-              <div fxLayoutAlign="center" class="label warning"><mat-icon style="margin-right: 10px;"
-                  class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> <b>Do not lose your security
-                  key!<br> Access to the report will be impossible!</b></div>
+              <div fxLayoutAlign="center" class="label warning">
+                <mat-icon style="margin-right: 10px;"
+                  class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon> 
+                  <b>Use report security key generator! <mat-icon (click)="generatePassword()">casino</mat-icon><br>Don't lose your security key,<br>otherwise 
+you won't be able to access the report!!</b>
+                  
+                </div>
 
             </div>
           </md-card>
