@@ -21,4 +21,12 @@ export class SessionstorageserviceService {
     return sessionStorage.removeItem(key);
   }
 
+
+    public removeSessionStorageItem_and_reload(key) {
+    this.storageChange.next(key);
+    sessionStorage.removeItem(key);
+    window.location.reload();
+    return true
+  }
+
 }
