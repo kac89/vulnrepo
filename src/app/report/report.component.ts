@@ -582,9 +582,13 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     e.returnValue = '';
   }
 
+
   sureYouWanttoLeave() {
     window.addEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = true;
+
+    this.indexeddbService.updatechangesStatus(true);
+    
   }
 
   removeSureYouWanttoLeave() {
@@ -594,6 +598,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     while (id--) {
       window.clearTimeout(id); // will do nothing if no timeout with id is present
     }
+    this.indexeddbService.updatechangesStatus(false);
   }
 
   afterDetectionNow() {

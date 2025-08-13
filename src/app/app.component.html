@@ -4,21 +4,25 @@
       <mat-icon>menu</mat-icon>
     </button>
     <span style="display: contents;">
-      <img style="margin-right: 15px;" width="35px" src="assets/logo/vulnrepo_logo.png"> 
-      
+      <img style="margin-right: 15px;" width="35px" src="assets/logo/vulnrepo_logo.png">
+
       <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
     </span>
     <div *ngIf="show_status" class="title-center">
 
       <div *ngIf="enc_status">
-        <mat-icon color="warn" class="vertical-align-middle padding-bottom-3" matSuffix>no_encryption</mat-icon> Report is decrypted
+        <a [routerLink]="[]" (click)="closeReport()"  title="Close report">
+          <mat-icon color="warn"
+            class="vertical-align-middle padding-bottom-3" matSuffix>no_encryption</mat-icon>
+          </a> Report is decrypted
       </div>
       <div *ngIf="!enc_status">
-        <mat-icon color="accent" class="vertical-align-middle padding-bottom-3" matSuffix>lock</mat-icon> Report is encrypted
+        <mat-icon color="accent" class="vertical-align-middle padding-bottom-3" matSuffix>lock</mat-icon> Report is
+        encrypted
       </div>
 
     </div>
-    
+
     <span class="example-fill-remaining-space" *ngIf="!show_status"></span>
 
     <div style="align-items: center;display: flex;" fxShow="true" fxHide.lt-md="true">
@@ -66,7 +70,8 @@
           FAQ
         </a>
 
-        <button mat-menu-item (click)="goAbout()"><mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
+        <button mat-menu-item (click)="goAbout()"><mat-icon
+            class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
 
         <div *ngIf="show_active_reports">
 
@@ -81,7 +86,9 @@
 
           <span *ngFor="let activreport of arr_oreports">
             <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
-              <mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon><mat-icon color="accent" *ngIf="activreport.report_source == 'api'" class="vertical-align-middle padding-bottom-3">public</mat-icon> {{activreport.report_name}}
+              <mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon><mat-icon color="accent"
+                *ngIf="activreport.report_source == 'api'"
+                class="vertical-align-middle padding-bottom-3">public</mat-icon> {{activreport.report_name}}
             </a>
 
           </span>
@@ -92,7 +99,8 @@
 
       <mat-menu #tools="matMenu" xPosition="after" yPosition="above">
 
-        <button mat-menu-item (click)="goAI()"><mat-icon class="vertical-align-middle padding-bottom-3">speaker_notes</mat-icon> AI assistant</button>
+        <button mat-menu-item (click)="goAI()"><mat-icon
+            class="vertical-align-middle padding-bottom-3">speaker_notes</mat-icon> AI assistant</button>
 
         <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
@@ -127,11 +135,13 @@
         </a>
       </mat-menu>
       <br>
-      <a target="_blank" fxLayoutAlign="center start" href="https://github.com/kac89/vulnrepo" style="padding-left: 10px;" title="Visit project on github.com" >
+      <a target="_blank" fxLayoutAlign="center start" href="https://github.com/kac89/vulnrepo"
+        style="padding-left: 10px;" title="Visit project on github.com">
         <img src="./assets/github.png" style="height: 32px;width: 32px;">
       </a>
 
-      <a target="_blank"  href="https://x.com/vulnrepo" title="Follow project on X" style="padding: 0px;padding-top: 10px;">
+      <a target="_blank" href="https://x.com/vulnrepo" title="Follow project on X"
+        style="padding: 0px;padding-top: 10px;">
         <img src="./assets/X.svg" style="width: 64px;">
       </a>
 

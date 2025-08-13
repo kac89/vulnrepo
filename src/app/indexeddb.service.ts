@@ -20,6 +20,7 @@ export class IndexeddbService {
   reportlist = [];
 
   private decryptstatusObs = new Subject<any>();
+  public changesStatus = new Subject<any>();
 
   constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
     private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,
@@ -553,6 +554,15 @@ export class IndexeddbService {
   updateEncStatus(message: any) {
     this.decryptstatusObs.next(message);
   }
+
+  getchangesStatus(): Observable<any> {
+    return this.changesStatus.asObservable();
+  }
+
+  updatechangesStatus(message: any) {
+    this.changesStatus.next(message);
+  }
+
 
   getkeybyReportID(reportid) {
     return new Promise<any>((resolve, reject) => {

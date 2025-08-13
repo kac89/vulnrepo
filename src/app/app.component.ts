@@ -7,6 +7,7 @@ import { SessionstorageserviceService } from "./sessionstorageservice.service"
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,10 @@ import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
 export class AppComponent implements OnInit, OnDestroy {
   show_status: any;
   enc_status: any;
+  status_unsaved = false;
+  report_id: any;
   subscription: Subscription;
+  getunsavedchang: Subscription;
   show_active_reports = false;
   arr_oreports: any = [];
   dialogRef: MatDialogRef<DialogAboutComponent>;
@@ -35,10 +39,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.navigate(['/my-reports']);
   }
 
-  constructor(public route: ActivatedRoute, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService, public dialog: MatDialog) {
+  constructor(public route: ActivatedRoute, private snackBar: MatSnackBar, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService, public dialog: MatDialog) {
     this.sessionsub.storageChange.subscribe(data => {
       // console.log(data);
       this.getopenreports();
+    });
+
+    this.getunsavedchang = this.indexeddbService.getchangesStatus().subscribe(value => {
+      this.status_unsaved = value;
     });
   }
 
@@ -63,6 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.router.events.subscribe(value => {
       if (value instanceof NavigationEnd) {
+        this.report_id = value.url;
         if (value.url.includes('/report/')) {
           this.show_status = true;
         } else {
@@ -76,9 +85,37 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
+
+
+
+  closeReport() {
+    console.log('close report');
+
+    const report_id = this.report_id.substring(this.report_id.lastIndexOf("/") + 1, this.report_id.length);
+
+    if (this.status_unsaved) {
+
+      console.log('unsaved changes');
+
+      this.snackBar.open('You have unsaved changes!', 'OK', {
+        duration: 2000,
+        panelClass: ['notify-snackbar-fail']
+      });
+
+    } else {
+
+      this.sessionsub.removeSessionStorageItem_and_reload(report_id);
+
+    }
+
+
+
+  }
+
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
+    this.getunsavedchang.unsubscribe();
   }
 
   goAbout(): void {
