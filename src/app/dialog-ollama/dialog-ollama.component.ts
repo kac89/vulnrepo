@@ -370,7 +370,7 @@ export class DialogOllamaComponent implements OnInit {
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a list remediation steps for provided issues.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a technical summary for developer with remediations.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please create a list with all issues.`,
-      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please select the most important issues to fix base on severity and potential impact.`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, Base on that file, what is the cost of fixing all issues? try estimate potential costs in dolars.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please select what kind a specialization and skills I need to have to solve these issues.`
     ];
 
