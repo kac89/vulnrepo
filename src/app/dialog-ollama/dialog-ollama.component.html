@@ -80,6 +80,10 @@
             matTooltip="Download" matTooltipPosition="below"
             #tooltip2="matTooltip"><mat-icon>file_download</mat-icon></button>
 
+          <div style="margin-left: auto;">
+            {{item.aitime}}
+          </div>
+
         </mat-card-actions>
       </mat-card>
 
@@ -107,8 +111,8 @@
       <button (click)="useAIprompt(5)" matButton="outlined">Who can fix it</button>
       <button (click)="useAIprompt(2)" matButton="outlined">Create technical summary for developer</button>
       <button (click)="useAIprompt(3)" matButton="outlined">List all issues</button>
-      <button (click)="useAIprompt(4)" matButton="outlined">Sort by most important</button>
-      
+      <button (click)="useAIprompt(4)" matButton="outlined">What is the cost of repair?</button>
+
     </div>
   </div>
 

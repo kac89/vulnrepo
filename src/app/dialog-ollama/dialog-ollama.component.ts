@@ -122,7 +122,7 @@ export class DialogOllamaComponent implements OnInit {
 
     if (inputmsg !== null && inputmsg !== '') {
 
-      this.chatmsg.push({ "question": inputmsg, "response": "", "response_md": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue, "temperature": this.temperature, "images": attarr, "files": attfiles });
+      this.chatmsg.push({ "question": inputmsg, "response": "", "response_md": "", "aitime": "", "date": String(this.currentdateService.getcurrentDate()), "model": this.aiselectedValue, "temperature": this.temperature, "images": attarr, "files": attfiles });
 
       const marked = new Marked(
         markedHighlight({
@@ -136,8 +136,6 @@ export class DialogOllamaComponent implements OnInit {
       );
       const renderer = new marked.Renderer();
 
-
-
       renderer.code = function (token) {
         return `<pre class="hljs"><code>` + DOMPurify.sanitize(token.text) + `</code></pre>`;
       };
@@ -146,8 +144,18 @@ export class DialogOllamaComponent implements OnInit {
         return `<blockquote><p>` + DOMPurify.sanitize(token.text) + `</p></blockquote>`;
       };
 
+      function millisToMinutesAndSeconds(millis) {
+        var minutes = Math.floor(millis / 60000);
+        var seconds = Number(((millis % 60000) / 1000).toFixed(0));
+        return (
+          seconds == 60 ?
+            (minutes + 1) + ":00" :
+            minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+        );
+      }
+
       let temps = "";
-      console.log(this.defaultprompt);
+      let start = performance.now();
       //this.updatemsg('user', inputmsg);
       this.ollamaService.chatStream(this.ollamaurl, inputmsg, this.aiselectedValue, attarr_b64, attfiles, this.defaultprompt).subscribe({
         next: (text) => {
@@ -178,9 +186,15 @@ export class DialogOllamaComponent implements OnInit {
 
           this.chatmsg[this.chatmsg.length - 1].response = marked.parse(temps, { renderer: renderer });
 
+          const end = millisToMinutesAndSeconds(performance.now() - start);
+
+          this.chatmsg[this.chatmsg.length - 1].aitime = end;
+
           this.sessionsub.setSessionStorageItem('VULNREPO-OLLAMA-CHAT', JSON.stringify(this.chatmsg));
 
+
           this.updatemsg('assistant', temps);
+
 
         },
         error: () => {
@@ -194,7 +208,6 @@ export class DialogOllamaComponent implements OnInit {
 
 
   }
-
 
   updatemsg(role, msg) {
     const localchat = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-MSG-H');
@@ -247,9 +260,6 @@ export class DialogOllamaComponent implements OnInit {
 
       });
     }
-
-
-
 
   }
 
@@ -370,7 +380,7 @@ export class DialogOllamaComponent implements OnInit {
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a list remediation steps for provided issues.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a technical summary for developer with remediations.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please create a list with all issues.`,
-      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please select the most important issues to fix base on severity and potential impact.`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, Base on that file, what is the cost of fixing all issues? try estimate potential costs in dolars.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please select what kind a specialization and skills I need to have to solve these issues.`
     ];
 
@@ -378,6 +388,9 @@ export class DialogOllamaComponent implements OnInit {
 
     this.sendmsg();
 
+
+
   }
+
 
 }
