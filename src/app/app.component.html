@@ -11,10 +11,9 @@
     <div *ngIf="show_status" class="title-center">
 
       <div *ngIf="enc_status">
-        <a [routerLink]="[]" (click)="closeReport()"  title="Close report">
-          <mat-icon color="warn"
-            class="vertical-align-middle padding-bottom-3" matSuffix>no_encryption</mat-icon>
-          </a> Report is decrypted
+        <a [routerLink]="[]" (click)="closeReport()" title="Close report">
+          <mat-icon color="warn" class="vertical-align-middle padding-bottom-3" matSuffix>no_encryption</mat-icon>
+        </a> Report is decrypted
       </div>
       <div *ngIf="!enc_status">
         <mat-icon color="accent" class="vertical-align-middle padding-bottom-3" matSuffix>lock</mat-icon> Report is
@@ -75,9 +74,7 @@
 
         <div *ngIf="show_active_reports">
 
-          <button mat-menu-item disabled>
-            <mat-icon>remove</mat-icon>
-          </button>
+          <mat-divider></mat-divider>
 
           <button mat-menu-item disabled>
             <mat-icon>lock_open</mat-icon>
