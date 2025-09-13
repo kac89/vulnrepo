@@ -165,12 +165,12 @@
                     value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
                   <div *ngIf="aiconnected" style="position:absolute;top: 10px; right: 10px;">
                     <button mat-icon-button color="accent" title="AI report summary" [matMenuTriggerFor]="menu">
-                      <mat-icon>insert_comment</mat-icon>
+                      <mat-icon>photo_filter</mat-icon>
                     </button>
 
                     <mat-menu #menu="matMenu">
                       <button mat-menu-item (click)="aiasist()"><mat-icon
-                          class="vertical-align-middle padding-bottom-3">description</mat-icon> AI report
+                          class="vertical-align-middle padding-bottom-3">photo_filter</mat-icon> AI report
                         summary</button>
                       <button mat-menu-item (click)="goaisettings()"><mat-icon
                           class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings</button>
@@ -1101,7 +1101,7 @@
             <mat-menu #aboveMenu="matMenu" yPosition="above">
 
               <button *ngIf="aiconnected" mat-menu-item (click)="goAIsummary()" title="Decrypted AI report to LLM">
-                <mat-icon>speaker_notes</mat-icon>Attach to AI assistant
+                <mat-icon>photo_filter</mat-icon>Attach to AI assistant
               </button>
               <mat-divider></mat-divider>
               <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false, '')"
