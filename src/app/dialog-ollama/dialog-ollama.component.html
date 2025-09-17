@@ -5,8 +5,8 @@
     <mat-card-title>AI assistant</mat-card-title>
     <mat-card-subtitle>Ask your local large language model (LLM).</mat-card-subtitle>
     <div style="flex: 1"></div>
-    <button color="warn" *ngIf="aiconnected" mat-button (click)="clearmsg()"><mat-icon>delete_forever</mat-icon>Remove
-      chat</button>
+    <button title="Remove chat" color="warn" *ngIf="aiconnected" matMiniFab
+      (click)="clearmsg()"><mat-icon>delete_forever</mat-icon></button>
   </mat-card-header>
 
   <mat-dialog-content class="mat-typography" id="chat">
@@ -105,14 +105,13 @@
     </mat-form-field>
 
     <div *ngIf="myrep">
-
-      <button (click)="useAIprompt(0)" matButton="outlined">Create report summary for CEO</button>
+      <button (click)="useAIprompt(0)" matButton="outlined">Report summary for CEO</button>
       <button (click)="useAIprompt(1)" matButton="outlined">List remediation steps</button>
-      <button (click)="useAIprompt(5)" matButton="outlined">Who can fix it</button>
-      <button (click)="useAIprompt(2)" matButton="outlined">Create technical summary for developer</button>
+      <button (click)="useAIprompt(2)" matButton="outlined">Technical summary for developer</button>
       <button (click)="useAIprompt(3)" matButton="outlined">List all issues</button>
-      <button (click)="useAIprompt(4)" matButton="outlined">What is the cost of repair?</button>
-
+      <button (click)="useAIprompt(4)" matButton="outlined">What is the cost of repair</button>
+      <button (click)="useAIprompt(5)" matButton="outlined">Who can fix it</button>
+      <button (click)="useAIprompt(6)" matButton="outlined">Describe to me like im 5</button>
     </div>
   </div>
 
