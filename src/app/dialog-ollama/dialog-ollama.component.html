@@ -5,7 +5,7 @@
     <mat-card-title>AI assistant</mat-card-title>
     <mat-card-subtitle>Ask your local large language model (LLM).</mat-card-subtitle>
     <div style="flex: 1"></div>
-    <button title="Remove chat" color="warn" *ngIf="aiconnected" matMiniFab
+    <button title="Remove chat" color="warn" *ngIf="aiconnected && chatmsg.length > 0" matMiniFab
       (click)="clearmsg()"><mat-icon>delete_forever</mat-icon></button>
   </mat-card-header>
 
