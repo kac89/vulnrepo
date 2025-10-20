@@ -843,11 +843,11 @@ export class DialogImportComponent implements OnInit {
           res.ports[0].port.forEach((myObject, index) => {
             let service = '';
             let service_name = '';
-            if (myObject.service[0]['$'].name !== undefined) {
+            if (myObject.service !== undefined && myObject.service[0]['$'].name !== undefined) {
               service_name = myObject.service[0]['$'].name;
             }
             let service_product = '';
-            if (myObject.service[0]['$'].product !== undefined) {
+            if (myObject.service !== undefined && myObject.service[0]['$'].product !== undefined) {
               service_product = myObject.service[0]['$'].product;
             }
             if (service_product === '') {
