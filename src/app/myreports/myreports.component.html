@@ -36,13 +36,13 @@
 <mat-card appearance="outlined" class="mdc-card my-card-content">
 
   <div fxLayout="row wrap" fxLayoutGap="10px grid">
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <div fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
       <mat-form-field *ngIf="dataSource.data.length != 0" appearance="outline" color="accent" class="full-width">
         <mat-label>Filter reports</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ex. external pentest" #input>
       </mat-form-field>
     </div>
-    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <div fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
 
       <mat-paginator color="accent" *ngIf="dataSource.data.length != 0" [pageSizeOptions]="[10, 50, 100]"
         showFirstLastButtons></mat-paginator>
@@ -70,25 +70,23 @@
       </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="source">
-      <mat-header-cell *matHeaderCellDef><mat-icon title="Where reports are stored">folder</mat-icon></mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <span *ngIf="!element.api"><mat-icon title="Local Host">computer</mat-icon></span>
+    <ng-container matColumnDef="report_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-70 th-left'"> <mat-icon
+          title="Where report is stored">folder</mat-icon> &nbsp; TITLE </mat-header-cell>
+      <mat-cell *matCellDef="let element" [ngClass]="'w-70 th-left'">
+
+        <span *ngIf="!element.api"><mat-icon style="color: #5e5e5e" title="Local Host">computer</mat-icon></span>
         <span *ngIf="element.api == 'remote'"><mat-icon color="accent"
             title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon></span>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="report_name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-70 th-left'"> TITLE </mat-header-cell>
-      <mat-cell *matCellDef="let element" [ngClass]="'w-70 th-left'">
+        &nbsp;
         <a mat-button class="active-link" routerLink="/report/{{element.report_id}}/"
           href="#">{{element.report_name}}</a>
       </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="report_createdate">
-      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75 th-right'"> CREATE DATE </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'w-75 th-right'"> <mat-icon>date_range</mat-icon>
+        &nbsp; CREATE DATE </mat-header-cell>
       <mat-cell *matCellDef="let element" [ngClass]="'w-75 th-right'">
         <span *ngIf="element.report_createdate == 0"></span>
         <span *ngIf="element.report_createdate != 0">{{element.report_createdate | date:'medium'}} </span>
@@ -96,7 +94,8 @@
     </ng-container>
 
     <ng-container matColumnDef="report_lastupdate">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> LAST UPDATE </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> <mat-icon>date_range</mat-icon> &nbsp; LAST UPDATE
+      </mat-header-cell>
       <mat-cell *matCellDef="let element">
         <span *ngIf="element.report_lastupdate == 0"></span>
         <span *ngIf="element.report_lastupdate != 0">{{element.report_lastupdate | date:'medium'}} </span>
@@ -138,6 +137,12 @@
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell">No data matching the filter</td>
+    </tr>
+
   </mat-table>
 
 

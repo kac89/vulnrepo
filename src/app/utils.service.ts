@@ -42,7 +42,7 @@ export class UtilsService {
   }
 
 
-  generatePassword(length) {
+  generatePassword(length: number) {
     const string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numeric = '0123456789';
     const punctuation = '!@#$%^&*()_+~`|}{[]\:;?><,./-=';
@@ -65,7 +65,7 @@ export class UtilsService {
 
 
 
-  parseCSV(str) {
+  parseCSV(str: string) {
 
     const arr: any = [];
     let quote = false;  // 'true' means we're inside a quoted field
@@ -102,7 +102,7 @@ export class UtilsService {
     return arr;
   }
 
-  removeHTMLTags(htmlString) {
+  removeHTMLTags(htmlString: string) {
     // Create a new DOMParser instance
     const parser = new DOMParser();
     // Parse the HTML string

@@ -12,19 +12,14 @@ th.mat-sort-header-sorted {
   justify-content: center;
 }
 .mat-mdc-header-cell:nth-child(2),.mat-mdc-cell:nth-child(2){
-  flex:6%;
-  text-align: center;
-  justify-content: center;
-}
-.mat-mdc-header-cell:nth-child(3),.mat-mdc-cell:nth-child(3){
   flex:60%;
   text-align: center;
   justify-content: flex-start;
 }
-.mat-mdc-header-cell:nth-child(4),.mat-mdc-cell:nth-child(4){
+.mat-mdc-header-cell:nth-child(3),.mat-mdc-cell:nth-child(3){
   flex:22%;
 }
-.mat-mdc-header-cell:nth-child(5),.mat-mdc-cell:nth-child(5){
+.mat-mdc-header-cell:nth-child(4),.mat-mdc-cell:nth-child(4){
   flex:22%;
 }
 .mat-mdc-header-cell:last-child,.mat-mdc-cell:last-child{
