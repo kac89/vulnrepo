@@ -31,16 +31,18 @@ export interface MyReportElement {
   styleUrls: ['./myreports.component.scss']
 })
 export class MyreportsComponent implements OnInit {
-  dialogRef: MatDialogRef<DialogEditComponent>;
-  displayedColumns: string[] = ['select', 'source', 'report_name', 'report_createdate', 'report_lastupdate', 'settings'];
+
+  displayedColumns: string[] = ['select', 'report_name', 'report_createdate', 'report_lastupdate', 'settings'];
   dataSource = new MatTableDataSource([]);
   selection = new SelectionModel<MyReportElement>(true, []);
   msg = '';
   keyfound = false;
   apilist: any = [];
   list: any = [];
-  private paginator: MatPaginator;
-  private sort: MatSort;
+  public dialogRef: MatDialogRef<DialogEditComponent> | undefined;
+  private paginator: MatPaginator | undefined;
+  private sort: MatSort | undefined;
+
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
@@ -58,7 +60,7 @@ export class MyreportsComponent implements OnInit {
   }
 
   constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService, private apiService: ApiService,
-    private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,public router: Router) {
+    private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService, public router: Router) {
 
   }
 
@@ -89,7 +91,7 @@ export class MyreportsComponent implements OnInit {
       this.keyfound = true;
       const vaultobj = JSON.parse(localkey);
       let x = 0;
-      vaultobj.forEach((element) => {
+      vaultobj.forEach((element: any) => {
         x = x + 1;
 
         this.apilist.push({ value: element.value, apikey: element.apikey, viewValue: element.viewValue });
@@ -97,7 +99,7 @@ export class MyreportsComponent implements OnInit {
         this.apiService.APISend(element.value, element.apikey, 'getreportslist', '').then(resp => {
 
           if (resp.length > 0) {
-            resp.forEach((ele) => {
+            resp.forEach((ele: any) => {
               ele.api = 'remote';
               ele.apiurl = element.value;
               ele.apikey = element.apikey;
@@ -131,7 +133,7 @@ export class MyreportsComponent implements OnInit {
         if (ret) {
 
           if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
-            setTimeout(_ => this.openDialog(ret));
+            setTimeout((_: any) => this.openDialog(ret));
           }
 
         }
@@ -161,11 +163,11 @@ export class MyreportsComponent implements OnInit {
 
   }
 
-  shareReport(report_id) {
+  shareReport(report_id: any) {
     this.indexeddbService.downloadEncryptedReport(report_id);
   }
 
-  removeReport(item) {
+  removeReport(item: any) {
 
     const remo = 'removereport';
     const dialogRef = this.dialog.open(DialogEditComponent, {
@@ -203,7 +205,7 @@ export class MyreportsComponent implements OnInit {
   }
 
 
-  cloneReport(item) {
+  cloneReport(item: any) {
 
     item.report_name = 'Clone of ' + item.report_name;
     item.report_id = uuid();
@@ -216,7 +218,7 @@ export class MyreportsComponent implements OnInit {
 
   }
 
-  fromAPIcloneReport(item) {
+  fromAPIcloneReport(item: any) {
 
     item.report_name = 'Clone of ' + item.report_name;
     item.report_id = uuid();
@@ -230,7 +232,7 @@ export class MyreportsComponent implements OnInit {
 
   }
 
-  toAPIcloneReport(item, apiurl, apikey) {
+  toAPIcloneReport(item: any, apiurl: string, apikey: string) {
 
     item.report_id = uuid();
 
@@ -287,7 +289,7 @@ export class MyreportsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  Redirectme(url) {
+  Redirectme(url: any) {
     this.router.navigate([url]);
   }
 
