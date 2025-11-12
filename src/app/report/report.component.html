@@ -709,10 +709,12 @@
         <mat-icon>face</mat-icon>
       </div>
       <mat-card-title style="display: flex">Researcher&nbsp;
-        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;"
-          [matMenuTriggerFor]="researchermenu">
-          <mat-icon>more_vert</mat-icon>
+        &nbsp;
+
+        <button style="height: 27px;" matButton="outlined" (click)="addresearcher()">Add researcher
+          <mat-icon>add</mat-icon>
         </button>
+
         <mat-menu #researchermenu="matMenu">
           <a [routerLink]="[]" (click)="addresearcher()" class="active-link" title="Add new researcher" mat-menu-item>
             <mat-icon class="vertical-align-middle">add</mat-icon> Add researcher
@@ -778,16 +780,17 @@
       </div>
       <mat-card-title style="display: flex">Changelog
         &nbsp;
-        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;"
-          [matMenuTriggerFor]="changelogmenu">
+
+        <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="changelogmenu">More
           <mat-icon>more_vert</mat-icon>
         </button>
+
         <mat-menu #changelogmenu="matMenu">
-          <a [routerLink]="[]" (click)="addchangelog()" class="active-link" title="Add event to changelog"
+          <a [routerLink]="[]" (click)="addchangelog()" title="Add event to changelog"
             mat-menu-item>
             <mat-icon class="vertical-align-middle">add</mat-icon> Add event to changelog
           </a>
-          <a [routerLink]="[]" (click)="removeallfromchangelog()" class="active-link"
+          <a [routerLink]="[]" (click)="removeallfromchangelog()"
             title="Remove all events from changelog" mat-menu-item>
             <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove all events
           </a>
@@ -869,8 +872,8 @@
 
       <mat-card-title style="display: flex" fxLayoutAlign="start">Settings
         &nbsp;
-        <button mat-icon-button style="width: 25px; height: 25px; line-height: 5px; border-radius: 70%;padding: 0px;"
-          [matMenuTriggerFor]="Settingsmenu">
+
+        <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="Settingsmenu">More
           <mat-icon>more_vert</mat-icon>
         </button>
 

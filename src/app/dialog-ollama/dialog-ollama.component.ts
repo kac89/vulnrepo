@@ -24,12 +24,12 @@ import { UtilsService } from '../utils.service';
 export class DialogOllamaComponent implements OnInit {
 
 
-  @ViewChild('tooltip') tooltip: MatTooltip;
-  @ViewChild('tooltip2') tooltip2: MatTooltip;
+  @ViewChild('tooltip') tooltip!: MatTooltip;
+  @ViewChild('tooltip2') tooltip2!: MatTooltip;
   chatmsg: any = [];
 
   questioninput = new UntypedFormControl();
-  aiselectedValue: string;
+  aiselectedValue: string = '';
   ai_tags: any = [];
   models: any;
   aiconnected = false;
@@ -144,7 +144,7 @@ export class DialogOllamaComponent implements OnInit {
         return `<blockquote><p>` + DOMPurify.sanitize(token.text) + `</p></blockquote>`;
       };
 
-      function millisToMinutesAndSeconds(millis) {
+      function millisToMinutesAndSeconds(millis:number) {
         var minutes = Math.floor(millis / 60000);
         var seconds = Number(((millis % 60000) / 1000).toFixed(0));
         return (
@@ -209,7 +209,7 @@ export class DialogOllamaComponent implements OnInit {
 
   }
 
-  updatemsg(role, msg) {
+  updatemsg(role:string, msg:any) {
     const localchat = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-MSG-H');
     let tarr: any = [];
     if (localchat) {
@@ -225,7 +225,7 @@ export class DialogOllamaComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  saniteizeme(code) {
+  saniteizeme(code:any) {
     return DOMPurify.sanitize(code);
   }
 
@@ -236,16 +236,16 @@ export class DialogOllamaComponent implements OnInit {
   }
 
 
-  onImageLoad(fileLoadedEvent) { }
+  //onImageLoad(fileLoadedEvent) { }
 
   onImageSelect(input: HTMLInputElement) {
     const files = input.files;
     if (files) {
-      Object.keys(files).forEach(key => {
+      Object.keys(files).forEach((key:any) => {
 
         const fileToRead = files[key];
         const fileReader = new FileReader();
-        fileReader.onload = this.onImageLoad;
+        //fileReader.onload = this.onImageLoad;
 
         fileReader.onload = (e) => {
 
@@ -268,17 +268,17 @@ export class DialogOllamaComponent implements OnInit {
     this.attachedIMG_b64 = [];
   }
 
-  onFileLoad(fileLoadedEvent) { }
+  //onFileLoad(fileLoadedEvent) { }
 
   onFileSelect(input: HTMLInputElement) {
     const files = input.files;
 
     if (files) {
-      Object.keys(files).forEach(key => {
+      Object.keys(files).forEach((key: any) => {
 
         const fileToRead = files[key];
         const fileReader = new FileReader();
-        fileReader.onload = this.onImageLoad;
+        //fileReader.onload = this.onImageLoad;
 
         fileReader.onload = (e) => {
 
@@ -353,7 +353,7 @@ export class DialogOllamaComponent implements OnInit {
     }, 2000);
   }
 
-  downloadAIText(response) {
+  downloadAIText(response:any) {
 
     // download JSON report
     const blob = new Blob([JSON.stringify(response)], { type: 'text/markdown' });
@@ -368,18 +368,18 @@ export class DialogOllamaComponent implements OnInit {
 
   }
 
-  prepAIcopy(html) {
+  prepAIcopy(html:any) {
     return this.utilsService.removeHTMLTags(html);
   }
 
 
-  useAIprompt(index) {
+  useAIprompt(index:number) {
 
     const arr = [
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a report summary and remediation's for a company CEO as a document, mention scope if provided on JSON key "report_scope", mention researcher if provided on JSON key "researcher".`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a list remediation steps for provided issues.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare a technical summary for developer with remediations.`,
-      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please create a list with all issues.`,
+      `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please prepare the content of an email to the management board summarizing all vulnerabilities and providing information on how to fix them after security pentest base on json file.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, Base on that file, what is the cost of fixing all issues? try estimate potential costs in dolars.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please select what kind a specialization and skills I need to have to solve these issues.`,
       `I have attached a JSON report file, don't mention that file, which contains a list of vulnerabilities, please describe report data like to 5 old child.`
