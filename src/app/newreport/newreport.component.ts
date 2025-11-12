@@ -21,8 +21,8 @@ import {Location} from '@angular/common';
   styleUrls: ['./newreport.component.scss']
 })
 export class NewreportComponent implements OnInit {
-  @ViewChild('tooltip') tooltip: MatTooltip;
-  dialogRef: MatDialogRef<DialogApikeyComponent>;
+  @ViewChild('tooltip') tooltip!: MatTooltip;
+  dialogRef: MatDialogRef<DialogApikeyComponent> | undefined;
   hide = true;
   localkeys = [];
   color: ThemePalette = 'warn';
@@ -86,13 +86,13 @@ export class NewreportComponent implements OnInit {
       this.keyfound = true;
       const vaultobj = JSON.parse(localkey);
 
-      vaultobj.forEach( (element) => {
+      vaultobj.forEach( (element:any) => {
 
         this.apiService.APISend(element.value, element.apikey, 'getreportprofiles', '').then(resp => {
 
           if (resp.length > 0) {
 
-            resp.forEach((ele) => {
+            resp.forEach((ele:any) => {
               ele.api = 'remote';
               ele.apiurl = element.value;
               ele.apikey = element.apikey;
@@ -125,7 +125,7 @@ export class NewreportComponent implements OnInit {
         if (ret) {
 
           if (this.sessionsub.getSessionStorageItem('hidedialog') !== 'true') {
-            setTimeout(_ => this.openDialog(ret));
+            setTimeout((_:any) => this.openDialog(ret));
           }
 
         }
@@ -168,7 +168,7 @@ export class NewreportComponent implements OnInit {
 
   }
 
-  passCheck(pass) {
+  passCheck(pass:string) {
 
     switch (this.passwordService.checkPasswordStrength(pass)) {
       case 0:
@@ -235,7 +235,7 @@ export class NewreportComponent implements OnInit {
 
   }
 
-  selectchange(event) {
+  selectchange(event:any) {
     this.selectEDAPI = [];
     if (event.value === 'local') {
       console.log('Local');
@@ -248,7 +248,7 @@ export class NewreportComponent implements OnInit {
 
   }
 
-  selectchangeProfiles(event) {
+  selectchangeProfiles(event:any) {
     if (event.value) {
       this.selected_profilefin = event.value.profile_name;
       this.profileSettingsselected = event.value;
