@@ -4,95 +4,103 @@
 
     <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
 
-          <h1 class="mat-headline-3">
-            <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> Templates List
-            ({{this.countvulns.length}})
-          </h1>
+      <h1 class="mat-headline-3">
+        <mat-icon class="vertical-align-middle padding-bottom-3 size-45">bug_report</mat-icon> Templates List
+        ({{this.countvulns.length}})
+      </h1>
 
     </div>
 
     <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-          <mat-form-field color="accent" appearance="fill">
-            <mat-label>Select a source</mat-label>
-          
-            <mat-select disableRipple [(value)]="sourceSelect" (selectionChange)="changeselect()">
-              <mat-option value="VULNREPO">VULNRΞPO</mat-option>
-              <mat-option value="CWE">CWE Research Concepts</mat-option>
-              <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-              <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
-              <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
-              <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
-              <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
-              <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
-            </mat-select>
-          </mat-form-field>
+      <mat-form-field color="accent" appearance="fill">
+        <mat-label>Select a source</mat-label>
+
+        <mat-select disableRipple [(value)]="sourceSelect" (selectionChange)="changeselect()">
+          <mat-option value="VULNREPO">VULNRΞPO</mat-option>
+          <mat-option value="CWE">CWE Research Concepts</mat-option>
+          <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+          <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+          <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
+          <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
+          <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
+          <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
   </div>
 
   <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-    <div *ngIf="sourceSelect == 'VULNREPO'">
-      <p>
-        List contains issues templates used during creating a report, source name: "VULNRΞPO". Share your templates on: 
-      <button mat-button color="accent" (click)="create_issue()">
-        <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>add_circle</mat-icon> Add custom template
-      </button> or directly edit /assets/vulns.json and make Pull Request to `dev` branch.
-      </p>
-    </div>
-  
+    @if (sourceSelect == 'VULNREPO') {
+      <div>
+        <p>
+          List contains issues templates used during creating a report, source name: "VULNRΞPO". Share your templates on:
+          <button mat-button color="accent" (click)="create_issue()">
+            <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>add_circle</mat-icon> Add custom template
+          </button> or directly edit /assets/vulns.json and make Pull Request to `dev` branch.
+        </p>
+      </div>
+    }
+
     <div class="mat-elevation-z8">
-  
-  
+
+
       <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort matSortActive="cvss"
         matSortDirection="desc">
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
           <td mat-cell *matCellDef="let element">
-            <mat-icon *ngIf="element.api == 'remote'" color="accent"
-            title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon> {{element.title}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="severity">
-          <th mat-header-cell *matHeaderCellDef> Severity </th>
-          <td mat-cell *matCellDef="let element"> {{element.severity}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="cvss">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> CVSS </th>
-          <td mat-cell *matCellDef="let element"> {{element.cvss}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="cve">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> CVE </th>
-          <td mat-cell *matCellDef="let element"> {{element.cve}} </td>
-        </ng-container>
-  
-        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-        <ng-container matColumnDef="expandedDetail">
-          <td mat-cell *matCellDef="let element;let i=index" [attr.colspan]="displayedColumns.length">
-            <div class="example-element-detail" [@detailExpand]="element.expanded ? 'expanded' : 'collapsed'">
-              <div class="example-element-description">
-                <b>Description: </b>{{element.desc}}<br>
-                <b *ngIf="element.cve">CVE: {{element.cve}}</b><br>
-                <b>Reference:</b>{{element.ref}}<br>
-              </div>
-            </div>
-          </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
-          [class.example-expanded-row]="element.expanded" (click)="element.expanded = !element.expanded">
-        </tr>
-        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-      </table>
-  
-      <mat-paginator [pageSizeOptions]="[100,500,1000]" showFirstLastButtons></mat-paginator>
-  
-    </div>
-    <p *ngIf="getvulnlistStatus">{{getvulnlistStatus}}</p>
-  </mat-card>
-  <br>
-  <br>
-  <br>
-</div>
+            @if (element.api == 'remote') {
+              <mat-icon color="accent"
+              title="Remote API: {{element.apiname}} - [{{element.apiurl}}] ">public</mat-icon>
+            } {{element.title}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="severity">
+            <th mat-header-cell *matHeaderCellDef> Severity </th>
+            <td mat-cell *matCellDef="let element"> {{element.severity}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cvss">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CVSS </th>
+            <td mat-cell *matCellDef="let element"> {{element.cvss}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cve">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CVE </th>
+            <td mat-cell *matCellDef="let element"> {{element.cve}} </td>
+          </ng-container>
+
+          <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element;let i=index" [attr.colspan]="displayedColumns.length">
+              <div class="example-element-detail" [@detailExpand]="element.expanded ? 'expanded' : 'collapsed'">
+                <div class="example-element-description">
+                  <b>Description: </b>{{element.desc}}<br>
+                  @if (element.cve) {
+                    <b>CVE: {{element.cve}}</b>
+                    }<br>
+                    <b>Reference:</b>{{element.ref}}<br>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+              [class.example-expanded-row]="element.expanded" (click)="element.expanded = !element.expanded">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[100,500,1000]" showFirstLastButtons></mat-paginator>
+
+        </div>
+        @if (getvulnlistStatus) {
+          <p>{{getvulnlistStatus}}</p>
+        }
+      </mat-card>
+      <br>
+        <br>
+          <br>
+          </div>

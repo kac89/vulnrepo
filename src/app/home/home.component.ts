@@ -12,9 +12,22 @@ export class HomeComponent implements OnInit {
   items = ['Screenshots'];
   expandedIndex = 0;
   readonly panelOpenState = signal(false);
-  constructor() { }
+  constructor() {
+
+    this.panelOpenState.set(true);
+
+   }
 
   ngOnInit() {
+
+  }
+
+  download() {
+    window.open('https://github.com/kac89/vulnrepo', '_blank');
+  }
+
+  demo() {
+    window.open('https://vulnrepo.com/', '_blank');
   }
 
 }

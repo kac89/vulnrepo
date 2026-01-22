@@ -6,95 +6,103 @@
 
   <div fxLayout="column" fxLayoutGap="10px grid">
     <div fxLayoutAlign="start center">
-        <mat-form-field class="example-full-width" color="accent">
-            <mat-label>Template name</mat-label>
-            <input matInput [formControl]="templatename" placeholder="e.g: [FPD] Full Path Disclosure">
-          </mat-form-field>
+      <mat-form-field class="example-full-width" color="accent">
+        <mat-label>Template name</mat-label>
+        <input matInput [formControl]="templatename" placeholder="e.g: [FPD] Full Path Disclosure">
+      </mat-form-field>
     </div>
     <div fxLayoutAlign="start center">
-        <mat-form-field class="example-full-width" color="accent">
-            <mat-label>Description</mat-label>
-            <textarea matInput [formControl]="description" placeholder="e.g: Full Path Disclosure (FPD) vulnerabilities enable the attacker to see the path to the webroot/file. e.g.: /home/omg/htdocs/file/. Certain vulnerabilities, such as using the load_file() (within a SQL Injection) query to view the page source, require the attacker to have the full path to the file they wish to view."></textarea>
-          </mat-form-field>
+      <mat-form-field class="example-full-width" color="accent">
+        <mat-label>Description</mat-label>
+        <textarea matInput [formControl]="description" placeholder="e.g: Full Path Disclosure (FPD) vulnerabilities enable the attacker to see the path to the webroot/file. e.g.: /home/omg/htdocs/file/. Certain vulnerabilities, such as using the load_file() (within a SQL Injection) query to view the page source, require the attacker to have the full path to the file they wish to view."></textarea>
+      </mat-form-field>
     </div>
     <div fxLayoutAlign="start center">
-        <mat-form-field class="example-full-width" color="accent">
-            <mat-label>References</mat-label>
-            <textarea matInput [formControl]="references" placeholder="e.g: https://owasp.org/www-community/attacks/Full_Path_Disclosure"></textarea>
-          </mat-form-field>
+      <mat-form-field class="example-full-width" color="accent">
+        <mat-label>References</mat-label>
+        <textarea matInput [formControl]="references" placeholder="e.g: https://owasp.org/www-community/attacks/Full_Path_Disclosure"></textarea>
+      </mat-form-field>
     </div>
     <div fxLayout="column" fxLayoutAlign="start">
 
-        <div fxLayout="row wrap" fxLayoutGap="10px grid">
-            <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>Select an severity</mat-label>
-                    <mat-select [formControl]="severity">
-                        @for (sev of tablecon; track sev) {
-                          <mat-option [value]="sev.name">{{sev.name}}</mat-option>
-                        }
-                      </mat-select>
-                  </mat-form-field>
-            </div>
-            <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>CVE</mat-label>
-                    <input matInput [formControl]="cve" placeholder="CVE">
-                  </mat-form-field>
-            </div>
+      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+        <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>Select an severity</mat-label>
+            <mat-select [formControl]="severity">
+              @for (sev of tablecon; track sev) {
+                <mat-option [value]="sev.name">{{sev.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
         </div>
-        <div fxLayout="row wrap" fxLayoutGap="10px grid">
-            <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>CVSS base score</mat-label>
-                    <input [formControl]="cvss" matInput placeholder="e.g: 5">
-                    <button mat-button (click)="openDialogCVSS()" style="line-height: 25px;" color="accent" matSuffix>
-                        CVSS
-                    </button>
-                  </mat-form-field>
-            </div>
-            <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>CVSS vector</mat-label>
-                    <input [formControl]="cvss_vector" matInput placeholder="CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_">
-                  </mat-form-field>
-            </div>
-
+        <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>CVE</mat-label>
+            <input matInput [formControl]="cve" placeholder="CVE">
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+        <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>CVSS base score</mat-label>
+            <input [formControl]="cvss" matInput placeholder="e.g: 5">
+            <button mat-button (click)="openDialogCVSS()" style="line-height: 25px;" color="accent" matSuffix>
+              CVSS
+            </button>
+          </mat-form-field>
+        </div>
+        <div fxLayoutAlign="end center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>CVSS vector</mat-label>
+            <input [formControl]="cvss_vector" matInput placeholder="CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_">
+          </mat-form-field>
         </div>
 
-        <div fxLayoutAlign="start center">
+      </div>
 
-            <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <mat-label>TAGs</mat-label>
-                <mat-chip-grid #tagList aria-label="Tags">
-                  <mat-chip-row *ngFor="let tag of tags" [(ngModel)]="tags" [selectable]="selectable"
-                    [removable]="removable" (removed)="TAGremove(tag)" ngDefaultControl>
-                    {{tag.name}}
-                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                  </mat-chip-row>
-                  <input placeholder="New tag..." [matChipInputFor]="tagList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="TAGadd($event)">
-                </mat-chip-grid>
-              </mat-form-field>
+      <div fxLayoutAlign="start center">
+
+        <mat-form-field appearance="outline" class="example-full-width" color="accent">
+          <mat-label>TAGs</mat-label>
+          <mat-chip-grid #tagList aria-label="Tags">
+            @for (tag of tags; track tag) {
+              <mat-chip-row [(ngModel)]="tags" [selectable]="selectable"
+                [removable]="removable" (removed)="TAGremove(tag)" ngDefaultControl>
+                {{tag.name}}
+                @if (removable) {
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                }
+              </mat-chip-row>
+            }
+            <input placeholder="New tag..." [matChipInputFor]="tagList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+              (matChipInputTokenEnd)="TAGadd($event)">
+            </mat-chip-grid>
+          </mat-form-field>
 
         </div>
+
+      </div>
 
     </div>
 
-</div>
 
 
-
-</mat-dialog-content>
-<mat-dialog-actions align="start">
-  <div fxLayout="row">
-    <div fxLayoutAlign="start center" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-        <button mat-raised-button color="accent" *ngIf="data.length == 0" (click)="savelocally()"><mat-icon>save_as</mat-icon> Save locally</button>
-        <button mat-raised-button color="accent" *ngIf="data.length > 0" (click)="edit(data)"><mat-icon>save_as</mat-icon> Save</button>
+  </mat-dialog-content>
+  <mat-dialog-actions align="start">
+    <div fxLayout="row">
+      <div fxLayoutAlign="start center" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+        @if (data.length == 0) {
+          <button mat-raised-button color="accent" (click)="savelocally()"><mat-icon>save_as</mat-icon> Save locally</button>
+        }
+        @if (data.length > 0) {
+          <button mat-raised-button color="accent" (click)="edit(data)"><mat-icon>save_as</mat-icon> Save</button>
+        }
         &nbsp;
         <button mat-raised-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
+      </div>
     </div>
-</div>
-</mat-dialog-actions>
+  </mat-dialog-actions>
 

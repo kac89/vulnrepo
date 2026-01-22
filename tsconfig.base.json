@@ -1,15 +1,16 @@
 {
+  "type": "module",
   "compileOnSave": false,
+  "typeCheckHostBindings": false,
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
     "downlevelIteration": true,
-    "importHelpers": true,
+    "importHelpers": false,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "declaration": false,
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "declaration": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "experimentalDecorators": true,
     "target": "ES2022",
     "typeRoots": [

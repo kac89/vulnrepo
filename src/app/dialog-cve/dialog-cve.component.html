@@ -2,109 +2,116 @@
 
   <h1 class="mat-display">
     <mat-icon class="vertical-align-middle size-45">explore</mat-icon> CVE Info (Online)
-</h1>
-<mat-dialog-content>
+  </h1>
+  <mat-dialog-content>
 
     <mat-form-field class="example-full-width" color="accent" appearance="outline">
-        <mat-label>CVE</mat-label>
-        <input matInput placeholder="e.g.: CVE-2024-6050" [formControl]="mycve">
+      <mat-label>CVE</mat-label>
+      <input matInput placeholder="e.g.: CVE-2024-6050" [formControl]="mycve">
     </mat-form-field>
 
-    <div *ngIf="results">
-
+    @if (results) {
+      <div>
         <div style="width: 100%;" fxLayout.xs="column" fxLayoutGap="10px">
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.published" fxFlex><b>Published:</b><br>{{ results?.published }}</div>
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.modified" fxFlex><b>Modified:</b><br>{{ results?.modified }}</div>
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" *ngIf="results?.assigner" fxFlex><b>Assigner:</b><br>{{ results?.assigner }}</div>
+          @if (results?.published) {
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" fxFlex><b>Published:</b><br>{{ results?.published }}</div>
+          }
+          @if (results?.modified) {
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" fxFlex><b>Modified:</b><br>{{ results?.modified }}</div>
+          }
+          @if (results?.assigner) {
+            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" fxFlex><b>Assigner:</b><br>{{ results?.assigner }}</div>
+          }
         </div>
-        
-        <p *ngIf="results?.descriptions"><b>Description:</b> {{ results?.descriptions[0].value }}</p>
-        
-       <!-- 
-       <p>
-            <mat-chip-listbox>
-                <mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option>
-                <a *ngIf="results?.weaknesses" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.weaknesses.descriptions[0].cweId }}"><mat-chip-option>{{ results?.weaknesses.descriptions[0].cweId }}</mat-chip-option></a>
-            </mat-chip-listbox>
-        </p> 
-       --> 
-
-        <h2 *ngIf="dataSource.data.length != 0">POCs</h2>
-
-        <div *ngIf="dataSource.data.length != 0">
+        @if (results?.descriptions) {
+          <p><b>Description:</b> {{ results?.descriptions[0].value }}</p>
+        }
+        <!--
+        <p>
+          <mat-chip-listbox>
+            <mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option>
+            <a *ngIf="results?.weaknesses" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.weaknesses.descriptions[0].cweId }}"><mat-chip-option>{{ results?.weaknesses.descriptions[0].cweId }}</mat-chip-option></a>
+          </mat-chip-listbox>
+        </p>
+        -->
+        @if (dataSource.data.length != 0) {
+          <h2>POCs</h2>
+        }
+        @if (dataSource.data.length != 0) {
+          <div>
             <table mat-table [dataSource]="dataSource">
-          
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> <b>Name</b> </th>
                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
               </ng-container>
-          
               <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef> <b>Description</b> </th>
                 <td mat-cell *matCellDef="let element"> {{element.description}} </td>
               </ng-container>
-          
               <ng-container matColumnDef="source">
                 <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
                 <td mat-cell *matCellDef="let element"> {{element.html_url}} </td>
               </ng-container>
-          
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-          
             <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]"
-                           showFirstLastButtons 
-                           aria-label="Select page of periodic elements">
+              showFirstLastButtons
+              aria-label="Select page of periodic elements">
             </mat-paginator>
           </div>
-                
-      <div *ngIf="results?.references">
-        <h2 *ngIf="results?.references.length != 0">References</h2>
-
-        <div *ngIf="results?.references">
-            <table mat-table [dataSource]="dataSource2">
-          
-              <ng-container matColumnDef="url">
-                <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
-                <td mat-cell *matCellDef="let element"> {{element.url}} </td>
-              </ng-container>
-          
-              <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-            </table>
-          
-            <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]"
-                          showFirstLastButtons 
-                          aria-label="Select page of periodic elements">
-            </mat-paginator>
+        }
+        @if (results?.references) {
+          <div>
+            @if (results?.references.length != 0) {
+              <h2>References</h2>
+            }
+            @if (results?.references) {
+              <div>
+                <table mat-table [dataSource]="dataSource2">
+                  <ng-container matColumnDef="url">
+                    <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
+                    <td mat-cell *matCellDef="let element"> {{element.url}} </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                </table>
+                <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]"
+                  showFirstLastButtons
+                  aria-label="Select page of periodic elements">
+                </mat-paginator>
+              </div>
+            }
           </div>
+        }
       </div>
+    }
 
-    </div>
-
-    <div *ngIf="show">
+    @if (show) {
+      <div>
         Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-    </div>
+      </div>
+    }
     {{err_msg}}
-</mat-dialog-content>
-<mat-dialog-actions>
+  </mat-dialog-content>
+  <mat-dialog-actions>
 
     <div>
       <button mat-raised-button color="accent" (click)="searchCVE()">
-        <mat-icon matSuffix>search</mat-icon> Search CVE 
-    </button>
-  </div>
-
-    <div style="margin-left: auto; margin-right: 0;" *ngIf="results">
-        <button mat-raised-button color="accent" (click)="saveCVE()">
-            <mat-icon matSuffix>save</mat-icon> Save & close
-        </button>&nbsp;
-        
+        <mat-icon matSuffix>search</mat-icon> Search CVE
+      </button>
     </div>
+
+    @if (results) {
+      <div style="margin-left: auto; margin-right: 0;">
+        <button mat-raised-button color="accent" (click)="saveCVE()">
+          <mat-icon matSuffix>save</mat-icon> Save & close
+        </button>&nbsp;
+      </div>
+    }
     &nbsp;
     <button mat-flat-button color="accent" (click)="openInNewWindow()"><mat-icon matSuffix>search</mat-icon> Search CVE by keyword</button>
     <button mat-flat-button color="primary" mat-dialog-close>Cancel</button>
-</mat-dialog-actions>
+  </mat-dialog-actions>
 
 </div>

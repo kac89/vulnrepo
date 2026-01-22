@@ -27,3 +27,9 @@
   .mat-expansion-panel {
     background: #212121;
   }
+
+  .logo {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}

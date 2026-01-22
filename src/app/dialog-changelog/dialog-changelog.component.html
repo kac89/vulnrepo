@@ -1,26 +1,34 @@
 <div class="mdc-card my-card-content">
 
   <h1 class="mat-display">
-    <mat-icon>security</mat-icon> Changelog <span *ngIf="!data">add</span><span *ngIf="data">edit</span>
-  </h1>
+    <mat-icon>security</mat-icon> Changelog @if (!data) {
+    <span>add</span>
+    }@if (data) {
+    <span>edit</span>
+  }
+</h1>
 
-  <div mat-dialog-content>
-  
-        <mat-form-field class="example-full-width" color="accent">
-          <input matInput placeholder="Event date" #edate value="{{ (data ? data.date : today) | date:'medium' }}">
-        </mat-form-field>
-      
-        <mat-form-field class="example-full-width" color="accent">
-          <textarea matInput placeholder="Leave a comment" #edesc value="{{data?.desc}}"></textarea>
-        </mat-form-field>
-  
-  </div>
-  
-  <div mat-dialog-actions>
-    <button *ngIf="!data" mat-raised-button cdkFocusInitial color="accent" (click)="addChangelog(edate.value, edesc.value)">Add</button>
-    <button *ngIf="data" mat-raised-button cdkFocusInitial color="accent" (click)="editChangelog(edate.value, edesc.value, data)">Edit</button>
-    &nbsp;
-    <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-    
-  </div>
+<div mat-dialog-content>
+
+  <mat-form-field class="example-full-width" color="accent">
+    <input matInput placeholder="Event date" #edate value="{{ (data ? data.date : today) | date:'medium' }}">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width" color="accent">
+    <textarea matInput placeholder="Leave a comment" #edesc value="{{data?.desc}}"></textarea>
+  </mat-form-field>
+
+</div>
+
+<div mat-dialog-actions>
+  @if (!data) {
+    <button mat-raised-button cdkFocusInitial color="accent" (click)="addChangelog(edate.value, edesc.value)">Add</button>
+  }
+  @if (data) {
+    <button mat-raised-button cdkFocusInitial color="accent" (click)="editChangelog(edate.value, edesc.value, data)">Edit</button>
+  }
+  &nbsp;
+  <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+
+</div>
 </div>

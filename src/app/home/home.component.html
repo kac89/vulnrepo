@@ -1,31 +1,62 @@
-<div fxLayout="row wrap" fxLayoutGap="10px grid">
-  <div fxLayoutAlign="center center" fxFlex="20%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <img width="150px" src="assets/logo/vulnrepo_logo.png">
-  </div>
-  <div fxLayoutAlign="start center" fxFlex="80%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <h1 style="margin: 0 0 0;" class="mat-headline-3">Create vulnerability reports like a PRO!!!</h1>
-  </div>
+<div>
+  <br><br><img class="logo" width="350px" src="assets/logo/vulnrepo_logo.png"><br><br><br><br>
+  <h1 align="center" class="mat-headline-2 center">Create vulnerability reports like a PRO!!!</h1>
 </div>
-
-<br>
 
 <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
-  <div fxFlex="calc(100% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%">
-    <span style="text-decoration: underline;text-decoration-color: #69f0ae"><b style="color:white">VULNRΞPO</b></span>
-    is a FREE Open Source project with end-to-end encryption by default, designed to speed up the creation of IT Security vulnerability reports and can be used
-    as a security reports repository.<br><br>Accelerates vulnerability reporting, you can quickly and securely share the
-    report with the vendor or use as a repository with vulnerabilities for bug bounty research! the ideal tool for the
-    Pentester, Researcher or anyone starting out in IT Security!<br><br>Store and manage your research locally, share it
-    securely!<br>Focus on research! DON'T waste your time creating a report!
+  <div align="center" class=".mat-subheading-2" fxFlex="calc(100% - 20px)" fxFlex.sm="100%" fxFlex.xs="100%">
+    Store and manage your research locally, share it
+    securely! Focus on research! DON'T waste your time creating a report!
   </div>
 
 </div>
-
 <br>
+<hr style="border: 0;height: 2px; background-image: linear-gradient(to right, #000000, #69f0ae, #000000);">
+<br>
+<br><br><br><br>
+
+<div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="10px grid">
+  <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-content>
+        VULNRΞPO is a FREE Open Source project with end-to-end encryption by default, designed to speed up the creation
+        of IT Security vulnerability reports and can be used as a security reports repository.
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxLayoutAlign="start" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-content>
+        Accelerates vulnerability reporting, you can quickly and securely share the
+        report with the vendor or use as a repository with vulnerabilities for bug bounty research! the ideal tool for
+        the
+        Pentester, Researcher or anyone starting out in IT Security!
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<br><br><br><br>
+
+<div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="10px grid">
+
+  <div fxLayoutAlign="center center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <button style="width: 50%;" class="mdc-elevation--z11" mat-fab extended color="accent" (click)="download()"><mat-icon>file_download</mat-icon> DOWNLOAD</button><br>
+
+  </div>
+  <div fxLayoutAlign="center center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+        <button style="width: 50%;" class="mdc-elevation--z11" mat-fab extended color="primary" (click)="demo()"><mat-icon>cloud</mat-icon> ONLINE</button>
+  </div>
+</div>
+
+
+
+<br><br><br><br>
+<br><br><br><br>
 
 <mat-accordion>
 
-  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)" [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title> <mat-icon>list</mat-icon> &nbsp; Features list </mat-panel-title>
       <mat-panel-description>
@@ -34,7 +65,7 @@
     </mat-expansion-panel-header>
     <div fxLayout="row wrap" fxLayoutGap="10px grid">
       <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-  
+
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
             <mat-card-header>
@@ -48,7 +79,7 @@
             </mat-card-header>
           </mat-card>
         </div>
-  
+
         <br>
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -61,7 +92,7 @@
             </mat-card-header>
           </mat-card>
         </div>
-  
+
         <br>
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -69,13 +100,14 @@
               <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">cloud_download</mat-icon>
               <mat-card-title>HTML & TXT & JSON & MARKDOWN & DOCX & PDF</mat-card-title>
               <mat-card-subtitle>
-                You can download report in HTML, TXT, JSON, MARKDOWN, DOCX formats!. If you need PDF just 'print as PDF' html report or from DOCX. The JSON
+                You can download report in HTML, TXT, JSON, MARKDOWN, DOCX formats!. If you need PDF just 'print as PDF'
+                html report or from DOCX. The JSON
                 format opens up completely new possibilities for processing report data.
               </mat-card-subtitle>
             </mat-card-header>
           </mat-card>
         </div>
-  
+
         <br>
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -83,16 +115,17 @@
               <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">attach_file</mat-icon>
               <mat-card-title>Attachments</mat-card-title>
               <mat-card-subtitle>
-                You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically doing
+                You can easly attach any file you want to. Screenshot, movie or scanner output in txt. Automatically
+                doing
                 checksum sha256 of attached file.
               </mat-card-subtitle>
             </mat-card-header>
           </mat-card>
         </div>
-  
-  
+
+
       </div>
-  
+
       <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -106,7 +139,7 @@
             </mat-card-header>
           </mat-card>
         </div>
-  
+
         <br>
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -120,7 +153,7 @@
             </mat-card-header>
           </mat-card>
         </div>
-  
+
         <br>
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -134,7 +167,7 @@
             </mat-card-header>
           </mat-card>
         </div>
-  
+
         <br>
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -148,7 +181,7 @@
             </mat-card-header>
           </mat-card>
         </div>
-  
+
         <br>
         <div class="mdc-elevation--z11">
           <mat-card appearance="outlined" style="padding: 12px;background: #212121;">
@@ -161,9 +194,9 @@
             </mat-card-header>
           </mat-card>
         </div>
-  
+
       </div>
-  
+
     </div>
   </mat-expansion-panel>
 
@@ -176,8 +209,9 @@
     </mat-expansion-panel-header>
     <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
 
-      <a class="active-link" target="_blank" href="https://www.youtube.com/@vulnrepo"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> vulnrepo</a>
-    
+      <a class="active-link" target="_blank" href="https://www.youtube.com/@vulnrepo"><mat-icon
+          class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> vulnrepo</a>
+
     </div>
   </mat-expansion-panel>
 
@@ -190,9 +224,12 @@
     </mat-expansion-panel-header>
     <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="20px">
 
-      <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo-server"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> VULNRΞPO Server</a>
-      <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> VULNRΞPO API Reference</a>
-      
+      <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo-server"><mat-icon
+          class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> VULNRΞPO Server</a>
+      <a class="active-link" target="_blank"
+        href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md"><mat-icon
+          class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon> VULNRΞPO API Reference</a>
+
     </div>
   </mat-expansion-panel>
 
@@ -206,12 +243,16 @@
   <h1 fxLayoutAlign="center" class="mat-headline-4">Join our community!</h1>
   <div fxLayoutAlign="center">
     <div fxLayout="row wrap" fxLayoutGap="5px grid">
-      <div class="row"><a target="_blank" href="https://github.com/kac89/vulnrepo"><img src="assets/github.png" style="height: 36px; width: 36px;"></a></div>
-      <div class="row"><a target="_blank" href="https://x.com/vulnrepo"><img src="assets/X.svg" style="width: 70px;margin-top: -7px;"></a></div>
-      <div class="row"><a target="_blank" href="https://www.youtube.com/@vulnrepo"><img src="assets/yt.png" style="width: 56px;"></a></div>
+      <div class="row"><a target="_blank" href="https://github.com/kac89/vulnrepo"><img src="assets/github.png"
+            style="height: 36px; width: 36px;"></a></div>
+      <div class="row"><a target="_blank" href="https://x.com/vulnrepo"><img src="assets/X.svg"
+            style="width: 70px;margin-top: -7px;"></a></div>
+      <div class="row"><a target="_blank" href="https://www.youtube.com/@vulnrepo"><img src="assets/yt.png"
+            style="width: 56px;"></a></div>
     </div>
   </div>
-  
+
 </div>
 <br>
 <br>
+<br><br><br><br>
