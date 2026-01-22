@@ -8,21 +8,27 @@
 
       <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
     </span>
-    <div *ngIf="show_status" class="title-center">
-
-      <div *ngIf="enc_status">
-        <a [routerLink]="[]" (click)="closeReport()" title="Close report">
-          <mat-icon color="warn" class="vertical-align-middle padding-bottom-3" matSuffix>no_encryption</mat-icon>
-        </a> Report is decrypted
+    @if (show_status) {
+      <div class="title-center">
+        @if (enc_status) {
+          <div>
+            <a [routerLink]="[]" (click)="closeReport()" title="Close report">
+              <mat-icon color="warn" class="vertical-align-middle padding-bottom-3" matSuffix>no_encryption</mat-icon>
+            </a> Report is decrypted
+          </div>
+        }
+        @if (!enc_status) {
+          <div>
+            <mat-icon color="accent" class="vertical-align-middle padding-bottom-3" matSuffix>lock</mat-icon> Report is
+            encrypted
+          </div>
+        }
       </div>
-      <div *ngIf="!enc_status">
-        <mat-icon color="accent" class="vertical-align-middle padding-bottom-3" matSuffix>lock</mat-icon> Report is
-        encrypted
-      </div>
+    }
 
-    </div>
-
-    <span class="example-fill-remaining-space" *ngIf="!show_status"></span>
+    @if (!show_status) {
+      <span class="example-fill-remaining-space"></span>
+    }
 
     <div style="align-items: center;display: flex;" fxShow="true" fxHide.lt-md="true">
       <a routerLink="/home" style="padding: 12px;" routerLinkActive="active-link" href="/home" mat-button>
@@ -70,34 +76,34 @@
         </a>
 
         <button mat-menu-item (click)="goAbout()"><mat-icon
-            class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
+        class="vertical-align-middle padding-bottom-3">info</mat-icon> About</button>
 
-        <div *ngIf="show_active_reports">
-
-          <mat-divider></mat-divider>
-
-          <button mat-menu-item disabled>
-            <mat-icon>lock_open</mat-icon>
-            <span>Open reports</span>
-          </button>
-
-          <span *ngFor="let activreport of arr_oreports">
-            <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
-              <mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon><mat-icon color="accent"
-                *ngIf="activreport.report_source == 'api'"
-                class="vertical-align-middle padding-bottom-3">public</mat-icon> {{activreport.report_name}}
-            </a>
-
-          </span>
-
-        </div>
+        @if (show_active_reports) {
+          <div>
+            <mat-divider></mat-divider>
+            <button mat-menu-item disabled>
+              <mat-icon>lock_open</mat-icon>
+              <span>Open reports</span>
+            </button>
+            @for (activreport of arr_oreports; track activreport) {
+              <span>
+                <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
+                  <mat-icon class="vertical-align-middle padding-bottom-3">lock_open</mat-icon>@if (activreport.report_source == 'api') {
+                  <mat-icon color="accent"
+                  class="vertical-align-middle padding-bottom-3">public</mat-icon>
+                  } {{activreport.report_name}}
+                </a>
+              </span>
+            }
+          </div>
+        }
 
       </mat-menu>
 
       <mat-menu #tools="matMenu" xPosition="after" yPosition="above">
 
         <button mat-menu-item (click)="goAI()"><mat-icon
-            class="vertical-align-middle padding-bottom-3">photo_filter</mat-icon> AI assistant</button>
+        class="vertical-align-middle padding-bottom-3">photo_filter</mat-icon> AI assistant</button>
 
         <a routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
           <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon>
@@ -132,80 +138,80 @@
         </a>
       </mat-menu>
       <br>
-      <a target="_blank" fxLayoutAlign="center start" href="https://github.com/kac89/vulnrepo"
-        style="padding-left: 10px;" title="Visit project on github.com">
-        <img src="./assets/github.png" style="height: 32px;width: 32px;">
-      </a>
+        <a target="_blank" fxLayoutAlign="center start" href="https://github.com/kac89/vulnrepo"
+          style="padding-left: 10px;" title="Visit project on github.com">
+          <img src="./assets/github.png" style="height: 32px;width: 32px;">
+        </a>
 
-      <a target="_blank" href="https://x.com/vulnrepo" title="Follow project on X"
-        style="padding: 0px;padding-top: 10px;">
-        <img src="./assets/X.svg" style="width: 64px;">
-      </a>
+        <a target="_blank" href="https://x.com/vulnrepo" title="Follow project on X"
+          style="padding: 0px;padding-top: 10px;">
+          <img src="./assets/X.svg" style="width: 64px;">
+        </a>
 
-    </div>
-  </mat-toolbar-row>
-</mat-toolbar>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-<mat-sidenav-container fxFlexFill>
-  <mat-sidenav #sidenav>
-    <mat-nav-list>
+  <mat-sidenav-container fxFlexFill>
+    <mat-sidenav #sidenav>
+      <mat-nav-list>
 
-      <button routerLink="/home" routerLinkActive="active-link" href="/home" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon> Home
-      </button>
+        <button routerLink="/home" routerLinkActive="active-link" href="/home" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">home</mat-icon> Home
+        </button>
 
-      <button routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon> My Reports
-      </button>
+        <button routerLink="/my-reports" routerLinkActive="active-link" href="/my-reports" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">list_alt</mat-icon> My Reports
+        </button>
 
-      <button routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> New report
-      </button>
+        <button routerLink="/new-report" routerLinkActive="active-link" href="/new-report" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon> New report
+        </button>
 
-      <button routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
-      </button>
+        <button routerLink="/import-report" routerLinkActive="active-link" href="/import-report" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import report
+        </button>
 
-      <button routerLink="/templates-list" routerLinkActive="active-link" href="/templates-list" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon> Templates List
-      </button>
+        <button routerLink="/templates-list" routerLinkActive="active-link" href="/templates-list" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">bug_report</mat-icon> Templates List
+        </button>
 
-      <button routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings
-      </button>
+        <button routerLink="/settings" routerLinkActive="active-link" href="/settings" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings
+        </button>
 
-      <button routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
-        <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon> CVE Search
-      </button>
+        <button routerLink="/cve-search" routerLinkActive="active-link" href="/cve-search" mat-menu-item>
+          <mat-icon class="vertical-align-middle padding-bottom-3">search</mat-icon> CVE Search
+        </button>
 
-      <button routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
-        <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon> Checklists
-      </button>
+        <button routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
+          <mat-icon class="vertical-align-middle padding-bottom-3">library_books</mat-icon> Checklists
+        </button>
 
-      <button mat-menu-item routerLink="/bugbounty-list" routerLinkActive="active-link" href="/bugbounty-list">
-        <mat-icon class="vertical-align-middle padding-bottom-3">format_list_bulleted</mat-icon> Bug Bounty List
-      </button>
+        <button mat-menu-item routerLink="/bugbounty-list" routerLinkActive="active-link" href="/bugbounty-list">
+          <mat-icon class="vertical-align-middle padding-bottom-3">format_list_bulleted</mat-icon> Bug Bounty List
+        </button>
 
-      <button mat-menu-item routerLink="/faq" routerLinkActive="active-link" href="/faq">
-        <mat-icon class="vertical-align-middle padding-bottom-3">live_help</mat-icon> FAQ
-      </button>
+        <button mat-menu-item routerLink="/faq" routerLinkActive="active-link" href="/faq">
+          <mat-icon class="vertical-align-middle padding-bottom-3">live_help</mat-icon> FAQ
+        </button>
 
-      <button mat-menu-item (click)="goAbout()">
-        <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About
-      </button>
+        <button mat-menu-item (click)="goAbout()">
+          <mat-icon class="vertical-align-middle padding-bottom-3">info</mat-icon> About
+        </button>
 
-      <button mat-menu-item (click)="sidenav.toggle()">
-        <mat-icon class="vertical-align-middle padding-bottom-3">close</mat-icon> Close
-      </button>
+        <button mat-menu-item (click)="sidenav.toggle()">
+          <mat-icon class="vertical-align-middle padding-bottom-3">close</mat-icon> Close
+        </button>
 
-    </mat-nav-list>
-  </mat-sidenav>
+      </mat-nav-list>
+    </mat-sidenav>
 
-  <mat-sidenav-content fxFlexFill>
+    <mat-sidenav-content fxFlexFill>
 
-    <div class="container">
-      <router-outlet></router-outlet>
-    </div>
+      <div class="container">
+        <router-outlet></router-outlet>
+      </div>
 
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    </mat-sidenav-content>
+  </mat-sidenav-container>

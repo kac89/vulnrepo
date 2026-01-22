@@ -12,145 +12,139 @@
   </div>
 </div>
 
-  <br>
+<br>
 
   <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-    PCI Data Security Standard (PCI DSS) is a global standard that provides a baseline of technical and operational requirements designed to protect account data. <br> 
+    PCI Data Security Standard (PCI DSS) is a global standard that provides a baseline of technical and operational requirements designed to protect account data. <br>
     <a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/">PCI DSS more info</a>
   </mat-card>
 
   <br>
-  <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
+    <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
 
-    <div class="mdc-typography--body1" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+      <div class="mdc-typography--body1" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
 
         <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-            <p>SAQs are designed to help you report the results of your PCI DSS self-assessment.</p>
-            <mat-form-field color="accent" appearance="fill" class="example-full-width">
-                <mat-label>Select an SAQ</mat-label>
-        
+          <p>SAQs are designed to help you report the results of your PCI DSS self-assessment.</p>
+          <mat-form-field color="accent" appearance="fill" class="example-full-width">
+            <mat-label>Select an SAQ</mat-label>
 
-                <mat-select [(ngModel)]="selectsaq" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
-                  <mat-option *ngFor="let saq of selectsaqmodel" [value]="saq.value">
-                    {{saq.viewValue}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <br>
-              <p>SAQ: {{selectsaq}}</p>
-              <p>{{getextendedinfosaq(selectsaq)}}</p>
-    
-        </div>
-    
-        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+
+            <mat-select [(ngModel)]="selectsaq" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
+              @for (saq of selectsaqmodel; track saq) {
+                <mat-option [value]="saq.value">
+                  {{saq.viewValue}}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <br>
+            <p>SAQ: {{selectsaq}}</p>
+            <p>{{getextendedinfosaq(selectsaq)}}</p>
+
+          </div>
+
+          <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
             <p>The Prioritized Approach includes six milestones. The following table summarizes the high-level goals of each milestone.</p>
             <mat-form-field color="accent" appearance="fill" class="example-full-width">
-                <mat-label>Select an Prioritized Approach</mat-label>
-          
-                <mat-select [(ngModel)]="selectlevel" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
-                  <mat-option *ngFor="let saq of selectlevelmodel" [value]="saq.value">
+              <mat-label>Select an Prioritized Approach</mat-label>
+
+              <mat-select [(ngModel)]="selectlevel" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
+                @for (saq of selectlevelmodel; track saq) {
+                  <mat-option [value]="saq.value">
                     {{saq.viewValue}}
                   </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <p>Prioritized Approach: {{selectlevel}}</p>
-              <p>{{getextendedinfo(selectlevel)}}</p>
+                }
+              </mat-select>
+            </mat-form-field>
+            <p>Prioritized Approach: {{selectlevel}}</p>
+            <p>{{getextendedinfo(selectlevel)}}</p>
+          </div>
+
         </div>
-    
-      </div>
 
-  </mat-card>
+      </mat-card>
 
-  <br> <br>
+      <br> <br>
 
-<mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1 sticky">
+      <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1 sticky">
 
-  Requirements: {{parsefunct(pcidssdata).length}} Checked: {{selection.selected.length}}<br>
-  <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(pcidssdata).length) * 100}}"></mat-progress-bar>
+        Requirements: {{parsefunct(pcidssdata).length}} Checked: {{selection.selected.length}}<br>
+        <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(pcidssdata).length) * 100}}"></mat-progress-bar>
 
-</mat-card>
+      </mat-card>
 
-  <br> <br>
+      <br> <br>
 
-  <mat-card *ngIf="pcidss" appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-
-    <span *ngFor="let pcicat of pcidss.items">
-        <h2>{{pcicat.requirement}}</h2>
-        <br>
-
-        <span *ngFor="let pcisubcat of pcicat.subitems">
-            <h3 *ngIf="parsefunct(pcisubcat.litems).length > 0">{{pcisubcat.subreq}}</h3>
-
-            <table *ngIf="parsefunct(pcisubcat.litems).length > 0" mat-table [dataSource]="parsefunct(pcisubcat.litems)" class="mat-elevation-z8">
-
-                <ng-container matColumnDef="select">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox id="{{pcisubcat.subreqid}}" (change)="$event ? toggleSpecificGroup(pcisubcat.subreqid) : null"
-                                  [checked]="checkedfn(pcisubcat.subreqid) && isAllSelectedGv(pcisubcat.subreqid)"
-                                  [indeterminate]="checkedfn(pcisubcat.subreqid) && !isAllSelectedGv(pcisubcat.subreqid)">
-                    </mat-checkbox>
-                  </th>
-                  <td mat-cell *matCellDef="let row">
-                    <mat-checkbox id="{{pcisubcat.subreqid}}" (click)="$event.stopPropagation()"
-                    (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                    </mat-checkbox>
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="id">
-                  <th mat-header-cell *matHeaderCellDef> <b>#</b> </th>
-                  <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="description">
-                  <th mat-header-cell *matHeaderCellDef> <b>Description</b> </th>
-                  <td mat-cell *matCellDef="let element"><div [innerHTML]="element.description"></div> </td>
-                </ng-container>
-
-                <ng-container matColumnDef="milestone">
-                  <th mat-header-cell *matHeaderCellDef> <b>Milestone</b> </th>
-                  <td mat-cell *matCellDef="let element"> 
-                    <mat-chip [ngStyle]="{'background-color': getcolors(element.milestone)}">
-                      {{element.milestone}}
-                    </mat-chip>
-                     </td>
-                </ng-container>
-
-                <ng-container matColumnDef="saq">
-                  <th mat-header-cell *matHeaderCellDef> <b>SAQ</b> </th>
-                  <td mat-cell *matCellDef="let element">
-
-
-                    <mat-chip-listbox class="mat-mdc-chip-set-stacked" style="max-width: 250px">
-                      <mat-chip-option *ngFor="let chip of element.saq" style="max-width: 250px" [selected]="getselectchip(chip, selectsaq)" [color]="colorchip(chip, selectsaq)" disabled>
-                        {{chip}}
-                      </mat-chip-option>
-                    </mat-chip-listbox>
-
-
-                </ng-container>
-              
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    (click)="selection.toggle(row)">
-                </tr>
-              </table>
-              
+      @if (pcidss) {
+        <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
+          @for (pcicat of pcidss.items; track pcicat) {
+            <span>
+              <h2>{{pcicat.requirement}}</h2>
               <br>
+                @for (pcisubcat of pcicat.subitems; track pcisubcat) {
+                  <span>
+                    @if (parsefunct(pcisubcat.litems).length > 0) {
+                      <h3>{{pcisubcat.subreq}}</h3>
+                    }
+                    @if (parsefunct(pcisubcat.litems).length > 0) {
+                      <table mat-table [dataSource]="parsefunct(pcisubcat.litems)" class="mat-elevation-z8">
+                        <ng-container matColumnDef="select">
+                          <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox id="{{pcisubcat.subreqid}}" (change)="$event ? toggleSpecificGroup(pcisubcat.subreqid) : null"
+                              [checked]="checkedfn(pcisubcat.subreqid) && isAllSelectedGv(pcisubcat.subreqid)"
+                              [indeterminate]="checkedfn(pcisubcat.subreqid) && !isAllSelectedGv(pcisubcat.subreqid)">
+                            </mat-checkbox>
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <mat-checkbox id="{{pcisubcat.subreqid}}" (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="id">
+                          <th mat-header-cell *matHeaderCellDef> <b>#</b> </th>
+                          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="description">
+                          <th mat-header-cell *matHeaderCellDef> <b>Description</b> </th>
+                          <td mat-cell *matCellDef="let element"><div [innerHTML]="element.description"></div> </td>
+                        </ng-container>
+                        <ng-container matColumnDef="milestone">
+                          <th mat-header-cell *matHeaderCellDef> <b>Milestone</b> </th>
+                          <td mat-cell *matCellDef="let element">
+                            <mat-chip [ngStyle]="{'background-color': getcolors(element.milestone)}">
+                              {{element.milestone}}
+                            </mat-chip>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="saq">
+                          <th mat-header-cell *matHeaderCellDef> <b>SAQ</b> </th>
+                          <td mat-cell *matCellDef="let element">
+                            <mat-chip-listbox class="mat-mdc-chip-set-stacked" style="max-width: 250px">
+                              @for (chip of element.saq; track chip) {
+                                <mat-chip-option style="max-width: 250px" [selected]="getselectchip(chip, selectsaq)" [color]="colorchip(chip, selectsaq)" disabled>
+                                  {{chip}}
+                                </mat-chip-option>
+                              }
+                            </mat-chip-listbox>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                            (click)="selection.toggle(row)">
+                          </tr>
+                        </table>
+                      }
+                      <br>
+                      </span>
+                    }
+                  </span>
+                }
+              </mat-card>
+            }
 
-        </span>
 
-    </span>
-    
-
-    
-
-
-
-  </mat-card>
-
-
-  <br>
-  <br>
-  <br>
-  <br>
+            <br>
+              <br>
+                <br>
+                  <br>

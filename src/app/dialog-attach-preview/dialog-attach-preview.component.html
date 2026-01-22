@@ -1,57 +1,61 @@
 
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon>
-      <mat-card-title>{{defaultAttach.title}}</mat-card-title>
-      <mat-card-subtitle><b>Date:</b> {{defaultAttach.date | date:'medium'}} | <b>Size:</b> {{defaultAttach.size | filesize }} </mat-card-subtitle>
-    </mat-card-header>
-    
-    <mat-card-content>
-        <mat-divider></mat-divider>
-        <p>
-            <button mat-mini-fab color="primary" (click)="closedialog()">
-                <mat-icon>close</mat-icon>
-            </button>
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon>
+    <mat-card-title>{{defaultAttach.title}}</mat-card-title>
+    <mat-card-subtitle><b>Date:</b> {{defaultAttach.date | date:'medium'}} | <b>Size:</b> {{defaultAttach.size | filesize }} </mat-card-subtitle>
+  </mat-card-header>
 
-            &nbsp;&nbsp;
+  <mat-card-content>
+    <mat-divider></mat-divider>
+    <p>
+      <button mat-mini-fab color="primary" (click)="closedialog()">
+        <mat-icon>close</mat-icon>
+      </button>
 
-            <button mat-mini-fab color="primary" (click)="downloadAttach(defaultAttach.data, defaultAttach.title)"  title="Download file">
-                <mat-icon color="accent">file_download</mat-icon>
-            </button>
+      &nbsp;&nbsp;
 
-            &nbsp;
-            
-            <button mat-mini-fab color="primary" (click)="removeAttach(defaultAttach)"  title="Remove file">
-                <mat-icon color="warn">delete_forever</mat-icon>
-            </button>
+      <button mat-mini-fab color="primary" (click)="downloadAttach(defaultAttach.data, defaultAttach.title)"  title="Download file">
+        <mat-icon color="accent">file_download</mat-icon>
+      </button>
 
-            &nbsp;&nbsp;
+      &nbsp;
 
-            <button [disabled]="defaultIndex == 0" mat-mini-fab color="primary" (click)="changePreview('minus')"  title="Move Back">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
+      <button mat-mini-fab color="primary" (click)="removeAttach(defaultAttach)"  title="Remove file">
+        <mat-icon color="warn">delete_forever</mat-icon>
+      </button>
 
-            <button [disabled]="defaultIndex == allAttachCount" mat-mini-fab color="primary" (click)="changePreview('plus')"  title="Move Forward">
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
-            
-        </p>
+      &nbsp;&nbsp;
 
-        
+      <button [disabled]="defaultIndex == 0" mat-mini-fab color="primary" (click)="changePreview('minus')"  title="Move Back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
 
-        <div style="background-color: black;">
-            <div *ngIf="defaultAttach.type.includes('image')" style="text-align: center;">
-                <img [src]="defaultAttach.data" title="{{defaultAttach.title}}" style="max-height: 55%;max-width: 55%;"><br>
-            </div>
-            <div *ngIf="defaultAttach.type.includes('video')" style="text-align: center;">
-                <video style="max-height: 55%;max-width: 55%;" controls preload="metadata" [src]="defaultAttach.data" type="{{defaultAttach.type}}">
-                    Your browser does not support the video tag.
-                </video>
-                <br>
-            </div>
+      <button [disabled]="defaultIndex == allAttachCount" mat-mini-fab color="primary" (click)="changePreview('plus')"  title="Move Forward">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+
+    </p>
+
+
+
+    <div style="background-color: black;">
+      @if (defaultAttach.type.includes('image')) {
+        <div style="text-align: center;">
+          <img [src]="defaultAttach.data" title="{{defaultAttach.title}}" style="max-height: 55%;max-width: 55%;"><br>
         </div>
+      }
+      @if (defaultAttach.type.includes('video')) {
+        <div style="text-align: center;">
+          <video style="max-height: 55%;max-width: 55%;" controls preload="metadata" [src]="defaultAttach.data" type="{{defaultAttach.type}}">
+            Your browser does not support the video tag.
+          </video>
+          <br>
+          </div>
+        }
+      </div>
 
 
-        
+
     </mat-card-content>
   </mat-card>

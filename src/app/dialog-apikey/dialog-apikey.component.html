@@ -1,7 +1,7 @@
 <div class="mdc-card my-card-content">
 
   <h1 class="mat-display">
-      <mat-icon class="vertical-align-middle size-45">https</mat-icon> Access API Vault
+    <mat-icon class="vertical-align-middle size-45">https</mat-icon> Access API Vault
   </h1>
 
 
@@ -13,18 +13,20 @@
         <input matInput placeholder="API Vault password" #keypass [formControl]="insertkeypass" (keydown)="onKeydown($event,keypass.value)" [type]="hide ? 'password' : 'text'">
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
 
-        <mat-error *ngIf="insertkeypass.hasError('incorrect')">
-          <strong>
-            <mat-icon class="vertical-align-middle size-45">https</mat-icon> Incorrect API Vault password!
-          </strong>
-        </mat-error>
+        @if (insertkeypass.hasError('incorrect')) {
+          <mat-error>
+            <strong>
+              <mat-icon class="vertical-align-middle size-45">https</mat-icon> Incorrect API Vault password!
+            </strong>
+          </mat-error>
+        }
 
       </mat-form-field>
 
     </form>
 
-  <mat-checkbox [checked]="removedialog" (change)="removedialogFunc($event)">Do not show again in this session</mat-checkbox>
-  <br><br>
+    <mat-checkbox [checked]="removedialog" (change)="removedialogFunc($event)">Do not show again in this session</mat-checkbox>
+    <br><br>
   </div>
 
   <div md-dialog-actions>

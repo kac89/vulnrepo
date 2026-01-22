@@ -1,43 +1,49 @@
 <h2 mat-dialog-title>
   <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report</h2>
-<mat-dialog-content>
-  <div>
-  <form class="example-form">
-    <mat-form-field class="example-full-width" color="accent" appearance="outline">
-      <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
-        (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
-      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-      <mat-hint>
-        <strong *ngIf="msg != ''">
-          <mat-icon class="vertical-align-middle size-45">https</mat-icon> {{msg}}
-        </strong>
-      </mat-hint>
-      <mat-error *ngIf="insertpass.hasError('incorrect')">
-        <strong>
-          <mat-icon class="vertical-align-middle size-45">https</mat-icon> Security key is incorrect!
-        </strong>
-      </mat-error>
-    </mat-form-field>
-    
+  <mat-dialog-content>
+    <div>
+      <form class="example-form">
+        <mat-form-field class="example-full-width" color="accent" appearance="outline">
+          <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
+            (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-hint>
+              @if (msg != '') {
+                <strong>
+                  <mat-icon class="vertical-align-middle size-45">https</mat-icon> {{msg}}
+                </strong>
+              }
+            </mat-hint>
+            @if (insertpass.hasError('incorrect')) {
+              <mat-error>
+                <strong>
+                  <mat-icon class="vertical-align-middle size-45">https</mat-icon> Security key is incorrect!
+                </strong>
+              </mat-error>
+            }
+          </mat-form-field>
 
-  </form>
-  </div>
-</mat-dialog-content>
-<mat-dialog-actions style="padding-left: 25px;">
 
-  <div fxLayout="row" fxLayoutGap="7px grid">
+        </form>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions style="padding-left: 25px;">
 
-    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="start">
-      <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)"><mat-icon>check</mat-icon>
+      <div fxLayout="row" fxLayoutGap="7px grid">
+
+        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="start">
+          <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)"><mat-icon>check</mat-icon>
         Decrypt</button>
-    </div>
+      </div>
 
-    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="end">
-      <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
-    </div>
+      <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="end">
+        <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
+      </div>
 
-  </div>
-</mat-dialog-actions>
-<div *ngIf="msg != ''">
-  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-</div>
+    </div>
+  </mat-dialog-actions>
+  @if (msg != '') {
+    <div>
+      <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+    </div>
+  }

@@ -1,52 +1,50 @@
 <mat-card appearance="outlined">
-    <mat-card-header>
-        
-      <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">enhanced_encryption</mat-icon>
-      <mat-card-title>Download encrypted report</mat-card-title>
-      <mat-card-subtitle>Set secure password for shared report</mat-card-subtitle>
-              <div style="flex: 1"></div>
-        <button matMiniFab mat-dialog-close color="primary"><mat-icon>close</mat-icon></button>
-    </mat-card-header>
-    
-    <mat-card-content>
-        <div fxLayout="column" fxLayoutGap="10px grid">
-            <div *ngIf="!usemyrepkey" fxLayoutAlign="start center">
-                <mat-form-field color="accent" class="example-full-width">
-                    <mat-label>Set report security key</mat-label>
-                    <input cdkFocusInitial [type]="hide ? 'password' : 'text'" [formControl]="setkey" matInput #securitykey maxlength="256">
-                    
-                    <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
-                        <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                      </button>
-                    <button matSuffix mat-icon-button aria-label="Generate security key" title="Generate security key" color="accent" (click)="genpass()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">
-                        <mat-icon>casino</mat-icon>
-                      </button>
-                    <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy security key" title="Copy security key" color="accent" [cdkCopyToClipboard]="securitykey.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">
-                        <mat-icon>content_copy</mat-icon>
-                      </button>
-            
-                    <mat-hint align="end">{{securitykey.value.length}} / 256 chars</mat-hint>
-                    @if (setkey.hasError('tooweakpass')) {
-                      <mat-error><strong>Security key is too weak! (min. 8 chars)</strong></mat-error>
-                    }
+  <mat-card-header>
 
-                  </mat-form-field>
-                  
-            </div>
-            <div fxLayoutAlign="start center">
-                <mat-checkbox (click)="changeValue()">Use my report current key</mat-checkbox>
-            </div>
-            
+    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">enhanced_encryption</mat-icon>
+    <mat-card-title>Download encrypted report</mat-card-title>
+    <mat-card-subtitle>Set secure password for shared report</mat-card-subtitle>
+    <div style="flex: 1"></div>
+    <button matMiniFab mat-dialog-close color="primary"><mat-icon>close</mat-icon></button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div fxLayout="column" fxLayoutGap="10px grid">
+      @if (!usemyrepkey) {
+        <div fxLayoutAlign="start center">
+          <mat-form-field color="accent" class="example-full-width">
+            <mat-label>Set report security key</mat-label>
+            <input cdkFocusInitial [type]="hide ? 'password' : 'text'" [formControl]="setkey" matInput #securitykey maxlength="256">
+            <button matSuffix mat-icon-button aria-label="Show security key" title="Show security key" color="accent" (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key" matTooltipPosition="below">
+              <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <button matSuffix mat-icon-button aria-label="Generate security key" title="Generate security key" color="accent" (click)="genpass()" life="1000" tooltipEvent="focus" matTooltip="Generate security key" matTooltipPosition="below">
+              <mat-icon>casino</mat-icon>
+            </button>
+            <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy security key" title="Copy security key" color="accent" [cdkCopyToClipboard]="securitykey.value" (click)="copyText()" life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+            <mat-hint align="end">{{securitykey.value.length}} / 256 chars</mat-hint>
+            @if (setkey.hasError('tooweakpass')) {
+              <mat-error><strong>Security key is too weak! (min. 8 chars)</strong></mat-error>
+            }
+          </mat-form-field>
         </div>
+      }
+      <div fxLayoutAlign="start center">
+        <mat-checkbox (click)="changeValue()">Use my report current key</mat-checkbox>
+      </div>
 
-        <br>
+    </div>
 
-        <div fxLayout="row" fxLayoutGap="10px grid">
-            <div fxLayoutAlign="start center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <button mat-raised-button color="accent" (click)="godownload()"><mat-icon>enhanced_encryption</mat-icon>Download</button>
-            </div>
+    <br>
+
+      <div fxLayout="row" fxLayoutGap="10px grid">
+        <div fxLayoutAlign="start center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+          <button mat-raised-button color="accent" (click)="godownload()"><mat-icon>enhanced_encryption</mat-icon>Download</button>
         </div>
+      </div>
 
-        
+
     </mat-card-content>
   </mat-card>

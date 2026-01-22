@@ -10,239 +10,289 @@
       <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()" [disabled]="freeztype">
         <mat-option value="VULNREPO"><img with="20" height="20" src="/favicon-32x32.png"> VULNRΞPO</mat-option>
         <mat-option value="CVE"><mat-icon color="accent">public</mat-icon> (CVE) Common Vulnerabilities and Exposures
-          (ONLINE)</mat-option>
-        <mat-option value="GHSA"><mat-icon color="accent">public</mat-icon> (GHSA) GitHub Advisory Database
-          (ONLINE)</mat-option>
-        <mat-option value="AIVULNS">AI Systems Issues</mat-option>
-        <mat-option value="CWE">CWE Research Concepts</mat-option>
-        <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
-        <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
-        <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
-        <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
-        <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
-        <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
-        <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-        <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+      (ONLINE)</mat-option>
+      <mat-option value="GHSA"><mat-icon color="accent">public</mat-icon> (GHSA) GitHub Advisory Database
+    (ONLINE)</mat-option>
+    <mat-option value="AIVULNS">AI Systems Issues</mat-option>
+    <mat-option value="CWE">CWE Research Concepts</mat-option>
+    <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
+    <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
+    <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
+    <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
+    <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
+    <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
+    <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+    <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
 
-      </mat-select>
-    </mat-form-field>
-  </mat-card-header>
+  </mat-select>
+</mat-form-field>
+</mat-card-header>
 
-  <mat-dialog-content class="mat-typography">
+<mat-dialog-content class="mat-typography">
 
-    <div>
-      <div *ngIf="sourceSelect == 'VULNREPO'">
+  <div>
+    @if (sourceSelect == 'VULNREPO') {
+      <div>
         <mat-form-field class="example-full-width" color="accent">
           <mat-label>Issue title</mat-label>
           <mat-chip-grid #chipGrid aria-label="Issue title" [formControl]="gridaction">
-            <mat-chip-row *ngFor="let isitemw of chipsissue" (removed)="remove(isitemw)">
-              {{isitemw}}
-              <button matChipRemove [attr.aria-label]="'remove ' + isitemw">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
+            @for (isitemw of chipsissue; track isitemw) {
+              <mat-chip-row (removed)="remove(isitemw)">
+                {{isitemw}}
+                <button matChipRemove [attr.aria-label]="'remove ' + isitemw">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
           </mat-chip-grid>
           <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom"
             [formControl]="customissueform" [matAutocomplete]="auto" [matChipInputFor]="chipGrid"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
-              <mat-icon *ngIf="option.api" color="accent"
-                title="Remote API: {{option.apiname}} - [{{option.apiurl}}] ">public</mat-icon> {{option.title}}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="customissueform.hasError('notempty')">
-            <strong>Title must not be empty!</strong>
-          </mat-error>
-        </mat-form-field>
-
-        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates
-              List</a></small></span>
-      </div>
-
-
-      <div [hidden]="hidecwe">
-
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>Filter</mat-label>
-          <input [formControl]="filterinput" matInput (keyup)="applyFilter($event)" [placeholder]="placeholder" #input>
-        </mat-form-field>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option.title">
+                  @if (option.api) {
+                    <mat-icon color="accent"
+                    title="Remote API: {{option.apiname}} - [{{option.apiurl}}] ">public</mat-icon>
+                    } {{option.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
+              @if (customissueform.hasError('notempty')) {
+                <mat-error>
+                  <strong>Title must not be empty!</strong>
+                </mat-error>
+              }
+            </mat-form-field>
+            <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates
+            List</a></small></span>
+          </div>
+        }
 
 
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+        <div [hidden]="hidecwe">
 
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-              </mat-checkbox>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef> Title </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} <br> <small><a target="_blank" class="active-link"
-                  href="{{element.ref}}">Reference</a> / Severity: {{element.severity}}</small> </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-          </tr>
-
-          <!-- Row shown when there is no matching data. -->
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-          </tr>
-        </table>
-
-        <br>
-
-        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page"></mat-paginator>
-
-        
-      </div>
-    
-
-      <div *ngIf="sourceSelect == 'CVE'">
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>CVE</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2024-5961" [formControl]="mycve">
-          <mat-error *ngIf="mycve.hasError('notempty')">
-            <strong>CVE must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="mycve.hasError('cve_format_error')">
-            <strong>CVE format error!</strong>
-          </mat-error>
-          <mat-error *ngIf="mycve.hasError('cve_notfound')">
-            <strong>CVE not found!</strong>
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div *ngIf="sourceSelect == 'GHSA'">
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>GHSA</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="e.g.: GHSA-xxxx-xxxx-xxxx" [formControl]="myghsa">
-          <mat-error *ngIf="myghsa.hasError('notempty')">
-            <strong>GHSA must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="myghsa.hasError('ghsa_format_error')">
-            <strong>GHSA format error!</strong>
-          </mat-error>
-          <mat-error *ngIf="myghsa.hasError('ghsa_notfound')">
-            <strong>GHSA not found!</strong>
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div *ngIf="sourceSelect == 'PCIDSS'">
-        <mat-form-field class="example-full-width" color="accent">
-          <mat-label>PCI DSS Requirements v3.2.1</mat-label>
-          <input cdkFocusInitial type="text" matInput placeholder="e.g.: Firewall" [formControl]="myPCI"
-            [matAutocomplete]="auto5">
-          <mat-autocomplete #auto5="matAutocomplete">
-            <mat-optgroup *ngFor="let group of filteredOptionsPCIDSS | async" [label]="group.maincategory"
-              [title]="group.maincategory">
-              <mat-option *ngFor="let item of group.items" [value]="item.title" [title]="item.title">
-                {{item.title}}
-              </mat-option>
-            </mat-optgroup>
-          </mat-autocomplete>
-          <mat-error *ngIf="myPCI.hasError('notempty')">
-            <strong>Title must not be empty!</strong>
-          </mat-error>
-          <mat-error *ngIf="myPCI.hasError('cantfind')">
-            <strong>Can not be found!</strong>
-          </mat-error>
-        </mat-form-field>
-        <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
-              href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
-      </div>
+          <mat-form-field class="example-full-width" color="accent">
+            <mat-label>Filter</mat-label>
+            <input [formControl]="filterinput" matInput (keyup)="applyFilter($event)" [placeholder]="placeholder" #input>
+          </mat-form-field>
 
 
-      <div
-        *ngIf="sourceSelect == 'OWASP_mobile' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017' || sourceSelect == 'AIVULNS'">
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-              </mat-checkbox>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef> Title </th>
+              <td mat-cell *matCellDef="let element"> {{element.title}} <br> <small><a target="_blank" class="active-link"
+              href="{{element.ref}}">Reference</a> / Severity: {{element.severity}}</small> </td>
+            </ng-container>
 
-          <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef> Title </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} <br> <small><a target="_blank" class="active-link"
-                  href="{{element.ref}}">Reference</a> / Severity: {{element.severity}}</small> </td>
-          </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+            </tr>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-          </tr>
-        </table>
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            </tr>
+          </table>
 
-        <span *ngIf="sourceSelect == 'AIVULNS'" fxLayoutAlign="flex-end"><br><small><a class="active-link"
-              target="_blank" href="https://www.microsoft.com/en-us/msrc/aibugbar">www.microsoft.com</a></small></span>
+          <br>
 
-        <span *ngIf="sourceSelect == 'OWASP_mobile'" fxLayoutAlign="flex-end"><br><small><a class="active-link"
-              target="_blank" href="https://owasp.org/www-project-mobile-top-10/">owasp.org</a></small></span>
+            <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page"></mat-paginator>
 
-        <span *ngIf="sourceSelect == 'OWASPTOP10k8s'" fxLayoutAlign="flex-end"><br><small><a class="active-link"
-              target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
 
-        <span *ngIf="sourceSelect == 'OWASPTOP10CICD'" fxLayoutAlign="flex-end"><br><small><a class="active-link"
-              target="_blank"
-              href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
+          </div>
 
-        <span *ngIf="sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017'"
-          fxLayoutAlign="flex-end"><br><small><a class="active-link" target="_blank"
-              href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
 
-      </div>
+          @if (sourceSelect == 'CVE') {
+            <div>
+              <mat-form-field class="example-full-width" color="accent">
+                <mat-label>CVE</mat-label>
+                <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2024-5961" [formControl]="mycve">
+                @if (mycve.hasError('notempty')) {
+                  <mat-error>
+                    <strong>CVE must not be empty!</strong>
+                  </mat-error>
+                }
+                @if (mycve.hasError('cve_format_error')) {
+                  <mat-error>
+                    <strong>CVE format error!</strong>
+                  </mat-error>
+                }
+                @if (mycve.hasError('cve_notfound')) {
+                  <mat-error>
+                    <strong>CVE not found!</strong>
+                  </mat-error>
+                }
+              </mat-form-field>
+            </div>
+          }
 
-      <div *ngIf="show">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
-      <span style="color: red;">{{err_msg}}</span>
-    </div>
+          @if (sourceSelect == 'GHSA') {
+            <div>
+              <mat-form-field class="example-full-width" color="accent">
+                <mat-label>GHSA</mat-label>
+                <input cdkFocusInitial type="text" matInput placeholder="e.g.: GHSA-xxxx-xxxx-xxxx" [formControl]="myghsa">
+                @if (myghsa.hasError('notempty')) {
+                  <mat-error>
+                    <strong>GHSA must not be empty!</strong>
+                  </mat-error>
+                }
+                @if (myghsa.hasError('ghsa_format_error')) {
+                  <mat-error>
+                    <strong>GHSA format error!</strong>
+                  </mat-error>
+                }
+                @if (myghsa.hasError('ghsa_notfound')) {
+                  <mat-error>
+                    <strong>GHSA not found!</strong>
+                  </mat-error>
+                }
+              </mat-form-field>
+            </div>
+          }
 
-  </mat-dialog-content>
+          @if (sourceSelect == 'PCIDSS') {
+            <div>
+              <mat-form-field class="example-full-width" color="accent">
+                <mat-label>PCI DSS Requirements v3.2.1</mat-label>
+                <input cdkFocusInitial type="text" matInput placeholder="e.g.: Firewall" [formControl]="myPCI"
+                  [matAutocomplete]="auto5">
+                  <mat-autocomplete #auto5="matAutocomplete">
+                    @for (group of filteredOptionsPCIDSS | async; track group) {
+                      <mat-optgroup [label]="group.maincategory"
+                        [title]="group.maincategory">
+                        @for (item of group.items; track item) {
+                          <mat-option [value]="item.title" [title]="item.title">
+                            {{item.title}}
+                          </mat-option>
+                        }
+                      </mat-optgroup>
+                    }
+                  </mat-autocomplete>
+                  @if (myPCI.hasError('notempty')) {
+                    <mat-error>
+                      <strong>Title must not be empty!</strong>
+                    </mat-error>
+                  }
+                  @if (myPCI.hasError('cantfind')) {
+                    <mat-error>
+                      <strong>Can not be found!</strong>
+                    </mat-error>
+                  }
+                </mat-form-field>
+                <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
+                href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
+              </div>
+            }
 
-  <mat-dialog-actions>
 
-    <button *ngIf="sourceSelect == 'VULNREPO'" mat-raised-button color="accent" (click)="addIssue()"><mat-icon
-        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button>
-    <button *ngIf="sourceSelect == 'CVE'" mat-raised-button color="accent" (click)="addCVE()"><mat-icon
-        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CVE</button>
-    <button *ngIf="sourceSelect == 'GHSA'" mat-raised-button color="accent" (click)="addGHSA()"><mat-icon
-        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from GHSA</button>
-    <button *ngIf="sourceSelect == 'PCIDSS'" mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon
-        class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
-    <div *ngIf="selection.selected.length > 0">
-      <button
-        *ngIf="sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE' || sourceSelect == 'MENTERPRISE' || sourceSelect == 'MMOBILE'"
-        mat-raised-button color="accent" (click)="addtop10(selection.selected)"><mat-icon
-          class="vertical-align-middle padding-bottom-3">add</mat-icon>
-        Add
-        selected ({{selection.selected.length}})</button>
-    </div>
+            @if (sourceSelect == 'OWASP_mobile' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017' || sourceSelect == 'AIVULNS') {
+              <div
+                >
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                      </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef> Title </th>
+                    <td mat-cell *matCellDef="let element"> {{element.title}} <br> <small><a target="_blank" class="active-link"
+                    href="{{element.ref}}">Reference</a> / Severity: {{element.severity}}</small> </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+                  </tr>
+                </table>
+                @if (sourceSelect == 'AIVULNS') {
+                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
+                  target="_blank" href="https://www.microsoft.com/en-us/msrc/aibugbar">www.microsoft.com</a></small></span>
+                }
+                @if (sourceSelect == 'OWASP_mobile') {
+                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
+                  target="_blank" href="https://owasp.org/www-project-mobile-top-10/">owasp.org</a></small></span>
+                }
+                @if (sourceSelect == 'OWASPTOP10k8s') {
+                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
+                  target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
+                }
+                @if (sourceSelect == 'OWASPTOP10CICD') {
+                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
+                    target="_blank"
+                  href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
+                }
+                @if (sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017') {
+                  <span
+                    fxLayoutAlign="flex-end"><br><small><a class="active-link" target="_blank"
+                  href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
+                }
+              </div>
+            }
 
-    &nbsp;
-    <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+            @if (show) {
+              <div>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
+            }
+            <span style="color: red;">{{err_msg}}</span>
+          </div>
 
-  </mat-dialog-actions>
+        </mat-dialog-content>
 
-</mat-card>
+        <mat-dialog-actions>
+
+          @if (sourceSelect == 'VULNREPO') {
+            <button mat-raised-button color="accent" (click)="addIssue()"><mat-icon
+            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button>
+          }
+          @if (sourceSelect == 'CVE') {
+            <button mat-raised-button color="accent" (click)="addCVE()"><mat-icon
+            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CVE</button>
+          }
+          @if (sourceSelect == 'GHSA') {
+            <button mat-raised-button color="accent" (click)="addGHSA()"><mat-icon
+            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from GHSA</button>
+          }
+          @if (sourceSelect == 'PCIDSS') {
+            <button mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon
+            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
+          }
+          @if (selection.selected.length > 0) {
+            <div>
+              @if (sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE' || sourceSelect == 'MENTERPRISE' || sourceSelect == 'MMOBILE') {
+                <button
+                  mat-raised-button color="accent" (click)="addtop10(selection.selected)"><mat-icon
+                class="vertical-align-middle padding-bottom-3">add</mat-icon>
+                Add
+              selected ({{selection.selected.length}})</button>
+            }
+          </div>
+        }
+
+        &nbsp;
+        <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+
+      </mat-dialog-actions>
+
+    </mat-card>

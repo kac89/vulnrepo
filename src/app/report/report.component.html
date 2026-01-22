@@ -3,1147 +3,1024 @@
     <img title="VULNRΞPO REPORT" width="60px" src="assets/issue.png">
   </div>
   <div fxLayoutAlign="start center" fxFlex="90%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <h1 style="margin: 0 0 0;" class="mat-headline-3">{{reportdesc?.report_name}} <a *ngIf="decryptedReportDataChanged"
+    <h1 style="margin: 0 0 0;" class="mat-headline-3">{{reportdesc?.report_name}} @if (decryptedReportDataChanged) {
+      <a
         title="Edit report name" [routerLink]="[]" (click)="editreporttitle(reportdesc)">
         <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
       </a>
-    </h1>
-  </div>
+    }
+  </h1>
+</div>
 </div>
 
 <br><br>
 <!-- Report info -->
 <mat-card appearance="outlined" class="mdc-typography--body1">
-  <mat-card-header *ngIf="decryptedReportDataChanged">
-    <div mat-card-avatar>
-      <mat-icon>fingerprint</mat-icon>
-    </div>
-    <mat-card-title style="display: flex">Release version</mat-card-title>
-  </mat-card-header>
+  @if (decryptedReportDataChanged) {
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>fingerprint</mat-icon>
+      </div>
+      <mat-card-title style="display: flex">Release version</mat-card-title>
+    </mat-card-header>
+  }
   <mat-card-content>
 
     <div fxLayout="row wrap" fxLayoutGap="10px grid">
-      <p *ngIf="api_connection_status">API connection please wait...<mat-progress-bar style="width: 300px;"
-          color="accent" mode="indeterminate"></mat-progress-bar></p>
-      <div *ngIf="!api_connection_status" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-        <p *ngIf="!report_decryption_in_progress">Report ID: {{reportdesc?.report_id}} <mat-icon
-            *ngIf="report_source_api" color="accent">public</mat-icon></p>
-        <p *ngIf="decryptedReportDataChanged">Report Version: <b
+      @if (api_connection_status) {
+        <p>API connection please wait...<mat-progress-bar style="width: 300px;"
+        color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
+      @if (!api_connection_status) {
+        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+          @if (!report_decryption_in_progress) {
+            <p>Report ID: {{reportdesc?.report_id}} @if (report_source_api) {
+              <mat-icon
+              color="accent">public</mat-icon>
+            }</p>
+          }
+          @if (decryptedReportDataChanged) {
+            <p>Report Version: <b
             class="labelversion">{{decryptedReportDataChanged?.report_version}}</b>
-          &nbsp;&nbsp;<button matButton="outlined" (click)="showHistory(reportdesc.report_id)">
+            &nbsp;&nbsp;<button matButton="outlined" (click)="showHistory(reportdesc.report_id)">
             <mat-icon class="vertical-align-middle padding-bottom-3">history</mat-icon> History</button>
+          </p>
+        }
+        @if (!report_decryption_in_progress) {
+          <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
+        }
+        @if (report_decryption_in_progress) {
+          <p>Report is decrypted please wait...<mat-progress-bar
+          style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
-        <p *ngIf="!report_decryption_in_progress">Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
+      }
+      @if (report_encryption_in_progress) {
+        <p>Report is encrypted please wait...<mat-progress-bar
+        style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
+      </p>
+    }
+  </div>
+}
 
-        <p *ngIf="report_decryption_in_progress">Report is decrypted please wait...<mat-progress-bar
-            style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
-        </p>
-        <p *ngIf="report_encryption_in_progress">Report is encrypted please wait...<mat-progress-bar
-            style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
-        </p>
-      </div>
-
-      <div *ngIf="decryptedReportDataChanged" style="text-align: center;" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-        <p
-          *ngIf="reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == ''">
-          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br
-            *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b><i>{{reportdesc?.report_lastupdate | date:
-              'medium'}}</i></b>
-        </p>
-        <p *ngIf="lastsavereportdata !== ''">
-          <span *ngIf="!youhaveunsavedchanges && savemsg">{{savemsg}}</span><br
-            *ngIf="!youhaveunsavedchanges && savemsg">Last release: <b class="active-link"><i>{{lastsavereportdata |
-              date: 'medium'}}</i></b>
-        </p>
-
-        <div>
-
-
-
-
-          <button mat-fab extended class="mat-elevation-z9" color="primary"
-            (click)="saveReportChanges(reportdesc.report_id)">
-            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save changes and release a new
-            version
-          </button>
-
-        </div>
-
-        <div class="youhaveunsavedchanges" *ngIf="youhaveunsavedchanges">
-          <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon> You have unsaved
-          changes! <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
-        </div>
-
-      </div>
-
+@if (decryptedReportDataChanged) {
+  <div style="text-align: center;" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+    @if (reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == '') {
+      <p
+        >
+        @if (!youhaveunsavedchanges && savemsg) {
+          <span>{{savemsg}}</span>
+          }@if (!youhaveunsavedchanges && savemsg) {
+          <br
+            >
+          }Last release: <b><i>{{reportdesc?.report_lastupdate | date:
+        'medium'}}</i></b>
+      </p>
+    }
+    @if (lastsavereportdata !== '') {
+      <p>
+        @if (!youhaveunsavedchanges && savemsg) {
+          <span>{{savemsg}}</span>
+          }@if (!youhaveunsavedchanges && savemsg) {
+          <br
+            >
+          }Last release: <b class="active-link"><i>{{lastsavereportdata |
+        date: 'medium'}}</i></b>
+      </p>
+    }
+    <div>
+      <button mat-fab extended class="mat-elevation-z9" color="primary"
+        (click)="saveReportChanges(reportdesc.report_id)">
+        <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save changes and release a new
+        version
+      </button>
     </div>
+    @if (youhaveunsavedchanges) {
+      <div class="youhaveunsavedchanges">
+        <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon> You have unsaved
+        changes! <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
+      </div>
+    }
+  </div>
+}
+
+</div>
 
 
-  </mat-card-content>
+</mat-card-content>
 </mat-card>
 
-<div *ngIf="decryptedReportDataChanged">
-
-  <br>
-  <!-- Report details -->
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>description</mat-icon>
-      </div>
-      <mat-card-title>Details</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-
-      <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-          <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <mat-label>Report scope</mat-label>
-
-
-            <div style="position:relative;">
-              <textarea matInput style="display:block;" rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
-                value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-
-              <div style="position:absolute;top: 10px; right: 10px;">
-                <button mat-icon-button color="accent" (click)="editorFullscreenScope()" title="Fullscreen Text Editor">
-                  <mat-icon>fullscreen</mat-icon>
-                </button>
-              </div>
-
-            </div>
-
-
-            <mat-hint>You can use Markdown or HTML.
-              <a class="active-link" href="javascript:void(0);" (click)="addtablescope()"
-                title="Insert table to scope.">[T]</a>&nbsp;
-              <a class="active-link" href="javascript:void(0);" (click)="addcodescope()"
-                title="Insert code to scope.">[C]</a>
-            </mat-hint>
-          </mat-form-field>
-        </div>
-
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-              <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-                <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                  <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>Research start date</mat-label>
-                    <input matInput [matDatepicker]="picker" (dateChange)="onDateChangeReportstart($event)"
-                      [value]="renderdateformat(decryptedReportDataChanged.report_metadata.starttest)">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </div>
-
-                <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                  <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>Research end date</mat-label>
-                    <input matInput [matDatepicker]="pickerend" (dateChange)="onDateChangeReportend($event)"
-                      [value]="renderdateformat(decryptedReportDataChanged.report_metadata.endtest)">
-                    <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerend></mat-datepicker>
-                  </mat-form-field>
-                </div>
-
-              </div>
-
-            </div>
-
-            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <mat-label>Report summary</mat-label>
-                <div style="position:relative;">
-                  <textarea matInput rows="2" [(ngModel)]="decryptedReportDataChanged.report_summary"
-                    value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
-                  <div *ngIf="aiconnected" style="position:absolute;top: 10px; right: 10px;">
-                    <button mat-icon-button color="accent" title="AI report summary" [matMenuTriggerFor]="menu">
-                      <mat-icon>photo_filter</mat-icon>
-                    </button>
-
-                    <mat-menu #menu="matMenu">
-                      <button mat-menu-item (click)="aiasist()"><mat-icon
-                          class="vertical-align-middle padding-bottom-3">photo_filter</mat-icon> AI report
-                        summary</button>
-                      <button mat-menu-item (click)="goaisettings()"><mat-icon
-                          class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings</button>
-                    </mat-menu>
-
-                  </div>
-                </div>
-
-              </mat-form-field>
-              <mat-progress-bar *ngIf="aiprogress" color="accent" mode="indeterminate"></mat-progress-bar>
-            </div>
-
+@if (decryptedReportDataChanged) {
+  <div>
+    <br>
+      <!-- Report details -->
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <div mat-card-avatar>
+            <mat-icon>description</mat-icon>
           </div>
-
-        </div>
-
-      </div>
-
-    </mat-card-content>
-  </mat-card>
-
-
-  <br>
-  <!-- Issues list -->
-  <mat-card appearance="outlined">
-
-
-    <div fxLayout="row wrap" style="display:flex;padding: 16px 16px 0;">
-
-      <div class="mat-mdc-card-avatar">
-        <mat-icon>bug_report</mat-icon>
-      </div>
-
-      <div class="mat-mdc-card-title" style="padding-left: 16px;">
-        <span>
-          Issues ({{decryptedReportDataChanged.report_vulns.length}})
-        </span>
-      </div>
-      <div style="flex-grow: 1"></div>
-
-      <div fxLayoutAlign="end" fxLayoutGap="5px grid">
-
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-          <button style="width: 100%" mat-button (click)="import_issues()">
-            <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
-          </button>
-        </div>
-
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-          <button [matMenuTriggerFor]="dropdownMenuOne" style="width: 100%"
-            *ngIf="decryptedReportDataChanged.report_vulns.length != 0" mat-button>
-            <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export
-          </button>
-
-          <mat-menu #dropdownMenuOne="matMenu">
-            <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'all')">Export
-              all</button>
-            <button *ngIf="selectedIssues.length >= 1" mat-menu-item
-              (click)="export_issues(decryptedReportDataChanged.report_vulns, 'selected')">Export selected
-              ({{selectedIssues.length}})</button>
-            <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
-            <button *ngIf="getTags(decryptedReportDataChanged.report_vulns) >= 1" mat-menu-item
-              [matMenuTriggerFor]="bytag">Export by Tag</button>
-          </mat-menu>
-
-          <mat-menu #bysev="matMenu">
-            <button mat-menu-item
-              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Critical')">Critical</button>
-            <button mat-menu-item
-              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'High')">High</button>
-            <button mat-menu-item
-              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Medium')">Medium</button>
-            <button mat-menu-item
-              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
-            <button mat-menu-item
-              (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
-          </mat-menu>
-          <mat-menu #bytag="matMenu">
-            <span *ngFor="let tagsin of getAllTAgs()">
-              <button mat-menu-item (click)="export_by_tag(tagsin)">
-                {{tagsin}}
-              </button>
-            </span>
-          </mat-menu>
-        </div>
-
-        <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-          <button *ngIf="decryptedReportDataChanged.report_vulns.length > 1" mat-button [matMenuTriggerFor]="menu">
-            <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="sortbyseverity()">Severity</button>
-            <button mat-menu-item (click)="sortbycvss()">CVSS</button>
-          </mat-menu>
-
-        </div>
-
-      </div>
-
-
-    </div>
-
-    <mat-card-content>
-
-      <div [hidden]="decryptedReportDataChanged.report_vulns.length == 0">
-        <mat-paginator #paginatorIssues color="accent" [pageSizeOptions]="[20, 50, 100, 250]"
-          (page)="pageEvent=getData($event)" showFirstLastButtons></mat-paginator>
-        <br>
-      </div>
-
-      <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
-
-        <mat-expansion-panel *ngFor="let dec_data of selectedResult; let i=index" class="mat-elevation-z9"
-          (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag>
-
-          <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
-            <mat-panel-title fxLayoutAlign="start">
-              <div style="white-space: nowrap;">
-                <mat-checkbox [checked]="checkcheckbox(i)" (change)="toggle(i,$event.checked)"
-                  (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
-                <span class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
-                &nbsp;&nbsp;{{dec_data.title}}
-              </div>
-            </mat-panel-title>
-
-
-            <mat-panel-description fxLayoutAlign="end center">
-
-              <div>
-                <div fxLayoutAlign="center start" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxHide.xs fxHide.sm>
-                  <mat-chip-listbox style="white-space: nowrap;">
-                    <mat-chip-option *ngFor="let tag of dec_data.tags.slice(0, 3);" [selectable]="false"
-                      ngDefaultControl>
-                      {{tag.name}}
-                    </mat-chip-option>
-                  </mat-chip-listbox>
-                </div>
-              </div>
-
-              &nbsp;
-              <div *ngIf="dec_data?.bounty" fxHide.xs fxHide.sm>
-                <mat-icon *ngIf="dec_data?.bounty.length > 0" title="Found bug-bounty program related to the issue"
-                  color="accent">attach_money</mat-icon>
-              </div>
-              <div *ngIf="dec_data?.status === 1" fxHide.xs fxHide.sm>
-                <mat-icon style="color:red" title="Issue status: Open (Waiting for review)"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon>
-              </div>
-              <div *ngIf="dec_data?.status === 2" fxHide.xs fxHide.sm>
-                <mat-icon style="color:yellow" title="Issue status: Fix In Progress"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon>
-              </div>
-              <div *ngIf="dec_data?.status === 3" fxHide.xs fxHide.sm>
-                <mat-icon style="color:green" title="Issue status: Fixed"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
-              </div>
-              <div *ngIf="dec_data?.status === 4" fxHide.xs fxHide.sm>
-                <mat-icon style="color:grey" title="Issue status: Won't Fix"
-                  class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
-              </div>
-
-              &nbsp;
-              <div>
-                <button mat-icon-button
-                  style="width: 30px; height: 30px; line-height: 5px; border-radius: 70%;padding: 0px;"
-                  *ngIf="decryptedReportDataChanged" title="Edit issue title" [routerLink]="[]"
-                  (click)="editissuetitle(dec_data);$event.stopPropagation();">
-                  <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
-                </button>
-              </div>
-
-              <mat-icon *ngIf="dec_data.files.length > 0" title="Attached file" style="color:grey"
-                class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
-            </mat-panel-description>
-
-          </mat-expansion-panel-header>
-          <mat-expansion-panel-header *cdkDragPlaceholder></mat-expansion-panel-header>
-
+          <mat-card-title>Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
           <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-            <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
+            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
               <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <mat-label>Proof of Concept</mat-label>
-
+                <mat-label>Report scope</mat-label>
                 <div style="position:relative;">
-                  <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"
-                    style="display:block;"></textarea>
-
+                  <textarea matInput style="display:block;" rows="6" [(ngModel)]="decryptedReportDataChanged.report_scope"
+                  value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
                   <div style="position:absolute;top: 10px; right: 10px;">
-
-                    <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)"
-                      title="Fullscreen Text Editor">
+                    <button mat-icon-button color="accent" (click)="editorFullscreenScope()" title="Fullscreen Text Editor">
                       <mat-icon>fullscreen</mat-icon>
                     </button>
                   </div>
-
                 </div>
-
-
+                <mat-hint>You can use Markdown or HTML.
+                  <a class="active-link" href="javascript:void(0);" (click)="addtablescope()"
+                  title="Insert table to scope.">[T]</a>&nbsp;
+                  <a class="active-link" href="javascript:void(0);" (click)="addcodescope()"
+                  title="Insert code to scope.">[C]</a>
+                </mat-hint>
               </mat-form-field>
             </div>
-
-            <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
-
-
-              <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>Severity</mat-label>
-                    <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
-                      (ngModelChange)="doStats()">
-                      <mat-option *ngFor="let sev of dataSourceforseverity" [value]="sev.severity">
-                        {{sev.severity}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-
-                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>Issue status</mat-label>
-                    <mat-select placeholder="Issue status" [(value)]="dec_data.status" [ngModel]="dec_data.status"
-                      (ngModelChange)="doStats()">
-                      <mat-option *ngFor="let issuestat of issueStatus" [value]="issuestat.value">
-                        {{issuestat.status}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-
-                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <mat-form-field class="example-full-width" color="accent">
-                    <mat-label>Create issue date</mat-label>
-                    <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
-                      [value]="renderdateformat(dec_data.date)">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-            <div fxLayout="row wrap" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                  <mat-label>Description</mat-label>
-                  <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
-                </mat-form-field>
-              </div>
-
-              <div *ngIf="dec_data.tags" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-form-field class="example-tags-list" color="accent">
-                  <mat-label>Tags</mat-label>
-                  <mat-chip-grid #tagList aria-label="Tags">
-                    <mat-chip-row *ngFor="let tag of dec_data.tags" [(ngModel)]="dec_data.tags"
-                      [selectable]="selectable" [removable]="removable" (removed)="TAGremove(tag, dec_data)"
-                      ngDefaultControl>
-                      {{tag.name}}
-                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                    </mat-chip-row>
-                    <input placeholder="New tag..." [matChipInputFor]="tagList"
-                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                      (matChipInputTokenEnd)="TAGadd($event, dec_data)">
-                  </mat-chip-grid>
-                </mat-form-field>
-              </div>
-
-            </div>
-
             <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
               <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
                 <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                    <mat-label>References</mat-label>
-                    <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
-                  </mat-form-field>
-                </div>
-
-                <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
-                  <mat-form-field class="example-full-width" color="accent">
-                    <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
-                    <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent"
-                      matSuffix title="Calculate CVSS">
-                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon>
-                      CVSS
-                    </button>
-                  </mat-form-field>
-                </div>
-
-                <div fxFlex="60%" fxFlex.sm="50%" fxFlex.xs="100%">
-                  <mat-form-field class="example-full-width" color="accent">
-                    <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
-                    <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent"
-                      matSuffix title="Search CVE">
-                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon> CVE
-                    </button>
-                  </mat-form-field>
-                </div>
-
-                <div fxLayout="row wrap" fxLayoutGap="5px grid" *ngIf="dec_data?.bounty" fxFlex="100%" fxFlex.sm="100%"
-                  fxFlex.xs="100%">
-
-                  <div style="display: inline;text-align: end;" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
-                    <div *ngIf="BBmsg != ''">
-                      <p>{{BBmsg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-                      </p>
+                  <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                      <mat-form-field class="example-full-width" color="accent">
+                        <mat-label>Research start date</mat-label>
+                        <input matInput [matDatepicker]="picker" (dateChange)="onDateChangeReportstart($event)"
+                          [value]="renderdateformat(decryptedReportDataChanged.report_metadata.starttest)">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                        <mat-form-field class="example-full-width" color="accent">
+                          <mat-label>Research end date</mat-label>
+                          <input matInput [matDatepicker]="pickerend" (dateChange)="onDateChangeReportend($event)"
+                            [value]="renderdateformat(decryptedReportDataChanged.report_metadata.endtest)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerend></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
                     </div>
-                    <button *ngFor="let bounty of dec_data?.bounty" mat-stroked-button color="accent"
-                      (click)="redirectBounty(bounty?.url)" title="{{bounty?.url}}">
-                      <mat-icon>attach_money</mat-icon>{{bounty?.name}}
-                    </button>
+                    <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                      <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                        <mat-label>Report summary</mat-label>
+                        <div style="position:relative;">
+                          <textarea matInput rows="2" [(ngModel)]="decryptedReportDataChanged.report_summary"
+                          value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
+                          @if (aiconnected) {
+                            <div style="position:absolute;top: 10px; right: 10px;">
+                              <button mat-icon-button color="accent" title="AI report summary" [matMenuTriggerFor]="menu">
+                                <mat-icon>photo_filter</mat-icon>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="aiasist()"><mat-icon
+                                class="vertical-align-middle padding-bottom-3">photo_filter</mat-icon> AI report
+                              summary</button>
+                              <button mat-menu-item (click)="goaisettings()"><mat-icon
+                              class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings</button>
+                            </mat-menu>
+                          </div>
+                        }
+                      </div>
+                    </mat-form-field>
+                    @if (aiprogress) {
+                      <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+                    }
                   </div>
-
-                  <div fxLayoutAlign="end start" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
-                    <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}"
-                      matBadgeColor="accent" (click)="searchBounty(dec_data)"
-                      title="Search for bug bounty program base on POC">
-                      <mat-icon>attach_money</mat-icon>
-                      <mat-icon>search</mat-icon>
-                    </button>
-                  </div>
-
                 </div>
-
               </div>
-
             </div>
-
-          </div>
-          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-
-
-            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-              <div *ngFor="let key of dec_data.files">
-
-                <mat-list>
-                  <mat-list-item class="mat-elevation-z4" fxLayout="row">
-
-                    <div matListItemTitle>{{key.title}}</div>
-                    <div matListItemLine><b>Date:</b> {{key.date | date:'medium'}} | <b>Size:</b> {{key.size | filesize
-                      }} </div>
-                    <div matListItemMeta>
-                      <button mat-icon-button
-                        *ngIf="key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000"
-                        (click)="openattachfullscreen(key, dec_data)" title="Preview file">
-                        <mat-icon color="accent">search</mat-icon>
-                      </button>
-                      <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
-                        <mat-icon color="accent">file_download</mat-icon>
-                      </button>
-                      <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
-                        <mat-icon color="warn">delete_forever</mat-icon>
-                      </button>
-                    </div>
-
-                  </mat-list-item>
-                </mat-list>
-
-              </div>
-
-            </div>
-          </div>
-
-          <mat-action-row align="end">
-
-
-            <button mat-fab (click)="fileuploadInput.click()" color="primary" title="Upload file">
-              <i class="material-icons">attach_file</i>
-              <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)"
-                style="display:none;" multiple>
-            </button>
-
-            <div fxFlex></div>
-
-            <span align="start" *ngIf="upload_in_progress">Upload please wait...<mat-progress-bar style="width: 300px;"
-                color="accent" mode="indeterminate"></mat-progress-bar></span>
-
-            <div fxFlex></div>
-
-            <button mat-fab color="primary" (click)="saveTemplate(dec_data)" title="Save issue as template">
-              <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>save_as</mat-icon>
-            </button>
-
-            <button mat-fab color="warn" (click)="removeIssiue(dec_data)" title="Remove issue">
-              <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>delete_forever</mat-icon>
-            </button>
-
-          </mat-action-row>
-
-
-        </mat-expansion-panel>
-
-
-      </mat-accordion>
-      <div *ngIf="pok == 1">
+          </mat-card-content>
+        </mat-card>
         <br>
-        <mat-expansion-panel class="mat-elevation-z9" disabled>
-          <mat-expansion-panel-header>
-            <mat-panel-title fxLayoutAlign="start center" style="margin-left: 13px;">
-              <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
-                settings</mat-icon>
-
-
-
-              <div fxLayout="row wrap" fxLayoutGap="0px" class="example-full-width">
-
-                <div fxLayoutAlign="start start" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
-
-                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
-                    <mat-icon>done_all</mat-icon>
-                    Select all
-                  </button>
-
-                  &nbsp;
-
-                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
-                    <mat-icon>done_all</mat-icon>
-                    Clear selected ({{ selectedIssues.length }})
-                  </button>
-
-                  &nbsp;
-
-                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selectedIssues)">
-                    <mat-icon>edit</mat-icon>
-                    Edit ({{ selectedIssues.length }})
-                  </button>
-
-                  &nbsp;
-
-                  <button *ngIf="selectedIssues.length >= 2" mat-stroked-button color="accent" [routerLink]="[]"
-                    (click)="openissuesmerge(selectedIssues)">
-                    <mat-icon>low_priority</mat-icon>
-                    Merge ({{ selectedIssues.length }})
-                  </button>
-
-                </div>
-
-                <div fxLayoutAlign="end end" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
-
-                  <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)"
-                    [matMenuTriggerFor]="trewwertwe">
-                    <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> Remove
-                    ({{ selectedIssues.length }})
-                  </button>
-
-                </div>
-
-
-
-
+          <!-- Issues list -->
+          <mat-card appearance="outlined">
+            <div fxLayout="row wrap" style="display:flex;padding: 16px 16px 0;">
+              <div class="mat-mdc-card-avatar">
+                <mat-icon>bug_report</mat-icon>
               </div>
-
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-        </mat-expansion-panel>
-      </div>
-      <br>
-
-      <div class="banner">
-        <div class="center-me">
-          <button class="mat-elevation-z9" mat-fab extended color="accent" (click)="addissue()">
-            <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add issue
-          </button>
-        </div>
-      </div>
-    </mat-card-content>
-
-  </mat-card>
-
-  <br>
-  <!-- Stats -->
-  <mat-card appearance="outlined" *ngIf="decryptedReportDataChanged.report_vulns.length !== 0">
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>insert_chart</mat-icon>
-      </div>
-      <mat-card-title>Statistics</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-
-      <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-          <div style="display: block; width: 100%; height: 300px;">
-            <ngx-charts-advanced-pie-chart [scheme]="colorScheme" [results]="severitytable">
-            </ngx-charts-advanced-pie-chart>
-          </div>
-
-          <div style="height: 50%;">
-
-            <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="severitytable"
-              [gradient]="gradient">
-            </ngx-charts-bar-vertical>
-
-          </div>
-
-
-
-        </div>
-
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-          <mat-card>
-            <mat-calendar class="mat-elevation-z9" [dateClass]="dateClass()" [selected]="selectedRangeValue"
-              [startAt]="startDate">
-            </mat-calendar>
-          </mat-card>
-
-        </div>
-
-      </div>
-
-    </mat-card-content>
-  </mat-card>
-
-  <br>
-  <!-- Researcher -->
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>face</mat-icon>
-      </div>
-      <mat-card-title style="display: flex">Researcher&nbsp;
-        &nbsp;
-
-        <button style="height: 27px;" matButton="outlined" (click)="addresearcher()">Add researcher
-          <mat-icon>add</mat-icon>
-        </button>
-
-        <mat-menu #researchermenu="matMenu">
-          <a [routerLink]="[]" (click)="addresearcher()" class="active-link" title="Add new researcher" mat-menu-item>
-            <mat-icon class="vertical-align-middle">add</mat-icon> Add researcher
-          </a>
-        </mat-menu>
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-
-      <div *ngFor="let researchers of decryptedReportDataChanged.researcher" fxLayout="row wrap"
-        fxLayoutGap="10px grid">
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
-          <mat-form-field class="example-full-width" color="accent">
-            <mat-label>Name</mat-label>
-            <input matInput [(ngModel)]="researchers.reportername" value="{{researchers.reportername}}">
-            <mat-icon matSuffix>person_pin</mat-icon>
-          </mat-form-field>
-        </div>
-
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
-          <mat-form-field class="example-full-width" color="accent">
-            <mat-label>E-mail</mat-label>
-            <input matInput [(ngModel)]="researchers.reporteremail" value="{{researchers.reporteremail}}">
-            <mat-icon matSuffix>email</mat-icon>
-          </mat-form-field>
-        </div>
-
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
-          <mat-form-field class="example-full-width" color="accent">
-            <mat-label>Social link</mat-label>
-            <input matInput [(ngModel)]="researchers.reportersocial" value="{{researchers.reportersocial}}">
-            <mat-icon matSuffix>share</mat-icon>
-          </mat-form-field>
-        </div>
-
-        <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
-          <mat-form-field style="width: 75%;" color="accent">
-            <mat-label>Website</mat-label>
-            <input matInput [(ngModel)]="researchers.reporterwww" value="{{researchers.reporterwww}}">
-            <mat-icon matSuffix>public</mat-icon>
-          </mat-form-field>
-          &nbsp;
-          <button mat-mini-fab color="warn" (click)="removeresearcher(researchers)" title="Remove researcher">
-            <mat-icon>delete_forever</mat-icon>
-          </button>
-        </div>
-
-
-      </div>
-
-    </mat-card-content>
-
-
-
-  </mat-card>
-
-  <br>
-  <!-- changelog -->
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>track_changes</mat-icon>
-      </div>
-      <mat-card-title style="display: flex">Changelog
-        &nbsp;
-
-        <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="changelogmenu">More
-          <mat-icon>more_vert</mat-icon>
-        </button>
-
-        <mat-menu #changelogmenu="matMenu">
-          <a [routerLink]="[]" (click)="addchangelog()" title="Add event to changelog"
-            mat-menu-item>
-            <mat-icon class="vertical-align-middle">add</mat-icon> Add event to changelog
-          </a>
-          <a [routerLink]="[]" (click)="removeallfromchangelog()"
-            title="Remove all events from changelog" mat-menu-item>
-            <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove all events
-          </a>
-        </mat-menu>
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-
-      <table #table2 *ngIf="listchangelog != 0" mat-table [dataSource]="dataSource" matSort matSortActive="date"
-        matSortDirection="desc" class="mat-elevation-z8">
-
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-          <td mat-cell *matCellDef="let element"> {{element.date | date:'medium'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="desc">
-          <th mat-header-cell *matHeaderCellDef> Description </th>
-          <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="settings">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-icon title="Settings">settings</mat-icon>
-          </th>
-          <td mat-cell *matCellDef="let element">
-
-            <button mat-icon-button
-              style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;"
-              [matMenuTriggerFor]="changelogsettings">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #changelogsettings="matMenu">
-              <a [routerLink]="[]" (click)="editchangelog(element)" class="active-link" title="Edit event"
-                mat-menu-item>
-                <mat-icon class="vertical-align-middle">edit</mat-icon> Edit event
-              </a>
-              <a [routerLink]="[]" (click)="removefromchangelog(element)" class="active-link" title="Remove event"
-                mat-menu-item>
-                <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove event
-              </a>
-            </mat-menu>
-
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-      <div fxLayout="row wrap" fxLayoutGap="10">
-        <div fxFlex="30%" fxFlex.sm="20%" fxFlex.xs="10%">
-
-          <div *ngIf="listchangelog == 0" class="mdc-typography--body1">
-            <h3>Changelog is empty <mat-icon>sentiment_dissatisfied</mat-icon></h3>
-          </div>
-
-        </div>
-
-        <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" [hidden]="listchangelog == 0">
-          <p>
-            <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]"
-              showFirstLastButtons></mat-paginator>
-          </p>
-        </div>
-
-      </div>
-
-    </mat-card-content>
-  </mat-card>
-  <br>
-
-  <!-- Report Settings -->
-  <mat-card appearance="outlined" *ngIf="decryptedReportDataChanged">
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>settings</mat-icon>
-      </div>
-
-      <mat-card-title style="display: flex" fxLayoutAlign="start">Settings
-        &nbsp;
-
-        <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="Settingsmenu">More
-          <mat-icon>more_vert</mat-icon>
-        </button>
-
-        <mat-menu #Settingsmenu="matMenu">
-
-          <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" title="Change report security key"
-            mat-menu-item>
-            <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
-          </a>
-
-          <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)"
-            title="Add custom content to report" mat-menu-item>
-            <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add custom content to report
-          </a>
-
-          <a [routerLink]="[]" (click)="addCustomcss(decryptedReportDataChanged)" title="Add custom css" mat-menu-item>
-            <mat-icon class="vertical-align-middle padding-bottom-3">palette</mat-icon> Custom CSS (HTML v2)
-          </a>
-
-          <button mat-menu-item [matMenuTriggerFor]="reportporfiles2">Report settings profile</button>
-        </mat-menu>
-
-        <mat-menu #reportporfiles2="matMenu">
-          <button mat-menu-item (click)="savenewReportProfile()">
-            <mat-icon title="Report settings profile">save</mat-icon> Save current settings
-          </button>
-          <button *ngIf="ReportProfilesList.length > 0" mat-menu-item [matMenuTriggerFor]="reportProfiles">Select
-            settings profile</button>
-        </mat-menu>
-
-        <mat-menu #reportProfiles="matMenu">
-          <span *ngFor="let profile of ReportProfilesList">
-
-            <button mat-menu-item (click)="setReportProfile(profile)">
-              <mat-icon *ngIf="!profile.api" title="Local Host">computer</mat-icon>
-              <mat-icon *ngIf="profile.api == 'remote'" color="accent"
-                title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon>
-              {{profile.profile_name}}
-            </button>
-          </span>
-        </mat-menu>
-      </mat-card-title>
-
-    </mat-card-header>
-    <mat-card-content>
-
-
-      <mat-tab-group [selectedIndex]="0" dynamicHeight color="accent">
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">image</mat-icon>
-            Report logo
-          </ng-template>
-          <div style="padding: 20px!important;">
-
-            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-
-              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-
-                <button mat-fab style="margin-right: 10px!important;" class="mdc-elevation--z11"
-                  (click)="fileuploadInput.click()" color="primary" title="Attach report logo" extended>
-
-                  <i class="material-icons">attach_file</i>
-                  Attach logo
-                  <input type="file" #fileuploadInput id="file" accept="image/*" (change)="importlogo($event.target)"
-                    name="myfiles" style="display:none;">
-                </button>
-
-                <img *ngIf="advlogo_saved" src="{{advlogo_saved}}" width="100px">
-                <div [innerHTML]="uploadlogoprev"></div>
-
-                <button *ngIf="advlogo_saved || advlogo" mat-icon-button color="warn" (click)="clearlogo()"
-                  title="Remove report logo">
-                  <mat-icon>delete_forever</mat-icon>
-                </button>
-
-                <div *ngIf="advlogo_saved || advlogo" fxLayout="column" style="margin-top: 5px; height: 125px;">
-                  <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
-                    <mat-label>Width (px)</mat-label>
-                    <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.width"
-                      value="{{decryptedReportDataChanged.report_settings.report_logo.width}}">
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
-                    <mat-label>Height (px)</mat-label>
-                    <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.height"
-                      value="{{decryptedReportDataChanged.report_settings.report_logo.height}}">
-                  </mat-form-field>
-                </div>
-
+              <div class="mat-mdc-card-title" style="padding-left: 16px;">
+                <span>
+                  Issues ({{decryptedReportDataChanged.report_vulns.length}})
+                </span>
               </div>
-
+              <div style="flex-grow: 1"></div>
+              <div fxLayoutAlign="end" fxLayoutGap="5px grid">
+                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                  <button style="width: 100%" mat-button (click)="import_issues()">
+                    <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
+                  </button>
+                </div>
+                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                  @if (decryptedReportDataChanged.report_vulns.length != 0) {
+                    <button [matMenuTriggerFor]="dropdownMenuOne" style="width: 100%"
+                      mat-button>
+                      <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export
+                    </button>
+                  }
+                  <mat-menu #dropdownMenuOne="matMenu">
+                    <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'all')">Export
+                    all</button>
+                    @if (selectedIssues.length >= 1) {
+                      <button mat-menu-item
+                        (click)="export_issues(decryptedReportDataChanged.report_vulns, 'selected')">Export selected
+                      ({{selectedIssues.length}})</button>
+                    }
+                    <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
+                    @if (getTags(decryptedReportDataChanged.report_vulns) >= 1) {
+                      <button mat-menu-item
+                      [matMenuTriggerFor]="bytag">Export by Tag</button>
+                    }
+                  </mat-menu>
+                  <mat-menu #bysev="matMenu">
+                    <button mat-menu-item
+                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Critical')">Critical</button>
+                    <button mat-menu-item
+                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'High')">High</button>
+                    <button mat-menu-item
+                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Medium')">Medium</button>
+                    <button mat-menu-item
+                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
+                    <button mat-menu-item
+                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
+                  </mat-menu>
+                  <mat-menu #bytag="matMenu">
+                    @for (tagsin of getAllTAgs(); track tagsin) {
+                      <span>
+                        <button mat-menu-item (click)="export_by_tag(tagsin)">
+                          {{tagsin}}
+                        </button>
+                      </span>
+                    }
+                  </mat-menu>
+                </div>
+                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                  @if (decryptedReportDataChanged.report_vulns.length > 1) {
+                    <button mat-button [matMenuTriggerFor]="menu">
+                      <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
+                    </button>
+                  }
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="sortbyseverity()">Severity</button>
+                    <button mat-menu-item (click)="sortbycvss()">CVSS</button>
+                  </mat-menu>
+                </div>
+              </div>
             </div>
-
-          </div>
-        </mat-tab>
-
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">tune</mat-icon>
-            Report settings
-          </ng-template>
-          <div style="padding: 10px!important;">
-
-            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-
-              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-                <mat-card appearance="outlined">
-                  <mat-card-header>
-                    <mat-card-title> HTML</mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-
-                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed"
-                        (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
-                    </div>
-                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc"
-                        (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"
-                        (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
-                    </div>
-
-                  </mat-card-content>
-                </mat-card>
-
-              </div>
-
-
-              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-                <mat-card appearance="outlined">
-                  <mat-card-header>
-                    <mat-card-title> ALL formats</mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-
-                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page"
-                        (change)="removechangelogpage($event)">Remove Changelog</mat-checkbox>
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuestatus"
-                        (change)="removeIssuestatus($event)">Remove Issue status</mat-checkbox>
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecvss"
-                        (change)="removeIssuecvss($event)">Remove Issue CVSS</mat-checkbox>
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecve"
-                        (change)="removeIssuecve($event)">Remove Issue CVE</mat-checkbox>
-                    </div>
-
-                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_researchers"
-                        (change)="removeResearchers($event)">Remove Researcher</mat-checkbox>
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuetags"
-                        (change)="removetagsfromreport($event)">Remove TAGs</mat-checkbox>
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_attach_name"
-                        (change)="removeattachname($event)">Hide the filename of all attachments</mat-checkbox>
-                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_lastpage"
-                        (change)="removeGeninfo($event)">Remove<br>(Generated by vulnrepo.com)</mat-checkbox>
-                    </div>
-
-                  </mat-card-content>
-                </mat-card>
-
-              </div>
-
-            </div>
-
-          </div>
-        </mat-tab>
-
-      </mat-tab-group>
-
-
-
-    </mat-card-content>
-  </mat-card>
-  <br>
-
-  <!-- Download -->
-  <mat-card appearance="outlined" *ngIf="decryptedReportDataChanged">
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>cloud_download</mat-icon>
-      </div>
-      <mat-card-title>Download</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-
-      <div fxLayout="row wrap" fxLayoutGap="10px grid">
-
-        <div fxLayoutAlign="center start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-          <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
-            <button style="width: 100%;" class="mdc-elevation--z11" mat-fab extended [matMenuTriggerFor]="aboveMenu2"
-              color="accent">
-              <mat-icon title="Encrypted report"
-                class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon> Download encrypted
-            </button>
-            <mat-menu #aboveMenu2="matMenu" yPosition="above">
-
-              <button mat-menu-item (click)="encrypt_reportv2(report_info, true, false)"
-                title="Full report with all dependency, encrypted portable version for offline reader">
-                <mat-icon>description</mat-icon>HTML
-              </button>
-              <button mat-menu-item (click)="encrypt_reportv2(report_info, true, 'mini')"
-                title="Full report with linked external dependency, encrypted (small size of the report)">
-                <mat-icon>description</mat-icon>HTML (mini)
-              </button>
-              <button mat-menu-item (click)="shareReport(report_info.report_id)"
-                title="(VULNR) VULNRΞPO encrypted report format">
-                <mat-icon>code</mat-icon>VULNR
-              </button>
-            </mat-menu>
-          </div>
-
-        </div>
-
-        <div fxLayoutAlign="center end" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-
-          <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-            <button mat-fab extended style="width: 100%;" class="mat-elevation-z9" color="warn"
-              [matMenuTriggerFor]="aboveMenu">
-              <mat-icon title="Unencrypted report"
-                class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
-            </button>
-            <mat-menu #aboveMenu="matMenu" yPosition="above">
-
-              <button *ngIf="aiconnected" mat-menu-item (click)="goAIsummary()" title="Decrypted AI report to LLM">
-                <mat-icon>photo_filter</mat-icon>Attach to AI assistant
-              </button>
-              <mat-divider></mat-divider>
-              <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false, '')"
-                title="Full report with all dependency, decrypted portable version for offline reader">
-                <mat-icon>description</mat-icon>HTML
-              </button>
-              <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, 'mini', '')"
-                title="Full report with linked external dependency, decrypted (small size of the report)">
-                <mat-icon>description</mat-icon>HTML (mini)
-              </button>
-              <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)"
-                title="Decrypted ASCII report format">
-                <mat-icon>description</mat-icon>TEXT
-              </button>
-              <button mat-menu-item (click)="DownloadJSON(report_info)" title="Decrypted JSON report format">
-                <mat-icon>code</mat-icon>JSON
-              </button>
-
-              <button mat-menu-item (click)="DownloadMarkdown(report_info)" title="Decrypted Markdown report format">
-                <mat-icon>subtitles</mat-icon>Markdown
-              </button>
-              <button mat-menu-item (click)="DownloadDOCX(report_info)" title="Decrypted DOCX report format">
-                <mat-icon>description</mat-icon>DOCX
-              </button>
-              <a mat-menu-item target="_blank" href="/faq?q=How-to-create-PDF-report" title="Get PDF report format">
-                <mat-icon>link</mat-icon>PDF
-              </a>
-            </mat-menu>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </mat-card-content>
-  </mat-card>
-
-  <br>
-  <br>
-</div>
-<br>
+            <mat-card-content>
+              <div [hidden]="decryptedReportDataChanged.report_vulns.length == 0">
+                <mat-paginator #paginatorIssues color="accent" [pageSizeOptions]="[20, 50, 100, 250]"
+                (page)="pageEvent=getData($event)" showFirstLastButtons></mat-paginator>
+                <br>
+                </div>
+                <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
+                  @for (dec_data of selectedResult; track dec_data; let i = $index) {
+                    <mat-expansion-panel class="mat-elevation-z9"
+                      (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag>
+                      <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
+                        <mat-panel-title fxLayoutAlign="start">
+                          <div style="white-space: nowrap;">
+                            <mat-checkbox [checked]="checkcheckbox(i)" (change)="toggle(i,$event.checked)"
+                            (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
+                            <span class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
+                            &nbsp;&nbsp;{{dec_data.title}}
+                          </div>
+                        </mat-panel-title>
+                        <mat-panel-description fxLayoutAlign="end center">
+                          <div>
+                            <div fxLayoutAlign="center start" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxHide.xs fxHide.sm>
+                              <mat-chip-listbox style="white-space: nowrap;">
+                                @for (tag of dec_data.tags.slice(0, 3); track tag) {
+                                  <mat-chip-option [selectable]="false"
+                                    ngDefaultControl>
+                                    {{tag.name}}
+                                  </mat-chip-option>
+                                }
+                              </mat-chip-listbox>
+                            </div>
+                          </div>
+                          &nbsp;
+                          @if (dec_data?.bounty) {
+                            <div fxHide.xs fxHide.sm>
+                              @if (dec_data?.bounty.length > 0) {
+                                <mat-icon title="Found bug-bounty program related to the issue"
+                                color="accent">attach_money</mat-icon>
+                              }
+                            </div>
+                          }
+                          @if (dec_data?.status === 1) {
+                            <div fxHide.xs fxHide.sm>
+                              <mat-icon style="color:red" title="Issue status: Open (Waiting for review)"
+                              class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon>
+                            </div>
+                          }
+                          @if (dec_data?.status === 2) {
+                            <div fxHide.xs fxHide.sm>
+                              <mat-icon style="color:yellow" title="Issue status: Fix In Progress"
+                              class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon>
+                            </div>
+                          }
+                          @if (dec_data?.status === 3) {
+                            <div fxHide.xs fxHide.sm>
+                              <mat-icon style="color:green" title="Issue status: Fixed"
+                              class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+                            </div>
+                          }
+                          @if (dec_data?.status === 4) {
+                            <div fxHide.xs fxHide.sm>
+                              <mat-icon style="color:grey" title="Issue status: Won't Fix"
+                              class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+                            </div>
+                          }
+                          &nbsp;
+                          <div>
+                            @if (decryptedReportDataChanged) {
+                              <button mat-icon-button
+                                style="width: 30px; height: 30px; line-height: 5px; border-radius: 70%;padding: 0px;"
+                                title="Edit issue title" [routerLink]="[]"
+                                (click)="editissuetitle(dec_data);$event.stopPropagation();">
+                                <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
+                              </button>
+                            }
+                          </div>
+                          @if (dec_data.files.length > 0) {
+                            <mat-icon title="Attached file" style="color:grey"
+                            class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
+                          }
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+                      <mat-expansion-panel-header *cdkDragPlaceholder></mat-expansion-panel-header>
+                      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                        <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
+                          <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                            <mat-label>Proof of Concept</mat-label>
+                            <div style="position:relative;">
+                              <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"
+                              style="display:block;"></textarea>
+                              <div style="position:absolute;top: 10px; right: 10px;">
+                                <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)"
+                                  title="Fullscreen Text Editor">
+                                  <mat-icon>fullscreen</mat-icon>
+                                </button>
+                              </div>
+                            </div>
+                          </mat-form-field>
+                        </div>
+                        <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
+                          <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                              <mat-form-field class="example-full-width" color="accent">
+                                <mat-label>Severity</mat-label>
+                                <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
+                                  (ngModelChange)="doStats()">
+                                  @for (sev of dataSourceforseverity; track sev) {
+                                    <mat-option [value]="sev.severity">
+                                      {{sev.severity}}
+                                    </mat-option>
+                                  }
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                              <mat-form-field class="example-full-width" color="accent">
+                                <mat-label>Issue status</mat-label>
+                                <mat-select placeholder="Issue status" [(value)]="dec_data.status" [ngModel]="dec_data.status"
+                                  (ngModelChange)="doStats()">
+                                  @for (issuestat of issueStatus; track issuestat) {
+                                    <mat-option [value]="issuestat.value">
+                                      {{issuestat.status}}
+                                    </mat-option>
+                                  }
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                              <mat-form-field class="example-full-width" color="accent">
+                                <mat-label>Create issue date</mat-label>
+                                <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
+                                  [value]="renderdateformat(dec_data.date)">
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                          <div fxLayout="row wrap" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                              <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                                <mat-label>Description</mat-label>
+                                <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
+                              </mat-form-field>
+                            </div>
+                            @if (dec_data.tags) {
+                              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                <mat-form-field class="example-tags-list" color="accent">
+                                  <mat-label>Tags</mat-label>
+                                  <mat-chip-grid #tagList aria-label="Tags">
+                                    @for (tag of dec_data.tags; track tag) {
+                                      <mat-chip-row [(ngModel)]="dec_data.tags"
+                                        [selectable]="selectable" [removable]="removable" (removed)="TAGremove(tag, dec_data)"
+                                        ngDefaultControl>
+                                        {{tag.name}}
+                                        @if (removable) {
+                                          <mat-icon matChipRemove>cancel</mat-icon>
+                                        }
+                                      </mat-chip-row>
+                                    }
+                                    <input placeholder="New tag..." [matChipInputFor]="tagList"
+                                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                      (matChipInputTokenEnd)="TAGadd($event, dec_data)">
+                                    </mat-chip-grid>
+                                  </mat-form-field>
+                                </div>
+                              }
+                            </div>
+                            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                              <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                  <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                                    <mat-label>References</mat-label>
+                                    <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
+                                  </mat-form-field>
+                                </div>
+                                <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                  <mat-form-field class="example-full-width" color="accent">
+                                    <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
+                                    <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent"
+                                      matSuffix title="Calculate CVSS">
+                                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon>
+                                      CVSS
+                                    </button>
+                                  </mat-form-field>
+                                </div>
+                                <div fxFlex="60%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                  <mat-form-field class="example-full-width" color="accent">
+                                    <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
+                                    <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent"
+                                      matSuffix title="Search CVE">
+                                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon> CVE
+                                    </button>
+                                  </mat-form-field>
+                                </div>
+                                @if (dec_data?.bounty) {
+                                  <div fxLayout="row wrap" fxLayoutGap="5px grid" fxFlex="100%" fxFlex.sm="100%"
+                                    fxFlex.xs="100%">
+                                    <div style="display: inline;text-align: end;" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
+                                      @if (BBmsg != '') {
+                                        <div>
+                                          <p>{{BBmsg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+                                        </p>
+                                      </div>
+                                    }
+                                    @for (bounty of dec_data?.bounty; track bounty) {
+                                      <button mat-stroked-button color="accent"
+                                        (click)="redirectBounty(bounty?.url)" title="{{bounty?.url}}">
+                                        <mat-icon>attach_money</mat-icon>{{bounty?.name}}
+                                      </button>
+                                    }
+                                  </div>
+                                  <div fxLayoutAlign="end start" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
+                                    <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}"
+                                      matBadgeColor="accent" (click)="searchBounty(dec_data)"
+                                      title="Search for bug bounty program base on POC">
+                                      <mat-icon>attach_money</mat-icon>
+                                      <mat-icon>search</mat-icon>
+                                    </button>
+                                  </div>
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                            @for (key of dec_data.files; track key) {
+                              <div>
+                                <mat-list>
+                                  <mat-list-item class="mat-elevation-z4" fxLayout="row">
+                                    <div matListItemTitle>{{key.title}}</div>
+                                    <div matListItemLine><b>Date:</b> {{key.date | date:'medium'}} | <b>Size:</b> {{key.size | filesize
+                                  }} </div>
+                                  <div matListItemMeta>
+                                    @if (key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000) {
+                                      <button mat-icon-button
+                                        (click)="openattachfullscreen(key, dec_data)" title="Preview file">
+                                        <mat-icon color="accent">search</mat-icon>
+                                      </button>
+                                    }
+                                    <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
+                                      <mat-icon color="accent">file_download</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
+                                      <mat-icon color="warn">delete_forever</mat-icon>
+                                    </button>
+                                  </div>
+                                </mat-list-item>
+                              </mat-list>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                      <mat-action-row align="end">
+                        <button mat-fab (click)="fileuploadInput.click()" color="primary" title="Upload file">
+                          <i class="material-icons">attach_file</i>
+                          <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)"
+                            style="display:none;" multiple>
+                          </button>
+                          <div fxFlex></div>
+                          @if (upload_in_progress) {
+                            <span align="start">Upload please wait...<mat-progress-bar style="width: 300px;"
+                            color="accent" mode="indeterminate"></mat-progress-bar></span>
+                          }
+                          <div fxFlex></div>
+                          <button mat-fab color="primary" (click)="saveTemplate(dec_data)" title="Save issue as template">
+                            <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>save_as</mat-icon>
+                          </button>
+                          <button mat-fab color="warn" (click)="removeIssiue(dec_data)" title="Remove issue">
+                            <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>delete_forever</mat-icon>
+                          </button>
+                        </mat-action-row>
+                      </mat-expansion-panel>
+                    }
+                  </mat-accordion>
+                  @if (pok == 1) {
+                    <div>
+                      <br>
+                        <mat-expansion-panel class="mat-elevation-z9" disabled>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title fxLayoutAlign="start center" style="margin-left: 13px;">
+                              <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
+                              settings</mat-icon>
+                              <div fxLayout="row wrap" fxLayoutGap="0px" class="example-full-width">
+                                <div fxLayoutAlign="start start" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
+                                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                                    <mat-icon>done_all</mat-icon>
+                                    Select all
+                                  </button>
+                                  &nbsp;
+                                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                                    <mat-icon>done_all</mat-icon>
+                                    Clear selected ({{ selectedIssues.length }})
+                                  </button>
+                                  &nbsp;
+                                  <button mat-stroked-button color="accent" [routerLink]="[]" (click)="openissuesedit(selectedIssues)">
+                                    <mat-icon>edit</mat-icon>
+                                    Edit ({{ selectedIssues.length }})
+                                  </button>
+                                  &nbsp;
+                                  @if (selectedIssues.length >= 2) {
+                                    <button mat-stroked-button color="accent" [routerLink]="[]"
+                                      (click)="openissuesmerge(selectedIssues)">
+                                      <mat-icon>low_priority</mat-icon>
+                                      Merge ({{ selectedIssues.length }})
+                                    </button>
+                                  }
+                                </div>
+                                <div fxLayoutAlign="end end" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
+                                  <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)"
+                                    [matMenuTriggerFor]="trewwertwe">
+                                    <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon> Remove
+                                    ({{ selectedIssues.length }})
+                                  </button>
+                                </div>
+                              </div>
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                        </mat-expansion-panel>
+                      </div>
+                    }
+                    <br>
+                      <div class="banner">
+                        <div class="center-me">
+                          <button class="mat-elevation-z9" mat-fab extended color="accent" (click)="addissue()">
+                            <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add issue
+                          </button>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                  <br>
+                    <!-- Stats -->
+                    @if (decryptedReportDataChanged.report_vulns.length !== 0) {
+                      <mat-card appearance="outlined">
+                        <mat-card-header>
+                          <div mat-card-avatar>
+                            <mat-icon>insert_chart</mat-icon>
+                          </div>
+                          <mat-card-title>Statistics</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                              <div style="display: block; width: 100%; height: 300px;">
+                                <ngx-charts-advanced-pie-chart [scheme]="colorScheme" [results]="severitytable">
+                                </ngx-charts-advanced-pie-chart>
+                              </div>
+                              <div style="height: 50%;">
+                                <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="severitytable"
+                                  [gradient]="gradient">
+                                </ngx-charts-bar-vertical>
+                              </div>
+                            </div>
+                            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                              <mat-card>
+                                <mat-calendar class="mat-elevation-z9" [dateClass]="dateClass()" [selected]="selectedRangeValue"
+                                  [startAt]="startDate">
+                                </mat-calendar>
+                              </mat-card>
+                            </div>
+                          </div>
+                        </mat-card-content>
+                      </mat-card>
+                    }
+                    <br>
+                      <!-- Researcher -->
+                      <mat-card appearance="outlined">
+                        <mat-card-header>
+                          <div mat-card-avatar>
+                            <mat-icon>face</mat-icon>
+                          </div>
+                          <mat-card-title style="display: flex">Researcher&nbsp;
+                            &nbsp;
+                            <button style="height: 27px;" matButton="outlined" (click)="addresearcher()">Add researcher
+                              <mat-icon>add</mat-icon>
+                            </button>
+                            <mat-menu #researchermenu="matMenu">
+                              <a [routerLink]="[]" (click)="addresearcher()" class="active-link" title="Add new researcher" mat-menu-item>
+                                <mat-icon class="vertical-align-middle">add</mat-icon> Add researcher
+                              </a>
+                            </mat-menu>
+                          </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                          @for (researchers of decryptedReportDataChanged.researcher; track researchers) {
+                            <div fxLayout="row wrap"
+                              fxLayoutGap="10px grid">
+                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                <mat-form-field class="example-full-width" color="accent">
+                                  <mat-label>Name</mat-label>
+                                  <input matInput [(ngModel)]="researchers.reportername" value="{{researchers.reportername}}">
+                                  <mat-icon matSuffix>person_pin</mat-icon>
+                                </mat-form-field>
+                              </div>
+                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                <mat-form-field class="example-full-width" color="accent">
+                                  <mat-label>E-mail</mat-label>
+                                  <input matInput [(ngModel)]="researchers.reporteremail" value="{{researchers.reporteremail}}">
+                                  <mat-icon matSuffix>email</mat-icon>
+                                </mat-form-field>
+                              </div>
+                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                <mat-form-field class="example-full-width" color="accent">
+                                  <mat-label>Social link</mat-label>
+                                  <input matInput [(ngModel)]="researchers.reportersocial" value="{{researchers.reportersocial}}">
+                                  <mat-icon matSuffix>share</mat-icon>
+                                </mat-form-field>
+                              </div>
+                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                <mat-form-field style="width: 75%;" color="accent">
+                                  <mat-label>Website</mat-label>
+                                  <input matInput [(ngModel)]="researchers.reporterwww" value="{{researchers.reporterwww}}">
+                                  <mat-icon matSuffix>public</mat-icon>
+                                </mat-form-field>
+                                &nbsp;
+                                <button mat-mini-fab color="warn" (click)="removeresearcher(researchers)" title="Remove researcher">
+                                  <mat-icon>delete_forever</mat-icon>
+                                </button>
+                              </div>
+                            </div>
+                          }
+                        </mat-card-content>
+                      </mat-card>
+                      <br>
+                        <!-- changelog -->
+                        <mat-card appearance="outlined">
+                          <mat-card-header>
+                            <div mat-card-avatar>
+                              <mat-icon>track_changes</mat-icon>
+                            </div>
+                            <mat-card-title style="display: flex">Changelog
+                              &nbsp;
+                              <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="changelogmenu">More
+                                <mat-icon>more_vert</mat-icon>
+                              </button>
+                              <mat-menu #changelogmenu="matMenu">
+                                <a [routerLink]="[]" (click)="addchangelog()" title="Add event to changelog"
+                                  mat-menu-item>
+                                  <mat-icon class="vertical-align-middle">add</mat-icon> Add event to changelog
+                                </a>
+                                <a [routerLink]="[]" (click)="removeallfromchangelog()"
+                                  title="Remove all events from changelog" mat-menu-item>
+                                  <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove all events
+                                </a>
+                              </mat-menu>
+                            </mat-card-title>
+                          </mat-card-header>
+                          <mat-card-content>
+                            @if (listchangelog != 0) {
+                              <table #table2 mat-table [dataSource]="dataSource" matSort matSortActive="date"
+                                matSortDirection="desc" class="mat-elevation-z8">
+                                <ng-container matColumnDef="date">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                                  <td mat-cell *matCellDef="let element"> {{element.date | date:'medium'}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="desc">
+                                  <th mat-header-cell *matHeaderCellDef> Description </th>
+                                  <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="settings">
+                                  <th mat-header-cell *matHeaderCellDef>
+                                    <mat-icon title="Settings">settings</mat-icon>
+                                  </th>
+                                  <td mat-cell *matCellDef="let element">
+                                    <button mat-icon-button
+                                      style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;"
+                                      [matMenuTriggerFor]="changelogsettings">
+                                      <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #changelogsettings="matMenu">
+                                      <a [routerLink]="[]" (click)="editchangelog(element)" class="active-link" title="Edit event"
+                                        mat-menu-item>
+                                        <mat-icon class="vertical-align-middle">edit</mat-icon> Edit event
+                                      </a>
+                                      <a [routerLink]="[]" (click)="removefromchangelog(element)" class="active-link" title="Remove event"
+                                        mat-menu-item>
+                                        <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove event
+                                      </a>
+                                    </mat-menu>
+                                  </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                              </table>
+                            }
+                            <div fxLayout="row wrap" fxLayoutGap="10">
+                              <div fxFlex="30%" fxFlex.sm="20%" fxFlex.xs="10%">
+                                @if (listchangelog == 0) {
+                                  <div class="mdc-typography--body1">
+                                    <h3>Changelog is empty <mat-icon>sentiment_dissatisfied</mat-icon></h3>
+                                  </div>
+                                }
+                              </div>
+                              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" [hidden]="listchangelog == 0">
+                                <p>
+                                  <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]"
+                                  showFirstLastButtons></mat-paginator>
+                                </p>
+                              </div>
+                            </div>
+                          </mat-card-content>
+                        </mat-card>
+                        <br>
+                          <!-- Report Settings -->
+                          @if (decryptedReportDataChanged) {
+                            <mat-card appearance="outlined">
+                              <mat-card-header>
+                                <div mat-card-avatar>
+                                  <mat-icon>settings</mat-icon>
+                                </div>
+                                <mat-card-title style="display: flex" fxLayoutAlign="start">Settings
+                                  &nbsp;
+                                  <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="Settingsmenu">More
+                                    <mat-icon>more_vert</mat-icon>
+                                  </button>
+                                  <mat-menu #Settingsmenu="matMenu">
+                                    <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" title="Change report security key"
+                                      mat-menu-item>
+                                      <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
+                                    </a>
+                                    <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)"
+                                      title="Add custom content to report" mat-menu-item>
+                                      <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add custom content to report
+                                    </a>
+                                    <a [routerLink]="[]" (click)="addCustomcss(decryptedReportDataChanged)" title="Add custom css" mat-menu-item>
+                                      <mat-icon class="vertical-align-middle padding-bottom-3">palette</mat-icon> Custom CSS (HTML v2)
+                                    </a>
+                                    <button mat-menu-item [matMenuTriggerFor]="reportporfiles2">Report settings profile</button>
+                                  </mat-menu>
+                                  <mat-menu #reportporfiles2="matMenu">
+                                    <button mat-menu-item (click)="savenewReportProfile()">
+                                      <mat-icon title="Report settings profile">save</mat-icon> Save current settings
+                                    </button>
+                                    @if (ReportProfilesList.length > 0) {
+                                      <button mat-menu-item [matMenuTriggerFor]="reportProfiles">Select
+                                      settings profile</button>
+                                    }
+                                  </mat-menu>
+                                  <mat-menu #reportProfiles="matMenu">
+                                    @for (profile of ReportProfilesList; track profile) {
+                                      <span>
+                                        <button mat-menu-item (click)="setReportProfile(profile)">
+                                          @if (!profile.api) {
+                                            <mat-icon title="Local Host">computer</mat-icon>
+                                          }
+                                          @if (profile.api == 'remote') {
+                                            <mat-icon color="accent"
+                                            title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon>
+                                          }
+                                          {{profile.profile_name}}
+                                        </button>
+                                      </span>
+                                    }
+                                  </mat-menu>
+                                </mat-card-title>
+                              </mat-card-header>
+                              <mat-card-content>
+                                <mat-tab-group [selectedIndex]="0" dynamicHeight color="accent">
+                                  <mat-tab>
+                                    <ng-template mat-tab-label>
+                                      <mat-icon class="example-tab-icon">image</mat-icon>
+                                      Report logo
+                                    </ng-template>
+                                    <div style="padding: 20px!important;">
+                                      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+                                        <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
+                                          <button mat-fab style="margin-right: 10px!important;" class="mdc-elevation--z11"
+                                            (click)="fileuploadInput.click()" color="primary" title="Attach report logo" extended>
+                                            <i class="material-icons">attach_file</i>
+                                            Attach logo
+                                            <input type="file" #fileuploadInput id="file" accept="image/*" (change)="importlogo($event.target)"
+                                              name="myfiles" style="display:none;">
+                                            </button>
+                                            @if (advlogo_saved) {
+                                              <img src="{{advlogo_saved}}" width="100px">
+                                            }
+                                            <div [innerHTML]="uploadlogoprev"></div>
+                                            @if (advlogo_saved || advlogo) {
+                                              <button mat-icon-button color="warn" (click)="clearlogo()"
+                                                title="Remove report logo">
+                                                <mat-icon>delete_forever</mat-icon>
+                                              </button>
+                                            }
+                                            @if (advlogo_saved || advlogo) {
+                                              <div fxLayout="column" style="margin-top: 5px; height: 125px;">
+                                                <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
+                                                  <mat-label>Width (px)</mat-label>
+                                                  <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.width"
+                                                    value="{{decryptedReportDataChanged.report_settings.report_logo.width}}">
+                                                  </mat-form-field>
+                                                  <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
+                                                    <mat-label>Height (px)</mat-label>
+                                                    <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.height"
+                                                      value="{{decryptedReportDataChanged.report_settings.report_logo.height}}">
+                                                    </mat-form-field>
+                                                  </div>
+                                                }
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </mat-tab>
+                                        <mat-tab>
+                                          <ng-template mat-tab-label>
+                                            <mat-icon class="example-tab-icon">tune</mat-icon>
+                                            Report settings
+                                          </ng-template>
+                                          <div style="padding: 10px!important;">
+                                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+                                              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                <mat-card appearance="outlined">
+                                                  <mat-card-header>
+                                                    <mat-card-title> HTML</mat-card-title>
+                                                  </mat-card-header>
+                                                  <mat-card-content>
+                                                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed"
+                                                        (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
+                                                      </div>
+                                                      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                        <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc"
+                                                          (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
+                                                          <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"
+                                                            (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
+                                                          </div>
+                                                        </mat-card-content>
+                                                      </mat-card>
+                                                    </div>
+                                                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                      <mat-card appearance="outlined">
+                                                        <mat-card-header>
+                                                          <mat-card-title> ALL formats</mat-card-title>
+                                                        </mat-card-header>
+                                                        <mat-card-content>
+                                                          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page"
+                                                            (change)="removechangelogpage($event)">Remove Changelog</mat-checkbox>
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuestatus"
+                                                            (change)="removeIssuestatus($event)">Remove Issue status</mat-checkbox>
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecvss"
+                                                            (change)="removeIssuecvss($event)">Remove Issue CVSS</mat-checkbox>
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecve"
+                                                            (change)="removeIssuecve($event)">Remove Issue CVE</mat-checkbox>
+                                                          </div>
+                                                          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_researchers"
+                                                            (change)="removeResearchers($event)">Remove Researcher</mat-checkbox>
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuetags"
+                                                            (change)="removetagsfromreport($event)">Remove TAGs</mat-checkbox>
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_attach_name"
+                                                            (change)="removeattachname($event)">Hide the filename of all attachments</mat-checkbox>
+                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_lastpage"
+                                                              (change)="removeGeninfo($event)">Remove<br>(Generated by vulnrepo.com)</mat-checkbox>
+                                                            </div>
+                                                          </mat-card-content>
+                                                        </mat-card>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </mat-tab>
+                                              </mat-tab-group>
+                                            </mat-card-content>
+                                          </mat-card>
+                                        }
+                                        <br>
+                                          <!-- Download -->
+                                          @if (decryptedReportDataChanged) {
+                                            <mat-card appearance="outlined">
+                                              <mat-card-header>
+                                                <div mat-card-avatar>
+                                                  <mat-icon>cloud_download</mat-icon>
+                                                </div>
+                                                <mat-card-title>Download</mat-card-title>
+                                              </mat-card-header>
+                                              <mat-card-content>
+                                                <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                                                  <div fxLayoutAlign="center start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                                    <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                      <button style="width: 100%;" class="mdc-elevation--z11" mat-fab extended [matMenuTriggerFor]="aboveMenu2"
+                                                        color="accent">
+                                                        <mat-icon title="Encrypted report"
+                                                        class="vertical-align-middle padding-bottom-3">enhanced_encryption</mat-icon> Download encrypted
+                                                      </button>
+                                                      <mat-menu #aboveMenu2="matMenu" yPosition="above">
+                                                        <button mat-menu-item (click)="encrypt_reportv2(report_info, true, false)"
+                                                          title="Full report with all dependency, encrypted portable version for offline reader">
+                                                          <mat-icon>description</mat-icon>HTML
+                                                        </button>
+                                                        <button mat-menu-item (click)="encrypt_reportv2(report_info, true, 'mini')"
+                                                          title="Full report with linked external dependency, encrypted (small size of the report)">
+                                                          <mat-icon>description</mat-icon>HTML (mini)
+                                                        </button>
+                                                        <button mat-menu-item (click)="shareReport(report_info.report_id)"
+                                                          title="(VULNR) VULNRΞPO encrypted report format">
+                                                          <mat-icon>code</mat-icon>VULNR
+                                                        </button>
+                                                      </mat-menu>
+                                                    </div>
+                                                  </div>
+                                                  <div fxLayoutAlign="center end" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                                                    <div fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
+                                                      <button mat-fab extended style="width: 100%;" class="mat-elevation-z9" color="warn"
+                                                        [matMenuTriggerFor]="aboveMenu">
+                                                        <mat-icon title="Unencrypted report"
+                                                        class="vertical-align-middle padding-bottom-3">no_encryption</mat-icon> Download decrypted
+                                                      </button>
+                                                      <mat-menu #aboveMenu="matMenu" yPosition="above">
+                                                        @if (aiconnected) {
+                                                          <button mat-menu-item (click)="goAIsummary()" title="Decrypted AI report to LLM">
+                                                            <mat-icon>photo_filter</mat-icon>Attach to AI assistant
+                                                          </button>
+                                                        }
+                                                        <mat-divider></mat-divider>
+                                                        <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false, '')"
+                                                          title="Full report with all dependency, decrypted portable version for offline reader">
+                                                          <mat-icon>description</mat-icon>HTML
+                                                        </button>
+                                                        <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, 'mini', '')"
+                                                          title="Full report with linked external dependency, decrypted (small size of the report)">
+                                                          <mat-icon>description</mat-icon>HTML (mini)
+                                                        </button>
+                                                        <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)"
+                                                          title="Decrypted ASCII report format">
+                                                          <mat-icon>description</mat-icon>TEXT
+                                                        </button>
+                                                        <button mat-menu-item (click)="DownloadJSON(report_info)" title="Decrypted JSON report format">
+                                                          <mat-icon>code</mat-icon>JSON
+                                                        </button>
+                                                        <button mat-menu-item (click)="DownloadMarkdown(report_info)" title="Decrypted Markdown report format">
+                                                          <mat-icon>subtitles</mat-icon>Markdown
+                                                        </button>
+                                                        <button mat-menu-item (click)="DownloadDOCX(report_info)" title="Decrypted DOCX report format">
+                                                          <mat-icon>description</mat-icon>DOCX
+                                                        </button>
+                                                        <a mat-menu-item target="_blank" href="/faq?q=How-to-create-PDF-report" title="Get PDF report format">
+                                                          <mat-icon>link</mat-icon>PDF
+                                                        </a>
+                                                      </mat-menu>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </mat-card-content>
+                                            </mat-card>
+                                          }
+                                          <br>
+                                            <br>
+                                            </div>
+                                          }
+                                          <br>

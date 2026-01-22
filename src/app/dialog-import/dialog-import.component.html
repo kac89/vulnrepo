@@ -1,123 +1,184 @@
 <div class="mdc-card my-card-content">
   <h1 mat-dialog-title>Import issues from:</h1>
   <div mat-dialog-content>
-  
-      <mat-form-field color="accent" class="example-full-width">
-        <mat-label>Select source</mat-label>
-        <mat-select [(value)]="selected_source" >
-          <mat-option *ngFor="let Importsource of sour" [value]="Importsource.value">
+
+    <mat-form-field color="accent" class="example-full-width">
+      <mat-label>Select source</mat-label>
+      <mat-select [(value)]="selected_source" >
+        @for (Importsource of sour; track Importsource) {
+          <mat-option [value]="Importsource.value">
             <img with="20" height="20" [src]="Importsource.viewImg">
             {{Importsource.viewValue}}
           </mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <span *ngIf="selected_source == 'vulnrepojson'">
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (selected_source == 'vulnrepojson') {
+      <span>
         <p><input type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
         <mat-form-field class="example-full-width" color="accent">
           <input cdkFocusInitial matInput placeholder="File security key" #pass [type]="hide ? 'password' : 'text'">
           <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </mat-form-field>
-        
-        <p *ngIf="vulnrepojsonplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-        <p *ngIf="vulnrepowrongpass"><b style="color: red">Wrong security key!!!</b></p>
+        @if (vulnrepojsonplease_wait) {
+          <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+        }
+        @if (vulnrepowrongpass) {
+          <p><b style="color: red">Wrong security key!!!</b></p>
+        }
         <br>
-        <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-      </span>
+          <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+        </span>
+      }
 
-        <input *ngIf="selected_source == 'bugcrowd'" cdkFocusInitial type="file" accept=".csv" (change)="bugcrowdonFileSelect($event.target)" name="myfile">
-        <p *ngIf="bugcrowdplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-  
-        <input *ngIf="selected_source == 'burp'" cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
-        <p *ngIf="burpplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-  
-        <input *ngIf="selected_source == 'openvas'" cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
-        <p *ngIf="selected_source == 'openvas'">Import results-*.xml file.</p>
-        <p *ngIf="openvas9please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-  
-        <input *ngIf="selected_source == 'nessus'" cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
-        <p *ngIf="please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-  
-        <input *ngIf="selected_source == 'nessus_xml'" cdkFocusInitial type="file" accept=".nessus" (change)="nessusxmlonFileSelect($event.target)" name="myfile">
-        <p *ngIf="nessusxmlplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      @if (selected_source == 'bugcrowd') {
+        <input cdkFocusInitial type="file" accept=".csv" (change)="bugcrowdonFileSelect($event.target)" name="myfile">
+      }
+      @if (bugcrowdplease_wait) {
+        <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
 
-        <input *ngIf="selected_source == 'jira_xml'" cdkFocusInitial type="file" accept=".xml" (change)="jiraxmlonFileSelect($event.target)" name="myfile">
-        <p *ngIf="jiraxmlplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      @if (selected_source == 'burp') {
+        <input cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
+      }
+      @if (burpplease_wait) {
+        <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
 
-        <input *ngIf="selected_source == 'decrypted_json'" cdkFocusInitial type="file" accept=".json" (change)="decryptedjsononFileSelect($event.target)" name="myfile">
-        <p *ngIf="decryptedjsonplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      @if (selected_source == 'openvas') {
+        <input cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
+      }
+      @if (selected_source == 'openvas') {
+        <p>Import results-*.xml file.</p>
+      }
+      @if (openvas9please_wait) {
+        <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
+
+      @if (selected_source == 'nessus') {
+        <input cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
+      }
+      @if (please_wait) {
+        <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
+
+      @if (selected_source == 'nessus_xml') {
+        <input cdkFocusInitial type="file" accept=".nessus" (change)="nessusxmlonFileSelect($event.target)" name="myfile">
+      }
+      @if (nessusxmlplease_wait) {
+        <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
+
+      @if (selected_source == 'jira_xml') {
+        <input cdkFocusInitial type="file" accept=".xml" (change)="jiraxmlonFileSelect($event.target)" name="myfile">
+      }
+      @if (jiraxmlplease_wait) {
+        <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
+
+      @if (selected_source == 'decrypted_json') {
+        <input cdkFocusInitial type="file" accept=".json" (change)="decryptedjsononFileSelect($event.target)" name="myfile">
+      }
+      @if (decryptedjsonplease_wait) {
+        <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
 
 
-        <div *ngIf="selected_source == 'nmap'">
-          
+      @if (selected_source == 'nmap') {
+        <div>
           <small>Open source utility for network discovery and security auditing: <a class="active-link" target="_blank" href="https://nmap.org/">Nmap</a>, example run:</small>
           <br><br>
           <code>$ <span class="greenfocus">nmap -T4 -Pn -oX r.xml 1.1.1.1</span></code>
           <br><br>
           <mat-checkbox [(ngModel)]="checked">Remove state down ip's</mat-checkbox>
           <hr>
-          <input cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile">
-          <p *ngIf="nmapplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-        </div>
+            <input cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile">
+            @if (nmapplease_wait) {
+              <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+            }
+          </div>
+        }
 
 
-        <div *ngIf="selected_source == 'trivy'">
+        @if (selected_source == 'trivy') {
+          <div>
+            <small>Open source security scanner: <a class="active-link" target="_blank" href="https://trivy.dev/">Trivy</a>, example run:</small>
+            <br><br>
+            <code>$ <span class="greenfocus">trivy fs . -f json -o r.json</span></code>
+            <br><br>
+            <hr>
+              <input cdkFocusInitial type="file" accept=".json" (change)="trivyonFileSelect($event.target)" name="myfile">
+              @if (please_wait) {
+                <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+              }
+            </div>
+          }
 
-          <small>Open source security scanner: <a class="active-link" target="_blank" href="https://trivy.dev/">Trivy</a>, example run:</small>
-          <br><br>
-          <code>$ <span class="greenfocus">trivy fs . -f json -o r.json</span></code>
-          <br><br>
-          <hr>
-          <input cdkFocusInitial type="file" accept=".json" (change)="trivyonFileSelect($event.target)" name="myfile">
-          <p *ngIf="please_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>    
 
-        </div>
+          @if (selected_source == 'npm_audit') {
+            <div>
+              <small>JavaScript Package Manager: <a class="active-link" target="_blank" href="https://www.npmjs.com/">NPM</a>, example run:</small>
+              <br><br>
+              <code>$ <span class="greenfocus">npm audit --json</span></code>
+              <br><br>
+              <hr>
+                <input cdkFocusInitial type="file" accept=".json" (change)="npmauditjsononFileSelect($event.target)" name="myfile">
+                @if (npmauditplease_wait) {
+                  <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+                }
+              </div>
+            }
 
+            @if (selected_source == 'semgrep') {
+              <div>
+                <small>Open source static analysis tool: <a class="active-link" target="_blank" href="https://semgrep.dev/">Semgrep</a>, example run:</small>
+                <br><br>
+                <code>$ <span class="greenfocus">semgrep scan --json</span></code>
+                <br><br>
+                <mat-checkbox [formControl]="mergeperpath">Group results by path?</mat-checkbox>
+                <hr>
+                  <input cdkFocusInitial type="file" accept=".json" (change)="semgreponFileSelect($event.target)" name="myfile">
+                  @if (semgrepplease_wait) {
+                    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+                  }
+                </div>
+              }
 
-        <div *ngIf="selected_source == 'npm_audit'">
+              @if (selected_source == 'composer') {
+                <div>
+                  <small>A Dependency Manager for PHP: <a class="active-link" target="_blank" href="https://getcomposer.org/">Composer</a>, example run:</small>
+                  <br><br>
+                  <code>$ <span class="greenfocus">composer audit --format=json</span></code>
+                  <br><br>
+                  <hr>
+                    <input cdkFocusInitial type="file" accept=".json" (change)="composeronFileSelect($event.target)" name="myfile">
+                    @if (composerplease_wait) {
+                      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+                    }
+                  </div>
+                }
 
-          <small>JavaScript Package Manager: <a class="active-link" target="_blank" href="https://www.npmjs.com/">NPM</a>, example run:</small>
-          <br><br>
-          <code>$ <span class="greenfocus">npm audit --json</span></code>
-          <br><br>
-          <hr>
-          <input cdkFocusInitial type="file" accept=".json" (change)="npmauditjsononFileSelect($event.target)" name="myfile">
-        <p *ngIf="npmauditplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-        </div>
+                @if (selected_source == 'wiz') {
+                  <div>
+                    <input cdkFocusInitial type="file" accept=".csv" (change)="wizonFileSelect($event.target)" name="myfile">
+                    @if (wizplease_wait) {
+                      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+                    }
+                  </div>
+                }
 
-        <div *ngIf="selected_source == 'semgrep'">
-        
+                @if (selected_source == 'zaproxy') {
+                  <input cdkFocusInitial type="file" accept=".json" (change)="zaproxyonFileSelect($event.target)" name="myfile">
+                }
+                @if (zaproxyplease_wait) {
+                  <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+                }
 
-          <small>Open source static analysis tool: <a class="active-link" target="_blank" href="https://semgrep.dev/">Semgrep</a>, example run:</small>
-          <br><br>
-          <code>$ <span class="greenfocus">semgrep scan --json</span></code>
-          <br><br>
-          <mat-checkbox [formControl]="mergeperpath">Group results by path?</mat-checkbox>
-          <hr>
-          <input cdkFocusInitial type="file" accept=".json" (change)="semgreponFileSelect($event.target)" name="myfile">
-          <p *ngIf="semgrepplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-        </div>
-
-        <div *ngIf="selected_source == 'composer'">
-          <small>A Dependency Manager for PHP: <a class="active-link" target="_blank" href="https://getcomposer.org/">Composer</a>, example run:</small>
-          <br><br>
-          <code>$ <span class="greenfocus">composer audit --format=json</span></code>
-          <br><br>
-          <hr>
-          <input cdkFocusInitial type="file" accept=".json" (change)="composeronFileSelect($event.target)" name="myfile">
-          <p *ngIf="composerplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-        </div>
-        
-        <div *ngIf="selected_source == 'wiz'">
-          <input cdkFocusInitial type="file" accept=".csv" (change)="wizonFileSelect($event.target)" name="myfile">
-          <p *ngIf="wizplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-        </div>
-
-        <input *ngIf="selected_source == 'zaproxy'" cdkFocusInitial type="file" accept=".json" (change)="zaproxyonFileSelect($event.target)" name="myfile">
-        <p *ngIf="zaproxyplease_wait">Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-
-        <br>
-        <br>
-    <button *ngIf="selected_source != 'vulnrepojson'" mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-  </div>
-</div>
+                <br>
+                  <br>
+                    @if (selected_source != 'vulnrepojson') {
+                      <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+                    }
+                  </div>
+                </div>
