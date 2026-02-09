@@ -29,7 +29,7 @@ export class DialogPassComponent implements OnInit {
     this.insertpass.setValue("");
   }
 
-  onKeydown(event, pass: string, report_id: string) {
+  onKeydown(event: any, pass: string, report_id: string) {
     if (event.key === 'Enter') {
       this.decrypt(pass, report_id);
     }
