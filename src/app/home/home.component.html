@@ -36,7 +36,19 @@
   </div>
 </div>
 
-<br><br><br><br>
+<br><br><br><br><br><br>
+
+ @if (online) {
+
+  <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="10px grid">
+
+  <div fxLayoutAlign="center center" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
+    <button style="width: 40%;" class="mdc-elevation--z11" mat-fab extended color="accent" (click)="download()"><mat-icon>file_download</mat-icon> DOWNLOAD</button><br>
+
+  </div>
+</div>
+
+ } @else {
 
 <div class="mdc-typography--body1 my-card-content" fxLayout="row wrap" fxLayoutGap="10px grid">
 
@@ -45,10 +57,11 @@
 
   </div>
   <div fxLayoutAlign="center center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-        <button style="width: 50%;" class="mdc-elevation--z11" mat-fab extended color="primary" (click)="demo()"><mat-icon>cloud</mat-icon> ONLINE</button>
+        <button style="width: 50%;" class="mdc-elevation--z11" mat-fab extended color="primary" (click)="demo()"><mat-icon>cloud</mat-icon> vulnrepo.com</button>
   </div>
 </div>
 
+ }
 
 
 <br><br><br><br>

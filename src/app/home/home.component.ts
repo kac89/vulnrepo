@@ -1,5 +1,5 @@
 import { Component, OnInit,signal } from '@angular/core';
-
+import { version } from "../../version";
 @Component({
   standalone: false,
   //imports: [],
@@ -8,7 +8,9 @@ import { Component, OnInit,signal } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+  app_ver = '';
+  app_ver_short = '';
+  online = false;
   items = ['Screenshots'];
   expandedIndex = 0;
   readonly panelOpenState = signal(false);
@@ -19,7 +21,15 @@ export class HomeComponent implements OnInit {
    }
 
   ngOnInit() {
-
+    this.app_ver = version.number;
+    
+    if (this.app_ver !== ''){
+      this.app_ver_short = this.app_ver.substring(0, 7);
+      this.online = true;
+    } else {
+      this.app_ver_short = 'N/A';
+      this.online = false;
+    }
   }
 
   download() {
