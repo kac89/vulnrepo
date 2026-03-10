@@ -24,9 +24,9 @@ export class DialogImportComponent implements OnInit {
 
   selected = '';
   selected_source = '';
-  csvContent: string;
-  parsedCsv: any[];
-  xmltojson: any[];
+  csvContent: string | undefined;
+  parsedCsv: any[] | undefined;
+  xmltojson: any[] | undefined;
   checked = true;
 
   public show_input = true;
@@ -66,6 +66,9 @@ export class DialogImportComponent implements OnInit {
   public zaproxyshow_input = true;
   public zaproxyplease_wait = false;
 
+  public codesightshow_input = true;
+  public codesightplease_wait = false;
+
   file: any;
   hide = true;
   sour: Importsource[] = [
@@ -83,7 +86,8 @@ export class DialogImportComponent implements OnInit {
     { value: 'semgrep', viewValue: 'Semgrep (.JSON)', viewImg: '/assets/vendors/semgrep-logo.png' },
     { value: 'composer', viewValue: 'PHP COMPOSER AUDIT (.JSON)', viewImg: '/assets/vendors/Logo-composer-transparent.png' },
     { value: 'wiz', viewValue: 'WIZ ISSUES (.CSV)', viewImg: '/assets/vendors/wiz.jpeg' },
-    { value: 'zaproxy', viewValue: 'ZAP (.JSON)', viewImg: '/assets/vendors/zap-by-checkmarx.svg' }
+    { value: 'zaproxy', viewValue: 'ZAP (.JSON)', viewImg: '/assets/vendors/zap-by-checkmarx.svg' },
+    { value: 'codesight', viewValue: 'BlackDuck Code Sight (.JSON)', viewImg: '/assets/vendors/bd.png' }
   ];
 
   constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
@@ -93,8 +97,7 @@ export class DialogImportComponent implements OnInit {
     this.mergeperpath.setValue(true);
   }
 
-  onFileLoad(fileLoadedEvent) {
-  }
+  //onFileLoad(fileLoadedEvent) {}
 
   onFileSelect(input: HTMLInputElement) {
 
@@ -106,7 +109,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
 
       fileReader.onload = (e) => {
@@ -122,7 +125,7 @@ export class DialogImportComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  parseNessus(imp): void {
+  parseNessus(imp: any): void {
 
     const csvData = imp || '';
     const allTextLines = csvData.split(/\r\n/);
@@ -143,16 +146,16 @@ export class DialogImportComponent implements OnInit {
     }
     this.parsedCsv = lines;
 
-    function unique(array, propertyName) {
+    function unique(array: any, propertyName: any) {
       return array.filter((e, i) => array.findIndex(a => a[propertyName] === e[propertyName]) === i);
     }
 
-    function group_issues(array) {
+    function group_issues(array: any) {
 
       const ret: any = [];
-      array.forEach((item, index) => {
+      array.forEach((item: any, index: any) => {
 
-        ret.forEach((retit: any, retindex) => {
+        ret.forEach((retit: any, retindex: any) => {
 
           if (retit[0] === item[0]) {
 
@@ -198,7 +201,7 @@ export class DialogImportComponent implements OnInit {
 
     const parsedCsv2 = group_issues(this.parsedCsv);
     const parsedCsv = unique(parsedCsv2, 0);
-    const info = parsedCsv.map((res, key) => {
+    const info = parsedCsv.map((res: any, key: any) => {
 
       const def = {
         title: res[7],
@@ -232,7 +235,7 @@ export class DialogImportComponent implements OnInit {
       this.bugcrowdplease_wait = true;
       const fileToRead = files[0];
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
       fileReader.onload = (e) => {
         this.parsebugcrowd(fileReader.result);
       };
@@ -242,7 +245,7 @@ export class DialogImportComponent implements OnInit {
 
 
 
-  parsebugcrowd(csv) {
+  parsebugcrowd(csv: any) {
 
     const csvData = csv || '';
     let m: any;
@@ -306,7 +309,7 @@ export class DialogImportComponent implements OnInit {
       this.burpplease_wait = true;
       const fileToRead = files[0];
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
       fileReader.onload = (e) => {
         this.parseBurp(fileReader.result);
       };
@@ -314,17 +317,17 @@ export class DialogImportComponent implements OnInit {
     }
   }
 
-  parseBurp(xml) {
+  parseBurp(xml: any) {
 
-    function returnhost(host, path) {
+    function returnhost(host: any, path: any) {
       let ret = '';
-      host.map((res, key) => {
+      host.map((res: any, key: any) => {
         ret = ret + res.$.ip + ' ' + res._ + path[key] + '\n';
       });
       return ret;
     }
 
-    function setcvss(severity) {
+    function setcvss(severity: any) {
 
       let cvss = 0;
       if (severity === 'High') {
@@ -364,7 +367,7 @@ export class DialogImportComponent implements OnInit {
 
     });
 
-    const info = emp.map((res, key) => {
+    const info = emp.map((res: any, key: any) => {
 
       let item = '';
       if (res.vulnerabilityClassifications !== undefined) {
@@ -430,7 +433,7 @@ export class DialogImportComponent implements OnInit {
       this.openvas9please_wait = true;
       const fileToRead = files[0];
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
       fileReader.onload = (e) => {
         this.parseOpenvas9(fileReader.result);
       };
@@ -438,7 +441,7 @@ export class DialogImportComponent implements OnInit {
     }
   }
 
-  parseOpenvas9(xml) {
+  parseOpenvas9(xml:any) {
 
     this.xmltojson = [];
     const parser = new xml2js.Parser({ strict: true, trim: true });
@@ -465,9 +468,9 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parseOpenvasxml(xml) {
+  parseOpenvasxml(xml:any) {
 
-    function isarr(arr) {
+    function isarr(arr:any) {
       return Array.isArray(arr)
     }
 
@@ -541,7 +544,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parseNessusxml(fileReader.result);
@@ -552,7 +555,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parseNessusxml(xml) {
+  parseNessusxml(xml:any) {
 
     function getSafe(fn, defaultVal) {
       try {
@@ -725,11 +728,11 @@ export class DialogImportComponent implements OnInit {
     this.dialogRef.close(info);
   }
 
-  fileChanged(e) {
+  fileChanged(e: any) {
     this.file = e.target.files[0];
   }
 
-  startUpload(pass) {
+  startUpload(pass:string) {
 
     if (pass !== '' && this.file) {
       this.vulnrepojsonshow_input = false;
@@ -743,7 +746,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  vulnrepojson(json, pass) {
+  vulnrepojson(json:any, pass:string) {
 
     try {
       // Decrypt
@@ -771,7 +774,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
 
       fileReader.onload = (e) => {
@@ -783,7 +786,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parseNmap(xml) {
+  parseNmap(xml:any) {
 
     let json = '';
     let hosts: any = [];
@@ -917,7 +920,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
 
       fileReader.onload = (e) => {
@@ -929,7 +932,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  trivyparse(json) {
+  trivyparse(json:any) {
 
     const data = JSON.parse(json);
     const issuelist: any = [];
@@ -952,10 +955,10 @@ export class DialogImportComponent implements OnInit {
     }
 
 
-    data.Results.forEach((myObject, index) => {
+    data.Results.forEach((myObject: any, index: number) => {
 
       const intvulns: any = [];
-      myObject.Vulnerabilities.forEach((myObject2, index) => {
+      myObject.Vulnerabilities.forEach((myObject2: any, index: number) => {
 
 
         if (Object.values(intvulns).indexOf(myObject2.VulnerabilityID) > -1) {
@@ -1013,7 +1016,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parseJiraxml(fileReader.result);
@@ -1024,8 +1027,8 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parseJiraxml(xml) {
-    let xmltojson = [];
+  parseJiraxml(xml: any) {
+    let xmltojson: any[] = [];
     const parser = new xml2js.Parser({ strict: true, trim: true });
     parser.parseString(xml, (err, result) => {
       xmltojson = result.rss.channel[0].item;
@@ -1114,7 +1117,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parsedecryptedJSON(fileReader.result);
@@ -1125,7 +1128,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parsedecryptedJSON(json) {
+  parsedecryptedJSON(json:any) {
     const data = JSON.parse(json);
     if (data) {
       this.dialogRef.close(data);
@@ -1144,7 +1147,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parsenpmauditJSON(fileReader.result);
@@ -1155,11 +1158,11 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parsenpmauditJSON(json) {
+  parsenpmauditJSON(json:any) {
     const data = JSON.parse(json);
     if (data.vulnerabilities) {
 
-      function setseverity(severity) {
+      function setseverity(severity:any) {
 
         if (severity === 'moderate') {
           severity = 'Medium';
@@ -1171,9 +1174,9 @@ export class DialogImportComponent implements OnInit {
       }
 
       const arr: any = [];
-      for (const [key, value] of Object.entries(data.vulnerabilities)) {
+      for (const [key, value] of Object.entries<any>(data.vulnerabilities)) {
         if (value) {
-          value["via"].forEach((item, index) => {
+          value["via"].forEach((item: any, index: number) => {
 
             const def = {
               title: item.name + ' ' + item.range + ' ' + item.title,
@@ -1213,7 +1216,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parseSemgrep(fileReader.result);
@@ -1225,10 +1228,10 @@ export class DialogImportComponent implements OnInit {
   }
 
 
-  parseSemgrep(json) {
+  parseSemgrep(json:any) {
 
 
-    function setseverity(severity) {
+    function setseverity(severity:any) {
       if (severity === 'HIGH') {
         severity = 'High';
       } else if (severity === 'MEDIUM') {
@@ -1239,7 +1242,7 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
-    function gethigherseverity(array) {
+    function gethigherseverity(array:any) {
 
       let severityret = '';
 
@@ -1257,7 +1260,7 @@ export class DialogImportComponent implements OnInit {
     const data = JSON.parse(json);
 
     if (this.mergeperpath.value) {
-      const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {});
+      const groupBy = (x: any, f: any) => x.reduce((a: any, b: any, i: any) => ((a[f(b, i, x)] ||= []).push(b), a), {});
       const grouped = groupBy(data.results, v => v.path);
       const arr: any = [];
       for (const [key, value] of Object.entries(grouped)) {
@@ -1326,7 +1329,7 @@ export class DialogImportComponent implements OnInit {
 
       const arr: any = [];
 
-      for (const [key, value] of Object.entries(data.results)) {
+      for (const [key, value] of Object.entries<any>(data.results)) {
 
 
         if (value) {
@@ -1373,7 +1376,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parseComposer(fileReader.result);
@@ -1385,10 +1388,10 @@ export class DialogImportComponent implements OnInit {
   }
 
 
-  parseComposer(json) {
+  parseComposer(json:any) {
     const data = JSON.parse(json);
 
-    function setseverity(severity) {
+    function setseverity(severity:any) {
       if (severity === 'critical') {
         severity = 'Critical';
       } else if (severity === 'high') {
@@ -1453,7 +1456,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parsezaproxy(fileReader.result);
@@ -1464,10 +1467,10 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parsezaproxy(json) {
+  parsezaproxy(json: any) {
     const data = JSON.parse(json);
 
-    function setseverity(severity) {
+    function setseverity(severity: any) {
       if (severity === '4') {
         severity = 'Critical';
       } else if (severity === '3') {
@@ -1482,18 +1485,18 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
-    function parseit(html) {
+    function parseit(html: any) {
       return this.utilsService.removeHTMLTags(html)
     }
-    function parseref(html) {
+    function parseref(html: any) {
       html = html.replaceAll('</p><p>', '</p>\n<p>');
       return this.utilsService.removeHTMLTags(html)
     }
     const arr: any = [];
-    for (const [key, value] of Object.entries(data.site)) {
+    for (const [key, value] of Object.entries<any>(data.site)) {
 
       if (value) {
-        for (const [subkey, subvalue] of Object.entries(value['alerts'])) {
+        for (const [subkey, subvalue] of Object.entries<any>(value['alerts'])) {
 
           if (subvalue) {
             let scopedesc = "";
@@ -1543,7 +1546,7 @@ export class DialogImportComponent implements OnInit {
       const fileToRead = files[0];
 
       const fileReader = new FileReader();
-      fileReader.onload = this.onFileLoad;
+      //fileReader.onload = this.onFileLoad;
 
       fileReader.onload = (e) => {
         this.parsewiz(fileReader.result);
@@ -1554,7 +1557,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parsewiz(csv) {
+  parsewiz(csv: any) {
 
     const csvData = csv || '';
     let m: any;
@@ -1564,7 +1567,7 @@ export class DialogImportComponent implements OnInit {
 
     const issues = this.utilsService.parseCSV(text);
 
-    function setseverity(severity) {
+    function setseverity(severity: any) {
       if (severity === 'CRITICAL') {
         severity = 'Critical';
       } else if (severity === 'HIGH') {
@@ -1579,7 +1582,7 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
-    issues.forEach((myObject:any, index) => {
+    issues.forEach((myObject: any, index: any) => {
 
       if (myObject) {
         const def = {
@@ -1608,5 +1611,63 @@ export class DialogImportComponent implements OnInit {
 
     this.dialogRef.close(issuelist);
   }
+
+
+
+    codesightonFileSelect(input: HTMLInputElement) {
+
+    const files = input.files;
+    if (files && files.length) {
+      this.zaproxyshow_input = false;
+      this.zaproxyplease_wait = true;
+
+      const fileToRead = files[0];
+
+      const fileReader = new FileReader();
+      //fileReader.onload = this.onFileLoad;
+
+      fileReader.onload = (e) => {
+        this.parsecodesight(fileReader.result);
+      };
+
+      fileReader.readAsText(fileToRead, 'UTF-8');
+    }
+
+  }
+
+  parsecodesight(json: any) {
+    const data = JSON.parse(json);
+    const arr: any = [];
+    for (const [key, value] of Object.entries<any>(data.results.issues.issues)) {
+
+      if (value) {
+
+            const def = {
+              title: value.summary,
+              poc: 'File: ' + value.filepath + ':' + value.location.start.line + '-' + value.location.end.line,
+              files: [],
+              desc: value.desc + '\n\n' + value.remediation,
+              severity: value.severity.impact,
+              ref: 'https://cwe.mitre.org/data/definitions/'+value.taxonomies.cwe[0]+'.html',
+              status: 1,
+              cvss: '',
+              cvss_vector: '',
+              cve: '',
+              tags: [{ name: "codesight" }],
+              bounty: [],
+              date: this.currentdateService.getcurrentDate()
+            };
+
+            arr.push(def);
+          
+      }
+
+    }
+
+    this.dialogRef.close(arr);
+
+  }
+
+
 
 }
