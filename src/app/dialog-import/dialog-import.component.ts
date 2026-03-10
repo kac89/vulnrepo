@@ -555,7 +555,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parseNessusxml(xml) {
+  parseNessusxml(xml:any) {
 
     function getSafe(fn, defaultVal) {
       try {
@@ -728,11 +728,11 @@ export class DialogImportComponent implements OnInit {
     this.dialogRef.close(info);
   }
 
-  fileChanged(e) {
+  fileChanged(e: any) {
     this.file = e.target.files[0];
   }
 
-  startUpload(pass) {
+  startUpload(pass:string) {
 
     if (pass !== '' && this.file) {
       this.vulnrepojsonshow_input = false;
@@ -746,7 +746,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  vulnrepojson(json, pass) {
+  vulnrepojson(json:any, pass:string) {
 
     try {
       // Decrypt
@@ -786,7 +786,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parseNmap(xml) {
+  parseNmap(xml:any) {
 
     let json = '';
     let hosts: any = [];
@@ -932,7 +932,7 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  trivyparse(json) {
+  trivyparse(json:any) {
 
     const data = JSON.parse(json);
     const issuelist: any = [];
@@ -955,10 +955,10 @@ export class DialogImportComponent implements OnInit {
     }
 
 
-    data.Results.forEach((myObject, index) => {
+    data.Results.forEach((myObject: any, index: number) => {
 
       const intvulns: any = [];
-      myObject.Vulnerabilities.forEach((myObject2, index) => {
+      myObject.Vulnerabilities.forEach((myObject2: any, index: number) => {
 
 
         if (Object.values(intvulns).indexOf(myObject2.VulnerabilityID) > -1) {
@@ -1027,8 +1027,8 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parseJiraxml(xml) {
-    let xmltojson = [];
+  parseJiraxml(xml: any) {
+    let xmltojson: any[] = [];
     const parser = new xml2js.Parser({ strict: true, trim: true });
     parser.parseString(xml, (err, result) => {
       xmltojson = result.rss.channel[0].item;
@@ -1158,11 +1158,11 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  parsenpmauditJSON(json) {
+  parsenpmauditJSON(json:any) {
     const data = JSON.parse(json);
     if (data.vulnerabilities) {
 
-      function setseverity(severity) {
+      function setseverity(severity:any) {
 
         if (severity === 'moderate') {
           severity = 'Medium';
@@ -1174,9 +1174,9 @@ export class DialogImportComponent implements OnInit {
       }
 
       const arr: any = [];
-      for (const [key, value] of Object.entries(data.vulnerabilities)) {
+      for (const [key, value] of Object.entries<any>(data.vulnerabilities)) {
         if (value) {
-          value["via"].forEach((item, index) => {
+          value["via"].forEach((item: any, index: number) => {
 
             const def = {
               title: item.name + ' ' + item.range + ' ' + item.title,
@@ -1228,10 +1228,10 @@ export class DialogImportComponent implements OnInit {
   }
 
 
-  parseSemgrep(json) {
+  parseSemgrep(json:any) {
 
 
-    function setseverity(severity) {
+    function setseverity(severity:any) {
       if (severity === 'HIGH') {
         severity = 'High';
       } else if (severity === 'MEDIUM') {
@@ -1242,7 +1242,7 @@ export class DialogImportComponent implements OnInit {
       return severity
     }
 
-    function gethigherseverity(array) {
+    function gethigherseverity(array:any) {
 
       let severityret = '';
 
@@ -1260,7 +1260,7 @@ export class DialogImportComponent implements OnInit {
     const data = JSON.parse(json);
 
     if (this.mergeperpath.value) {
-      const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {});
+      const groupBy = (x: any, f: any) => x.reduce((a: any, b: any, i: any) => ((a[f(b, i, x)] ||= []).push(b), a), {});
       const grouped = groupBy(data.results, v => v.path);
       const arr: any = [];
       for (const [key, value] of Object.entries(grouped)) {
@@ -1329,7 +1329,7 @@ export class DialogImportComponent implements OnInit {
 
       const arr: any = [];
 
-      for (const [key, value] of Object.entries(data.results)) {
+      for (const [key, value] of Object.entries<any>(data.results)) {
 
 
         if (value) {
@@ -1388,10 +1388,10 @@ export class DialogImportComponent implements OnInit {
   }
 
 
-  parseComposer(json) {
+  parseComposer(json:any) {
     const data = JSON.parse(json);
 
-    function setseverity(severity) {
+    function setseverity(severity:any) {
       if (severity === 'critical') {
         severity = 'Critical';
       } else if (severity === 'high') {
@@ -1493,10 +1493,10 @@ export class DialogImportComponent implements OnInit {
       return this.utilsService.removeHTMLTags(html)
     }
     const arr: any = [];
-    for (const [key, value] of Object.entries(data.site)) {
+    for (const [key, value] of Object.entries<any>(data.site)) {
 
       if (value) {
-        for (const [subkey, subvalue] of Object.entries(value['alerts'])) {
+        for (const [subkey, subvalue] of Object.entries<any>(value['alerts'])) {
 
           if (subvalue) {
             let scopedesc = "";
