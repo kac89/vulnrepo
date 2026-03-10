@@ -3116,7 +3116,7 @@ Date   | Description
       { "filename": "marked-highlight/2.2.1/index.umd.min.js", "integrity": "sha512-T5TNAGHd65imlc6xoRDq9hARHowETqOlOGMJ443E+PohphJHbzPpwQNBtcpmcjmHmQKLctZ/W3H2cY/T8EGDPA==" }
 
     ];
-    let ciphertext = "";
+    let ciphertext:any = "";
     if (encpass === 'userepokey') {
       ciphertext = Crypto.AES.encrypt(JSON.stringify(json), this.sessionsub.getSessionStorageItem(report_info.report_id));
     } else {

@@ -85,7 +85,7 @@ export class DialogPcidss4Component {
   
         const json = JSON.stringify(toexport);
         // Encrypt
-        const ciphertext = Crypto.AES.encrypt(json, pass);
+        const ciphertext:any = Crypto.AES.encrypt(json, pass);
   
         const element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));
