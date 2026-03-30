@@ -123,7 +123,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   pok = 0;
   prev_height = 190;
   timerCounter = 0;
-  spinner:any;
+  spinner: any;
   savemsg = '';
   report_decryption_in_progress: boolean;
   report_encryption_in_progress: boolean;
@@ -588,7 +588,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     this.youhaveunsavedchanges = true;
 
     this.indexeddbService.updatechangesStatus(true);
-    
+
   }
 
   removeSureYouWanttoLeave() {
@@ -3116,7 +3116,7 @@ Date   | Description
       { "filename": "marked-highlight/2.2.1/index.umd.min.js", "integrity": "sha512-T5TNAGHd65imlc6xoRDq9hARHowETqOlOGMJ443E+PohphJHbzPpwQNBtcpmcjmHmQKLctZ/W3H2cY/T8EGDPA==" }
 
     ];
-    let ciphertext:any = "";
+    let ciphertext: any = "";
     if (encpass === 'userepokey') {
       ciphertext = Crypto.AES.encrypt(JSON.stringify(json), this.sessionsub.getSessionStorageItem(report_info.report_id));
     } else {
@@ -3124,91 +3124,60 @@ Date   | Description
     }
 
 
-    this.http.get('/assets/html_report_v2_template.html?v=' + new Date(), { responseType: 'text' }).subscribe(res => {
+    this.http.get('/assets/html_report_v3_template.html?v=' + new Date(), { responseType: 'text' }).subscribe(res => {
 
       if (this.decryptedReportDataChanged.report_settings.report_css !== '') {
         res = res.replace("/*[CSS_Injection_here]*/", DOMPurify.sanitize(this.decryptedReportDataChanged.report_settings.report_css))
       }
 
-      if (type_dep === "mini") {
 
-        let css_String = "";
-        let js_String = "";
+      // FULL REPORT DEP included
+      let css_String = "";
+      let js_String = "";
 
-        report_dep_css_obj.forEach(function (value) {
-          css_String = css_String + '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/' + value.filename + '" integrity="' + value.integrity + '" crossorigin="anonymous" referrerpolicy="no-referrer" />\n';
-        });
-        res = res.replace("<depstyle></depstyle>", css_String);
-
-        report_dep_js_obj.forEach(function (value) {
-          js_String = js_String + '<script src="https://cdnjs.cloudflare.com/ajax/libs/' + value.filename + '" integrity="' + value.integrity + '" crossorigin="anonymous" referrerpolicy="no-referrer"></script>\n';
-        });
-        res = res.replace("<depscripts></depscripts>", js_String);
-        this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
-
-      } else {
-
-        // FULL REPORT DEP included
-        let css_String = "";
-        let js_String = "";
-
-        of("bootstrap/5.2.3/css/bootstrap.rtl.min.css", "bootstrap-icons/1.10.3/font/bootstrap-icons.min.css")
-          .pipe(
-            concatMap(ind => {
-              let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
-              return obs1
-            })
-          ).subscribe(data => {
-            css_String = css_String + `<style>
+      of("bootstrap/5.2.3/css/bootstrap.rtl.min.css", "bootstrap-icons/1.10.3/font/bootstrap-icons.min.css")
+        .pipe(
+          concatMap(ind => {
+            let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
+            return obs1
+          })
+        ).subscribe(data => {
+          css_String = css_String + `<style>
 `+ data + `
 </style>`;
 
-          }).add(() => {
-            //console.log('Finally callback');
-            this.http.get('/assets/res/bootstrap-icons/1.10.3/font/fonts/bootstrap-icons.woff2.b64', { responseType: 'text' }).subscribe(ret => {
+        }).add(() => {
+          //console.log('Finally callback');
 
-              css_String = css_String + `<style>
-            @font-face{
-              font-display:block;
-              font-family:bootstrap-icons;
-              src:url(data:font/opentype;base64,`+ ret + `) format("woff2"),
-              url(data:font/opentype;base64,<wofftag></wofftag>) format("woff")
-            }
-            </style>`;
+            this.http.get('/assets/res/fonts/fonts-inline.css', { responseType: 'text' }).subscribe(fontsCSS => {
+              css_String = `<style>\n` + fontsCSS + `\n</style>\n` + css_String;
+              res = res.replace("<depstyle></depstyle>", css_String);
+              css_String = "";
 
-              this.http.get('/assets/res/bootstrap-icons/1.10.3/font/fonts/bootstrap-icons.woff.b64', { responseType: 'text' }).subscribe(ret2 => {
-
-                css_String = css_String.replace('<wofftag></wofftag>', ret2);
-
-                res = res.replace("<depstyle></depstyle>", css_String);
-                css_String = "";
-
-                of("jquery/3.6.3/jquery.min.js", "crypto-js/4.1.1/crypto-js.min.js", "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "marked/15.0.0/marked.min.js", "dompurify/2.4.1/purify.min.js", "chart-js/4.4.0/chart.js", "highlight.js/11.10.0/highlight.min.js", "marked-highlight/2.2.1/index.umd.min.js")
-                  .pipe(
-                    concatMap(ind => {
-                      let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
-                      return obs1
-                    })
-                  ).subscribe(data2 => {
-                    js_String = js_String + `<script>
+              of("jquery/3.6.3/jquery.min.js", "crypto-js/4.1.1/crypto-js.min.js", "bootstrap/5.2.3/js/bootstrap.bundle.min.js", "marked/15.0.0/marked.min.js", "dompurify/2.4.1/purify.min.js", "chart-js/4.4.0/chart.js", "highlight.js/11.10.0/highlight.min.js", "marked-highlight/2.2.1/index.umd.min.js")
+                .pipe(
+                  concatMap(ind => {
+                    let obs1 = this.http.get('/assets/res/' + ind, { responseType: 'text' })
+                    return obs1
+                  })
+                ).subscribe(data2 => {
+                  js_String = js_String + `<script>
             ` + data2 + `
             </script>`;
 
-                  }).add(() => {
-                    res = res.replace("<depscripts></depscripts>", js_String);
-                    js_String = "";
-                    this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
-                  });
+                }).add(() => {
+                  res = res.replace("<depscripts></depscripts>", js_String);
+                  js_String = "";
+                  this.DownloadHTMLreportv2(res, encrypted, ciphertext, json, report_info);
+                });
 
-              });
-
-
-            });
-
-          });
+            }); // end fontsCSS subscrib
 
 
-      }
+        });
+
+
+
     });
   }
 

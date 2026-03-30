@@ -33,3 +33,386 @@
     left: 50%;
     transform: translateX(-50%);
 }
+
+/* ── Tokens ───────────────────────────────────────────────────── */
+:root,
+.vr-page {
+  --vr-accent:       #69f0ae;
+  --vr-accent-dim:   rgba(105, 240, 174, 0.12);
+  --vr-accent-glow:  rgba(105, 240, 174, 0.06);
+  --vr-bg:           #000000;
+  --vr-bg-card:      #0d0d0d;
+  --vr-bg-card-2:    #111111;
+  --vr-border:       rgba(255, 255, 255, 0.07);
+  --vr-border-hover: rgba(105, 240, 174, 0.35);
+  --vr-text:         #e8e8e8;
+  --vr-text-muted:   #888;
+  --vr-radius:       10px;
+  --vr-radius-lg:    16px;
+}
+
+/* ── Page shell ───────────────────────────────────────────────── */
+.vr-page {
+  background: var(--vr-bg);
+  color: var(--vr-text);
+  font-family: 'Roboto Mono', monospace, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.vr-accent { color: var(--vr-accent); }
+
+/* ── Hero ─────────────────────────────────────────────────────── */
+.vr-hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px 60px;
+  overflow: hidden;
+}
+
+/* Subtle noise texture overlay */
+.vr-hero__noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.vr-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+}
+
+.vr-hero__logo {
+  margin-bottom: 48px;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 24px rgba(105,240,174,0.2));
+}
+
+.vr-hero__headline {
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+  color: #fff;
+}
+
+.vr-hero__sub {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--vr-text-muted);
+  max-width: 520px;
+  margin: 0 auto 40px;
+}
+
+.vr-hero__cta {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.vr-hero__cta--single {
+  justify-content: center;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.vr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--vr-radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.vr-btn--primary {
+  background: var(--vr-accent);
+  color: #0a0a0a;
+}
+.vr-btn--primary:hover {
+  background: #8fffca;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(105, 240, 174, 0.3);
+}
+
+.vr-btn--outline {
+  background: transparent;
+  color: var(--vr-text);
+  border: 1px solid var(--vr-border);
+}
+.vr-btn--outline:hover {
+  border-color: var(--vr-border-hover);
+  color: var(--vr-accent);
+  transform: translateY(-2px);
+}
+
+.vr-hero__scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--vr-text-muted);
+  animation: vr-bounce 2s ease-in-out infinite;
+  opacity: 0.5;
+}
+@keyframes vr-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
+}
+
+/* ── Strip ────────────────────────────────────────────────────── */
+.vr-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  padding: 18px 24px;
+  background: var(--vr-bg-card);
+  border-top: 1px solid var(--vr-border);
+  border-bottom: 1px solid var(--vr-border);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vr-accent);
+}
+.vr-strip__dot {
+  color: var(--vr-border);
+}
+
+/* ── Sections ─────────────────────────────────────────────────── */
+.vr-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 72px 24px;
+}
+
+.vr-section__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+  margin: 0 0 36px;
+}
+.vr-section__title mat-icon {
+  color: var(--vr-accent);
+  font-size: 20px;
+}
+
+/* ── About cards ──────────────────────────────────────────────── */
+.vr-about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.vr-card--about {
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius-lg);
+  padding: 28px 28px 24px;
+  transition: border-color 0.2s ease;
+}
+.vr-card--about:hover {
+  border-color: rgba(105, 240, 174, 0.2);
+}
+
+.vr-card__icon {
+  display: block;
+  color: var(--vr-accent);
+  font-size: 28px !important;
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+
+.vr-card--about p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--vr-text-muted);
+}
+
+/* ── Feature grid ─────────────────────────────────────────────── */
+.vr-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.vr-feature-card {
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+  padding: 22px 22px 20px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.vr-feature-card:hover {
+  border-color: rgba(105, 240, 174, 0.2);
+  background: #191919;
+}
+
+.vr-feature-card--accent {
+  border-color: rgba(105, 240, 174, 0.25);
+  background: var(--vr-accent-glow);
+}
+
+.vr-feature-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.vr-feature-card__header mat-icon {
+  color: var(--vr-accent);
+  font-size: 20px !important;
+  flex-shrink: 0;
+}
+.vr-feature-card__header span {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #d8d8d8;
+}
+
+.vr-feature-card p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--vr-text-muted);
+}
+
+/* ── Resources ────────────────────────────────────────────────── */
+.vr-resources-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vr-resource-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+  color: var(--vr-text);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.vr-resource-card:hover {
+  border-color: var(--vr-border-hover);
+  background: var(--vr-bg-card-2);
+}
+
+.vr-resource-card > mat-icon:first-child {
+  color: var(--vr-accent);
+  font-size: 22px !important;
+  flex-shrink: 0;
+}
+.vr-resource-card > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.vr-resource-card strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ddd;
+}
+.vr-resource-card span {
+  font-size: 0.8rem;
+  color: var(--vr-text-muted);
+}
+.vr-resource-card__arrow {
+  color: var(--vr-text-muted);
+  font-size: 18px !important;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.vr-resource-card:hover .vr-resource-card__arrow {
+  color: var(--vr-accent);
+  transform: translateX(3px);
+}
+
+/* ── Community ────────────────────────────────────────────────── */
+.vr-community {
+  text-align: center;
+  padding-bottom: 96px;
+}
+.vr-community__title {
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px;
+}
+.vr-community__sub {
+  color: var(--vr-text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 40px;
+}
+.vr-community__links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.vr-social-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+  color: var(--vr-text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.vr-social-btn:hover {
+  border-color: var(--vr-border-hover);
+  background: var(--vr-bg-card-2);
+  color: var(--vr-accent);
+}
+.vr-social-btn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: grayscale(30%);
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .vr-hero__cta {
+    flex-direction: column;
+    align-items: center;
+  }
+  .vr-strip {
+    gap: 8px 16px;
+  }
+  .vr-strip__dot {
+    display: none;
+  }
+}

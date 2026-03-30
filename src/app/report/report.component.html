@@ -960,12 +960,8 @@
                                                       </button>
                                                       <mat-menu #aboveMenu2="matMenu" yPosition="above">
                                                         <button mat-menu-item (click)="encrypt_reportv2(report_info, true, false)"
-                                                          title="Full report with all dependency, encrypted portable version for offline reader">
+                                                          title="Full report encrypted portable version for offline reader">
                                                           <mat-icon>description</mat-icon>HTML
-                                                        </button>
-                                                        <button mat-menu-item (click)="encrypt_reportv2(report_info, true, 'mini')"
-                                                          title="Full report with linked external dependency, encrypted (small size of the report)">
-                                                          <mat-icon>description</mat-icon>HTML (mini)
                                                         </button>
                                                         <button mat-menu-item (click)="shareReport(report_info.report_id)"
                                                           title="(VULNR) VULNRΞPO encrypted report format">
@@ -989,13 +985,10 @@
                                                         }
                                                         <mat-divider></mat-divider>
                                                         <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, false, '')"
-                                                          title="Full report with all dependency, decrypted portable version for offline reader">
+                                                          title="Full report decrypted portable version for offline reader">
                                                           <mat-icon>description</mat-icon>HTML
                                                         </button>
-                                                        <button mat-menu-item (click)="DownloadHTMLv2(report_info, false, 'mini', '')"
-                                                          title="Full report with linked external dependency, decrypted (small size of the report)">
-                                                          <mat-icon>description</mat-icon>HTML (mini)
-                                                        </button>
+
                                                         <button mat-menu-item (click)="downloadASCII(decryptedReportDataChanged,report_info)"
                                                           title="Decrypted ASCII report format">
                                                           <mat-icon>description</mat-icon>TEXT
