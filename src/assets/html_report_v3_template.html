@@ -1,0 +1,1841 @@
+<html>
+
+<head>
+	<title>VULNRΞPO - Vulnerability Report</title>
+
+	<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAF1UlEQVRYhb2X6XMU1xXF3+vu6e6Z7tl6GUZEoKXASGKxkbVgsQljWZJBEgQDBo2kAe3LTMWpuJyKC5crRPGWpEjZOGWXg3EgyHEMyEqwwCDpT/vlQ8tCgxaEMPlwqqbnvek5975zz71PCCH4CXLRZyEEQsrC52cDgZKKom5OrhuKb6/w8jUFIEh82EFqLr9uxC8eeroMrIeA/+Mo0cEGtDIXoWv/ZwIzOfTaEoQiMQ5uwXj5uXnNCMzD27DzB58tgdg7zQghiL332sIRSF0l/oejpObyJP92GqEp6yfgTQ1iD+1DryshcqYG/4fhgnWjcStauVeggehvDuM/GMNsrVpz9FIuIuB9P4DVVYu+pxSpqwhFEtq1EaGrGHvLCwjoL25Cry9ZeHb/0UVqNkekq279GnC+ziAtnVBVGitbj3sjS2ouj/2rRoQQ6HUlKBuiSEtHqApClUhLR1o6ZlMFqbk8zlcZ7NEDqKXOqn8aqt6E/lLZ4zXgfnMO71YfQpFopS7aVh91Y5xIpgahKYR2FxPpriV2oQVvaoD474/g3xkiNZPDHt2/og6Sn5wk8UH76gSSfz2BjBr4d4YI7S7GytaTvHwKaWi4N3qIvnkIEVIx9pUT/fXLeJMDhNt3ohbFsAf2kprNER9vQ6iFZqR4Fv79MSKZ2lVEONmPkowESv9tE7ELLSjJCP6dIcxXK9DKXLxvz+N8eRiru47oW4fx/zuEc6Uz2NNcgflqJanZPFZP/UMCUhK/eAR/ehjFtVYmEDldjTQ0wh070cpc/PtjhCrTmK9sw787gnFwC9I2iJx5kfgf23CudOL+swehKcGeeyMYjVuDyrg7gpKMoPg28YtBmZpHtq9ShjM5lESY0PYi/B+GUVI29uBe3IksimthtlTi3x0hPt6Gsa8cNR3FbK0KNDORRStzCR/bhXezF7U4QWo2Fwj6wRj+9DDma9sf1UQhAfda98JiYryNxJ+PI+ZNxr3eg1buoRbFib55CO9mb8Hvom8dJvn5GwhNwZsaRK/ZjPNVJ96/e4l01qA41nKiLCSQuHQCIQRmSyVKIow7cY7Y268gdRU734j/4yh2vhFtvtSkpWO2VuFczQQRz+WR4RDJz04RPrqDxEcdQRDLGdFyBJwvzgTR/+k4oepNqMUJvFt9JD5oD45mx8Zg/0wO77tekp+8jnOlE+dqBrNpG97kAEKRuDeyGI1bSX56EufzN1A3xtdmxf70cFDj29NIXcMe3U/qwVjgCd8PBAK1DZS4if5SGeH2nUEVTI/g3xshfHQHoao0/v0x1KIY/vS8jc/mSbzfjpqOPb4XGA3lCCGIjx/FvdZNqDKNjOjE3msNSN4bJfHxMaz+BsLHdgV6uN1P6PlfoDgRnK+7sHMHCXfsDKy7oYzw6y/gTfbj3e5/1CmXEkh+dhoh5YIOzJYqvP8MBim/fIrk5ZMFcK514f7rHJFMLd7tfhLvt6GWOHhTA4sdD2VDFHcii3M1s9gll3fCnwzEbJqv/aYKhCKREX2hByzuBf79MRKXTmA2VxKq2BAc2c3eJeNaaHdx4AVNFY/pBbN5rL4GvKlBzNYqpKERe7sJ52pmCdxvz+NOBKKLXWghNZPDvd6Dujm5rPCca93ELrQUEvBu9hHprCH2u2a8W30Pj+OLMwgpVp2QjQNbHtr4d71Y2XpkOLTifuv8HuyR/YUE3OvdyKgZfKlIjIYyYu+2olWlUVwLb7Kf5KcnSXzUQeiFYhTfJvFhR4BLJ0jN5Qkff349o/wjTngjiz20D7UoKBclbpL4yy8LB5LqTeh1DweS+Hgbzpdncb85h5JaaUR/0plwJod7vRv/3siSNePQc6ilTsFIppY4eLeDMoucrn6STKxjKH03EFDsneYFAkII1HQs6I5/P/szZGA1zObQ95YjpETfU4pxYMuhxxtruycUDKVPRGAuT+rBGPbYAbRtG5AR/UnP/Skz8Aie+mr27C6nayTwc2HJ9X4NGvgfC9oVhY0Nqt0AAAAASUVORK5CYII="/>
+
+
+	<depstyle></depstyle>
+	<depscripts></depscripts>
+
+	<style>
+		/* ================================================================
+		   DESIGN TOKENS
+		   ================================================================ */
+		:root {
+			--bg:      #09090c;
+			--bg2:     #111116;
+			--bg3:     #18181f;
+			--bg4:     #22222c;
+			--bg5:     #2a2a38;
+			--border:  rgba(255,255,255,0.07);
+			--border2: rgba(255,255,255,0.13);
+			--border3: rgba(255,255,255,0.22);
+			--text:    #eeeef2;
+			--text2:   #8888a0;
+			--text3:   #52526a;
+			--accent:  #00e87a;
+			--accent2: #00b85f;
+			--red:     #ff2d55;
+			--orange:  #ff6820;
+			--yellow:  #f0c000;
+			--green:   #00e87a;
+			--blue:    #4a9eff;
+			--mono:    'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
+			--display: 'Syne', 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			--body:    'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+			--r:       8px;
+			--r2:      12px;
+			--r3:      18px;
+		}
+
+		.light-mode {
+			--bg:      #f2f2f6;
+			--bg2:     #ffffff;
+			--bg3:     #ebebf2;
+			--bg4:     #e0e0ec;
+			--bg5:     #d2d2e2;
+			--border:  rgba(0,0,0,0.07);
+			--border2: rgba(0,0,0,0.13);
+			--border3: rgba(0,0,0,0.22);
+			--text:    #0d0d18;
+			--text2:   #4c4c68;
+			--text3:   #9090b0;
+			--accent:  #009950;
+			--accent2: #007840;
+			--red:     #d91a3c;
+			--orange:  #c84400;
+			--yellow:  #8a6a00;
+			--green:   #009950;
+			--blue:    #1a60d0;
+		}
+
+		/* ================================================================
+		   RESET & BASE
+		   ================================================================ */
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+		html { scroll-behavior: smooth; }
+
+		body {
+			font-family: var(--body);
+			background: var(--bg);
+			color: var(--text);
+			font-size: 14px;
+			line-height: 1.65;
+			min-height: 100vh;
+			transition: background .3s, color .3s;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		a { color: var(--blue); text-decoration: none; }
+		a:hover { text-decoration: underline; }
+		p { margin-top: 0; }
+		h1,h2,h3,h4,h5,h6 { font-family: var(--display); color: var(--text); margin: 0; }
+		ul { padding-left: 24px !important; }
+
+		blockquote {
+			border-left: 3px solid var(--accent);
+			margin: 10px 0;
+			padding: 4px 14px;
+			color: var(--text2);
+		}
+		blockquote p { margin: 5px 0; }
+
+		img { max-width: 100%; }
+
+		/* ================================================================
+		   COVER PAGE
+		   ================================================================ */
+		.cover-page {
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+			overflow: hidden;
+			padding: 60px 40px 80px;
+		}
+
+		.cover-bg-grid {
+			position: absolute; inset: 0;
+			background-image:
+				linear-gradient(rgba(0,232,122,.035) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(0,232,122,.035) 1px, transparent 1px);
+			background-size: 44px 44px;
+			mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+			-webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+		}
+
+		.cover-glow {
+			position: absolute;
+			width: 640px; height: 640px;
+			background: radial-gradient(circle, rgba(0,232,122,.07) 0%, transparent 70%);
+			top: 50%; left: 50%;
+			transform: translate(-50%, -50%);
+			pointer-events: none;
+		}
+
+		.cover-corner {
+			position: absolute;
+			font-family: var(--mono);
+			font-size: 9.5px;
+			color: var(--text3);
+			letter-spacing: .1em;
+			line-height: 1.6;
+		}
+		.cover-corner.tl { top: 28px; left: 36px; }
+		.cover-corner.tr { top: 28px; right: 36px; text-align: right; }
+		.cover-corner.bl { bottom: 28px; left: 36px; }
+		.cover-corner.br { bottom: 28px; right: 36px; text-align: right; }
+
+		.cover-logo-zone {
+			width: clamp(144px, 24vw, 384px); height: clamp(57.6px, 9.6vw, 153.6px);
+			display: flex; align-items: center; justify-content: center;
+			margin-bottom: 44px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.cover-logo-zone img { max-width: 100%; max-height: 100%; object-fit: contain; width: auto; height: auto; }
+
+		.cover-badge {
+			display: inline-flex; align-items: center; gap: 8px;
+			font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase;
+			background: rgba(255,45,85,.1); color: var(--red);
+			border: 1px solid rgba(255,45,85,.28);
+			padding: 5px 14px; border-radius: 6px; margin-bottom: 18px;
+			position: relative; z-index: 1;
+		}
+
+		.pulse-dot {
+			width: 6px; height: 6px; border-radius: 50%; background: var(--red);
+			animation: blink 1.4s ease-in-out infinite;
+		}
+		@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+		.cover-title {
+			font-family: var(--display);
+			font-size: clamp(30px, 5vw, 52px);
+			font-weight: 800;
+			line-height: 1.1;
+			text-align: center;
+			letter-spacing: -.025em;
+			margin-bottom: 10px;
+			position: relative; z-index: 1;
+			color: var(--text);
+		}
+		.cover-title .report_name { color: var(--accent); }
+
+		.cover-sub {
+			font-size: 14px; color: var(--text2); text-align: center;
+			max-width: 480px; margin-bottom: 38px;
+			position: relative; z-index: 1;
+		}
+
+		.cover-meta-row {
+			display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+			margin-bottom: 44px; position: relative; z-index: 1;
+		}
+
+		.meta-chip {
+			display: flex; align-items: center; gap: 6px;
+			background: var(--bg2); border: 1px solid var(--border2);
+			border-radius: 7px; padding: 6px 12px;
+			font-family: var(--mono); font-size: 10.5px; color: var(--text2);
+		}
+		.meta-chip-lbl { color: var(--text3); }
+
+		.cover-sev-strip {
+			display: flex; border: 1px solid var(--border2);
+			border-radius: var(--r2); overflow: hidden;
+			width: 100%; max-width: 480px;
+			position: relative; z-index: 1;
+		}
+
+		.sev-cell {
+			flex: 1; padding: 14px 8px; text-align: center;
+			border-right: 1px solid var(--border);
+		}
+		.sev-cell:last-child { border-right: none; }
+
+		.sev-num {
+			font-family: var(--display); font-size: 24px; font-weight: 800; line-height: 1;
+		}
+
+		.sev-lbl {
+			font-family: var(--mono); font-size: 8.5px;
+			text-transform: uppercase; letter-spacing: .1em; margin-top: 4px;
+		}
+
+		.cover-scroll-hint {
+			position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%);
+			display: flex; flex-direction: column; align-items: center; gap: 5px;
+			color: var(--text3); font-family: var(--mono); font-size: 8.5px; letter-spacing: .1em;
+			animation: fadeFloat 2.2s ease-in-out infinite;
+		}
+		@keyframes fadeFloat {
+			0%,100%{opacity:.4; transform:translateX(-50%) translateY(0)}
+			50%{opacity:.9; transform:translateX(-50%) translateY(-5px)}
+		}
+
+		/* ================================================================
+		   TOPBAR
+		   ================================================================ */
+		.topbar {
+			position: sticky; top: 0; z-index: 100;
+			display: flex; align-items: center; justify-content: space-between;
+			padding: 9px 24px;
+			background: var(--bg2);
+			border-bottom: 1px solid var(--border);
+			backdrop-filter: blur(14px);
+			-webkit-backdrop-filter: blur(14px);
+			transition: background .3s, border-color .3s;
+		}
+
+		.topbar-left {
+			font-family: var(--mono); font-size: 10px; color: var(--text3);
+			letter-spacing: .08em;
+			white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+		}
+		.topbar-accent { color: var(--accent); }
+
+		.topbar-right { display: flex; align-items: center; gap: 7px; }
+
+		.tbtn {
+			padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border2);
+			background: transparent; color: var(--text2);
+			font-family: var(--mono); font-size: 10px;
+			cursor: pointer; transition: all .15s; letter-spacing: .04em;
+		}
+		.tbtn:hover { background: var(--bg3); color: var(--text); }
+		.tbtn.active { background: var(--bg4); border-color: var(--border3); color: var(--text); }
+
+		/* ================================================================
+		   APP SHELL
+		   ================================================================ */
+		.app-shell {
+			display: grid;
+			grid-template-columns: 234px 1fr;
+			gap: 22px;
+			max-width: 1240px;
+			margin: 0 auto;
+			padding: 26px 22px 80px;
+			align-items: start;
+		}
+
+		/* ================================================================
+		   SIDEBAR
+		   ================================================================ */
+		.sidebar {
+			position: sticky; top: 58px;
+			background: var(--bg2);
+			border: 1px solid var(--border);
+			border-radius: var(--r3);
+			overflow: hidden;
+		}
+
+		.sb-header {
+			padding: 18px 16px 14px;
+			border-bottom: 1px solid var(--border);
+		}
+		.sb-tag { font-family: var(--mono); font-size: 8.5px; color: var(--accent); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; }
+		.sb-name { font-family: var(--display); font-size: 13px; font-weight: 700; line-height: 1.35; color: var(--text); }
+		.sb-id { font-family: var(--mono); font-size: 9.5px; color: var(--text3); margin-top: 4px; }
+
+		.sb-nav { padding: 5px 0; border-bottom: 1px solid var(--border); }
+		.sb-nav-lbl { font-family: var(--mono); font-size: 8px; color: var(--text3); letter-spacing: .14em; text-transform: uppercase; padding: 5px 16px 2px; }
+
+		.sb-nav-item {
+			display: flex; align-items: center; gap: 9px;
+			padding: 7px 16px; font-size: 12.5px; color: var(--text2);
+			text-decoration: none;
+			border-left: 2px solid transparent;
+			transition: background .12s, color .12s;
+		}
+		.sb-nav-item:hover { background: var(--bg3); color: var(--text); text-decoration: none; }
+		.sb-nav-item.active { color: var(--text); border-left-color: var(--accent); background: var(--bg3); }
+
+		.sb-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+		.sb-count {
+			margin-left: auto; font-family: var(--mono); font-size: 9.5px;
+			background: var(--bg4); padding: 1px 6px; border-radius: 4px; color: var(--text3);
+		}
+
+		.sb-sev { padding: 12px 16px 14px; }
+
+		.sb-sev-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+		.sb-sev-lbl { font-family: var(--mono); font-size: 9.5px; min-width: 28px; }
+		.sb-sev-track { flex: 1; height: 3px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
+		.sb-sev-fill { height: 100%; border-radius: 2px; transition: width .4s ease; }
+		.sb-sev-n { font-family: var(--mono); font-size: 9.5px; color: var(--text3); min-width: 14px; text-align: right; }
+
+		/* ================================================================
+		   MAIN CONTENT
+		   ================================================================ */
+		.main-content { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+
+		/* ================================================================
+		   SECTION DIVIDER
+		   ================================================================ */
+		.sec-div {
+			display: flex; align-items: center; gap: 11px;
+			margin-bottom: 14px;
+		}
+		.sec-num { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: .1em; flex-shrink: 0; }
+		.sec-lbl { font-family: var(--display); font-size: 15px; font-weight: 700; color: var(--text); white-space: nowrap; }
+		.sec-line { flex: 1; height: 1px; background: var(--border); }
+
+		/* ================================================================
+		   GENERIC CARD
+		   ================================================================ */
+		.card {
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r2); overflow: hidden;
+		}
+
+		/* ================================================================
+		   TOC ENTRIES
+		   ================================================================ */
+		.toc-entry {
+			display: flex; align-items: center; gap: 11px;
+			padding: 11px 16px;
+			border-bottom: 1px solid var(--border);
+			text-decoration: none;
+			transition: background .12s;
+		}
+		.toc-entry:last-child { border-bottom: none; }
+		.toc-entry:hover { background: var(--bg3); text-decoration: none; }
+
+		.toc-entry-title { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
+		.toc-entry-sub { font-size: 11.5px; color: var(--text3); margin-top: 1px; }
+		.toc-entry-date { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-left: auto; white-space: nowrap; }
+
+		/* ================================================================
+		   SCOPE SECTION
+		   ================================================================ */
+		.scope-content {
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r2); padding: 18px 20px;
+			font-size: 13.5px; color: var(--text2); line-height: 1.7;
+		}
+
+		/* ================================================================
+		   STATS GRID
+		   ================================================================ */
+		.stats-strip {
+			display: flex; border: 1px solid var(--border2);
+			border-radius: var(--r2); overflow: hidden;
+			background: var(--bg2); margin-bottom: 20px;
+		}
+
+		.stat-cell {
+			flex: 1; padding: 18px 12px; text-align: center;
+			border-right: 1px solid var(--border);
+		}
+		.stat-cell:last-child { border-right: none; }
+
+		.stat-n {
+			font-family: var(--display); font-size: 28px; font-weight: 800;
+			line-height: 1; margin-bottom: 5px;
+		}
+		.stat-l {
+			font-family: var(--mono); font-size: 8.5px; text-transform: uppercase;
+			letter-spacing: .1em;
+		}
+
+		.stat-cell.s-crit .stat-n { color: var(--red); }
+		.stat-cell.s-crit .stat-l { color: var(--red); }
+		.stat-cell.s-high .stat-n { color: var(--orange); }
+		.stat-cell.s-high .stat-l { color: var(--orange); }
+		.stat-cell.s-med  .stat-n { color: var(--yellow); }
+		.stat-cell.s-med  .stat-l { color: var(--yellow); }
+		.stat-cell.s-low  .stat-n { color: var(--green); }
+		.stat-cell.s-low  .stat-l { color: var(--green); }
+		.stat-cell.s-info .stat-n { color: var(--blue); }
+		.stat-cell.s-info .stat-l { color: var(--blue); }
+
+		.chart-area {
+			display: flex; gap: 24px; align-items: center; margin-bottom: 22px;
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r2); padding: 18px 20px;
+		}
+		.chart-box { width: 160px; flex-shrink: 0; }
+
+		/* ================================================================
+		   RISK MATRIX
+		   ================================================================ */
+		.risk-body { padding: 18px 20px; }
+		.risk-note { font-size: 12px; color: var(--text2); margin-bottom: 14px; }
+		.risk-note a { color: var(--blue); font-family: var(--mono); font-size: 11px; }
+
+		.matrix-wrap {
+			display: grid;
+			grid-template-columns: 54px repeat(3, 1fr);
+			gap: 5px;
+		}
+		.m-lbl {
+			display: flex; align-items: center; justify-content: flex-end;
+			padding-right: 9px; font-family: var(--mono); font-size: 9px;
+			color: var(--text3);
+		}
+		.m-cell {
+			border-radius: 7px; padding: 11px 6px; text-align: center;
+			font-family: var(--mono); font-size: 9px; font-weight: 600;
+			text-transform: uppercase; letter-spacing: .06em;
+		}
+		.m-info     { background:rgba(74,158,255,.12); color:var(--blue); }
+		.m-low      { background:rgba(0,232,122,.1);   color:var(--green); }
+		.m-med      { background:rgba(240,192,0,.12);  color:var(--yellow); }
+		.m-high     { background:rgba(255,104,32,.12); color:var(--orange); }
+		.m-crit     { background:rgba(255,45,85,.12);  color:var(--red); }
+		.m-axis     { background:transparent; color:var(--text3); font-size:8px; }
+		.matrix-foot { font-family:var(--mono); font-size:8.5px; color:var(--text3); text-align:center; margin-top:7px; }
+
+		/* ================================================================
+		   SEVERITY PILLS (label-compatible)
+		   ================================================================ */
+		.label,
+		.sev-pill {
+			display: inline-block;
+			font-family: var(--mono); font-size: 9.5px; font-weight: 600;
+			padding: 3px 9px; border-radius: 5px;
+			letter-spacing: .07em; text-transform: uppercase;
+			line-height: 1.4;
+		}
+
+		.sev-pill.sev-critical, .label.Critical, .label.critical,
+		.Critical, .critical { background:rgba(255,45,85,.12); color:var(--red)!important; border:1px solid rgba(255,45,85,.3); }
+
+		.sev-pill.sev-high, .label.High, .label.high,
+		.High, .high { background:rgba(255,104,32,.12); color:var(--orange)!important; border:1px solid rgba(255,104,32,.3); }
+
+		.sev-pill.sev-medium, .label.Medium, .label.medium,
+		.Medium, .medium { background:rgba(240,192,0,.12); color:var(--yellow)!important; border:1px solid rgba(240,192,0,.3); }
+
+		.sev-pill.sev-low, .label.Low, .label.low,
+		.Low, .low { background:rgba(0,232,122,.1); color:var(--green)!important; border:1px solid rgba(0,232,122,.22); }
+
+		.sev-pill.sev-info, .label.Info, .label.info,
+		.Info, .info { background:rgba(74,158,255,.1); color:var(--blue)!important; border:1px solid rgba(74,158,255,.25); }
+
+		/* ================================================================
+		   FILTER BAR
+		   ================================================================ */
+		.filter-bar {
+			display: flex; align-items: center; gap: 10px;
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r); padding: 7px 12px;
+			margin-bottom: 12px; transition: border-color .15s;
+		}
+		.filter-bar:focus-within { border-color: var(--border3); }
+		.filter-icon { color: var(--text3); font-size: 13px; line-height: 1; }
+		.filter-input {
+			flex: 1; background: none; border: none; outline: none;
+			font-family: var(--mono); font-size: 11.5px; color: var(--text);
+			caret-color: var(--accent);
+		}
+		.filter-input::placeholder { color: var(--text3); }
+		.filter-pills { display: flex; gap: 5px; }
+
+		.fpill {
+			padding: 3px 10px; border-radius: 5px; border: 1px solid var(--border2);
+			background: transparent; color: var(--text3);
+			font-family: var(--mono); font-size: 9px; cursor: pointer;
+			transition: all .14s; letter-spacing: .05em; text-transform: uppercase;
+		}
+		.fpill:hover { background: var(--bg3); color: var(--text); }
+		.fpill.on { background: var(--bg4); border-color: var(--border3); color: var(--text); }
+		.fpill.fp-crit.on { background:rgba(255,45,85,.12); color:var(--red); border-color:rgba(255,45,85,.3); }
+		.fpill.fp-high.on { background:rgba(255,104,32,.12); color:var(--orange); border-color:rgba(255,104,32,.3); }
+		.fpill.fp-med.on  { background:rgba(240,192,0,.12); color:var(--yellow); border-color:rgba(240,192,0,.3); }
+		.fpill.fp-low.on  { background:rgba(0,232,122,.1); color:var(--green); border-color:rgba(0,232,122,.22); }
+		.fpill.fp-info.on { background:rgba(74,158,255,.1); color:var(--blue); border-color:rgba(74,158,255,.25); }
+
+		/* ================================================================
+		   ISSUE CARDS
+		   ================================================================ */
+		.issue-card {
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r2); overflow: hidden;
+			transition: border-color .18s, box-shadow .18s;
+			margin-bottom: 10px;
+		}
+		.issue-card:hover { border-color: var(--border2); }
+		.issue-card:last-child { margin-bottom: 0; }
+
+		.issue-header {
+			display: flex; align-items: center; gap: 12px;
+			padding: 13px 18px;
+			cursor: pointer;
+			border-bottom: 1px solid var(--border);
+			user-select: none;
+			transition: background .12s;
+		}
+		.issue-header:hover { background: var(--bg3); }
+		.issue-header.collapsed { border-bottom-color: transparent; }
+
+		.issue-title { font-size: 13.5px; font-weight: 500; flex: 1; color: var(--text); }
+		.issue-meta { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+		.issue-date { font-family: var(--mono); font-size: 9.5px; color: var(--text3); }
+
+		.status-badge {
+			font-family: var(--mono); font-size: 8.5px; padding: 2px 7px;
+			border-radius: 4px; border: 1px solid var(--border2); color: var(--text3);
+			text-transform: uppercase; letter-spacing: .06em;
+		}
+		.s-open     { color: var(--yellow); border-color:rgba(240,192,0,.3); background:rgba(240,192,0,.07); }
+		.s-progress { color: var(--orange); border-color:rgba(255,104,32,.3); background:rgba(255,104,32,.08); }
+		.s-fixed    { color: var(--green);  border-color:rgba(0,232,122,.22); background:rgba(0,232,122,.06); }
+		.s-wontfix  { color: var(--text3);  border-color:var(--border2); background:var(--bg3); }
+
+		.toggle-icon {
+			width: 16px; height: 16px; color: var(--text3);
+			transition: transform .22s; flex-shrink: 0;
+		}
+		.toggle-icon.open { transform: rotate(90deg); }
+
+		.issue-body { padding: 16px 18px; }
+		.issue-body.hidden { display: none; }
+
+		.ib-grid {
+			display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+			margin-bottom: 14px;
+			padding: 12px 14px; background: var(--bg3); border-radius: var(--r);
+		}
+		.ib-lbl { font-family: var(--mono); font-size: 8.5px; color: var(--text3); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+		.ib-val { font-size: 12.5px; color: var(--text2); font-family: var(--mono); }
+		.ib-val.cv-crit { color: var(--red); }
+		.ib-val.cv-high { color: var(--orange); }
+		.ib-val.cv-med  { color: var(--yellow); }
+
+		.ib-section-lbl {
+			font-family: var(--mono); font-size: 8.5px; color: var(--text3);
+			text-transform: uppercase; letter-spacing: .1em; margin-bottom: 7px; margin-top: 14px;
+		}
+		.ib-section-lbl:first-child { margin-top: 0; }
+
+		.ib-text { font-size: 13px; color: var(--text2); line-height: 1.72; margin-bottom: 4px; }
+		.ib-text code {
+			font-family: var(--mono); font-size: 11px;
+			background: var(--bg3); padding: 1px 5px; border-radius: 3px; color: var(--text);
+		}
+
+		.code-block {
+			background: var(--bg3); border: 1px solid var(--border);
+			border-left: 3px solid var(--border2);
+			border-radius: var(--r); padding: 12px 14px;
+			font-family: var(--mono); font-size: 11.5px; color: var(--text2);
+			overflow-x: auto; margin-bottom: 4px; line-height: 1.72;
+			white-space: pre-wrap; word-wrap: break-word;
+		}
+
+		.tags-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; margin-bottom: 2px; }
+		.tag {
+			font-family: var(--mono); font-size: 9px; padding: 2px 8px;
+			border-radius: 4px; background: var(--bg4); color: var(--text3);
+			border: 1px solid var(--border); text-transform: uppercase; letter-spacing: .04em;
+		}
+
+		/* ================================================================
+		   ATTACHMENT CARDS
+		   ================================================================ */
+		.attach-card {
+			border: 1px solid var(--border); border-radius: var(--r);
+			margin-top: 8px; overflow: hidden; background: var(--bg3);
+		}
+
+		.attach-header {
+			display: flex; justify-content: space-between; align-items: center;
+			padding: 8px 12px; border-bottom: 1px solid var(--border);
+			font-family: var(--mono); font-size: 10.5px; color: var(--text2);
+			background: var(--bg4); gap: 10px; flex-wrap: wrap;
+		}
+		.attach-header b { color: var(--text); }
+
+		.attach-body { padding: 10px 12px; }
+
+		/* ================================================================
+		   RESEARCHER CARD
+		   ================================================================ */
+		.report_researcher {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 12px;
+		}
+		@media (max-width: 600px) {
+			.report_researcher { grid-template-columns: 1fr; }
+		}
+		.researcher-card {
+			display: flex; align-items: center; gap: 16px;
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r2); padding: 18px 20px;
+		}
+
+		.researcher-avatar {
+			width: 46px; height: 46px; border-radius: 50%;
+			background: conic-gradient(from 180deg, var(--accent), var(--blue), var(--accent));
+			display: flex; align-items: center; justify-content: center;
+			font-family: var(--display); font-weight: 800; font-size: 16px; color: #000;
+			flex-shrink: 0;
+		}
+
+		.researcher-name { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--text); }
+		.researcher-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+		.researcher-links { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+
+		.r-link {
+			font-family: var(--mono); font-size: 10px; color: var(--text3);
+			padding: 3px 8px; border: 1px solid var(--border); border-radius: 5px;
+			transition: all .14s;
+		}
+		.r-link:hover { color: var(--text); border-color: var(--border2); text-decoration: none; }
+
+		/* ================================================================
+		   CHANGELOG TIMELINE
+		   ================================================================ */
+		.changelog-card {
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r2); overflow: hidden;
+		}
+
+		.cl-row {
+			display: flex; align-items: flex-start; gap: 14px;
+			padding: 11px 18px; border-bottom: 1px solid var(--border);
+		}
+		.cl-row:last-child { border-bottom: none; }
+		.cl-date { font-family: var(--mono); font-size: 10px; color: var(--text3); min-width: 78px; padding-top: 2px; }
+		.cl-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+		.cl-dot.muted { background: var(--border2); }
+		.cl-desc { font-size: 12.5px; color: var(--text2); }
+
+		/* ================================================================
+		   SUMMARY
+		   ================================================================ */
+		.summary-content {
+			background: var(--bg2); border: 1px solid var(--border);
+			border-radius: var(--r2); padding: 20px 22px;
+			font-size: 13.5px; color: var(--text2); line-height: 1.75;
+		}
+
+		/* ================================================================
+		   MARKDOWN TABLES
+		   ================================================================ */
+		.tablemd, .tablemd th, .tablemd td, .tableb {
+			border-color: var(--border) !important;
+		}
+		.tablemd { width:100%; border-collapse:collapse; font-size:13px; }
+		.tablemd th, .tablemd td, .tableb { padding:8px 11px; border:1px solid var(--border); color:var(--text); background:var(--bg2); }
+		.tablemd thead th, thead.tablemd tr th { background:var(--bg3); font-weight:600; font-size:11.5px; }
+		.titlepad { padding-left:10px; }
+		.table-responsive { overflow-x:auto; }
+
+		/* ================================================================
+		   CODE OVERRIDES (hljs + pre)
+		   ================================================================ */
+		pre code, pre {
+			background: var(--bg3) !important;
+			border: 1px solid var(--border) !important;
+			border-radius: var(--r) !important;
+			padding: 12px 14px !important;
+			font-family: var(--mono) !important;
+			font-size: 12px !important;
+			white-space: pre-wrap;
+			word-wrap: break-word;
+			display: block;
+			color: var(--text2) !important;
+		}
+		pre code.hljs, code.hljs { display:block; padding:1em; }
+		.hljs { background: var(--bg3) !important; color: var(--text2) !important; }
+
+		/* ================================================================
+		   POC SNIPPET
+		   ================================================================ */
+		.poc-snippet {
+			border: 1px solid var(--border);
+			border-radius: var(--r2);
+			overflow: hidden;
+			margin: 8px 0 4px;
+			font-family: var(--mono);
+			font-size: 12px;
+		}
+		.poc-snippet-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 6px 12px;
+			background: var(--bg4);
+			border-bottom: 1px solid var(--border);
+		}
+		.poc-snippet-lang {
+			font-size: 10px;
+			color: var(--text3);
+			text-transform: uppercase;
+			letter-spacing: .1em;
+			font-family: var(--mono);
+		}
+		.poc-snippet-copy {
+			background: none;
+			border: 1px solid var(--border2);
+			color: var(--text3);
+			font-size: 10px;
+			padding: 2px 10px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-family: var(--mono);
+			letter-spacing: .04em;
+			transition: border-color .15s, color .15s;
+		}
+		.poc-snippet-copy:hover { border-color: var(--accent); color: var(--accent); }
+		.poc-snippet-copy.copied { border-color: var(--accent); color: var(--accent); }
+		.poc-snippet-body { background: var(--bg3); overflow-x: auto; }
+		.poc-pre-wrapper { display: flex; }
+		.poc-line-numbers {
+			padding: 13px 10px 13px 14px;
+			color: var(--text3);
+			text-align: right;
+			user-select: none;
+			border-right: 1px solid var(--border);
+			line-height: 1.6;
+			font-size: 11px;
+			white-space: pre;
+			flex-shrink: 0;
+		}
+		.poc-snippet-body pre {
+			margin: 0 !important;
+			flex: 1;
+			background: transparent !important;
+			border: none !important;
+			border-radius: 0 !important;
+			padding: 12px 14px !important;
+			overflow: visible;
+			line-height: 1.6;
+		}
+		.poc-snippet-body pre code {
+			background: transparent !important;
+			border: none !important;
+			border-radius: 0 !important;
+			padding: 0 !important;
+			font-size: 12px !important;
+			line-height: 1.6;
+			white-space: pre;
+		}
+
+		/* ================================================================
+		   MISC
+		   ================================================================ */
+		.strbreak { word-break: break-word; }
+		.pagebreak { page-break-before: always; }
+
+		.badge { display:inline-block; font-size:10.5px; font-weight:600; padding:2px 7px; border-radius:4px; }
+		.bg-secondary, .badge.bg-secondary {
+			background: var(--bg4) !important; color: var(--text2) !important;
+			border: 1px solid var(--border) !important; font-family: var(--mono);
+		}
+		.bg-danger  { background: rgba(255,45,85,.15) !important; color: var(--red) !important; border: 1px solid rgba(255,45,85,.3) !important; }
+		.bg-primary { background: rgba(74,158,255,.12) !important; color: var(--blue) !important; border: 1px solid rgba(74,158,255,.25) !important; }
+
+		/* ================================================================
+		   BACK TO TOP
+		   ================================================================ */
+		#btn-back-to-top {
+			position: fixed; bottom: 22px; right: 22px;
+			display: none;
+			width: 38px; height: 38px;
+			border-radius: 9px;
+			background: var(--accent); color: #000;
+			border: none; cursor: pointer;
+			font-size: 15px; font-weight: 700;
+			box-shadow: 0 4px 14px rgba(0,232,122,.3);
+			align-items: center; justify-content: center;
+			transition: transform .15s; z-index: 300;
+		}
+		#btn-back-to-top:hover { transform: translateY(-2px); }
+		#btn-back-to-top[style*="flex"] { display: flex !important; }
+
+		/* ================================================================
+		   FOOTER
+		   ================================================================ */
+		.report-footer {
+			text-align: center; padding: 22px 0 6px;
+			font-family: var(--mono); font-size: 9.5px; color: var(--text3);
+			border-top: 1px solid var(--border); margin-top: 6px;
+		}
+		.report-footer a { color: var(--accent); }
+
+		/* ================================================================
+		   MODAL OVERRIDES
+		   ================================================================ */
+		.modal-content {
+			background: var(--bg2) !important; border: 1px solid var(--border2) !important;
+			border-radius: var(--r2) !important; color: var(--text) !important;
+		}
+		.modal-header, .modal-footer { border-color: var(--border) !important; }
+		.modal-title { color: var(--text) !important; font-family: var(--display) !important; }
+		.form-control {
+			background: var(--bg3) !important; border-color: var(--border) !important;
+			color: var(--text) !important; border-radius: var(--r) !important;
+			font-family: var(--mono) !important; font-size: 13px !important;
+		}
+		.form-control:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 2px rgba(0,232,122,.15) !important; }
+		.col-form-label { color: var(--text2) !important; font-family: var(--mono) !important; font-size: 11px !important; }
+
+		/* ================================================================
+		   RESPONSIVE
+		   ================================================================ */
+		@media (max-width: 900px) {
+			.app-shell { grid-template-columns: 1fr; }
+			.sidebar { position: static; }
+			.chart-area { flex-direction: column; }
+		}
+
+		@media (max-width: 600px) {
+			.stats-strip { flex-wrap: wrap; }
+			.stat-cell { min-width: calc(33% - 1px); }
+			.app-shell { padding: 16px 14px 60px; }
+			.cover-page { padding: 48px 20px 70px; }
+			.ib-grid { grid-template-columns: 1fr; }
+		}
+
+		@media print {
+			.topbar, .sidebar, #btn-back-to-top, .filter-bar { display: none !important; }
+			.app-shell { grid-template-columns: 1fr; padding: 0; }
+			.issue-body.hidden { display: block !important; }
+			body { background: white; color: black; }
+		}
+	</style>
+
+	<style>
+	/*[CSS_Injection_here]*/
+	</style>
+</head>
+
+<body id="vr-body">
+
+<!-- ============================================================
+     REPORT WRAPPER (hidden until decrypted/loaded)
+     ============================================================ -->
+<div id="reportdetal" style="display:none">
+
+	<!-- COVER PAGE -->
+	<section class="cover-page" id="cover">
+		<div class="cover-bg-grid"></div>
+		<div class="cover-glow"></div>
+
+		<span class="cover-corner tl">VULNREPO // IT-SEC-REPORT</span>
+		<span class="cover-corner tr">CONFIDENTIAL<br>DO NOT DISTRIBUTE</span>
+		<span class="cover-corner bl report_id" style="color:var(--text3);font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;"></span>
+		<span class="cover-corner br report_version" style="color:var(--text3);font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-align:right;"></span>
+
+		<!-- Logo -->
+		<div class="cover-logo-zone logo"></div>
+
+		<!-- Confidential badge -->
+		<div class="cover-badge">
+			<div class="pulse-dot"></div>
+			CONFIDENTIAL DOCUMENT
+		</div>
+
+		<!-- Title -->
+		<h1 class="cover-title">
+			<span class="report_name"></span>
+		</h1>
+
+		<!-- Sub: date range -->
+		<p class="cover-sub report_date_range"></p>
+
+		<!-- Meta chips -->
+		<div class="cover-meta-row">
+			<div class="meta-chip cover-id-chip"><span class="meta-chip-lbl">ID&nbsp;</span><span class="cover-id-val"></span></div>
+			<div class="meta-chip cover-ver-chip"><span class="meta-chip-lbl">Version&nbsp;</span><span class="cover-ver-val"></span></div>
+			<div class="meta-chip cover-date-chip"><span class="meta-chip-lbl">Period&nbsp;</span><span class="cover-date-val"></span></div>
+		</div>
+
+		<!-- Severity strip -->
+		<div class="cover-sev-strip">
+			<div class="sev-cell">
+				<div class="sev-num critical_count" style="color:var(--red)">0</div>
+				<div class="sev-lbl" style="color:var(--red)">Critical</div>
+			</div>
+			<div class="sev-cell">
+				<div class="sev-num high_count" style="color:var(--orange)">0</div>
+				<div class="sev-lbl" style="color:var(--orange)">High</div>
+			</div>
+			<div class="sev-cell">
+				<div class="sev-num medium_count" style="color:var(--yellow)">0</div>
+				<div class="sev-lbl" style="color:var(--yellow)">Medium</div>
+			</div>
+			<div class="sev-cell">
+				<div class="sev-num low_count" style="color:var(--green)">0</div>
+				<div class="sev-lbl" style="color:var(--green)">Low</div>
+			</div>
+			<div class="sev-cell">
+				<div class="sev-num info_count" style="color:var(--blue)">0</div>
+				<div class="sev-lbl" style="color:var(--blue)">Info</div>
+			</div>
+		</div>
+
+		<!-- Scroll hint -->
+		<div class="cover-scroll-hint">
+			<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 7l5 5 5-5"/></svg>
+			SCROLL TO REPORT
+		</div>
+	</section>
+
+	<!-- TOPBAR -->
+	<div class="topbar">
+		<span class="topbar-left">// VULNREPO &middot; <span class="topbar-accent report_name"></span></span>
+		<div class="topbar-right">
+			<button class="tbtn"        id="vr-btn-dark"  onclick="vrSetTheme('dark')">Dark</button>
+			<button class="tbtn active" id="vr-btn-light" onclick="vrSetTheme('light')">Light</button>
+		</div>
+	</div>
+
+	<!-- APP SHELL -->
+	<div class="app-shell">
+
+		<!-- SIDEBAR -->
+		<aside class="sidebar">
+			<div class="sb-header">
+				<div class="sb-tag">Security Audit</div>
+				<div class="sb-name report_name"></div>
+				<div class="sb-id report_id"></div>
+			</div>
+
+			<nav class="sb-nav">
+				<div class="sb-nav-lbl">Sections</div>
+				<a class="sb-nav-item active" href="#sec-scope">
+					<div class="sb-dot" style="background:var(--text3)"></div>Scope
+				</a>
+				<a class="sb-nav-item" href="#sec-stats">
+					<div class="sb-dot" style="background:var(--text3)"></div>Statistics
+				</a>
+				<a class="sb-nav-item" href="#sec-issues">
+					<div class="sb-dot" style="background:var(--blue)"></div>Issues
+					<span class="sb-count issues_count">0</span>
+				</a>
+				<a class="sb-nav-item list_summary" href="#sec-summary" style="display:none">
+					<div class="sb-dot" style="background:var(--text3)"></div>Summary
+				</a>
+				<a class="sb-nav-item list_researcher" href="#sec-researcher" style="display:none">
+					<div class="sb-dot" style="background:var(--text3)"></div>Researcher
+				</a>
+				<a class="sb-nav-item list_changelog" href="#sec-changelog" style="display:none">
+					<div class="sb-dot" style="background:var(--text3)"></div>Changelog
+				</a>
+			</nav>
+
+			<!-- Severity bars -->
+			<div class="sb-sev">
+				<div class="sb-sev-row">
+					<span class="sb-sev-lbl" style="color:var(--red)">CRIT</span>
+					<div class="sb-sev-track"><div class="sb-sev-fill" id="sbf-crit" style="width:0%;background:var(--red)"></div></div>
+					<span class="sb-sev-n critical_count">0</span>
+				</div>
+				<div class="sb-sev-row">
+					<span class="sb-sev-lbl" style="color:var(--orange)">HIGH</span>
+					<div class="sb-sev-track"><div class="sb-sev-fill" id="sbf-high" style="width:0%;background:var(--orange)"></div></div>
+					<span class="sb-sev-n high_count">0</span>
+				</div>
+				<div class="sb-sev-row">
+					<span class="sb-sev-lbl" style="color:var(--yellow)">MED</span>
+					<div class="sb-sev-track"><div class="sb-sev-fill" id="sbf-med" style="width:0%;background:var(--yellow)"></div></div>
+					<span class="sb-sev-n medium_count">0</span>
+				</div>
+				<div class="sb-sev-row">
+					<span class="sb-sev-lbl" style="color:var(--green)">LOW</span>
+					<div class="sb-sev-track"><div class="sb-sev-fill" id="sbf-low" style="width:0%;background:var(--green)"></div></div>
+					<span class="sb-sev-n low_count">0</span>
+				</div>
+				<div class="sb-sev-row">
+					<span class="sb-sev-lbl" style="color:var(--blue)">INFO</span>
+					<div class="sb-sev-track"><div class="sb-sev-fill" id="sbf-info" style="width:0%;background:var(--blue)"></div></div>
+					<span class="sb-sev-n info_count">0</span>
+				</div>
+			</div>
+		</aside>
+
+		<!-- MAIN CONTENT -->
+		<main class="main-content">
+
+			<!-- TABLE OF CONTENTS (injected by JS) -->
+			<section id="sec-toc" class="pagebreak">
+				<div class="sec-div">
+					<span class="sec-num">01</span>
+					<span class="sec-lbl">Table of Contents</span>
+					<div class="sec-line"></div>
+				</div>
+				<div class="card">
+					<a class="toc-entry" href="#sec-scope">
+						<span class="sev-pill" style="background:var(--bg4);color:var(--text2);border:1px solid var(--border2);">SCOPE</span>
+						<div><div class="toc-entry-title">Scope</div><div class="toc-entry-sub">Report scope and targets.</div></div>
+					</a>
+					<a class="toc-entry" href="#sec-stats">
+						<span class="sev-pill" style="background:var(--bg4);color:var(--text2);border:1px solid var(--border2);">STATS</span>
+						<div><div class="toc-entry-title">Statistics &amp; Risk</div><div class="toc-entry-sub">Severity breakdown and risk matrix.</div></div>
+					</a>
+					<a class="toc-entry" href="#sec-issues">
+						<span class="sev-pill" style="background:rgba(74,158,255,.1);color:var(--blue);border:1px solid rgba(74,158,255,.25);">ISSUES</span>
+						<div><div class="toc-entry-title">Issues</div><div class="toc-entry-sub">All found vulnerabilities.</div></div>
+						<span class="toc-entry-date issues_count"></span>
+					</a>
+					<!-- dynamic issue entries -->
+					<div class="table_of_contents"></div>
+					<!-- conditional sections -->
+					<div class="list_summary" style="display:none">
+						<a class="toc-entry" href="#sec-summary">
+							<span class="sev-pill" style="background:var(--bg4);color:var(--text2);border:1px solid var(--border2);">SUMMARY</span>
+							<div><div class="toc-entry-title">Report Summary</div><div class="toc-entry-sub">Researcher's comments.</div></div>
+						</a>
+					</div>
+					<div class="list_researcher" style="display:none">
+						<a class="toc-entry" href="#sec-researcher">
+							<span class="sev-pill" style="background:var(--bg4);color:var(--text2);border:1px solid var(--border2);">AUTHOR</span>
+							<div><div class="toc-entry-title">Researcher</div><div class="toc-entry-sub">Information about report author.</div></div>
+						</a>
+					</div>
+					<div class="list_changelog" style="display:none">
+						<a class="toc-entry" href="#sec-changelog">
+							<span class="sev-pill" style="background:var(--bg4);color:var(--text2);border:1px solid var(--border2);">CHANGES</span>
+							<div><div class="toc-entry-title">Changelog</div><div class="toc-entry-sub">Report revision history.</div></div>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<!-- SCOPE -->
+			<section id="sec-scope">
+				<div class="sec-div">
+					<span class="sec-num">02</span>
+					<span class="sec-lbl">Scope</span>
+					<div class="sec-line"></div>
+				</div>
+				<div class="scope-content report_scope"></div>
+				<div class="report_html" style="margin-top:12px;"></div>
+			</section>
+
+			<!-- STATISTICS & RISK -->
+			<section id="sec-stats">
+				<div class="sec-div">
+					<span class="sec-num">03</span>
+					<span class="sec-lbl">Statistics &amp; Risk</span>
+					<div class="sec-line"></div>
+				</div>
+
+				<div class="stats-strip">
+					<div class="stat-cell s-crit">
+						<div class="stat-n critical_count">0</div>
+						<div class="stat-l">Critical</div>
+					</div>
+					<div class="stat-cell s-high">
+						<div class="stat-n high_count">0</div>
+						<div class="stat-l">High</div>
+					</div>
+					<div class="stat-cell s-med">
+						<div class="stat-n medium_count">0</div>
+						<div class="stat-l">Medium</div>
+					</div>
+					<div class="stat-cell s-low">
+						<div class="stat-n low_count">0</div>
+						<div class="stat-l">Low</div>
+					</div>
+					<div class="stat-cell s-info">
+						<div class="stat-n info_count">0</div>
+						<div class="stat-l">Info</div>
+					</div>
+				</div>
+
+				<div class="chart-area">
+					<div class="chart-box"><canvas id="issueChart"></canvas></div>
+					<p style="font-size:12.5px;color:var(--text2);line-height:1.7;margin:0;">
+						Risk is rated using a custom-tailored version of the
+						<a href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology" target="_blank">OWASP Risk Rating Methodology</a>.
+						Severity is determined by estimated technical &amp; business impact combined with the likelihood of exploitation.
+						<br><br>
+						<strong style="color:var(--text)">Risk = Likelihood &times; Impact</strong>
+					</p>
+				</div>
+
+				<div class="card">
+					<div class="risk-body">
+						<div class="risk-note">Risk matrix &middot; <a href="https://owasp.org/www-community/OWASP_Risk_Rating_Methodology" target="_blank">OWASP Risk Rating Methodology &rarr;</a></div>
+						<div class="matrix-wrap">
+							<div class="m-lbl">High</div>
+							<div class="m-cell m-med">Medium</div>
+							<div class="m-cell m-high">High</div>
+							<div class="m-cell m-crit">Critical</div>
+
+							<div class="m-lbl">Medium</div>
+							<div class="m-cell m-low">Low</div>
+							<div class="m-cell m-med">Medium</div>
+							<div class="m-cell m-high">High</div>
+
+							<div class="m-lbl">Low</div>
+							<div class="m-cell m-info">Info</div>
+							<div class="m-cell m-low">Low</div>
+							<div class="m-cell m-med">Medium</div>
+
+							<div class="m-lbl" style="color:transparent">_</div>
+							<div class="m-cell m-axis">Low</div>
+							<div class="m-cell m-axis">Medium</div>
+							<div class="m-cell m-axis">High</div>
+						</div>
+						<div class="matrix-foot">&larr; Likelihood &rarr;</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ISSUES -->
+			<section id="sec-issues">
+				<div class="sec-div">
+					<span class="sec-num">04</span>
+					<span class="sec-lbl report_vulns_h2"></span>
+					<div class="sec-line"></div>
+				</div>
+
+				<div class="filter-bar">
+					<span class="filter-icon">&#9906;</span>
+					<input class="filter-input" id="vr-filter-input" placeholder="Filter by title, tag&#8230;" oninput="vrApplyFilter()">
+					<div class="filter-pills">
+						<button class="fpill on"      id="fp-all"  onclick="vrSetFpill('all',this)">All</button>
+						<button class="fpill fp-crit" id="fp-crit" onclick="vrSetFpill('Critical',this)">Crit</button>
+						<button class="fpill fp-high" id="fp-high" onclick="vrSetFpill('High',this)">High</button>
+						<button class="fpill fp-med"  id="fp-med"  onclick="vrSetFpill('Medium',this)">Med</button>
+						<button class="fpill fp-low"  id="fp-low"  onclick="vrSetFpill('Low',this)">Low</button>
+						<button class="fpill fp-info" id="fp-info" onclick="vrSetFpill('Info',this)">Info</button>
+					</div>
+				</div>
+
+				<div class="report_vulns bg-d"></div>
+			</section>
+
+			<!-- SUMMARY (conditional) -->
+			<section id="sec-summary" style="display:none">
+				<div class="sec-div">
+					<span class="sec-num">05</span>
+					<span class="sec-lbl">Report Summary</span>
+					<div class="sec-line"></div>
+				</div>
+				<div class="summary-content report_summary"></div>
+			</section>
+
+			<!-- RESEARCHER (conditional) -->
+			<section id="sec-researcher" style="display:none">
+				<div class="sec-div">
+					<span class="sec-num">06</span>
+					<span class="sec-lbl">Researcher</span>
+					<div class="sec-line"></div>
+				</div>
+				<div class="report_researcher"></div>
+			</section>
+
+			<!-- CHANGELOG (conditional) -->
+			<section id="sec-changelog" style="display:none">
+				<div class="sec-div">
+					<span class="sec-num">07</span>
+					<span class="sec-lbl">Changelog</span>
+					<div class="sec-line"></div>
+				</div>
+				<div class="report_changelog"></div>
+			</section>
+
+			<button type="button" id="btn-back-to-top" aria-label="Back to top">&#8593;</button>
+
+			<footer class="report-footer list_copyright" style="display:none">
+				&copy; Generated by <a href="https://vulnrepo.com/" target="_blank">vulnrepo.com</a>
+				&middot; This document is strictly confidential.
+			</footer>
+
+		</main>
+	</div><!-- /.app-shell -->
+
+</div><!-- /#reportdetal -->
+
+
+<!-- PASSWORD MODAL -->
+<div class="modal fade" id="passprompt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+	role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" style="display:flex;align-items:center;gap:8px;" id="exampleModalLongTitle">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+					Report is encrypted
+				</h5>
+			</div>
+			<div class="modal-body">
+				<label for="inputPassword" class="col-form-label">Security key</label>
+				<input type="password" class="form-control" id="inputPassword" style="width:100%;margin-top:6px;"><br>
+				<div class="wrongpass" style="display:none;"><span class="badge bg-danger">Wrong security key</span></div>
+			</div>
+			<div class="modal-footer">
+				<button class="tbtn" style="border-color:var(--border3);">Decrypt</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- ============================================================
+     GLOBAL UI FUNCTIONS (theme, filter, issue toggle)
+     ============================================================ -->
+<script>
+	/* THEME */
+	(function () {
+		var saved = localStorage.getItem('vr-theme') || 'light';
+		if (saved !== 'dark') document.getElementById('vr-body').classList.add('light-mode');
+	})();
+
+	function vrSetTheme(t) {
+		var body = document.getElementById('vr-body');
+		var btnD = document.getElementById('vr-btn-dark');
+		var btnL = document.getElementById('vr-btn-light');
+		if (t === 'light') {
+			body.classList.add('light-mode');
+			btnL.classList.add('active');
+			btnD.classList.remove('active');
+		} else {
+			body.classList.remove('light-mode');
+			btnD.classList.add('active');
+			btnL.classList.remove('active');
+		}
+		localStorage.setItem('vr-theme', t);
+		if (window._vrChart) window._vrChart.update();
+	}
+
+	/* ISSUE COLLAPSE TOGGLE */
+	function toggleIssue(header) {
+		var body = header.nextElementSibling;
+		var icon = header.querySelector('.toggle-icon');
+		var isOpen = !body.classList.contains('hidden');
+		if (isOpen) {
+			body.classList.add('hidden');
+			icon.classList.remove('open');
+			header.classList.add('collapsed');
+		} else {
+			body.classList.remove('hidden');
+			icon.classList.add('open');
+			header.classList.remove('collapsed');
+		}
+	}
+
+	/* ISSUE FILTER */
+	var _vrActiveSev = 'all';
+
+	function vrSetFpill(sev, btn) {
+		_vrActiveSev = sev;
+		document.querySelectorAll('.fpill').forEach(function(b) { b.classList.remove('on'); });
+		btn.classList.add('on');
+		vrApplyFilter();
+	}
+
+	function vrApplyFilter() {
+		var q = (document.getElementById('vr-filter-input').value || '').toLowerCase().trim();
+		document.querySelectorAll('.report_vulns .issue-card').forEach(function(card) {
+			var sevOk = _vrActiveSev === 'all' || card.dataset.sev === _vrActiveSev;
+			var qOk   = !q || (card.dataset.title || '').includes(q);
+			card.style.display = (sevOk && qOk) ? '' : 'none';
+		});
+	}
+
+	/* POC SNIPPET — copy & line numbers */
+	window._vrPocData = {};
+
+	function copyPoc(idx) {
+		var text = window._vrPocData[idx] || '';
+		var btn = document.querySelector('.poc-snippet[data-idx="' + idx + '"] .poc-snippet-copy');
+		function onCopied() {
+			if (btn) { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000); }
+		}
+		if (navigator.clipboard) {
+			navigator.clipboard.writeText(text).then(onCopied).catch(function() {
+				var ta = document.createElement('textarea');
+				ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+				document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+				document.body.removeChild(ta); onCopied();
+			});
+		} else {
+			var ta = document.createElement('textarea');
+			ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+			document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+			document.body.removeChild(ta); onCopied();
+		}
+	}
+
+	function initPocLineNumbers() {
+		document.querySelectorAll('.poc-snippet pre').forEach(function(pre) {
+			var code = pre.querySelector('code');
+			if (!code) return;
+			var text = code.textContent;
+			if (text.endsWith('\n')) text = text.slice(0, -1);
+			var count = text.split('\n').length;
+			var nums = Array.from({length: count}, function(_, i) { return i + 1; }).join('\n');
+			var wrapper = document.createElement('div');
+			wrapper.className = 'poc-pre-wrapper';
+			pre.parentNode.insertBefore(wrapper, pre);
+			var lnDiv = document.createElement('div');
+			lnDiv.className = 'poc-line-numbers';
+			lnDiv.textContent = nums;
+			wrapper.appendChild(lnDiv);
+			wrapper.appendChild(pre);
+		});
+	}
+
+	/* SIDEBAR SCROLL SPY */
+	document.addEventListener('DOMContentLoaded', function() {
+		var sections = document.querySelectorAll('section[id]');
+		var navLinks = document.querySelectorAll('.sb-nav-item');
+		if (!sections.length) return;
+		var skipObserver = false;
+
+		// set active immediately on click so anchor jumps feel instant
+		navLinks.forEach(function(link) {
+			link.addEventListener('click', function() {
+				navLinks.forEach(function(n) { n.classList.remove('active'); });
+				link.classList.add('active');
+				skipObserver = true;
+				setTimeout(function() { skipObserver = false; }, 1000);
+			});
+		});
+
+		var visible = new Set();
+		var obs = new IntersectionObserver(function(entries) {
+			entries.forEach(function(e) {
+				if (e.isIntersecting) { visible.add(e.target); } else { visible.delete(e.target); }
+			});
+			if (skipObserver) return;
+			// activate the topmost visible section
+			var top = null;
+			visible.forEach(function(s) {
+				if (!top || s.compareDocumentPosition(top) & Node.DOCUMENT_POSITION_FOLLOWING) top = s;
+			});
+			if (top) {
+				navLinks.forEach(function(n) { n.classList.remove('active'); });
+				var match = document.querySelector('.sb-nav-item[href="#' + top.id + '"]');
+				if (match) match.classList.add('active');
+			}
+		}, { rootMargin: '-25% 0px -65% 0px' });
+		sections.forEach(function(s) { obs.observe(s); });
+	});
+</script>
+
+<!-- ============================================================
+     REPORT ENGINE
+     ============================================================ -->
+<script>
+	$(document).ready(function () {
+		$('#reportdetal').hide();
+		$('.wrongpass').hide();
+		$('.list_changelog').hide();
+		$('.list_summary').hide();
+		$('.list_researcher').hide();
+		$('.list_copyright').hide();
+
+		var saved = localStorage.getItem('vr-theme') || 'light';
+		if (saved !== 'dark') {
+			$('#vr-btn-light').addClass('active');
+			$('#vr-btn-dark').removeClass('active');
+		}
+
+		let locale = navigator.language || 'en-GB';
+
+		const base64_data = {'HERE':'REPLACE'};
+		const decodedData = atob(base64_data);
+
+		try {
+			var obj = JSON.parse(decodeURIComponent(decodedData));
+		} catch(e) {
+			console.log(e);
+			obj = base64_data;
+		}
+
+		if (typeof obj.report_encrypted_t == 'undefined') {
+			const modal = new Promise(function (resolve, reject) {
+				const localkey = sessionStorage.getItem('VULNREPO-PASS');
+				if (localkey) {
+					var xx = decodeAES(obj, localkey);
+					if (xx) { resolve(xx); }
+				} else {
+					$('#passprompt').modal('show');
+					$('#passprompt').on('keypress', function (event) {
+						var keycode = (event.keyCode ? event.keyCode : event.which);
+						if (keycode == '13') { $('#passprompt .tbtn').click(); }
+					});
+					$('#passprompt .tbtn').click(function () {
+						var xx = decodeAES(obj, $('#inputPassword').val());
+						if (xx) { resolve(xx); } else { $('.wrongpass').show(); }
+					});
+				}
+			}).then(function(dec_data) {
+				if (dec_data) {
+					genreport(dec_data);
+					const localkey = sessionStorage.getItem('VULNREPO-PASS');
+					if (!localkey) { sessionStorage.setItem('VULNREPO-PASS', $('#inputPassword').val()); }
+					$('#passprompt').modal('hide');
+					$('#reportdetal').show();
+				}
+			}).catch(function (err) { console.log(err); });
+
+		} else if (obj.report_encrypted_t == true) {
+			genreport(obj);
+			$('#reportdetal').show();
+		}
+
+		/* ---- helpers ---- */
+		function parse_links(text) {
+			const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+			return text.replace(urlRegex, function (url) {
+				const safeUrl = url.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+				return '<a target="_blank" href="' + safeUrl + '">' + safeUrl + '</a>';
+			});
+		}
+
+		function parse_newline(text) {
+			return text.toString()
+				.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')
+				.replace(/(?:\r\n|\r|\n)/g, '<br>');
+		}
+
+		function escapeAttr(val) {
+			return DOMPurify.sanitize(String(val), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).replace(/"/g, '&quot;');
+		}
+
+		function filetype(type, title, data, isembed) {
+			var fil = "";
+			if (type.includes('image')) {
+				fil = '<img style="max-width:100%;" src="' + DOMPurify.sanitize(data) + '" title="' + DOMPurify.sanitize(title) + '">';
+			} else if (type.includes('video')) {
+				if (isembed) {
+					fil = '<video style="max-width:100%;" height="500" controls><source src="' + DOMPurify.sanitize(data) + '" type="' + DOMPurify.sanitize(type) + '">Your browser does not support the video tag.</video><br>Download <a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
+				} else {
+					fil = '<a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
+				}
+			} else if (type === 'text/plain') {
+				const byteString = atob(data.split(',')[1]);
+				fil = '<div class="code-block">' + DOMPurify.sanitize(byteString) + '</div>';
+			} else {
+				fil = '<a href="' + DOMPurify.sanitize(data) + '" download="' + DOMPurify.sanitize(title) + '"><i>' + DOMPurify.sanitize(title) + '</i></a>';
+			}
+			return fil;
+		}
+
+		function decodeAES(data, pass) {
+			try {
+				const bytes = CryptoJS.AES.decrypt(data, pass);
+				const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+				if (decryptedData) { return decryptedData; }
+			} catch (except) { console.log('wrong pass'); }
+		}
+
+		function getStatusClass(status) {
+			if (status === 1) return 's-open';
+			if (status === 2) return 's-progress';
+			if (status === 3) return 's-fixed';
+			if (status === 4) return 's-wontfix';
+			return '';
+		}
+
+		function getInitials(name) {
+			if (!name) return '?';
+			var parts = name.trim().split(' ');
+			if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+			return name.substring(0,2).toUpperCase();
+		}
+
+		/* ---- MAIN REPORT GENERATOR ---- */
+		function genreport(obj) {
+
+			const { Marked } = globalThis.marked;
+			const { markedHighlight } = globalThis.markedHighlight;
+
+			const marked = new Marked(
+				markedHighlight({
+					emptyLangClass: 'hljs',
+					langPrefix: 'hljs language-',
+					highlight(code, lang, info) {
+						const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+						return hljs.highlight(code, { language }).value;
+					}
+				})
+			);
+
+			const renderer = new marked.Renderer();
+
+			renderer.code = function (token) {
+				const langClass = token.lang ? 'hljs language-' + token.lang : 'hljs';
+				return '<pre><code class="' + langClass + '">' + token.text + '</code></pre>';
+			};
+
+			renderer.blockquote = function (token) {
+				return '<blockquote><p>' + DOMPurify.sanitize(token.text) + '</p></blockquote>';
+			};
+
+			renderer.image = function (token) {
+				return DOMPurify.sanitize(token.href);
+			};
+
+			renderer.link = function (token) {
+				try {
+					var prot = decodeURIComponent(unescape(token.href)).replace(/[^\w:]/g, '').toLowerCase();
+				} catch (e) { return token.text; }
+				if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+					return token.text;
+				}
+				return '<a target="_blank" class="active-link" rel="nofollow" href="' + DOMPurify.sanitize(token.href) + '" title="' + DOMPurify.sanitize(token.title) + '">' + DOMPurify.sanitize(token.text) + '</a>';
+			};
+
+			renderer.table = function (token) {
+				const header = token.header.map(function(res) { return "<th class='titlepad'>" + DOMPurify.sanitize(res.text) + "</th>"; }).join("");
+				const body = token.rows.map(function(res) {
+					return "<tr>" + res.map(function(res2) { return "<td class='tableb'>" + DOMPurify.sanitize(res2.text) + "</td>"; }).join("") + "</tr>";
+				}).join("");
+				return "<div class='table-responsive'><table class='tablemd'><thead class='tablemd'><tr>" + header + "</tr></thead><tbody>" + body + "</tbody></table></div>";
+			};
+
+			/* meta */
+			$("title").text(obj.report_name);
+			$(".report_name").text(obj.report_name);
+			$(".report_version").text('Version: ' + obj.report_version);
+			$(".report_id").text('ID: ' + obj.report_id);
+
+			$(".cover-id-val").text(obj.report_id);
+			$(".cover-ver-val").text(obj.report_version);
+
+			if (obj.report_metadata.starttest !== "" || obj.report_metadata.endtest !== "") {
+				let strd = new Date(obj.report_metadata.starttest).toLocaleDateString(locale);
+				let endd = new Date(obj.report_metadata.endtest).toLocaleDateString(locale);
+				if (strd === 'Invalid Date') strd = '';
+				if (endd === 'Invalid Date') { endd = ''; } else { endd = ' – ' + endd; }
+				$(".report_date_range").text(strd + endd);
+				$(".cover-date-val").text(strd + endd);
+			}
+
+			/* logo */
+			if (obj.report_settings.report_logo.logo !== "") {
+				if (obj.report_settings.report_logo.width !== "" || obj.report_settings.report_logo.height !== "") {
+					$(".logo").prepend('<img width="' + DOMPurify.sanitize(obj.report_settings.report_logo.width) + '" height="' + DOMPurify.sanitize(obj.report_settings.report_logo.height) + '" src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
+				} else {
+					$(".logo").prepend('<img src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
+				}
+			}
+
+			$(".issues_count").text(obj.report_vulns.length);
+
+			/* issue status helpers */
+			const issueStatus = [
+				{ status: 'Open (Waiting for review)', value: 1 },
+				{ status: 'Fix In Progress',           value: 2 },
+				{ status: 'Fixed',                     value: 3 },
+				{ status: "Won't Fix",                 value: 4 }
+			];
+
+			function statusDesc(status) {
+				const ret = issueStatus.filter(function(el) { return el.value === status; });
+				return ret[0].status;
+			}
+
+			/* TABLE OF CONTENTS — dynamic issue entries */
+			for (let index = 0; index < obj.report_vulns.length; ++index) {
+				const element = obj.report_vulns[index];
+				let elementissuestatus = "";
+				if (obj.report_settings.report_remove_issuestatus !== true) {
+					if (typeof element.status != 'undefined') elementissuestatus = statusDesc(element.status);
+				}
+				const toc_entry = `
+				<a href="#issue-${index}" class="toc-entry">
+					<span class="sev-pill sev-${escapeAttr(element.severity.toLowerCase())}">${DOMPurify.sanitize(element.severity)}</span>
+					<div>
+						<div class="toc-entry-title">${DOMPurify.sanitize(element.title)}</div>
+						<div class="toc-entry-sub">${DOMPurify.sanitize(elementissuestatus)}</div>
+					</div>
+					<span class="toc-entry-date">${DOMPurify.sanitize(new Date(element.date).toLocaleDateString(locale))}</span>
+				</a>`;
+				$(".table_of_contents").append(toc_entry);
+			}
+
+			/* SCOPE */
+			let markedscope = "";
+			if (obj.report_scope) markedscope = marked.parse(obj.report_scope, { renderer: renderer });
+			$(".report_scope").html(DOMPurify.sanitize(markedscope));
+
+			let markedhtml = "";
+			if (obj.report_settings.report_html) markedhtml = marked.parse(obj.report_settings.report_html, { renderer: renderer });
+			$(".report_html").html(DOMPurify.sanitize(markedhtml));
+
+			/* ISSUES */
+			$(".report_vulns_h2").text('Issues (' + obj.report_vulns.length + ')');
+
+			function gettags(tags) {
+				if (!tags || tags.length === 0) return '';
+				return '<div class="tags-row">' + tags.map(function(t) { return '<span class="tag">' + DOMPurify.sanitize(t.name) + '</span>'; }).join('') + '</div>';
+			}
+
+			function getrefs(refs) {
+				if (!refs) return '';
+				return '<p class="ib-section-lbl" style="margin-top:12px;">References</p><div style="font-family:var(--mono);font-size:11px;">' + DOMPurify.sanitize(parse_links(parse_newline(refs))) + '</div>';
+			}
+
+			for (let index = 0; index < obj.report_vulns.length; ++index) {
+				const element = obj.report_vulns[index];
+
+				window._vrPocData[index] = element.poc || '';
+				let elementpoc = "";
+				if (element.poc) {
+					if (obj.report_settings.report_parsing_poc_markdown) {
+						elementpoc = marked.parse(element.poc, { renderer: renderer, html: false, breaks: true });
+					} else {
+						elementpoc = '<pre><code class="hljs">' + element.poc.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code></pre>';
+					}
+				}
+
+				let elementdesc = "";
+				if (obj.report_settings.report_parsing_desc) {
+					elementdesc = parse_newline(element.desc);
+				} else {
+					elementdesc = element.desc;
+				}
+
+				let elementissuestatus = "";
+				let statusClass = "";
+				if (obj.report_settings.report_remove_issuestatus !== true) {
+					if (typeof element.status != 'undefined') {
+						elementissuestatus = statusDesc(element.status);
+						statusClass = getStatusClass(element.status);
+					}
+				}
+
+				const cveBlock = (!obj.report_settings.report_remove_issuecve && element.cve) ?
+					`<div class="ib-block"><div class="ib-lbl">CVE</div><div class="ib-val">${DOMPurify.sanitize(element.cve)}</div></div>` : '';
+
+				const cvssBlock = (!obj.report_settings.report_remove_issuecvss && element.cvss) ?
+					`<div class="ib-block"><div class="ib-lbl">CVSS</div><div class="ib-val">${DOMPurify.sanitize(element.cvss)}</div></div>` : '';
+
+				const statusBlock = elementissuestatus ?
+					`<div class="ib-block"><div class="ib-lbl">Status</div><div class="ib-val">${DOMPurify.sanitize(elementissuestatus)}</div></div>` : '';
+
+				const ibGrid = (cveBlock || cvssBlock || statusBlock) ?
+					`<div class="ib-grid">${cveBlock}${cvssBlock}${statusBlock}</div>` : '';
+
+				var issues = `
+				<div id="issue-${index}" class="issue-card cardissues"
+					data-sev="${escapeAttr(element.severity)}"
+					data-title="${escapeAttr(element.title.toLowerCase())}">
+					<div class="issue-header" onclick="toggleIssue(this)">
+						<span class="sev-pill sev-${escapeAttr(element.severity.toLowerCase())}">${DOMPurify.sanitize(element.severity)}</span>
+						<span class="issue-title">${DOMPurify.sanitize(element.title)}</span>
+						<div class="issue-meta">
+							${elementissuestatus ? `<span class="status-badge ${escapeAttr(statusClass)}">${DOMPurify.sanitize(elementissuestatus)}</span>` : ''}
+							<span class="issue-date">${DOMPurify.sanitize(new Date(element.date).toLocaleDateString(locale))}</span>
+						</div>
+						<svg class="toggle-icon open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+							<path d="M6 4l4 4-4 4"/>
+						</svg>
+					</div>
+					<div class="issue-body">
+						${ibGrid}
+						<p class="ib-section-lbl">Description</p>
+						<div class="ib-text">${DOMPurify.sanitize(elementdesc)}</div>
+						${elementpoc ? `<p class="ib-section-lbl" style="margin-top:12px;">Proof of Concept</p>
+						<div class="poc-snippet" data-idx="${index}">
+							<div class="poc-snippet-header">
+								<span class="poc-snippet-lang">CODE</span>
+								<button class="poc-snippet-copy" onclick="copyPoc(${index})">Copy</button>
+							</div>
+							<div class="poc-snippet-body">${DOMPurify.sanitize(elementpoc)}</div>
+						</div>` : ''}
+						${(!obj.report_settings.report_remove_issuetags) ? gettags(element.tags) : ''}
+						${element.ref ? getrefs(element.ref) : ''}`;
+
+				var files = '';
+				if (element.files.length > 0) {
+					files = '<p class="ib-section-lbl" style="margin-top:14px;">Files</p>';
+					for (let fi = 0; fi < element.files.length; ++fi) {
+						const ele = element.files[fi];
+						files += `
+						<div class="attach-card cardissuesattach">
+							<div class="attach-header">
+								<span><b>${(!obj.report_settings.report_remove_attach_name) ? DOMPurify.sanitize(ele.title) : ''}</b> (${DOMPurify.sanitize(ele.size)} bytes)</span>
+								<small><b>sha256:</b> ${DOMPurify.sanitize(ele.sha256checksum)}</small>
+							</div>
+							<div class="attach-body">${filetype(ele.type, ele.title, ele.data, obj.report_settings.report_video_embed)}</div>
+						</div>`;
+					}
+				}
+
+				var issues2 = `</div></div>`;
+				$(".report_vulns").append(issues + files + issues2);
+			}
+			initPocLineNumbers();
+
+			/* SEVERITY COUNTS */
+			const critical = obj.report_vulns.filter(function(el) { return el.severity === 'Critical'; });
+			const high     = obj.report_vulns.filter(function(el) { return el.severity === 'High'; });
+			const medium   = obj.report_vulns.filter(function(el) { return el.severity === 'Medium'; });
+			const low      = obj.report_vulns.filter(function(el) { return el.severity === 'Low'; });
+			const info     = obj.report_vulns.filter(function(el) { return el.severity === 'Info'; });
+
+			$(".critical_count").text(critical.length);
+			$(".high_count").text(high.length);
+			$(".medium_count").text(medium.length);
+			$(".low_count").text(low.length);
+			$(".info_count").text(info.length);
+
+			/* sidebar severity bars */
+			const total = obj.report_vulns.length || 1;
+			$('#sbf-crit').css('width', Math.round(critical.length / total * 100) + '%');
+			$('#sbf-high').css('width', Math.round(high.length    / total * 100) + '%');
+			$('#sbf-med').css('width',  Math.round(medium.length  / total * 100) + '%');
+			$('#sbf-low').css('width',  Math.round(low.length     / total * 100) + '%');
+			$('#sbf-info').css('width', Math.round(info.length    / total * 100) + '%');
+
+			/* CHART */
+			const ctx = document.getElementById('issueChart');
+			window._vrChart = new Chart(ctx, {
+				type: "pie",
+				data: {
+					labels: ["Critical", "High", "Medium", "Low", "Info"],
+					datasets: [{
+						backgroundColor: ["#ff2d55", "#ff6820", "#f0c000", "#00e87a", "#4a9eff"],
+						data: [critical.length, high.length, medium.length, low.length, info.length]
+					}]
+				},
+				options: {
+					responsive: true,
+					plugins: { legend: { display: false } }
+				}
+			});
+
+			/* SUMMARY */
+			if (obj.report_summary !== "") {
+				const markedreport_summary = marked.parse(obj.report_summary, { renderer: renderer });
+				$(".report_summary").html(DOMPurify.sanitize(markedreport_summary));
+				$('#sec-summary').show();
+				$('.list_summary').show();
+			}
+
+			/* RESEARCHER */
+			var researcher_data = "";
+			for (let index = 0; index < obj.researcher.length; ++index) {
+				const element = obj.researcher[index];
+				const initials = getInitials(element.reportername);
+				researcher_data += `
+				<div class="researcher-card">
+					<div class="researcher-avatar">${initials}</div>
+					<div>
+						<div class="researcher-name">${DOMPurify.sanitize(element.reportername)}</div>
+						<div class="researcher-meta">Security Researcher</div>
+						<div class="researcher-links">
+							${element.reporterwww     ? '<span class="r-link">' + DOMPurify.sanitize(element.reporterwww) + '</span>' : ''}
+							${element.reportersocial  ? '<span class="r-link">' + DOMPurify.sanitize(element.reportersocial) + '</span>' : ''}
+							${element.reporteremail   ? '<span class="r-link">' + DOMPurify.sanitize(element.reporteremail) + '</span>' : ''}
+						</div>
+					</div>
+				</div>`;
+			}
+
+			if (obj.report_settings.report_remove_researchers !== true) {
+				$(".report_researcher").append(researcher_data);
+				$('#sec-researcher').show();
+				$('.list_researcher').show();
+			}
+
+			/* CHANGELOG */
+			var changelog_rows = "";
+			var sorted_changelog = (obj.report_changelog || []).slice().sort(function(a, b) {
+				return new Date(b.date) - new Date(a.date);
+			});
+			for (let index = 0; index < sorted_changelog.length; ++index) {
+				const element = sorted_changelog[index];
+				const xxx = new Date(element.date).toLocaleDateString(locale);
+				const isLatest = (index === 0);
+				changelog_rows += `
+				<div class="cl-row">
+					<span class="cl-date">${DOMPurify.sanitize(xxx)}</span>
+					<div class="cl-dot${isLatest ? '' : ' muted'}"></div>
+					<span class="cl-desc">${DOMPurify.sanitize(element.desc)}</span>
+				</div>`;
+			}
+
+			if (obj.report_settings.report_changelog_page !== true) {
+				$(".report_changelog").append('<div class="changelog-card">' + changelog_rows + '</div>');
+				$('#sec-changelog').show();
+				$('.list_changelog').show();
+			}
+
+			if (!obj.report_settings.report_remove_lastpage) {
+				$('.list_copyright').show();
+			}
+
+			/* BACK TO TOP */
+			var mybutton = document.getElementById("btn-back-to-top");
+			window.onscroll = function () {
+				if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+					mybutton.style.display = "flex";
+				} else {
+					mybutton.style.display = "none";
+				}
+			};
+			mybutton.addEventListener("click", function () {
+				document.body.scrollTop = 0;
+				document.documentElement.scrollTop = 0;
+			});
+		}
+
+	});
+</script>
+
+</body>
+</html>
