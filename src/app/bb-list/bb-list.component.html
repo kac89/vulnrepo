@@ -1,67 +1,80 @@
-<div>
+<div class="bb-container">
 
-    <h1 class="mat-headline-3">
-        <mat-icon class="vertical-align-middle padding-bottom-3 size-45">format_list_bulleted</mat-icon> Bug Bounty List
-        ({{this.dataSource.data.length}})
-    </h1>
+  <div class="page-header">
+    <div class="page-title">
+      <mat-icon class="title-icon">bug_report</mat-icon>
+      <div>
+        <h1>Bug Bounty List</h1>
+        <span class="page-subtitle">Public bug bounty programs · <a class="bb-link" target="_blank" href="https://github.com/projectdiscovery/public-bugbounty-programs">projectdiscovery</a></span>
+      </div>
+    </div>
+  </div>
 
-    <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
+  <div class="search-panel">
 
-
-        <div fxLayout="row wrap" fxLayoutGap="10px grid" class="full-width">
-            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start">
-
-                <mat-form-field color="accent" class="full-width">
-                    <mat-label>Filter</mat-label>
-                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. google" #input>
-                </mat-form-field>
-
-            </div>
-            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end">
-
-                <mat-paginator color="accent" [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page of users"></mat-paginator>
-
-            </div>
+    <div class="search-sticky">
+      <div class="search-controls">
+        <div class="search-input-wrapper">
+          <mat-form-field appearance="outline" class="search-field" color="accent">
+            <mat-label>Search programs or domains</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. google, cloudamqp.com..." #input>
+          </mat-form-field>
         </div>
+      </div>
 
+      <div class="results-bar">
+        <span class="results-count">
+          <span class="count-badge">{{this.dataSource.data.length}}</span> programs
+        </span>
+        <mat-paginator class="compact-paginator" color="accent" [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page"></mat-paginator>
+      </div>
+    </div>
 
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" class="bb-table">
 
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="bb-th">Program</th>
+          <td mat-cell *matCellDef="let element" class="bb-td bb-td-name">
+            <a class="bb-program-link active-link" target="_blank" href="{{element.url}}">
+              <span class="bb-program-avatar">{{element.name?.charAt(0)?.toUpperCase()}}</span>
+              <span class="bb-program-name">{{element.name}}</span>
+              <mat-icon class="bb-external-icon">open_in_new</mat-icon>
+            </a>
+          </td>
+        </ng-container>
 
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let element"> <a class="active-link" target="_blank"
-                        href="{{element.url}}">{{element.name}}</a> </td>
-            </ng-container>
+        <ng-container matColumnDef="bounty">
+          <th mat-header-cell *matHeaderCellDef class="bb-th">Rewards</th>
+          <td mat-cell *matCellDef="let element" class="bb-td bb-td-bounty">
+            <span class="reward-badge reward-money" *ngIf="element.bounty">
+              <mat-icon>attach_money</mat-icon> Bounty
+            </span>
+            <span class="reward-badge reward-swag" *ngIf="element.swag">
+              <mat-icon>redeem</mat-icon> Swag
+            </span>
+          </td>
+        </ng-container>
 
-            <ng-container matColumnDef="bounty">
-                <th mat-header-cell *matHeaderCellDef> Bounty? </th>
-                <td mat-cell *matCellDef="let element"> <span [hidden]="!element.bounty"><mat-icon
-                            title="Money bounty">attach_money</mat-icon></span> <span [hidden]="!element.swag"><mat-icon
-                            title="SWAG">redeem</mat-icon></span> </td>
-            </ng-container>
+        <ng-container matColumnDef="domains">
+          <th mat-header-cell *matHeaderCellDef class="bb-th">Domains</th>
+          <td mat-cell *matCellDef="let element" class="bb-td bb-td-domains">
+            <span class="domain-chip" *ngFor="let d of element.domains">{{d}}</span>
+          </td>
+        </ng-container>
 
-            <ng-container matColumnDef="domains">
-                <th mat-header-cell *matHeaderCellDef> Domains </th>
-                <td mat-cell *matCellDef="let element"> {{element.domains}} </td>
-            </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bb-row"></tr>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" colspan="3">No programs matching "{{input.value}}"</td>
+        </tr>
 
-            <!-- Row shown when there is no matching data. -->
-            <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-            </tr>
-        </table>
+      </table>
+    </div>
 
-        <p>List provided and maintain by <a class="active-link" target="_blank"
-                href="https://github.com/projectdiscovery/public-bugbounty-programs">projectdiscovery</a>.</p>
+  </div>
 
-
-
-    </mat-card>
-    <br>
-    <br>
-    <br>
+  <br><br>
 </div>
