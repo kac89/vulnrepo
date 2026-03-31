@@ -1,0 +1,250 @@
+// ── Shell ─────────────────────────────────────────────────────────────────────
+.tbhm-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// ── Sticky wrapper ────────────────────────────────────────────────────────────
+.tbhm-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #1a1a1a;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.tbhm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #242424;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.tbhm-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tbhm-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #424242;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tbhm-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tbhm-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
+}
+
+.tbhm-subtitle {
+  font-size: 11px;
+  color: #757575;
+}
+
+.header-link {
+  color: #9e9e9e;
+  text-decoration: none;
+  &:hover { color: #e0e0e0; text-decoration: underline; }
+}
+
+.tbhm-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.progress-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f5f5f5;
+  background: #424242;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 99px;
+  padding: 3px 12px;
+  letter-spacing: 0.02em;
+}
+
+.progress-sep {
+  color: #616161;
+  font-weight: 400;
+  margin: 0 2px;
+}
+
+.reset-btn {
+  color: #616161 !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  &:hover { color: #ef5350 !important; }
+}
+
+// ── Progress track ────────────────────────────────────────────────────────────
+.tbhm-progress-track {
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.tbhm-progress-fill {
+  height: 100%;
+  background: #616161;
+  transition: width 0.3s ease;
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+.tbhm-body {
+  flex: 1;
+  padding: 20px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+// ── Section cards ─────────────────────────────────────────────────────────────
+.section-card {
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: #2a2a2a;
+}
+
+.section-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: #616161;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e0;
+  letter-spacing: 0.01em;
+  flex: 1;
+}
+
+.section-count {
+  font-size: 11px;
+  color: #616161;
+  background: rgba(255,255,255,0.05);
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+
+// ── Subsection label ──────────────────────────────────────────────────────────
+.subsection-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #616161;
+  padding: 10px 16px 4px;
+}
+
+// ── Check list ────────────────────────────────────────────────────────────────
+.check-list {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0 10px;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.12s;
+  font-size: 13px;
+  color: #bdbdbd;
+  line-height: 1.5;
+
+  &:hover {
+    background: rgba(255,255,255,0.04);
+    color: #f5f5f5;
+  }
+
+  span { flex: 1; }
+}
+
+// ── Checkbox override (dark theme) ────────────────────────────────────────────
+::ng-deep {
+  .tbhm-shell {
+    .mdc-checkbox__background {
+      border-color: #555 !important;
+      border-radius: 4px !important;
+    }
+
+    .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background {
+      background-color: #616161 !important;
+      border-color: #616161 !important;
+    }
+
+    .mdc-checkbox__ripple { display: none; }
+
+    .mat-mdc-checkbox label {
+      cursor: pointer;
+      color: inherit;
+    }
+  }
+}

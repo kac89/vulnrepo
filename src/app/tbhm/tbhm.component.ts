@@ -97,13 +97,8 @@ export class TbhmComponent implements OnInit {
 
     this.allreqstored = JSON.parse(localStorage.getItem("tbhm") || '{}');
 
-    if(this.allreqstored === undefined || this.allreqstored === null){
-      this.allreq = this._formBuilder.group(this.groupdef);
-      
-    } else {
-      this.allreq = this._formBuilder.group(this.allreqstored);
-      this.selecteditems = Object.keys(this.allreq.value).filter(key => this.allreq.value[key]);
-    }
+    this.allreq = this._formBuilder.group({ ...this.groupdef, ...this.allreqstored });
+    this.selecteditems = Object.keys(this.allreq.value).filter(key => this.allreq.value[key]);
 
     this.allreq.valueChanges.subscribe(value => {
       //console.log(value);
