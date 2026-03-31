@@ -1,16 +1,311 @@
-  
-  .example-full-width {
-    width: 100%;
+// ── Page shell ────────────────────────────────────────────────────────────────
+.nr-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+}
+
+// ── Hero header (matches faq-hero pattern) ────────────────────────────────────
+.nr-hero {
+  padding: 48px 0 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 36px;
+}
+
+.nr-hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nr-hero-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #555555;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: #69f0ae;
+  }
+}
+
+.nr-hero-title {
+  margin: 0 0 4px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.nr-hero-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 1rem;
+}
+
+@media (max-width: 599px) {
+  .nr-hero {
+    padding: 28px 0 24px;
   }
 
+  .nr-hero-icon {
+    width: 42px;
+    height: 42px;
 
-  .label {
-    color: white;
-    padding: 8px;
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
   }
 
-.success {background-color: #4CAF50;} /* Green */
-.info {background-color: #2196F3;} /* Blue */
-.warning {background-color: #ff9800;} /* Orange */
-.danger {background-color: #FF0039;} /* Red */
-.other {background-color: #e7e7e7; color: black;} /* Gray */
+  .nr-hero-title {
+    font-size: 1.4rem;
+  }
+
+  .nr-hero-subtitle {
+    font-size: 0.875rem;
+  }
+}
+
+// ── Two-column grid ────────────────────────────────────────────────────────────
+.nr-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 680px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Form card (left) ──────────────────────────────────────────────────────────
+.nr-card {
+  background: #424242;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 28px 24px 20px;
+  overflow: hidden;
+}
+
+.nr-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 12px;
+
+  &--mt {
+    margin-top: 24px;
+  }
+}
+
+.nr-field {
+  width: 100%;
+}
+
+.nr-field-prefix {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 18px;
+  margin-right: 4px;
+}
+
+.nr-suffix-icon {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: #69f0ae;
+  }
+}
+
+.nr-option-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.3);
+
+  &--remote {
+    color: #69f0ae;
+  }
+}
+
+// ── Right side column ─────────────────────────────────────────────────────────
+.nr-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Strength card ─────────────────────────────────────────────────────────────
+.nr-strength-card {
+  background: #424242;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.nr-strength-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.nr-strength-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.nr-strength-value {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &--tooshort,
+  &--common {
+    background: rgba(255, 0, 57, 0.14);
+    color: #ff4d6d;
+    border: 1px solid rgba(255, 0, 57, 0.28);
+  }
+
+  &--weak {
+    background: rgba(249, 238, 6, 0.1);
+    color: #f5d020;
+    border: 1px solid rgba(249, 238, 6, 0.22);
+  }
+
+  &--itsok {
+    background: rgba(39, 128, 227, 0.12);
+    color: #60a5fa;
+    border: 1px solid rgba(39, 128, 227, 0.25);
+  }
+
+  &--strong {
+    background: rgba(105, 240, 174, 0.1);
+    color: #69f0ae;
+    border: 1px solid rgba(105, 240, 174, 0.22);
+  }
+}
+
+.nr-progress {
+  border-radius: 4px;
+  height: 6px;
+}
+
+// ── Notice box ────────────────────────────────────────────────────────────────
+.nr-notice {
+  display: flex;
+  gap: 12px;
+  background: #424242;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 3px solid #69f0ae;
+  border-radius: 8px;
+  padding: 16px;
+
+  &__icon {
+    flex-shrink: 0;
+    mat-icon {
+      color: #69f0ae;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__body {
+    flex: 1;
+  }
+
+  &__title {
+    margin: 0 0 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.6;
+  }
+
+  &__inline-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #69f0ae;
+  }
+}
+
+// ── Action bar ────────────────────────────────────────────────────────────────
+.nr-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.nr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 10px !important;
+  padding: 0 20px !important;
+  height: 40px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &--primary {
+    background: #69f0ae !important;
+    color: #000 !important;
+
+    mat-icon { color: #000; }
+
+    &:hover {
+      background: #a5f3c8 !important;
+    }
+  }
+
+  &--cancel {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      color: #fff !important;
+    }
+  }
+}
