@@ -1,202 +1,336 @@
-<h1 class="mat-headline-3">
-    <mat-icon class="vertical-align-middle padding-bottom-3 size-45">live_help</mat-icon> FAQ
-  </h1>
-  
+<div class="faq-page">
 
-  <mat-card appearance="outlined" id="Browser-support">
-    <mat-card-header>
-      <div mat-card-avatar>
-        <a class="active-link" href="/faq?q=Browser-support"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+  <!-- Hero Header -->
+  <div class="faq-hero">
+    <div class="faq-hero-inner">
+      <div class="faq-hero-icon">
+        <mat-icon>live_help</mat-icon>
       </div>
-      <mat-card-title>Browser support</mat-card-title>
-      <mat-card-subtitle>Project is working on latest browsers (<b><i>Not in private browsing mode!</i></b>):</mat-card-subtitle>
-    </mat-card-header>
-
-    <mat-card-content>
-      <mat-list>
-        <mat-list-item><mat-icon color="accent">check</mat-icon> Google Chrome </mat-list-item>
-        <mat-list-item><mat-icon color="accent">check</mat-icon> Mozilla Firefox </mat-list-item>
-        <mat-list-item><mat-icon color="accent">check</mat-icon> Microsoft Edge (chromium) </mat-list-item>
-        <mat-list-item><mat-icon color="accent">check</mat-icon> iOS Safari/Chrome </mat-list-item>
-        <mat-list-item><mat-icon color="accent">check</mat-icon> Android Chrome </mat-list-item>
-       </mat-list>
-    </mat-card-content>
-  </mat-card>
-<br>
-
-<mat-card appearance="outlined" id="How-are-reports-stored">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=How-are-reports-stored"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
+      <div>
+        <h1 class="faq-title">Frequently Asked Questions</h1>
+        <p class="faq-subtitle">Everything you need to know about VULNREPO</p>
+      </div>
     </div>
-    <mat-card-title>How are reports stored?</mat-card-title>
-    <mat-card-subtitle>All data are stored in browser (by default on local machine, nothing is send outside) using indexeddb and SessionStorage.</mat-card-subtitle>
-    <mat-card-subtitle>There is option to use external database/server to store encrypted reports, check on: <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a>, <a class="active-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>.</mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<br>
+  </div>
 
-<mat-card appearance="outlined" id="How-to-create-PDF-report">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=How-to-create-PDF-report"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>How to create PDF report?</mat-card-title>
-    <mat-card-subtitle>1. (simple, fast option) Download HTML report, open and use 'print to pdf' feature in your browser (ctrl+p), check: <a class="active-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>, (<a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Google Chrome</a> / <a target="_blank" class="active-link" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">Mozilla Firefox</a>)</mat-card-subtitle>
-    <mat-card-subtitle>2. (advanced option) Download report in JSON and use generator to LaTeX! <a class="active-link" target="_blank"  href="https://github.com/kac89/vulnrepo-json-to-latex-pdf">vulnrepo-json-to-latex-pdf</a>. You can build your template in LaTeX and fill it with data from the report json file, this gives you a lot of room for customisation.</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-actions>
-    
-  </mat-card-actions>
-</mat-card>
-<br>
+  <!-- Two-column layout -->
+  <div class="faq-layout">
 
-<mat-card appearance="outlined" id="I-forgot-my-security-key">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=I-forgot-my-security-key"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>How to restore my encrypted report if I forgot my security key?</mat-card-title>
-    <mat-card-subtitle>Use bruteforce method or better remember the security key, otherwise there is no other option to decrypt data.</mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<br>
+    <!-- Sticky sidebar TOC -->
+    <aside class="faq-sidebar">
+      <div class="faq-toc">
+        <p class="faq-toc-heading">On this page</p>
+        <nav>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Browser-support'}">Browser support</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'How-are-reports-stored'}">How are reports stored?</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'How-to-create-PDF-report'}">Create PDF report</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'I-forgot-my-security-key'}">Forgot security key</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Can-I-change-report-security-key'}">Change security key</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Displaying-attachments'}">Displaying attachments</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'VULN-VULNR'}">.VULN vs .VULNR</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'What-is-the-issue-status'}">Issue status</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'API'}">External storage</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'API-VAULT'}">API VAULT</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Report-Profiles'}">Report Profiles</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Search-CVE'}">CVE Search (NVD)</a>
+          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Private-LLM'}">Private LLM</a>
+        </nav>
+      </div>
+    </aside>
 
-<mat-card appearance="outlined" id="Can-I-change-report-security-key">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=Can-I-change-report-security-key"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>Can I change report security key?</mat-card-title>
-    <mat-card-subtitle>Yes If you able to decrypt report where security key you want to change.</mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<br>
+    <!-- Main content -->
+    <main class="faq-content">
 
-<mat-card appearance="outlined" id="Displaying-attachments">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=Displaying-attachments"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>How does displaying attachments in the HTML report works?</mat-card-title>
-    <mat-card-subtitle>It's simple, all images are always displayed and *.txt files. All other file types will be displayed as a link.</mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<br>
+      <section class="faq-item" id="Browser-support">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">devices</mat-icon>
+            <h2 class="faq-item-title">Browser support</h2>
+            <a class="faq-anchor-link" href="/faq?q=Browser-support" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Project is working on latest browsers (<strong>not in private browsing mode!</strong>):</p>
+        </div>
+        <div class="faq-item-body">
+          <ul class="faq-check-list">
+            <li><mat-icon color="accent">check_circle</mat-icon> Google Chrome</li>
+            <li><mat-icon color="accent">check_circle</mat-icon> Mozilla Firefox</li>
+            <li><mat-icon color="accent">check_circle</mat-icon> Microsoft Edge (Chromium)</li>
+            <li><mat-icon color="accent">check_circle</mat-icon> iOS Safari / Chrome</li>
+            <li><mat-icon color="accent">check_circle</mat-icon> Android Chrome</li>
+          </ul>
+        </div>
+      </section>
 
-<mat-card appearance="outlined" id="VULN-VULNR">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=VULN-VULNR"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>What is the difference between the file with the (.VULN) & (.VULNR) extension?</mat-card-title>
-    <mat-card-subtitle>Files:</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item>(.VULN) - File contains only issues</mat-list-item>
-      <mat-list-item>(.VULNR) - File contains full report details e.g.: issues, metadata, author etc...</mat-list-item>
-     </mat-list>
-  </mat-card-content>
-</mat-card>
-<br>
+      <div class="faq-divider"></div>
 
-<mat-card appearance="outlined" id="What-is-the-issue-status">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=What-is-the-issue-status"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>What is the issue status?</mat-card-title>
-    <mat-card-subtitle>Issue status is information for the researcher and information in the report about issue current status of review/fixing/if issue still exist.</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item><mat-icon style="color:red" title="Issue status: Open (Waiting for review)" class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon> - Open (Waiting for review)</mat-list-item>
-      <mat-list-item><mat-icon style="color:yellow" title="Issue status: Fix In Progress" class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon> - Fix In Progress</mat-list-item>
-      <mat-list-item><mat-icon style="color:green" title="Issue status: Fixed" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Fixed</mat-list-item>
-      <mat-list-item><mat-icon style="color:grey" title="Issue status: Won't Fix" class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon> - Won't Fix</mat-list-item>
-     </mat-list>
-  </mat-card-content>
-</mat-card>
-  
-<br>
-<mat-card appearance="outlined" id="API">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=API"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>Can I use external storage for encrypted reports?</mat-card-title>
-    <mat-card-subtitle>YES, You can use Local or External server. Here is <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a> and example server for personal use on localhost: (<a class="active-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>)</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item>
-        <mat-icon>open_in_browser</mat-icon> <a class="active-link" target="_blank" href="https://github.com/kac89/vulnrepo-server">vulnrepo-server</a>
-      </mat-list-item>
-     </mat-list>
-  </mat-card-content>
-</mat-card>
-<br>
+      <section class="faq-item" id="How-are-reports-stored">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">storage</mat-icon>
+            <h2 class="faq-item-title">How are reports stored?</h2>
+            <a class="faq-anchor-link" href="/faq?q=How-are-reports-stored" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">All data are stored in browser (by default on local machine, nothing is sent outside) using IndexedDB and SessionStorage.</p>
+          <p class="faq-item-desc">There is an option to use an external database/server to store encrypted reports — see:
+            <a class="faq-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a>,
+            <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>.
+          </p>
+        </div>
+      </section>
 
-<mat-card appearance="outlined" id="API-VAULT">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=API-VAULT"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>What is the API VAULT?</mat-card-title>
-    <mat-card-subtitle>API VAULT is encrypted (AES) configuration for your API. You have only one VAULT which contains your all APIs configuration.</mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<br>
+      <div class="faq-divider"></div>
 
-<mat-card appearance="outlined" id="Report-Profiles">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=Report-Profiles"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>Can I create settings for exist/new report and save it?</mat-card-title>
-    <mat-card-subtitle>Use in Settings: "Report Profiles". <a class="active-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a></mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<br>
+      <section class="faq-item" id="How-to-create-PDF-report">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">picture_as_pdf</mat-icon>
+            <h2 class="faq-item-title">How to create a PDF report?</h2>
+            <a class="faq-anchor-link" href="/faq?q=How-to-create-PDF-report" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+        </div>
+        <div class="faq-item-body">
+          <div class="faq-option-card">
+            <span class="faq-option-badge">Option 1 — Simple</span>
+            <p>Download the HTML report, open it, and use the browser's <strong>Print to PDF</strong> feature (<kbd>Ctrl+P</kbd>).
+              See: <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a> &bull;
+              <a class="faq-link" target="_blank" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Chrome guide</a> &bull;
+              <a class="faq-link" target="_blank" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">Firefox guide</a>
+            </p>
+          </div>
+          <div class="faq-option-card">
+            <span class="faq-option-badge">Option 2 — Advanced</span>
+            <p>Download the report as JSON and use the LaTeX generator:
+              <a class="faq-link" target="_blank" href="https://github.com/kac89/vulnrepo-json-to-latex-pdf">vulnrepo-json-to-latex-pdf</a>.
+              Build a custom LaTeX template and fill it with report data for full customisation.
+            </p>
+          </div>
+        </div>
+      </section>
 
+      <div class="faq-divider"></div>
 
-<mat-card appearance="outlined" id="Search-CVE">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=Search-CVE"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>What it is CVE Search (NVD)?</mat-card-title>
-    <mat-card-subtitle>CVE search allows you to search the NVD online database using the API. <a class="active-link" target="_blank" href="https://nvd.nist.gov/vuln">NVD</a> </mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<br>
+      <section class="faq-item" id="I-forgot-my-security-key">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">lock</mat-icon>
+            <h2 class="faq-item-title">How to restore an encrypted report if I forgot my security key?</h2>
+            <a class="faq-anchor-link" href="/faq?q=I-forgot-my-security-key" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Use a bruteforce method — or, ideally, remember the security key. There is no other way to decrypt the data.</p>
+        </div>
+      </section>
 
-<mat-card appearance="outlined" id="Private-LLM">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <a class="active-link" href="/faq?q=Private-LLM"><mat-icon class="vertical-align-middle padding-bottom-3 size-45">link</mat-icon></a>
-    </div>
-    <mat-card-title>How add private LLM?</mat-card-title>
-    <mat-card-subtitle>Integrate with Ollama!</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item>
-        1. To add an LLM, install ollama.com
-      </mat-list-item>
-      <mat-list-item>
-        2. Download and run model: $ ollama run llama3.2:latest<br>
-        -  Models <a class="active-link" target="_blank" href="https://ollama.com/search">list</a>.
-      </mat-list-item>
-      <mat-list-item>
-        3. Allow additional web origins to access <a class="active-link" target="_blank" href="https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama">Ollama</a>. If you use vulnrepo.com add OLLAMA_ORIGINS=https://vulnrepo.com or localserver.
-      </mat-list-item>
-      
-     </mat-list>
-  </mat-card-content>
-</mat-card>
-<br>
+      <div class="faq-divider"></div>
 
+      <section class="faq-item" id="Can-I-change-report-security-key">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">key</mat-icon>
+            <h2 class="faq-item-title">Can I change the report security key?</h2>
+            <a class="faq-anchor-link" href="/faq?q=Can-I-change-report-security-key" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Yes — as long as you are able to decrypt the report with the current security key first.</p>
+        </div>
+      </section>
 
-<br><br>
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="Displaying-attachments">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">attach_file</mat-icon>
+            <h2 class="faq-item-title">How does displaying attachments in the HTML report work?</h2>
+            <a class="faq-anchor-link" href="/faq?q=Displaying-attachments" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Images and <code class="faq-code">.txt</code> files are always displayed inline. All other file types are rendered as a download link.</p>
+        </div>
+      </section>
+
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="VULN-VULNR">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">description</mat-icon>
+            <h2 class="faq-item-title">What is the difference between <code class="faq-code">.VULN</code> and <code class="faq-code">.VULNR</code>?</h2>
+            <a class="faq-anchor-link" href="/faq?q=VULN-VULNR" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+        </div>
+        <div class="faq-item-body">
+          <div class="faq-ext-table">
+            <div class="faq-ext-row">
+              <span class="faq-ext-badge">.VULN</span>
+              <span>Contains <strong>issues only</strong></span>
+            </div>
+            <div class="faq-ext-row">
+              <span class="faq-ext-badge">.VULNR</span>
+              <span>Contains the <strong>full report</strong> — issues, metadata, author info, etc.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="What-is-the-issue-status">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">flag</mat-icon>
+            <h2 class="faq-item-title">What is the issue status?</h2>
+            <a class="faq-anchor-link" href="/faq?q=What-is-the-issue-status" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Issue status reflects the current state of review, fixing, or existence of an issue — visible to both researcher and in the final report.</p>
+        </div>
+        <div class="faq-item-body">
+          <ul class="faq-status-list">
+            <li>
+              <mat-icon style="color:red">report</mat-icon>
+              <div><strong>Open</strong> <span class="faq-status-label">Waiting for review</span></div>
+            </li>
+            <li>
+              <mat-icon style="color:yellow">warning</mat-icon>
+              <div><strong>Fix In Progress</strong></div>
+            </li>
+            <li>
+              <mat-icon style="color:#4caf50">check_circle</mat-icon>
+              <div><strong>Fixed</strong></div>
+            </li>
+            <li>
+              <mat-icon style="color:grey">check_circle</mat-icon>
+              <div><strong>Won't Fix</strong></div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="API">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">cloud</mat-icon>
+            <h2 class="faq-item-title">Can I use external storage for encrypted reports?</h2>
+            <a class="faq-anchor-link" href="/faq?q=API" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Yes — local or external server is supported. See the
+            <a class="faq-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a>
+            and
+            <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>.
+          </p>
+        </div>
+        <div class="faq-item-body">
+          <a class="faq-resource-link" target="_blank" href="https://github.com/kac89/vulnrepo-server">
+            <mat-icon>open_in_browser</mat-icon>
+            <span>vulnrepo-server</span>
+            <mat-icon class="faq-resource-arrow">arrow_outward</mat-icon>
+          </a>
+        </div>
+      </section>
+
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="API-VAULT">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">security</mat-icon>
+            <h2 class="faq-item-title">What is the API VAULT?</h2>
+            <a class="faq-anchor-link" href="/faq?q=API-VAULT" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">API VAULT is an AES-encrypted configuration store for your APIs. You have a single VAULT that holds all your API configurations.</p>
+        </div>
+      </section>
+
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="Report-Profiles">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">tune</mat-icon>
+            <h2 class="faq-item-title">Can I save settings for existing/new reports?</h2>
+            <a class="faq-anchor-link" href="/faq?q=Report-Profiles" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Use <strong>Report Profiles</strong> in Settings to create and save reusable report configurations.
+            <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>
+          </p>
+        </div>
+      </section>
+
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="Search-CVE">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">manage_search</mat-icon>
+            <h2 class="faq-item-title">What is CVE Search (NVD)?</h2>
+            <a class="faq-anchor-link" href="/faq?q=Search-CVE" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">CVE Search queries the <a class="faq-link" target="_blank" href="https://nvd.nist.gov/vuln">NVD online database</a> via its public API, letting you pull CVE details directly into your reports.</p>
+        </div>
+      </section>
+
+      <div class="faq-divider"></div>
+
+      <section class="faq-item" id="Private-LLM">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">smart_toy</mat-icon>
+            <h2 class="faq-item-title">How to add a private LLM?</h2>
+            <a class="faq-anchor-link" href="/faq?q=Private-LLM" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">Integrate with <a class="faq-link" target="_blank" href="https://ollama.com">Ollama</a> to run a local model.</p>
+        </div>
+        <div class="faq-item-body">
+          <ol class="faq-steps">
+            <li>
+              <span class="faq-step-num">1</span>
+              <div>Install <a class="faq-link" target="_blank" href="https://ollama.com">ollama.com</a></div>
+            </li>
+            <li>
+              <span class="faq-step-num">2</span>
+              <div>
+                Download and run a model:<br>
+                <code class="faq-codeblock">$ ollama run llama3.2:latest</code><br>
+                Browse available <a class="faq-link" target="_blank" href="https://ollama.com/search">models</a>.
+              </div>
+            </li>
+            <li>
+              <span class="faq-step-num">3</span>
+              <div>
+                Allow additional web origins to access <a class="faq-link" target="_blank" href="https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama">Ollama</a>.
+                If using vulnrepo.com, set: <code class="faq-code">OLLAMA_ORIGINS=https://vulnrepo.com</code>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+</div>

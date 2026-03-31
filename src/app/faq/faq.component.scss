@@ -1,0 +1,441 @@
+// ──────────────────────────────────────────────
+// FAQ Page — modern Next.js-inspired layout
+// ──────────────────────────────────────────────
+
+$border-color: rgba(255, 255, 255, 0.08);
+$surface: #111;
+$surface-hover: #181818;
+$text-secondary: rgba(255, 255, 255, 0.55);
+$accent-green: #69f0ae; // Material green A200
+
+// Page wrapper
+.faq-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+// ── Hero ────────────────────────────────────────
+.faq-hero {
+  padding: 48px 0 40px;
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 0;
+}
+
+.faq-hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.faq-hero-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  background: $surface;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: $accent-green;
+  }
+}
+
+.faq-title {
+  margin: 0 0 4px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.faq-subtitle {
+  margin: 0;
+  color: $text-secondary;
+  font-size: 1rem;
+}
+
+// ── Two-column layout ───────────────────────────
+.faq-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  padding-top: 40px;
+}
+
+// ── Sidebar TOC ─────────────────────────────────
+.faq-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 80px;
+}
+
+.faq-toc {
+  padding: 16px 0;
+}
+
+.faq-toc-heading {
+  margin: 0 0 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-secondary;
+}
+
+.faq-toc-link {
+  display: block;
+  padding: 5px 0 5px 12px;
+  font-size: 0.82rem;
+  color: $text-secondary;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  line-height: 1.5;
+
+  &:hover {
+    color: #fff;
+    border-left-color: $accent-green;
+  }
+}
+
+// ── Main content ────────────────────────────────
+.faq-content {
+  flex: 1;
+  min-width: 0;
+}
+
+// ── FAQ item ────────────────────────────────────
+.faq-item {
+  padding: 32px 0;
+  scroll-margin-top: 100px;
+}
+
+.faq-divider {
+  height: 1px;
+  background: $border-color;
+}
+
+.faq-item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  &:hover .faq-anchor-link {
+    opacity: 1;
+  }
+}
+
+.faq-item-icon {
+  color: $accent-green;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.faq-item-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.faq-anchor-link {
+  opacity: 0;
+  transition: opacity 0.15s;
+  color: $text-secondary;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    color: $accent-green;
+  }
+}
+
+.faq-item-desc {
+  margin: 6px 0 0;
+  color: $text-secondary;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.faq-item-body {
+  margin-top: 16px;
+}
+
+// ── Links ────────────────────────────────────────
+.faq-link {
+  color: $accent-green;
+  text-decoration: none;
+  border-bottom: 1px solid rgba($accent-green, 0.3);
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-bottom-color: $accent-green;
+  }
+}
+
+// ── Check list ──────────────────────────────────
+.faq-check-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+// ── Status list ─────────────────────────────────
+.faq-status-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.faq-status-label {
+  margin-left: 4px;
+  color: $text-secondary;
+  font-size: 0.8rem;
+}
+
+// ── Option cards (PDF) ──────────────────────────
+.faq-option-card {
+  padding: 16px 18px;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  background: $surface;
+  margin-bottom: 10px;
+  transition: background 0.15s;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background: $surface-hover;
+  }
+
+  p {
+    margin: 8px 0 0;
+    font-size: 0.875rem;
+    color: $text-secondary;
+    line-height: 1.6;
+  }
+}
+
+.faq-option-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $accent-green;
+  padding: 2px 8px;
+  border: 1px solid rgba($accent-green, 0.3);
+  border-radius: 4px;
+}
+
+// ── Extension table ─────────────────────────────
+.faq-ext-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-ext-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  background: $surface;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  transition: background 0.15s;
+
+  &:hover {
+    background: $surface-hover;
+  }
+}
+
+.faq-ext-badge {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $accent-green;
+  background: rgba($accent-green, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+// ── Resource link ────────────────────────────────
+.faq-resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  background: $surface;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.875rem;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $accent-green;
+  }
+
+  &:hover {
+    background: $surface-hover;
+    border-color: rgba($accent-green, 0.3);
+    color: #fff;
+  }
+}
+
+.faq-resource-arrow {
+  margin-left: 2px;
+  color: $text-secondary !important;
+  transition: color 0.15s;
+
+  .faq-resource-link:hover & {
+    color: $accent-green !important;
+  }
+}
+
+// ── Steps list ───────────────────────────────────
+.faq-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.65;
+  }
+}
+
+.faq-step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba($accent-green, 0.4);
+  color: $accent-green;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+// ── Inline code & code blocks ────────────────────
+.faq-code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.82em;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.faq-codeblock {
+  display: inline-block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid $border-color;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin: 6px 0;
+  color: $accent-green;
+}
+
+// ── Section highlight (on ?q= navigation) ───────
+.faq-item--highlighted {
+  border-radius: 10px;
+  animation: faq-highlight-fade 2.5s ease forwards;
+}
+
+@keyframes faq-highlight-fade {
+  0%   { background: rgba($accent-green, 0.10); box-shadow: 0 0 0 1px rgba($accent-green, 0.35); }
+  60%  { background: rgba($accent-green, 0.08); box-shadow: 0 0 0 1px rgba($accent-green, 0.25); }
+  100% { background: transparent; box-shadow: none; }
+}
+
+// ── Responsive ──────────────────────────────────
+@media (max-width: 768px) {
+  .faq-sidebar {
+    display: none;
+  }
+
+  .faq-layout {
+    gap: 0;
+  }
+
+  .faq-title {
+    font-size: 1.5rem;
+  }
+}
