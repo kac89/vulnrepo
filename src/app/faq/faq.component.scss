@@ -2,9 +2,11 @@
 // FAQ Page — modern Next.js-inspired layout
 // ──────────────────────────────────────────────
 
-$border-color: rgba(255, 255, 255, 0.08);
-$surface: #111;
-$surface-hover: #181818;
+$border-color: rgba(255, 255, 255, 0.12);
+$surface: #424242;
+$surface-hover: #4e4e4e;
+$surface-nested: #555555;
+$surface-nested-hover: #5e5e5e;
 $text-secondary: rgba(255, 255, 255, 0.55);
 $accent-green: #69f0ae; // Material green A200
 
@@ -36,7 +38,7 @@ $accent-green: #69f0ae; // Material green A200
   height: 52px;
   border-radius: 12px;
   border: 1px solid $border-color;
-  background: $surface;
+  background: $surface-nested;
   flex-shrink: 0;
 
   mat-icon {
@@ -114,13 +116,16 @@ $accent-green: #69f0ae; // Material green A200
 
 // ── FAQ item ────────────────────────────────────
 .faq-item {
-  padding: 32px 0;
+  padding: 28px 28px;
   scroll-margin-top: 100px;
+  background: $surface;
+  border-radius: 10px;
+  border: 1px solid $border-color;
 }
 
 .faq-divider {
-  height: 1px;
-  background: $border-color;
+  height: 12px;
+  background: transparent;
 }
 
 .faq-item-title-row {
@@ -252,7 +257,7 @@ $accent-green: #69f0ae; // Material green A200
   padding: 16px 18px;
   border: 1px solid $border-color;
   border-radius: 8px;
-  background: $surface;
+  background: $surface-nested;
   margin-bottom: 10px;
   transition: background 0.15s;
 
@@ -261,7 +266,7 @@ $accent-green: #69f0ae; // Material green A200
   }
 
   &:hover {
-    background: $surface-hover;
+    background: $surface-nested-hover;
   }
 
   p {
@@ -298,13 +303,13 @@ $accent-green: #69f0ae; // Material green A200
   padding: 12px 16px;
   border: 1px solid $border-color;
   border-radius: 8px;
-  background: $surface;
+  background: $surface-nested;
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.8);
   transition: background 0.15s;
 
   &:hover {
-    background: $surface-hover;
+    background: $surface-nested-hover;
   }
 }
 
@@ -327,7 +332,7 @@ $accent-green: #69f0ae; // Material green A200
   padding: 10px 16px;
   border: 1px solid $border-color;
   border-radius: 8px;
-  background: $surface;
+  background: $surface-nested;
   text-decoration: none;
   color: rgba(255, 255, 255, 0.85);
   font-size: 0.875rem;
@@ -341,7 +346,7 @@ $accent-green: #69f0ae; // Material green A200
   }
 
   &:hover {
-    background: $surface-hover;
+    background: $surface-nested-hover;
     border-color: rgba($accent-green, 0.3);
     color: #fff;
   }
@@ -420,22 +425,72 @@ $accent-green: #69f0ae; // Material green A200
 }
 
 @keyframes faq-highlight-fade {
-  0%   { background: rgba($accent-green, 0.10); box-shadow: 0 0 0 1px rgba($accent-green, 0.35); }
-  60%  { background: rgba($accent-green, 0.08); box-shadow: 0 0 0 1px rgba($accent-green, 0.25); }
-  100% { background: transparent; box-shadow: none; }
+  0%   { background: rgba($accent-green, 0.28); box-shadow: 0 0 0 1px rgba($accent-green, 0.45); }
+  100% { background: $surface; box-shadow: none; }
 }
 
 // ── Responsive ──────────────────────────────────
 @media (max-width: 768px) {
+  .faq-page {
+    padding: 0 16px 60px;
+  }
+
+  .faq-hero {
+    padding: 28px 0 24px;
+  }
+
+  .faq-hero-icon {
+    width: 42px;
+    height: 42px;
+
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  .faq-title {
+    font-size: 1.4rem;
+  }
+
+  .faq-subtitle {
+    font-size: 0.875rem;
+  }
+
   .faq-sidebar {
     display: none;
   }
 
   .faq-layout {
     gap: 0;
+    padding-top: 24px;
   }
 
-  .faq-title {
-    font-size: 1.5rem;
+  .faq-item {
+    padding: 24px 0;
+  }
+
+  .faq-item-title {
+    font-size: 1rem;
+  }
+
+  .faq-option-card {
+    padding: 14px;
+  }
+
+  .faq-ext-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .faq-resource-link {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .faq-codeblock {
+    word-break: break-all;
+    white-space: normal;
   }
 }
