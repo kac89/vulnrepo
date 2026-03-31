@@ -368,6 +368,13 @@ export class DialogOllamaComponent implements OnInit {
 
   }
 
+  onEnterKey(event: KeyboardEvent) {
+    if (!event.shiftKey) {
+      event.preventDefault();
+      this.sendmsg();
+    }
+  }
+
   prepAIcopy(html:any) {
     return this.utilsService.removeHTMLTags(html);
   }
