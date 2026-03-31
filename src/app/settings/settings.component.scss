@@ -1,71 +1,402 @@
-* {
-    box-sizing: border-box;
-  }
-  
-  .example-full-width {
-    width: 100%;
-  }
-  
-  /* Create two equal columns that floats next to each other */
-  .column {
-    float: left;
-    width: 49%;
-    padding: 10px;
-    margin: 4px;
+// Settings page — colours matching cve-search.component
 
+$card-bg:         #424242;
+$card-bg-sticky:  rgba(66, 66, 66, 0.92);
+$border:          rgba(255, 255, 255, 0.08);
+$border-inner:    rgba(255, 255, 255, 0.07);
+$accent:          #69f0ae;
+$accent-hover:    #a5f3c8;
+$accent-tint:     rgba(105, 240, 174, 0.12);
+$accent-border:   rgba(105, 240, 174, 0.2);
+$accent-hover-row: rgba(105, 240, 174, 0.025);
+$danger-tint:     rgba(183, 28, 28, 0.15);
+$danger-border:   rgba(183, 28, 28, 0.3);
+$text-primary:    #fff;
+$text-sub:        rgba(255, 255, 255, 0.38);
+$text-muted:      rgba(255, 255, 255, 0.28);
+$text-body:       rgba(255, 255, 255, 0.72);
+$icon-bg:         rgba(255, 255, 255, 0.05);
+
+* { box-sizing: border-box; }
+
+// ─── Page shell ────────────────────────────────────────────────────────────────
+
+.settings-page {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid $border-inner;
+}
+
+.page-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-header-icon {
+  font-size: 2rem;
+  height: 2rem;
+  width: 2rem;
+  color: $accent;
+  flex-shrink: 0;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: $text-primary;
+  line-height: 1.2;
+}
+
+.page-description {
+  display: block;
+  margin: 3px 0 0;
+  font-size: 0.8rem;
+  color: $text-sub;
+}
+
+// ─── Two-column grid ────────────────────────────────────────────────────────────
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
   }
-  
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
+}
+
+.settings-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ─── Section card ───────────────────────────────────────────────────────────────
+
+.settings-section {
+  border: 1px solid $border;
+  border-radius: 12px;
+  background: $card-bg;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.14);
   }
-  
-  /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-  @media screen and (max-width: 600px) {
-    .column {
-      width: 100%;
+
+  &--danger {
+    border-color: $danger-border;
+
+    &:hover { border-color: rgba(183, 28, 28, 0.5); }
+  }
+}
+
+// ─── Section header ─────────────────────────────────────────────────────────────
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid $border-inner;
+  position: relative;
+}
+
+.section-header-icon-wrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: $icon-bg;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &--danger { background: $danger-tint; border-color: $danger-border; }
+  &--ai     { background: rgba(105, 240, 174, 0.08); border-color: $accent-border; }
+  &--vault  { background: rgba(105, 240, 174, 0.06); border-color: rgba(105, 240, 174, 0.15); }
+}
+
+.section-icon {
+  font-size: 17px;
+  height: 17px;
+  width: 17px;
+  color: $text-sub;
+
+  .section-header-icon-wrap--ai &,
+  .section-header-icon-wrap--vault & { color: $accent; }
+}
+
+.section-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: $text-primary;
+  line-height: 1.3;
+}
+
+.section-subtitle {
+  font-size: 0.78rem;
+  color: $text-sub;
+  line-height: 1.4;
+}
+
+.section-menu-btn {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  flex-shrink: 0;
+  color: $text-sub;
+
+  &:hover { color: $text-primary; }
+}
+
+// ─── Section body ───────────────────────────────────────────────────────────────
+
+.section-body {
+  padding: 16px 20px 20px;
+}
+
+.section-note {
+  font-size: 0.8rem;
+  color: $text-body;
+  margin: 0 0 14px;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  border-left: 2px solid rgba(255, 255, 255, 0.12);
+  line-height: 1.5;
+}
+
+// ─── Danger confirm ─────────────────────────────────────────────────────────────
+
+.danger-confirm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 12px;
+  background: rgba(183, 28, 28, 0.04);
+  border-radius: 6px;
+  border: 1px solid $danger-border;
+}
+
+.danger-confirm-text {
+  font-size: 0.8rem;
+  color: #ef9a9a;
+  line-height: 1.4;
+}
+
+// ─── Action rows ────────────────────────────────────────────────────────────────
+
+.action-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  &--spaced {
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+}
+
+.action-row-end {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+// ─── Add FAB ────────────────────────────────────────────────────────────────────
+
+.add-fab {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: $accent !important;
+  color: #000 !important;
+  flex-shrink: 0;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  mat-icon {
+    color: #000;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:hover { background: $accent-hover !important; }
+}
+
+// ─── Data tables ────────────────────────────────────────────────────────────────
+
+.data-table-wrap {
+  border: 1px solid $border;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 4px;
+
+  table {
+    width: 100%;
+    background: transparent !important;
+  }
+
+  .mat-mdc-header-row {
+    background: rgba(255, 255, 255, 0.025) !important;
+  }
+
+  .mat-mdc-header-cell {
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.09em !important;
+    text-transform: uppercase !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    border-bottom: 1px solid $border-inner !important;
+    padding: 10px 14px !important;
+  }
+
+  .mat-mdc-cell {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    padding: 12px 14px !important;
+    color: $text-body;
+  }
+
+  .mat-mdc-row {
+    transition: background 0.12s ease;
+
+    &:hover { background: $accent-hover-row !important; }
+
+    &:last-child .mat-mdc-cell {
+      border-bottom: none !important;
     }
   }
+}
 
-  .mat-mdc-header-cell:first-child,.mat-mdc-cell:first-child{
-    flex:40%;
+.row-action-btn {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  color: $text-sub;
+
+  &:hover { color: $text-primary; }
+}
+
+// ─── Count / status badge (reused from cve-search) ──────────────────────────────
+
+.count-badge {
+  background: $accent-tint;
+  color: $accent;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  border: 1px solid $accent-border;
+}
+
+// ─── Empty state ────────────────────────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $text-muted;
+  font-size: 0.85rem;
+  padding: 12px 0;
+
+  mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
   }
-  .mat-mdc-header-cell:nth-child(2),.mat-mdc-cell:nth-child(2){
-    flex:5%;
-  }
-  .mat-mdc-header-cell:nth-child(3),.mat-mdc-cell:nth-child(3){
-    flex:5%;
-  }
-  .mat-mdc-header-cell:nth-child(4),.mat-mdc-cell:nth-child(4){
-    flex:5%;
-  }
-  .mat-mdc-header-cell:nth-child(5),.mat-mdc-cell:nth-child(5){
-    flex:40%;
-  }
-  .mat-mdc-header-cell:last-child,.mat-mdc-cell:last-child{
-    flex:5%;
-    text-align: right;
-    justify-content: flex-end;
+}
+
+// ─── Loading state ───────────────────────────────────────────────────────────────
+
+.loading-state {
+  padding: 4px 0 14px;
+
+  span {
+    display: block;
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin-bottom: 8px;
   }
 
+  mat-progress-bar { border-radius: 4px; }
+}
 
-  .example-label-container {
-    display: flex;
-    margin: 10px 0px 0;
-    max-width: 284px;
-  }
-  
-  .example-result-card .example-value-label {
-    font-weight: 600;
-  }
+// ─── Icon links ─────────────────────────────────────────────────────────────────
 
-  .example-margin {
-    margin: 8px;
-  }
-  
-  .example-width {
-    max-width: 400px;
-    width: 100%;
-  }
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  color: $text-sub !important;
+  transition: color 0.15s;
+
+  &:hover { color: $accent !important; }
+}
+
+// ─── Status icon ────────────────────────────────────────────────────────────────
+
+.status-icon {
+  font-size: 15px;
+  height: 15px;
+  width: 15px;
+  margin-right: 4px;
+}
+
+// ─── Form fields ─────────────────────────────────────────────────────────────────
+
+.full-width { width: 100%; }
+
+.filter-field { margin-bottom: 8px; }
+
+// ─── Table cell flex ratios (preserved from original) ───────────────────────────
+
+.mat-mdc-header-cell:first-child,
+.mat-mdc-cell:first-child   { flex: 40%; }
+
+.mat-mdc-header-cell:nth-child(2),
+.mat-mdc-cell:nth-child(2)  { flex: 5%; }
+
+.mat-mdc-header-cell:nth-child(3),
+.mat-mdc-cell:nth-child(3)  { flex: 5%; }
+
+.mat-mdc-header-cell:nth-child(4),
+.mat-mdc-cell:nth-child(4)  { flex: 5%; }
+
+.mat-mdc-header-cell:nth-child(5),
+.mat-mdc-cell:nth-child(5)  { flex: 40%; }
+
+.mat-mdc-header-cell:last-child,
+.mat-mdc-cell:last-child {
+  flex: 5%;
+  text-align: right;
+  justify-content: flex-end;
+}
