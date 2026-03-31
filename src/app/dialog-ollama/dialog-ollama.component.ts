@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
 import { CurrentdateService } from '../currentdate.service';
@@ -48,6 +48,11 @@ export class DialogOllamaComponent implements OnInit {
 
   }
 
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey() {
+    this.dialogRef.close();
+  }
 
   ngOnInit() {
 
@@ -366,6 +371,13 @@ export class DialogOllamaComponent implements OnInit {
     link.click();
     document.body.removeChild(link);
 
+  }
+
+  onEnterKey(event: KeyboardEvent) {
+    if (!event.shiftKey) {
+      event.preventDefault();
+      this.sendmsg();
+    }
   }
 
   prepAIcopy(html:any) {

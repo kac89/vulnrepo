@@ -1,21 +1,348 @@
+// ─── Page layout ─────────────────────────────────────────────────────────────
 
-table {
+.bb-container {
+  padding: 0;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.38);
+    margin-top: 3px;
+  }
+
+  .title-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: #69f0ae;
+    flex-shrink: 0;
+  }
+}
+
+.bb-link {
+  color: #69f0ae;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+// ─── Search panel card ───────────────────────────────────────────────────────
+
+.search-panel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #424242;
+  overflow: hidden;
+}
+
+// ─── Sticky search header ────────────────────────────────────────────────────
+
+.search-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(66, 66, 66, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 16px 20px 10px;
+}
+
+.search-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .search-input-wrapper {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .search-field {
     width: 100%;
   }
-  
-  tr.example-detail-row {
-    height: 0;
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
   }
-  
-  .example-element-row td {
-    border-bottom-width: 0;
-  }
-  
-  td , th {
-    white-space: normal;
-    word-wrap: break-word;
-    max-width: 200px;
 }
-.full-width {
+
+// ─── Results bar ─────────────────────────────────────────────────────────────
+
+.results-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  min-height: 48px;
+
+  .results-count {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.35);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .count-badge {
+    background: rgba(105, 240, 174, 0.12);
+    color: #69f0ae;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    margin-right: 2px;
+    border: 1px solid rgba(105, 240, 174, 0.2);
+  }
+
+  .compact-paginator {
+    flex: 1;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    min-height: unset;
+  }
+}
+
+// ─── Table ───────────────────────────────────────────────────────────────────
+
+.table-wrapper {
   width: 100%;
+  overflow-x: auto;
+}
+
+.bb-table {
+  width: 100%;
+  background: transparent !important;
+
+  .mat-mdc-header-row {
+    background: rgba(255, 255, 255, 0.025) !important;
+  }
+
+  .mat-mdc-header-cell {
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.09em !important;
+    text-transform: uppercase !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+    padding: 12px 16px !important;
+  }
+
+  .mat-mdc-cell {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    padding: 14px 16px !important;
+    vertical-align: middle;
+  }
+
+  .bb-row {
+    transition: background 0.12s ease;
+
+    &:hover {
+      background: rgba(105, 240, 174, 0.025) !important;
+    }
+
+    &:last-child .mat-mdc-cell {
+      border-bottom: none !important;
+    }
+  }
+}
+
+// ─── Program name cell ───────────────────────────────────────────────────────
+
+.bb-td-name {
+  white-space: nowrap;
+}
+
+.bb-program-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.85);
+
+  &:hover .bb-program-name {
+    color: #69f0ae;
+  }
+
+  &:hover .bb-external-icon {
+    opacity: 1;
+  }
+}
+
+.bb-program-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(105, 240, 174, 0.1);
+  color: #69f0ae;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(105, 240, 174, 0.18);
+}
+
+.bb-program-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: color 0.12s ease;
+}
+
+.bb-external-icon {
+  font-size: 13px;
+  width: 13px;
+  height: 13px;
+  color: rgba(255, 255, 255, 0.28);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+// ─── Reward badges ───────────────────────────────────────────────────────────
+
+.bb-td-bounty {
+  white-space: nowrap;
+}
+
+.reward-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 8px 2px 5px;
+  border-radius: 4px;
+  margin-right: 6px;
+
+  mat-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.reward-money {
+  background: rgba(105, 240, 174, 0.1);
+  color: #69f0ae;
+  border: 1px solid rgba(105, 240, 174, 0.2);
+}
+
+.reward-swag {
+  background: rgba(96, 165, 250, 0.1);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.2);
+}
+
+// ─── Domain chips ─────────────────────────────────────────────────────────────
+
+.bb-td-domains {
+  max-width: 440px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.domain-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  color: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 2px 3px 2px 0;
+  line-height: 1.6;
+}
+
+// ─── No data ─────────────────────────────────────────────────────────────────
+
+.no-data {
+  text-align: center !important;
+  padding: 64px 20px !important;
+  color: rgba(255, 255, 255, 0.2) !important;
+  font-size: 0.875rem;
+  border-bottom: none !important;
+}
+
+// ─── Responsive — mobile (< 600px) ───────────────────────────────────────────
+
+@media (max-width: 599px) {
+  .page-header {
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    gap: 10px;
+
+    h1 {
+      font-size: 1.2rem;
+    }
+
+    .page-subtitle {
+      display: none;
+    }
+
+    .title-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  .search-panel {
+    border-radius: 8px;
+  }
+
+  .search-sticky {
+    padding: 10px 12px 6px;
+  }
+
+  .search-controls {
+    .search-input-wrapper {
+      min-width: unset;
+      width: 100%;
+    }
+  }
+
+  .results-bar {
+    flex-wrap: wrap;
+    gap: 4px;
+
+    .results-count {
+      width: 100%;
+    }
+
+    .compact-paginator {
+      width: 100%;
+    }
+  }
+
+  .bb-td-domains {
+    max-width: unset;
+  }
 }

@@ -1,150 +1,166 @@
-<div>
-  <h1 class="mat-headline-3" fxLayoutAlign="start">
-    <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon>&nbsp;New report
-  </h1>
+<div class="nr-page">
 
-  <div fxLayoutAlign="start">
-    <form class="example-full-width mdc-typography--body1">
-      <mat-card class="mdc-card my-card-content">
+  <!-- Page header -->
+  <div class="nr-hero">
+    <div class="nr-hero-inner">
+      <div class="nr-hero-icon">
+        <mat-icon>add_circle_outline</mat-icon>
+      </div>
+      <div>
+        <h1 class="nr-hero-title">New Report</h1>
+        <p class="nr-hero-subtitle">Configure and create a new vulnerability report</p>
+      </div>
+    </div>
+  </div>
 
-        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
+  <form class="nr-form">
+    <div class="nr-grid">
 
-          <md-card fxFlex="50%" fxFlex.xs="100%" class="mdc-card my-card-content">
+      <!-- Left column: inputs -->
+      <div class="nr-card">
 
-            <mat-form-field appearance="outline" class="example-full-width" color="accent">
-              <input matInput placeholder="Report title (e.g: External penetration testing report)" #title
-                [formControl]="titlenewreport" value="">
-                @if (titlenewreport.hasError('notempty')) {
-                  <mat-error>
-                    <strong>Title must not be empty!</strong>
-                  </mat-error>
+        <div class="nr-section-label">Report Details</div>
+
+        <mat-form-field appearance="outline" class="nr-field" color="accent">
+          <mat-label>Report title</mat-label>
+          <input matInput placeholder="e.g. External penetration testing report" #title
+            [formControl]="titlenewreport">
+          <mat-icon matPrefix class="nr-field-prefix">description</mat-icon>
+          @if (titlenewreport.hasError('notempty')) {
+            <mat-error><strong>Title must not be empty!</strong></mat-error>
+          }
+        </mat-form-field>
+
+        <div class="nr-section-label nr-section-label--mt">Security Key</div>
+
+        <mat-form-field appearance="outline" class="nr-field" color="accent">
+          <mat-label>Set security key</mat-label>
+          <input [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput
+            placeholder="Min. 8 characters" #pass [type]="hide ? 'password' : 'text'">
+          <mat-icon matPrefix class="nr-field-prefix">lock</mat-icon>
+          <mat-icon matSuffix class="nr-suffix-icon" (click)="hide = !hide"
+            matTooltip="Toggle visibility" matTooltipPosition="below">
+            {{hide ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+          <mat-icon matSuffix class="nr-suffix-icon" (click)="generatePassword()"
+            matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
+          <mat-icon matSuffix class="nr-suffix-icon" #tooltip="matTooltip"
+            [cdkCopyToClipboard]="pass1model.value" (click)="copyText()"
+            matTooltip="Copy to clipboard" matTooltipPosition="below">content_copy</mat-icon>
+          @if (pass1model.hasError('tooweakpass')) {
+            <mat-error><strong>Security key is too weak!</strong></mat-error>
+          }
+          @if (pass1model.hasError('passnotmatch')) {
+            <mat-error><strong>Keys do not match!</strong></mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="nr-field" color="accent">
+          <mat-label>Confirm security key</mat-label>
+          <input [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput
+            placeholder="Re-enter security key" #pass2 [type]="hide ? 'password' : 'text'">
+          <mat-icon matPrefix class="nr-field-prefix">lock_outline</mat-icon>
+          <mat-icon matSuffix class="nr-suffix-icon" (click)="hide = !hide"
+            matTooltip="Toggle visibility" matTooltipPosition="below">
+            {{hide ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+          <mat-icon matSuffix class="nr-suffix-icon" (click)="generatePassword()"
+            matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
+          <mat-icon matSuffix class="nr-suffix-icon" #tooltip="matTooltip"
+            [cdkCopyToClipboard]="pass2model.value" (click)="copyText()"
+            matTooltip="Copy to clipboard" matTooltipPosition="below">content_copy</mat-icon>
+          @if (pass2model.hasError('tooweakpass')) {
+            <mat-error><strong>Security key is too weak!</strong></mat-error>
+          }
+          @if (pass2model.hasError('passnotmatch')) {
+            <mat-error><strong>Keys do not match!</strong></mat-error>
+          }
+        </mat-form-field>
+
+        @if (localkeys.length > 0) {
+          <div class="nr-section-label nr-section-label--mt">Storage</div>
+          <mat-form-field appearance="outline" class="nr-field" color="accent">
+            <mat-label>Save report to</mat-label>
+            <mat-icon matPrefix class="nr-field-prefix">storage</mat-icon>
+            <mat-select (selectionChange)="selectchange($event)" [(value)]="selected">
+              <mat-option value="local">Local Host</mat-option>
+              <mat-optgroup label="API">
+                @for (apis of localkeys; track apis) {
+                  <mat-option [value]="apis">{{apis.viewValue}}</mat-option>
                 }
-              </mat-form-field>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        }
 
-              <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <input [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput
-                  placeholder="Set report security key (min. 8 char length)" #pass [type]="hide ? 'password' : 'text'">
-
-                  <mat-icon matSuffix (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key"
-                  matTooltipPosition="below">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                  <mat-icon matSuffix (click)="generatePassword()" life="1000" tooltipEvent="focus"
-                  matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
-                  <mat-icon matSuffix #tooltip="matTooltip" [cdkCopyToClipboard]="pass1model.value" (click)="copyText()"
-                    life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard"
-                  matTooltipPosition="below">content_copy</mat-icon>
-
-                  @if (pass1model.hasError('tooweakpass')) {
-                    <mat-error>
-                      <strong>Security key is too weak!</strong>
-                    </mat-error>
+        @if (ReportProfilesList.length > 0) {
+          <mat-form-field appearance="outline" class="nr-field" color="accent">
+            <mat-label>Settings profile (optional)</mat-label>
+            <mat-icon matPrefix class="nr-field-prefix">tune</mat-icon>
+            <mat-select (selectionChange)="selectchangeProfiles($event)" [(value)]="selected_profile">
+              <mat-select-trigger>{{selected_profilefin}}</mat-select-trigger>
+              <mat-option>None</mat-option>
+              @for (profile of ReportProfilesList; track profile) {
+                <mat-option [value]="profile">
+                  @if (!profile.api) {
+                    <mat-icon class="nr-option-icon">computer</mat-icon>
                   }
-                  @if (pass1model.hasError('passnotmatch')) {
-                    <mat-error>
-                      <strong>The given security keys do not match!</strong>
-                    </mat-error>
+                  @if (profile.api) {
+                    <mat-icon class="nr-option-icon nr-option-icon--remote"
+                      title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}]">public</mat-icon>
                   }
-                </mat-form-field>
+                  {{profile.profile_name}}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
 
-                <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                  <input [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput
-                    placeholder="Re-enter report security key (min. 8 char length)" #pass2
-                    [type]="hide ? 'password' : 'text'">
+      </div>
 
-                    <mat-icon matSuffix (click)="hide = !hide" life="1000" tooltipEvent="focus" matTooltip="Show security key"
-                    matTooltipPosition="below">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    <mat-icon matSuffix (click)="generatePassword()" life="1000" tooltipEvent="focus"
-                    matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
-                    <mat-icon matSuffix #tooltip="matTooltip" [cdkCopyToClipboard]="pass2model.value" (click)="copyText()"
-                      life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard"
-                    matTooltipPosition="below">content_copy</mat-icon>
+      <!-- Right column: strength + notice -->
+      <div class="nr-side">
 
-                    @if (pass2model.hasError('tooweakpass')) {
-                      <mat-error>
-                        <strong>Security key is too weak!</strong>
-                      </mat-error>
-                    }
-                    @if (pass2model.hasError('passnotmatch')) {
-                      <mat-error>
-                        <strong>The given security keys do not match!</strong>
-                      </mat-error>
-                    }
-                  </mat-form-field>
+        @if (str !== '') {
+          <div class="nr-strength-card">
+            <div class="nr-strength-header">
+              <span class="nr-strength-label">Key strength</span>
+              <span class="nr-strength-value" [class]="'nr-strength-value--' + str.toLowerCase().replace(' ', '')">{{str}}</span>
+            </div>
+            <mat-progress-bar class="nr-progress" [color]="color" [mode]="mode"
+              [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
+          </div>
+        }
 
-                  @if (localkeys.length > 0) {
-                    <mat-form-field appearance="fill" color="accent">
-                      <mat-label>Select where save report:</mat-label>
-                      <mat-select (selectionChange)="selectchange($event)" [(value)]="selected">
-                        <mat-option value="local">Local Host</mat-option>
-                        <mat-optgroup [label]="'API'">
-                          @for (apis of localkeys; track apis) {
-                            <mat-option [value]="apis">{{apis.viewValue}}</mat-option>
-                          }
-                        </mat-optgroup>
-                      </mat-select>
-                    </mat-form-field>
-                  }
-
-                  <br>
-
-                    @if (ReportProfilesList.length > 0) {
-                      <mat-form-field appearance="fill" color="accent">
-                        <mat-label>Select settings profile (Optional):</mat-label>
-                        <mat-select (selectionChange)="selectchangeProfiles($event)" [(value)]="selected_profile">
-                          <mat-select-trigger>{{selected_profilefin}}</mat-select-trigger>
-                          <mat-option>None</mat-option>
-                          @for (profile of ReportProfilesList; track profile) {
-                            <mat-option [value]="profile">
-                              @if (!profile.api) {
-                                <mat-icon title="Local Host">computer</mat-icon>
-                                }@if (profile.api) {
-                                <mat-icon
-                                color="accent" title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon>
-                              }
-                              {{profile.profile_name}}
-                            </mat-option>
-                          }
-                        </mat-select>
-                      </mat-form-field>
-                    }
-
-                  </md-card>
-
-                  <md-card fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="center center">
-                    <div style="width: 100%">
-
-                      @if (str != '') {
-                        <div>
-                          <p fxLayoutAlign="center">Strength validation: {{str}}.</p>
-                          <mat-progress-bar [color]="color" [mode]="mode" [value]="value"
-                          [bufferValue]="bufferValue"></mat-progress-bar>
-                          <br>
-                          </div>
-                        }
-
-
-                        <div fxLayoutAlign="center" class="label warning">
-                          <mat-icon style="margin-right: 10px;"
-                          class="vertical-align-middle padding-bottom-3 size-45">warning</mat-icon>
-                          <b>Use report security key generator! <mat-icon (click)="generatePassword()">casino</mat-icon><br>Don't lose your security key,<br>otherwise
-                        you won't be able to access the report!!</b>
-
-                      </div>
-
-                    </div>
-                  </md-card>
-                </div>
-
-                <mat-dialog-actions>
-                  <button class="mdc-elevation--z11" mat-fab extended color="accent"
-                    (click)="addnewReport(title.value,pass.value,pass2.value)"><mat-icon
-                  class="vertical-align-middle padding-bottom-3 size-25">save</mat-icon> Save report</button>
-                  &nbsp;
-                  <button class="mdc-elevation--z11" mat-fab extended color="primary" (click)="cancel()"><mat-icon
-                  class="vertical-align-middle padding-bottom-3 size-25">close</mat-icon> Cancel</button>
-                </mat-dialog-actions>
-
-              </mat-card>
-            </form>
-
+        <div class="nr-notice">
+          <div class="nr-notice__icon">
+            <mat-icon>info_outline</mat-icon>
+          </div>
+          <div class="nr-notice__body">
+            <p class="nr-notice__title">Protect your report</p>
+            <p class="nr-notice__text">
+              Use the key generator <mat-icon class="nr-notice__inline-icon" (click)="generatePassword()">casino</mat-icon>
+              to create a strong security key.
+              <strong>Do not lose your key</strong> — there is no recovery option.
+            </p>
           </div>
         </div>
+
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="nr-actions">
+      <button mat-flat-button class="nr-btn nr-btn--primary"
+        (click)="addnewReport(title.value, pass.value, pass2.value)">
+        <mat-icon>save</mat-icon>
+        Save report
+      </button>
+      <button mat-stroked-button class="nr-btn nr-btn--cancel" (click)="cancel()">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+    </div>
+
+  </form>
+</div>

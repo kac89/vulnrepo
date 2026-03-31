@@ -1,183 +1,197 @@
-<mat-card appearance="outlined">
+<div class="chat-shell">
 
-  <mat-card-header>
-    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">photo_filter</mat-icon>
-    <mat-card-title>AI assistant</mat-card-title>
-    <mat-card-subtitle>Ask your local large language model (LLM).</mat-card-subtitle>
-    <div style="flex: 1"></div>
-    @if (aiconnected && chatmsg.length > 0) {
-      <button title="Remove chat" color="warn" matMiniFab
-        (click)="clearmsg()"><mat-icon>delete_forever</mat-icon></button>
-      }
-    </mat-card-header>
-
-    <mat-dialog-content class="mat-typography" id="chat">
-
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-avatar-logo">
+        <mat-icon class="logo-icon">photo_filter</mat-icon>
+      </div>
+      <div class="chat-header-text">
+        <span class="chat-title">AI Assistant</span>
+        <span class="chat-subtitle">Ask your local large language model (LLM)</span>
+      </div>
+    </div>
+    <div class="chat-header-right">
       @if (!aiconnected) {
-        <div class="example-full-width">
-          <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        <span class="status-badge status-connecting">
+          <span class="status-dot"></span>Connecting…
+        </span>
+      } @else {
+        <span class="status-badge status-online">
+          <span class="status-dot"></span>Online
+        </span>
+      }
+      @if (aiconnected && chatmsg.length > 0) {
+        <button mat-icon-button class="clear-btn" title="Clear chat" (click)="clearmsg()">
+          <mat-icon>delete_sweep</mat-icon>
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Chat body -->
+  <mat-dialog-content class="chat-body" id="chat">
+
+    @if (!aiconnected) {
+      <div class="connecting-state">
+        <mat-progress-bar color="accent" mode="indeterminate" class="connect-bar"></mat-progress-bar>
+        <p class="connecting-label">Establishing connection to Ollama…</p>
+      </div>
+    }
+
+    @if (aiconnected) {
+      <div class="messages-list">
+
+        @if (chatmsg.length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">chat_bubble_outline</mat-icon>
+            <p class="empty-title">Start a conversation</p>
+            <p class="empty-sub">Ask anything — your model is ready.</p>
+          </div>
+        }
+
+        @for (item of chatmsg; track item) {
+
+          <!-- User message -->
+          <div class="message-row user-row">
+            <div class="bubble user-bubble">
+              <div class="bubble-text">{{item.question}}</div>
+              @if (item.files && item.files.length > 0) {
+                <div class="bubble-files">
+                  @for (f of item.files; track f) {
+                    <span class="file-chip"><mat-icon class="chip-icon">attach_file</mat-icon>{{f.filename}}</span>
+                  }
+                </div>
+              }
+              @if (item.images && item.images.length > 0) {
+                <div class="bubble-images">
+                  @for (img of item.images; track img) {
+                    <img [src]="img" class="bubble-img">
+                  }
+                </div>
+              }
+              <div class="bubble-meta">
+                <span class="bubble-time">{{item.date | date:'HH:mm'}}</span>
+                <button mat-icon-button class="meta-btn" [cdkCopyToClipboard]="item.question" (click)="copyTextuser()" matTooltip="Copy" matTooltipPosition="below">
+                  <mat-icon class="meta-icon">content_copy</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="avatar user-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+          </div>
+
+          <!-- AI message -->
+          <div class="message-row ai-row">
+            <div class="avatar ai-avatar">
+              <div class="header-image-ai"></div>
+            </div>
+            <div class="bubble ai-bubble">
+              @if (item.response === '') {
+                <div class="thinking-row">
+                  <span class="dot-flashing"></span>
+                  <span class="thinking-label">Thinking…</span>
+                </div>
+              }
+              <div class="bubble-text ai-text" [innerHtml]="saniteizeme(item.response)"></div>
+              <div class="bubble-meta">
+                <span class="bubble-model">{{item.model}} · {{item.temperature}}°</span>
+                <span class="bubble-time ai-time">{{item.aitime}}</span>
+                <button mat-icon-button class="meta-btn" [cdkCopyToClipboard]="prepAIcopy(saniteizeme(item.response))" (click)="copyTextAI()" matTooltip="Copy" matTooltipPosition="below">
+                  <mat-icon class="meta-icon">content_copy</mat-icon>
+                </button>
+                <button mat-icon-button class="meta-btn" (click)="downloadAIText(item.response_md)" matTooltip="Download" matTooltipPosition="below">
+                  <mat-icon class="meta-icon">file_download</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        }
+      </div>
+    }
+
+  </mat-dialog-content>
+
+  <!-- Attachments preview -->
+  @if (attachedIMG.length > 0 || attachedFILES.length > 0) {
+    <div class="attachments-bar">
+      @for (item of attachedIMG; track item) {
+        <div class="attach-thumb">
+          <img [src]="item" class="thumb-img">
+          <button mat-icon-button class="thumb-remove" (click)="removeAttach()" title="Remove">
+            <mat-icon>close</mat-icon>
+          </button>
         </div>
       }
+      @for (item of attachedFILES; track item) {
+        <div class="attach-file-chip">
+          <mat-icon class="chip-icon">description</mat-icon>
+          <span class="chip-name">{{item.filename}}</span>
+          <button mat-icon-button class="thumb-remove" (click)="removeAttachfile()" title="Remove">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+  }
 
+  <!-- Quick prompts -->
+  @if (aiconnected && myrep) {
+    <div class="quick-prompts">
+      <button class="qp-chip" (click)="useAIprompt(0)">Report summary for CEO</button>
+      <button class="qp-chip" (click)="useAIprompt(1)">List remediation steps</button>
+      <button class="qp-chip" (click)="useAIprompt(2)">Technical summary for developer</button>
+      <button class="qp-chip" (click)="useAIprompt(3)">Email with summary</button>
+      <button class="qp-chip" (click)="useAIprompt(4)">Cost of repair</button>
+      <button class="qp-chip" (click)="useAIprompt(5)">Who can fix it</button>
+      <button class="qp-chip" (click)="useAIprompt(6)">Explain like I'm 5</button>
+    </div>
+  }
 
-      @if (aiconnected) {
-        <div class="example-full-width">
-          @for (item of chatmsg; track item) {
-            <mat-card class="example-card" appearance="outlined">
-              <mat-card-header style="align-self: last baseline;">
-                <div mat-card-avatar class="header-image-ai"></div>
-                <mat-card-title>You</mat-card-title>
-                <mat-card-subtitle>Date: {{item.date | date:'medium'}}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content style="color: white;">
-                <p>
-                  {{item.question}}
-                </p>
-                <div>
-                  <mat-list>
-                    @for (item of item.files; track item) {
-                      <mat-list-item style="max-width:400px;">
-                        {{item.filename}}
-                      </mat-list-item>
-                    }
-                  </mat-list>
-                </div>
-                <p>
-                  @for (item of item.images; track item) {
-                    <img src="{{item}}" width="100px">
-                  }
-                </p>
-              </mat-card-content>
-              <mat-card-actions>
-                <!-- <button mat-icon-button life="1000" tooltipEvent="focus" matTooltip="Reply again" matTooltipPosition="below"><mat-icon>reply</mat-icon></button> -->
-                <button mat-icon-button [cdkCopyToClipboard]="item.question" (click)="copyTextuser()" life="1000"
-                  tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
-                  #tooltip="matTooltip"><mat-icon>content_copy</mat-icon></button>
-                </mat-card-actions>
-              </mat-card>
-              <mat-card class="example-card" appearance="outlined">
-                <mat-card-header>
-                  <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">account_circle</mat-icon>
-                  <mat-card-title>AI</mat-card-title>
-                  <mat-card-subtitle>Model: {{item.model}}, Temperature: {{item.temperature}}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content style="color: white;">
-                  @if (item.response == '') {
-                    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-                  }
-                  <div [innerHtml]="saniteizeme(item.response)"></div>
-                </mat-card-content>
-                <mat-card-actions>
-                  <button mat-icon-button [cdkCopyToClipboard]="prepAIcopy(saniteizeme(item.response))" (click)="copyTextAI()"
-                    life="1000" tooltipEvent="focus" matTooltip="Copy to clipboard" matTooltipPosition="below"
-                    #tooltip2="matTooltip"><mat-icon>content_copy</mat-icon></button>
-                    <button mat-icon-button (click)="downloadAIText(item.response_md)" life="1000" tooltipEvent="focus"
-                      matTooltip="Download" matTooltipPosition="below"
-                      #tooltip2="matTooltip"><mat-icon>file_download</mat-icon></button>
-                      <div style="margin-left: auto;">
-                        {{item.aitime}}
-                      </div>
-                    </mat-card-actions>
-                  </mat-card>
-                  <br>
-                  }
-                </div>
-              }
-            </mat-dialog-content>
-
-            @if (aiconnected) {
-              <div style="padding: 10px;">
-                <mat-form-field color="accent" class="example-full-width" appearance="outline">
-                  <mat-label>Model: {{aiselectedValue}}, Temperature: {{temperature}}</mat-label>
-                  <textarea matInput [formControl]="questioninput" cdkFocusInitial></textarea>
-                  @if (questioninput.hasError('notempty')) {
-                    <mat-error>
-                      <strong>Please provide some data!</strong>
-                    </mat-error>
-                  }
-                </mat-form-field>
-                @if (myrep) {
-                  <div>
-                    <button (click)="useAIprompt(0)" matButton="outlined">Report summary for CEO</button>
-                    <button (click)="useAIprompt(1)" matButton="outlined">List remediation steps</button>
-                    <button (click)="useAIprompt(2)" matButton="outlined">Technical summary for developer</button>
-                    <button (click)="useAIprompt(3)" matButton="outlined">Email with summary</button>
-                    <button (click)="useAIprompt(4)" matButton="outlined">What is the cost of repair</button>
-                    <button (click)="useAIprompt(5)" matButton="outlined">Who can fix it</button>
-                    <button (click)="useAIprompt(6)" matButton="outlined">Describe to me like im 5</button>
-                  </div>
-                }
-              </div>
+  <!-- Input area -->
+  @if (aiconnected) {
+    <div class="input-area">
+      <div class="input-wrapper">
+        <textarea
+          class="chat-input"
+          [formControl]="questioninput"
+          cdkFocusInitial
+          placeholder="Message AI · Model: {{aiselectedValue}} · Temp: {{temperature}}"
+          rows="1"
+          (keydown.enter)="onEnterKey($event)"
+        ></textarea>
+        <div class="input-toolbar">
+          <div class="toolbar-left">
+            <button mat-icon-button class="tool-btn" (click)="opensettings()" title="Settings">
+              <mat-icon>tune</mat-icon>
+            </button>
+            @if (attachedIMG.length === 0) {
+              <button mat-icon-button class="tool-btn" (click)="attachimg.click()" title="Attach image">
+                <mat-icon>image</mat-icon>
+              </button>
             }
+            <input hidden type="file" accept="image/*" #attachimg (change)="onImageSelect($event.target)" name="myimages" />
+            <button mat-icon-button class="tool-btn" title="Attach file" (click)="attachfile.click()">
+              <mat-icon>attach_file</mat-icon>
+            </button>
+            <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles" multiple />
+          </div>
+          <div class="toolbar-right">
+            <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+              <mat-icon>close</mat-icon>
+            </button>
+            <button class="send-btn" (click)="sendmsg()" [disabled]="questioninput.invalid">
+              <mat-icon>arrow_upward</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      @if (questioninput.hasError('notempty')) {
+        <p class="input-error">Please provide some data</p>
+      }
+    </div>
+  }
 
-            <div style="padding: 20px;">
-
-              @for (item of attachedIMG; track item) {
-
-
-                <div style="position:relative">
-                  <img src="{{item}}" width="100px">
-                  <div style="position:absolute;left:-10px;top:-20px;">
-                    <button matListItemMeta mat-icon-button (click)="removeAttach()" title="Remove image">
-                      <mat-icon color="warn">delete_forever</mat-icon>
-                    </button>
-                  </div>
-                </div>
-
-              }
-
-              @for (item of attachedFILES; track item) {
-
-
-                <mat-list>
-                  <mat-list-item>
-
-                    <div matListItemTitle>{{item.filename}}
-
-                      <button mat-icon-button (click)="removeAttachfile()" title="Remove file">
-                        <mat-icon color="warn">delete_forever</mat-icon>
-                      </button>
-
-                    </div>
-                    <div matListItemLine>{{item.date | date:'medium'}}</div>
-
-                  </mat-list-item>
-                </mat-list>
-
-
-              }
-
-            </div>
-
-            @if (aiconnected) {
-              <mat-dialog-actions>
-                <div fxLayout="row wrap" fxLayoutGap="0px grid" class="example-full-width">
-                  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-                    <div style="padding: 10px;">
-                      <button mat-icon-button style="padding: 0px;" (click)="opensettings()" title="Settings">
-                        <mat-icon>settings</mat-icon>
-                      </button>
-                      @if (attachedIMG.length == 0) {
-                        <button mat-icon-button style="padding: 0px;" (click)="attachimg.click()" title="Attach image"
-                          >
-                          <mat-icon>image</mat-icon>
-                        </button>
-                      }
-                      <input hidden type="file" accept="image/*" #attachimg (change)="onImageSelect($event.target)"
-                        name="myimages" />
-                        <button mat-icon-button style="padding: 0px;" title="Attach file" (click)="attachfile.click()">
-                          <mat-icon>attach_file</mat-icon>
-                        </button>
-                        <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles"
-                          multiple />
-                        </div>
-                      </div>
-                      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end center">
-                        <button mat-raised-button (click)="sendmsg()" color="accent">Ask</button>
-                        <button mat-raised-button mat-dialog-close color="primary">Close</button>
-                      </div>
-                    </div>
-                  </mat-dialog-actions>
-                }
-
-              </mat-card>
+</div>

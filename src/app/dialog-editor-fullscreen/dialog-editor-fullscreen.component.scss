@@ -1,43 +1,294 @@
+// ── Shell ─────────────────────────────────────────────────────────────────────
+.editor-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+}
 
-.example-full {
-    width: 100%;
-    height: 100%;
+// ── Header ────────────────────────────────────────────────────────────────────
+.editor-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #242424;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.editor-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.editor-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #424242;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.editor-logo-icon {
+  color: #9e9e9e;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.editor-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.editor-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
+}
+
+.editor-subtitle {
+  font-size: 11px;
+  color: #757575;
+}
+
+.editor-header-right {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+// ── Toolbar group ─────────────────────────────────────────────────────────────
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.1);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+// ── Icon buttons ──────────────────────────────────────────────────────────────
+.tool-btn {
+  color: #757575 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  transition: color 0.15s, background 0.15s !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
   }
 
-html, body, textarea {
-  border: 0;
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+  }
+
+  &:hover {
+    color: #e0e0e0 !important;
+    background: rgba(255,255,255,0.07) !important;
+  }
+}
+
+.preview-active {
+  color: #9e9e9e !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+
+.close-btn:hover {
+  color: #ef5350 !important;
+  background: rgba(239, 83, 80, 0.1) !important;
+}
+
+// ── Editor body ───────────────────────────────────────────────────────────────
+.editor-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+// ── Split view ────────────────────────────────────────────────────────────────
+.split-view {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.pane-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #424242;
+  letter-spacing: 0.1em;
+  padding: 8px 16px 4px;
+  flex-shrink: 0;
+}
+
+.pane-separator {
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, #69f0ae55, #424242, #69f0ae55, transparent);
+  flex-shrink: 0;
+}
+
+.editor-pane .code-textarea,
+.full-view .code-textarea {
+  flex: 1;
+}
+
+// ── Full view ─────────────────────────────────────────────────────────────────
+.full-view {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+// ── Textarea ──────────────────────────────────────────────────────────────────
+.code-textarea {
+  flex: 1;
   width: 100%;
   height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: #e0e0e0;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::placeholder {
+    color: #424242;
+  }
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
 }
 
-.textareaeditor {
-  width: 47vw;
-  height: 85vh;
-  padding-top: 15px;
+// ── Preview pane ──────────────────────────────────────────────────────────────
+.preview-pane {
+  background: #1e1e1e;
 }
 
-.textareaeditor_show {
-  width: 96vw;
-  height: 85vh;
-  padding-top: 15px;
-}
+.preview-content {
+  flex: 1;
+  padding: 12px 20px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.7;
+  font-size: 14px;
+  color: #e0e0e0;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
 
-.space {
-  background-image: linear-gradient(to bottom, #424242, #69f0ae, #424242);
-  width: 100%;
-  height: 100%;
-  max-width: 1px;
-}
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
 
-.textprev {
-    white-space: pre-wrap;
+  // Markdown styles
+  ::ng-deep h1, ::ng-deep h2, ::ng-deep h3 {
+    color: #f5f5f5;
+    font-weight: 600;
+    margin: 1em 0 0.4em;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 4px;
+  }
+
+  ::ng-deep code {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 12px;
+    background: #111;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #a6e3a1;
+  }
+
+  ::ng-deep pre {
+    background: #111;
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+
+    code {
+      background: transparent;
+      padding: 0;
+      color: #e0e0e0;
+    }
+  }
+
+  ::ng-deep blockquote {
+    border-left: 3px solid #424242;
+    margin: 0;
+    padding: 8px 16px;
+    color: #757575;
+    background: rgba(255,255,255,0.03);
+    border-radius: 0 4px 4px 0;
+  }
+
+  ::ng-deep a {
+    color: #69f0ae;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+
+  ::ng-deep table {
     width: 100%;
-    height: 85vh;
-    word-wrap: break-word; 
-    overflow-y: scroll;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  ::ng-deep th, ::ng-deep td {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 12px;
+    text-align: left;
+  }
+
+  ::ng-deep th {
+    background: #242424;
+    color: #f5f5f5;
+    font-weight: 600;
+  }
 }
 
 [hidden] {
   display: none !important;
 }
-

@@ -1,52 +1,70 @@
-<h1 class="mat-headline-3">
-  <mat-icon class="vertical-align-middle padding-bottom-3 size-45">playlist_add</mat-icon> Import report
-</h1>
+<div class="import-page">
 
-<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-
-  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">description</mat-icon>
-        <mat-card-title>Import from file (.VULNR)</mat-card-title>
-        <mat-card-subtitle>(.VULNR) - File contains full report details</mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        <button mat-raised-button color="primary" (click)="importreports.click()" title="Import reports">
-          <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon> Import
-        </button>
-        <input hidden type="file" accept=".vulnr" #importreports (change)="onFileSelect($event.target)" name="myfiles" multiple />
-
-      </mat-card-content>
-      
-    </mat-card>
-
+  <!-- Hero Header -->
+  <div class="import-hero">
+    <div class="import-hero-inner">
+      <div class="import-hero-icon">
+        <mat-icon>playlist_add</mat-icon>
+      </div>
+      <div>
+        <h1 class="import-title">Import Report</h1>
+        <p class="import-subtitle">Load an existing report from a file or paste it directly from clipboard</p>
+      </div>
+    </div>
   </div>
 
-  <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <mat-card appearance="outlined">
+  <!-- Two-column cards -->
+  <div class="import-grid">
 
-      <mat-card-header>
-        <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">content_paste</mat-icon>
-        <mat-card-title>Import from a clipboard</mat-card-title>
-        <mat-card-subtitle>Import report from clipboard if need it.</mat-card-subtitle>
-      </mat-card-header>
+    <!-- File import -->
+    <div class="import-card">
+      <div class="import-card-header">
+        <div class="import-card-icon">
+          <mat-icon>description</mat-icon>
+        </div>
+        <div>
+          <h2 class="import-card-title">Import from file</h2>
+          <p class="import-card-subtitle">Accepts <span class="import-badge">.VULNR</span> — contains the full report</p>
+        </div>
+      </div>
 
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="example-full-width" color="accent">
-          <mat-label>Paste from the clipboard</mat-label>
-          <textarea matInput rows="6" [(ngModel)]="pastefromclipboard" class="form-control z-depth-1"></textarea>
+      <div class="import-card-body">
+        <button class="import-btn" (click)="importreports.click()" title="Import reports">
+          <mat-icon>upload_file</mat-icon>
+          Choose file
+        </button>
+        <input hidden type="file" accept=".vulnr" #importreports (change)="onFileSelect($event.target)" name="myfiles" multiple />
+        <p class="import-hint">You can select multiple <span class="import-badge">.VULNR</span> files at once.</p>
+      </div>
+    </div>
+
+    <!-- Clipboard import -->
+    <div class="import-card">
+      <div class="import-card-header">
+        <div class="import-card-icon">
+          <mat-icon>content_paste</mat-icon>
+        </div>
+        <div>
+          <h2 class="import-card-title">Import from clipboard</h2>
+          <p class="import-card-subtitle">Paste raw report data directly into the field below</p>
+        </div>
+      </div>
+
+      <div class="import-card-body">
+        <mat-form-field appearance="outline" class="import-textarea-field" color="accent">
+          <mat-label>Paste report data</mat-label>
+          <textarea matInput rows="6" [(ngModel)]="pastefromclipboard"></textarea>
         </mat-form-field>
-      </mat-card-content>
+      </div>
 
-      <mat-card-actions>
-        <button (click)="importfromclipboard(pastefromclipboard)" mat-raised-button color="primary"><mat-icon class="vertical-align-middle padding-bottom-3 size-25">playlist_add</mat-icon> Import</button>
-      </mat-card-actions>
+      <div class="import-card-footer">
+        <button class="import-btn" (click)="importfromclipboard(pastefromclipboard)">
+          <mat-icon>playlist_add</mat-icon>
+          Import
+        </button>
+      </div>
+    </div>
 
-      
-    </mat-card>
   </div>
 
 </div>
