@@ -29,16 +29,17 @@ export class FaqComponent implements OnInit {
     const yourHeight = 105 + 20;
 
     if (node) {
-      // scroll to your element
       node.scrollIntoView(true);
-    }
 
+      // now account for fixed header
+      const scrolledY = window.scrollY;
+      if (scrolledY) {
+        window.scroll(0, scrolledY - yourHeight);
+      }
 
-    // now account for fixed header
-    const scrolledY = window.scrollY;
-
-    if (scrolledY) {
-      window.scroll(0, scrolledY - yourHeight);
+      // highlight the targeted section
+      node.classList.add('faq-item--highlighted');
+      setTimeout(() => node.classList.remove('faq-item--highlighted'), 2500);
     }
 
   }

@@ -2,7 +2,7 @@
 
 @use '@angular/material' as mat;
 
-@import 'material-design-icons/iconfont/material-icons.css';
+@import url('assets/fonts/material-icons/material-icons.css');
 
 $my-typography: mat.m2-define-typography-config($font-family: 'Roboto,Helvetica Neue,sans-serif',
   );
