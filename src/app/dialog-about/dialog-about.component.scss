@@ -1,3 +1,54 @@
-.example-full-width {
-    width: 100%;
+.about-dialog {
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 12px;
   }
+
+  &__logo-wrap {
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size: 0.75rem;
+    opacity: 0.5;
+    letter-spacing: 0.03em;
+  }
+
+  &__version {
+    padding: 12px 0 4px;
+  }
+
+  &__list {
+    padding-top: 4px;
+
+    mat-list-item {
+      border-radius: 8px;
+      transition: background 150ms ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+    }
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
