@@ -1,70 +1,96 @@
-<div style="display: flex;padding: 15px;">
+<div class="editor-shell">
 
-  <mat-form-field appearance="outline" class="example-full" color="accent">
-    <mat-label>Text Editor</mat-label>
+  <!-- Header / toolbar -->
+  <div class="editor-header">
+    <div class="editor-header-left">
+      <div class="editor-avatar">
+        <mat-icon class="editor-logo-icon">edit_note</mat-icon>
+      </div>
+      <div class="editor-header-text">
+        <span class="editor-title">Text Editor</span>
+        <span class="editor-subtitle">Markdown supported</span>
+      </div>
+    </div>
 
-    <div style="margin-top: 16px;display: flex;">
-
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Bold Format" (click)="parseBold(data)">
+    <div class="toolbar-group">
+      <button mat-icon-button class="tool-btn" title="Bold" (click)="parseBold(data)">
         <mat-icon>format_bold</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Italic Format" (click)="parseItalic(data)">
+      <button mat-icon-button class="tool-btn" title="Italic" (click)="parseItalic(data)">
         <mat-icon>format_italic</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Heading Format" (click)="parseHeading(data)">
+      <button mat-icon-button class="tool-btn" title="Heading" (click)="parseHeading(data)">
         <mat-icon>title</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Strikethrough Format"
-        (click)="parseStrikethrough(data)">
+      <button mat-icon-button class="tool-btn" title="Strikethrough" (click)="parseStrikethrough(data)">
         <mat-icon>strikethrough_s</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Link Format" (click)="parseLink(data)">
+      <div class="toolbar-divider"></div>
+      <button mat-icon-button class="tool-btn" title="Link" (click)="parseLink(data)">
         <mat-icon>link</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="List Format" (click)="parseList(data)">
+      <button mat-icon-button class="tool-btn" title="List" (click)="parseList(data)">
         <mat-icon>list</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Code Format" (click)="parseCode(data)">
+      <button mat-icon-button class="tool-btn" title="Code" (click)="parseCode(data)">
         <mat-icon>code</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Quote Format" (click)="parseQuote(data)">
+      <button mat-icon-button class="tool-btn" title="Quote" (click)="parseQuote(data)">
         <mat-icon>format_quote</mat-icon>
       </button>
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Table Format" (click)="parseTable(data)">
-        <mat-icon>table</mat-icon>
+      <button mat-icon-button class="tool-btn" title="Table" (click)="parseTable(data)">
+        <mat-icon>table_chart</mat-icon>
       </button>
-
-      <button mat-icon-button style="padding: 0px;" color="accent" title="Show/Close preview"
-        (click)="showprev=!showprev">
+      <div class="toolbar-divider"></div>
+      <button mat-icon-button class="tool-btn preview-btn" [class.preview-active]="!showprev" title="Toggle preview" (click)="showprev=!showprev">
         <mat-icon>{{showprev ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <div style="flex: 1"></div>
-      <button matMiniFab style="padding: 0px;" color="primary" title="Save and Close fullscreen"
-        (click)="cancel()"><mat-icon>close</mat-icon></button>
-
-
-    </div>
-    <mat-divider></mat-divider>
-
-    <div [hidden]="showprev" fxLayout="row wrap" fxLayoutGap="10px grid">
-      <div fxFlex="49%" fxFlex.sm="99%" fxFlex.xs="99%">
-        <textarea #textareaEl [(ngModel)]="data" (ngModelChange)="onChange($event)" matInput class="textareaeditor"
-          (select)="select($event)" (click)="onclick($event)" cdkFocusInitial></textarea>
-      </div>
-      <div fxFlex="1%" fxFlex.sm="1%" fxFlex.xs="1%">
-        <div class="space"></div>
-      </div>
-      <div fxFlex="49%" fxFlex.sm="99%" fxFlex.xs="99%">
-        <div class="textprev" [innerHtml]="saniteizeme(previewfield.value)"></div>
-      </div>
     </div>
 
-    <div fxLayout="row wrap" fxLayoutGap="1px grid">
-      <div [hidden]="!showprev" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-        <textarea [(ngModel)]="data" (ngModelChange)="onChange(data)" matInput class="textareaeditor_show"
-          (select)="select($event)" (click)="onclick($event)"></textarea>
+    <div class="editor-header-right">
+      <button mat-icon-button class="tool-btn close-btn" title="Save and close" (click)="cancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Editor body -->
+  <div class="editor-body">
+
+    <!-- Split view: editor + preview -->
+    <div [hidden]="showprev" class="split-view">
+      <div class="pane editor-pane">
+        <div class="pane-label">EDITOR</div>
+        <textarea
+          #textareaEl
+          [(ngModel)]="data"
+          (ngModelChange)="onChange($event)"
+          class="code-textarea"
+          (select)="select($event)"
+          (click)="onclick($event)"
+          cdkFocusInitial
+          placeholder="Start writing…"
+        ></textarea>
+      </div>
+      <div class="pane-separator"></div>
+      <div class="pane preview-pane">
+        <div class="pane-label">PREVIEW</div>
+        <div class="preview-content" [innerHtml]="saniteizeme(previewfield.value)"></div>
       </div>
     </div>
 
-  </mat-form-field>
+    <!-- Full-width editor only -->
+    <div [hidden]="!showprev" class="full-view">
+      <textarea
+        [(ngModel)]="data"
+        (ngModelChange)="onChange(data)"
+        class="code-textarea"
+        (select)="select($event)"
+        (click)="onclick($event)"
+        placeholder="Start writing…"
+      ></textarea>
+    </div>
+
+  </div>
+
 </div>
