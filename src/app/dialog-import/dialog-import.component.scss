@@ -1,16 +1,355 @@
-.example-full-width {
-    width: 100%;
-  }
-
-code {
-  font-size: 15px;
-  background-color: black;
-  white-space: pre-wrap;
-  border-left: 12px solid #16bf6e;
-  border-radius: 5px;
-  padding: 5px;
+// ── Base shell ────────────────────────────────────────────────────────────────
+.import-shell {
+  display: flex;
+  flex-direction: column;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-width: 480px;
 }
 
-.greenfocus {
+// ── Header ────────────────────────────────────────────────────────────────────
+.import-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: #242424;
+  flex-shrink: 0;
+}
+
+.import-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.import-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #424242;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  .avatar-icon {
+    color: #9e9e9e;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.import-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.import-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
+}
+
+.import-subtitle {
+  font-size: 11px;
+  color: #757575;
+}
+
+.import-header-right {
+  display: flex;
+  align-items: center;
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+.import-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: 60vh;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+// ── Field group ───────────────────────────────────────────────────────────────
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #757575;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.full-width {
+  width: 100%;
+}
+
+// ── Source panel ──────────────────────────────────────────────────────────────
+.source-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Tool info block ───────────────────────────────────────────────────────────
+.tool-info {
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tool-info-text {
+  font-size: 12px;
+  color: #757575;
+}
+
+.tool-link {
+  color: #9e9e9e;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover {
+    color: #f5f5f5;
+    border-color: rgba(255,255,255,0.4);
+  }
+}
+
+.code-block {
+  background: #111;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+
+  code {
+    font-size: 13px;
+    color: #9e9e9e;
+    background: transparent;
+    border: none;
+    padding: 0;
+    white-space: pre-wrap;
+  }
+}
+
+.code-accent {
   color: #16bf6e;
 }
+
+.check-option {
+  font-size: 13px;
+  color: #9e9e9e;
+}
+
+// ── Info hint ─────────────────────────────────────────────────────────────────
+.info-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #757575;
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 8px 12px;
+
+  .hint-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #616161;
+    flex-shrink: 0;
+  }
+
+  code {
+    font-size: 12px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: #9e9e9e;
+    border: none;
+  }
+}
+
+// ── Upload zone ───────────────────────────────────────────────────────────────
+.upload-zone {
+  border: 1.5px dashed rgba(255,255,255,0.12);
+  border-radius: 10px;
+  background: #242424;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+
+  &:hover {
+    border-color: rgba(255,255,255,0.28);
+    background: #2a2a2a;
+  }
+
+  .upload-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: #616161;
+  }
+
+  .upload-label {
+    font-size: 12px;
+    color: #757575;
+  }
+
+  .file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// ── Progress ──────────────────────────────────────────────────────────────────
+.progress-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-label {
+  font-size: 11px;
+  color: #757575;
+}
+
+.progress-bar {
+  border-radius: 4px;
+}
+
+// ── Error banner ──────────────────────────────────────────────────────────────
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 83, 80, 0.08);
+  border: 1px solid rgba(239, 83, 80, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #ef5350;
+
+  .error-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+}
+
+// ── Action row ────────────────────────────────────────────────────────────────
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #424242;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #f5f5f5;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background: #616161;
+    border-color: rgba(255,255,255,0.2);
+  }
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #9e9e9e;
+  font-size: 13px;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: #242424;
+    color: #f5f5f5;
+  }
+}
+
+// ── Header tool button ────────────────────────────────────────────────────────
+.tool-btn {
+  color: #616161 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  &:hover { color: #9e9e9e !important; }
+}
+
+.close-btn:hover { color: #ef5350 !important; }
