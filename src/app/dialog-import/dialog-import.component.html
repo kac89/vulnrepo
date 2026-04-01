@@ -1,199 +1,371 @@
-<div class="mdc-card my-card-content">
-  <h1 mat-dialog-title>Import issues from:</h1>
-  <div mat-dialog-content>
+<div class="import-shell">
 
-    <mat-form-field color="accent" class="example-full-width">
-      <mat-label>Select source</mat-label>
-      <mat-select [(value)]="selected_source">
-        @for (Importsource of sour; track Importsource) {
-        <mat-option [value]="Importsource.value">
-          <img with="20" height="20" [src]="Importsource.viewImg">
-          {{Importsource.viewValue}}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+  <!-- Header -->
+  <div class="import-header">
+    <div class="import-header-left">
+      <div class="import-avatar">
+        <mat-icon class="avatar-icon">file_upload</mat-icon>
+      </div>
+      <div class="import-header-text">
+        <span class="import-title">Import Issues</span>
+        <span class="import-subtitle">Load findings from your security tools</span>
+      </div>
+    </div>
+    <div class="import-header-right">
+      <button mat-icon-button class="tool-btn close-btn" (click)="cancel()" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
 
-    @if (selected_source == 'vulnrepojson') {
-    <span>
-      <p><input type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)"></p>
-      <mat-form-field class="example-full-width" color="accent">
-        <input cdkFocusInitial matInput placeholder="File security key" #pass [type]="hide ? 'password' : 'text'">
-        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+  <!-- Content -->
+  <div mat-dialog-content class="import-body">
+
+    <!-- Source selector -->
+    <div class="field-group">
+      <label class="field-label">Source</label>
+      <mat-form-field color="accent" class="full-width source-field" appearance="outline">
+        <mat-select [(value)]="selected_source">
+          @for (Importsource of sour; track Importsource) {
+            <mat-option [value]="Importsource.value">
+              <img width="16" height="16" [src]="Importsource.viewImg" style="vertical-align:middle;margin-right:8px;">
+              {{Importsource.viewValue}}
+            </mat-option>
+          }
+        </mat-select>
       </mat-form-field>
-      @if (vulnrepojsonplease_wait) {
-      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-      @if (vulnrepowrongpass) {
-      <p><b style="color: red">Wrong security key!!!</b></p>
-      }
-      <br>
-      <button mat-raised-button color="accent" (click)="startUpload(pass.value)">Import</button>&nbsp;&nbsp;<button
-        mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-    </span>
+    </div>
+
+    <!-- VulnRepo JSON -->
+    @if (selected_source == 'vulnrepojson') {
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">lock</mat-icon>
+          <span class="upload-label">Select encrypted .vuln file</span>
+          <input type="file" accept=".vuln" name="myfile" (change)="fileChanged($event)" class="file-input">
+        </div>
+        <mat-form-field class="full-width" color="accent" appearance="outline">
+          <mat-label>Security key</mat-label>
+          <input cdkFocusInitial matInput placeholder="File security key" #pass [type]="hide ? 'password' : 'text'">
+          <mat-icon matSuffix (click)="hide = !hide" style="cursor:pointer">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+        @if (vulnrepojsonplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+        @if (vulnrepowrongpass) {
+          <div class="error-banner">
+            <mat-icon class="error-icon">error_outline</mat-icon>
+            Wrong security key
+          </div>
+        }
+        <div class="action-row">
+          <button class="primary-btn" (click)="startUpload(pass.value)">
+            <mat-icon>file_upload</mat-icon> Import
+          </button>
+          <button class="ghost-btn" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
     }
 
+    <!-- Bugcrowd -->
     @if (selected_source == 'bugcrowd') {
-    <input cdkFocusInitial type="file" accept=".csv" (change)="bugcrowdonFileSelect($event.target)" name="myfile">
-    }
-    @if (bugcrowdplease_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .csv file</span>
+          <input cdkFocusInitial type="file" accept=".csv" (change)="bugcrowdonFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (bugcrowdplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Burp Suite -->
     @if (selected_source == 'burp') {
-    <input cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile">
-    }
-    @if (burpplease_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .xml file</span>
+          <input cdkFocusInitial type="file" accept=".xml" (change)="burponFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (burpplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- OpenVAS -->
     @if (selected_source == 'openvas') {
-    <input cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile">
-    }
-    @if (selected_source == 'openvas') {
-    <p>Import results-*.xml file.</p>
-    }
-    @if (openvas9please_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="info-hint">
+          <mat-icon class="hint-icon">info_outline</mat-icon>
+          Import <code>results-*.xml</code> file.
+        </div>
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .xml file</span>
+          <input cdkFocusInitial type="file" accept=".xml" (change)="openvas9onFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (openvas9please_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Nessus CSV -->
     @if (selected_source == 'nessus') {
-    <input cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile">
-    }
-    @if (please_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .csv file</span>
+          <input cdkFocusInitial type="file" accept=".csv" (change)="onFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (please_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Nessus XML -->
     @if (selected_source == 'nessus_xml') {
-    <input cdkFocusInitial type="file" accept=".nessus" (change)="nessusxmlonFileSelect($event.target)" name="myfile">
-    }
-    @if (nessusxmlplease_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .nessus file</span>
+          <input cdkFocusInitial type="file" accept=".nessus" (change)="nessusxmlonFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (nessusxmlplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Jira XML -->
     @if (selected_source == 'jira_xml') {
-    <input cdkFocusInitial type="file" accept=".xml" (change)="jiraxmlonFileSelect($event.target)" name="myfile">
-    }
-    @if (jiraxmlplease_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .xml file</span>
+          <input cdkFocusInitial type="file" accept=".xml" (change)="jiraxmlonFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (jiraxmlplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Decrypted JSON -->
     @if (selected_source == 'decrypted_json') {
-    <input cdkFocusInitial type="file" accept=".json" (change)="decryptedjsononFileSelect($event.target)" name="myfile">
-    }
-    @if (decryptedjsonplease_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .json file</span>
+          <input cdkFocusInitial type="file" accept=".json" (change)="decryptedjsononFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (decryptedjsonplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
-
+    <!-- Nmap -->
     @if (selected_source == 'nmap') {
-    <div>
-      <small>Open source utility for network discovery and security auditing: <a class="active-link" target="_blank"
-          href="https://nmap.org/">Nmap</a>, example run:</small>
-      <br><br>
-      <code>$ <span class="greenfocus">nmap -T4 -Pn -oX r.xml 1.1.1.1</span></code>
-      <br><br>
-      <mat-checkbox [(ngModel)]="checked">Remove state down ip's</mat-checkbox>
-      <hr>
-      <input cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile">
-      @if (nmapplease_wait) {
-      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-    </div>
+      <div class="source-panel">
+        <div class="tool-info">
+          <span class="tool-info-text">Open source network discovery: <a class="tool-link" target="_blank" href="https://nmap.org/">Nmap</a></span>
+          <div class="code-block">
+            <code>$ <span class="code-accent">nmap -T4 -Pn -oX r.xml 1.1.1.1</span></code>
+          </div>
+          <mat-checkbox [(ngModel)]="checked" class="check-option">Remove state down IPs</mat-checkbox>
+        </div>
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .xml file</span>
+          <input cdkFocusInitial type="file" accept=".xml" (change)="nmaponFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (nmapplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
-
+    <!-- Trivy -->
     @if (selected_source == 'trivy') {
-    <div>
-      <small>Open source security scanner: <a class="active-link" target="_blank" href="https://trivy.dev/">Trivy</a>,
-        example run:</small>
-      <br><br>
-      <code>$ <span class="greenfocus">trivy fs . -f json -o r.json</span></code>
-      <br><br>
-      <hr>
-      <input cdkFocusInitial type="file" accept=".json" (change)="trivyonFileSelect($event.target)" name="myfile">
-      @if (please_wait) {
-      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-    </div>
+      <div class="source-panel">
+        <div class="tool-info">
+          <span class="tool-info-text">Open source security scanner: <a class="tool-link" target="_blank" href="https://trivy.dev/">Trivy</a></span>
+          <div class="code-block">
+            <code>$ <span class="code-accent">trivy fs . -f json -o r.json</span></code>
+          </div>
+        </div>
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .json file</span>
+          <input cdkFocusInitial type="file" accept=".json" (change)="trivyonFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (please_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
-
+    <!-- npm audit -->
     @if (selected_source == 'npm_audit') {
-    <div>
-      <small>JavaScript Package Manager: <a class="active-link" target="_blank" href="https://www.npmjs.com/">NPM</a>,
-        example run:</small>
-      <br><br>
-      <code>$ <span class="greenfocus">npm audit --json</span></code>
-      <br><br>
-      <hr>
-      <input cdkFocusInitial type="file" accept=".json" (change)="npmauditjsononFileSelect($event.target)"
-        name="myfile">
-      @if (npmauditplease_wait) {
-      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-    </div>
+      <div class="source-panel">
+        <div class="tool-info">
+          <span class="tool-info-text">JavaScript package manager: <a class="tool-link" target="_blank" href="https://www.npmjs.com/">NPM</a></span>
+          <div class="code-block">
+            <code>$ <span class="code-accent">npm audit --json</span></code>
+          </div>
+        </div>
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .json file</span>
+          <input cdkFocusInitial type="file" accept=".json" (change)="npmauditjsononFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (npmauditplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Semgrep -->
     @if (selected_source == 'semgrep') {
-    <div>
-      <small>Open source static analysis tool: <a class="active-link" target="_blank"
-          href="https://semgrep.dev/">Semgrep</a>, example run:</small>
-      <br><br>
-      <code>$ <span class="greenfocus">semgrep scan --json</span></code>
-      <br><br>
-      <mat-checkbox [formControl]="mergeperpath">Group results by path?</mat-checkbox>
-      <hr>
-      <input cdkFocusInitial type="file" accept=".json" (change)="semgreponFileSelect($event.target)" name="myfile">
-      @if (semgrepplease_wait) {
-      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-    </div>
+      <div class="source-panel">
+        <div class="tool-info">
+          <span class="tool-info-text">Open source static analysis: <a class="tool-link" target="_blank" href="https://semgrep.dev/">Semgrep</a></span>
+          <div class="code-block">
+            <code>$ <span class="code-accent">semgrep scan --json</span></code>
+          </div>
+          <mat-checkbox [formControl]="mergeperpath" class="check-option">Group results by path?</mat-checkbox>
+        </div>
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .json file</span>
+          <input cdkFocusInitial type="file" accept=".json" (change)="semgreponFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (semgrepplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Composer -->
     @if (selected_source == 'composer') {
-    <div>
-      <small>A Dependency Manager for PHP: <a class="active-link" target="_blank"
-          href="https://getcomposer.org/">Composer</a>, example run:</small>
-      <br><br>
-      <code>$ <span class="greenfocus">composer audit --format=json</span></code>
-      <br><br>
-      <hr>
-      <input cdkFocusInitial type="file" accept=".json" (change)="composeronFileSelect($event.target)" name="myfile">
-      @if (composerplease_wait) {
-      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-    </div>
+      <div class="source-panel">
+        <div class="tool-info">
+          <span class="tool-info-text">PHP dependency manager: <a class="tool-link" target="_blank" href="https://getcomposer.org/">Composer</a></span>
+          <div class="code-block">
+            <code>$ <span class="code-accent">composer audit --format=json</span></code>
+          </div>
+        </div>
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .json file</span>
+          <input cdkFocusInitial type="file" accept=".json" (change)="composeronFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (composerplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- Wiz -->
     @if (selected_source == 'wiz') {
-    <div>
-      <input cdkFocusInitial type="file" accept=".csv" (change)="wizonFileSelect($event.target)" name="myfile">
-      @if (wizplease_wait) {
-      <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-    </div>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .csv file</span>
+          <input cdkFocusInitial type="file" accept=".csv" (change)="wizonFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (wizplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
+    <!-- ZAProxy -->
     @if (selected_source == 'zaproxy') {
-    <input cdkFocusInitial type="file" accept=".json" (change)="zaproxyonFileSelect($event.target)" name="myfile">
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .json file</span>
+          <input cdkFocusInitial type="file" accept=".json" (change)="zaproxyonFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (zaproxyplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
-    @if (zaproxyplease_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
-    }
-    
 
+    <!-- Codesight -->
     @if (selected_source == 'codesight') {
-    <input cdkFocusInitial type="file" accept=".json" (change)="codesightonFileSelect($event.target)" name="myfile">
-    }
-    @if (codesightplease_wait) {
-    <p>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+      <div class="source-panel">
+        <div class="upload-zone">
+          <mat-icon class="upload-icon">upload_file</mat-icon>
+          <span class="upload-label">Select .json file</span>
+          <input cdkFocusInitial type="file" accept=".json" (change)="codesightonFileSelect($event.target)" name="myfile" class="file-input">
+        </div>
+        @if (codesightplease_wait) {
+          <div class="progress-row">
+            <span class="progress-label">Importing…</span>
+            <mat-progress-bar color="accent" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+          </div>
+        }
+      </div>
     }
 
-    <br>
-    <br>
     @if (selected_source != 'vulnrepojson') {
-    <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+      <div class="action-row">
+        <button class="ghost-btn" (click)="cancel()">Cancel</button>
+      </div>
     }
+
   </div>
 </div>

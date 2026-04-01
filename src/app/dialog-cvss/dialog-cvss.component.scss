@@ -1,53 +1,307 @@
-.example-full-width {
-    width: 100%;
+// ── Base shell ───────────────────────────────────────────────────────────────
+.cvss-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
+.cvss-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: #242424;
+  flex-shrink: 0;
+}
+
+.cvss-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cvss-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #424242;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  .cvss-icon {
+    color: #9e9e9e;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
   }
-  .example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
+}
+
+.cvss-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cvss-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
+}
+
+.cvss-subtitle {
+  font-size: 11px;
+  color: #757575;
+}
+
+.cvss-header-right {
+  display: flex;
+  align-items: center;
+}
+
+// ── Severity badge ────────────────────────────────────────────────────────────
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.severity-critical {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.severity-high {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.severity-medium {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.severity-low {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.severity-info, .severity-none {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+// ── Body / scroll area ────────────────────────────────────────────────────────
+.cvss-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+// ── Section labels ────────────────────────────────────────────────────────────
+.section-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #616161;
+  margin: 0 0 10px;
+
+  & + .metrics-grid { margin-bottom: 20px; }
+}
+
+// ── Metrics grid ──────────────────────────────────────────────────────────────
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .example-radio-group {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
   }
-  
-  .example-radio-button {
-    margin: 5px;
+}
+
+// ── Metric card ───────────────────────────────────────────────────────────────
+.metric-card {
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.metric-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.metric-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #bdbdbd;
+  cursor: default;
+}
+
+.metric-code {
+  font-size: 10px;
+  font-weight: 700;
+  color: #616161;
+  background: rgba(255,255,255,0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+}
+
+// ── Toggle button group (radio as chips) ──────────────────────────────────────
+.btn-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.btn-option {
+  // Hide the default radio circle
+  ::ng-deep .mdc-radio,
+  ::ng-deep .mat-radio-outer-circle,
+  ::ng-deep .mat-radio-inner-circle,
+  ::ng-deep .mat-radio-ripple {
+    display: none !important;
   }
 
+  ::ng-deep .mdc-form-field {
+    padding: 0;
+    cursor: pointer;
+  }
 
-  .label {
-    color: white;
+  ::ng-deep .mdc-label {
     display: inline-block;
-    font-family: verdana, sans-serif;
-    padding: 4px;
+    padding: 4px 10px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: #757575;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1.6;
+
+    &:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.2);
+      color: #e0e0e0;
+    }
   }
-  /*critical*/
-  .critical {
-    border-color: #FF0039;
-    background-color: #FF0039;
+
+  &.mat-mdc-radio-checked ::ng-deep .mdc-label {
+    background: #424242;
+    border-color: #616161;
+    color: #f5f5f5;
   }
-  /*high*/
-  .high {
-    border-color: #FF7518;
-    background-color: #FF7518;
-  } 
-  /*medium*/
-  .medium {
-    color: #000;
-    border-color: #F9EE06; 
-    background-color: #F9EE06;
-  } 
-  /*low*/
-  .low {
-    border-color: #3FB618; 
-    background-color: #3FB618;
-  } 
-  /*information*/
-  .info {
-    border-color: #2780E3; 
-    background-color: #2780E3;
-  } 
-  
+}
+
+// ── Score vector field ────────────────────────────────────────────────────────
+.vector-row {
+  margin-top: 4px;
+}
+
+.vector-field {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: #242424;
+    border-radius: 8px;
+  }
+
+  ::ng-deep .mdc-text-field--filled .mdc-floating-label {
+    color: #757575;
+  }
+
+  ::ng-deep .mat-mdc-input-element {
+    color: #e0e0e0;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+  }
+}
+
+// ── Mobile hint ───────────────────────────────────────────────────────────────
+.mobile-hint {
+  font-size: 12px;
+  color: #616161;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+.cvss-actions {
+  padding: 12px 20px 16px !important;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.save-btn {
+  background: #424242 !important;
+  color: #f5f5f5 !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  &:hover {
+    background: #616161 !important;
+  }
+}
+
+.cancel-btn {
+  color: #757575 !important;
+  font-size: 13px !important;
+
+  &:hover {
+    color: #9e9e9e !important;
+  }
+}
