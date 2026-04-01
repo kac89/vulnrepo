@@ -371,6 +371,24 @@
 			border-radius: var(--r2); padding: 18px 20px;
 			font-size: 13.5px; color: var(--text2); line-height: 1.7;
 		}
+		.scope-url-list {
+			margin: 0; padding: 0; list-style: none;
+		}
+		.scope-url-list li {
+			display: flex; align-items: center; gap: 8px;
+			padding: 7px 0; border-bottom: 1px solid var(--border);
+		}
+		.scope-url-list li:last-child { border-bottom: none; }
+		.scope-url-icon {
+			display: flex; align-items: center; flex-shrink: 0;
+			color: var(--accent); opacity: 0.75;
+		}
+		.scope-url-list a {
+			font-family: var(--mono); font-size: 13px; color: var(--accent);
+			word-break: break-all; text-decoration: none; flex: 1;
+		}
+		.scope-url-list a:hover { text-decoration: underline; }
+		.scope-in-scope-label { flex-shrink: 0; }
 
 		/* ================================================================
 		   STATS GRID
@@ -1607,9 +1625,26 @@
 			}
 
 			/* SCOPE */
-			let markedscope = "";
-			if (obj.report_scope) markedscope = marked.parse(obj.report_scope, { renderer: renderer });
-			$(".report_scope").html(DOMPurify.sanitize(markedscope));
+			if (obj.report_scope) {
+				const scopeLines = obj.report_scope.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+				const urlPattern = /^https?:\/\//i;
+				const hasUrls = scopeLines.some(l => urlPattern.test(l));
+				const linkIcon = '<span class="scope-url-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>';
+				const inScopeLabel = '<span class="sev-pill scope-in-scope-label" style="background:rgba(74,158,255,.1);color:var(--blue);border:1px solid rgba(74,158,255,.25);">In Scope</span>';
+				if (hasUrls) {
+					const listItems = scopeLines.map(function(line) {
+						if (urlPattern.test(line)) {
+							const safeUrl = DOMPurify.sanitize(line);
+							const safeText = DOMPurify.sanitize(line);
+							return '<li>' + linkIcon + '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + safeText + '</a>' + inScopeLabel + '</li>';
+						}
+						return '<li>' + DOMPurify.sanitize(line) + '</li>';
+					}).join('');
+					$(".report_scope").html('<ul class="scope-url-list">' + listItems + '</ul>');
+				} else {
+					$(".report_scope").html(DOMPurify.sanitize(marked.parse(obj.report_scope, { renderer: renderer })));
+				}
+			}
 
 			let markedhtml = "";
 			if (obj.report_settings.report_html) markedhtml = marked.parse(obj.report_settings.report_html, { renderer: renderer });
