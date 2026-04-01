@@ -131,6 +131,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   report_source_api = false;
   upload_in_progress = false;
   youhaveunsavedchanges = false;
+  stickyBarVisible = false;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   setLocal = 'en-GB';  //dd/MM/yyyy
@@ -185,6 +186,33 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   aiprogress = false;
   aiconnected = false;
   models: any;
+
+  issueSearchText = '';
+  issueFilterSeverity = '';
+
+  getFilteredVulns(): any[] {
+    let vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
+    if (this.issueFilterSeverity) {
+      vulns = vulns.filter(v => v.severity === this.issueFilterSeverity);
+    }
+    if (this.issueSearchText) {
+      const term = this.issueSearchText.toLowerCase();
+      vulns = vulns.filter(v =>
+        v.title?.toLowerCase().includes(term) ||
+        v.poc?.toLowerCase().includes(term) ||
+        v.desc?.toLowerCase().includes(term)
+      );
+    }
+    return vulns;
+  }
+
+  applyIssueFilter() {
+    this.pageIndex = 0;
+    const filtered = this.getFilteredVulns();
+    this.issesTable = new MatTableDataSource(filtered);
+    this.issesTable.paginator = this.paginator;
+    this.selectedResult = filtered.slice(0, this.pageSize);
+  }
 
   @HostListener('window:keydown.control.shift.l', ['$event'])
   GoToNewReport(event: KeyboardEvent) {
@@ -586,6 +614,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   sureYouWanttoLeave() {
     window.addEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = true;
+    this.stickyBarVisible = true;
 
     this.indexeddbService.updatechangesStatus(true);
 
@@ -594,11 +623,36 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   removeSureYouWanttoLeave() {
     window.removeEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = false;
+    this.stickyBarVisible = false;
     let id = window.setTimeout(function () { }, 0);
     while (id--) {
       window.clearTimeout(id); // will do nothing if no timeout with id is present
     }
     this.indexeddbService.updatechangesStatus(false);
+  }
+
+  dismissStickyBar() {
+    this.stickyBarVisible = false;
+  }
+
+  discardChanges() {
+    const pass = this.sessionsub.getSessionStorageItem(this.report_info.report_id);
+    if (pass !== null) {
+      this.report_decryption_in_progress = true;
+      if (this.report_source_api) {
+        if (this.indexeddbService.decodeAES(this.report_info, pass)) {
+          this.report_decryption_in_progress = false;
+          this.removeSureYouWanttoLeave();
+        }
+      } else {
+        this.indexeddbService.decrypt(pass, this.report_info.report_id).then(returned => {
+          if (returned) {
+            this.report_decryption_in_progress = false;
+            this.removeSureYouWanttoLeave();
+          }
+        });
+      }
+    }
   }
 
   afterDetectionNow() {
@@ -875,7 +929,8 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     const dialogRef = this.dialog.open(DialogPassComponent, {
       width: '400px',
       disableClose: true,
-      data: data
+      data: data,
+      panelClass: 'dark-dialog-panel'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -961,9 +1016,10 @@ Sample code here\n\
     }
 
     // this.reportdesc.report_lastupdate = this.decryptedReportDataChanged.report_lastupdate;
-    this.issesTable = new MatTableDataSource(this.decryptedReportDataChanged.report_vulns);
+    const filtered = this.getFilteredVulns();
+    this.issesTable = new MatTableDataSource(filtered);
     this.issesTable.paginator = this.paginator;
-    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
+    this.selectedResult = filtered.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
 
   }
 
@@ -974,7 +1030,7 @@ Sample code here\n\
       this.pageIndex = event.pageIndex;
     }
 
-    this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
+    this.selectedResult = this.getFilteredVulns().slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
     return event;
 
   }

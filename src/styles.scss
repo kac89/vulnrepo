@@ -373,4 +373,15 @@ blockquote p {
   border-radius: 50%;
 
   width: 250px;
-} 
+}
+
+.mat-mdc-dialog-surface {
+  overflow: hidden;
+}
+
+.dark-dialog-panel .mat-mdc-dialog-surface {
+  background: transparent !important;
+  border-radius: 14px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6) !important;
+  overflow: hidden;
+}

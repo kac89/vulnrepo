@@ -1,119 +1,125 @@
-<div fxLayout="row wrap" fxLayoutGap="10px grid">
-  <div fxLayoutAlign="center center" fxFlex="10%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <img title="VULNRΞPO REPORT" width="60px" src="assets/issue.png">
-  </div>
-  <div fxLayoutAlign="start center" fxFlex="90%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <h1 style="margin: 0 0 0;" class="mat-headline-3">{{reportdesc?.report_name}} @if (decryptedReportDataChanged) {
-      <a
-        title="Edit report name" [routerLink]="[]" (click)="editreporttitle(reportdesc)">
-        <mat-icon class="vertical-align-middle valign-center padding-bottom-3">edit</mat-icon>
-      </a>
-    }
-  </h1>
-</div>
-</div>
-
-<br><br>
-<!-- Report info -->
-<mat-card appearance="outlined" class="mdc-typography--body1">
-  @if (decryptedReportDataChanged) {
-    <mat-card-header>
-      <div mat-card-avatar>
-        <mat-icon>fingerprint</mat-icon>
+<!-- Sticky unsaved-changes bar -->
+@if (stickyBarVisible && decryptedReportDataChanged) {
+  <div class="report-sticky-bar">
+    <div class="report-sticky-bar-inner">
+      <span class="report-sticky-bar-msg">
+        <mat-icon>notifications_active</mat-icon>
+        You have unsaved changes
+      </span>
+      <div class="report-sticky-bar-actions">
+        <button mat-stroked-button class="report-sticky-discard-btn"
+          (click)="discardChanges()" title="Revert to last saved version">
+          <mat-icon>undo</mat-icon> Discard
+        </button>
+        <button mat-flat-button color="primary" class="report-sticky-save-btn"
+          (click)="saveReportChanges(reportdesc.report_id)">
+          <mat-icon>save</mat-icon> Save &amp; release v.{{ decryptedReportDataChanged.report_version + 1 }}
+        </button>
       </div>
-      <mat-card-title style="display: flex">Release version</mat-card-title>
-    </mat-card-header>
-  }
-  <mat-card-content>
+    </div>
+  </div>
+}
 
-    <div fxLayout="row wrap" fxLayoutGap="10px grid">
-      @if (api_connection_status) {
-        <p>API connection please wait...<mat-progress-bar style="width: 300px;"
-        color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
+<div class="report-page" [class.report-page--bar-visible]="stickyBarVisible">
+
+<!-- Hero -->
+<div class="report-hero">
+  <div class="report-hero-inner">
+    <div class="report-hero-icon">
+      <img title="VULNRΞPO REPORT" src="assets/issue.png">
+    </div>
+    <div class="report-hero-body">
+      <h1 class="report-hero-title">
+        {{reportdesc?.report_name}}
+        @if (decryptedReportDataChanged) {
+          <a title="Edit report name" [routerLink]="[]" (click)="editreporttitle(reportdesc)">
+            <mat-icon>edit</mat-icon>
+          </a>
+        }
+      </h1>
       @if (!api_connection_status) {
-        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+        <div class="report-hero-meta">
           @if (!report_decryption_in_progress) {
-            <p>Report ID: {{reportdesc?.report_id}} @if (report_source_api) {
-              <mat-icon
-              color="accent">public</mat-icon>
-            }</p>
+            <span class="report-hero-meta-item">
+              ID: <b>{{reportdesc?.report_id}}</b>
+              @if (report_source_api) { <mat-icon color="accent" style="font-size:14px;width:14px;height:14px;">public</mat-icon> }
+            </span>
+            <span class="report-hero-meta-item">Created: <b>{{reportdesc?.report_createdate | date:'mediumDate'}}</b></span>
           }
           @if (decryptedReportDataChanged) {
-            <p>Report Version: <b
-            class="labelversion">{{decryptedReportDataChanged?.report_version}}</b>
-            &nbsp;&nbsp;<button matButton="outlined" (click)="showHistory(reportdesc.report_id)">
-            <mat-icon class="vertical-align-middle padding-bottom-3">history</mat-icon> History</button>
-          </p>
-        }
-        @if (!report_decryption_in_progress) {
-          <p>Created: {{reportdesc?.report_createdate | date:'medium'}}</p>
-        }
-        @if (report_decryption_in_progress) {
-          <p>Report is decrypted please wait...<mat-progress-bar
-          style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
-        </p>
+            <span class="report-hero-meta-item">
+              Version: <b class="labelversion">{{decryptedReportDataChanged?.report_version}}</b>
+              &nbsp;<button matButton="outlined" (click)="showHistory(reportdesc.report_id)">
+                <mat-icon class="vertical-align-middle padding-bottom-3">history</mat-icon> History
+              </button>
+            </span>
+          }
+        </div>
+      }
+      @if (api_connection_status) {
+        <p style="margin:8px 0 0; font-size:0.875rem;">API connection please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
+      @if (report_decryption_in_progress) {
+        <p style="margin:8px 0 0; font-size:0.875rem;">Report is decrypted please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
       }
       @if (report_encryption_in_progress) {
-        <p>Report is encrypted please wait...<mat-progress-bar
-        style="width: 300px;" color="accent" mode="indeterminate"></mat-progress-bar>
-      </p>
-    }
-  </div>
-}
+        <p style="margin:8px 0 0; font-size:0.875rem;">Report is encrypted please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
+      }
 
-@if (decryptedReportDataChanged) {
-  <div style="text-align: center;" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-    @if (reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == '') {
-      <p
-        >
-        @if (!youhaveunsavedchanges && savemsg) {
-          <span>{{savemsg}}</span>
-          }@if (!youhaveunsavedchanges && savemsg) {
-          <br
-            >
-          }Last release: <b><i>{{reportdesc?.report_lastupdate | date:
-        'medium'}}</i></b>
-      </p>
-    }
-    @if (lastsavereportdata !== '') {
-      <p>
-        @if (!youhaveunsavedchanges && savemsg) {
-          <span>{{savemsg}}</span>
-          }@if (!youhaveunsavedchanges && savemsg) {
-          <br
-            >
-          }Last release: <b class="active-link"><i>{{lastsavereportdata |
-        date: 'medium'}}</i></b>
-      </p>
-    }
-    <div>
-      <button mat-fab extended class="mat-elevation-z9" color="primary"
-        (click)="saveReportChanges(reportdesc.report_id)">
-        <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save changes and release a new
-        version
-      </button>
+      @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
+        <div class="report-severity-strip">
+          @for (sev of severitytable; track sev) {
+            @if (sev.value > 0) {
+              <span class="report-sev-pill sev-{{ sev.name | lowercase }}">
+                <span class="report-sev-count">{{ sev.value }}</span>
+                {{ sev.name }}
+              </span>
+            }
+          }
+        </div>
+      }
+
+      @if (decryptedReportDataChanged) {
+        <div class="report-save-row">
+          <div class="report-save-meta">
+            @if (reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == '') {
+              @if (!youhaveunsavedchanges && savemsg) {
+                <span>{{savemsg}}</span><br>
+              }
+              Last release: <b><i>{{reportdesc?.report_lastupdate | date:'medium'}}</i></b>
+            }
+            @if (lastsavereportdata !== '') {
+              @if (!youhaveunsavedchanges && savemsg) {
+                <span>{{savemsg}}</span><br>
+              }
+              Last release: <b style="color:#69f0ae;"><i>{{lastsavereportdata | date:'medium'}}</i></b>
+            }
+            @if (youhaveunsavedchanges) {
+              <div class="youhaveunsavedchanges">
+                <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon>
+                You have unsaved changes!
+                <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
+              </div>
+            }
+          </div>
+          <button mat-fab extended class="mat-elevation-z9" color="primary"
+            (click)="saveReportChanges(reportdesc.report_id)">
+            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save &amp; release new version
+          </button>
+        </div>
+      }
     </div>
-    @if (youhaveunsavedchanges) {
-      <div class="youhaveunsavedchanges">
-        <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon> You have unsaved
-        changes! <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
-      </div>
-    }
   </div>
-}
-
 </div>
 
+<!-- Sections -->
+<div class="report-sections">
 
-</mat-card-content>
-</mat-card>
 
 @if (decryptedReportDataChanged) {
   <div>
-    <br>
       <!-- Report details -->
-      <mat-card appearance="outlined">
+      <mat-card appearance="outlined" class="report-section">
         <mat-card-header>
           <div mat-card-avatar>
             <mat-icon>description</mat-icon>
@@ -197,82 +203,99 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <br>
           <!-- Issues list -->
-          <mat-card appearance="outlined">
-            <div fxLayout="row wrap" style="display:flex;padding: 16px 16px 0;">
-              <div class="mat-mdc-card-avatar">
+          <mat-card appearance="outlined" class="report-section">
+            <mat-card-header>
+              <div mat-card-avatar>
                 <mat-icon>bug_report</mat-icon>
               </div>
-              <div class="mat-mdc-card-title" style="padding-left: 16px;">
-                <span>
-                  Issues ({{decryptedReportDataChanged.report_vulns.length}})
-                </span>
-              </div>
-              <div style="flex-grow: 1"></div>
-              <div fxLayoutAlign="end" fxLayoutGap="5px grid">
-                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <button style="width: 100%" mat-button (click)="import_issues()">
-                    <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
-                  </button>
-                </div>
-                <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
+              <mat-card-title>Issues ({{decryptedReportDataChanged.report_vulns.length}})</mat-card-title>
+              <span style="flex:1"></span>
+              <div class="issues-header-actions">
+                <button mat-button (click)="import_issues()">
+                  <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
+                </button>
+                <div id="rightopts">
                   @if (decryptedReportDataChanged.report_vulns.length != 0) {
-                    <button [matMenuTriggerFor]="dropdownMenuOne" style="width: 100%"
-                      mat-button>
+                    <button [matMenuTriggerFor]="dropdownMenuOne" mat-button>
                       <mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon>Export
                     </button>
                   }
                   <mat-menu #dropdownMenuOne="matMenu">
-                    <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'all')">Export
-                    all</button>
+                    <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'all')">Export all</button>
                     @if (selectedIssues.length >= 1) {
-                      <button mat-menu-item
-                        (click)="export_issues(decryptedReportDataChanged.report_vulns, 'selected')">Export selected
-                      ({{selectedIssues.length}})</button>
+                      <button mat-menu-item (click)="export_issues(decryptedReportDataChanged.report_vulns, 'selected')">Export selected ({{selectedIssues.length}})</button>
                     }
                     <button mat-menu-item [matMenuTriggerFor]="bysev">Export by Severity</button>
                     @if (getTags(decryptedReportDataChanged.report_vulns) >= 1) {
-                      <button mat-menu-item
-                      [matMenuTriggerFor]="bytag">Export by Tag</button>
+                      <button mat-menu-item [matMenuTriggerFor]="bytag">Export by Tag</button>
                     }
                   </mat-menu>
                   <mat-menu #bysev="matMenu">
-                    <button mat-menu-item
-                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Critical')">Critical</button>
-                    <button mat-menu-item
-                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'High')">High</button>
-                    <button mat-menu-item
-                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Medium')">Medium</button>
-                    <button mat-menu-item
-                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
-                    <button mat-menu-item
-                    (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
+                    <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Critical')">Critical</button>
+                    <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'High')">High</button>
+                    <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Medium')">Medium</button>
+                    <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Low')">Low</button>
+                    <button mat-menu-item (click)="export_by_severity(decryptedReportDataChanged.report_vulns, 'Info')">Info</button>
                   </mat-menu>
                   <mat-menu #bytag="matMenu">
                     @for (tagsin of getAllTAgs(); track tagsin) {
-                      <span>
-                        <button mat-menu-item (click)="export_by_tag(tagsin)">
-                          {{tagsin}}
-                        </button>
-                      </span>
+                      <button mat-menu-item (click)="export_by_tag(tagsin)">{{tagsin}}</button>
                     }
                   </mat-menu>
                 </div>
-                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  @if (decryptedReportDataChanged.report_vulns.length > 1) {
-                    <button mat-button [matMenuTriggerFor]="menu">
-                      <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
-                    </button>
-                  }
+                @if (decryptedReportDataChanged.report_vulns.length > 1) {
+                  <button mat-button [matMenuTriggerFor]="menu">
+                    <mat-icon class="vertical-align-middle padding-bottom-3">swap_vert</mat-icon>Sort
+                  </button>
                   <mat-menu #menu="matMenu">
                     <button mat-menu-item (click)="sortbyseverity()">Severity</button>
                     <button mat-menu-item (click)="sortbycvss()">CVSS</button>
                   </mat-menu>
-                </div>
+                }
               </div>
-            </div>
+            </mat-card-header>
             <mat-card-content>
+              @if (decryptedReportDataChanged.report_vulns.length > 0) {
+                <div class="report-issue-filter-bar">
+                  <mat-form-field appearance="outline" class="report-issue-search" color="accent" subscriptSizing="dynamic">
+                    <mat-label>Search issues</mat-label>
+                    <mat-icon matPrefix>search</mat-icon>
+                    <input matInput [(ngModel)]="issueSearchText" (ngModelChange)="applyIssueFilter()" placeholder="Title, PoC, description…">
+                    @if (issueSearchText) {
+                      <button matSuffix mat-icon-button (click)="issueSearchText=''; applyIssueFilter()" title="Clear search">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    }
+                  </mat-form-field>
+                  <div class="report-sev-filters">
+                    @for (sev of dataSourceforseverity; track sev) {
+                      <button mat-stroked-button
+                        class="sev-filter-btn sev-filter-{{ sev.severity | lowercase }}"
+                        [class.active]="issueFilterSeverity === sev.severity"
+                        (click)="issueFilterSeverity = issueFilterSeverity === sev.severity ? '' : sev.severity; applyIssueFilter()">
+                        {{ sev.severity }}
+                      </button>
+                    }
+                    @if (issueFilterSeverity || issueSearchText) {
+                      <button mat-icon-button title="Clear all filters"
+                        (click)="issueFilterSeverity=''; issueSearchText=''; applyIssueFilter()">
+                        <mat-icon>filter_alt_off</mat-icon>
+                      </button>
+                    }
+                  </div>
+                </div>
+                @if (selectedResult.length === 0 && (issueFilterSeverity || issueSearchText)) {
+                  <div class="report-filter-empty">
+                    <mat-icon>search_off</mat-icon>
+                    <p>No issues match your filter.</p>
+                    <button mat-stroked-button color="accent"
+                      (click)="issueFilterSeverity=''; issueSearchText=''; applyIssueFilter()">
+                      Clear filters
+                    </button>
+                  </div>
+                }
+              }
               <div [hidden]="decryptedReportDataChanged.report_vulns.length == 0">
                 <mat-paginator #paginatorIssues color="accent" [pageSizeOptions]="[20, 50, 100, 250]"
                 (page)="pageEvent=getData($event)" showFirstLastButtons></mat-paginator>
@@ -596,20 +619,31 @@
                         </mat-expansion-panel>
                       </div>
                     }
-                    <br>
-                      <div class="banner">
-                        <div class="center-me">
+                      @if (decryptedReportDataChanged.report_vulns.length === 0) {
+                        <div class="report-empty-state">
+                          <div class="report-empty-icon-wrap">
+                            <mat-icon>shield</mat-icon>
+                          </div>
+                          <h3 class="report-empty-title">No vulnerabilities added yet</h3>
+                          <p class="report-empty-desc">Start documenting your findings by adding the first issue to this report.</p>
                           <button class="mat-elevation-z9" mat-fab extended color="accent" (click)="addissue()">
-                            <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add issue
+                            <mat-icon>add</mat-icon> Add first issue
                           </button>
                         </div>
-                      </div>
+                      } @else {
+                        <div class="banner">
+                          <div class="center-me">
+                            <button class="mat-elevation-z9" mat-fab extended color="accent" (click)="addissue()">
+                              <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add issue
+                            </button>
+                          </div>
+                        </div>
+                      }
                     </mat-card-content>
                   </mat-card>
-                  <br>
                     <!-- Stats -->
                     @if (decryptedReportDataChanged.report_vulns.length !== 0) {
-                      <mat-card appearance="outlined">
+                      <mat-card appearance="outlined" class="report-section">
                         <mat-card-header>
                           <div mat-card-avatar>
                             <mat-icon>insert_chart</mat-icon>
@@ -640,9 +674,8 @@
                         </mat-card-content>
                       </mat-card>
                     }
-                    <br>
                       <!-- Researcher -->
-                      <mat-card appearance="outlined">
+                      <mat-card appearance="outlined" class="report-section">
                         <mat-card-header>
                           <div mat-card-avatar>
                             <mat-icon>face</mat-icon>
@@ -699,9 +732,8 @@
                           }
                         </mat-card-content>
                       </mat-card>
-                      <br>
                         <!-- changelog -->
-                        <mat-card appearance="outlined">
+                        <mat-card appearance="outlined" class="report-section">
                           <mat-card-header>
                             <div mat-card-avatar>
                               <mat-icon>track_changes</mat-icon>
@@ -778,10 +810,9 @@
                             </div>
                           </mat-card-content>
                         </mat-card>
-                        <br>
                           <!-- Report Settings -->
                           @if (decryptedReportDataChanged) {
-                            <mat-card appearance="outlined">
+                            <mat-card appearance="outlined" class="report-section">
                               <mat-card-header>
                                 <div mat-card-avatar>
                                   <mat-icon>settings</mat-icon>
@@ -939,10 +970,9 @@
                                             </mat-card-content>
                                           </mat-card>
                                         }
-                                        <br>
                                           <!-- Download -->
                                           @if (decryptedReportDataChanged) {
-                                            <mat-card appearance="outlined">
+                                            <mat-card appearance="outlined" class="report-section">
                                               <mat-card-header>
                                                 <div mat-card-avatar>
                                                   <mat-icon>cloud_download</mat-icon>
@@ -1012,8 +1042,8 @@
                                               </mat-card-content>
                                             </mat-card>
                                           }
-                                          <br>
-                                            <br>
                                             </div>
                                           }
-                                          <br>
+
+</div><!-- /report-sections -->
+</div><!-- /report-page -->

@@ -1,3 +1,208 @@
+// ──────────────────────────────────────────────────────────────
+// Report Page — modern Next.js-inspired layout
+// Same design language as faq.component.scss
+// ──────────────────────────────────────────────────────────────
+
+$border-color: rgba(255, 255, 255, 0.12);
+$surface: #424242;
+$surface-hover: #4e4e4e;
+$surface-nested: #555555;
+$surface-nested-hover: #5e5e5e;
+$text-secondary: rgba(255, 255, 255, 0.55);
+$accent-green: #69f0ae;
+
+// ── Page wrapper ─────────────────────────────────────────────
+.report-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  transition: padding-top 0.18s ease;
+
+  &--bar-visible {
+    padding-top: 48px; // pushes content down by sticky bar height so hero isn't clipped
+  }
+}
+
+// ── Hero ──────────────────────────────────────────────────────
+.report-hero {
+  padding: 48px 0 32px;
+  border-bottom: 1px solid $border-color;
+}
+
+.report-hero-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.report-hero-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  background: $surface-nested;
+  flex-shrink: 0;
+
+  img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+}
+
+.report-hero-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.report-hero-title {
+  margin: 0 0 4px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  a {
+    color: $text-secondary;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+    &:hover { color: $accent-green; }
+  }
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.report-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.report-hero-meta-item {
+  font-size: 0.825rem;
+  color: $text-secondary;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  b, strong {
+    color: rgba(255, 255, 255, 0.87);
+  }
+}
+
+// ── Save row (in hero) ────────────────────────────────────────
+.report-save-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid $border-color;
+}
+
+.report-save-meta {
+  font-size: 0.825rem;
+  color: $text-secondary;
+  flex: 1;
+  min-width: 0;
+
+  b, i { color: rgba(255, 255, 255, 0.85); }
+}
+
+// ── Sections container ────────────────────────────────────────
+.report-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 28px;
+}
+
+// ── Section card (overrides mat-card) ────────────────────────
+.report-section {
+  background: $surface !important;
+  border: 1px solid $border-color !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  margin-bottom: 12px !important;
+
+  // header bar
+  .mat-mdc-card-header {
+    padding: 18px 20px 16px !important;
+    border-bottom: 1px solid $border-color;
+    align-items: center !important;
+  }
+
+  .mat-mdc-card-header-text {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+  }
+
+  .mat-mdc-card-content {
+    padding: 20px !important;
+  }
+
+  // Icon avatar
+  .mat-mdc-card-avatar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 8px !important;
+    border: 1px solid $border-color !important;
+    background: $surface-nested !important;
+    overflow: hidden !important;
+    margin-right: 12px !important;
+
+    mat-icon {
+      color: $accent-green !important;
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+
+  .mat-mdc-card-title {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  // Nested cards inside (e.g. settings sub-cards)
+  mat-card {
+    background: $surface-nested !important;
+    border: 1px solid $border-color !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+  }
+}
+
+// ── Unsaved changes banner ────────────────────────────────────
+.youhaveunsavedchanges {
+  padding-top: 4px !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ff9800;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+// ── Severity labels (pills) ───────────────────────────────────
 .example-full-width {
   width: 100%;
 }
@@ -5,8 +210,9 @@
 .banner {
   min-width: 150px;
   display: flex;
+  margin-top: 20px;
 }
-  
+
 .center-me {
   margin: auto;
 }
@@ -16,20 +222,28 @@ table {
 }
 
 .labelversion {
-  font-size: medium;
-  color: #69f0ae;
+  font-size: 0.875rem;
+  color: $accent-green;
   display: inline;
   font-family: verdana, sans-serif;
-  padding: 2px;
-  border-color: #212121; 
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba($accent-green, 0.08);
+  border: 1px solid rgba($accent-green, 0.25);
 }
 
 .label {
   color: white;
   display: inline-block;
   font-family: verdana, sans-serif;
-  padding: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
 }
+
 /*critical*/
 .critical {
   border-color: #FF0039;
@@ -39,37 +253,39 @@ table {
 .high {
   border-color: #FF7518;
   background-color: #FF7518;
-} 
+}
 /*medium*/
 .medium {
   color: #000;
-  border-color: #F9EE06; 
+  border-color: #F9EE06;
   background-color: #F9EE06;
-} 
+}
 /*low*/
 .low {
-  border-color: #3FB618; 
+  border-color: #3FB618;
   background-color: #3FB618;
-} 
+}
 /*information*/
 .info {
-  border-color: #2780E3; 
+  border-color: #2780E3;
   background-color: #2780E3;
-} 
+}
 
 .card-container-right {
   display: flex;
   float: right;
-  margin-left:-8px;
+  margin-left: -8px;
 }
-  
-.card-container-left{
+
+.card-container-left {
   display: inline;
 }
 
-.mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
-    display: inline;
+.mat-expansion-panel-header-description,
+.mat-expansion-panel-header-title {
+  display: inline;
 }
+
 .mat-expansion-panel-header-description {
   margin-top: 6px;
 }
@@ -125,69 +341,67 @@ tr.mat-mdc-footer-row td {
   border-top: 1px solid #595959;
 }
 
-::ng-deep .ngx-charts { 
-  text{
-      fill: #fff!important; 
+::ng-deep .ngx-charts {
+  text {
+    fill: #fff !important;
   }
 }
 
-::ng-deep.special-date {
-  border-color: #FF0039!important;
-  background-color: #FF0039!important;
+::ng-deep .special-date {
+  border-color: #FF0039 !important;
+  background-color: #FF0039 !important;
   opacity: 0.6;
   border-radius: 100%;
   border-width: 0px;
 }
 
-::ng-deep.special-date-high {
-  border-color: #FF7518!important;
-  background-color: #FF7518!important;
+::ng-deep .special-date-high {
+  border-color: #FF7518 !important;
+  background-color: #FF7518 !important;
   opacity: 0.6;
   border-radius: 100%;
   border-width: 0px;
 }
 
-::ng-deep.special-date-medium {
-  border-color: #F9EE06!important;
-  background-color: #F9EE06!important;
+::ng-deep .special-date-medium {
+  border-color: #F9EE06 !important;
+  background-color: #F9EE06 !important;
   opacity: 0.6;
-  color: #000!important;
+  color: #000 !important;
   border-radius: 100%;
   border-width: 0px;
 }
 
-::ng-deep.special-date-low {
-  border-color: #3FB618!important;
-  background-color: #3FB618!important;
-  opacity: 0.6;
-  border-radius: 100%;
-  border-width: 0px;
-}
-
-::ng-deep.special-date-info {
-  border-color: #2780E3!important;
-  background-color: #2780E3!important;
+::ng-deep .special-date-low {
+  border-color: #3FB618 !important;
+  background-color: #3FB618 !important;
   opacity: 0.6;
   border-radius: 100%;
   border-width: 0px;
 }
 
-::ng-deep.success-date {
-  border-color: #18ad3d58!important;
-  background-color: #18ad3d58!important;
+::ng-deep .special-date-info {
+  border-color: #2780E3 !important;
+  background-color: #2780E3 !important;
   opacity: 0.6;
   border-radius: 100%;
   border-width: 0px;
 }
 
-::ng-deep.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-value {
-  margin-top: 1px!important;
+::ng-deep .success-date {
+  border-color: #18ad3d58 !important;
+  background-color: #18ad3d58 !important;
+  opacity: 0.6;
+  border-radius: 100%;
+  border-width: 0px;
 }
 
+::ng-deep .advanced-pie-legend .legend-items-container .legend-items .legend-item .item-value {
+  margin-top: 1px !important;
+}
 
-::ng-deep.legend-item:hover {
-
-  color: #16bf6e!important;
+::ng-deep .legend-item:hover {
+  color: #16bf6e !important;
 }
 
 mat-paginator {
@@ -209,6 +423,306 @@ mat-paginator {
   border-radius: 5px;
 }
 
-.youhaveunsavedchanges {
-  padding-top: 4px!important;
+// ── Issues header actions ─────────────────────────────────────
+.issues-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+// ── Responsive ────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .report-page {
+    padding: 0 16px 60px;
+  }
+
+  .report-hero {
+    padding: 28px 0 24px;
+  }
+
+  .report-hero-title {
+    font-size: 1.4rem;
+  }
+
+  .report-hero-meta {
+    gap: 12px;
+  }
+
+  .report-section .mat-mdc-card-content {
+    padding: 14px !important;
+  }
+
+  .report-section .mat-mdc-card-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .issues-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+// ── Sticky save bar (sub-navbar, sits below mat-toolbar) ─────
+.report-sticky-bar {
+  position: fixed;
+  top: 64px;           // height of the main mat-toolbar
+  left: 0;
+  right: 0;
+  z-index: 999;        // one below .app-toolbar (z-index: 1000)
+  height: 48px;
+  background: #212121; // matches mat-toolbar color="primary" (grey-900)
+  border-bottom: 2px solid rgba($accent-green, 0.5);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  animation: slide-down 0.18s ease;
+}
+
+@keyframes slide-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+.report-sticky-bar-inner {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.report-sticky-bar-msg {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #ff9800;
+  flex: 1;
+
+  mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.report-sticky-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.report-sticky-discard-btn {
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 0.78rem !important;
+  color: $text-secondary !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+
+  &:hover {
+    color: #fff !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+  }
+}
+
+.report-sticky-save-btn {
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 0.78rem !important;
+}
+
+.report-sticky-close-btn {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  color: $text-secondary !important;
+  transition: color 0.15s !important;
+
+  &:hover { color: #fff !important; }
+}
+
+@media (max-width: 768px) {
+  .report-sticky-bar { top: 56px; } // mobile toolbar is 56px
+}
+
+// ── Severity summary strip ────────────────────────────────────
+.report-severity-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.report-sev-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 6px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.report-sev-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0 4px;
+}
+
+.sev-critical {
+  color: #FF0039;
+  border-color: rgba(#FF0039, 0.3);
+  background: rgba(#FF0039, 0.08);
+  .report-sev-count { background: #FF0039; color: #fff; }
+}
+.sev-high {
+  color: #FF7518;
+  border-color: rgba(#FF7518, 0.3);
+  background: rgba(#FF7518, 0.08);
+  .report-sev-count { background: #FF7518; color: #fff; }
+}
+.sev-medium {
+  color: #e8d900;
+  border-color: rgba(#F9EE06, 0.3);
+  background: rgba(#F9EE06, 0.07);
+  .report-sev-count { background: #F9EE06; color: #000; }
+}
+.sev-low {
+  color: #3FB618;
+  border-color: rgba(#3FB618, 0.3);
+  background: rgba(#3FB618, 0.08);
+  .report-sev-count { background: #3FB618; color: #fff; }
+}
+.sev-info {
+  color: #5b9cf6;
+  border-color: rgba(#2780E3, 0.3);
+  background: rgba(#2780E3, 0.08);
+  .report-sev-count { background: #2780E3; color: #fff; }
+}
+
+// ── Issue filter bar ──────────────────────────────────────────
+.report-issue-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 12px;
+}
+
+.report-issue-search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.report-sev-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.sev-filter-btn {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 0 10px !important;
+  height: 30px !important;
+  min-width: unset !important;
+  border-radius: 20px !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s !important;
+}
+
+.sev-filter-critical         { color: #FF0039 !important; border-color: rgba(#FF0039, 0.4) !important; }
+.sev-filter-critical.active  { background: #FF0039 !important; color: #fff !important; }
+.sev-filter-high             { color: #FF7518 !important; border-color: rgba(#FF7518, 0.4) !important; }
+.sev-filter-high.active      { background: #FF7518 !important; color: #fff !important; }
+.sev-filter-medium           { color: #e8d900 !important; border-color: rgba(#F9EE06, 0.4) !important; }
+.sev-filter-medium.active    { background: #F9EE06 !important; color: #000 !important; }
+.sev-filter-low              { color: #3FB618 !important; border-color: rgba(#3FB618, 0.4) !important; }
+.sev-filter-low.active       { background: #3FB618 !important; color: #fff !important; }
+.sev-filter-info             { color: #5b9cf6 !important; border-color: rgba(#2780E3, 0.4) !important; }
+.sev-filter-info.active      { background: #2780E3 !important; color: #fff !important; }
+
+// ── Filter empty state (no results for filter) ────────────────
+.report-filter-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 0;
+  color: $text-secondary;
+  text-align: center;
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    opacity: 0.4;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+// ── Issues empty state ────────────────────────────────────────
+.report-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.report-empty-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  border: 1px solid $border-color;
+  background: $surface-nested;
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: $accent-green;
+    opacity: 0.6;
+  }
+}
+
+.report-empty-title {
+  margin: 4px 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.report-empty-desc {
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  color: $text-secondary;
+  max-width: 360px;
+  line-height: 1.6;
 }

@@ -1,49 +1,74 @@
-<h2 mat-dialog-title>
-  <mat-icon class="vertical-align-middle size-45">https</mat-icon> Decrypt report</h2>
-  <mat-dialog-content>
-    <div>
-      <form class="example-form">
-        <mat-form-field class="example-full-width" color="accent" appearance="outline">
-          <input matInput placeholder="Report security key" #pass [formControl]="insertpass"
-            (keydown)="onKeydown($event,pass.value,data.report_id)" [type]="hide ? 'password' : 'text'">
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            <mat-hint>
-              @if (msg != '') {
-                <strong>
-                  <mat-icon class="vertical-align-middle size-45">https</mat-icon> {{msg}}
-                </strong>
-              }
-            </mat-hint>
-            @if (insertpass.hasError('incorrect')) {
-              <mat-error>
-                <strong>
-                  <mat-icon class="vertical-align-middle size-45">https</mat-icon> Security key is incorrect!
-                </strong>
-              </mat-error>
-            }
-          </mat-form-field>
+<div class="pass-shell">
 
-
-        </form>
+  <!-- Header -->
+  <div class="pass-header">
+    <div class="pass-header-left">
+      <div class="pass-avatar">
+        <mat-icon class="pass-avatar-icon">lock</mat-icon>
       </div>
-    </mat-dialog-content>
-    <mat-dialog-actions style="padding-left: 25px;">
-
-      <div fxLayout="row" fxLayoutGap="7px grid">
-
-        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="start">
-          <button mat-flat-button color="accent" (click)="decrypt(pass.value,data.report_id)"><mat-icon>check</mat-icon>
-        Decrypt</button>
+      <div class="pass-header-text">
+        <span class="pass-title">Decrypt report</span>
+        <span class="pass-subtitle">Enter the security key to unlock this report</span>
       </div>
-
-      <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="50%" fxLayoutAlign="end">
-        <button mat-flat-button color="primary" (click)="cancel()"><mat-icon>cancel</mat-icon> Cancel</button>
-      </div>
-
     </div>
-  </mat-dialog-actions>
-  @if (msg != '') {
-    <div>
-      <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-    </div>
+  </div>
+
+  <!-- Body -->
+  <mat-dialog-content class="pass-body">
+
+<form class="pass-form" autocomplete="off">
+      <div class="pass-input-wrapper" [class.pass-input-error-state]="insertpass.hasError('incorrect')">
+        <mat-icon class="pass-input-prefix">shield</mat-icon>
+        <input
+          class="pass-input"
+          [formControl]="insertpass"
+          placeholder="Report security key"
+          #pass
+          [type]="hide ? 'password' : 'text'"
+          (keydown)="onKeydown($event, pass.value, data.report_id)"
+          autocomplete="new-password"
+        />
+        <button type="button" class="pass-visibility-btn" (click)="hide = !hide" [title]="hide ? 'Show key' : 'Hide key'">
+          <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </div>
+
+      @if (insertpass.hasError('incorrect')) {
+        <p class="pass-error-msg">
+          <mat-icon class="pass-error-icon">error_outline</mat-icon>
+          Security key is incorrect
+        </p>
+      }
+
+      @if (msg !== '') {
+        <p class="pass-hint-msg">
+          <mat-icon class="pass-hint-icon">info_outline</mat-icon>
+          {{ msg }}
+        </p>
+      }
+    </form>
+
+  </mat-dialog-content>
+
+  <!-- Progress bar -->
+  @if (msg !== '') {
+    <mat-progress-bar color="accent" mode="indeterminate" class="pass-progress"></mat-progress-bar>
   }
+
+  <!-- Actions -->
+  <div class="pass-actions">
+    <button class="pass-btn pass-btn-cancel" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+    <button
+      class="pass-btn pass-btn-decrypt"
+      (click)="decrypt(pass.value, data.report_id)"
+      [disabled]="msg !== ''"
+    >
+      <mat-icon>lock_open</mat-icon>
+      Decrypt
+    </button>
+  </div>
+
+</div>

@@ -421,9 +421,37 @@
   background: #2a2a2a;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 8px;
-  padding: 6px 10px;
+  padding: 6px 6px 6px 10px;
   font-size: 12px;
   color: #9e9e9e;
+}
+
+.chip-remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #616161;
+  padding: 0;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  &:hover {
+    color: #ef5350;
+    background: rgba(239, 83, 80, 0.1);
+  }
 }
 
 .chip-name {
