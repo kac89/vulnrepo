@@ -26,6 +26,9 @@
           <mat-icon>delete_sweep</mat-icon>
         </button>
       }
+      <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
   </div>
 
@@ -129,7 +132,7 @@
         <div class="attach-file-chip">
           <mat-icon class="chip-icon">description</mat-icon>
           <span class="chip-name">{{item.filename}}</span>
-          <button mat-icon-button class="thumb-remove" (click)="removeAttachfile()" title="Remove">
+          <button class="chip-remove-btn" (click)="removeAttachfile()" title="Remove">
             <mat-icon>close</mat-icon>
           </button>
         </div>
@@ -179,9 +182,6 @@
             <input hidden type="file" accept="*/*" #attachfile (change)="onFileSelect($event.target)" name="myfiles" multiple />
           </div>
           <div class="toolbar-right">
-            <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
-              <mat-icon>close</mat-icon>
-            </button>
             <button class="send-btn" (click)="sendmsg()" [disabled]="questioninput.invalid">
               <mat-icon>arrow_upward</mat-icon>
             </button>

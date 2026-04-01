@@ -375,6 +375,10 @@ blockquote p {
   width: 250px;
 }
 
+.mat-mdc-dialog-surface {
+  overflow: hidden;
+}
+
 .dark-dialog-panel .mat-mdc-dialog-surface {
   background: transparent !important;
   border-radius: 14px !important;

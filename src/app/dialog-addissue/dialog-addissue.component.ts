@@ -767,8 +767,11 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
 
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.chipsissue.push(event.option.viewValue);
-    //this.fruitInput.nativeElement.value = '';
+    this.chipsissue.push(event.option.value);
     this.customissueform.setValue('');
+  }
+
+  openIssuePanel(trigger: any): void {
+    setTimeout(() => trigger.openPanel());
   }
 }

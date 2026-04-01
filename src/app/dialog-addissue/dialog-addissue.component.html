@@ -1,39 +1,45 @@
-<mat-card appearance="outlined">
+<div class="addissue-shell">
 
-  <mat-card-header>
-    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">add</mat-icon>
-    <mat-card-title>Add Issue</mat-card-title>
-    <mat-card-subtitle>Use templates or custom</mat-card-subtitle>
-    <div style="flex: 1"></div>
-    <mat-form-field appearance="outline" color="accent" class="example-full-width">
-      <mat-label>Templates source</mat-label>
-      <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()" [disabled]="freeztype">
-        <mat-option value="VULNREPO"><img with="20" height="20" src="/favicon-32x32.png"> VULNRΞPO</mat-option>
-        <mat-option value="CVE"><mat-icon color="accent">public</mat-icon> (CVE) Common Vulnerabilities and Exposures
-      (ONLINE)</mat-option>
-      <mat-option value="GHSA"><mat-icon color="accent">public</mat-icon> (GHSA) GitHub Advisory Database
-    (ONLINE)</mat-option>
-    <mat-option value="AIVULNS">AI Systems Issues</mat-option>
-    <mat-option value="CWE">CWE Research Concepts</mat-option>
-    <mat-option value="OWASPTOP2021">OWASP Top 10 2021 Web Application Security Risks</mat-option>
-    <mat-option value="OWASPTOP2017">OWASP Top 10 2017 Web Application Security Risks</mat-option>
-    <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD Security Risks</mat-option>
-    <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
-    <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
-    <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
-    <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-    <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+  <!-- Header -->
+  <div class="addissue-header">
+    <div class="header-left">
+      <div class="header-avatar">
+        <mat-icon class="header-icon">security</mat-icon>
+      </div>
+      <div class="header-text">
+        <span class="header-title">Add Issue</span>
+        <span class="header-subtitle">Use templates or custom</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <mat-form-field appearance="outline" color="accent" class="source-select-field">
+        <mat-label>Templates source</mat-label>
+        <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()" [disabled]="freeztype">
+          <mat-option value="VULNREPO"><img width="16" height="16" src="/favicon-32x32.png" style="vertical-align:middle;margin-right:6px"> VULNRΞPO</mat-option>
+          <mat-option value="CVE"><mat-icon color="accent" style="font-size:16px;vertical-align:middle;margin-right:4px">public</mat-icon> CVE — Common Vulnerabilities</mat-option>
+          <mat-option value="GHSA"><mat-icon color="accent" style="font-size:16px;vertical-align:middle;margin-right:4px">public</mat-icon> GHSA — GitHub Advisory</mat-option>
+          <mat-option value="AIVULNS">AI Systems Issues</mat-option>
+          <mat-option value="CWE">CWE Research Concepts</mat-option>
+          <mat-option value="OWASPTOP2021">OWASP Top 10 2021</mat-option>
+          <mat-option value="OWASPTOP2017">OWASP Top 10 2017</mat-option>
+          <mat-option value="OWASPTOP10CICD">OWASP CI/CD Top 10</mat-option>
+          <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
+          <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
+          <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
+          <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
+          <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
 
-  </mat-select>
-</mat-form-field>
-</mat-card-header>
+  <!-- Body -->
+  <mat-dialog-content class="addissue-body">
 
-<mat-dialog-content class="mat-typography">
-
-  <div>
+    <!-- VULNREPO chip search -->
     @if (sourceSelect == 'VULNREPO') {
-      <div>
-        <mat-form-field class="example-full-width" color="accent">
+      <div class="section-block">
+        <mat-form-field class="full-width" color="accent">
           <mat-label>Issue title</mat-label>
           <mat-chip-grid #chipGrid aria-label="Issue title" [formControl]="gridaction">
             @for (isitemw of chipsissue; track isitemw) {
@@ -45,254 +51,280 @@
               </mat-chip-row>
             }
           </mat-chip-grid>
-          <input cdkFocusInitial type="text" matInput placeholder="type: XSS, SQL, RCE vulnerability or custom"
-            [formControl]="customissueform" [matAutocomplete]="auto" [matChipInputFor]="chipGrid"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-              @for (option of filteredOptions | async; track option) {
-                <mat-option [value]="option.title">
-                  @if (option.api) {
-                    <mat-icon color="accent"
-                    title="Remote API: {{option.apiname}} - [{{option.apiurl}}] ">public</mat-icon>
-                    } {{option.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-              @if (customissueform.hasError('notempty')) {
-                <mat-error>
-                  <strong>Title must not be empty!</strong>
-                </mat-error>
-              }
-            </mat-form-field>
-            <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank" href="/templates-list">Templates
-            List</a></small></span>
-          </div>
-        }
+          <input cdkFocusInitial type="text" matInput
+            placeholder="type: XSS, SQL, RCE vulnerability or custom"
+            [formControl]="customissueform"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"
+            #autoTrigger="matAutocompleteTrigger"
+            (focus)="openIssuePanel(autoTrigger)">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" class="vuln-autocomplete-panel">
+            @for (option of filteredOptions | async; track option) {
+              <mat-option [value]="option.title" class="vuln-option">
+                <div class="vo-row">
+                  <div class="vo-main">
+                    <div class="vo-title-row">
+                      @if (option.api) {
+                        <mat-icon class="vo-remote-icon" [title]="'Remote: ' + option.apiname + ' [' + option.apiurl + ']'">cloud</mat-icon>
+                      }
+                      <span class="vo-title">{{option.title}}</span>
+                    </div>
+                    @if (option.desc) {
+                      <div class="vo-desc">{{option.desc | slice:0:110}}{{option.desc.length > 110 ? '…' : ''}}</div>
+                    }
+                  </div>
+                  <div class="vo-badges">
+                    @if (option.severity) {
+                      <span class="vo-badge severity-{{option.severity | lowercase}}">{{option.severity}}</span>
+                    }
+                    @if (option.cvss) {
+                      <span class="vo-badge vo-cvss">CVSS&nbsp;{{option.cvss}}</span>
+                    }
+                    @if (option.cve) {
+                      <span class="vo-badge vo-cve">{{option.cve}}</span>
+                    }
+                  </div>
+                </div>
+              </mat-option>
+            }
+          </mat-autocomplete>
+          @if (customissueform.hasError('notempty')) {
+            <mat-error><strong>Title must not be empty!</strong></mat-error>
+          }
+        </mat-form-field>
+        <div class="ref-link-row">
+          <a class="active-link" target="_blank" href="/templates-list">Templates List</a>
+        </div>
+      </div>
+    }
 
+    <!-- Table: CWE / MITRE (sortable + paginated) -->
+    <div [hidden]="hidecwe">
+      <div class="section-block">
+        <mat-form-field class="full-width" color="accent">
+          <mat-label>Filter</mat-label>
+          <mat-icon matPrefix class="filter-prefix-icon">search</mat-icon>
+          <input [formControl]="filterinput" matInput (keyup)="applyFilter($event)" [placeholder]="placeholder" #input>
+        </mat-form-field>
 
-        <div [hidden]="hidecwe">
-
-          <mat-form-field class="example-full-width" color="accent">
-            <mat-label>Filter</mat-label>
-            <input [formControl]="filterinput" matInput (keyup)="applyFilter($event)" [placeholder]="placeholder" #input>
-          </mat-form-field>
-
-
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="dataSource" class="issues-table" matSort>
 
             <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
+              <th mat-header-cell *matHeaderCellDef class="col-check">
                 <mat-checkbox (change)="$event ? toggleAllRows() : null"
                   [checked]="selection.hasValue() && isAllSelected()"
-                  [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  [aria-label]="checkboxLabel()">
                 </mat-checkbox>
               </th>
-              <td mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                  [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+              <td mat-cell *matCellDef="let row" class="col-check">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)"
+                  [aria-label]="checkboxLabel(row)">
                 </mat-checkbox>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="title">
-              <th mat-header-cell *matHeaderCellDef> Title </th>
-              <td mat-cell *matCellDef="let element"> {{element.title}} <br> <small><a target="_blank" class="active-link"
-              href="{{element.ref}}">Reference</a> / Severity: {{element.severity}}</small> </td>
+              <th mat-header-cell *matHeaderCellDef>Title</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="issue-title-text">{{element.title}}</span>
+                <div class="issue-meta-row">
+                  <a target="_blank" class="active-link" href="{{element.ref}}">Reference</a>
+                  <span class="meta-sep">·</span>
+                  <span class="severity-badge severity-{{element.severity | lowercase}}">{{element.severity}}</span>
+                </div>
+              </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-            </tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)" class="issue-row"></tr>
 
-            <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+              <td class="mat-cell no-data-cell" colspan="4">No data matching "{{input.value}}"</td>
             </tr>
           </table>
+        </div>
 
-          <br>
+        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page" class="issues-paginator"></mat-paginator>
+      </div>
+    </div>
 
-            <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page"></mat-paginator>
-
-
-          </div>
-
-
-          @if (sourceSelect == 'CVE') {
-            <div>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>CVE</mat-label>
-                <input cdkFocusInitial type="text" matInput placeholder="e.g.: CVE-2024-5961" [formControl]="mycve">
-                @if (mycve.hasError('notempty')) {
-                  <mat-error>
-                    <strong>CVE must not be empty!</strong>
-                  </mat-error>
-                }
-                @if (mycve.hasError('cve_format_error')) {
-                  <mat-error>
-                    <strong>CVE format error!</strong>
-                  </mat-error>
-                }
-                @if (mycve.hasError('cve_notfound')) {
-                  <mat-error>
-                    <strong>CVE not found!</strong>
-                  </mat-error>
-                }
-              </mat-form-field>
-            </div>
+    <!-- CVE -->
+    @if (sourceSelect == 'CVE') {
+      <div class="section-block">
+        <mat-form-field class="full-width" color="accent">
+          <mat-label>CVE Identifier</mat-label>
+          <input cdkFocusInitial type="text" matInput placeholder="e.g. CVE-2024-5961" [formControl]="mycve">
+          @if (mycve.hasError('notempty')) {
+            <mat-error><strong>CVE must not be empty!</strong></mat-error>
           }
-
-          @if (sourceSelect == 'GHSA') {
-            <div>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>GHSA</mat-label>
-                <input cdkFocusInitial type="text" matInput placeholder="e.g.: GHSA-xxxx-xxxx-xxxx" [formControl]="myghsa">
-                @if (myghsa.hasError('notempty')) {
-                  <mat-error>
-                    <strong>GHSA must not be empty!</strong>
-                  </mat-error>
-                }
-                @if (myghsa.hasError('ghsa_format_error')) {
-                  <mat-error>
-                    <strong>GHSA format error!</strong>
-                  </mat-error>
-                }
-                @if (myghsa.hasError('ghsa_notfound')) {
-                  <mat-error>
-                    <strong>GHSA not found!</strong>
-                  </mat-error>
-                }
-              </mat-form-field>
-            </div>
+          @if (mycve.hasError('cve_format_error')) {
+            <mat-error><strong>CVE format error!</strong></mat-error>
           }
+          @if (mycve.hasError('cve_notfound')) {
+            <mat-error><strong>CVE not found!</strong></mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
 
-          @if (sourceSelect == 'PCIDSS') {
-            <div>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>PCI DSS Requirements v3.2.1</mat-label>
-                <input cdkFocusInitial type="text" matInput placeholder="e.g.: Firewall" [formControl]="myPCI"
-                  [matAutocomplete]="auto5">
-                  <mat-autocomplete #auto5="matAutocomplete">
-                    @for (group of filteredOptionsPCIDSS | async; track group) {
-                      <mat-optgroup [label]="group.maincategory"
-                        [title]="group.maincategory">
-                        @for (item of group.items; track item) {
-                          <mat-option [value]="item.title" [title]="item.title">
-                            {{item.title}}
-                          </mat-option>
-                        }
-                      </mat-optgroup>
-                    }
-                  </mat-autocomplete>
-                  @if (myPCI.hasError('notempty')) {
-                    <mat-error>
-                      <strong>Title must not be empty!</strong>
-                    </mat-error>
-                  }
-                  @if (myPCI.hasError('cantfind')) {
-                    <mat-error>
-                      <strong>Can not be found!</strong>
-                    </mat-error>
-                  }
-                </mat-form-field>
-                <span fxLayoutAlign="flex-end"><small><a class="active-link" target="_blank"
-                href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a></small></span>
-              </div>
+    <!-- GHSA -->
+    @if (sourceSelect == 'GHSA') {
+      <div class="section-block">
+        <mat-form-field class="full-width" color="accent">
+          <mat-label>GHSA Identifier</mat-label>
+          <input cdkFocusInitial type="text" matInput placeholder="e.g. GHSA-xxxx-xxxx-xxxx" [formControl]="myghsa">
+          @if (myghsa.hasError('notempty')) {
+            <mat-error><strong>GHSA must not be empty!</strong></mat-error>
+          }
+          @if (myghsa.hasError('ghsa_format_error')) {
+            <mat-error><strong>GHSA format error!</strong></mat-error>
+          }
+          @if (myghsa.hasError('ghsa_notfound')) {
+            <mat-error><strong>GHSA not found!</strong></mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
+
+    <!-- PCI DSS -->
+    @if (sourceSelect == 'PCIDSS') {
+      <div class="section-block">
+        <mat-form-field class="full-width" color="accent">
+          <mat-label>PCI DSS Requirements v3.2.1</mat-label>
+          <input cdkFocusInitial type="text" matInput placeholder="e.g. Firewall" [formControl]="myPCI" [matAutocomplete]="auto5">
+          <mat-autocomplete #auto5="matAutocomplete">
+            @for (group of filteredOptionsPCIDSS | async; track group) {
+              <mat-optgroup [label]="group.maincategory" [title]="group.maincategory">
+                @for (item of group.items; track item) {
+                  <mat-option [value]="item.title" [title]="item.title">{{item.title}}</mat-option>
+                }
+              </mat-optgroup>
             }
-
-
-            @if (sourceSelect == 'OWASP_mobile' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017' || sourceSelect == 'AIVULNS') {
-              <div
-                >
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                  <ng-container matColumnDef="select">
-                    <th mat-header-cell *matHeaderCellDef>
-                      <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                      </mat-checkbox>
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-                      </mat-checkbox>
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="title">
-                    <th mat-header-cell *matHeaderCellDef> Title </th>
-                    <td mat-cell *matCellDef="let element"> {{element.title}} <br> <small><a target="_blank" class="active-link"
-                    href="{{element.ref}}">Reference</a> / Severity: {{element.severity}}</small> </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-                  </tr>
-                </table>
-                @if (sourceSelect == 'AIVULNS') {
-                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
-                  target="_blank" href="https://www.microsoft.com/en-us/msrc/aibugbar">www.microsoft.com</a></small></span>
-                }
-                @if (sourceSelect == 'OWASP_mobile') {
-                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
-                  target="_blank" href="https://owasp.org/www-project-mobile-top-10/">owasp.org</a></small></span>
-                }
-                @if (sourceSelect == 'OWASPTOP10k8s') {
-                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
-                  target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></small></span>
-                }
-                @if (sourceSelect == 'OWASPTOP10CICD') {
-                  <span fxLayoutAlign="flex-end"><br><small><a class="active-link"
-                    target="_blank"
-                  href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></small></span>
-                }
-                @if (sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017') {
-                  <span
-                    fxLayoutAlign="flex-end"><br><small><a class="active-link" target="_blank"
-                  href="https://owasp.org/www-project-top-ten/">owasp.org</a></small></span>
-                }
-              </div>
-            }
-
-            @if (show) {
-              <div>Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></div>
-            }
-            <span style="color: red;">{{err_msg}}</span>
-          </div>
-
-        </mat-dialog-content>
-
-        <mat-dialog-actions>
-
-          @if (sourceSelect == 'VULNREPO') {
-            <button mat-raised-button color="accent" (click)="addIssue()"><mat-icon
-            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add Issue</button>
+          </mat-autocomplete>
+          @if (myPCI.hasError('notempty')) {
+            <mat-error><strong>Title must not be empty!</strong></mat-error>
           }
-          @if (sourceSelect == 'CVE') {
-            <button mat-raised-button color="accent" (click)="addCVE()"><mat-icon
-            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from CVE</button>
+          @if (myPCI.hasError('cantfind')) {
+            <mat-error><strong>Can not be found!</strong></mat-error>
           }
-          @if (sourceSelect == 'GHSA') {
-            <button mat-raised-button color="accent" (click)="addGHSA()"><mat-icon
-            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from GHSA</button>
-          }
-          @if (sourceSelect == 'PCIDSS') {
-            <button mat-raised-button color="accent" (click)="addPCIDSS()"><mat-icon
-            class="vertical-align-middle padding-bottom-3">add</mat-icon> Add from PCI DSS Requirements</button>
-          }
-          @if (selection.selected.length > 0) {
-            <div>
-              @if (sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE' || sourceSelect == 'MENTERPRISE' || sourceSelect == 'MMOBILE') {
-                <button
-                  mat-raised-button color="accent" (click)="addtop10(selection.selected)"><mat-icon
-                class="vertical-align-middle padding-bottom-3">add</mat-icon>
-                Add
-              selected ({{selection.selected.length}})</button>
-            }
-          </div>
+        </mat-form-field>
+        <div class="ref-link-row">
+          <a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/document_library">pcisecuritystandards.org</a>
+        </div>
+      </div>
+    }
+
+    <!-- OWASP / MITRE / AI table (no sort/pagination) -->
+    @if (sourceSelect == 'OWASP_mobile' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017' || sourceSelect == 'AIVULNS') {
+      <div class="section-block">
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="dataSource" class="issues-table">
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="col-check">
+                <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row" class="col-check">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)"
+                  [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Title</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="issue-title-text">{{element.title}}</span>
+                <div class="issue-meta-row">
+                  <a target="_blank" class="active-link" href="{{element.ref}}">Reference</a>
+                  <span class="meta-sep">·</span>
+                  <span class="severity-badge severity-{{element.severity | lowercase}}">{{element.severity}}</span>
+                </div>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)" class="issue-row"></tr>
+          </table>
+        </div>
+
+        @if (sourceSelect == 'AIVULNS') {
+          <div class="ref-link-row"><a class="active-link" target="_blank" href="https://www.microsoft.com/en-us/msrc/aibugbar">www.microsoft.com</a></div>
         }
+        @if (sourceSelect == 'OWASP_mobile') {
+          <div class="ref-link-row"><a class="active-link" target="_blank" href="https://owasp.org/www-project-mobile-top-10/">owasp.org</a></div>
+        }
+        @if (sourceSelect == 'OWASPTOP10k8s') {
+          <div class="ref-link-row"><a class="active-link" target="_blank" href="https://owasp.org/www-project-kubernetes-top-ten/">owasp.org</a></div>
+        }
+        @if (sourceSelect == 'OWASPTOP10CICD') {
+          <div class="ref-link-row"><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></div>
+        }
+        @if (sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017') {
+          <div class="ref-link-row"><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></div>
+        }
+      </div>
+    }
 
-        &nbsp;
-        <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+    <!-- Loading / error -->
+    @if (show) {
+      <div class="loading-bar">
+        <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        <span class="loading-label">Please wait…</span>
+      </div>
+    }
+    @if (err_msg) {
+      <div class="error-msg">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        {{err_msg}}
+      </div>
+    }
 
-      </mat-dialog-actions>
+  </mat-dialog-content>
 
-    </mat-card>
+  <!-- Actions -->
+  <div class="addissue-actions">
+    <div class="actions-left">
+      @if (sourceSelect == 'VULNREPO') {
+        <button class="action-btn action-primary" (click)="addIssue()">
+          <mat-icon>add</mat-icon> Add Issue
+        </button>
+      }
+      @if (sourceSelect == 'CVE') {
+        <button class="action-btn action-primary" (click)="addCVE()">
+          <mat-icon>add</mat-icon> Add from CVE
+        </button>
+      }
+      @if (sourceSelect == 'GHSA') {
+        <button class="action-btn action-primary" (click)="addGHSA()">
+          <mat-icon>add</mat-icon> Add from GHSA
+        </button>
+      }
+      @if (sourceSelect == 'PCIDSS') {
+        <button class="action-btn action-primary" (click)="addPCIDSS()">
+          <mat-icon>add</mat-icon> Add from PCI DSS
+        </button>
+      }
+      @if (selection.selected.length > 0) {
+        @if (sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE' || sourceSelect == 'MENTERPRISE' || sourceSelect == 'MMOBILE') {
+          <button class="action-btn action-primary" (click)="addtop10(selection.selected)">
+            <mat-icon>add</mat-icon> Add selected ({{selection.selected.length}})
+          </button>
+        }
+      }
+    </div>
+    <div class="actions-right">
+      <button class="action-btn action-ghost" (click)="cancel()">Cancel</button>
+    </div>
+  </div>
+
+</div>
