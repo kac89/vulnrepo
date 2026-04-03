@@ -1,66 +1,82 @@
-<div class="about-dialog">
+<div class="about-shell">
 
-  <div class="about-dialog__header" mat-dialog-title>
-    <div class="about-dialog__logo-wrap">
-      <img src="assets/logo/vulnrepo_logo.png" width="48" height="48" alt="VulnRepo logo" />
+  <!-- Header -->
+  <div class="about-header" mat-dialog-title>
+    <div class="about-header-left">
+      <div class="about-logo-wrap">
+        <img src="assets/logo/vulnrepo_logo.png" width="28" height="28" alt="VulnRepo logo" />
+      </div>
+      <div class="about-header-text">
+        <span class="about-title">VULNRΞPO</span>
+        <span class="about-subtitle">About the project</span>
+      </div>
     </div>
-    <div>
-      <h2 class="about-dialog__title">VULNRΞPO</h2>
-      <span class="about-dialog__subtitle">About the project</span>
-    </div>
-    <span class="spacer"></span>
-    <button mat-icon-button mat-dialog-close aria-label="Close">
+    <button mat-icon-button mat-dialog-close class="tool-btn close-btn" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <mat-divider />
+  <!-- Body -->
+  <mat-dialog-content class="about-body">
 
-  <mat-dialog-content class="about-dialog__body">
-
-    <div class="about-dialog__version">
-      <mat-chip-set>
-        <mat-chip highlighted color="accent" disableRipple>βeta</mat-chip>
-        <mat-chip>
-          <mat-icon matChipAvatar>commit</mat-icon>
-          <a class="active-link" target="_blank" [href]="'https://github.com/kac89/vulnrepo/commit/' + app_ver">
-            {{ app_ver_short }}
-          </a>
-        </mat-chip>
-      </mat-chip-set>
+    <!-- Version badges -->
+    <div class="about-badges">
+      <span class="badge badge--accent">βeta</span>
+      <a class="badge badge--default" target="_blank" [href]="'https://github.com/kac89/vulnrepo/commit/' + app_ver">
+        <mat-icon class="badge-icon">commit</mat-icon>
+        {{ app_ver_short }}
+      </a>
     </div>
 
-    <mat-list class="about-dialog__list">
-      <mat-list-item>
-        <mat-icon matListItemIcon>language</mat-icon>
-        <span matListItemTitle>Project</span>
-        <a matListItemLine class="active-link" href="https://vulnrepo.com/" target="_blank">vulnrepo.com</a>
-      </mat-list-item>
+    <!-- Info rows -->
+    <div class="about-rows">
 
-      <mat-list-item>
-        <mat-icon matListItemIcon>bug_report</mat-icon>
-        <span matListItemTitle>Issues</span>
-        <a matListItemLine class="active-link" href="https://github.com/kac89/vulnrepo/issues" target="_blank">Report a bug</a>
-      </mat-list-item>
+      <a class="about-row" href="https://vulnrepo.com/" target="_blank">
+        <div class="about-row-icon"><mat-icon>language</mat-icon></div>
+        <div class="about-row-body">
+          <span class="about-row-label">Project</span>
+          <span class="about-row-value">vulnrepo.com</span>
+        </div>
+        <mat-icon class="about-row-arrow">chevron_right</mat-icon>
+      </a>
 
-      <mat-list-item>
-        <mat-icon matListItemIcon>forum</mat-icon>
-        <span matListItemTitle>Feedback</span>
-        <a matListItemLine class="active-link" href="https://github.com/kac89/vulnrepo/discussions/new/choose" target="_blank">Discussions</a>
-      </mat-list-item>
+      <a class="about-row" href="https://github.com/kac89/vulnrepo/issues" target="_blank">
+        <div class="about-row-icon"><mat-icon>bug_report</mat-icon></div>
+        <div class="about-row-body">
+          <span class="about-row-label">Issues</span>
+          <span class="about-row-value">Report a bug</span>
+        </div>
+        <mat-icon class="about-row-arrow">chevron_right</mat-icon>
+      </a>
 
-      <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
-        <span matListItemTitle>Author</span>
-        <a matListItemLine class="active-link" href="https://kacperrybczynski.com/" target="_blank">Kacper Rybczyński</a>
-      </mat-list-item>
+      <a class="about-row" href="https://github.com/kac89/vulnrepo/discussions/new/choose" target="_blank">
+        <div class="about-row-icon"><mat-icon>forum</mat-icon></div>
+        <div class="about-row-body">
+          <span class="about-row-label">Feedback</span>
+          <span class="about-row-value">Discussions</span>
+        </div>
+        <mat-icon class="about-row-arrow">chevron_right</mat-icon>
+      </a>
 
-      <mat-list-item>
-        <mat-icon matListItemIcon>gavel</mat-icon>
-        <span matListItemTitle>License</span>
-        <a matListItemLine class="active-link" href="https://github.com/kac89/vulnrepo/blob/master/LICENSE" target="_blank">Apache-2.0</a>
-      </mat-list-item>
-    </mat-list>
+      <a class="about-row" href="https://kacperrybczynski.com/" target="_blank">
+        <div class="about-row-icon"><mat-icon>person</mat-icon></div>
+        <div class="about-row-body">
+          <span class="about-row-label">Author</span>
+          <span class="about-row-value">Kacper Rybczyński</span>
+        </div>
+        <mat-icon class="about-row-arrow">chevron_right</mat-icon>
+      </a>
+
+      <a class="about-row" href="https://github.com/kac89/vulnrepo/blob/master/LICENSE" target="_blank">
+        <div class="about-row-icon"><mat-icon>gavel</mat-icon></div>
+        <div class="about-row-body">
+          <span class="about-row-label">License</span>
+          <span class="about-row-value">Apache-2.0</span>
+        </div>
+        <mat-icon class="about-row-arrow">chevron_right</mat-icon>
+      </a>
+
+    </div>
 
   </mat-dialog-content>
 

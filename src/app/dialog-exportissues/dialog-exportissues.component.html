@@ -1,126 +1,175 @@
-<div class="mdc-card my-card-content">
-  <h1 mat-dialog-title>Export issues {{isReturn.length}} to:</h1>
-  <div mat-dialog-content>
+<div class="export-shell">
 
-    <mat-form-field color="accent" class="example-full-width">
+  <!-- Header -->
+  <div class="export-header">
+    <div class="export-header-left">
+      <div class="export-avatar-logo">
+        <mat-icon class="logo-icon">file_download</mat-icon>
+      </div>
+      <div class="export-header-text">
+        <span class="export-title">Export Issues</span>
+        <span class="export-subtitle">{{isReturn.length}} issue{{isReturn.length !== 1 ? 's' : ''}} selected</span>
+      </div>
+    </div>
+    <div class="export-header-right">
+      <button mat-icon-button class="tool-btn close-btn" mat-dialog-close title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="export-body">
+
+    <!-- Format selector -->
+    <div class="section-label">Export format</div>
+    <mat-form-field color="accent" class="full-width" appearance="outline">
       <mat-label>Select export</mat-label>
-      <mat-select [(value)]="selected_export" >
+      <mat-select [(value)]="selected_export">
         @for (Exportsource of sour; track Exportsource) {
           <mat-option [value]="Exportsource.value">
-            <img with="20" height="20" [src]="Exportsource.viewImg">
+            <img width="20" height="20" [src]="Exportsource.viewImg" style="vertical-align:middle;margin-right:8px;">
             {{Exportsource.viewValue}}
           </mat-option>
         }
       </mat-select>
     </mat-form-field>
 
-
+    <!-- ── VulnRepo JSON (encrypted) ── -->
     @if (selected_export == 'vulnrepojson') {
-      <div>
-        <form class="example-form">
-          <p>Exported file will be encrypted by default:</p>
-          <mat-form-field class="example-full-width" color="accent">
-            <input matInput cdkFocusInitial placeholder="Set report security key" #pass
-              [type]="hide ? 'password' : 'text'">
-              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </mat-form-field>
-            <mat-form-field class="example-full-width" color="accent">
-              <input matInput placeholder="Re-enter report security key" #pass2
-                [type]="hide ? 'password' : 'text'">
-                <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <div class="panel">
+        <div class="panel-notice">
+          <mat-icon class="notice-icon">lock</mat-icon>
+          <span>Exported file will be encrypted by default.</span>
+        </div>
+        <mat-form-field class="full-width" color="accent" appearance="outline">
+          <mat-label>Security key</mat-label>
+          <input matInput cdkFocusInitial placeholder="Set report security key" #pass
+            [type]="hide ? 'password' : 'text'">
+          <mat-icon matSuffix (click)="hide = !hide" style="cursor:pointer">
+            {{hide ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+        </mat-form-field>
+        <mat-form-field class="full-width" color="accent" appearance="outline">
+          <mat-label>Confirm security key</mat-label>
+          <input matInput placeholder="Re-enter report security key" #pass2
+            [type]="hide ? 'password' : 'text'">
+          <mat-icon matSuffix (click)="hide = !hide" style="cursor:pointer">
+            {{hide ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+        </mat-form-field>
+        <div class="action-row">
+          @if (pass.value != '' && pass2.value != '' && pass.value == pass2.value) {
+            <button class="primary-btn" (click)="vulnrepojsonexport(pass.value,pass2.value)">
+              <mat-icon>file_download</mat-icon>Export encrypted
+            </button>
+          }
+          <button class="ghost-btn" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    }
+
+    <!-- ── Decrypted JSON ── -->
+    @if (selected_export == 'decrypted_json') {
+      <div class="panel">
+        <div class="panel-notice">
+          <mat-icon class="notice-icon">warning</mat-icon>
+          <span>This file will not be encrypted.</span>
+        </div>
+        <div class="action-row">
+          <button class="primary-btn" (click)="downloaddecryptedJSON()">
+            <mat-icon>file_download</mat-icon>Download JSON
+          </button>
+          <button class="ghost-btn" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    }
+
+    <!-- ── Jira ── -->
+    @if (selected_export == 'jira') {
+      <div class="panel">
+        <mat-form-field class="full-width" color="accent" appearance="outline">
+          <mat-label>Jira URL</mat-label>
+          <input cdkFocusInitial matInput placeholder="https://yoursite.atlassian.net" #jira_c_url>
+        </mat-form-field>
+
+        <div class="two-col">
+          <mat-form-field color="accent" appearance="outline" class="flex1">
+            <mat-label>Project key</mat-label>
+            <input matInput placeholder="e.g. SEC" #jira_c_key>
+          </mat-form-field>
+          <mat-form-field color="accent" appearance="outline" class="flex1">
+            <mat-label>Ticket label</mat-label>
+            <input matInput placeholder="Optional label" #jira_c_label>
+          </mat-form-field>
+        </div>
+
+        <div class="two-col">
+          <mat-form-field color="accent" appearance="outline" class="flex1">
+            <mat-label>User e-mail / login</mat-label>
+            <input matInput placeholder="you@company.com" #jira_c_email>
+            <mat-hint>For Jira Cloud use e-mail.</mat-hint>
+          </mat-form-field>
+          <div class="split-col flex1">
+            <mat-checkbox [checked]="splitfilereport" (change)="splitfile($event)" class="split-check">
+              Split file<br><span class="split-hint">(smaller parts)</span>
+            </mat-checkbox>
+            @if (splitfilereport) {
+              <mat-form-field appearance="outline" color="accent" class="split-count">
+                <mat-label>Per file</mat-label>
+                <input matInput #splitcount value="49" maxlength="4">
               </mat-form-field>
-              @if (pass.value != '' && pass2.value != '' && pass.value == pass2.value) {
-                <button mat-raised-button
-                color="accent" (click)="vulnrepojsonexport(pass.value,pass2.value)" cdkFocusInitial>Export encrypted issues</button>
-              }
-              &nbsp;
-              <button mat-raised-button color="primary" (click)="cancel()">Close</button>
-            </form>
+            }
           </div>
-        }
+        </div>
 
-        @if (selected_export == 'decrypted_json') {
-          <div>
-            <br><button mat-raised-button color="accent"
-            (click)="downloaddecryptedJSON()">Download as decrypted JSON</button>&nbsp;&nbsp;
-            <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-          </div>
-        }
+        <mat-form-field class="full-width" color="accent" appearance="outline">
+          <mat-label>WorkFlow fields</mat-label>
+          <textarea matInput value="{{fields_prop}}" #jira_workflow rows="4"></textarea>
+          <mat-hint>Variables: $key, $title, $desc, $poc, $ref, $severity, $label</mat-hint>
+        </mat-form-field>
 
-        @if (selected_export == 'jira') {
-          <div>
-            <mat-form-field class="example-full-width" color="accent">
-              <input cdkFocusInitial matInput placeholder="Jira URL*" #jira_c_url value="">
+        <div class="action-row" style="margin-top:20px">
+          <button class="primary-btn"
+            (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value, splitcount.value)">
+            <mat-icon>terminal</mat-icon>Generate cURL
+          </button>
+          <button class="ghost-btn" (click)="cancel()">Cancel</button>
+        </div>
+
+        @if (curlhide) {
+          <div class="curl-block">
+            <div class="curl-label">
+              <mat-icon class="curl-icon">terminal</mat-icon>cURL command
+              <span class="curl-hint">— download <code>data.json</code> and run in the same folder</span>
+            </div>
+            <mat-form-field class="full-width" color="accent" appearance="outline">
+              <textarea matInput value="{{curlcmd}}" rows="3"></textarea>
             </mat-form-field>
-            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0px grid">
-              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-form-field class="pola" color="accent">
-                  <input matInput placeholder="Project key*" #jira_c_key value="">
-                </mat-form-field>
-              </div>
-              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-form-field class="example-full-width" color="accent">
-                  <input matInput placeholder="Set ticket label" #jira_c_label value="">
-                </mat-form-field>
-              </div>
-            </div>
-            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0px grid">
-              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <mat-form-field class="pola" color="accent">
-                  <input matInput placeholder="User e-mail/login*" #jira_c_email value="">
-                  <mat-hint>For JIRA cloud use e-mail.</mat-hint>
-                </mat-form-field>
-              </div>
-              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                <div fxLayout="row" fxLayoutGap="0px">
-                  <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="70%">
-                    <mat-checkbox [checked]="splitfilereport" (change)="splitfile($event)">Split the
-                      file<br>(smaller parts)</mat-checkbox>
-                    </div>
-                    <div [hidden]="!splitfilereport" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="20%">
-                      <mat-form-field [style.width.px]="50" appearance="outline" color="accent">
-                        <input matInput placeholder="How many issues to split a file?" #splitcount value="49"
-                          maxlength="4" size="2" title="How many issues to split a file?">
-                        </mat-form-field>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <mat-form-field class="example-full-width" color="accent">
-                  <textarea matInput value="{{fields_prop}}" #jira_workflow placeholder="WorkFlow fields*"></textarea>
-                  <mat-hint>You can customize all fields params. Variables: $key, $title, $desc, $poc, $ref,
-                    $severity,
-                  $label</mat-hint>
-                </mat-form-field>
-                <br><br><br>
-                <button mat-raised-button color="accent"
-                  (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value, splitcount.value)">Generate
-                cURL request</button>&nbsp;
-                <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-                <br><br>
-                @if (curlhide) {
-                  <div>
-                    <mat-form-field class="example-full-width" color="accent">
-                      <textarea matInput value="{{curlcmd}}"></textarea>
-                      <mat-hint>Download data.json file and in the same folder run curl
-                        <mat-icon>arrow_upward</mat-icon></mat-hint>
-                      </mat-form-field>
-                    </div>
-                  }
-                  @if (multipartcurl) {
-                    <div>
-                      <mat-form-field class="example-full-width" color="accent">
-                        <textarea matInput value="{{multicurlcmd}}"></textarea>
-                        <mat-hint>Download data[0-9].json files and in the same folder run cmd
-                          <mat-icon>arrow_upward</mat-icon></mat-hint>
-                        </mat-form-field>
-                      </div>
-                    }
-                    @if (curlhide || multipartcurl) {
-                      <p>cURL should prompt to enter your user password or access token to JIRA.</p>
-                    }
-                  </div>
-                }
+          </div>
+        }
 
-              </div>
+        @if (multipartcurl) {
+          <div class="curl-block">
+            <div class="curl-label">
+              <mat-icon class="curl-icon">terminal</mat-icon>Multi-part cURL
+              <span class="curl-hint">— download <code>data[0-9].json</code> files and run</span>
             </div>
+            <mat-form-field class="full-width" color="accent" appearance="outline">
+              <textarea matInput value="{{multicurlcmd}}" rows="3"></textarea>
+            </mat-form-field>
+          </div>
+        }
+
+        @if (curlhide || multipartcurl) {
+          <div class="panel-notice" style="margin-top:8px">
+            <mat-icon class="notice-icon">info</mat-icon>
+            <span>cURL will prompt for your user password or access token.</span>
+          </div>
+        }
+      </div>
+    }
+
+  </mat-dialog-content>
+
+</div>

@@ -1,18 +1,276 @@
-table {
-    width: 100%;
+// ── Base shell ────────────────────────────────────────────────────────────────
+.history-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #242424;
+  flex-shrink: 0;
+}
+
+.history-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #424242;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.history-avatar-icon {
+  color: #9e9e9e;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+.history-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
+}
+
+.history-subtitle {
+  font-size: 11px;
+  color: #757575;
+}
+
+.history-header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+// ── Tool buttons (shared pattern with ollama) ─────────────────────────────────
+.tool-btn {
+  color: #616161 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
   }
 
-  .mat-column-report_name {
-    min-width: 20%;
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
   }
-  
-  .mat-column-report_lastupdate {
-    min-width: 80%;
+
+  &:hover { color: #9e9e9e !important; }
+}
+
+.close-btn:hover { color: #ef5350 !important; }
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+.history-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 !important;
+  max-height: none !important;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  gap: 8px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #424242;
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #616161;
+  margin: 0;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: #424242;
+  margin: 0;
+  max-width: 280px;
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+.history-table {
+  width: 100%;
+  background: transparent !important;
+
+  // Header row
+  ::ng-deep .mat-mdc-header-row {
+    background: #1e1e1e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   }
-  
-  .mat-column-settings {
-    text-align: right;
-    justify-content: flex-end;
-    min-width: 80px;
-    max-width: 100px;
+
+  // Data rows
+  ::ng-deep .mat-mdc-row {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
+}
+
+.col-header {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #757575 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 16px !important;
+}
+
+.mat-column-report_name {
+  min-width: 25%;
+}
+
+.mat-column-report_lastupdate {
+  min-width: 60%;
+}
+
+.mat-column-settings {
+  width: 60px;
+  max-width: 60px;
+  text-align: right;
+}
+
+.col-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #e0e0e0;
+  padding: 12px 16px !important;
+}
+
+.col-date {
+  font-size: 12px;
+  color: #9e9e9e;
+  padding: 12px 16px !important;
+}
+
+.col-actions {
+  padding: 8px 12px 8px 0 !important;
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.col-actions-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #616161;
+}
+
+// ── Row menu button ───────────────────────────────────────────────────────────
+.row-menu-btn {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  color: #616161 !important;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  ::ng-deep .mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  &:hover { color: #e0e0e0 !important; }
+}
+
+.history-row:hover .row-menu-btn {
+  opacity: 1;
+}
+
+// ── Paginator ─────────────────────────────────────────────────────────────────
+.history-paginator {
+  background: #1e1e1e !important;
+  color: #757575 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 12px;
+
+  ::ng-deep .mat-mdc-paginator-icon { fill: #616161; }
+  ::ng-deep .mat-mdc-select-value { color: #9e9e9e; }
+  ::ng-deep .mat-mdc-paginator-range-label { color: #757575; }
+
+  ::ng-deep button[mat-icon-button]:not([disabled]) {
+    color: #9e9e9e;
+    &:hover { color: #f5f5f5; }
+  }
+}
+
+// ── Menu danger item ──────────────────────────────────────────────────────────
+::ng-deep .menu-item-danger {
+  color: #ef5350 !important;
+  mat-icon { color: #ef5350 !important; }
+}

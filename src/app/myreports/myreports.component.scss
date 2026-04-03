@@ -12,36 +12,38 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .page-title {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 
   h1 {
     margin: 0;
-    font-size: 1.75rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
     color: #fff;
-    line-height: 1.2;
+    line-height: 1.15;
   }
 
   .page-subtitle {
     display: block;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.38);
-    margin-top: 3px;
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 4px;
+    letter-spacing: 0.01em;
   }
 
   .title-icon {
-    font-size: 2rem;
-    width: 2rem;
-    height: 2rem;
+    font-size: 1.6rem;
+    width: 1.6rem;
+    height: 1.6rem;
     color: #69f0ae;
     flex-shrink: 0;
+    opacity: 0.9;
   }
 }
 
@@ -49,47 +51,50 @@
 
 .header-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 10px !important;
-  font-size: 0.82rem;
+  gap: 5px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 6px !important;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease;
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
 }
 
 .accent-btn {
-  background: rgba(105, 240, 174, 0.12) !important;
+  background: rgba(105, 240, 174, 0.1) !important;
   color: #69f0ae !important;
-  border: 1px solid rgba(105, 240, 174, 0.25) !important;
+  border: 1px solid rgba(105, 240, 174, 0.22) !important;
 
   &:hover {
-    background: rgba(105, 240, 174, 0.2) !important;
+    background: rgba(105, 240, 174, 0.17) !important;
+    border-color: rgba(105, 240, 174, 0.38) !important;
   }
 }
 
 .primary-btn {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: rgba(255, 255, 255, 0.75) !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.6) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.09) !important;
-    color: #fff !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
   }
 }
 
@@ -97,7 +102,7 @@
 
 .reports-panel {
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  border-radius: 8px;
   background: #424242;
   overflow: hidden;
 }
@@ -108,33 +113,39 @@
   position: sticky;
   top: 0;
   z-index: 99;
-  background: rgba(66, 66, 66, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #424242;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  padding: 14px 20px 8px;
+  padding: 12px 16px 10px;
 }
 
 .filter-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 
   .filter-field {
-    width: 280px;
+    width: 260px;
     flex-shrink: 0;
   }
 
   .compact-paginator {
     flex: 1;
     background: transparent;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.45);
     min-height: unset;
+
+    ::ng-deep .mat-mdc-paginator-range-label {
+      font-size: 0.75rem;
+    }
   }
 
   ::ng-deep .mat-mdc-form-field-subscript-wrapper {
     display: none;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    padding: 0 10px !important;
   }
 }
 
@@ -150,8 +161,8 @@
   background: transparent !important;
 
   .mat-mdc-header-row {
-    background: rgba(255, 255, 255, 0.025) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
   }
 
   ::ng-deep .mat-mdc-row,
@@ -160,51 +171,68 @@
   }
 
   .mat-mdc-header-cell {
-    font-size: 0.68rem !important;
+    font-size: 0.65rem !important;
     font-weight: 700 !important;
-    letter-spacing: 0.09em !important;
+    letter-spacing: 0.1em !important;
     text-transform: uppercase !important;
-    color: rgba(255, 255, 255, 0.3) !important;
+    color: rgba(255, 255, 255, 0.25) !important;
     border-bottom: none !important;
-    padding: 10px 16px !important;
+    padding: 8px 16px !important;
 
     .col-icon {
-      font-size: 14px;
-      width: 14px;
-      height: 14px;
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
       vertical-align: middle;
       margin-right: 4px;
-      color: rgba(255, 255, 255, 0.22);
+      color: rgba(255, 255, 255, 0.18);
     }
   }
 
   .mat-mdc-cell {
     border-bottom: none !important;
-    padding: 12px 16px !important;
+    padding: 0 16px !important;
   }
 
   // Checkbox column
   .mat-column-select {
-    width: 48px;
-    flex: 0 0 48px;
+    width: 44px;
+    flex: 0 0 44px;
     padding-left: 16px !important;
-    padding-right: 8px !important;
+    padding-right: 4px !important;
   }
 
   // Settings column
   .mat-column-settings {
-    width: 52px;
-    flex: 0 0 52px;
+    width: 48px;
+    flex: 0 0 48px;
     text-align: right;
-    padding-right: 12px !important;
+    padding-right: 10px !important;
   }
 
   .report-row {
-    transition: background 0.12s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.1s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.045) !important;
+    border-left: 2px solid transparent;
+
+    // Cells inherit min-height for comfortable click target
+    .mat-mdc-cell {
+      padding-top: 14px !important;
+      padding-bottom: 14px !important;
+    }
 
     &:hover {
-      background: rgba(105, 240, 174, 0.025) !important;
+      background: rgba(255, 255, 255, 0.03) !important;
+      border-left-color: rgba(105, 240, 174, 0.55) !important;
+
+      .report-name-link {
+        color: #69f0ae !important;
+        text-decoration: underline;
+        text-decoration-color: rgba(105, 240, 174, 0.4);
+        text-underline-offset: 3px;
+      }
     }
 
     &:last-child {
@@ -219,40 +247,40 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%;
 }
 
 .name-cell-inner {
   display: block;
+  min-width: 0;
 }
 
 .storage-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
   flex-shrink: 0;
 
   mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
   }
 
   &.local {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     mat-icon {
-      color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.25);
     }
   }
 
   &.remote {
-    background: rgba(105, 240, 174, 0.1);
-    border: 1px solid rgba(105, 240, 174, 0.2);
+    background: rgba(105, 240, 174, 0.08);
+    border: 1px solid rgba(105, 240, 174, 0.18);
 
     mat-icon {
       color: #69f0ae;
@@ -261,15 +289,17 @@
 }
 
 .report-name-link {
+  display: inline-block;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
   text-decoration: none;
-
-  &:hover {
-    color: #69f0ae !important;
-  }
+  transition: color 0.12s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 38vw;
 }
 
 // ─── Date cell ────────────────────────────────────────────────────────────────
@@ -279,21 +309,22 @@
   flex-direction: column;
   align-items: flex-start;
   white-space: nowrap;
+  gap: 2px;
 }
 
 .date-primary {
   display: block;
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .date-time {
   display: block;
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.22);
   font-variant-numeric: tabular-nums;
-  margin-top: 2px;
 }
 
 // ─── Actions cell ─────────────────────────────────────────────────────────────
@@ -302,77 +333,82 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  width: 100%;
 }
 
 .menu-btn {
-  --mdc-icon-button-state-layer-size: 32px;
-  width: 32px !important;
-  height: 32px !important;
+  --mdc-icon-button-state-layer-size: 30px;
+  width: 30px !important;
+  height: 30px !important;
   padding: 0 !important;
-  border-radius: 8px !important;
-  color: rgba(255, 255, 255, 0.35) !important;
+  border-radius: 6px !important;
+  color: rgba(255, 255, 255, 0.28) !important;
+  transition: background 0.12s ease, color 0.12s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
-    color: rgba(255, 255, 255, 0.75) !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
   }
 
   .mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
   }
 }
 
 // ─── Bulk actions bar ─────────────────────────────────────────────────────────
 
 .bulk-actions {
-  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 77, 109, 0.04);
 }
 
 .delete-selected-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  border-radius: 8px !important;
-  font-size: 0.82rem;
+  gap: 5px;
+  border-radius: 6px !important;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding: 0 14px !important;
-  height: 36px;
-  background: rgba(255, 77, 109, 0.1) !important;
+  padding: 0 12px !important;
+  height: 32px;
+  background: rgba(255, 77, 109, 0.09) !important;
   color: #ff4d6d !important;
-  border: 1px solid rgba(255, 77, 109, 0.2) !important;
+  border: 1px solid rgba(255, 77, 109, 0.18) !important;
+  transition: background 0.12s ease, border-color 0.12s ease;
 
   &:hover {
-    background: rgba(255, 77, 109, 0.18) !important;
+    background: rgba(255, 77, 109, 0.16) !important;
+    border-color: rgba(255, 77, 109, 0.3) !important;
   }
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
 }
 
 // ─── Progress state ───────────────────────────────────────────────────────────
 
 .progress-state {
-  padding: 16px 20px 12px;
+  padding: 14px 16px 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 
   .loading-text {
     display: block;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.3);
     margin-bottom: 8px;
+    letter-spacing: 0.02em;
   }
 
   mat-progress-bar {
-    border-radius: 4px;
+    border-radius: 2px;
   }
 }
 
@@ -380,9 +416,9 @@
 
 .no-data {
   text-align: center !important;
-  padding: 48px 20px !important;
-  color: rgba(255, 255, 255, 0.2) !important;
-  font-size: 0.875rem;
+  padding: 56px 20px !important;
+  color: rgba(255, 255, 255, 0.18) !important;
+  font-size: 0.82rem;
   border-bottom: none !important;
 }
 
@@ -393,30 +429,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 72px 24px;
+  padding: 80px 24px;
   text-align: center;
 
+  .empty-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 20px;
+  }
+
   .empty-icon {
-    font-size: 3rem;
-    width: 3rem;
-    height: 3rem;
-    color: rgba(255, 255, 255, 0.12);
-    margin-bottom: 16px;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.2);
   }
 
   .empty-title {
-    margin: 0 0 8px;
-    font-size: 1rem;
+    margin: 0 0 6px;
+    font-size: 0.95rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: -0.01em;
   }
 
   .empty-subtitle {
     margin: 0;
-    font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.22);
-    max-width: 320px;
-    line-height: 1.6;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.2);
+    max-width: 300px;
+    line-height: 1.65;
   }
 }
 
@@ -424,15 +472,15 @@
 
 @media (max-width: 959px) {
   .page-title h1 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
 
   .filter-bar .filter-field {
-    width: 220px;
+    width: 200px;
   }
 
   .panel-sticky {
-    padding: 12px 14px 8px;
+    padding: 10px 14px 8px;
   }
 }
 
@@ -454,9 +502,9 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.28);
-    margin-top: 3px;
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 4px;
     font-variant-numeric: tabular-nums;
   }
 
@@ -464,7 +512,7 @@
     font-size: 11px;
     width: 11px;
     height: 11px;
-    color: rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.2);
   }
 
   .name-cell-inner {
@@ -472,17 +520,21 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .report-name-link {
+    max-width: 55vw;
+  }
 }
 
 // ─── Responsive — mobile (< 600px) ───────────────────────────────────────────
 
 @media (max-width: 599px) {
   .page-header {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .page-title h1 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   .page-title .page-subtitle {
@@ -490,9 +542,9 @@
   }
 
   .page-title .title-icon {
-    font-size: 1.5rem;
-    width: 1.5rem;
-    height: 1.5rem;
+    font-size: 1.4rem;
+    width: 1.4rem;
+    height: 1.4rem;
   }
 
   .header-actions {
@@ -505,11 +557,11 @@
   }
 
   .reports-panel {
-    border-radius: 8px;
+    border-radius: 6px;
   }
 
   .panel-sticky {
-    padding: 10px 12px 6px;
+    padding: 8px 12px 6px;
   }
 
   .filter-bar {
@@ -525,14 +577,16 @@
     }
   }
 
-  // Hide checkbox on small screens to maximise title space
   .mat-column-select {
     display: none;
   }
 
-  // Tighten cell padding
   .reports-table .mat-mdc-cell,
   .reports-table .mat-mdc-header-cell {
     padding: 10px 10px !important;
+  }
+
+  .report-name-link {
+    max-width: 68vw;
   }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IndexeddbService } from '../indexeddb.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
@@ -19,12 +19,12 @@ export class DialogReportHistoryComponent implements OnInit {
   dataSource = new MatTableDataSource([]);
   anyreports = false;
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild(MatSort) set sort(sort: MatSort) {
+    if (sort) this.dataSource.sort = sort;
+  }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+  @ViewChild('paginator') set paginator(paginator: MatPaginator) {
+    if (paginator) this.dataSource.paginator = paginator;
   }
 
 
