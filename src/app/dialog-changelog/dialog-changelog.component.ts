@@ -18,13 +18,16 @@ export class DialogChangelogComponent implements OnInit {
   ngOnInit() {
   }
 
-  addChangelog(date, desc) {
-    this.dialogRef.close({date: new Date(date).getTime(), desc: desc});
+  addChangelog(date, desc, version) {
+    const entry: any = {date: new Date(date).getTime(), desc: desc};
+    if (version && version.trim()) { entry.version = version.trim(); }
+    this.dialogRef.close(entry);
   }
 
-  editChangelog(date, desc, data) {
-    const xta = {date: new Date(date).getTime(), desc: desc, origi: data};
-    this.dialogRef.close(xta);
+  editChangelog(date, desc, version, data) {
+    const entry: any = {date: new Date(date).getTime(), desc: desc, origi: data};
+    if (version && version.trim()) { entry.version = version.trim(); }
+    this.dialogRef.close(entry);
   }
 
   cancel(): void {

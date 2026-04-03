@@ -678,56 +678,59 @@
                       <mat-card appearance="outlined" class="report-section">
                         <mat-card-header>
                           <div mat-card-avatar>
-                            <mat-icon>face</mat-icon>
+                            <mat-icon>group</mat-icon>
                           </div>
-                          <mat-card-title style="display: flex">Researcher&nbsp;
-                            &nbsp;
-                            <button style="height: 27px;" matButton="outlined" (click)="addresearcher()">Add researcher
-                              <mat-icon>add</mat-icon>
+                          <mat-card-title>Researchers</mat-card-title>
+                          <div class="researcher-header-actions">
+                            <button mat-stroked-button class="researcher-add-btn" (click)="addresearcher()">
+                              <mat-icon>add</mat-icon>Add researcher
                             </button>
-                            <mat-menu #researchermenu="matMenu">
-                              <a [routerLink]="[]" (click)="addresearcher()" class="active-link" title="Add new researcher" mat-menu-item>
-                                <mat-icon class="vertical-align-middle">add</mat-icon> Add researcher
-                              </a>
-                            </mat-menu>
-                          </mat-card-title>
+                          </div>
                         </mat-card-header>
                         <mat-card-content>
                           @for (researchers of decryptedReportDataChanged.researcher; track researchers) {
-                            <div fxLayout="row wrap"
-                              fxLayoutGap="10px grid">
-                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
+                            <div class="researcher-row">
+                              <div class="researcher-avatar">
+                                {{ researchers.reportername ? researchers.reportername[0] : '?' }}
+                              </div>
+                              <div class="researcher-fields">
                                 <mat-form-field class="example-full-width" color="accent">
                                   <mat-label>Name</mat-label>
-                                  <input matInput [(ngModel)]="researchers.reportername" value="{{researchers.reportername}}">
+                                  <input matInput [(ngModel)]="researchers.reportername">
                                   <mat-icon matSuffix>person_pin</mat-icon>
                                 </mat-form-field>
-                              </div>
-                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
                                 <mat-form-field class="example-full-width" color="accent">
                                   <mat-label>E-mail</mat-label>
-                                  <input matInput [(ngModel)]="researchers.reporteremail" value="{{researchers.reporteremail}}">
+                                  <input matInput [(ngModel)]="researchers.reporteremail">
                                   <mat-icon matSuffix>email</mat-icon>
                                 </mat-form-field>
-                              </div>
-                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
                                 <mat-form-field class="example-full-width" color="accent">
                                   <mat-label>Social link</mat-label>
-                                  <input matInput [(ngModel)]="researchers.reportersocial" value="{{researchers.reportersocial}}">
+                                  <input matInput [(ngModel)]="researchers.reportersocial">
                                   <mat-icon matSuffix>share</mat-icon>
                                 </mat-form-field>
-                              </div>
-                              <div fxFlex="25%" fxFlex.sm="50%" fxFlex.xs="100%">
-                                <mat-form-field style="width: 75%;" color="accent">
+                                <mat-form-field class="example-full-width" color="accent">
                                   <mat-label>Website</mat-label>
-                                  <input matInput [(ngModel)]="researchers.reporterwww" value="{{researchers.reporterwww}}">
+                                  <input matInput [(ngModel)]="researchers.reporterwww">
                                   <mat-icon matSuffix>public</mat-icon>
                                 </mat-form-field>
-                                &nbsp;
-                                <button mat-mini-fab color="warn" (click)="removeresearcher(researchers)" title="Remove researcher">
-                                  <mat-icon>delete_forever</mat-icon>
+                              </div>
+                              <div class="researcher-row-actions">
+                                <button mat-icon-button class="researcher-delete-btn" (click)="removeresearcher(researchers)" title="Remove researcher">
+                                  <mat-icon>delete_outline</mat-icon>
                                 </button>
                               </div>
+                            </div>
+                          } @empty {
+                            <div class="researcher-empty">
+                              <div class="researcher-empty-icon">
+                                <mat-icon>group_add</mat-icon>
+                              </div>
+                              <p class="researcher-empty-title">No researchers yet</p>
+                              <p class="researcher-empty-desc">Add the people who worked on this report.</p>
+                              <button mat-stroked-button class="researcher-add-btn" (click)="addresearcher()">
+                                <mat-icon>add</mat-icon>Add researcher
+                              </button>
                             </div>
                           }
                         </mat-card-content>
@@ -736,78 +739,98 @@
                         <mat-card appearance="outlined" class="report-section">
                           <mat-card-header>
                             <div mat-card-avatar>
-                              <mat-icon>track_changes</mat-icon>
+                              <mat-icon>history</mat-icon>
                             </div>
-                            <mat-card-title style="display: flex">Changelog
-                              &nbsp;
-                              <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="changelogmenu">More
-                                <mat-icon>more_vert</mat-icon>
+                            <mat-card-title class="changelog-header-title">
+                              <span>Changelog</span>
+                              @if (listchangelog?.length) {
+                                <span class="changelog-count-pill">{{ listchangelog.length }}</span>
+                              }
+                            </mat-card-title>
+                            <div class="changelog-header-actions">
+                              <button mat-stroked-button class="changelog-add-btn" (click)="addchangelog()" title="Add entry">
+                                <mat-icon>add</mat-icon> Add entry
+                              </button>
+                              <button mat-icon-button [matMenuTriggerFor]="changelogmenu" title="More options">
+                                <mat-icon>more_horiz</mat-icon>
                               </button>
                               <mat-menu #changelogmenu="matMenu">
-                                <a [routerLink]="[]" (click)="addchangelog()" title="Add event to changelog"
-                                  mat-menu-item>
-                                  <mat-icon class="vertical-align-middle">add</mat-icon> Add event to changelog
-                                </a>
-                                <a [routerLink]="[]" (click)="removeallfromchangelog()"
-                                  title="Remove all events from changelog" mat-menu-item>
-                                  <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove all events
+                                <a [routerLink]="[]" (click)="removeallfromchangelog()" title="Remove all entries" mat-menu-item>
+                                  <mat-icon class="vertical-align-middle">delete_sweep</mat-icon> Clear all entries
                                 </a>
                               </mat-menu>
-                            </mat-card-title>
+                            </div>
                           </mat-card-header>
                           <mat-card-content>
-                            @if (listchangelog != 0) {
-                              <table #table2 mat-table [dataSource]="dataSource" matSort matSortActive="date"
-                                matSortDirection="desc" class="mat-elevation-z8">
-                                <ng-container matColumnDef="date">
-                                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-                                  <td mat-cell *matCellDef="let element"> {{element.date | date:'medium'}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="desc">
-                                  <th mat-header-cell *matHeaderCellDef> Description </th>
-                                  <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="settings">
-                                  <th mat-header-cell *matHeaderCellDef>
-                                    <mat-icon title="Settings">settings</mat-icon>
-                                  </th>
-                                  <td mat-cell *matCellDef="let element">
-                                    <button mat-icon-button
-                                      style="width: 25px; height: 25px; flex-shrink: 0; line-height: 5px; border-radius: 70%;padding: 0px;"
-                                      [matMenuTriggerFor]="changelogsettings">
-                                      <mat-icon>more_vert</mat-icon>
-                                    </button>
-                                    <mat-menu #changelogsettings="matMenu">
-                                      <a [routerLink]="[]" (click)="editchangelog(element)" class="active-link" title="Edit event"
-                                        mat-menu-item>
-                                        <mat-icon class="vertical-align-middle">edit</mat-icon> Edit event
-                                      </a>
-                                      <a [routerLink]="[]" (click)="removefromchangelog(element)" class="active-link" title="Remove event"
-                                        mat-menu-item>
-                                        <mat-icon class="vertical-align-middle">delete_forever</mat-icon> Remove event
-                                      </a>
-                                    </mat-menu>
-                                  </td>
-                                </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                              </table>
-                            }
-                            <div fxLayout="row wrap" fxLayoutGap="10">
-                              <div fxFlex="30%" fxFlex.sm="20%" fxFlex.xs="10%">
-                                @if (listchangelog == 0) {
-                                  <div class="mdc-typography--body1">
-                                    <h3>Changelog is empty <mat-icon>sentiment_dissatisfied</mat-icon></h3>
+
+                            <!-- Timeline view -->
+                            @if (listchangelog && listchangelog.length > 0) {
+                              <div class="changelog-timeline">
+                                @for (item of listchangelog | slice:0:changelogLimit; track $index; let last = $last) {
+                                  <div class="changelog-entry" [class.changelog-entry--release]="item.version" [class.changelog-entry--last]="last && changelogLimit >= listchangelog.length">
+                                    <div class="changelog-entry-line">
+                                      <div class="changelog-entry-dot" [class.changelog-entry-dot--release]="item.version"></div>
+                                    </div>
+                                    <div class="changelog-entry-body">
+                                      <div class="changelog-entry-meta">
+                                        @if (item.version) {
+                                          <span class="changelog-version-badge">
+                                            <mat-icon>new_releases</mat-icon>
+                                            v{{ item.version }}
+                                          </span>
+                                        }
+                                        <span class="changelog-entry-date">
+                                          <mat-icon>schedule</mat-icon>
+                                          {{ item.date | date:'MMM d, y · HH:mm' }}
+                                        </span>
+                                        <div class="changelog-entry-actions">
+                                          <button mat-icon-button class="changelog-action-btn" (click)="editchangelog(item)" title="Edit entry">
+                                            <mat-icon>edit</mat-icon>
+                                          </button>
+                                          <button mat-icon-button class="changelog-action-btn changelog-action-btn--danger" (click)="removefromchangelog(item)" title="Delete entry">
+                                            <mat-icon>delete_outline</mat-icon>
+                                          </button>
+                                        </div>
+                                      </div>
+                                      <p class="changelog-entry-desc">{{ item.desc }}</p>
+                                    </div>
                                   </div>
                                 }
                               </div>
-                              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" [hidden]="listchangelog == 0">
-                                <p>
-                                  <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]"
-                                  showFirstLastButtons></mat-paginator>
-                                </p>
+                              @if (changelogLimit < listchangelog.length) {
+                                <div class="changelog-load-more">
+                                  <button mat-stroked-button class="changelog-load-more-btn" (click)="changelogLimit = changelogLimit + 5">
+                                    <mat-icon>expand_more</mat-icon>
+                                    Load older entries
+                                    <span class="changelog-load-more-count">({{ listchangelog.length - changelogLimit }} remaining)</span>
+                                  </button>
+                                </div>
+                              }
+                            } @else {
+                              <div class="changelog-empty">
+                                <div class="changelog-empty-icon">
+                                  <mat-icon>history_toggle_off</mat-icon>
+                                </div>
+                                <p class="changelog-empty-title">No entries yet</p>
+                                <p class="changelog-empty-desc">Track changes and version releases by adding your first changelog entry.</p>
+                                <button mat-stroked-button class="changelog-add-btn" (click)="addchangelog()">
+                                  <mat-icon>add</mat-icon> Add first entry
+                                </button>
                               </div>
+                            }
+
+                            <!-- Hidden table + paginator — keep for Angular ViewChild wiring -->
+                            <div style="display:none">
+                              <table #table2 mat-table [dataSource]="dataSource" matSort matSortActive="date" matSortDirection="desc">
+                                <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef mat-sort-header></th><td mat-cell *matCellDef="let element"></td></ng-container>
+                                <ng-container matColumnDef="desc"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let element"></td></ng-container>
+                                <ng-container matColumnDef="settings"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let element"></td></ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                              </table>
+                              <mat-paginator #paginatorchangelog color="accent" [pageSizeOptions]="[5, 15, 30]" showFirstLastButtons></mat-paginator>
                             </div>
+
                           </mat-card-content>
                         </mat-card>
                           <!-- Report Settings -->

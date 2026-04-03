@@ -86,6 +86,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns: string[] = ['date', 'desc', 'settings'];
   dataSource = new MatTableDataSource();
   listchangelog: any[];
+  changelogLimit = 5;
 
   @ViewChild("textareaheight") textareaheight: ElementRef;
   @ViewChild('paginatorIssues') paginator: MatPaginator;
@@ -1002,7 +1003,8 @@ Sample code here\n\
 
 
 
-    this.listchangelog = this.decryptedReportData.report_changelog;
+    this.listchangelog = [...this.decryptedReportData.report_changelog].sort((a, b) => b.date - a.date);
+    this.changelogLimit = 5;
     this.dataSource = new MatTableDataSource(this.decryptedReportData.report_changelog);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator2;
@@ -1640,7 +1642,9 @@ Sample code here\n\
         const index: number = this.decryptedReportDataChanged.report_changelog.indexOf(result.origi);
 
         if (index !== -1) {
-          this.decryptedReportDataChanged.report_changelog[index] = { date: result.date, desc: result.desc };
+          const updated: any = { date: result.date, desc: result.desc };
+          if (result.version) { updated.version = result.version; }
+          this.decryptedReportDataChanged.report_changelog[index] = updated;
           this.doStats();
         }
       }
