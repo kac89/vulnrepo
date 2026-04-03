@@ -355,6 +355,11 @@ blockquote p {
   background-color: #000 !important;
 }
 
+// Let app-navbar control its own background via backdrop-filter
+mat-toolbar.app-navbar {
+  --mat-toolbar-container-background-color: transparent;
+}
+
 
 @keyframes rotate {
   0% {
