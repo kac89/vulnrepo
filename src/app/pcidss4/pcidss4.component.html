@@ -1,150 +1,186 @@
-<div fxLayout="row wrap" fxLayoutGap="10px grid">
-  <div fxLayoutAlign="center center" fxFlex="10%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <img width="60px" src="assets/issue.png">
+<div class="pci-shell">
+
+  <!-- ── Page header ── -->
+  <div class="pci-header">
+    <div class="pci-header-left">
+      <div class="pci-logo">
+        <img width="28px" src="assets/issue.png">
+      </div>
+      <div class="pci-header-text">
+        <span class="pci-title">PCI DSS v4.0 Auditor</span>
+        <span class="pci-subtitle">Payment Card Industry Data Security Standard checklist</span>
+      </div>
+    </div>
+    <div class="pci-header-right">
+      <button class="pci-btn pci-btn-secondary" (click)="openpcidss4dialog()">
+        <mat-icon class="btn-icon">arrow_downward</mat-icon> Export
+      </button>
+      <button class="pci-btn pci-btn-danger" (click)="resetselected()">
+        <mat-icon class="btn-icon">autorenew</mat-icon> Reset
+      </button>
+    </div>
   </div>
-  <div fxLayoutAlign="start center" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <h1 style="margin: 0 0 0;" class="mat-headline-3">PCI DSS v4.0 Auditor</h1>
+
+  <!-- ── Info banner ── -->
+  <div class="pci-banner">
+    <mat-icon class="banner-icon">info_outline</mat-icon>
+    <span>PCI DSS is a global standard providing a baseline of technical and operational requirements to protect account data.
+      <a class="pci-link" target="_blank" href="https://www.pcisecuritystandards.org/">Learn more &rarr;</a>
+    </span>
   </div>
-  <div fxLayoutAlign="end center" fxFlex="40%" fxFlex.sm="100%" fxFlex.xs="100%">
-    <button mat-raised-button color="accent" (click)="openpcidss4dialog()"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon> Export</button>
-    &nbsp;&nbsp;
-    <button mat-raised-button color="warn" (click)="resetselected()"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Reset/Unselect all</button>
-  </div>
-</div>
 
-<br>
-
-  <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-    PCI Data Security Standard (PCI DSS) is a global standard that provides a baseline of technical and operational requirements designed to protect account data. <br>
-    <a class="active-link" target="_blank" href="https://www.pcisecuritystandards.org/">PCI DSS more info</a>
-  </mat-card>
-
-  <br>
-    <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-
-      <div class="mdc-typography--body1" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-
-        <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-          <p>SAQs are designed to help you report the results of your PCI DSS self-assessment.</p>
-          <mat-form-field color="accent" appearance="fill" class="example-full-width">
-            <mat-label>Select an SAQ</mat-label>
-
-
-            <mat-select [(ngModel)]="selectsaq" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
-              @for (saq of selectsaqmodel; track saq) {
-                <mat-option [value]="saq.value">
-                  {{saq.viewValue}}
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-          <br>
-            <p>SAQ: {{selectsaq}}</p>
-            <p>{{getextendedinfosaq(selectsaq)}}</p>
-
-          </div>
-
-          <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-            <p>The Prioritized Approach includes six milestones. The following table summarizes the high-level goals of each milestone.</p>
-            <mat-form-field color="accent" appearance="fill" class="example-full-width">
-              <mat-label>Select an Prioritized Approach</mat-label>
-
-              <mat-select [(ngModel)]="selectlevel" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
-                @for (saq of selectlevelmodel; track saq) {
-                  <mat-option [value]="saq.value">
-                    {{saq.viewValue}}
-                  </mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-            <p>Prioritized Approach: {{selectlevel}}</p>
-            <p>{{getextendedinfo(selectlevel)}}</p>
-          </div>
-
-        </div>
-
-      </mat-card>
-
-      <br> <br>
-
-      <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1 sticky">
-
-        Requirements: {{parsefunct(pcidssdata).length}} Checked: {{selection.selected.length}}<br>
-        <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(pcidssdata).length) * 100}}"></mat-progress-bar>
-
-      </mat-card>
-
-      <br> <br>
-
-      @if (pcidss) {
-        <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-          @for (pcicat of pcidss.items; track pcicat) {
-            <span>
-              <h2>{{pcicat.requirement}}</h2>
-              <br>
-                @for (pcisubcat of pcicat.subitems; track pcisubcat) {
-                  <span>
-                    @if (parsefunct(pcisubcat.litems).length > 0) {
-                      <h3>{{pcisubcat.subreq}}</h3>
-                    }
-                    @if (parsefunct(pcisubcat.litems).length > 0) {
-                      <table mat-table [dataSource]="parsefunct(pcisubcat.litems)" class="mat-elevation-z8">
-                        <ng-container matColumnDef="select">
-                          <th mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox id="{{pcisubcat.subreqid}}" (change)="$event ? toggleSpecificGroup(pcisubcat.subreqid) : null"
-                              [checked]="checkedfn(pcisubcat.subreqid) && isAllSelectedGv(pcisubcat.subreqid)"
-                              [indeterminate]="checkedfn(pcisubcat.subreqid) && !isAllSelectedGv(pcisubcat.subreqid)">
-                            </mat-checkbox>
-                          </th>
-                          <td mat-cell *matCellDef="let row">
-                            <mat-checkbox id="{{pcisubcat.subreqid}}" (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                            </mat-checkbox>
-                          </td>
-                        </ng-container>
-                        <ng-container matColumnDef="id">
-                          <th mat-header-cell *matHeaderCellDef> <b>#</b> </th>
-                          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="description">
-                          <th mat-header-cell *matHeaderCellDef> <b>Description</b> </th>
-                          <td mat-cell *matCellDef="let element"><div [innerHTML]="element.description"></div> </td>
-                        </ng-container>
-                        <ng-container matColumnDef="milestone">
-                          <th mat-header-cell *matHeaderCellDef> <b>Milestone</b> </th>
-                          <td mat-cell *matCellDef="let element">
-                            <mat-chip [ngStyle]="{'background-color': getcolors(element.milestone)}">
-                              {{element.milestone}}
-                            </mat-chip>
-                          </td>
-                        </ng-container>
-                        <ng-container matColumnDef="saq">
-                          <th mat-header-cell *matHeaderCellDef> <b>SAQ</b> </th>
-                          <td mat-cell *matCellDef="let element">
-                            <mat-chip-listbox class="mat-mdc-chip-set-stacked" style="max-width: 250px">
-                              @for (chip of element.saq; track chip) {
-                                <mat-chip-option style="max-width: 250px" [selected]="getselectchip(chip, selectsaq)" [color]="colorchip(chip, selectsaq)" disabled>
-                                  {{chip}}
-                                </mat-chip-option>
-                              }
-                            </mat-chip-listbox>
-                          </ng-container>
-                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                            (click)="selection.toggle(row)">
-                          </tr>
-                        </table>
-                      }
-                      <br>
-                      </span>
-                    }
-                  </span>
-                }
-              </mat-card>
+  <!-- ── Filters card ── -->
+  <div class="pci-card pci-filters-card">
+    <div class="filters-grid">
+      <div class="filter-col">
+        <p class="filter-label">SAQs help you report the results of your PCI DSS self-assessment.</p>
+        <mat-form-field color="accent" appearance="outline" class="pci-select-field">
+          <mat-label>Select an SAQ</mat-label>
+          <mat-select [(ngModel)]="selectsaq" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
+            @for (saq of selectsaqmodel; track saq) {
+              <mat-option [value]="saq.value">{{saq.viewValue}}</mat-option>
             }
+          </mat-select>
+        </mat-form-field>
+        <div class="filter-meta">
+          <span class="filter-pill">{{selectsaq}}</span>
+          <span class="filter-desc">{{getextendedinfosaq(selectsaq)}}</span>
+        </div>
+      </div>
 
+      <div class="filter-divider"></div>
 
-            <br>
-              <br>
-                <br>
-                  <br>
+      <div class="filter-col">
+        <p class="filter-label">The Prioritized Approach includes six milestones summarized by high-level goals.</p>
+        <mat-form-field color="accent" appearance="outline" class="pci-select-field">
+          <mat-label>Select a Prioritized Approach</mat-label>
+          <mat-select [(ngModel)]="selectlevel" (ngModelChange)="onChangeSelect()" disableRipple color="accent">
+            @for (saq of selectlevelmodel; track saq) {
+              <mat-option [value]="saq.value">{{saq.viewValue}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <div class="filter-meta">
+          <span class="filter-pill">Milestone {{selectlevel}}</span>
+          <span class="filter-desc">{{getextendedinfo(selectlevel)}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Sticky progress bar ── -->
+  <div class="pci-card pci-progress-card sticky">
+    <div class="progress-row">
+      <div class="progress-stats">
+        <span class="stat-item">
+          <span class="stat-value">{{parsefunct(pcidssdata).length}}</span>
+          <span class="stat-label">Requirements</span>
+        </span>
+        <span class="stat-sep"></span>
+        <span class="stat-item">
+          <span class="stat-value accent">{{selection.selected.length}}</span>
+          <span class="stat-label">Checked</span>
+        </span>
+        <span class="stat-sep"></span>
+        <span class="stat-item">
+          <span class="stat-value">{{parsefunct(pcidssdata).length - selection.selected.length}}</span>
+          <span class="stat-label">Remaining</span>
+        </span>
+      </div>
+      <span class="progress-pct">{{((selection.selected.length / parsefunct(pcidssdata).length) * 100) | number:'1.0-0'}}%</span>
+    </div>
+    <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(pcidssdata).length) * 100}}" class="pci-progress-bar"></mat-progress-bar>
+  </div>
+
+  <!-- ── Checklist ── -->
+  @if (pcidss) {
+    <div class="pci-checklist">
+      @for (pcicat of pcidss.items; track pcicat) {
+        <div class="pci-section">
+          <div class="section-header">
+            <span class="section-badge">Req</span>
+            <h2 class="section-title">{{pcicat.requirement}}</h2>
+          </div>
+
+          @for (pcisubcat of pcicat.subitems; track pcisubcat) {
+            @if (parsefunct(pcisubcat.litems).length > 0) {
+              <div class="pci-subsection">
+                <h3 class="subsection-title">{{pcisubcat.subreq}}</h3>
+
+                <div class="pci-table-wrapper">
+                  <table mat-table [dataSource]="parsefunct(pcisubcat.litems)" class="pci-table">
+
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox id="{{pcisubcat.subreqid}}"
+                          (change)="$event ? toggleSpecificGroup(pcisubcat.subreqid) : null"
+                          [checked]="checkedfn(pcisubcat.subreqid) && isAllSelectedGv(pcisubcat.subreqid)"
+                          [indeterminate]="checkedfn(pcisubcat.subreqid) && !isAllSelectedGv(pcisubcat.subreqid)">
+                        </mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-checkbox id="{{pcisubcat.subreqid}}"
+                          (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="id">
+                      <th mat-header-cell *matHeaderCellDef>#</th>
+                      <td mat-cell *matCellDef="let element">
+                        <span class="req-id">{{element.id}}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                      <th mat-header-cell *matHeaderCellDef>Description</th>
+                      <td mat-cell *matCellDef="let element">
+                        <div class="req-desc" [innerHTML]="element.description"></div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="milestone">
+                      <th mat-header-cell *matHeaderCellDef>Milestone</th>
+                      <td mat-cell *matCellDef="let element">
+                        <span class="milestone-badge" [ngStyle]="{'background-color': getcolors(element.milestone)}">
+                          {{element.milestone}}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="saq">
+                      <th mat-header-cell *matHeaderCellDef>SAQ</th>
+                      <td mat-cell *matCellDef="let element">
+                        <mat-chip-listbox class="mat-mdc-chip-set-stacked" style="max-width:250px">
+                          @for (chip of element.saq; track chip) {
+                            <mat-chip-option style="max-width:250px"
+                              [selected]="getselectchip(chip, selectsaq)"
+                              [color]="colorchip(chip, selectsaq)"
+                              disabled>{{chip}}
+                            </mat-chip-option>
+                          }
+                        </mat-chip-listbox>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                      (click)="selection.toggle(row)"
+                      [class.row-selected]="selection.isSelected(row)">
+                    </tr>
+
+                  </table>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="pci-footer-spacer"></div>
+
+</div>
