@@ -1,34 +1,40 @@
 <div class="mdc-card my-card-content">
 
   <h1 class="mat-display">
-    <mat-icon>security</mat-icon> Changelog @if (!data) {
-    <span>add</span>
-    }@if (data) {
-    <span>edit</span>
-  }
-</h1>
+    <mat-icon>history</mat-icon>
+    @if (!data) { <span>Add changelog entry</span> }
+    @if (data) { <span>Edit changelog entry</span> }
+  </h1>
 
-<div mat-dialog-content>
+  <div mat-dialog-content>
 
-  <mat-form-field class="example-full-width" color="accent">
-    <input matInput placeholder="Event date" #edate value="{{ (data ? data.date : today) | date:'medium' }}">
-  </mat-form-field>
+    <mat-form-field class="example-full-width" color="accent">
+      <mat-label>Event date</mat-label>
+      <input matInput placeholder="Event date" #edate value="{{ (data ? data.date : today) | date:'medium' }}">
+    </mat-form-field>
 
-  <mat-form-field class="example-full-width" color="accent">
-    <textarea matInput placeholder="Leave a comment" #edesc value="{{data?.desc}}"></textarea>
-  </mat-form-field>
+    <mat-form-field class="example-full-width" color="accent">
+      <mat-label>Description</mat-label>
+      <textarea matInput placeholder="Describe the change..." #edesc value="{{data?.desc}}" rows="3"></textarea>
+    </mat-form-field>
 
-</div>
+    <mat-form-field class="example-full-width" color="accent">
+      <mat-label>Version (optional)</mat-label>
+      <input matInput placeholder="e.g. 1.0, 2.1.3" #eversion value="{{data?.version}}">
+      <mat-hint>Mark this entry as a version release</mat-hint>
+    </mat-form-field>
 
-<div mat-dialog-actions>
-  @if (!data) {
-    <button mat-raised-button cdkFocusInitial color="accent" (click)="addChangelog(edate.value, edesc.value)">Add</button>
-  }
-  @if (data) {
-    <button mat-raised-button cdkFocusInitial color="accent" (click)="editChangelog(edate.value, edesc.value, data)">Edit</button>
-  }
-  &nbsp;
-  <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+  </div>
 
-</div>
+  <div mat-dialog-actions>
+    @if (!data) {
+      <button mat-raised-button cdkFocusInitial color="accent" (click)="addChangelog(edate.value, edesc.value, eversion.value)">Add entry</button>
+    }
+    @if (data) {
+      <button mat-raised-button cdkFocusInitial color="accent" (click)="editChangelog(edate.value, edesc.value, eversion.value, data)">Save changes</button>
+    }
+    &nbsp;
+    <button mat-button (click)="cancel()">Cancel</button>
+  </div>
+
 </div>

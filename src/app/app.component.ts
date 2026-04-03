@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { IndexeddbService } from './indexeddb.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -13,7 +14,37 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  standalone: false
+  standalone: false,
+  animations: [
+    trigger('statusBadge', [
+      state('encrypted', style({
+        backgroundColor: 'rgba(22, 191, 110, 0.15)',
+        borderColor: 'rgba(22, 191, 110, 0.5)',
+        color: '#16bf6e',
+      })),
+      state('decrypted', style({
+        backgroundColor: 'rgba(255, 82, 82, 0.15)',
+        borderColor: 'rgba(255, 82, 82, 0.5)',
+        color: '#ff5252',
+      })),
+      transition('encrypted <=> decrypted', [
+        animate('320ms cubic-bezier(0.4, 0, 0.2, 1)')
+      ]),
+    ]),
+    trigger('statusSlide', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-6px)' }),
+        animate('240ms 80ms cubic-bezier(0.4, 0, 0.2, 1)',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        )
+      ]),
+      transition(':leave', [
+        animate('200ms cubic-bezier(0.4, 0, 0.2, 1)',
+          style({ opacity: 0, transform: 'translateY(6px)' })
+        )
+      ])
+    ])
+  ]
 })
 
 export class AppComponent implements OnInit, OnDestroy {

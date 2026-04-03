@@ -1,120 +1,191 @@
-<div>
+<div class="asvs-shell">
 
-  <div fxLayout="row wrap" fxLayoutGap="10px grid">
-    <div fxLayoutAlign="center center" fxFlex="10%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <img width="60px" src="assets/issue.png">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-icon">
+        <img width="28px" src="assets/issue.png">
+      </div>
+      <div class="page-title-group">
+        <h1 class="page-title">Application Security Verification Standard</h1>
+        <span class="page-subtitle">OWASP ASVS 4.0.3 — Security checklist for researchers</span>
+      </div>
     </div>
-    <div fxLayoutAlign="start center" fxFlex="60%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <h1 style="margin: 0 0 0;" class="mat-headline-3">Application Security Verification Standard</h1>
-    </div>
-
-
-    <div fxLayoutAlign="end center" fxFlex="30%" fxFlex.sm="100%" fxFlex.xs="100%">
-      <button mat-raised-button color="accent" (click)="openasvs4dialog()"><mat-icon class="vertical-align-middle padding-bottom-3">arrow_downward</mat-icon> Export</button>
-      &nbsp;&nbsp;
-      <button mat-raised-button color="warn" (click)="resetselected()"><mat-icon class="vertical-align-middle padding-bottom-3">autorenew</mat-icon> Reset/Unselect all</button>
-
+    <div class="page-header-right">
+      <button class="action-btn" (click)="openasvs4dialog()">
+        <mat-icon class="action-btn-icon">arrow_downward</mat-icon>
+        Export
+      </button>
+      <button class="action-btn action-btn-danger" (click)="resetselected()">
+        <mat-icon class="action-btn-icon">autorenew</mat-icon>
+        Reset
+      </button>
     </div>
   </div>
 
-  <br>
+  <!-- Description card -->
+  @if (asvs) {
+    <div class="info-card">
+      <mat-icon class="info-card-icon">info_outline</mat-icon>
+      <span class="info-card-text">
+        {{asvs.Description}}
+        <a class="link" target="_blank" href="https://owasp.org/www-project-application-security-verification-standard/">ASVS more info</a>
+      </span>
+    </div>
+  }
 
-    @if (asvs) {
-      <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-        {{asvs.Description}} <a class="active-link" target="_blank" href="https://owasp.org/www-project-application-security-verification-standard/">ASVS more info</a>
-      </mat-card>
-    }
-    <br>
-      @if (asvs) {
-        <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-          <mat-form-field color="accent" appearance="fill">
-            <mat-label>Select an ASVS level</mat-label>
-            <mat-select [(ngModel)]="selectlevel" disableRipple (ngModelChange)="onChangeSelect()" color="accent">
-              <mat-option value="All" selected>--- Show all ---</mat-option>
-              <mat-option value="L1">Level 1 - First steps, automated, or whole of portfolio view</mat-option>
-              <mat-option value="L2">Level 2 - Most applications</mat-option>
-              <mat-option value="L3">Level 3 - High value, high assurance, or high safety</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </mat-card>
-      }
-      <br>
-        <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1 sticky">
-          <div>ASVS Level: {{selectlevel}} Items: {{parsefunct(asvsdata).length}} Checked: {{selection.selected.length}}</div>
-          <div>
-            <mat-progress-bar color="accent" mode="determinate" value="{{(selection.selected.length / parsefunct(asvsdata).length) * 100}}"></mat-progress-bar>
+  <!-- Level selector -->
+  @if (asvs) {
+    <div class="section-card">
+      <div class="level-selector-label">Filter by level</div>
+      <div class="level-chips">
+        <button class="level-chip" [class.level-chip-active]="selectlevel === 'All'"
+          (click)="selectlevel='All'; onChangeSelect()">All levels</button>
+        <button class="level-chip" [class.level-chip-active]="selectlevel === 'L1'"
+          (click)="selectlevel='L1'; onChangeSelect()">
+          <span class="level-badge l1">L1</span> First steps
+        </button>
+        <button class="level-chip" [class.level-chip-active]="selectlevel === 'L2'"
+          (click)="selectlevel='L2'; onChangeSelect()">
+          <span class="level-badge l2">L2</span> Most applications
+        </button>
+        <button class="level-chip" [class.level-chip-active]="selectlevel === 'L3'"
+          (click)="selectlevel='L3'; onChangeSelect()">
+          <span class="level-badge l3">L3</span> High assurance
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Sticky progress bar -->
+  <div class="sticky-stats">
+    <div class="stats-row">
+      <div class="stats-left">
+        <span class="stats-label">Level</span>
+        <span class="stats-badge">{{selectlevel}}</span>
+        <span class="stats-divider">·</span>
+        <span class="stats-label">Items</span>
+        <span class="stats-value">{{parsefunct(asvsdata).length}}</span>
+        <span class="stats-divider">·</span>
+        <span class="stats-label">Checked</span>
+        <span class="stats-value checked">{{selection.selected.length}}</span>
+      </div>
+      <div class="stats-right">
+        <span class="stats-pct">{{((selection.selected.length / parsefunct(asvsdata).length) * 100) | number:'1.0-0'}}%</span>
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="(selection.selected.length / parsefunct(asvsdata).length) * 100"></div>
+    </div>
+  </div>
+
+  <!-- Requirements -->
+  @if (asvs) {
+    <div class="requirements-section">
+      <h2 class="section-heading">Requirements</h2>
+
+      @for (asvitem of asvs.Requirements; track asvitem) {
+        <div class="req-group">
+
+          <!-- Chapter heading -->
+          <div class="chapter-header" id="{{asvitem.Shortcode}} {{asvitem.ShortName}}">
+            <span class="chapter-code">{{asvitem.Shortcode}}</span>
+            <span class="chapter-name">{{asvitem.ShortName}}</span>
+            <a class="anchor-link" href="/asvs4#{{asvitem.Shortcode}} {{asvitem.ShortName}}">
+              <mat-icon class="anchor-icon">link</mat-icon>
+            </a>
           </div>
-        </mat-card>
 
-        <br><br>
-        <h2>Requirements</h2>
-        @if (asvs) {
-          <mat-card appearance="outlined" class="mdc-card my-card-content mdc-typography--body1">
-            @for (asvitem of asvs.Requirements; track asvitem) {
-              <span>
-                <h1 id="{{asvitem.Shortcode}} {{asvitem.ShortName}}">{{asvitem.Shortcode}} {{asvitem.ShortName}} <a class="active-link" href="/asvs4#{{asvitem.Shortcode}} {{asvitem.ShortName}}"><mat-icon class="vertical-align-middle padding-bottom-3">link</mat-icon></a></h1>
-                @for (asvsubitem of asvitem.Items; track asvsubitem) {
-                  <span>
-                    <h3 id="{{asvsubitem.Shortcode}} {{asvsubitem.Name}}">{{asvsubitem.Shortcode}} {{asvsubitem.Name}} <a class="active-link" href="/asvs4#{{asvsubitem.Shortcode}} {{asvsubitem.Name}}"><mat-icon class="vertical-align-middle padding-bottom-3">link</mat-icon></a></h3>
-                    @if (parsefunct(asvsubitem.Items).length > 0) {
-                      <table mat-table [dataSource]="parsefunct(asvsubitem.Items)"
-                        class="mat-elevation-z8">
-                        <ng-container matColumnDef="select">
-                          <th mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox id="{{asvitem.Shortcode}}"
-                              (change)="$event ? toggleSpecificGroup(asvsubitem.Shortcode) : null"
-                              [checked]="checkedfn(asvsubitem.Shortcode) && isAllSelectedGv(asvsubitem.Shortcode)"
-                              [indeterminate]="checkedfn(asvsubitem.Shortcode) && !isAllSelectedGv(asvsubitem.Shortcode)">
-                            </mat-checkbox>
-                          </th>
-                          <td mat-cell *matCellDef="let row">
-                            <mat-checkbox id="{{asvitem.Shortcode}}" (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                            </mat-checkbox>
-                          </td>
-                        </ng-container>
-                        <ng-container matColumnDef="Shortcode">
-                          <th mat-header-cell *matHeaderCellDef> <b>#</b> </th>
-                          <td mat-cell *matCellDef="let element"> {{element.Shortcode}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="Description">
-                          <th mat-header-cell *matHeaderCellDef> <b>Description</b> </th>
-                          <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="L1">
-                          <th mat-header-cell *matHeaderCellDef> <b>L1</b> </th>
-                          <td mat-cell *matCellDef="let element"> {{element.L1.Requirement}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="L2">
-                          <th mat-header-cell *matHeaderCellDef> <b>L2</b> </th>
-                          <td mat-cell *matCellDef="let element"> {{element.L2.Requirement}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="L3">
-                          <th mat-header-cell *matHeaderCellDef> <b>L3</b> </th>
-                          <td mat-cell *matCellDef="let element"> {{element.L3.Requirement}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="CWE">
-                          <th mat-header-cell *matHeaderCellDef> <b>CWE</b> </th>
-                          <td mat-cell *matCellDef="let element"> <a class="active-link" target="_blank" href="https://cwe.mitre.org/data/definitions/{{element.CWE}}.html">{{element.CWE}}</a> </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-                        </tr>
-                      </table>
-                    }
-                    <br><br>
-                  </span>
-                }
-              </span>
-            }
-          </mat-card>
-        }
+          @for (asvsubitem of asvitem.Items; track asvsubitem) {
+            <div class="sub-group">
 
+              <!-- Sub-chapter heading -->
+              <div class="sub-header" id="{{asvsubitem.Shortcode}} {{asvsubitem.Name}}">
+                <span class="sub-code">{{asvsubitem.Shortcode}}</span>
+                <span class="sub-name">{{asvsubitem.Name}}</span>
+                <a class="anchor-link" href="/asvs4#{{asvsubitem.Shortcode}} {{asvsubitem.Name}}">
+                  <mat-icon class="anchor-icon">link</mat-icon>
+                </a>
+              </div>
 
+              @if (parsefunct(asvsubitem.Items).length > 0) {
+                <div class="table-wrapper">
+                  <table mat-table [dataSource]="parsefunct(asvsubitem.Items)" class="asvs-table">
 
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox
+                          (change)="$event ? toggleSpecificGroup(asvsubitem.Shortcode) : null"
+                          [checked]="checkedfn(asvsubitem.Shortcode) && isAllSelectedGv(asvsubitem.Shortcode)"
+                          [indeterminate]="checkedfn(asvsubitem.Shortcode) && !isAllSelectedGv(asvsubitem.Shortcode)">
+                        </mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
 
+                    <ng-container matColumnDef="Shortcode">
+                      <th mat-header-cell *matHeaderCellDef>#</th>
+                      <td mat-cell *matCellDef="let element">
+                        <span class="shortcode-chip">{{element.Shortcode}}</span>
+                      </td>
+                    </ng-container>
 
-        <br>
-          <br>
-            <br>
+                    <ng-container matColumnDef="Description">
+                      <th mat-header-cell *matHeaderCellDef>Description</th>
+                      <td mat-cell *matCellDef="let element" class="desc-cell">{{element.Description}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="L1">
+                      <th mat-header-cell *matHeaderCellDef><span class="level-badge l1">L1</span></th>
+                      <td mat-cell *matCellDef="let element">
+                        <span class="req-dot" [class.req-dot-on]="element.L1.Requirement === '✓'">{{element.L1.Requirement}}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="L2">
+                      <th mat-header-cell *matHeaderCellDef><span class="level-badge l2">L2</span></th>
+                      <td mat-cell *matCellDef="let element">
+                        <span class="req-dot" [class.req-dot-on]="element.L2.Requirement === '✓'">{{element.L2.Requirement}}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="L3">
+                      <th mat-header-cell *matHeaderCellDef><span class="level-badge l3">L3</span></th>
+                      <td mat-cell *matCellDef="let element">
+                        <span class="req-dot" [class.req-dot-on]="element.L3.Requirement === '✓'">{{element.L3.Requirement}}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="CWE">
+                      <th mat-header-cell *matHeaderCellDef>CWE</th>
+                      <td mat-cell *matCellDef="let element">
+                        <a class="link cwe-link" target="_blank"
+                          href="https://cwe.mitre.org/data/definitions/{{element.CWE}}.html">
+                          {{element.CWE}}
+                        </a>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                      (click)="selection.toggle(row)"
+                      [class.row-selected]="selection.isSelected(row)">
+                    </tr>
+                  </table>
+                </div>
+              }
+
             </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div style="height: 80px;"></div>
+</div>
