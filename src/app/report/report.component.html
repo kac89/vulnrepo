@@ -840,159 +840,203 @@
                                 <div mat-card-avatar>
                                   <mat-icon>settings</mat-icon>
                                 </div>
-                                <mat-card-title style="display: flex" fxLayoutAlign="start">Settings
-                                  &nbsp;
-                                  <button style="height: 27px;" matButton="outlined" [matMenuTriggerFor]="Settingsmenu">More
-                                    <mat-icon>more_vert</mat-icon>
+                                <mat-card-title class="settings-header-title">Settings</mat-card-title>
+                                <div class="settings-header-actions">
+                                  <button mat-icon-button [matMenuTriggerFor]="Settingsmenu" title="More options">
+                                    <mat-icon>more_horiz</mat-icon>
                                   </button>
                                   <mat-menu #Settingsmenu="matMenu">
-                                    <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" title="Change report security key"
-                                      mat-menu-item>
-                                      <mat-icon class="vertical-align-middle padding-bottom-3">security</mat-icon> Change report securty key
+                                    <a [routerLink]="[]" (click)="changesecuritykey(reportdesc.report_id)" title="Change report security key" mat-menu-item>
+                                      <mat-icon>security</mat-icon> Change report security key
                                     </a>
-                                    <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)"
-                                      title="Add custom content to report" mat-menu-item>
-                                      <mat-icon class="vertical-align-middle padding-bottom-3">add_circle</mat-icon> Add custom content to report
+                                    <a [routerLink]="[]" (click)="addCustomcontent(decryptedReportDataChanged)" title="Add custom content to report" mat-menu-item>
+                                      <mat-icon>add_circle</mat-icon> Add custom content to report
                                     </a>
                                     <a [routerLink]="[]" (click)="addCustomcss(decryptedReportDataChanged)" title="Add custom css" mat-menu-item>
-                                      <mat-icon class="vertical-align-middle padding-bottom-3">palette</mat-icon> Custom CSS (HTML v2)
+                                      <mat-icon>palette</mat-icon> Custom CSS (HTML v2)
                                     </a>
-                                    <button mat-menu-item [matMenuTriggerFor]="reportporfiles2">Report settings profile</button>
+                                    <button mat-menu-item [matMenuTriggerFor]="reportporfiles2">
+                                      <mat-icon>bookmark</mat-icon> Report settings profile
+                                    </button>
                                   </mat-menu>
                                   <mat-menu #reportporfiles2="matMenu">
                                     <button mat-menu-item (click)="savenewReportProfile()">
-                                      <mat-icon title="Report settings profile">save</mat-icon> Save current settings
+                                      <mat-icon>save</mat-icon> Save current settings
                                     </button>
                                     @if (ReportProfilesList.length > 0) {
-                                      <button mat-menu-item [matMenuTriggerFor]="reportProfiles">Select
-                                      settings profile</button>
+                                      <button mat-menu-item [matMenuTriggerFor]="reportProfiles">
+                                        <mat-icon>layers</mat-icon> Select settings profile
+                                      </button>
                                     }
                                   </mat-menu>
                                   <mat-menu #reportProfiles="matMenu">
                                     @for (profile of ReportProfilesList; track profile) {
-                                      <span>
-                                        <button mat-menu-item (click)="setReportProfile(profile)">
-                                          @if (!profile.api) {
-                                            <mat-icon title="Local Host">computer</mat-icon>
-                                          }
-                                          @if (profile.api == 'remote') {
-                                            <mat-icon color="accent"
-                                            title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}] ">public</mat-icon>
-                                          }
-                                          {{profile.profile_name}}
-                                        </button>
-                                      </span>
+                                      <button mat-menu-item (click)="setReportProfile(profile)">
+                                        @if (!profile.api) {
+                                          <mat-icon title="Local Host">computer</mat-icon>
+                                        }
+                                        @if (profile.api == 'remote') {
+                                          <mat-icon color="accent" title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}]">public</mat-icon>
+                                        }
+                                        {{profile.profile_name}}
+                                      </button>
                                     }
                                   </mat-menu>
-                                </mat-card-title>
+                                </div>
                               </mat-card-header>
                               <mat-card-content>
-                                <mat-tab-group [selectedIndex]="0" dynamicHeight color="accent">
+                                <mat-tab-group [selectedIndex]="0" dynamicHeight color="accent" animationDuration="150ms" mat-stretch-tabs="false">
+
+                                  <!-- Tab: Logo -->
                                   <mat-tab>
                                     <ng-template mat-tab-label>
                                       <mat-icon class="example-tab-icon">image</mat-icon>
                                       Report logo
                                     </ng-template>
-                                    <div style="padding: 20px!important;">
-                                      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-                                        <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-                                          <button mat-fab style="margin-right: 10px!important;" class="mdc-elevation--z11"
-                                            (click)="fileuploadInput.click()" color="primary" title="Attach report logo" extended>
-                                            <i class="material-icons">attach_file</i>
-                                            Attach logo
-                                            <input type="file" #fileuploadInput id="file" accept="image/*" (change)="importlogo($event.target)"
-                                              name="myfiles" style="display:none;">
-                                            </button>
+                                    <div class="settings-tab-body">
+                                      <div class="settings-logo-zone">
+                                        <div class="settings-logo-upload-row">
+                                          <button mat-stroked-button class="settings-logo-btn" (click)="fileuploadInput.click()" title="Attach report logo">
+                                            <mat-icon>upload</mat-icon>
+                                            Upload logo
+                                            <input type="file" #fileuploadInput id="file" accept="image/*" (change)="importlogo($event.target)" name="myfiles" style="display:none;">
+                                          </button>
+                                          <span class="settings-logo-hint">PNG, JPG or SVG &mdash; displayed on the report cover</span>
+                                        </div>
+                                        @if (advlogo_saved || advlogo) {
+                                          <div class="settings-logo-preview">
                                             @if (advlogo_saved) {
-                                              <img src="{{advlogo_saved}}" width="100px">
+                                              <img src="{{advlogo_saved}}" class="settings-logo-img">
                                             }
                                             <div [innerHTML]="uploadlogoprev"></div>
-                                            @if (advlogo_saved || advlogo) {
-                                              <button mat-icon-button color="warn" (click)="clearlogo()"
-                                                title="Remove report logo">
+                                            <div class="settings-logo-controls">
+                                              <button mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo" class="settings-logo-remove-btn">
                                                 <mat-icon>delete_forever</mat-icon>
                                               </button>
-                                            }
-                                            @if (advlogo_saved || advlogo) {
-                                              <div fxLayout="column" style="margin-top: 5px; height: 125px;">
-                                                <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
-                                                  <mat-label>Width (px)</mat-label>
-                                                  <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.width"
-                                                    value="{{decryptedReportDataChanged.report_settings.report_logo.width}}">
-                                                  </mat-form-field>
-                                                  <mat-form-field appearance="outline" color="accent" [style.width.px]="100">
-                                                    <mat-label>Height (px)</mat-label>
-                                                    <input matInput [(ngModel)]="decryptedReportDataChanged.report_settings.report_logo.height"
-                                                      value="{{decryptedReportDataChanged.report_settings.report_logo.height}}">
-                                                    </mat-form-field>
-                                                  </div>
-                                                }
-                                              </div>
                                             </div>
                                           </div>
-                                        </mat-tab>
-                                        <mat-tab>
-                                          <ng-template mat-tab-label>
-                                            <mat-icon class="example-tab-icon">tune</mat-icon>
-                                            Report settings
-                                          </ng-template>
-                                          <div style="padding: 10px!important;">
-                                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px grid">
-                                              <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                                <mat-card appearance="outlined">
-                                                  <mat-card-header>
-                                                    <mat-card-title> HTML</mat-card-title>
-                                                  </mat-card-header>
-                                                  <mat-card-content>
-                                                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                                      <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed"
-                                                        (change)="embedVideo($event)">Embed video in report<br>(MP4, WebM, and OGG)</mat-checkbox>
-                                                      </div>
-                                                      <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                                        <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc"
-                                                          (change)="parsingdescnewline($event)">(Parsing: Description)<br>Add new line</mat-checkbox><br>
-                                                          <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"
-                                                            (change)="parsingpocmarkdown($event)">(Parsing: PoC)<br>Use Markdown</mat-checkbox>
-                                                          </div>
-                                                        </mat-card-content>
-                                                      </mat-card>
-                                                    </div>
-                                                    <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                                      <mat-card appearance="outlined">
-                                                        <mat-card-header>
-                                                          <mat-card-title> ALL formats</mat-card-title>
-                                                        </mat-card-header>
-                                                        <mat-card-content>
-                                                          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page"
-                                                            (change)="removechangelogpage($event)">Remove Changelog</mat-checkbox>
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuestatus"
-                                                            (change)="removeIssuestatus($event)">Remove Issue status</mat-checkbox>
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecvss"
-                                                            (change)="removeIssuecvss($event)">Remove Issue CVSS</mat-checkbox>
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecve"
-                                                            (change)="removeIssuecve($event)">Remove Issue CVE</mat-checkbox>
-                                                          </div>
-                                                          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_researchers"
-                                                            (change)="removeResearchers($event)">Remove Researcher</mat-checkbox>
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuetags"
-                                                            (change)="removetagsfromreport($event)">Remove TAGs</mat-checkbox>
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_attach_name"
-                                                            (change)="removeattachname($event)">Hide the filename of all attachments</mat-checkbox>
-                                                            <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_lastpage"
-                                                              (change)="removeGeninfo($event)">Remove<br>(Generated by vulnrepo.com)</mat-checkbox>
-                                                            </div>
-                                                          </mat-card-content>
-                                                        </mat-card>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </mat-tab>
-                                              </mat-tab-group>
-                                            </mat-card-content>
-                                          </mat-card>
                                         }
+                                      </div>
+                                    </div>
+                                  </mat-tab>
+
+                                  <!-- Tab: Report settings -->
+                                  <mat-tab>
+                                    <ng-template mat-tab-label>
+                                      <mat-icon class="example-tab-icon">tune</mat-icon>
+                                      Report settings
+                                    </ng-template>
+                                    <div class="settings-tab-body">
+                                      <div class="settings-groups-grid">
+
+                                        <!-- HTML group -->
+                                        <div class="settings-group">
+                                          <div class="settings-group-header">
+                                            <span class="settings-group-title">HTML</span>
+                                            <span class="settings-group-desc">Specific to HTML export</span>
+                                          </div>
+                                          <div class="settings-toggle-list">
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Embed video</span>
+                                                <span class="settings-toggle-hint">MP4, WebM and OGG</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_video_embed"
+                                                (change)="embedVideo($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Parsing: Description</span>
+                                                <span class="settings-toggle-hint">Add new line</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_desc"
+                                                (change)="parsingdescnewline($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Parsing: PoC</span>
+                                                <span class="settings-toggle-hint">Use Markdown</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_parsing_poc_markdown"
+                                                (change)="parsingpocmarkdown($event)"></mat-checkbox>
+                                            </label>
+                                          </div>
+                                        </div>
+
+                                        <!-- All formats group -->
+                                        <div class="settings-group">
+                                          <div class="settings-group-header">
+                                            <span class="settings-group-title">All formats</span>
+                                            <span class="settings-group-desc">Applied to HTML, DOCX, Markdown &amp; more</span>
+                                          </div>
+                                          <div class="settings-toggle-list">
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Remove Changelog</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_changelog_page"
+                                                (change)="removechangelogpage($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Remove Issue status</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuestatus"
+                                                (change)="removeIssuestatus($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Remove Issue CVSS</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecvss"
+                                                (change)="removeIssuecvss($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Remove Issue CVE</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuecve"
+                                                (change)="removeIssuecve($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Remove Researcher</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_researchers"
+                                                (change)="removeResearchers($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Remove TAGs</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_issuetags"
+                                                (change)="removetagsfromreport($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Hide attachment filenames</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_attach_name"
+                                                (change)="removeattachname($event)"></mat-checkbox>
+                                            </label>
+                                            <label class="settings-toggle-row">
+                                              <div class="settings-toggle-info">
+                                                <span class="settings-toggle-label">Remove "Generated by vulnrepo.com"</span>
+                                              </div>
+                                              <mat-checkbox [checked]="decryptedReportDataChanged.report_settings.report_remove_lastpage"
+                                                (change)="removeGeninfo($event)"></mat-checkbox>
+                                            </label>
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                  </mat-tab>
+
+                                </mat-tab-group>
+                              </mat-card-content>
+                            </mat-card>
+                          }
                                           <!-- Download -->
                                           @if (decryptedReportDataChanged) {
                                             <mat-card appearance="outlined" class="report-section">
