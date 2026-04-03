@@ -194,7 +194,9 @@
 
     @if (dataSource.data.length == 0) {
       <div class="empty-state">
-        <mat-icon class="empty-icon">sentiment_very_dissatisfied</mat-icon>
+        <div class="empty-icon-wrap">
+          <mat-icon class="empty-icon">folder_open</mat-icon>
+        </div>
         <p class="empty-title">No reports yet</p>
         <p class="empty-subtitle">Create a new report or import an existing one to get started.</p>
       </div>
