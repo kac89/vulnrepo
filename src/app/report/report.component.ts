@@ -3771,6 +3771,7 @@ Date   | Description
 
     const dialogRef = this.dialog.open(DialogReportHistoryComponent, {
       width: '600px',
+      maxHeight: '80vh',
       disableClose: false,
       data: report_id
     });
