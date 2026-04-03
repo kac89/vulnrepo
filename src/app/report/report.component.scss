@@ -1106,6 +1106,175 @@ mat-paginator {
   line-height: 1.6;
 }
 
+// ── Issue panels (Next.js-style) ─────────────────────────────
+
+.issue-panel {
+  background: rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-left: 3px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  margin-bottom: 6px !important;
+  box-shadow: none !important;
+  transition: background 0.15s, border-color 0.15s !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(255, 255, 255, 0.16) !important;
+  }
+
+  &.mat-expanded {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+  }
+}
+
+.issue-panel--critical { border-left-color: #FF0039 !important; }
+.issue-panel--high     { border-left-color: #FF7518 !important; }
+.issue-panel--medium   { border-left-color: #F9EE06 !important; }
+.issue-panel--low      { border-left-color: #3FB618 !important; }
+.issue-panel--info     { border-left-color: #2780E3 !important; }
+
+::ng-deep .issue-panel .mat-expansion-panel-header {
+  height: 52px !important;
+  padding: 0 12px 0 16px !important;
+  &:hover { background: rgba(255, 255, 255, 0.03) !important; }
+}
+
+::ng-deep .issue-panel .mat-expansion-panel-content .mat-expansion-panel-body {
+  padding: 0 16px 16px !important;
+}
+
+// Issue inner form — CSS grid layout
+.issue-form-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px 0 8px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.issue-form-meta-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  mat-form-field { width: 100%; }
+}
+
+.issue-form-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-bottom: 8px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.issue-form-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  mat-form-field { width: 100%; }
+}
+
+.issue-form-cvss-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 8px;
+
+  mat-form-field { width: 100%; }
+}
+
+.issue-bounty-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.issue-bounty-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.issue-bounty-search { flex-shrink: 0; }
+
+.issue-form-files-row {
+  padding-bottom: 4px;
+}
+
+// Slim action strip (replaces mat-action-row FABs)
+.issue-action-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 10px 0 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  margin-top: 8px;
+}
+
+.issue-action-strip-spacer { flex: 1; }
+
+.issue-action-btn {
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 0.775rem !important;
+  padding: 0 12px !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-radius: 6px !important;
+  gap: 4px;
+
+  mat-icon, .mat-icon {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    vertical-align: middle;
+    margin-right: 3px;
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.32) !important;
+    color: rgba(255, 255, 255, 0.88) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+  }
+}
+
+.issue-action-btn--danger {
+  border-color: rgba(#f44336, 0.28) !important;
+  color: rgba(#f44336, 0.7) !important;
+
+  &:hover {
+    border-color: #f44336 !important;
+    color: #f44336 !important;
+    background: rgba(#f44336, 0.06) !important;
+  }
+}
+
+.issue-upload-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.775rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+// "Add issue" banner — modernized
+.issue-add-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  margin-top: 12px;
+}
+
 // ── Settings section ──────────────────────────────────────────
 .settings-header-title {
   font-size: 1rem !important;

@@ -303,7 +303,7 @@
                 </div>
                 <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
                   @for (dec_data of selectedResult; track dec_data; let i = $index) {
-                    <mat-expansion-panel class="mat-elevation-z9"
+                    <mat-expansion-panel class="issue-panel issue-panel--{{dec_data.severity | lowercase}}"
                       (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag>
                       <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
                         <mat-panel-title fxLayoutAlign="start">
@@ -378,198 +378,170 @@
                         </mat-panel-description>
                       </mat-expansion-panel-header>
                       <mat-expansion-panel-header *cdkDragPlaceholder></mat-expansion-panel-header>
-                      <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                        <div fxFlex="70%" fxFlex.sm="70%" fxFlex.xs="100%">
-                          <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                            <mat-label>Proof of Concept</mat-label>
-                            <div style="position:relative;">
-                              <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"
-                              style="display:block;"></textarea>
-                              <div style="position:absolute;top: 10px; right: 10px;">
-                                <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)"
-                                  title="Fullscreen Text Editor">
-                                  <mat-icon>fullscreen</mat-icon>
-                                </button>
-                              </div>
+                      <!-- Row 1: PoC + meta -->
+                      <div class="issue-form-main-grid">
+                        <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                          <mat-label>Proof of Concept</mat-label>
+                          <div style="position:relative;">
+                            <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput rows="8"
+                            style="display:block;"></textarea>
+                            <div style="position:absolute;top: 10px; right: 10px;">
+                              <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)"
+                                title="Fullscreen Text Editor">
+                                <mat-icon>fullscreen</mat-icon>
+                              </button>
                             </div>
+                          </div>
+                        </mat-form-field>
+                        <div class="issue-form-meta-col">
+                          <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>Severity</mat-label>
+                            <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
+                              (ngModelChange)="doStats()">
+                              @for (sev of dataSourceforseverity; track sev) {
+                                <mat-option [value]="sev.severity">{{sev.severity}}</mat-option>
+                              }
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>Issue status</mat-label>
+                            <mat-select placeholder="Issue status" [(value)]="dec_data.status" [ngModel]="dec_data.status"
+                              (ngModelChange)="doStats()">
+                              @for (issuestat of issueStatus; track issuestat) {
+                                <mat-option [value]="issuestat.value">{{issuestat.status}}</mat-option>
+                              }
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>Create issue date</mat-label>
+                            <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
+                              [value]="renderdateformat(dec_data.date)">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
                           </mat-form-field>
                         </div>
-                        <div fxFlex="30%" fxFlex.sm="30%" fxFlex.xs="100%">
-                          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                              <mat-form-field class="example-full-width" color="accent">
-                                <mat-label>Severity</mat-label>
-                                <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
-                                  (ngModelChange)="doStats()">
-                                  @for (sev of dataSourceforseverity; track sev) {
-                                    <mat-option [value]="sev.severity">
-                                      {{sev.severity}}
-                                    </mat-option>
-                                  }
-                                </mat-select>
-                              </mat-form-field>
-                            </div>
-                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                              <mat-form-field class="example-full-width" color="accent">
-                                <mat-label>Issue status</mat-label>
-                                <mat-select placeholder="Issue status" [(value)]="dec_data.status" [ngModel]="dec_data.status"
-                                  (ngModelChange)="doStats()">
-                                  @for (issuestat of issueStatus; track issuestat) {
-                                    <mat-option [value]="issuestat.value">
-                                      {{issuestat.status}}
-                                    </mat-option>
-                                  }
-                                </mat-select>
-                              </mat-form-field>
-                            </div>
-                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                              <mat-form-field class="example-full-width" color="accent">
-                                <mat-label>Create issue date</mat-label>
-                                <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
-                                  [value]="renderdateformat(dec_data.date)">
-                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                  <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
+                      </div>
+                      <!-- Row 2: Description/Tags + References/CVSS/CVE/Bounty -->
+                      <div class="issue-form-detail-grid">
+                        <div class="issue-form-col">
+                          <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                            <mat-label>Description</mat-label>
+                            <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
+                          </mat-form-field>
+                          @if (dec_data.tags) {
+                            <mat-form-field class="example-tags-list" color="accent">
+                              <mat-label>Tags</mat-label>
+                              <mat-chip-grid #tagList aria-label="Tags">
+                                @for (tag of dec_data.tags; track tag) {
+                                  <mat-chip-row [(ngModel)]="dec_data.tags"
+                                    [selectable]="selectable" [removable]="removable" (removed)="TAGremove(tag, dec_data)"
+                                    ngDefaultControl>
+                                    {{tag.name}}
+                                    @if (removable) {
+                                      <mat-icon matChipRemove>cancel</mat-icon>
+                                    }
+                                  </mat-chip-row>
+                                }
+                                <input placeholder="New tag..." [matChipInputFor]="tagList"
+                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                  (matChipInputTokenEnd)="TAGadd($event, dec_data)">
+                              </mat-chip-grid>
+                            </mat-form-field>
+                          }
+                        </div>
+                        <div class="issue-form-col">
+                          <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                            <mat-label>References</mat-label>
+                            <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
+                          </mat-form-field>
+                          <div class="issue-form-cvss-row">
+                            <mat-form-field class="example-full-width" color="accent">
+                              <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
+                              <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent"
+                                matSuffix title="Calculate CVSS">
+                                <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon>
+                                CVSS
+                              </button>
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width" color="accent">
+                              <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
+                              <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent"
+                                matSuffix title="Search CVE">
+                                <mat-icon class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon> CVE
+                              </button>
+                            </mat-form-field>
+                          </div>
+                          @if (dec_data?.bounty) {
+                            <div class="issue-bounty-row">
+                              <div class="issue-bounty-list">
+                                @if (BBmsg != '') {
+                                  <p>{{BBmsg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar></p>
+                                }
+                                @for (bounty of dec_data?.bounty; track bounty) {
+                                  <button mat-stroked-button color="accent"
+                                    (click)="redirectBounty(bounty?.url)" title="{{bounty?.url}}">
+                                    <mat-icon>attach_money</mat-icon>{{bounty?.name}}
+                                  </button>
+                                }
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                          <div fxLayout="row wrap" fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                            <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                              <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                                <mat-label>Description</mat-label>
-                                <textarea [(ngModel)]="dec_data.desc" matInput rows="6"></textarea>
-                              </mat-form-field>
-                            </div>
-                            @if (dec_data.tags) {
-                              <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                <mat-form-field class="example-tags-list" color="accent">
-                                  <mat-label>Tags</mat-label>
-                                  <mat-chip-grid #tagList aria-label="Tags">
-                                    @for (tag of dec_data.tags; track tag) {
-                                      <mat-chip-row [(ngModel)]="dec_data.tags"
-                                        [selectable]="selectable" [removable]="removable" (removed)="TAGremove(tag, dec_data)"
-                                        ngDefaultControl>
-                                        {{tag.name}}
-                                        @if (removable) {
-                                          <mat-icon matChipRemove>cancel</mat-icon>
-                                        }
-                                      </mat-chip-row>
-                                    }
-                                    <input placeholder="New tag..." [matChipInputFor]="tagList"
-                                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                                      (matChipInputTokenEnd)="TAGadd($event, dec_data)">
-                                    </mat-chip-grid>
-                                  </mat-form-field>
-                                </div>
-                              }
-                            </div>
-                            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                              <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                                  <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                                    <mat-label>References</mat-label>
-                                    <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
-                                  </mat-form-field>
-                                </div>
-                                <div fxFlex="40%" fxFlex.sm="50%" fxFlex.xs="100%">
-                                  <mat-form-field class="example-full-width" color="accent">
-                                    <input matInput placeholder="CVSS" [(ngModel)]="dec_data.cvss" value="{{dec_data.cvss}}">
-                                    <button mat-button (click)="openDialogCVSS(dec_data)" style="line-height: 25px;" color="accent"
-                                      matSuffix title="Calculate CVSS">
-                                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">add_circle_outline</mat-icon>
-                                      CVSS
-                                    </button>
-                                  </mat-form-field>
-                                </div>
-                                <div fxFlex="60%" fxFlex.sm="50%" fxFlex.xs="100%">
-                                  <mat-form-field class="example-full-width" color="accent">
-                                    <input matInput placeholder="CVE" [(ngModel)]="dec_data.cve" value="{{dec_data.cve}}">
-                                    <button mat-button (click)="openDialogCVE(dec_data)" style="line-height: 25px;" color="accent"
-                                      matSuffix title="Search CVE">
-                                      <mat-icon class="vertical-align-middle padding-bottom-3 size-45">search</mat-icon> CVE
-                                    </button>
-                                  </mat-form-field>
-                                </div>
-                                @if (dec_data?.bounty) {
-                                  <div fxLayout="row wrap" fxLayoutGap="5px grid" fxFlex="100%" fxFlex.sm="100%"
-                                    fxFlex.xs="100%">
-                                    <div style="display: inline;text-align: end;" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
-                                      @if (BBmsg != '') {
-                                        <div>
-                                          <p>{{BBmsg}}<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-                                        </p>
-                                      </div>
-                                    }
-                                    @for (bounty of dec_data?.bounty; track bounty) {
-                                      <button mat-stroked-button color="accent"
-                                        (click)="redirectBounty(bounty?.url)" title="{{bounty?.url}}">
-                                        <mat-icon>attach_money</mat-icon>{{bounty?.name}}
-                                      </button>
-                                    }
-                                  </div>
-                                  <div fxLayoutAlign="end start" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
-                                    <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}"
-                                      matBadgeColor="accent" (click)="searchBounty(dec_data)"
-                                      title="Search for bug bounty program base on POC">
-                                      <mat-icon>attach_money</mat-icon>
-                                      <mat-icon>search</mat-icon>
-                                    </button>
-                                  </div>
-                                </div>
-                              }
-                            </div>
-                          </div>
-                        </div>
-                        <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                          <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                            @for (key of dec_data.files; track key) {
-                              <div>
-                                <mat-list>
-                                  <mat-list-item class="mat-elevation-z4" fxLayout="row">
-                                    <div matListItemTitle>{{key.title}}</div>
-                                    <div matListItemLine><b>Date:</b> {{key.date | date:'medium'}} | <b>Size:</b> {{key.size | filesize
-                                  }} </div>
-                                  <div matListItemMeta>
-                                    @if (key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000) {
-                                      <button mat-icon-button
-                                        (click)="openattachfullscreen(key, dec_data)" title="Preview file">
-                                        <mat-icon color="accent">search</mat-icon>
-                                      </button>
-                                    }
-                                    <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
-                                      <mat-icon color="accent">file_download</mat-icon>
-                                    </button>
-                                    <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
-                                      <mat-icon color="warn">delete_forever</mat-icon>
-                                    </button>
-                                  </div>
-                                </mat-list-item>
-                              </mat-list>
+                              <div class="issue-bounty-search">
+                                <button mat-raised-button color="primary" matBadge="{{dec_data?.bounty.length}}"
+                                  matBadgeColor="accent" (click)="searchBounty(dec_data)"
+                                  title="Search for bug bounty program base on POC">
+                                  <mat-icon>attach_money</mat-icon>
+                                  <mat-icon>search</mat-icon>
+                                </button>
+                              </div>
                             </div>
                           }
                         </div>
                       </div>
-                      <mat-action-row align="end">
-                        <button mat-fab (click)="fileuploadInput.click()" color="primary" title="Upload file">
-                          <i class="material-icons">attach_file</i>
+                      <!-- Row 3: Attachments -->
+                      @if (dec_data.files.length > 0) {
+                        <div class="issue-form-files-row">
+                          @for (key of dec_data.files; track key) {
+                            <mat-list>
+                              <mat-list-item class="mat-elevation-z4">
+                                <div matListItemTitle>{{key.title}}</div>
+                                <div matListItemLine><b>Date:</b> {{key.date | date:'medium'}} | <b>Size:</b> {{key.size | filesize}}</div>
+                                <div matListItemMeta>
+                                  @if (key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000) {
+                                    <button mat-icon-button (click)="openattachfullscreen(key, dec_data)" title="Preview file">
+                                      <mat-icon color="accent">search</mat-icon>
+                                    </button>
+                                  }
+                                  <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
+                                    <mat-icon color="accent">file_download</mat-icon>
+                                  </button>
+                                  <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
+                                    <mat-icon color="warn">delete_forever</mat-icon>
+                                  </button>
+                                </div>
+                              </mat-list-item>
+                            </mat-list>
+                          }
+                        </div>
+                      }
+                      <div class="issue-action-strip">
+                        <button mat-stroked-button class="issue-action-btn" (click)="fileuploadInput.click()" title="Attach file">
+                          <mat-icon>attach_file</mat-icon>Attach
                           <input type="file" #fileuploadInput id="file" accept=".*" (change)="uploadAttach($event.target, dec_data)"
                             style="display:none;" multiple>
-                          </button>
-                          <div fxFlex></div>
-                          @if (upload_in_progress) {
-                            <span align="start">Upload please wait...<mat-progress-bar style="width: 300px;"
-                            color="accent" mode="indeterminate"></mat-progress-bar></span>
-                          }
-                          <div fxFlex></div>
-                          <button mat-fab color="primary" (click)="saveTemplate(dec_data)" title="Save issue as template">
-                            <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>save_as</mat-icon>
-                          </button>
-                          <button mat-fab color="warn" (click)="removeIssiue(dec_data)" title="Remove issue">
-                            <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>delete_forever</mat-icon>
-                          </button>
-                        </mat-action-row>
+                        </button>
+                        @if (upload_in_progress) {
+                          <span class="issue-upload-hint">
+                            <mat-progress-bar style="width:140px;" color="accent" mode="indeterminate"></mat-progress-bar>
+                            Uploading…
+                          </span>
+                        }
+                        <span class="issue-action-strip-spacer"></span>
+                        <button mat-stroked-button class="issue-action-btn" (click)="saveTemplate(dec_data)" title="Save issue as template">
+                          <mat-icon>save_as</mat-icon>Save template
+                        </button>
+                        <button mat-stroked-button class="issue-action-btn issue-action-btn--danger" (click)="removeIssiue(dec_data)" title="Remove issue">
+                          <mat-icon>delete_forever</mat-icon>Delete
+                        </button>
+                      </div>
                       </mat-expansion-panel>
                     }
                   </mat-accordion>
@@ -631,12 +603,10 @@
                           </button>
                         </div>
                       } @else {
-                        <div class="banner">
-                          <div class="center-me">
-                            <button class="mat-elevation-z9" mat-fab extended color="accent" (click)="addissue()">
-                              <mat-icon class="vertical-align-middle padding-bottom-3">add</mat-icon> Add issue
-                            </button>
-                          </div>
+                        <div class="issue-add-banner">
+                          <button mat-stroked-button color="accent" (click)="addissue()">
+                            <mat-icon>add</mat-icon> Add issue
+                          </button>
                         </div>
                       }
                     </mat-card-content>
