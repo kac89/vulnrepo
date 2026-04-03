@@ -1,6 +1,496 @@
-.sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 999;
+// ── Base shell ────────────────────────────────────────────────────────────────
+.asvs-shell {
+  padding: 28px 32px;
+  background: #1a1a1a;
+  min-height: 100%;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+// ── Page header ───────────────────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.page-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.page-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5f5f5;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 12px;
+  color: #616161;
+  letter-spacing: 0.01em;
+}
+
+.page-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// ── Action buttons ────────────────────────────────────────────────────────────
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #2a2a2a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover {
+    background: #424242;
+    border-color: rgba(255,255,255,0.18);
+    color: #f5f5f5;
   }
+}
+
+.action-btn-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  line-height: 16px !important;
+}
+
+.action-btn-danger {
+  &:hover {
+    background: rgba(239, 83, 80, 0.12);
+    border-color: rgba(239, 83, 80, 0.3);
+    color: #ef5350;
+  }
+}
+
+// ── Info card ────────────────────────────────────────────────────────────────
+.info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #9e9e9e;
+  line-height: 1.6;
+}
+
+.info-card-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: #424242;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-card-text { flex: 1; }
+
+// ── Section card ─────────────────────────────────────────────────────────────
+.section-card {
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.level-selector-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #616161;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+// ── Level chips ───────────────────────────────────────────────────────────────
+.level-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.level-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 99px;
+  color: #9e9e9e;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover {
+    background: #2a2a2a;
+    color: #f5f5f5;
+    border-color: rgba(255,255,255,0.2);
+  }
+}
+
+.level-chip-active {
+  background: #424242;
+  border-color: rgba(255,255,255,0.18);
+  color: #f5f5f5;
+}
+
+// ── Level badges ──────────────────────────────────────────────────────────────
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 1px 5px;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+.l1 { background: rgba(74, 222, 128, 0.12); color: #4ade80; }
+.l2 { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+.l3 { background: rgba(239, 83, 80, 0.12);  color: #ef5350; }
+
+// ── Sticky stats bar ──────────────────────────────────────────────────────────
+.sticky-stats {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 0 10px;
+  margin-bottom: 24px;
+}
+
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.stats-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.stats-label {
+  color: #616161;
+}
+
+.stats-badge {
+  background: #424242;
+  color: #f5f5f5;
+  border-radius: 5px;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stats-divider {
+  color: #424242;
+}
+
+.stats-value {
+  color: #9e9e9e;
+  font-weight: 600;
+}
+
+.stats-value.checked {
+  color: #4ade80;
+}
+
+.stats-pct {
+  font-size: 12px;
+  font-weight: 700;
+  color: #757575;
+}
+
+.progress-track {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #424242, #757575);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+// ── Requirements section ──────────────────────────────────────────────────────
+.requirements-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.section-heading {
+  font-size: 11px;
+  font-weight: 600;
+  color: #616161;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+
+// ── Requirement group ─────────────────────────────────────────────────────────
+.req-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ── Chapter heading ───────────────────────────────────────────────────────────
+.chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.chapter-code {
+  font-size: 11px;
+  font-weight: 700;
+  color: #757575;
+  background: #2a2a2a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 2px 8px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.chapter-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f5f5f5;
+  letter-spacing: -0.01em;
+}
+
+// ── Sub-chapter heading ───────────────────────────────────────────────────────
+.sub-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(255,255,255,0.06);
+}
+
+.sub-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sub-code {
+  font-size: 10px;
+  font-weight: 700;
+  color: #616161;
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 5px;
+  padding: 1px 7px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.sub-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #bdbdbd;
+}
+
+// ── Anchor link ───────────────────────────────────────────────────────────────
+.anchor-link {
+  display: inline-flex;
+  align-items: center;
+  color: #424242;
+  text-decoration: none;
+  margin-left: 2px;
+  transition: color 0.15s;
+
+  &:hover { color: #9e9e9e; }
+}
+
+.anchor-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+// ── Table wrapper ─────────────────────────────────────────────────────────────
+.table-wrapper {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+// ── ASVS table ────────────────────────────────────────────────────────────────
+.asvs-table {
+  width: 100%;
+  background: #242424 !important;
+
+  // Header
+  ::ng-deep .mat-mdc-header-row {
+    background: #2a2a2a !important;
+  }
+
+  ::ng-deep .mat-mdc-header-cell {
+    background: #2a2a2a !important;
+    color: #616161 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+    padding: 10px 14px !important;
+  }
+
+  // Rows
+  ::ng-deep .mat-mdc-row {
+    background: #242424 !important;
+    transition: background 0.12s;
+    cursor: pointer;
+
+    &:hover {
+      background: #2a2a2a !important;
+    }
+  }
+
+  ::ng-deep .mat-mdc-cell {
+    color: #9e9e9e !important;
+    font-size: 13px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+    padding: 10px 14px !important;
+    vertical-align: top !important;
+  }
+
+  // Selected row
+  ::ng-deep .mat-mdc-row.row-selected {
+    background: rgba(66, 66, 66, 0.35) !important;
+
+    .mat-mdc-cell {
+      color: #e0e0e0 !important;
+    }
+  }
+}
+
+// ── Shortcode chip ────────────────────────────────────────────────────────────
+.shortcode-chip {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #757575;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 5px;
+  padding: 2px 6px;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+// ── Description cell ──────────────────────────────────────────────────────────
+.desc-cell {
+  line-height: 1.6 !important;
+  max-width: 520px;
+}
+
+// ── Requirement dot ───────────────────────────────────────────────────────────
+.req-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #424242;
+}
+
+.req-dot-on {
+  color: #4ade80;
+}
+
+// ── CWE link ──────────────────────────────────────────────────────────────────
+.cwe-link {
+  font-size: 12px !important;
+}
+
+// ── Links ─────────────────────────────────────────────────────────────────────
+.link {
+  color: #757575;
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover { color: #9e9e9e; }
+}
+
+// ── Checkbox overrides ────────────────────────────────────────────────────────
+::ng-deep .asvs-table .mat-mdc-checkbox {
+  .mdc-checkbox__background {
+    border-color: rgba(255,255,255,0.2) !important;
+  }
+  &.mat-mdc-checkbox-checked .mdc-checkbox__background {
+    background-color: #616161 !important;
+    border-color: #616161 !important;
+  }
+}
+
+// ── Scrollbar ─────────────────────────────────────────────────────────────────
+:host {
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
