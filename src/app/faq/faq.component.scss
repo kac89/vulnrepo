@@ -63,6 +63,92 @@ $accent-green: #69f0ae; // Material green A200
   font-size: 1rem;
 }
 
+// ── Search ──────────────────────────────────────
+.faq-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px 14px;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  background: $surface;
+  transition: border-color 0.15s;
+  max-width: 480px;
+
+  &:focus-within {
+    border-color: rgba($accent-green, 0.45);
+  }
+}
+
+.faq-search-icon {
+  color: $text-secondary;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.faq-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  &::placeholder {
+    color: $text-secondary;
+  }
+}
+
+.faq-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: $text-secondary;
+  transition: color 0.15s;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+// ── No results ───────────────────────────────────
+.faq-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: $text-secondary;
+  text-align: center;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+
 // ── Two-column layout ───────────────────────────
 .faq-layout {
   display: flex;
@@ -105,6 +191,12 @@ $accent-green: #69f0ae; // Material green A200
   &:hover {
     color: #fff;
     border-left-color: $accent-green;
+  }
+
+  &.faq-toc-link--active {
+    color: $accent-green;
+    border-left-color: $accent-green;
+    font-weight: 500;
   }
 }
 

@@ -11,6 +11,19 @@
         <p class="faq-subtitle">Everything you need to know about VULNREPO</p>
       </div>
     </div>
+    <div class="faq-search-wrap">
+      <mat-icon class="faq-search-icon">search</mat-icon>
+      <input
+        class="faq-search-input"
+        type="text"
+        placeholder="Search sections…"
+        [(ngModel)]="searchQuery"
+        autocomplete="off"
+      />
+      <button *ngIf="searchQuery" class="faq-search-clear" (click)="searchQuery = ''" aria-label="Clear search">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
   </div>
 
   <!-- Two-column layout -->
@@ -21,19 +34,19 @@
       <div class="faq-toc">
         <p class="faq-toc-heading">On this page</p>
         <nav>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Browser-support'}">Browser support</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'How-are-reports-stored'}">How are reports stored?</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'How-to-create-PDF-report'}">Create PDF report</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'I-forgot-my-security-key'}">Forgot security key</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Can-I-change-report-security-key'}">Change security key</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Displaying-attachments'}">Displaying attachments</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'VULN-VULNR'}">.VULN vs .VULNR</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'What-is-the-issue-status'}">Issue status</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'API'}">External storage</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'API-VAULT'}">API VAULT</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Report-Profiles'}">Report Profiles</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Search-CVE'}">CVE Search (NVD)</a>
-          <a class="faq-toc-link" routerLink="/faq" [queryParams]="{q: 'Private-LLM'}">Private LLM</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Browser-support'" routerLink="/faq" [queryParams]="{q: 'Browser-support'}">Browser support</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'How-are-reports-stored'" routerLink="/faq" [queryParams]="{q: 'How-are-reports-stored'}">How are reports stored?</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'How-to-create-PDF-report'" routerLink="/faq" [queryParams]="{q: 'How-to-create-PDF-report'}">Create PDF report</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'I-forgot-my-security-key'" routerLink="/faq" [queryParams]="{q: 'I-forgot-my-security-key'}">Forgot security key</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Can-I-change-report-security-key'" routerLink="/faq" [queryParams]="{q: 'Can-I-change-report-security-key'}">Change security key</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Displaying-attachments'" routerLink="/faq" [queryParams]="{q: 'Displaying-attachments'}">Displaying attachments</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'VULN-VULNR'" routerLink="/faq" [queryParams]="{q: 'VULN-VULNR'}">.VULN vs .VULNR</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'What-is-the-issue-status'" routerLink="/faq" [queryParams]="{q: 'What-is-the-issue-status'}">Issue status</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'API'" routerLink="/faq" [queryParams]="{q: 'API'}">External storage</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'API-VAULT'" routerLink="/faq" [queryParams]="{q: 'API-VAULT'}">API VAULT</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Report-Profiles'" routerLink="/faq" [queryParams]="{q: 'Report-Profiles'}">Report Profiles</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Search-CVE'" routerLink="/faq" [queryParams]="{q: 'Search-CVE'}">CVE Search (NVD)</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Private-LLM'" routerLink="/faq" [queryParams]="{q: 'Private-LLM'}">Private LLM</a>
         </nav>
       </div>
     </aside>
@@ -41,7 +54,7 @@
     <!-- Main content -->
     <main class="faq-content">
 
-      <section class="faq-item" id="Browser-support">
+      <section class="faq-item" id="Browser-support" [hidden]="!sectionVisible('Browser-support')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">devices</mat-icon>
@@ -63,9 +76,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('Browser-support') && !sectionVisible('How-are-reports-stored')"></div>
 
-      <section class="faq-item" id="How-are-reports-stored">
+      <section class="faq-item" id="How-are-reports-stored" [hidden]="!sectionVisible('How-are-reports-stored')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">storage</mat-icon>
@@ -82,9 +95,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('How-are-reports-stored') && !sectionVisible('How-to-create-PDF-report')"></div>
 
-      <section class="faq-item" id="How-to-create-PDF-report">
+      <section class="faq-item" id="How-to-create-PDF-report" [hidden]="!sectionVisible('How-to-create-PDF-report')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">picture_as_pdf</mat-icon>
@@ -113,9 +126,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('How-to-create-PDF-report') && !sectionVisible('I-forgot-my-security-key')"></div>
 
-      <section class="faq-item" id="I-forgot-my-security-key">
+      <section class="faq-item" id="I-forgot-my-security-key" [hidden]="!sectionVisible('I-forgot-my-security-key')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">lock</mat-icon>
@@ -128,9 +141,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('I-forgot-my-security-key') && !sectionVisible('Can-I-change-report-security-key')"></div>
 
-      <section class="faq-item" id="Can-I-change-report-security-key">
+      <section class="faq-item" id="Can-I-change-report-security-key" [hidden]="!sectionVisible('Can-I-change-report-security-key')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">key</mat-icon>
@@ -143,9 +156,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('Can-I-change-report-security-key') && !sectionVisible('Displaying-attachments')"></div>
 
-      <section class="faq-item" id="Displaying-attachments">
+      <section class="faq-item" id="Displaying-attachments" [hidden]="!sectionVisible('Displaying-attachments')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">attach_file</mat-icon>
@@ -158,9 +171,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('Displaying-attachments') && !sectionVisible('VULN-VULNR')"></div>
 
-      <section class="faq-item" id="VULN-VULNR">
+      <section class="faq-item" id="VULN-VULNR" [hidden]="!sectionVisible('VULN-VULNR')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">description</mat-icon>
@@ -184,9 +197,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('VULN-VULNR') && !sectionVisible('What-is-the-issue-status')"></div>
 
-      <section class="faq-item" id="What-is-the-issue-status">
+      <section class="faq-item" id="What-is-the-issue-status" [hidden]="!sectionVisible('What-is-the-issue-status')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">flag</mat-icon>
@@ -219,9 +232,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('What-is-the-issue-status') && !sectionVisible('API')"></div>
 
-      <section class="faq-item" id="API">
+      <section class="faq-item" id="API" [hidden]="!sectionVisible('API')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">cloud</mat-icon>
@@ -245,9 +258,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('API') && !sectionVisible('API-VAULT')"></div>
 
-      <section class="faq-item" id="API-VAULT">
+      <section class="faq-item" id="API-VAULT" [hidden]="!sectionVisible('API-VAULT')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">security</mat-icon>
@@ -260,9 +273,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('API-VAULT') && !sectionVisible('Report-Profiles')"></div>
 
-      <section class="faq-item" id="Report-Profiles">
+      <section class="faq-item" id="Report-Profiles" [hidden]="!sectionVisible('Report-Profiles')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">tune</mat-icon>
@@ -277,9 +290,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('Report-Profiles') && !sectionVisible('Search-CVE')"></div>
 
-      <section class="faq-item" id="Search-CVE">
+      <section class="faq-item" id="Search-CVE" [hidden]="!sectionVisible('Search-CVE')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">manage_search</mat-icon>
@@ -292,9 +305,9 @@
         </div>
       </section>
 
-      <div class="faq-divider"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('Search-CVE') && !sectionVisible('Private-LLM')"></div>
 
-      <section class="faq-item" id="Private-LLM">
+      <section class="faq-item" id="Private-LLM" [hidden]="!sectionVisible('Private-LLM')">
         <div class="faq-item-header">
           <div class="faq-item-title-row">
             <mat-icon class="faq-item-icon">smart_toy</mat-icon>
@@ -329,6 +342,11 @@
           </ol>
         </div>
       </section>
+
+      <div class="faq-no-results" *ngIf="noResults">
+        <mat-icon>search_off</mat-icon>
+        <p>No sections match "<strong>{{ searchQuery }}</strong>"</p>
+      </div>
 
     </main>
   </div>
