@@ -1,8 +1,316 @@
-.example-full-width {
-    width: 100%;
+// ── Base shell ────────────────────────────────────────────────────────────────
+.export-shell {
+  display: flex;
+  flex-direction: column;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-width: 480px;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.export-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #242424;
+  flex-shrink: 0;
+}
+
+.export-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.export-avatar-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #424242;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  .logo-icon {
+    color: #9e9e9e;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.export-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.export-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
+}
+
+.export-subtitle {
+  font-size: 11px;
+  color: #757575;
+}
+
+.export-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+.export-body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 72vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+// ── Section label ─────────────────────────────────────────────────────────────
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #616161;
+  margin-bottom: 6px;
+}
+
+// ── Full-width helper ─────────────────────────────────────────────────────────
+.full-width {
+  width: 100%;
+}
+
+// ── Panel (per-format section) ────────────────────────────────────────────────
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 16px;
+  background: #242424;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+}
+
+// ── Notice bar ────────────────────────────────────────────────────────────────
+.panel-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #9e9e9e;
+}
+
+.notice-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: #616161;
+  flex-shrink: 0;
+}
+
+// ── Two-column layout ─────────────────────────────────────────────────────────
+.two-col {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  @media (max-width: 540px) {
+    flex-direction: column;
+  }
+}
+
+.flex1 { flex: 1; }
+
+// ── Split controls ────────────────────────────────────────────────────────────
+.split-col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.split-check {
+  color: #9e9e9e;
+  font-size: 13px;
+  flex: 1;
+}
+
+.split-hint {
+  font-size: 11px;
+  color: #616161;
+}
+
+.split-count {
+  width: 72px;
+  flex-shrink: 0;
+}
+
+// ── cURL result block ─────────────────────────────────────────────────────────
+.curl-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.curl-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9e9e9e;
+}
+
+.curl-icon {
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+  color: #616161;
+}
+
+.curl-hint {
+  font-size: 11px;
+  color: #616161;
+
+  code {
+    background: rgba(255, 255, 255, 0.07);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #9e9e9e;
+  }
+}
+
+// ── Action row ────────────────────────────────────────────────────────────────
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────────────
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: #424242;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f5f5f5;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
   }
 
-  .pola {
-    width: 98%;
+  &:hover {
+    background: #616161;
+    border-color: rgba(255, 255, 255, 0.2);
   }
-  
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #757575;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #9e9e9e;
+  }
+}
+
+// ── Header icon buttons ───────────────────────────────────────────────────────
+.tool-btn {
+  color: #616161 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  &:hover { color: #9e9e9e !important; }
+}
+
+.close-btn:hover { color: #ef5350 !important; }
+
+// ── Material overrides (dark theme) ──────────────────────────────────────────
+::ng-deep .export-shell {
+  .mat-mdc-form-field-subscript-wrapper { padding: 0 2px; }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+  }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.22) !important;
+    }
+  }
+
+  .mat-mdc-form-field-infix { color: #e0e0e0; }
+  .mat-mdc-input-element { color: #e0e0e0 !important; caret-color: #9e9e9e; }
+  .mat-mdc-select-value { color: #e0e0e0; }
+  .mat-mdc-form-field-label { color: #757575; }
+  .mdc-floating-label { color: #757575 !important; }
+  .mat-mdc-form-field-hint { color: #616161; font-size: 11px; }
+
+  .mat-mdc-checkbox .mdc-checkbox__background { border-color: #616161 !important; }
+  .mat-mdc-checkbox-label { color: #9e9e9e; }
+}
