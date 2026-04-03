@@ -1,20 +1,246 @@
-.example-full-width {
-  width: 100%;
-}
-.example-label-container {
+// ── Shell ─────────────────────────────────────────────────────────────────────
+.settings-shell {
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-width: 420px;
 }
 
-.example-result-card .example-value-label {
+// ── Header ────────────────────────────────────────────────────────────────────
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #242424;
+  flex-shrink: 0;
+}
+
+.settings-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #424242;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-icon {
+  color: #9e9e9e;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.settings-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-title {
+  font-size: 14px;
   font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
 }
 
-.example-margin {
-  margin: 8px;
+.settings-subtitle {
+  font-size: 11px;
+  color: #757575;
 }
 
-.example-width {
-  max-width: 520px;
+.close-btn {
+  color: #616161 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  &:hover { color: #ef5350 !important; }
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+.settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px !important;
+  background: #1a1a1a;
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+// ── Sections ──────────────────────────────────────────────────────────────────
+.settings-section {
+  background: #242424;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9e9e9e;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.section-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: #616161;
+}
+
+.section-badge {
+  margin-left: auto;
+  background: #424242;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #bdbdbd;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.temp-badge {
+  background: rgba(66, 66, 66, 0.8);
+  color: #e0e0e0;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 32px;
+  text-align: center;
+}
+
+// ── Field ─────────────────────────────────────────────────────────────────────
+.settings-field {
   width: 100%;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: #2a2a2a !important;
+    border-radius: 8px;
+  }
+
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: #757575 !important;
+  }
+
+  ::ng-deep .mat-mdc-input-element,
+  ::ng-deep .mat-mdc-select-value-text {
+    color: #e0e0e0 !important;
+    font-size: 13px;
+  }
+
+  ::ng-deep .mat-mdc-floating-label {
+    color: #616161 !important;
+  }
+
+  ::ng-deep textarea {
+    color: #e0e0e0 !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    resize: none;
+  }
+}
+
+// ── Slider ────────────────────────────────────────────────────────────────────
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-slider {
+  flex: 1;
+}
+
+.slider-bound {
+  font-size: 11px;
+  color: #616161;
+  min-width: 12px;
+  text-align: center;
+}
+
+.section-hint {
+  font-size: 11px;
+  color: #616161;
+  margin: 0;
+  line-height: 1.5;
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+.settings-footer {
+  padding: 12px 20px 16px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: #1a1a1a;
+  justify-content: flex-end !important;
+}
+
+.done-btn {
+  height: 34px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #424242;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f5f5f5;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  letter-spacing: 0.02em;
+
+  &:hover {
+    background: #616161;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
 }
