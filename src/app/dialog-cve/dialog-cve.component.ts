@@ -42,6 +42,9 @@ export class DialogCveComponent implements OnInit, AfterViewInit {
      }
 
   ngOnInit(): void {
+    if (this.mycve.value) {
+      this.searchCVE();
+    }
   }
 
   searchCVE() {

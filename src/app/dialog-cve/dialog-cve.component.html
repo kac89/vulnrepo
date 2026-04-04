@@ -1,117 +1,154 @@
-<div class="mdc-card my-card-content">
+<div class="cve-shell">
 
-  <h1 class="mat-display">
-    <mat-icon class="vertical-align-middle size-45">explore</mat-icon> CVE Info (Online)
-  </h1>
-  <mat-dialog-content>
-
-    <mat-form-field class="example-full-width" color="accent" appearance="outline">
-      <mat-label>CVE</mat-label>
-      <input matInput placeholder="e.g.: CVE-2024-6050" [formControl]="mycve">
-    </mat-form-field>
-
-    @if (results) {
-      <div>
-        <div style="width: 100%;" fxLayout.xs="column" fxLayoutGap="10px">
-          @if (results?.published) {
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" fxFlex><b>Published:</b><br>{{ results?.published }}</div>
-          }
-          @if (results?.modified) {
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" fxFlex><b>Modified:</b><br>{{ results?.modified }}</div>
-          }
-          @if (results?.assigner) {
-            <div fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(25%-10px)" fxFlex><b>Assigner:</b><br>{{ results?.assigner }}</div>
-          }
-        </div>
-        @if (results?.descriptions) {
-          <p><b>Description:</b> {{ results?.descriptions[0].value }}</p>
-        }
-        <!--
-        <p>
-          <mat-chip-listbox>
-            <mat-chip-option *ngIf="results?.cvss">CVSS: {{ results?.cvss }}</mat-chip-option>
-            <a *ngIf="results?.weaknesses" target="_blank" href="https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id={{ results?.weaknesses.descriptions[0].cweId }}"><mat-chip-option>{{ results?.weaknesses.descriptions[0].cweId }}</mat-chip-option></a>
-          </mat-chip-listbox>
-        </p>
-        -->
-        @if (dataSource.data.length != 0) {
-          <h2>POCs</h2>
-        }
-        @if (dataSource.data.length != 0) {
-          <div>
-            <table mat-table [dataSource]="dataSource">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> <b>Name</b> </th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef> <b>Description</b> </th>
-                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-              </ng-container>
-              <ng-container matColumnDef="source">
-                <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
-                <td mat-cell *matCellDef="let element"> {{element.html_url}} </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-            <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]"
-              showFirstLastButtons
-              aria-label="Select page of periodic elements">
-            </mat-paginator>
-          </div>
-        }
-        @if (results?.references) {
-          <div>
-            @if (results?.references.length != 0) {
-              <h2>References</h2>
-            }
-            @if (results?.references) {
-              <div>
-                <table mat-table [dataSource]="dataSource2">
-                  <ng-container matColumnDef="url">
-                    <th mat-header-cell *matHeaderCellDef> <b>Source</b> </th>
-                    <td mat-cell *matCellDef="let element"> {{element.url}} </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-                </table>
-                <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]"
-                  showFirstLastButtons
-                  aria-label="Select page of periodic elements">
-                </mat-paginator>
-              </div>
-            }
-          </div>
-        }
+  <!-- Header -->
+  <div class="cve-header">
+    <div class="cve-header-left">
+      <div class="cve-avatar-logo">
+        <mat-icon class="logo-icon">manage_search</mat-icon>
       </div>
-    }
-
-    @if (show) {
-      <div>
-        Please wait...<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+      <div class="cve-header-text">
+        <span class="cve-title">CVE Info</span>
+        <span class="cve-subtitle">National Vulnerability Database</span>
       </div>
-    }
-    {{err_msg}}
-  </mat-dialog-content>
-  <mat-dialog-actions>
+    </div>
+    <div class="cve-header-right">
+      <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
 
-    <div>
-      <button mat-raised-button color="accent" (click)="searchCVE()">
-        <mat-icon matSuffix>search</mat-icon> Search CVE
+  <mat-dialog-content class="cve-body">
+
+    <!-- Search input -->
+    <div class="cve-search-row">
+      <mat-form-field appearance="outline" class="cve-search-field" color="accent">
+        <mat-label>CVE ID</mat-label>
+        <mat-icon matPrefix>fingerprint</mat-icon>
+        <input matInput placeholder="e.g.: CVE-2024-6050" [formControl]="mycve" (keyup.enter)="searchCVE()">
+      </mat-form-field>
+      <button class="search-action-btn" (click)="searchCVE()" title="Search">
+        <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>
 
-    @if (results) {
-      <div style="margin-left: auto; margin-right: 0;">
-        <button mat-raised-button color="accent" (click)="saveCVE()">
-          <mat-icon matSuffix>save</mat-icon> Save & close
-        </button>&nbsp;
+    <!-- Loading -->
+    @if (show) {
+      <div class="loading-state">
+        <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        <span class="loading-label">Fetching CVE data…</span>
       </div>
     }
-    &nbsp;
-    <button mat-flat-button color="accent" (click)="openInNewWindow()"><mat-icon matSuffix>search</mat-icon> Search CVE by keyword</button>
-    <button mat-flat-button color="primary" mat-dialog-close>Cancel</button>
-  </mat-dialog-actions>
+
+    <!-- Error -->
+    @if (err_msg) {
+      <div class="err-msg">
+        <mat-icon class="err-icon">error_outline</mat-icon>{{ err_msg }}
+      </div>
+    }
+
+    <!-- Results -->
+    @if (results) {
+      <div class="results-section">
+
+        <!-- Meta info cards -->
+        <div class="meta-row">
+          @if (results?.published) {
+            <div class="meta-card">
+              <span class="meta-label">Published</span>
+              <span class="meta-value">{{ results?.published | date:'mediumDate' }}</span>
+            </div>
+          }
+          @if (results?.modified) {
+            <div class="meta-card">
+              <span class="meta-label">Last Modified</span>
+              <span class="meta-value">{{ results?.modified | date:'mediumDate' }}</span>
+            </div>
+          }
+          @if (results?.assigner) {
+            <div class="meta-card">
+              <span class="meta-label">Assigner</span>
+              <span class="meta-value">{{ results?.assigner }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Description -->
+        @if (results?.descriptions) {
+          <div class="info-block">
+            <span class="block-label">Description</span>
+            <p class="block-text">{{ results?.descriptions[0].value }}</p>
+          </div>
+        }
+
+        <!-- POCs -->
+        @if (dataSource.data.length > 0) {
+          <div class="info-block">
+            <span class="block-label">Proof of Concept</span>
+            <div class="dark-table-wrap">
+              <table mat-table [dataSource]="dataSource" class="dark-table">
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let element">{{element.name}}</td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <td mat-cell *matCellDef="let element">{{element.description}}</td>
+                </ng-container>
+                <ng-container matColumnDef="source">
+                  <th mat-header-cell *matHeaderCellDef>Source</th>
+                  <td mat-cell *matCellDef="let element">
+                    <a class="ref-link" href="{{element.html_url}}" target="_blank">{{element.html_url}}</a>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        }
+
+        <!-- References -->
+        @if (results?.references && results?.references.length > 0) {
+          <div class="info-block">
+            <span class="block-label">References</span>
+            <div class="dark-table-wrap">
+              <table mat-table [dataSource]="dataSource2" class="dark-table">
+                <ng-container matColumnDef="url">
+                  <th mat-header-cell *matHeaderCellDef>URL</th>
+                  <td mat-cell *matCellDef="let element">
+                    <a class="ref-link" href="{{element.url}}" target="_blank">{{element.url}}</a>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+              </table>
+              <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        }
+
+      </div>
+    }
+
+  </mat-dialog-content>
+
+  <!-- Footer actions -->
+  <div class="cve-footer">
+    <button class="footer-btn secondary-btn" (click)="searchCVE()">
+      <mat-icon>search</mat-icon> Search
+    </button>
+    <div class="footer-right">
+      @if (results && !data?.fromSearch) {
+        <button class="footer-btn accent-btn" (click)="saveCVE()">
+          <mat-icon>save</mat-icon> Save & close
+        </button>
+      }
+      <button class="footer-btn ghost-btn" (click)="openInNewWindow()">
+        <mat-icon>open_in_new</mat-icon> CVE Search
+      </button>
+    </div>
+  </div>
 
 </div>
