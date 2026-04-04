@@ -682,6 +682,138 @@ mat-paginator {
   &:hover { color: #fff !important; }
 }
 
+// ── Download section ──────────────────────────────────────────
+.dl-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+.dl-divider {
+  width: 1px;
+  background: $border-color;
+  align-self: stretch;
+  margin: 0 24px;
+}
+
+.dl-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dl-col-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  width: fit-content;
+
+  &--enc {
+    background: rgba(105, 240, 174, 0.12);
+    color: $accent-green;
+    border: 1px solid rgba(105, 240, 174, 0.25);
+  }
+
+  &--dec {
+    background: rgba(244, 67, 54, 0.1);
+    color: #ef9a9a;
+    border: 1px solid rgba(244, 67, 54, 0.25);
+  }
+}
+
+.dl-col-badge-icon {
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.dl-col-desc {
+  font-size: 0.78rem;
+  color: $text-secondary;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.dl-fmt-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dl-fmt-tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 72px;
+  height: 72px;
+  background: $surface-nested;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease, color 0.15s ease;
+  padding: 0;
+  outline: none;
+
+  &:hover {
+    background: $surface-nested-hover;
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &--ai {
+    border-color: rgba(105, 240, 174, 0.22);
+    color: $accent-green;
+
+    &:hover {
+      background: rgba(105, 240, 174, 0.1);
+      border-color: rgba(105, 240, 174, 0.45);
+      color: $accent-green;
+    }
+  }
+}
+
+.dl-fmt-icon {
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.dl-fmt-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  .dl-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .dl-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .report-sticky-bar { top: 56px; } // mobile toolbar is 56px
 }
