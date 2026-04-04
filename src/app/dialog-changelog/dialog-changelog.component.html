@@ -1,40 +1,85 @@
-<div class="mdc-card my-card-content">
+<div class="cl-shell">
 
-  <h1 class="mat-display">
-    <mat-icon>history</mat-icon>
-    @if (!data) { <span>Add changelog entry</span> }
-    @if (data) { <span>Edit changelog entry</span> }
-  </h1>
-
-  <div mat-dialog-content>
-
-    <mat-form-field class="example-full-width" color="accent">
-      <mat-label>Event date</mat-label>
-      <input matInput placeholder="Event date" #edate value="{{ (data ? data.date : today) | date:'medium' }}">
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width" color="accent">
-      <mat-label>Description</mat-label>
-      <textarea matInput placeholder="Describe the change..." #edesc value="{{data?.desc}}" rows="3"></textarea>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width" color="accent">
-      <mat-label>Version (optional)</mat-label>
-      <input matInput placeholder="e.g. 1.0, 2.1.3" #eversion value="{{data?.version}}">
-      <mat-hint>Mark this entry as a version release</mat-hint>
-    </mat-form-field>
-
+  <!-- Header -->
+  <div class="cl-header">
+    <div class="cl-header-left">
+      <div class="cl-avatar">
+        <mat-icon class="cl-avatar-icon">history</mat-icon>
+      </div>
+      <div class="cl-header-text">
+        <span class="cl-title">
+          @if (!data) { Add changelog entry }
+          @if (data) { Edit changelog entry }
+        </span>
+        <span class="cl-subtitle">Timeline event details</span>
+      </div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="cl-close-btn" title="Close">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <div mat-dialog-actions>
+  <!-- Body -->
+  <mat-dialog-content class="cl-body">
+
+    <div class="cl-field-group">
+
+      <div class="cl-field-label">Event date</div>
+      <div class="cl-input-wrap">
+        <mat-icon class="cl-field-icon">calendar_today</mat-icon>
+        <input
+          class="cl-input"
+          placeholder="e.g. Apr 4, 2026, 12:00:00 PM"
+          #edate
+          value="{{ (data ? data.date : today) | date:'medium' }}"
+        >
+      </div>
+
+      <div class="cl-field-label">Description</div>
+      <div class="cl-input-wrap cl-textarea-wrap">
+        <mat-icon class="cl-field-icon cl-icon-top">notes</mat-icon>
+        <textarea
+          class="cl-input cl-textarea"
+          placeholder="Describe the change…"
+          #edesc
+          rows="3"
+        >{{data?.desc}}</textarea>
+      </div>
+
+      <div class="cl-field-label">
+        Version
+        <span class="cl-badge-optional">optional</span>
+      </div>
+      <div class="cl-input-wrap">
+        <mat-icon class="cl-field-icon">tag</mat-icon>
+        <input
+          class="cl-input"
+          placeholder="e.g. 1.0, 2.1.3"
+          #eversion
+          value="{{data?.version}}"
+        >
+      </div>
+      <p class="cl-hint">Mark this entry as a version release</p>
+
+    </div>
+
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div mat-dialog-actions class="cl-actions">
+    <button class="cl-btn-cancel" (click)="cancel()">Cancel</button>
     @if (!data) {
-      <button mat-raised-button cdkFocusInitial color="accent" (click)="addChangelog(edate.value, edesc.value, eversion.value)">Add entry</button>
+      <button class="cl-btn-primary" cdkFocusInitial (click)="addChangelog(edate.value, edesc.value, eversion.value)">
+        <mat-icon class="cl-btn-icon">add</mat-icon>
+        Add entry
+      </button>
     }
     @if (data) {
-      <button mat-raised-button cdkFocusInitial color="accent" (click)="editChangelog(edate.value, edesc.value, eversion.value, data)">Save changes</button>
+      <button class="cl-btn-primary" cdkFocusInitial (click)="editChangelog(edate.value, edesc.value, eversion.value, data)">
+        <mat-icon class="cl-btn-icon">save</mat-icon>
+        Save changes
+      </button>
     }
-    &nbsp;
-    <button mat-button (click)="cancel()">Cancel</button>
   </div>
 
 </div>
