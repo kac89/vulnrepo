@@ -24,49 +24,78 @@
 
 <!-- Hero -->
 <div class="report-hero">
+  <div class="report-hero-glow"></div>
+  <div class="report-hero-grid"></div>
   <div class="report-hero-inner">
-    <div class="report-hero-icon">
-      <img title="VULNRΞPO REPORT" src="assets/issue.png">
-    </div>
-    <div class="report-hero-body">
+
+    <!-- Top row: icon + title -->
+    <div class="report-hero-top">
+      <div class="report-hero-icon">
+        <img title="VULNRΞPO REPORT" src="assets/issue.png">
+      </div>
       <h1 class="report-hero-title">
         {{reportdesc?.report_name}}
         @if (decryptedReportDataChanged) {
-          <a title="Edit report name" [routerLink]="[]" (click)="editreporttitle(reportdesc)">
+          <a class="report-hero-edit-btn" title="Edit report name" [routerLink]="[]" (click)="editreporttitle(reportdesc)">
             <mat-icon>edit</mat-icon>
           </a>
         }
       </h1>
-      @if (!api_connection_status) {
-        <div class="report-hero-meta">
-          @if (!report_decryption_in_progress) {
-            <span class="report-hero-meta-item">
-              ID: <b>{{reportdesc?.report_id}}</b>
-              @if (report_source_api) { <mat-icon color="accent" style="font-size:14px;width:14px;height:14px;">public</mat-icon> }
+    </div>
+
+    <!-- Meta strip -->
+    @if (!api_connection_status) {
+      <div class="report-hero-meta">
+        @if (!report_decryption_in_progress) {
+          <div class="report-hero-meta-item">
+            <mat-icon class="report-hero-meta-icon">fingerprint</mat-icon>
+            <span class="report-hero-meta-label">ID</span>
+            <span class="report-hero-meta-value">
+              {{reportdesc?.report_id}}
+              @if (report_source_api) { <mat-icon color="accent" class="report-hero-api-icon">public</mat-icon> }
             </span>
-            <span class="report-hero-meta-item">Created: <b>{{reportdesc?.report_createdate | date:'mediumDate'}}</b></span>
-          }
-          @if (decryptedReportDataChanged) {
-            <span class="report-hero-meta-item">
-              Version: <b class="labelversion">{{decryptedReportDataChanged?.report_version}}</b>
-              &nbsp;<button matButton="outlined" (click)="showHistory(reportdesc.report_id)">
-                <mat-icon class="vertical-align-middle padding-bottom-3">history</mat-icon> History
+          </div>
+          <span class="report-hero-meta-sep"></span>
+          <div class="report-hero-meta-item">
+            <mat-icon class="report-hero-meta-icon">calendar_today</mat-icon>
+            <span class="report-hero-meta-label">Created</span>
+            <span class="report-hero-meta-value">{{reportdesc?.report_createdate | date:'mediumDate'}}</span>
+          </div>
+        }
+        @if (decryptedReportDataChanged) {
+          <span class="report-hero-meta-sep"></span>
+          <div class="report-hero-meta-item">
+            <mat-icon class="report-hero-meta-icon">local_offer</mat-icon>
+            <span class="report-hero-meta-label">Version</span>
+            <span class="report-hero-meta-value">
+              <b class="labelversion">v{{decryptedReportDataChanged?.report_version}}</b>
+              <button class="report-hero-history-btn" matButton="outlined" (click)="showHistory(reportdesc.report_id)">
+                <mat-icon>history</mat-icon> History
               </button>
             </span>
-          }
-        </div>
-      }
-      @if (api_connection_status) {
-        <p style="margin:8px 0 0; font-size:0.875rem;">API connection please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-      @if (report_decryption_in_progress) {
-        <p style="margin:8px 0 0; font-size:0.875rem;">Report is decrypted please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-      @if (report_encryption_in_progress) {
-        <p style="margin:8px 0 0; font-size:0.875rem;">Report is encrypted please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
+          </div>
+        }
+      </div>
+    }
 
-      @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
+    <!-- Progress states -->
+    @if (api_connection_status) {
+      <p class="report-hero-progress-msg">API connection please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
+    }
+    @if (report_decryption_in_progress) {
+      <p class="report-hero-progress-msg">Report is decrypted please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
+    }
+    @if (report_encryption_in_progress) {
+      <p class="report-hero-progress-msg">Report is encrypted please wait…<mat-progress-bar style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
+    }
+
+    <!-- Severity findings strip -->
+    @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
+      <div class="report-hero-findings">
+        <span class="report-hero-findings-label">
+          <mat-icon>bug_report</mat-icon>
+          Findings
+        </span>
         <div class="report-severity-strip">
           @for (sev of severitytable; track sev) {
             @if (sev.value > 0) {
@@ -77,38 +106,39 @@
             }
           }
         </div>
-      }
+      </div>
+    }
 
-      @if (decryptedReportDataChanged) {
-        <div class="report-save-row">
-          <div class="report-save-meta">
-            @if (reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == '') {
-              @if (!youhaveunsavedchanges && savemsg) {
-                <span>{{savemsg}}</span><br>
-              }
-              Last release: <b><i>{{reportdesc?.report_lastupdate | date:'medium'}}</i></b>
+    <!-- Save row -->
+    @if (decryptedReportDataChanged) {
+      <div class="report-save-row">
+        <div class="report-save-meta">
+          @if (reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == '') {
+            @if (!youhaveunsavedchanges && savemsg) {
+              <span>{{savemsg}}</span><br>
             }
-            @if (lastsavereportdata !== '') {
-              @if (!youhaveunsavedchanges && savemsg) {
-                <span>{{savemsg}}</span><br>
-              }
-              Last release: <b style="color:#69f0ae;"><i>{{lastsavereportdata | date:'medium'}}</i></b>
+            Last release: <b><i>{{reportdesc?.report_lastupdate | date:'medium'}}</i></b>
+          }
+          @if (lastsavereportdata !== '') {
+            @if (!youhaveunsavedchanges && savemsg) {
+              <span>{{savemsg}}</span><br>
             }
-            @if (youhaveunsavedchanges) {
-              <div class="youhaveunsavedchanges">
-                <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon>
-                You have unsaved changes!
-                <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
-              </div>
-            }
-          </div>
-          <button mat-fab extended class="mat-elevation-z9" color="primary"
-            (click)="saveReportChanges(reportdesc.report_id)">
-            <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save &amp; release new version
-          </button>
+            Last release: <b style="color:#4ade80;"><i>{{lastsavereportdata | date:'medium'}}</i></b>
+          }
+          @if (youhaveunsavedchanges) {
+            <div class="youhaveunsavedchanges">
+              <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon>
+              You have unsaved changes!
+              <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
+            </div>
+          }
         </div>
-      }
-    </div>
+        <button mat-fab extended class="mat-elevation-z9" color="primary"
+          (click)="saveReportChanges(reportdesc.report_id)">
+          <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save &amp; release new version
+        </button>
+      </div>
+    }
   </div>
 </div>
 
