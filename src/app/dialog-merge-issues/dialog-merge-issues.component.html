@@ -1,60 +1,99 @@
-<mat-card appearance="outlined">
-  <mat-card-header>
-    <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">low_priority</mat-icon>
-    <mat-card-title>Merge selected ({{data.length}})</mat-card-title>
-    <mat-card-subtitle>Merge multiple issues</mat-card-subtitle>
-  </mat-card-header>
+<div class="merge-shell">
 
-  <mat-card-content>
-    <div fxLayout="row wrap" fxLayoutGap="10px grid">
+  <!-- Header -->
+  <div class="merge-header">
+    <div class="merge-header-left">
+      <div class="merge-avatar">
+        <mat-icon class="merge-avatar-icon">low_priority</mat-icon>
+      </div>
+      <div class="merge-header-text">
+        <span class="merge-title">Merge selected</span>
+        <span class="merge-subtitle">{{data.length}} issue{{data.length !== 1 ? 's' : ''}} selected</span>
+      </div>
+    </div>
+    <div class="merge-header-right">
+      <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
 
-      <mat-form-field color="accent" class="example-full-width">
-        <mat-label>Select a parent</mat-label>
+  <!-- Body -->
+  <mat-dialog-content class="merge-body">
+
+    <!-- Items preview -->
+    <div class="items-preview">
+      @for (item of selectedop; track item) {
+        <div class="preview-chip">
+          <mat-icon class="preview-chip-icon">bug_report</mat-icon>
+          <span class="preview-chip-label">{{item.title}}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Step 1: Parent -->
+    <div class="step-block">
+      <span class="step-label">
+        <span class="step-num">1</span>
+        Select a parent issue
+      </span>
+      <mat-form-field color="accent" class="merge-field" appearance="outline">
+        <mat-label>Parent issue</mat-label>
         <mat-select [(value)]="user_selected">
           @for (item of selectedop; track item) {
             <mat-option [value]="item">{{item.title}}</mat-option>
           }
         </mat-select>
+        <mat-icon matPrefix class="field-prefix-icon">account_tree</mat-icon>
       </mat-form-field>
+    </div>
 
-      @if (user_selected != '') {
-        <div class="example-full-width">
-          <p>Then</p>
-          <mat-form-field class="example-full-width" color="accent">
-            <mat-label>Selected fields to merge</mat-label>
-            <mat-chip-grid #chipGrid aria-label="Field selection">
-              @for (field of fields(); track $index) {
-                <mat-chip-row (removed)="remove(field)">
-                  {{field}}
-                  <button matChipRemove [attr.aria-label]="'remove ' + field">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip-row>
-              }
-            </mat-chip-grid>
-            <input name="currentFruit" placeholder="Add field..." #fieldInput [(ngModel)]="currentFruit"
-              [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="add($event)" />
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); fieldInput.value = ''">
-                @for (item of filteredFruits(); track item) {
-                  <mat-option [value]="item">{{item}}</mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        }
-
-
-
-
-
-
+    <!-- Step 2: Fields -->
+    @if (user_selected != '') {
+      <div class="step-block">
+        <span class="step-label">
+          <span class="step-num">2</span>
+          Choose fields to merge into parent
+        </span>
+        <mat-form-field class="merge-field" color="accent" appearance="outline">
+          <mat-label>Fields to merge</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Field selection">
+            @for (field of fields(); track $index) {
+              <mat-chip-row (removed)="remove(field)">
+                {{field}}
+                <button matChipRemove [attr.aria-label]="'remove ' + field">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input
+            name="currentFruit"
+            placeholder="Add field…"
+            #fieldInput
+            [(ngModel)]="currentFruit"
+            [matChipInputFor]="chipGrid"
+            [matAutocomplete]="auto"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)" />
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); fieldInput.value = ''">
+            @for (item of filteredFruits(); track item) {
+              <mat-option [value]="item">{{item}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
       </div>
-      <p>
-        <button mat-raised-button color="accent" (click)="merge()">Merge</button>
-        &nbsp;
-        <button mat-raised-button color="primary" (click)="closedialog()">Close</button>
-      </p>
+    }
 
-    </mat-card-content>
-  </mat-card>
+  </mat-dialog-content>
+
+  <!-- Footer -->
+  <div class="merge-footer">
+    <button class="merge-btn-secondary" (click)="closedialog()">Cancel</button>
+    <button class="merge-btn-primary" (click)="merge()" [disabled]="user_selected === ''">
+      <mat-icon class="merge-btn-icon">merge</mat-icon>
+      Merge
+    </button>
+  </div>
+
+</div>

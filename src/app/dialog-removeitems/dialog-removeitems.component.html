@@ -1,9 +1,44 @@
-<div class="mdc-card my-card-content">
-    <h1 mat-dialog-title>Remove selected items: {{isReturn.length}}</h1>
+<div class="remove-shell">
 
-    <div mat-dialog-content></div>
-    
-    <div mat-dialog-actions>
-        <button mat-raised-button color="warn" (click)="removefromreport()">Remove</button> <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+  <!-- Header -->
+  <div class="remove-header">
+    <div class="remove-header-left">
+      <div class="warning-icon-wrap">
+        <mat-icon class="warning-icon">delete_forever</mat-icon>
+      </div>
+      <div class="remove-header-text">
+        <span class="remove-title">Remove items</span>
+        <span class="remove-subtitle">This action cannot be undone</span>
+      </div>
     </div>
+    <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Body -->
+  <mat-dialog-content class="remove-body">
+    <div class="confirm-block">
+      <div class="item-count-badge">
+        <mat-icon class="count-icon">layers</mat-icon>
+        <span class="count-num">{{ isReturn.length }}</span>
+        <span class="count-label">{{ isReturn.length === 1 ? 'item' : 'items' }} selected</span>
+      </div>
+      <p class="confirm-text">
+        Are you sure you want to permanently remove
+        <strong class="count-highlight">{{ isReturn.length }} {{ isReturn.length === 1 ? 'item' : 'items' }}</strong>
+        from the report?
+      </p>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="remove-actions">
+    <button class="btn-cancel" (click)="cancel()">Cancel</button>
+    <button class="btn-remove" (click)="removefromreport()">
+      <mat-icon class="btn-icon">delete_forever</mat-icon>
+      Remove
+    </button>
+  </div>
+
 </div>

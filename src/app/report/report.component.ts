@@ -872,6 +872,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const dialogRef = this.dialog.open(DialogRemoveitemsComponent, {
       width: '400px',
+      panelClass: 'remove-dialog-panel',
       data: { sel: array, orig: this.decryptedReportDataChanged.report_vulns }
     });
 
@@ -915,6 +916,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     const dialogRef = this.dialog.open(DialogCveComponent, {
       width: '700px',
       disableClose: false,
+      panelClass: 'dark-dialog-panel',
       data: data
     });
 
