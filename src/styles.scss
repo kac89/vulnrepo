@@ -391,6 +391,15 @@ mat-toolbar.app-navbar {
   overflow: hidden;
 }
 
+// ── remove-items dialog panel ─────────────────────────────────────────────────
+.remove-dialog-panel .mat-mdc-dialog-surface {
+  background: transparent !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6) !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
 // ── edit-dialog responsive panel ─────────────────────────────────────────────
 .edit-dialog-panel .mat-mdc-dialog-surface {
   background: transparent !important;
