@@ -928,7 +928,8 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   openDialog(data: any): void {
 
     const dialogRef = this.dialog.open(DialogPassComponent, {
-      width: '400px',
+      width: '90vw',
+      maxWidth: '480px',
       disableClose: true,
       data: data,
       panelClass: 'dark-dialog-panel'

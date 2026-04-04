@@ -5,8 +5,10 @@
   background: #1a1a1a;
   color: #e0e0e0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  min-width: 380px;
+  min-width: 320px;
   max-width: 480px;
+  width: 100%;
+  box-sizing: border-box;
   border-radius: 14px;
   overflow: hidden;
 }
@@ -229,5 +231,27 @@
     color: #555;
     cursor: default;
     border-color: transparent;
+  }
+}
+
+// ── Mobile ────────────────────────────────────────────────────────────────────
+@media (max-width: 480px) {
+  .pass-shell {
+    min-width: unset;
+    border-radius: 10px;
+  }
+
+  .pass-body {
+    padding: 20px 16px 16px !important;
+  }
+
+  .pass-actions {
+    padding: 10px 16px 16px;
+    flex-wrap: wrap;
+
+    .pass-btn {
+      flex: 1;
+      justify-content: center;
+    }
   }
 }

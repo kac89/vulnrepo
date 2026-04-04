@@ -25,81 +25,205 @@ $accent-green: #69f0ae;
 
 // ── Hero ──────────────────────────────────────────────────────
 .report-hero {
-  padding: 48px 0 32px;
-  border-bottom: 1px solid $border-color;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  margin-top: 28px;
+  margin-bottom: 28px;
+}
+
+.report-hero-grid {
+  display: none;
+}
+
+.report-hero-glow {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 220px;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(74,222,128,0.07), transparent 70%);
+  pointer-events: none;
 }
 
 .report-hero-inner {
+  position: relative;
+  z-index: 1;
+  padding: 36px 32px 28px;
+}
+
+// ── Top row: icon + badge ─────────────────────────────────────
+.report-hero-top {
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
 .report-hero-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
-  border: 1px solid $border-color;
-  background: $surface-nested;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: #242424;
   flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(74,222,128,0.06);
 
   img {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
   }
 }
 
-.report-hero-body {
-  flex: 1;
-  min-width: 0;
-}
-
+// ── Title ─────────────────────────────────────────────────────
 .report-hero-title {
-  margin: 0 0 4px;
+  margin: 0;
   font-size: 2rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.2;
   display: flex;
   align-items: center;
-  gap: 8px;
-
-  a {
-    color: $text-secondary;
-    display: flex;
-    align-items: center;
-    transition: color 0.15s;
-    &:hover { color: $accent-green; }
-  }
-
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+  gap: 10px;
+  background: linear-gradient(135deg, #f5f5f5 0%, rgba(255,255,255,0.55) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+.report-hero-edit-btn {
+  display: flex;
+  align-items: center;
+  color: rgba(255,255,255,0.3);
+  transition: color 0.15s;
+  -webkit-text-fill-color: initial;
+  text-decoration: none;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover { color: #4ade80; }
+}
+
+// ── Meta strip ────────────────────────────────────────────────
 .report-hero-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 10px;
+  align-items: center;
+  gap: 4px 0;
+  margin-top: 14px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 0 4px;
+  width: fit-content;
 }
 
 .report-hero-meta-item {
-  font-size: 0.825rem;
-  color: $text-secondary;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.8125rem;
+}
+
+.report-hero-meta-icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  color: #616161;
+}
+
+.report-hero-meta-label {
+  color: #616161;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.report-hero-meta-value {
+  color: #e0e0e0;
+  font-size: 0.8125rem;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 5px;
+}
 
-  b, strong {
-    color: rgba(255, 255, 255, 0.87);
+.report-hero-api-icon {
+  font-size: 13px !important;
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.report-hero-meta-sep {
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.report-hero-history-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: #9e9e9e;
+  font-size: 11px;
+  padding: 2px 8px 2px 5px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s, border-color 0.15s;
+  margin-left: 4px;
+
+  mat-icon { font-size: 13px !important; width: 13px !important; height: 13px !important; }
+
+  &:hover {
+    color: #f5f5f5;
+    border-color: rgba(255,255,255,0.25);
   }
+}
+
+// ── Progress message ──────────────────────────────────────────
+.report-hero-progress-msg {
+  margin: 12px 0 0;
+  font-size: 0.875rem;
+  color: #9e9e9e;
+}
+
+// ── Findings row ──────────────────────────────────────────────
+.report-hero-findings {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.report-hero-findings-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #616161;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  mat-icon { font-size: 14px !important; width: 14px !important; height: 14px !important; }
 }
 
 // ── Save row (in hero) ────────────────────────────────────────
@@ -439,7 +563,13 @@ mat-paginator {
   }
 
   .report-hero {
-    padding: 28px 0 24px;
+    border-radius: 12px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  .report-hero-inner {
+    padding: 24px 18px 20px;
   }
 
   .report-hero-title {
@@ -447,7 +577,13 @@ mat-paginator {
   }
 
   .report-hero-meta {
-    gap: 12px;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .report-hero-meta-sep {
+    display: none;
   }
 
   .report-section .mat-mdc-card-content {
