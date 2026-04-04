@@ -1,33 +1,62 @@
-<div class="mdc-card my-card-content">
+<div class="css-shell">
 
-    <div layout="row" layout-align="space-between" fxLayoutGap="10px grid">
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="start center">
-            <h1 mat-dialog-title>Custom CSS</h1>
-        </div>
-        <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%" fxLayoutAlign="end end">
-            <mat-form-field appearance="outline" color="accent" style="width: 250px; font-size:11px;">
-                <mat-label>Example CSS style</mat-label>
-                <mat-select (selectionChange)="selectcss($event)">
-                    <mat-option value="none">None</mat-option>
-                    <mat-option value="monospace">Monospace</mat-option>
-                    <mat-option value="cypher">Cypher</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+  <!-- Header -->
+  <div class="css-header">
+    <div class="css-header-left">
+      <div class="css-avatar-logo">
+        <mat-icon class="logo-icon">style</mat-icon>
+      </div>
+      <div class="css-header-text">
+        <span class="css-title">Custom CSS</span>
+        <span class="css-subtitle">Customize the HTML report appearance</span>
+      </div>
+    </div>
+    <div class="css-header-right">
+      <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <mat-dialog-content class="css-body">
+
+    <div class="preset-row">
+      <span class="section-label">Example styles</span>
+      <mat-form-field appearance="outline" color="accent" class="preset-select">
+        <mat-label>Pick a preset</mat-label>
+        <mat-select (selectionChange)="selectcss($event)">
+          <mat-option value="none">None</mat-option>
+          <mat-option value="monospace">Monospace</mat-option>
+          <mat-option value="cypher">Midnight</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
-    <div mat-dialog-content>
-
-        <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <textarea rows="8" matInput placeholder="HTML report CSS"
-                value="" [formControl]="report_css"></textarea>
-            <mat-hint>CSS only!</mat-hint>
-        </mat-form-field>
-
+    <div class="editor-block">
+      <div class="editor-label-row">
+        <mat-icon class="editor-label-icon">code</mat-icon>
+        <span class="section-label">CSS editor</span>
+      </div>
+      <mat-form-field appearance="outline" class="editor-field" color="accent">
+        <textarea
+          rows="12"
+          matInput
+          placeholder="/* Add your custom CSS here */"
+          [formControl]="report_css"
+        ></textarea>
+        <mat-hint>CSS only — applied directly to the HTML report</mat-hint>
+      </mat-form-field>
     </div>
-    <div class="spacer"></div>
-    <div mat-dialog-actions>
-        <button mat-raised-button color="accent" (click)="savechange()">Save</button>
-        <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-    </div>
+
+  </mat-dialog-content>
+
+  <!-- Footer actions -->
+  <div class="css-footer">
+    <button class="action-btn cancel-btn" (click)="cancel()">Cancel</button>
+    <button class="action-btn save-btn" (click)="savechange()">
+      <mat-icon class="btn-icon">save</mat-icon>Save
+    </button>
+  </div>
+
 </div>
