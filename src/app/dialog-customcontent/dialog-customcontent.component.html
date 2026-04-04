@@ -1,16 +1,46 @@
-<div class="mdc-card my-card-content">
-    <h1 mat-dialog-title>Add Custom Content (You can use Markdown or HTML)</h1>
-    <div mat-dialog-content>
+<div class="cc-shell">
 
-        <mat-form-field appearance="outline" class="example-full-width" color="accent">
-            <textarea [formControl]="report_custom_content" rows="8" matInput placeholder="HTML content"></textarea>
-            <mat-hint>Use "&#x3C;div class=&#x22;pagebreak&#x22;&#x3E;&#x3C;/div&#x3E;" to break page in print/pdf.</mat-hint>
-        </mat-form-field>
+  <!-- Header -->
+  <div class="cc-header">
+    <div class="cc-header-left">
+      <div class="cc-avatar-logo">
+        <mat-icon class="cc-logo-icon">edit_note</mat-icon>
+      </div>
+      <div class="cc-header-text">
+        <span class="cc-title">Custom Content</span>
+        <span class="cc-subtitle">Markdown or HTML — added to the report</span>
+      </div>
+    </div>
+    <div class="cc-header-right">
+      <button mat-icon-button mat-dialog-close class="cc-tool-btn cc-close-btn" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
 
+  <!-- Body -->
+  <mat-dialog-content class="cc-body">
+    <div class="cc-editor-wrapper">
+      <textarea
+        class="cc-editor"
+        [formControl]="report_custom_content"
+        rows="10"
+        placeholder="Enter HTML or Markdown content…"
+        cdkFocusInitial
+      ></textarea>
     </div>
-    <div class="spacer"></div>
-    <div mat-dialog-actions>
-        <button mat-raised-button color="accent" (click)="savechange()">Save</button>
-        <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-    </div>
+    <p class="cc-hint">
+      <mat-icon class="cc-hint-icon">info</mat-icon>
+      Use <code>&lt;div class="pagebreak"&gt;&lt;/div&gt;</code> to break the page in print&nbsp;/&nbsp;PDF.
+    </p>
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="cc-actions">
+    <button class="cc-btn cc-btn-ghost" (click)="cancel()">Cancel</button>
+    <button class="cc-btn cc-btn-primary" (click)="savechange()">
+      <mat-icon class="cc-btn-icon">save</mat-icon>Save
+    </button>
+  </div>
+
 </div>

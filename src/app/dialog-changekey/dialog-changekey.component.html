@@ -1,27 +1,85 @@
-<div class="mdc-card my-card-content">
+<div class="key-shell">
 
-  <h1 class="mat-display">
-    <mat-icon>security</mat-icon> Change report security key
-  </h1>
+  <!-- Header -->
+  <div class="key-header">
+    <div class="key-header-left">
+      <div class="key-avatar-logo">
+        <mat-icon class="logo-icon">security</mat-icon>
+      </div>
+      <div class="key-header-text">
+        <span class="key-title">Change Security Key</span>
+        <span class="key-subtitle">Update the encryption key for this report</span>
+      </div>
+    </div>
+    <div class="key-header-right">
+      <button mat-icon-button class="tool-btn close-btn" mat-dialog-close title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
 
-    <form class="example-form">
-  
-      <mat-form-field class="example-full-width" color="accent">
-        <input matInput placeholder="Set report security key" #pass [type]="hide ? 'password' : 'text'">
-        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </mat-form-field>
-  
-      <mat-form-field class="example-full-width" color="accent">
-        <input matInput placeholder="Re-enter report security key" #pass2 [type]="hide ? 'password' : 'text'">
-        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </mat-form-field>
+  <!-- Body -->
+  <mat-dialog-content class="key-body">
 
-      <p>Remember report security key, losing it you will lose access to the report!</p>
-      <p style="color: red">{{alert}}</p>
+    <div class="warning-banner">
+      <mat-icon class="warning-icon">warning_amber</mat-icon>
+      <span>Remember your security key — losing it means losing access to this report.</span>
+    </div>
 
-      <button mat-raised-button color="accent" (click)="changeseckey(pass.value, pass2.value)">Set new security key</button>
-      &nbsp;
-      <button mat-raised-button color="primary" (click)="cancel()">Close</button>
-  
+    <form class="key-form">
+
+      <div class="field-group">
+        <label class="field-label">New security key</label>
+        <div class="input-wrapper" [class.focused]="focus1">
+          <input
+            class="key-input"
+            #pass
+            [type]="hide ? 'password' : 'text'"
+            placeholder="Enter new security key"
+            (focus)="focus1 = true"
+            (blur)="focus1 = false"
+          >
+          <button type="button" class="visibility-btn" (click)="hide = !hide" tabindex="-1">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Confirm security key</label>
+        <div class="input-wrapper" [class.focused]="focus2">
+          <input
+            class="key-input"
+            #pass2
+            [type]="hide ? 'password' : 'text'"
+            placeholder="Re-enter security key"
+            (focus)="focus2 = true"
+            (blur)="focus2 = false"
+          >
+          <button type="button" class="visibility-btn" (click)="hide = !hide" tabindex="-1">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      @if (alert) {
+        <p class="alert-msg">
+          <mat-icon class="alert-icon">error_outline</mat-icon>
+          {{alert}}
+        </p>
+      }
+
     </form>
+
+  </mat-dialog-content>
+
+  <!-- Footer -->
+  <div class="key-footer">
+    <button class="btn-cancel" (click)="cancel()">Cancel</button>
+    <button class="btn-confirm" (click)="changeseckey(pass.value, pass2.value)">
+      <mat-icon>lock_reset</mat-icon>
+      Set new key
+    </button>
+  </div>
+
 </div>

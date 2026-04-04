@@ -345,4 +345,23 @@
   .bb-td-domains {
     max-width: unset;
   }
+
+  // Hide domains column on mobile — too wide for small screens
+  ::ng-deep .mat-column-domains {
+    display: none;
+  }
+
+  .bb-td-name {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .bb-program-link {
+    flex-wrap: wrap;
+  }
+
+  .bb-table .mat-mdc-cell,
+  .bb-table .mat-mdc-header-cell {
+    padding: 10px 12px !important;
+  }
 }
