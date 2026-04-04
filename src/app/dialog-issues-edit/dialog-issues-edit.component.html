@@ -1,42 +1,61 @@
-<mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-icon mat-card-avatar class="vertical-align-middle padding-bottom-3 size-45">edit</mat-icon>
-      <mat-card-title>Edit selected ({{data.sel.length}})</mat-card-title>
-      <mat-card-subtitle>Make changes on multiple issues</mat-card-subtitle>
-    </mat-card-header>
+<div class="edit-shell">
 
-    <mat-card-content>
-        <div fxLayout="row wrap" fxLayoutGap="10px grid">
-            <div fxLayoutAlign="start center" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                <mat-form-field color="accent" style="width: 100%;">
-                    <mat-label>Set severity</mat-label>
-                    <mat-select [(value)]="selseverity">
-                      <mat-option value="0"></mat-option>
-                      @for (option of tableseverity; track option) {
-                        <mat-option value="{{ option.value }}">{{ option.name }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-            </div>
-            <div fxLayoutAlign="start start" fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                <mat-form-field color="accent" style="width: 100%;">
-                    <mat-label>Set status</mat-label>
-                    <mat-select [(value)]="selstatus">
-                      <mat-option value="0"></mat-option>
-                      @for (option of tablestatus; track option) {
-                        <mat-option value="{{ option.value }}">{{ option.status }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-            </div>
+  <!-- Header -->
+  <div class="edit-header">
+    <div class="edit-header-left">
+      <div class="edit-avatar">
+        <mat-icon class="edit-avatar-icon">edit</mat-icon>
+      </div>
+      <div class="edit-header-text">
+        <span class="edit-title">Edit selected</span>
+        <span class="edit-subtitle">Apply changes to {{data.sel.length}} issue{{data.sel.length !== 1 ? 's' : ''}}</span>
+      </div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-        </div>
-        <p>
-          <button mat-raised-button color="accent" (click)="applychanges()"><mat-icon>save</mat-icon> Apply changes</button>
-            
-            &nbsp;&nbsp;
-            <button mat-raised-button color="primary" (click)="closedialog()">Close</button>
-        </p>
-        
-    </mat-card-content>
-  </mat-card>
+  <!-- Body -->
+  <mat-dialog-content class="edit-body">
+
+    <div class="field-grid">
+
+      <div class="field-group">
+        <label class="field-label">Severity</label>
+        <mat-form-field appearance="outline" color="accent" class="field-input">
+          <mat-select [(value)]="selseverity" placeholder="No change">
+            <mat-option value="0">— No change —</mat-option>
+            @for (option of tableseverity; track option) {
+              <mat-option value="{{ option.value }}">{{ option.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Status</label>
+        <mat-form-field appearance="outline" color="accent" class="field-input">
+          <mat-select [(value)]="selstatus" placeholder="No change">
+            <mat-option value="0">— No change —</mat-option>
+            @for (option of tablestatus; track option) {
+              <mat-option value="{{ option.value }}">{{ option.status }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+  </mat-dialog-content>
+
+  <!-- Footer -->
+  <div class="edit-footer">
+    <button class="btn-ghost" (click)="closedialog()">Cancel</button>
+    <button class="btn-primary" (click)="applychanges()">
+      <mat-icon class="btn-icon">save</mat-icon>
+      Apply changes
+    </button>
+  </div>
+
+</div>

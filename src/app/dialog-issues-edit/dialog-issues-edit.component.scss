@@ -1,0 +1,239 @@
+// ── Shell ─────────────────────────────────────────────────────────────────────
+.edit-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: #242424;
+  flex-shrink: 0;
+}
+
+.edit-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.edit-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #424242;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.edit-avatar-icon {
+  color: #9e9e9e;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.edit-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.edit-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.01em;
+}
+
+.edit-subtitle {
+  font-size: 11px;
+  color: #757575;
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+.edit-body {
+  // Remove Material's default 24px horizontal padding so we control spacing
+  padding: 24px 20px 8px !important;
+  margin: 0 !important;
+  background: #1a1a1a;
+  box-sizing: border-box;
+  overflow-x: hidden !important;
+  max-width: 100%;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  // Prevent grid from stretching past its container
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  // Allow grid child to shrink below its content size
+  min-width: 0;
+  overflow: hidden;
+}
+
+.field-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #757575;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.field-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  ::ng-deep {
+    // Kill Material's hardcoded min-width on the form field host
+    &.mat-mdc-form-field {
+      min-width: 0 !important;
+      width: 100%;
+    }
+
+    .mat-mdc-form-field-infix {
+      min-width: 0 !important;
+      width: 100%;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background: #2a2a2a;
+    }
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: rgba(255,255,255,0.12) !important;
+    }
+
+    &:hover .mdc-notched-outline__leading,
+    &:hover .mdc-notched-outline__notch,
+    &:hover .mdc-notched-outline__trailing {
+      border-color: rgba(255,255,255,0.25) !important;
+    }
+
+    .mat-mdc-select-value-text,
+    .mat-mdc-select-placeholder {
+      color: #e0e0e0;
+    }
+
+    .mat-mdc-select-arrow {
+      color: #616161;
+    }
+
+    .mat-mdc-form-field-label {
+      color: #757575;
+    }
+  }
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+.edit-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: #1f1f1f;
+  flex-shrink: 0;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #9e9e9e;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 18px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: #2a2a2a;
+    color: #f5f5f5;
+    border-color: rgba(255,255,255,0.2);
+  }
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #424242;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #f5f5f5;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 18px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: #555555;
+    border-color: rgba(255,255,255,0.2);
+  }
+}
+
+.btn-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  line-height: 16px !important;
+}
+
+// ── Shared icon button (header close) ────────────────────────────────────────
+.tool-btn {
+  color: #616161 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+.close-btn:hover { color: #ef5350 !important; }
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 480px) {
+  .field-grid { grid-template-columns: 1fr; }
+}
