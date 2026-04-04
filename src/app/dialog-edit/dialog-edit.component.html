@@ -1,79 +1,111 @@
-<div class="mdc-card my-card-content">
-  @if (col1) {
-    <h1 mat-dialog-title>Edit report title</h1>
-  }
-  @if (col2) {
-    <h1 mat-dialog-title>Edit issue title</h1>
-  }
-  @if (col3) {
-    <h1 mat-dialog-title>Remove issue:</h1>
-  }
-  @if (col4) {
-    <h1 mat-dialog-title>Remove event from changelog:</h1>
-  }
-  @if (col5) {
-    <h1 mat-dialog-title>Remove report:</h1>
-  }
+<div class="edit-shell">
 
-  <div>
-    <div class="example-form" mat-dialog-content>
-
-      @if (col1) {
-        <mat-form-field class="example-full-width" color="accent">
-          <input [formControl]="reportname" type="text" matInput>
-          @if (reportname.hasError('notempty')) {
-            <mat-error>
-              <strong>Title must not be empty!</strong>
-            </mat-error>
-          }
-        </mat-form-field>
-      }
-
-      @if (col2) {
-        <mat-form-field class="example-full-width" color="accent">
-          <input [formControl]="title" type="text" matInput>
-          @if (title.hasError('notempty')) {
-            <mat-error>
-              <strong>Title must not be empty!</strong>
-            </mat-error>
-          }
-        </mat-form-field>
-      }
-
-      @if (col3) {
-        <h3>{{data[1].item.title}}</h3>
-      }
-      @if (col4) {
-        <h3>{{data[1].item.desc}}</h3>
-      }
-      @if (col5) {
-        <h3>{{data[1].item.report_name}}</h3>
-      }
-      @if (col6) {
-        <h3>Remove all events from the changelog?</h3>
-      }
+  <!-- Header -->
+  <div class="edit-header">
+    <div class="edit-header-left">
+      <div class="edit-icon-wrap">
+        @if (col1 || col2) {
+          <mat-icon class="edit-icon">edit</mat-icon>
+        }
+        @if (col3 || col4 || col5 || col6) {
+          <mat-icon class="edit-icon danger-icon">delete_outline</mat-icon>
+        }
+      </div>
+      <div class="edit-header-text">
+        @if (col1) { <span class="edit-title">Edit report title</span> }
+        @if (col2) { <span class="edit-title">Edit issue title</span> }
+        @if (col3) { <span class="edit-title">Remove issue</span> }
+        @if (col4) { <span class="edit-title">Remove changelog event</span> }
+        @if (col5) { <span class="edit-title">Remove report</span> }
+        @if (col6) { <span class="edit-title">Clear changelog</span> }
+      </div>
     </div>
+    <button mat-icon-button class="tool-btn close-btn" (click)="cancel()" title="Close">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <div mat-dialog-actions>
+  <!-- Body -->
+  <mat-dialog-content class="edit-body">
+
     @if (col1) {
-      <button mat-raised-button color="accent" (click)="changereportname()">Save</button>
+      <p class="edit-label">Report title</p>
+      <mat-form-field class="edit-field" appearance="outline" color="accent">
+        <input [formControl]="reportname" type="text" matInput cdkFocusInitial>
+        @if (reportname.hasError('notempty')) {
+          <mat-error><strong>Title must not be empty!</strong></mat-error>
+        }
+      </mat-form-field>
+    }
+
+    @if (col2) {
+      <p class="edit-label">Issue title</p>
+      <mat-form-field class="edit-field" appearance="outline" color="accent">
+        <input [formControl]="title" type="text" matInput cdkFocusInitial>
+        @if (title.hasError('notempty')) {
+          <mat-error><strong>Title must not be empty!</strong></mat-error>
+        }
+      </mat-form-field>
+    }
+
+    @if (col3 || col4 || col5) {
+      <div class="confirm-card">
+        <mat-icon class="confirm-icon">warning_amber</mat-icon>
+        <div class="confirm-text">
+          <p class="confirm-headline">This action cannot be undone.</p>
+          @if (col3) { <p class="confirm-item">{{ data[1].item.title }}</p> }
+          @if (col4) { <p class="confirm-item">{{ data[1].item.desc }}</p> }
+          @if (col5) { <p class="confirm-item">{{ data[1].item.report_name }}</p> }
+        </div>
+      </div>
+    }
+
+    @if (col6) {
+      <div class="confirm-card">
+        <mat-icon class="confirm-icon">warning_amber</mat-icon>
+        <div class="confirm-text">
+          <p class="confirm-headline">This action cannot be undone.</p>
+          <p class="confirm-item">All events will be permanently removed from the changelog.</p>
+        </div>
+      </div>
+    }
+
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="edit-actions">
+    <button class="action-btn cancel-btn" (click)="cancel()">Cancel</button>
+
+    @if (col1) {
+      <button class="action-btn save-btn" (click)="changereportname()">
+        <mat-icon>check</mat-icon>Save
+      </button>
     }
     @if (col2) {
-      <button mat-raised-button color="accent" (click)="changeissuetitle()">Save</button>
-    }
-    @if (col5) {
-      <button mat-raised-button color="warn" (click)="removeReport(data[1].item)">Remove</button>
-    }
-    @if (col4) {
-      <button mat-raised-button color="warn" (click)="removechangelog(data[1].item)">Remove</button>
+      <button class="action-btn save-btn" (click)="changeissuetitle()">
+        <mat-icon>check</mat-icon>Save
+      </button>
     }
     @if (col3) {
-      <button mat-raised-button color="warn" (click)="removeissue(data[1].item)">Remove</button>
+      <button class="action-btn danger-btn" (click)="removeissue(data[1].item)">
+        <mat-icon>delete</mat-icon>Remove
+      </button>
+    }
+    @if (col4) {
+      <button class="action-btn danger-btn" (click)="removechangelog(data[1].item)">
+        <mat-icon>delete</mat-icon>Remove
+      </button>
+    }
+    @if (col5) {
+      <button class="action-btn danger-btn" (click)="removeReport(data[1].item)">
+        <mat-icon>delete</mat-icon>Remove
+      </button>
     }
     @if (col6) {
-      <button mat-raised-button color="warn" (click)="removechangelogall()">Remove all</button>
+      <button class="action-btn danger-btn" (click)="removechangelogall()">
+        <mat-icon>delete_sweep</mat-icon>Remove all
+      </button>
     }
-    <button mat-raised-button color="primary" (click)="cancel()">Close</button>
   </div>
+
 </div>

@@ -19,6 +19,7 @@ export class DialogEncryptReportComponent implements OnInit {
   setkey = new UntypedFormControl();
   usemyrepkey = false;
   hide = true;
+  keyFocused = false;
   // @ts-ignore
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogEncryptReportComponent>,
     private utilsService: UtilsService) {

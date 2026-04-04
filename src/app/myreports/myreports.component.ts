@@ -171,7 +171,9 @@ export class MyreportsComponent implements OnInit {
 
     const remo = 'removereport';
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      width: '400px',
+      width: '420px',
+      maxWidth: '95vw',
+      panelClass: 'edit-dialog-panel',
       data: [{ remo }, { item }],
     });
 

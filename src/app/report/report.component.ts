@@ -1500,6 +1500,8 @@ Sample code here\n\
 
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '450px',
+      maxWidth: '95vw',
+      panelClass: 'edit-dialog-panel',
       data: item
     });
 
@@ -1566,6 +1568,8 @@ Sample code here\n\
   editissuetitle(item) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '450px',
+      maxWidth: '95vw',
+      panelClass: 'edit-dialog-panel',
       data: item
     });
 
@@ -1667,7 +1671,9 @@ Sample code here\n\
   removefromchangelog(item) {
     const remo = 'changelog';
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      width: '350px',
+      width: '420px',
+      maxWidth: '95vw',
+      panelClass: 'edit-dialog-panel',
       data: [{ remo }, { item }],
     });
 
@@ -1688,7 +1694,9 @@ Sample code here\n\
 
     const remo = 'changelog_wipe';
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      width: '350px',
+      width: '420px',
+      maxWidth: '95vw',
+      panelClass: 'edit-dialog-panel',
       data: [{ remo }],
     });
 
@@ -1708,7 +1716,9 @@ Sample code here\n\
   removeIssiue(item) {
     const remo = 'remove';
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      width: '350px',
+      width: '420px',
+      maxWidth: '95vw',
+      panelClass: 'edit-dialog-panel',
       data: [{ remo }, { item }],
     });
 
