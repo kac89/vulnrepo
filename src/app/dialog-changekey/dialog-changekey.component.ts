@@ -11,6 +11,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class DialogChangekeyComponent implements OnInit {
   alert: string;
   hide = true;
+  focus1 = false;
+  focus2 = false;
 
   constructor(public dialogRef: MatDialogRef<DialogChangekeyComponent>) { }
 
