@@ -1664,7 +1664,8 @@ Sample code here\n\
     const today: number = Date.now();
     const add_changelog = {
       date: today,
-      desc: item
+      desc: item,
+      version: this.decryptedReportDataChanged.report_version
     };
 
     this.decryptedReportDataChanged.report_changelog.push(add_changelog);
