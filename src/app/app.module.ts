@@ -34,7 +34,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 import { DialogAddissueComponent } from './dialog-addissue/dialog-addissue.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -176,7 +176,6 @@ import { BbListComponent } from './bb-list/bb-list.component';
         MatRadioModule,
         HammerModule,
         MatProgressBarModule,
-        NgxChartsModule,
         ClipboardModule,
         MatTooltipModule,
         MatSliderModule,

@@ -151,6 +151,14 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     { status: 'Fixed', value: 3 },
     { status: 'Won\'t Fix', value: 4 }
   ];
+  statusStatsTable = [
+    { status: 'Open', value: 0, color: '#FF0039' },
+    { status: 'In Progress', value: 0, color: '#FF9800' },
+    { status: 'Fixed', value: 0, color: '#69f0ae' },
+    { status: "Won't Fix", value: 0, color: '#616161' },
+  ];
+  heatmapWeeks: { date: string, count: number, level: number }[][] = [];
+  heatmapMonthLabels: { label: string, col: number }[] = [];
   selectedtheme = 'white';
   uploadlogoprev = '';
   adv_html: any;
@@ -394,6 +402,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       this.calendar.updateTodaysDate(); // update calendar state
     }
 
+    this.buildHeatmap();
   }
 
   onDateChangeReportstart(event) {
@@ -1004,7 +1013,15 @@ Sample code here\n\
       { name: 'Info', value: info.length }
     ];
 
+    const vulns = this.decryptedReportDataChanged.report_vulns;
+    this.statusStatsTable = [
+      { status: 'Open', value: vulns.filter(v => v.status === 1).length, color: '#FF0039' },
+      { status: 'In Progress', value: vulns.filter(v => v.status === 2).length, color: '#FF9800' },
+      { status: 'Fixed', value: vulns.filter(v => v.status === 3).length, color: '#69f0ae' },
+      { status: "Won't Fix", value: vulns.filter(v => v.status === 4).length, color: '#616161' },
+    ];
 
+    this.buildHeatmap();
 
     this.listchangelog = [...this.decryptedReportData.report_changelog].sort((a, b) => b.date - a.date);
     this.changelogLimit = 5;
@@ -1026,6 +1043,83 @@ Sample code here\n\
     this.issesTable.paginator = this.paginator;
     this.selectedResult = filtered.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize);
 
+  }
+
+  buildHeatmap() {
+    const meta = this.decryptedReportDataChanged.report_metadata;
+    const vulns = this.decryptedReportDataChanged.report_vulns;
+
+    const today = new Date();
+    const todayNorm = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    let endNorm: Date;
+    let startNorm: Date;
+
+    if (meta.endtest) {
+      const d = new Date(meta.endtest);
+      endNorm = isNaN(d.getTime()) ? todayNorm : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    } else {
+      endNorm = todayNorm;
+    }
+
+    if (meta.starttest) {
+      const d = new Date(meta.starttest);
+      startNorm = isNaN(d.getTime()) ? new Date(endNorm.getTime() - 29 * 86400000) : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    } else {
+      startNorm = new Date(endNorm.getTime() - 29 * 86400000);
+    }
+
+    // Count issues per day
+    const countMap: { [key: string]: number } = {};
+    vulns.forEach(v => {
+      if (v.date) {
+        const d = new Date(v.date);
+        if (!isNaN(d.getTime())) {
+          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          countMap[key] = (countMap[key] || 0) + 1;
+        }
+      }
+    });
+
+    const rangeValues = Object.entries(countMap)
+      .filter(([k]) => { const d = new Date(k); return d >= startNorm && d <= endNorm; })
+      .map(([, v]) => v);
+    const rangeMax = rangeValues.length ? Math.max(...rangeValues) : 1;
+
+    // Build week columns starting from the Sunday of the week containing startNorm
+    const gridStart = new Date(startNorm);
+    gridStart.setDate(gridStart.getDate() - gridStart.getDay());
+
+    const weeks: { date: string, count: number, level: number }[][] = [];
+    const monthLabels: { label: string, col: number }[] = [];
+    let lastMonth = -1;
+    const cur = new Date(gridStart);
+
+    while (cur <= endNorm) {
+      const week: { date: string, count: number, level: number }[] = [];
+      for (let d = 0; d < 7; d++) {
+        const inRange = cur >= startNorm && cur <= endNorm;
+        const key = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, '0')}-${String(cur.getDate()).padStart(2, '0')}`;
+        const count = inRange ? (countMap[key] || 0) : 0;
+        const level = !inRange ? -1 : count === 0 ? 0 : Math.ceil((count / rangeMax) * 4);
+        week.push({ date: key, count, level });
+        cur.setDate(cur.getDate() + 1);
+      }
+
+      const firstInRange = week.find(d => d.level !== -1);
+      if (firstInRange) {
+        const m = new Date(firstInRange.date).getMonth();
+        if (m !== lastMonth) {
+          monthLabels.push({ label: new Date(firstInRange.date).toLocaleString('default', { month: 'short' }), col: weeks.length });
+          lastMonth = m;
+        }
+      }
+
+      weeks.push(week);
+    }
+
+    this.heatmapWeeks = weeks;
+    this.heatmapMonthLabels = monthLabels;
   }
 
   getData(event?: PageEvent) {

@@ -23,7 +23,6 @@
     "@angular/platform-browser": "^21.2.6",
     "@angular/platform-browser-dynamic": "^21.2.6",
     "@angular/router": "^21.2.6",
-    "@swimlane/ngx-charts": "^23.1.0",
     "buffer": "^6.0.3",
     "clone": "^2.1.2",
     "core-js": "^3.49.0",

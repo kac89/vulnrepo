@@ -443,6 +443,18 @@
                             </mat-select>
                           </mat-form-field>
                           <mat-form-field class="example-full-width" color="accent">
+                            <mat-label>Reporter</mat-label>
+                            <mat-select placeholder="Reporter" [(ngModel)]="dec_data.reporter"
+                              (ngModelChange)="doStats()">
+                              <mat-option value="">— Unassigned —</mat-option>
+                              @for (res of decryptedReportDataChanged.researcher; track res) {
+                                @if (res.reportername) {
+                                  <mat-option [value]="res.reportername">{{ res.reportername }}</mat-option>
+                                }
+                              }
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field class="example-full-width" color="accent">
                             <mat-label>Create issue date</mat-label>
                             <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
                               [value]="renderdateformat(dec_data.date)">
@@ -641,38 +653,138 @@
                       }
                     </mat-card-content>
                   </mat-card>
-                    <!-- Stats -->
+                    <!-- Stats — Next.js / Vercel style dashboard -->
                     @if (decryptedReportDataChanged.report_vulns.length !== 0) {
-                      <mat-card appearance="outlined" class="report-section">
-                        <mat-card-header>
-                          <div mat-card-avatar>
-                            <mat-icon>insert_chart</mat-icon>
+                      <div class="stats-dashboard">
+
+                        <!-- Header -->
+                        <div class="stats-db-header">
+                          <div class="stats-db-header-icon">
+                            <mat-icon>analytics</mat-icon>
                           </div>
-                          <mat-card-title>Statistics</mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                              <div style="display: block; width: 100%; height: 300px;">
-                                <ngx-charts-advanced-pie-chart [scheme]="colorScheme" [results]="severitytable">
-                                </ngx-charts-advanced-pie-chart>
+                          <div class="stats-db-header-text">
+                            <span class="stats-db-header-title">Statistics</span>
+                            <span class="stats-db-header-sub">{{ decryptedReportDataChanged.report_vulns.length }} total findings</span>
+                          </div>
+                        </div>
+
+                        <!-- KPI tiles — one per severity -->
+                        <div class="stats-kpi-row">
+                          @for (sev of severitytable; track sev.name) {
+                            <div class="stats-kpi-tile stats-kpi-tile--{{ sev.name | lowercase }}">
+                              <span class="stats-kpi-label">{{ sev.name }}</span>
+                              <span class="stats-kpi-value">{{ sev.value }}</span>
+                              <span class="stats-kpi-mini-bar">
+                                <span class="stats-kpi-mini-bar-fill"
+                                  [style.width.%]="(sev.value / decryptedReportDataChanged.report_vulns.length) * 100">
+                                </span>
+                              </span>
+                            </div>
+                          }
+                        </div>
+
+                        <!-- Body: breakdown chart + activity calendar -->
+                        <div class="stats-body-grid">
+
+                          <!-- Left: severity breakdown + status pills -->
+                          <div class="stats-panel">
+                            <div class="stats-panel-title">Severity distribution</div>
+
+                            <!-- Stacked proportional bar -->
+                            <div class="stats-stacked-bar">
+                              @for (sev of severitytable; track sev.name) {
+                                @if (sev.value > 0) {
+                                  <div class="stats-stacked-seg stats-seg--{{ sev.name | lowercase }}"
+                                    [style.flex]="sev.value"
+                                    [title]="sev.name + ': ' + sev.value">
+                                  </div>
+                                }
+                              }
+                            </div>
+
+                            <!-- Horizontal bar rows -->
+                            <div class="stats-breakdown">
+                              @for (sev of severitytable; track sev.name) {
+                                <div class="stats-breakdown-row">
+                                  <span class="stats-bd-dot stats-bd-dot--{{ sev.name | lowercase }}"></span>
+                                  <span class="stats-bd-name">{{ sev.name }}</span>
+                                  <div class="stats-bd-bar-track">
+                                    <div class="stats-bd-bar-fill stats-bd-bar-fill--{{ sev.name | lowercase }}"
+                                      [style.width.%]="(sev.value / decryptedReportDataChanged.report_vulns.length) * 100">
+                                    </div>
+                                  </div>
+                                  <span class="stats-bd-count">{{ sev.value }}</span>
+                                  <span class="stats-bd-pct">{{ ((sev.value / decryptedReportDataChanged.report_vulns.length) * 100) | number:'1.0-0' }}%</span>
+                                </div>
+                              }
+                            </div>
+
+                            <!-- Issue status pills -->
+                            <div class="stats-panel-title stats-panel-title--mt">Issue status</div>
+                            <div class="stats-status-row">
+                              @for (st of statusStatsTable; track st.status) {
+                                <div class="stats-status-pill">
+                                  <span class="stats-status-dot" [style.background]="st.color"></span>
+                                  <span class="stats-status-label">{{ st.status }}</span>
+                                  <span class="stats-status-count">{{ st.value }}</span>
+                                </div>
+                              }
+                            </div>
+
+                            <!-- Activity heatmap -->
+                            <div class="stats-panel-title stats-panel-title--mt">Activity heatmap</div>
+                            <div class="heatmap-wrap">
+                              <div class="heatmap-top">
+                                <div class="heatmap-day-gutter"></div>
+                                <div class="heatmap-months-row">
+                                  @for (ml of heatmapMonthLabels; track ml.col) {
+                                    <span [style.left.px]="ml.col * 14">{{ ml.label }}</span>
+                                  }
+                                </div>
                               </div>
-                              <div style="height: 50%;">
-                                <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="severitytable"
-                                  [gradient]="gradient">
-                                </ngx-charts-bar-vertical>
+                              <div class="heatmap-main">
+                                <div class="heatmap-day-labels">
+                                  <span></span>
+                                  <span>Mon</span>
+                                  <span></span>
+                                  <span>Wed</span>
+                                  <span></span>
+                                  <span>Fri</span>
+                                  <span></span>
+                                </div>
+                                <div class="heatmap-grid">
+                                  @for (week of heatmapWeeks; track $index) {
+                                    <div class="heatmap-col">
+                                      @for (day of week; track day.date) {
+                                        <div class="heatmap-cell"
+                                          [class.heatmap-out]="day.level === -1"
+                                          [class.heatmap-l0]="day.level === 0"
+                                          [class.heatmap-l1]="day.level === 1"
+                                          [class.heatmap-l2]="day.level === 2"
+                                          [class.heatmap-l3]="day.level === 3"
+                                          [class.heatmap-l4]="day.level === 4"
+                                          [title]="day.level >= 0 ? (day.count + ' issue' + (day.count !== 1 ? 's' : '') + ' on ' + day.date) : ''">
+                                        </div>
+                                      }
+                                    </div>
+                                  }
+                                </div>
                               </div>
                             </div>
-                            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-                              <mat-card>
-                                <mat-calendar class="mat-elevation-z9" [dateClass]="dateClass()" [selected]="selectedRangeValue"
-                                  [startAt]="startDate">
-                                </mat-calendar>
-                              </mat-card>
+                          </div>
+
+                          <!-- Right: activity calendar -->
+                          <div class="stats-panel">
+                            <div class="stats-panel-title">Researcher activity</div>
+                            <div class="stats-calendar-wrap">
+                              <mat-calendar [dateClass]="dateClass()" [selected]="selectedRangeValue"
+                                [startAt]="startDate">
+                              </mat-calendar>
                             </div>
                           </div>
-                        </mat-card-content>
-                      </mat-card>
+
+                        </div>
+                      </div>
                     }
                       <!-- Researcher -->
                       <mat-card appearance="outlined" class="report-section">
@@ -767,9 +879,9 @@
                             @if (listchangelog && listchangelog.length > 0) {
                               <div class="changelog-timeline">
                                 @for (item of listchangelog | slice:0:changelogLimit; track $index; let last = $last) {
-                                  <div class="changelog-entry" [class.changelog-entry--release]="item.version" [class.changelog-entry--last]="last && changelogLimit >= listchangelog.length">
+                                  <div class="changelog-entry" [class.changelog-entry--release]="item.version === decryptedReportDataChanged.report_version" [class.changelog-entry--last]="last && changelogLimit >= listchangelog.length">
                                     <div class="changelog-entry-line">
-                                      <div class="changelog-entry-dot" [class.changelog-entry-dot--release]="item.version"></div>
+                                      <div class="changelog-entry-dot" [class.changelog-entry-dot--release]="item.version === decryptedReportDataChanged.report_version" [class.changelog-entry-dot--old]="item.version !== decryptedReportDataChanged.report_version"></div>
                                     </div>
                                     <div class="changelog-entry-body">
                                       <div class="changelog-entry-meta">
