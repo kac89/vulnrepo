@@ -3439,7 +3439,7 @@ Date   | Description
 
   parselogo(data, name, type) {
     const linkprev = 'data:image/png;base64,' + btoa(data);
-    this.uploadlogoprev = '<img src="' + linkprev + '" width="100px">';
+    this.uploadlogoprev = linkprev;
     this.advlogo = linkprev;
     this.decryptedReportDataChanged.report_settings.report_logo.logo = this.advlogo;
     this.decryptedReportDataChanged.report_settings.report_logo.logo_name = DOMPurify.sanitize(name);
@@ -3505,7 +3505,7 @@ Date   | Description
 
   setReportProfile(profile: any) {
 
-    this.uploadlogoprev = '<img src="' + profile.logo + '" width="100px">';
+    this.uploadlogoprev = profile.logo;
     this.advlogo = profile.logo;
     this.advlogo_saved = '';
 

@@ -123,7 +123,9 @@
                 <input matInput [formControl]="logoh">
               </mat-form-field>
             </div>
-            <div class="logo-preview" [innerHTML]="uploadlogoprev"></div>
+            @if (uploadlogoprev) {
+              <img class="logo-preview" [src]="uploadlogoprev" width="100px">
+            }
             @if (advlogo) {
               <button mat-icon-button color="warn" class="tool-btn" (click)="clearlogo()" title="Remove logo">
                 <mat-icon>delete_forever</mat-icon>
