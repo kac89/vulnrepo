@@ -74,7 +74,7 @@ export class DialogAddreportprofileComponent implements OnInit {
         this.origi.push(this.data);
         this.profile_name.setValue(this.data.profile_name);
   
-        this.uploadlogoprev = '<img src="' + this.data.logo + '" width="100px">';
+        this.uploadlogoprev = this.data.logo;
         this.advlogo = this.data.logo;
   
         this.logow.setValue(this.data.logow);
@@ -122,7 +122,7 @@ export class DialogAddreportprofileComponent implements OnInit {
 
   parselogo(data) {
     const linkprev = 'data:image/png;base64,' + btoa(data);
-    this.uploadlogoprev = '<img src="' + linkprev + '" width="100px">';
+    this.uploadlogoprev = linkprev;
     this.advlogo = linkprev;
   }
 

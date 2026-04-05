@@ -1020,7 +1020,9 @@
                                             @if (advlogo_saved) {
                                               <img src="{{advlogo_saved}}" class="settings-logo-img">
                                             }
-                                            <div [innerHTML]="uploadlogoprev"></div>
+                                            @if (uploadlogoprev) {
+                                              <img [src]="uploadlogoprev" width="100px" class="settings-logo-img">
+                                            }
                                             <div class="settings-logo-controls">
                                               <button mat-icon-button color="warn" (click)="clearlogo()" title="Remove report logo" class="settings-logo-remove-btn">
                                                 <mat-icon>delete_forever</mat-icon>

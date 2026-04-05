@@ -847,12 +847,19 @@ export class SettingsComponent implements OnInit {
   parseprofile(profile) {
     const parsed = JSON.parse(profile);
 
+    const sanitizeProfileLogo = (item: any) => {
+      if (item.logo && !item.logo.startsWith('data:image/')) {
+        item.logo = '';
+      }
+      return item;
+    };
+
     if (Array.isArray(parsed)) {
       parsed.forEach((item) => {
-        this.indexeddbService.saveReportProfileinDB(item).then(ret => { });
+        this.indexeddbService.saveReportProfileinDB(sanitizeProfileLogo(item)).then(ret => { });
       });
     } else {
-      this.indexeddbService.saveReportProfileinDB(parsed).then(ret => { });
+      this.indexeddbService.saveReportProfileinDB(sanitizeProfileLogo(parsed)).then(ret => { });
     }
 
     this.getProfiles();
