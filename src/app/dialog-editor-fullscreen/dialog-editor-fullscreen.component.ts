@@ -41,7 +41,8 @@ export class DialogEditorFullscreenComponent implements OnInit {
   selectedtextarea_start: any;
   selectedtextarea_end: any;
 
-  @ViewChild('textareaEl', { static: false}) textareaElement: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('textareaEl', { static: false }) textareaElement: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('previewContentEl', { static: false }) previewContentEl: ElementRef<HTMLDivElement>;
   // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogEditorFullscreenComponent>,@Inject(MAT_DIALOG_DATA) public data: any) {}
 
@@ -139,11 +140,45 @@ export class DialogEditorFullscreenComponent implements OnInit {
         return "<div class='table-responsive'><table class='tablemd'><thead class='tablemd'><tr>" + header + "</tr></thead><tbody>" + body + "</tr></tbody></table></div>";      
     }
 
-    this.previewfield.setValue(marked.parse(value, { renderer: renderer }));
+    // Preserve multiple blank lines: each extra \n beyond 2 becomes a &nbsp; paragraph
+    const preprocessed = value.replace(/\n{3,}/g, (match: string) => {
+      const extra = match.length - 2;
+      return '\n\n' + Array(extra).fill('&nbsp;').join('\n') + '\n\n';
+    });
+
+    this.previewfield.setValue(marked.parse(preprocessed, { renderer: renderer, breaks: true }));
   }
 
   onChange(event) {
     this.poc_preview_funct(event);
+  }
+
+  private _syncingScroll = false;
+
+  onEditorScroll(event: Event): void {
+    if (this._syncingScroll) return;
+    const editor = event.target as HTMLTextAreaElement;
+    const preview = this.previewContentEl?.nativeElement;
+    if (!preview) return;
+    const scrollableHeight = editor.scrollHeight - editor.clientHeight;
+    if (scrollableHeight <= 0) return;
+    const ratio = editor.scrollTop / scrollableHeight;
+    this._syncingScroll = true;
+    preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
+    this._syncingScroll = false;
+  }
+
+  onPreviewScroll(event: Event): void {
+    if (this._syncingScroll) return;
+    const preview = event.target as HTMLDivElement;
+    const editor = this.textareaElement?.nativeElement;
+    if (!editor) return;
+    const scrollableHeight = preview.scrollHeight - preview.clientHeight;
+    if (scrollableHeight <= 0) return;
+    const ratio = preview.scrollTop / scrollableHeight;
+    this._syncingScroll = true;
+    editor.scrollTop = ratio * (editor.scrollHeight - editor.clientHeight);
+    this._syncingScroll = false;
   }
 
   onclick(event) {

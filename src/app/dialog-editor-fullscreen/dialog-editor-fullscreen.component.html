@@ -68,6 +68,7 @@
           class="code-textarea"
           (select)="select($event)"
           (click)="onclick($event)"
+          (scroll)="onEditorScroll($event)"
           cdkFocusInitial
           placeholder="Start writing…"
         ></textarea>
@@ -75,7 +76,7 @@
       <div class="pane-separator"></div>
       <div class="pane preview-pane">
         <div class="pane-label">PREVIEW</div>
-        <div class="preview-content" [innerHtml]="saniteizeme(previewfield.value)"></div>
+        <div #previewContentEl class="preview-content" (scroll)="onPreviewScroll($event)" [innerHtml]="saniteizeme(previewfield.value)"></div>
       </div>
     </div>
 
