@@ -2047,122 +2047,110 @@ Sample code here\n\
   }
 
   parserefmd(str): string {
-    const xx = str.split("\n");
-    let ar = "";
-    xx.forEach((item, index) => {
-      item = item.replace(" ", "_");
-      ar = ar + `[` + item + `](` + item + `)\n\n`;
-    });
-
-    return ar
+    if (!str?.trim()) return '';
+    return str.split("\n")
+      .filter((item: string) => item.trim().length > 0)
+      .map((item: string) => {
+        const ref = item.replace(/ /g, "_");
+        return `[${ref}](${ref})`;
+      })
+      .join("\n\n") + "\n\n";
   }
 
   DownloadMarkdown(report_info): void {
+    const data = this.decryptedReportDataChanged;
+    const settings = data.report_settings;
 
     const str = `# Security Report
-## ` + report_info.report_name + `
-##### Report Version: ` + this.decryptedReportDataChanged.report_version + `
-##### Report ID: ` + report_info.report_id;
+## ${report_info.report_name}
+#### Report Version: ${data.report_version}
+#### Report ID: ${report_info.report_id}`;
 
     let str_dates = "";
-    if (this.decryptedReportDataChanged.report_metadata.starttest !== '' && this.decryptedReportDataChanged.report_metadata.endtest !== '') {
-      const startdatestr = new Date(this.decryptedReportDataChanged.report_metadata.starttest).toLocaleDateString(this.setLocal);
-
-      const enddatestr = new Date(this.decryptedReportDataChanged.report_metadata.endtest).toLocaleDateString(this.setLocal);
-
-      str_dates = `
-##### Start date: ` + startdatestr + `
-##### End date: ` + enddatestr + `\n\n`;
+    if (data.report_metadata.starttest !== '' && data.report_metadata.endtest !== '') {
+      const startdatestr = new Date(data.report_metadata.starttest).toLocaleDateString(this.setLocal);
+      const enddatestr = new Date(data.report_metadata.endtest).toLocaleDateString(this.setLocal);
+      str_dates = `\n#### Start date: ${startdatestr}\n#### End date: ${enddatestr}\n\n`;
     }
 
-
-    const critical = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Critical');
-    });
-
-    const high = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'High');
-    });
-
-    const medium = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Medium');
-    });
-
-    const low = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Low');
-    });
-
-    const info = this.decryptedReportDataChanged.report_vulns.filter(function (el) {
-      return (el.severity === 'Info');
-    });
+    const sevCounts: Record<string, number> = { Critical: 0, High: 0, Medium: 0, Low: 0, Info: 0 };
+    data.report_vulns.forEach((v: any) => { if (sevCounts[v.severity] !== undefined) sevCounts[v.severity]++; });
 
     const vulnstats = `## Statistics\n
-Severity   | Number 
-------|--------------
-Critical | `+ critical.length + `
-High | `+ high.length + `
-Medium | `+ medium.length + `
-Low | `+ low.length + `
-Info | `+ info.length + `\n\n`;
+Severity   | Number
+-----------|-------
+Critical   | ${sevCounts.Critical}
+High       | ${sevCounts.High}
+Medium     | ${sevCounts.Medium}
+Low        | ${sevCounts.Low}
+Info       | ${sevCounts.Info}\n\n`;
 
-    const str_scope = `
-## Scope
-` + this.decryptedReportDataChanged.report_scope + `\n\n`;
+    let str_summary = '';
+    if (data.report_summary?.trim()) {
+      str_summary = `## Summary\n\n${data.report_summary}\n\n`;
+    }
+
+    const str_scope = `## Scope\n\n${data.report_scope}\n\n`;
 
     let str_issues = '## Results\n\n';
-
-    this.decryptedReportDataChanged.report_vulns.forEach((item, index) => {
-      index = index + 1;
-      str_issues = str_issues + `
-##### ` + index + `. ` + item.title + `
-###### Severity:
-` + item.severity + `
-###### Description:
-` + item.desc + `
-###### PoC:
-` + item.poc + `
-###### References:
-` + this.parserefmd(item.ref) + `\n-------------\n\n`;
+    data.report_vulns.forEach((item: any, index: number) => {
+      const num = index + 1;
+      let issue = `### ${num}. ${item.title}\n`;
+      issue += `#### Severity:\n${item.severity}\n\n`;
+      if (!settings.report_remove_issuestatus && item.status) {
+        const statusEntry = this.utilsService.issueStatustable.find((s: any) => s.value === item.status);
+        if (statusEntry?.status) issue += `#### Status:\n${statusEntry.status}\n\n`;
+      }
+      if (!settings.report_remove_issuecvss && item.cvss?.length) {
+        issue += `#### CVSS Score:\n${item.cvss}\n\n`;
+      }
+      if (item.date) {
+        issue += `#### Date Found:\n${new Date(item.date).toLocaleDateString(this.setLocal)}\n\n`;
+      }
+      issue += `#### Description:\n${item.desc}\n\n`;
+      issue += `#### PoC:\n${item.poc}\n\n`;
+      if (!settings.report_remove_issuetags && item.tags?.length) {
+        issue += `#### Tags:\n${item.tags.map((t: any) => t.name).join(', ')}\n\n`;
+      }
+      issue += `#### References:\n${this.parserefmd(item.ref)}\n---\n\n`;
+      str_issues += issue;
     });
 
     let str_researcher = '';
-    if (this.decryptedReportDataChanged.report_settings.report_remove_researchers === false) {
-      this.decryptedReportDataChanged.researcher.forEach((item, index) => {
-        str_researcher = str_researcher + `## Researcher
-  > ` + item.reportername + ` ` + item.reportersocial + `\n\n`;
+    if (settings.report_remove_researchers === false) {
+      str_researcher = '## Researchers\n\n';
+      data.researcher.forEach((item: any) => {
+        str_researcher += `> ${item.reportername} ${item.reportersocial}\n\n`;
       });
     }
 
     let str_changelog = '';
-    if (this.decryptedReportDataChanged.report_settings.report_changelog_page === false) {
-      str_changelog = `## Changelog\n
-Date   | Description 
-------|--------------\n`;
-
-      this.decryptedReportDataChanged.report_changelog.forEach((item, index) => {
-
+    if (settings.report_changelog_page === false) {
+      str_changelog = `## Changelog\n\nDate       | Description\n-----------|------------\n`;
+      data.report_changelog.forEach((item: any) => {
         const rdate = new Date(item.date).toLocaleDateString(this.setLocal);
-
-        str_changelog = str_changelog + rdate + ` | ` + item.desc + `\n`;
+        str_changelog += `${rdate} | ${item.desc}\n`;
       });
-      str_changelog = str_changelog + '\n\n';
+      str_changelog += '\n\n';
     }
 
-    let str2 = '';
-    if (this.decryptedReportDataChanged.report_settings.report_remove_lastpage === false) {
-      str2 = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
+    let str_footer = '';
+    if (settings.report_remove_lastpage === false) {
+      str_footer = `_Generated by [VULNRΞPO](https://vulnrepo.com/)_`;
     }
 
     // download MARKDOWN report
-    const blob = new Blob([str + str_dates + str_scope + vulnstats + str_issues + str_researcher + str_changelog + str2], { type: 'text/markdown' });
+    const content = str + str_dates + str_summary + str_scope + vulnstats + str_issues + str_researcher + str_changelog + str_footer;
+    const blob = new Blob([content], { type: 'text/markdown' });
     const link = document.createElement('a');
     const url = window.URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', report_info.report_name + ' ' + report_info.report_id + ' (vulnrepo.com).md');
+    link.setAttribute('download', `${report_info.report_name} ${report_info.report_id} (vulnrepo.com).md`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   }
 
   DownloadJSON(report_info): void {
