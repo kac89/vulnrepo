@@ -4,6 +4,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogPcidss4Component } from '../dialog-pcidss4/dialog-pcidss4.component';
+import DOMPurify from 'dompurify';
 
 export interface pcidssElement {
   id: string;
@@ -63,7 +64,11 @@ export class Pcidss4Component implements OnInit {
               localStorage.removeItem("pcidss4");
             }
    
-       }); 
+       });
+  }
+
+  sanitizeHtml(html: string): string {
+    return DOMPurify.sanitize(html);
   }
 
   resetselected(){

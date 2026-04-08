@@ -137,7 +137,7 @@
                     <ng-container matColumnDef="description">
                       <th mat-header-cell *matHeaderCellDef>Description</th>
                       <td mat-cell *matCellDef="let element">
-                        <div class="req-desc" [innerHTML]="element.description"></div>
+                        <div class="req-desc" [innerHTML]="sanitizeHtml(element.description)"></div>
                       </td>
                     </ng-container>
 

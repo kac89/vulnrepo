@@ -168,7 +168,7 @@ export class DialogOllamaComponent implements OnInit {
           temps += text;
 
           if (text.includes(".\n") || text.includes(". \n")) {
-            this.chatmsg[this.chatmsg.length - 1].response = marked.parse(this.chatmsg[this.chatmsg.length - 1].response, { renderer: renderer });
+            this.chatmsg[this.chatmsg.length - 1].response = DOMPurify.sanitize(marked.parse(this.chatmsg[this.chatmsg.length - 1].response, { renderer: renderer }) as string);
           }
 
           //scroll bottom
@@ -186,10 +186,13 @@ export class DialogOllamaComponent implements OnInit {
           this.chatmsg[this.chatmsg.length - 1].response_md = temps;
 
           if (temps.includes('<think>')) {
-            temps = temps.replaceAll(/<think>/g, "<details class='think'><summary>Think details</summary>").replaceAll(/<\/think>/gi, "</details><br>");
+            temps = temps.replace(/<think>([\s\S]*?)<\/think>/gi, (_, content) => {
+              const sanitizedContent = DOMPurify.sanitize(marked.parse(content, { renderer: renderer }) as string);
+              return `<details class='think'><summary>Think details</summary>${sanitizedContent}</details><br>`;
+            });
           }
 
-          this.chatmsg[this.chatmsg.length - 1].response = marked.parse(temps, { renderer: renderer });
+          this.chatmsg[this.chatmsg.length - 1].response = DOMPurify.sanitize(marked.parse(temps, { renderer: renderer }) as string);
 
           const end = millisToMinutesAndSeconds(performance.now() - start);
 
@@ -255,8 +258,9 @@ export class DialogOllamaComponent implements OnInit {
         fileReader.onload = (e) => {
 
           const res: string = fileReader.result as string;
+          const mime = fileToRead.type || 'image/png';
 
-          this.attachedIMG.push('data:image/png;base64,' + btoa(res));
+          this.attachedIMG.push('data:' + mime + ';base64,' + btoa(res));
           this.attachedIMG_b64.push(btoa(res));
 
         };

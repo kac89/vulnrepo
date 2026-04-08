@@ -75,19 +75,22 @@ export class DialogEditorFullscreenComponent implements OnInit {
       })
     );
 
+    const escapeHtml = (str: string) =>
+      str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
     const applyLineNumbers = (code: string) => {
         const lines = code.trim().split('\n');
-      
+
         const rows = lines.map((line, idx) => {
           const lineNumber = idx + 1;
-      
+
           let html = '<tr>';
     	    html += `<td class="line-number">${lineNumber}</td>`;
-          html += `<td class="code-line">${line}</td>`;
+          html += `<td class="code-line">${escapeHtml(line)}</td>`;
       	    html += '</tr>';
       	    return html;
         });
-      	
+
         return `<table><tbody>${rows.join('')}</tbody></table>`;
       };
 

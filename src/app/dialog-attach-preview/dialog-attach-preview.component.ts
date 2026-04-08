@@ -1,5 +1,6 @@
 import { Component,Inject,OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dialog-attach-preview',
@@ -16,8 +17,14 @@ export class DialogAttachPreviewComponent implements OnInit {
   allAttach:any;
   dec_data:any;
   arrsa:any = [];
+  private allowedMimeTypes = [
+    'image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp',
+    'video/mp4', 'video/webm', 'video/ogg',
+    'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm'
+  ];
+
   // @ts-ignore
-  constructor(public dialogRef: MatDialogRef<DialogAttachPreviewComponent>,@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(public dialogRef: MatDialogRef<DialogAttachPreviewComponent>,@Inject(MAT_DIALOG_DATA) public data: any, private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.defaultAttach = this.data[0];
@@ -27,6 +34,15 @@ export class DialogAttachPreviewComponent implements OnInit {
     this.defaultIndex = index;
 
     this.allAttachCount = this.allAttach.length - 1;
+  }
+
+  getSafeMediaUrl(dataUrl: string): SafeUrl | null {
+    if (!dataUrl) return null;
+    const mimeMatch = dataUrl.match(/^data:([^;,]+)/);
+    if (!mimeMatch) return null;
+    const mime = mimeMatch[1].toLowerCase();
+    if (!this.allowedMimeTypes.includes(mime)) return null;
+    return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
   }
 
   closedialog(): void {
