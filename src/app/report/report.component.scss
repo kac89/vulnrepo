@@ -1,5 +1,5 @@
 // ──────────────────────────────────────────────────────────────
-// Report Page — modern Next.js-inspired layout
+// Report Page — modern layout
 // Same design language as faq.component.scss
 // ──────────────────────────────────────────────────────────────
 
@@ -1373,7 +1373,7 @@ mat-paginator {
   line-height: 1.6;
 }
 
-// ── Issue panels (Next.js-style) ─────────────────────────────
+// ── Issue panels ─────────────────────────────
 
 .issue-panel {
   background: rgba(0, 0, 0, 0.15) !important;
@@ -1789,7 +1789,7 @@ mat-paginator {
   line-height: 1.6;
 }
 
-// ── Stats Dashboard (Next.js / Vercel style) ──────────────────
+// ── Stats ──────────────────
 $sev-critical: #FF0039;
 $sev-high:     #FF7518;
 $sev-medium:   #F9EE06;

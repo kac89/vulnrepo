@@ -443,18 +443,6 @@
                             </mat-select>
                           </mat-form-field>
                           <mat-form-field class="example-full-width" color="accent">
-                            <mat-label>Reporter</mat-label>
-                            <mat-select placeholder="Reporter" [(ngModel)]="dec_data.reporter"
-                              (ngModelChange)="doStats()">
-                              <mat-option value="">— Unassigned —</mat-option>
-                              @for (res of decryptedReportDataChanged.researcher; track res) {
-                                @if (res.reportername) {
-                                  <mat-option [value]="res.reportername">{{ res.reportername }}</mat-option>
-                                }
-                              }
-                            </mat-select>
-                          </mat-form-field>
-                          <mat-form-field class="example-full-width" color="accent">
                             <mat-label>Create issue date</mat-label>
                             <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
                               [value]="renderdateformat(dec_data.date)">
@@ -653,7 +641,7 @@
                       }
                     </mat-card-content>
                   </mat-card>
-                    <!-- Stats — Next.js / Vercel style dashboard -->
+                    <!-- Stats -->
                     @if (decryptedReportDataChanged.report_vulns.length !== 0) {
                       <div class="stats-dashboard">
 
