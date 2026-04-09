@@ -424,24 +424,34 @@
                           </div>
                         </mat-form-field>
                         <div class="issue-form-meta-col">
-                          <mat-form-field class="example-full-width" color="accent">
-                            <mat-label>Severity</mat-label>
-                            <mat-select placeholder="Severity" [(value)]="dec_data.severity" [ngModel]="dec_data.severity"
-                              (ngModelChange)="doStats()">
+                          <div class="sev-toggle-group">
+                            <span class="sev-toggle-label">Severity</span>
+                            <div class="sev-toggle-buttons">
                               @for (sev of dataSourceforseverity; track sev) {
-                                <mat-option [value]="sev.severity">{{sev.severity}}</mat-option>
+                                <button mat-stroked-button type="button"
+                                  class="sev-btn sev-{{sev.severity | lowercase}}"
+                                  [class.sev-btn-active]="dec_data.severity === sev.severity"
+                                  (click)="dec_data.severity = sev.severity; doStats()"
+                                  [title]="sev.severity">
+                                  {{sev.severity}}
+                                </button>
                               }
-                            </mat-select>
-                          </mat-form-field>
-                          <mat-form-field class="example-full-width" color="accent">
-                            <mat-label>Issue status</mat-label>
-                            <mat-select placeholder="Issue status" [(value)]="dec_data.status" [ngModel]="dec_data.status"
-                              (ngModelChange)="doStats()">
+                            </div>
+                          </div>
+                          <div class="sev-toggle-group">
+                            <span class="sev-toggle-label">Issue status</span>
+                            <div class="status-toggle-buttons">
                               @for (issuestat of issueStatus; track issuestat) {
-                                <mat-option [value]="issuestat.value">{{issuestat.status}}</mat-option>
+                                <button mat-stroked-button type="button"
+                                  class="status-btn status-{{issuestat.value}}"
+                                  [class.status-btn-active]="dec_data.status === issuestat.value"
+                                  (click)="dec_data.status = issuestat.value; doStats()"
+                                  [title]="issuestat.status">
+                                  {{issuestat.status}}
+                                </button>
                               }
-                            </mat-select>
-                          </mat-form-field>
+                            </div>
+                          </div>
                           <mat-form-field class="example-full-width" color="accent">
                             <mat-label>Create issue date</mat-label>
                             <input matInput [matDatepicker]="picker" (dateChange)="onDateChange(dec_data, $event)"
@@ -482,7 +492,16 @@
                         <div class="issue-form-col">
                           <mat-form-field appearance="outline" class="example-full-width" color="accent">
                             <mat-label>References</mat-label>
-                            <textarea [(ngModel)]="dec_data.ref" matInput rows="2"></textarea>
+                            <mat-icon matPrefix style="margin-right:6px; opacity:0.7;">link</mat-icon>
+                            <textarea
+                              [(ngModel)]="dec_data.ref"
+                              matInput
+                              cdkTextareaAutosize
+                              cdkAutosizeMinRows="3"
+                              cdkAutosizeMaxRows="8"
+                              placeholder="https://example.com/advisory&#10;https://cve.mitre.org/cgi-bin/cvename.cgi?name=..."
+                            ></textarea>
+
                           </mat-form-field>
                           <div class="issue-form-cvss-row">
                             <mat-form-field class="example-full-width" color="accent">

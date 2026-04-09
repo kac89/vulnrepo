@@ -1429,6 +1429,79 @@ mat-paginator {
   mat-form-field { width: 100%; }
 }
 
+.sev-toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+
+.sev-toggle-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  padding-left: 2px;
+  letter-spacing: 0.03em;
+}
+
+.sev-toggle-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.status-toggle-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.status-btn {
+  width: 100%;
+  font-size: 11px;
+  font-weight: 600;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 4px;
+  opacity: 0.4;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  text-align: left;
+  padding: 0 10px;
+
+  &.status-btn-active { opacity: 1; }
+
+  &.status-1 { color: #FF7518; border-color: rgba(#FF7518, 0.5);
+    &.status-btn-active { background: rgba(#FF7518, 0.12); } }
+  &.status-2 { color: #5b9cf6; border-color: rgba(#2780E3, 0.5);
+    &.status-btn-active { background: rgba(#2780E3, 0.12); } }
+  &.status-3 { color: #3FB618; border-color: rgba(#3FB618, 0.5);
+    &.status-btn-active { background: rgba(#3FB618, 0.12); } }
+}
+
+.sev-btn {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 4px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 4px;
+  opacity: 0.4;
+  transition: opacity 0.15s ease, background 0.15s ease;
+
+  &.sev-btn-active { opacity: 1; }
+
+  &.sev-critical { color: #FF0039; border-color: rgba(#FF0039, 0.5);
+    &.sev-btn-active { background: rgba(#FF0039, 0.12); } }
+  &.sev-high     { color: #FF7518; border-color: rgba(#FF7518, 0.5);
+    &.sev-btn-active { background: rgba(#FF7518, 0.12); } }
+  &.sev-medium   { color: #e8d900; border-color: rgba(#F9EE06, 0.5);
+    &.sev-btn-active { background: rgba(#F9EE06, 0.08); } }
+  &.sev-low      { color: #3FB618; border-color: rgba(#3FB618, 0.5);
+    &.sev-btn-active { background: rgba(#3FB618, 0.12); } }
+  &.sev-info     { color: #5b9cf6; border-color: rgba(#2780E3, 0.5);
+    &.sev-btn-active { background: rgba(#2780E3, 0.12); } }
+}
+
 .issue-form-detail-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1444,6 +1517,12 @@ mat-paginator {
   min-width: 0;
 
   mat-form-field { width: 100%; }
+
+  mat-form-field:first-child textarea {
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.6;
+  }
 }
 
 .issue-form-cvss-row {
