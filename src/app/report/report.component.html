@@ -431,14 +431,13 @@
                   <div class="poc-textarea-wrapper">
                     <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput
                       cdkTextareaAutosize cdkAutosizeMinRows="8" cdkAutosizeMaxRows="20"
-                      placeholder="Steps to reproduce, command output, screenshots, code snippets..."></textarea>
+                      placeholder="Steps to reproduce, command output, code snippets..."></textarea>
                     <button mat-icon-button color="accent" (click)="editorFullscreenPoC(dec_data)"
                       title="Fullscreen Text Editor" class="poc-fullscreen-btn">
                       <mat-icon>fullscreen</mat-icon>
                     </button>
                   </div>
                   <mat-hint><span class="sev-toggle-label">Supports Markdown</span></mat-hint>
-
                 </mat-form-field>
                 <div class="issue-form-meta-col">
                   <div class="sev-toggle-group">
