@@ -1421,6 +1421,25 @@ mat-paginator {
   @media (max-width: 768px) { grid-template-columns: 1fr; }
 }
 
+.poc-form-field {
+  textarea {
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+}
+
+.poc-textarea-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.poc-fullscreen-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
 .issue-form-meta-col {
   display: flex;
   flex-direction: column;
