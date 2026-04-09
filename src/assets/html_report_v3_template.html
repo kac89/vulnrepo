@@ -1533,8 +1533,8 @@
 			const renderer = new marked.Renderer();
 
 			renderer.code = function (token) {
-				const langClass = token.lang ? 'hljs language-' + token.lang : 'hljs';
-				return '<pre><code class="' + langClass + '">' + token.text + '</code></pre>';
+				const langClass = token.lang ? 'hljs language-' + escapeAttr(token.lang) : 'hljs';
+				return '<pre><code class="' + langClass + '">' + DOMPurify.sanitize(token.text) + '</code></pre>';
 			};
 
 			renderer.blockquote = function (token) {
@@ -1583,10 +1583,15 @@
 
 			/* logo */
 			if (obj.report_settings.report_logo.logo !== "") {
-				if (obj.report_settings.report_logo.width !== "" || obj.report_settings.report_logo.height !== "") {
-					$(".logo").prepend('<img width="' + DOMPurify.sanitize(obj.report_settings.report_logo.width) + '" height="' + DOMPurify.sanitize(obj.report_settings.report_logo.height) + '" src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
-				} else {
-					$(".logo").prepend('<img src="' + DOMPurify.sanitize(obj.report_settings.report_logo.logo) + '" />');
+				var logoSrc = obj.report_settings.report_logo.logo;
+				var logoProt = '';
+				try { logoProt = decodeURIComponent(unescape(logoSrc)).replace(/[^\w:]/g, '').toLowerCase(); } catch (e) {}
+				if (logoProt.indexOf('javascript:') !== 0 && logoProt.indexOf('vbscript:') !== 0) {
+					if (obj.report_settings.report_logo.width !== "" || obj.report_settings.report_logo.height !== "") {
+						$(".logo").prepend('<img width="' + escapeAttr(obj.report_settings.report_logo.width) + '" height="' + escapeAttr(obj.report_settings.report_logo.height) + '" src="' + escapeAttr(logoSrc) + '" />');
+					} else {
+						$(".logo").prepend('<img src="' + escapeAttr(logoSrc) + '" />');
+					}
 				}
 			}
 
@@ -1634,7 +1639,7 @@
 				if (hasUrls) {
 					const listItems = scopeLines.map(function(line) {
 						if (urlPattern.test(line)) {
-							const safeUrl = DOMPurify.sanitize(line);
+							const safeUrl = escapeAttr(line);
 							const safeText = DOMPurify.sanitize(line);
 							return '<li>' + linkIcon + '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' + safeText + '</a>' + inScopeLabel + '</li>';
 						}
