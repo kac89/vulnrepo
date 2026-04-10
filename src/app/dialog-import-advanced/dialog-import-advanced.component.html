@@ -1,0 +1,430 @@
+<div class="adia-shell">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <div class="adia-header">
+    <div class="adia-header-left">
+      @if (mode === 'wizard') {
+        <button mat-icon-button class="hdr-btn back-btn" (click)="backToTiles()" title="Back to sources">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      }
+      <div class="adia-avatar">
+        <mat-icon class="avatar-icon">{{ mode === 'wizard' ? 'auto_fix_high' : 'import_export' }}</mat-icon>
+      </div>
+      <div class="adia-header-text">
+        <span class="adia-title">{{ mode === 'wizard' ? 'Custom Import Wizard' : 'Advanced Import' }}</span>
+        <span class="adia-subtitle">{{ mode === 'wizard' ? 'Map any JSON, XML or CSV to issue fields' : 'Select a source or build a custom mapping' }}</span>
+      </div>
+    </div>
+    <div class="adia-header-right">
+      <button mat-icon-button class="hdr-btn close-btn" (click)="cancel()" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── TILE MODE ─────────────────────────────────────────────────────── -->
+  @if (mode === 'tiles') {
+    <div class="adia-body tiles-body">
+
+      <p class="section-label">Import from tool</p>
+
+      <div class="tile-grid">
+        @for (src of sources; track src.value) {
+          <button class="source-tile" (click)="selectExistingSource(src.value)" [title]="src.viewValue">
+            <img [src]="src.viewImg" [alt]="src.viewValue" class="tile-img">
+            <span class="tile-name">{{ src.viewValue }}</span>
+            <span class="tile-fmt">{{ src.format }}</span>
+          </button>
+        }
+      </div>
+
+      <div class="tiles-divider">
+        <span class="divider-label">or</span>
+      </div>
+
+      <!-- Custom Wizard button -->
+      <button class="custom-tile" (click)="openWizard()">
+        <mat-icon class="custom-tile-icon">auto_fix_high</mat-icon>
+        <div class="custom-tile-text">
+          <span class="custom-tile-title">Custom Import Wizard</span>
+          <span class="custom-tile-sub">Map any JSON, XML or CSV file to issue fields using a template language</span>
+        </div>
+        <mat-icon class="custom-tile-arrow">chevron_right</mat-icon>
+      </button>
+
+      <!-- ── Saved Vectors ─────────────────────────────────────────────── -->
+      @if (savedVectors.length > 0 || vectorsLoading) {
+        <div class="tiles-divider">
+          <span class="divider-label">saved vectors</span>
+        </div>
+
+        <!-- Vector tiles -->
+        <div class="vector-grid">
+          @if (vectorsLoading) {
+            <div class="vector-loading">
+              <mat-icon class="spin-icon">sync</mat-icon> Loading vectors…
+            </div>
+          }
+          @for (v of savedVectors; track v.id) {
+            <div class="vector-tile">
+              <div class="vector-tile-header">
+                <span class="vector-fmt-badge fmt-{{ v.format }}">{{ v.format | uppercase }}</span>
+                <span class="vector-name">{{ v.name }}</span>
+                <button class="icon-danger-btn" (click)="deleteVector(v.id)" title="Delete vector">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </div>
+
+              <div class="vector-meta">
+                <span class="vector-meta-item">
+                  <mat-icon class="vm-icon">route</mat-icon>
+                  {{ v.itemsPath || '$' }}
+                </span>
+                <span class="vector-meta-item">
+                  <mat-icon class="vm-icon">tune</mat-icon>
+                  {{ vectorFieldCount(v) }} field{{ vectorFieldCount(v) !== 1 ? 's' : '' }} mapped
+                </span>
+              </div>
+
+              <!-- Quick apply upload -->
+              <div class="vector-upload-row">
+                @if (!vectorQuickFile[v.id]) {
+                  <div class="upload-zone upload-zone-xs">
+                    <mat-icon class="upload-icon">upload_file</mat-icon>
+                    <span class="upload-label">Upload {{ v.format | uppercase }} to apply</span>
+                    <input type="file"
+                      [accept]="v.format === 'csv' ? '.csv' : v.format === 'xml' ? '.xml,.nessus' : '.json'"
+                      (change)="onVectorFileSelected($event, v.id)"
+                      class="file-input">
+                  </div>
+                } @else {
+                  <div class="vector-ready">
+                    <mat-icon class="vr-icon">insert_drive_file</mat-icon>
+                    <span class="vr-name">{{ vectorQuickFile[v.id]!.name }}</span>
+                    <button class="ghost-btn sm-btn" (click)="applyVectorImport(v)" [disabled]="vectorQuickLoading[v.id]">
+                      @if (vectorQuickLoading[v.id]) {
+                        <mat-icon class="spin-icon">sync</mat-icon>
+                      } @else {
+                        <mat-icon>play_arrow</mat-icon>
+                      }
+                      Import
+                    </button>
+                    <button class="ghost-btn sm-btn" (click)="vectorQuickFile[v.id] = null">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                }
+                @if (vectorQuickError[v.id]) {
+                  <div class="error-banner error-banner-sm">
+                    <mat-icon class="error-icon">error_outline</mat-icon>
+                    {{ vectorQuickError[v.id] }}
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- ── WIZARD MODE ───────────────────────────────────────────────────── -->
+  @if (mode === 'wizard') {
+    <div class="adia-body wizard-body">
+
+      <mat-stepper #stepper linear class="wizard-stepper" [orientation]="'horizontal'">
+
+        <!-- ─ Step 1: Upload ─────────────────────────────────────────── -->
+        <mat-step label="Upload">
+          <div class="step-content">
+
+            <p class="step-desc">Choose file format and upload your file. The wizard will parse it and detect the data structure.</p>
+
+            <!-- Format selector -->
+            <div class="format-row">
+              <button class="fmt-btn" [class.fmt-active]="wizardFormat === 'json'" (click)="wizardFormat = 'json'; uploadedFile = null">
+                <mat-icon>data_object</mat-icon> JSON
+              </button>
+              <button class="fmt-btn" [class.fmt-active]="wizardFormat === 'xml'" (click)="wizardFormat = 'xml'; uploadedFile = null">
+                <mat-icon>code</mat-icon> XML
+              </button>
+              <button class="fmt-btn" [class.fmt-active]="wizardFormat === 'csv'" (click)="wizardFormat = 'csv'; uploadedFile = null">
+                <mat-icon>table_rows</mat-icon> CSV
+              </button>
+            </div>
+
+            <!-- Drop zone -->
+            <div class="upload-zone">
+              <mat-icon class="upload-icon">upload_file</mat-icon>
+              <span class="upload-label">
+                {{ uploadedFile ? uploadedFile.name : 'Select .' + wizardFormat + ' file' }}
+              </span>
+              @if (uploadedFile) {
+                <span class="upload-size">{{ (uploadedFile.size / 1024).toFixed(1) }} KB</span>
+              }
+              <input type="file" [accept]="wizardFormat === 'csv' ? '.csv' : '.' + wizardFormat" (change)="onFileSelected($event)" class="file-input">
+            </div>
+
+            @if (parseError) {
+              <div class="error-banner">
+                <mat-icon class="error-icon">error_outline</mat-icon>
+                {{ parseError }}
+              </div>
+            }
+
+            <div class="step-actions">
+              <button class="primary-btn" [disabled]="!uploadedFile || isLoading" (click)="parseUploadedFile()">
+                @if (isLoading) {
+                  <mat-icon class="spin-icon">sync</mat-icon> Parsing…
+                } @else {
+                  <mat-icon>arrow_forward</mat-icon> Parse &amp; Continue
+                }
+              </button>
+            </div>
+
+          </div>
+        </mat-step>
+
+        <!-- ─ Step 2: Structure ──────────────────────────────────────── -->
+        <mat-step label="Structure">
+          <div class="step-content">
+
+            <p class="step-desc">
+              The wizard found <strong>{{ records.length }}</strong> record(s).
+              Select the path that points to the array of items to import.
+            </p>
+
+            @if (detectedArrayPaths.length > 0) {
+              <div class="field-group">
+                <label class="field-label">Detected array paths</label>
+                <div class="path-chip-row">
+                  @for (p of detectedArrayPaths; track p) {
+                    <button class="path-chip" [class.path-chip-active]="itemsPath === p" (click)="applyItemsPath(p)">
+                      {{ p === '$' ? '$ (root array)' : p }}
+                      <span class="path-chip-count">
+                        @if (p === '$') { {{ parsedRaw?.length }} }
+                        @else { {{ resolvePath(parsedRaw, p)?.length ?? 0 }} }
+                      </span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
+            <div class="field-group">
+              <label class="field-label">Items path <span class="field-hint">(dot notation, e.g. <code>results.items</code>)</span></label>
+              <div class="path-input-row">
+                <input class="path-input" [(ngModel)]="itemsPath" placeholder="e.g. vulnerabilities or $" />
+                <button class="ghost-btn sm-btn" (click)="applyItemsPath(itemsPath)">Apply</button>
+              </div>
+              @if (records.length > 0) {
+                <span class="path-result-info">→ {{ records.length }} record(s) loaded · {{ availableKeys.length }} fields detected</span>
+              }
+            </div>
+
+            @if (availableKeys.length > 0) {
+              <div class="field-group">
+                <label class="field-label">Available fields in record</label>
+                <div class="key-chip-row">
+                  @for (k of availableKeys; track k) {
+                    <span class="key-chip"><code>{{ k }}</code></span>
+                  }
+                </div>
+              </div>
+            }
+
+            <details class="structure-preview">
+              <summary class="structure-toggle">Raw structure preview</summary>
+              <pre class="structure-pre">{{ structurePreview }}</pre>
+            </details>
+
+            <div class="step-actions">
+              <button class="ghost-btn" matStepperPrevious>Back</button>
+              <button class="primary-btn" [disabled]="records.length === 0" (click)="goToMapping()">
+                <mat-icon>arrow_forward</mat-icon> Configure mapping
+              </button>
+            </div>
+
+          </div>
+        </mat-step>
+
+        <!-- ─ Step 3: Mapping ────────────────────────────────────────── -->
+        <mat-step label="Mapping">
+          <div class="step-content">
+
+            <p class="step-desc">
+              Define how source fields map to output fields. Type <code ngNonBindable>{{</code> to trigger key suggestions.
+              Combine fields with literal text and apply filters using <code>|</code>.
+            </p>
+
+            <div class="mapping-grid">
+              @for (field of outputFields; track field.key) {
+                <div class="mapping-row">
+                  <div class="mapping-label-col">
+                    <span class="mapping-label">{{ field.label }}</span>
+                    @if (field.required) { <span class="required-badge">required</span> }
+                    <span class="mapping-hint">{{ field.hint }}</span>
+                  </div>
+                  <div class="mapping-input-col">
+                    <div class="autocomplete-wrap">
+                      <input
+                        class="mapping-input"
+                        [(ngModel)]="fieldMappings[field.key]"
+                        (input)="onMappingInput(field.key)"
+                        (blur)="dismissSuggestions(field.key)"
+                        [placeholder]="field.placeholder"
+                        autocomplete="off"
+                      />
+                      @if (showSuggestions[field.key]) {
+                        <div class="suggest-dropdown">
+                          @for (k of activeSuggestions[field.key]; track k) {
+                            <button class="suggest-item" (mousedown)="insertSuggestion(field.key, k)">
+                              <code>{{ k }}</code>
+                            </button>
+                          }
+                        </div>
+                      }
+                    </div>
+                    @if (getLivePreview(field.key)) {
+                      <span class="live-preview">→ {{ getLivePreview(field.key) }}</span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="step-actions">
+              <button class="ghost-btn" matStepperPrevious>Back</button>
+              <button class="primary-btn" [disabled]="!fieldMappings['title']" (click)="buildPreview()">
+                <mat-icon>preview</mat-icon> Preview results
+              </button>
+            </div>
+
+            <!-- Language reference -->
+            <details class="lang-ref">
+              <summary class="lang-ref-toggle">Template language reference</summary>
+              <div class="lang-ref-body" ngNonBindable>
+                <p class="lang-ref-intro">Use these expressions to extract and transform values from your file:</p>
+                <table class="lang-table">
+                  <thead><tr><th>Expression</th><th>Result</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>{{fieldName}}</code></td><td>Value of <em>fieldName</em> in the record</td></tr>
+                    <tr><td><code>{{parent.child}}</code></td><td>Nested field access</td></tr>
+                    <tr><td><code>{{items[0]}}</code></td><td>First element of an array</td></tr>
+                    <tr><td><code>{{a}} — {{b}}</code></td><td>Concatenation with literal text</td></tr>
+                    <tr><td><code>{{f | upper}}</code></td><td>Uppercase</td></tr>
+                    <tr><td><code>{{f | lower}}</code></td><td>Lowercase</td></tr>
+                    <tr><td><code>{{f | trim}}</code></td><td>Strip whitespace</td></tr>
+                    <tr><td><code>{{f | default:N/A}}</code></td><td>Fallback when empty</td></tr>
+                    <tr><td><code>{{f | prefix:CVE-}}</code></td><td>Prepend text</td></tr>
+                    <tr><td><code>{{f | suffix: (fixed)}}</code></td><td>Append text</td></tr>
+                    <tr><td><code>{{f | replace:old:new}}</code></td><td>String replace</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+
+          </div>
+        </mat-step>
+
+        <!-- ─ Step 4: Preview, Vector & Import ──────────────────────── -->
+        <mat-step label="Import">
+          <div class="step-content">
+
+            <p class="step-desc">
+              Preview of first {{ previewItems.length }} record(s) out of <strong>{{ records.length }}</strong> total.
+              Save the configuration as a <em>vector</em> to reuse it later, then import.
+            </p>
+
+            <!-- Preview cards -->
+            <div class="preview-list">
+              @for (item of previewItems; track $index) {
+                <div class="preview-card">
+                  <div class="preview-card-header">
+                    <span class="preview-idx">#{{ $index + 1 }}</span>
+                    <span class="preview-title">{{ item.title || '(no title)' }}</span>
+                    <span class="preview-severity sev-{{ item.severity | lowercase }}">{{ item.severity }}</span>
+                  </div>
+                  <div class="preview-fields">
+                    @if (item.desc) {
+                      <div class="preview-field"><span class="pf-key">desc</span><span class="pf-val">{{ item.desc | slice:0:120 }}{{ item.desc.length > 120 ? '…' : '' }}</span></div>
+                    }
+                    @if (item.cvss) {
+                      <div class="preview-field"><span class="pf-key">cvss</span><span class="pf-val">{{ item.cvss }}</span></div>
+                    }
+                    @if (item.cve) {
+                      <div class="preview-field"><span class="pf-key">cve</span><span class="pf-val">{{ item.cve }}</span></div>
+                    }
+                    @if (item.ref) {
+                      <div class="preview-field"><span class="pf-key">ref</span><span class="pf-val">{{ item.ref | slice:0:80 }}{{ item.ref.length > 80 ? '…' : '' }}</span></div>
+                    }
+                    <div class="preview-field">
+                      <span class="pf-key">tags</span>
+                      <span class="pf-val">
+                        @for (t of item.tags; track t.name) {
+                          <span class="tag-badge">{{ t.name }}</span>
+                        }
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- ── Vector block ──────────────────────────────────────── -->
+            <div class="vector-block">
+              <div class="vector-block-header">
+                <mat-icon class="vb-icon">schema</mat-icon>
+                <span class="vb-title">Vector configuration</span>
+                <span class="vb-sub">{{ wizardFormat | uppercase }} · {{ itemsPath || '$' }} · {{ (outputFields | slice:0:9).length }} fields</span>
+              </div>
+
+              <pre class="vector-pre">{{ vectorConfig }}</pre>
+
+              @if (!vectorSaved) {
+                <div class="vector-save-row">
+                  <input
+                    class="path-input vector-name-input"
+                    [(ngModel)]="vectorName"
+                    placeholder="Name this vector, e.g. My Burp Custom…"
+                    maxlength="64"
+                  />
+                  <button class="primary-btn" [disabled]="!vectorName.trim() || vectorSaving" (click)="saveVector()">
+                    @if (vectorSaving) {
+                      <mat-icon class="spin-icon">sync</mat-icon> Saving…
+                    } @else {
+                      <mat-icon>save</mat-icon> Save vector
+                    }
+                  </button>
+                </div>
+                @if (vectorSaveError) {
+                  <div class="error-banner">
+                    <mat-icon class="error-icon">error_outline</mat-icon>
+                    {{ vectorSaveError }}
+                  </div>
+                }
+              } @else {
+                <div class="vector-saved-banner">
+                  <mat-icon>check_circle</mat-icon>
+                  Vector saved — it will appear on the import screen for reuse.
+                </div>
+              }
+            </div>
+
+            <div class="step-actions">
+              <button class="ghost-btn" matStepperPrevious>Back</button>
+              <button class="primary-btn import-btn" (click)="doImport()">
+                <mat-icon>file_upload</mat-icon> Import all {{ records.length }} records
+              </button>
+            </div>
+
+          </div>
+        </mat-step>
+
+      </mat-stepper>
+    </div>
+  }
+
+</div>

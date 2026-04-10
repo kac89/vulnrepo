@@ -9,6 +9,7 @@ import { Subscription, of, concatMap, Observable } from 'rxjs';
 import { MessageService } from '../message.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DialogImportComponent } from '../dialog-import/dialog-import.component';
+import { DialogImportAdvancedComponent } from '../dialog-import-advanced/dialog-import-advanced.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -1195,30 +1196,42 @@ Sample code here\n\
   }
 
   import_issues() {
-    console.log('Import issues');
-    const dialogRef = this.dialog.open(DialogImportComponent, {
-      width: '500px'
+    const advRef = this.dialog.open(DialogImportAdvancedComponent, {
+      width: '800px',
+      maxWidth: '95vw'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    advRef.afterClosed().subscribe(result => {
+      if (result === undefined) return;
 
-      if (result !== undefined) {
-        result.forEach(eachObj => {
-
-          if (eachObj.title !== '' && eachObj.title !== undefined && eachObj.cvss !== 'Active') {
-            this.decryptedReportDataChanged.report_vulns.push(eachObj);
-            this.addtochangelog('Create issue: ' + eachObj.title);
-            this.afterDetectionNow();
-          }
-
+      // User selected a standard source tile → open the classic dialog pre-set to that source
+      if (result?.delegateTo) {
+        const stdRef = this.dialog.open(DialogImportComponent, {
+          width: '500px',
+          data: { selected_source: result.delegateTo }
         });
-
-        this.doStats();
+        stdRef.afterClosed().subscribe(stdResult => {
+          if (stdResult !== undefined) {
+            this.applyImportResult(stdResult);
+          }
+        });
+        return;
       }
 
+      // Wizard produced records directly
+      this.applyImportResult(result);
     });
+  }
 
+  private applyImportResult(result: any[]) {
+    result.forEach(eachObj => {
+      if (eachObj.title !== '' && eachObj.title !== undefined && eachObj.cvss !== 'Active') {
+        this.decryptedReportDataChanged.report_vulns.push(eachObj);
+        this.addtochangelog('Create issue: ' + eachObj.title);
+        this.afterDetectionNow();
+      }
+    });
+    this.doStats();
   }
 
 
