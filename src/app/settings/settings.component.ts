@@ -15,6 +15,7 @@ import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/
 import {OllamaServiceService} from '../ollama-service.service';
 import { UntypedFormControl } from '@angular/forms';
 import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
+import { ImportVectorService, ImportVector } from '../import-vector.service';
 
 export interface ApiList {
   apikey: string;
@@ -78,6 +79,12 @@ export class SettingsComponent implements OnInit {
   reportProfileList:any = [];
   reportTemplateList:any = [];
   reportProfileList_int:any = [];
+
+  // ── Import vectors ──────────────────────────────────────────────────────────
+  vectorList: ImportVector[] = [];
+  selectedVectorIds = new Set<string>();
+  vectorsLoading = false;
+  vectorRestoreError = '';
   reportTemplateList_int:any = [];
   ReportProfilesdisplayedColumns: string[] = ['source', 'profile_name', 'profile_settings'];
   ReportProfilesdataSource = new MatTableDataSource<any>([]);
@@ -93,12 +100,14 @@ export class SettingsComponent implements OnInit {
 
 
   constructor(public router: Router, private indexeddbService: IndexeddbService, private apiService: ApiService,
-    public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService,private ollamaService: OllamaServiceService) { }
+    public dialog: MatDialog, public sessionsub: SessionstorageserviceService, private currentdateService: CurrentdateService,
+    private ollamaService: OllamaServiceService, public vectorService: ImportVectorService) { }
 
 
   ngOnInit() {
 
     this.getVault();
+    this.loadVectors();
 
     this.indexeddbService.getkeybyAiintegration().then(ret => {
       
@@ -1066,11 +1075,97 @@ export class SettingsComponent implements OnInit {
       disableClose: false,
       data: []
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       console.log('The AI-Settings dialog was closed');
     });
   }
 
+  // ── Import vectors ──────────────────────────────────────────────────────────
+
+  async loadVectors() {
+    this.vectorsLoading = true;
+    try {
+      this.vectorList = await this.vectorService.getAll();
+      this.vectorList.sort((a, b) => b.createdAt - a.createdAt);
+      // Remove stale selections
+      this.selectedVectorIds.forEach(id => {
+        if (!this.vectorList.find(v => v.id === id)) this.selectedVectorIds.delete(id);
+      });
+    } catch { /* silent */ }
+    finally { this.vectorsLoading = false; }
+  }
+
+  toggleVectorSelection(id: string) {
+    if (this.selectedVectorIds.has(id)) this.selectedVectorIds.delete(id);
+    else this.selectedVectorIds.add(id);
+  }
+
+  allVectorsSelected(): boolean {
+    return this.vectorList.length > 0 && this.selectedVectorIds.size === this.vectorList.length;
+  }
+
+  toggleSelectAllVectors() {
+    if (this.allVectorsSelected()) {
+      this.selectedVectorIds.clear();
+    } else {
+      this.vectorList.forEach(v => this.selectedVectorIds.add(v.id));
+    }
+  }
+
+  async deleteSingleVector(id: string) {
+    await this.vectorService.delete(id);
+    await this.loadVectors();
+  }
+
+  async deleteSelectedVectors() {
+    for (const id of Array.from(this.selectedVectorIds)) {
+      await this.vectorService.delete(id);
+    }
+    this.selectedVectorIds.clear();
+    await this.loadVectors();
+  }
+
+  backupVectors() {
+    const data = JSON.stringify(this.vectorList, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `vulnrepo-vectors-${new Date().toISOString().slice(0, 10)}.vulnrepo-vectors`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async restoreVectors(input: HTMLInputElement) {
+    this.vectorRestoreError = '';
+    const file = input.files?.[0];
+    if (!file) return;
+    try {
+      const text: string = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result as string);
+        r.onerror = () => rej(r.error);
+        r.readAsText(file, 'UTF-8');
+      });
+      const parsed: ImportVector[] = JSON.parse(text);
+      if (!Array.isArray(parsed)) throw new Error('Invalid backup file format.');
+      for (const v of parsed) {
+        if (!v.name || !v.format || !v.fieldMappings) continue;
+        await this.vectorService.save({
+          name:          v.name,
+          format:        v.format,
+          itemsPath:     v.itemsPath ?? '',
+          fieldMappings: v.fieldMappings,
+          sampleKeys:    v.sampleKeys ?? [],
+        });
+      }
+      await this.loadVectors();
+    } catch (e: any) {
+      this.vectorRestoreError = 'Restore failed: ' + (e?.message ?? String(e));
+    } finally {
+      input.value = '';
+    }
+  }
 
 }

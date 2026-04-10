@@ -93,6 +93,8 @@ import { DialogMergeIssuesComponent } from './dialog-merge-issues/dialog-merge-i
 import { DialogReportHistoryComponent } from './dialog-report-history/dialog-report-history.component';
 import { DialogSpinnerComponent } from './dialog-spinner/dialog-spinner.component';
 import { BbListComponent } from './bb-list/bb-list.component';
+import { DialogImportAdvancedComponent } from './dialog-import-advanced/dialog-import-advanced.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -138,7 +140,8 @@ import { BbListComponent } from './bb-list/bb-list.component';
         DialogMergeIssuesComponent,
         DialogReportHistoryComponent,
         BbListComponent,
-        DialogSpinnerComponent
+        DialogSpinnerComponent,
+        DialogImportAdvancedComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,
@@ -179,6 +182,7 @@ import { BbListComponent } from './bb-list/bb-list.component';
         ClipboardModule,
         MatTooltipModule,
         MatSliderModule,
+        MatStepperModule,
         CdkAccordionModule], providers: [MessageService, IndexeddbService, DatePipe, provideHttpClient(withInterceptorsFromDi())] })
 
 export class AppModule {

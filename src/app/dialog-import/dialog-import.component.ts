@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject, Optional } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import * as xml2js from 'xml2js';
 import * as Crypto from 'crypto-js';
@@ -90,11 +90,19 @@ export class DialogImportComponent implements OnInit {
     { value: 'codesight', viewValue: 'BlackDuck Code Sight (.JSON)', viewImg: '/assets/vendors/bd.png' }
   ];
 
-  constructor(public dialogRef: MatDialogRef<DialogImportComponent>, public datePipe: DatePipe,
-    private currentdateService: CurrentdateService, private utilsService: UtilsService) { }
+  constructor(
+    public dialogRef: MatDialogRef<DialogImportComponent>,
+    public datePipe: DatePipe,
+    private currentdateService: CurrentdateService,
+    private utilsService: UtilsService,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit() {
     this.mergeperpath.setValue(true);
+    if (this.data?.selected_source) {
+      this.selected_source = this.data.selected_source;
+    }
   }
 
   //onFileLoad(fileLoadedEvent) {}

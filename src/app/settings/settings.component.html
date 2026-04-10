@@ -334,6 +334,132 @@
         </div>
       </div>
 
+      <!-- Import Vectors -->
+      <div class="settings-section">
+        <div class="section-header">
+          <div class="section-header-icon-wrap">
+            <mat-icon class="section-icon">schema</mat-icon>
+          </div>
+          <div class="section-header-text">
+            <span class="section-title">Import Vectors</span>
+            <span class="section-subtitle">Reusable field-mapping configurations for the Custom Import Wizard</span>
+          </div>
+        </div>
+        <div class="section-body">
+
+          @if (vectorsLoading) {
+            <div class="empty-state">
+              <mat-icon>sync</mat-icon>
+              <span>Loading…</span>
+            </div>
+          }
+
+          @if (!vectorsLoading && vectorList.length === 0) {
+            <div class="empty-state">
+              <mat-icon>sentiment_dissatisfied</mat-icon>
+              <span>No import vectors saved yet</span>
+            </div>
+          }
+
+          @if (vectorList.length > 0) {
+            <div class="data-table-wrap">
+              <table mat-table style="width:100%;" [dataSource]="vectorList">
+
+                <!-- Checkbox -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox color="accent"
+                      [checked]="allVectorsSelected()"
+                      [indeterminate]="selectedVectorIds.size > 0 && !allVectorsSelected()"
+                      (change)="toggleSelectAllVectors()">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let v">
+                    <mat-checkbox color="accent"
+                      [checked]="selectedVectorIds.has(v.id)"
+                      (change)="toggleVectorSelection(v.id)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- Format -->
+                <ng-container matColumnDef="format">
+                  <th mat-header-cell *matHeaderCellDef>Format</th>
+                  <td mat-cell *matCellDef="let v">
+                    <span class="vector-fmt-chip vector-fmt-{{ v.format }}">{{ v.format | uppercase }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- Name -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let v">{{ v.name }}</td>
+                </ng-container>
+
+                <!-- Items path -->
+                <ng-container matColumnDef="path">
+                  <th mat-header-cell *matHeaderCellDef>Items path</th>
+                  <td mat-cell *matCellDef="let v">
+                    <code class="vector-path-code">{{ v.itemsPath || '$' }}</code>
+                  </td>
+                </ng-container>
+
+                <!-- Fields mapped -->
+                <ng-container matColumnDef="fields">
+                  <th mat-header-cell *matHeaderCellDef>Fields</th>
+                  <td mat-cell *matCellDef="let v">
+                    {{ (v.fieldMappings | keyvalue)?.length }} mapped
+                  </td>
+                </ng-container>
+
+                <!-- Delete -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let v">
+                    <a [routerLink]="[]" (click)="deleteSingleVector(v.id)" title="Remove">
+                      <mat-icon color="warn" class="vertical-align-middle">delete_forever</mat-icon>
+                    </a>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['select','format','name','path','fields','actions']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['select','format','name','path','fields','actions'];"></tr>
+              </table>
+            </div>
+          }
+
+          @if (vectorRestoreError) {
+            <div class="section-error-row">
+              <mat-icon color="warn">error_outline</mat-icon>
+              {{ vectorRestoreError }}
+            </div>
+          }
+
+          <div class="action-row action-row--spaced">
+            <div>
+              @if (selectedVectorIds.size > 0) {
+                <button mat-flat-button color="warn" (click)="deleteSelectedVectors()">
+                  <mat-icon>delete</mat-icon> Delete selected ({{ selectedVectorIds.size }})
+                </button>
+              }
+            </div>
+            <div class="action-row-end">
+              <button mat-stroked-button (click)="vectorsBackupInput.click()">
+                <mat-icon>playlist_add</mat-icon> Restore
+              </button>
+              <input hidden type="file" accept=".vulnrepo-vectors" #vectorsBackupInput
+                (change)="restoreVectors(vectorsBackupInput)" />
+              @if (vectorList.length > 0) {
+                <button mat-flat-button color="primary" (click)="backupVectors()">
+                  <mat-icon>file_download</mat-icon> Backup vectors
+                </button>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- API Vault -->
       <div class="settings-section">
         <div class="section-header">
