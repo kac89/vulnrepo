@@ -214,9 +214,9 @@
             }
 
             <div class="field-group">
-              <label class="field-label">Items path <span class="field-hint">(dot notation, e.g. <code>results.items</code>)</span></label>
+              <label class="field-label">Items path <span class="field-hint">(dot notation, e.g. <code>results.items</code> — use <code>$</code> for root array/object)</span></label>
               <div class="path-input-row">
-                <input class="path-input" [(ngModel)]="itemsPath" placeholder="e.g. vulnerabilities or $" />
+                <input class="path-input" [(ngModel)]="itemsPath" placeholder="e.g. vulnerabilities or $ for root" />
                 <button class="ghost-btn sm-btn" (click)="applyItemsPath(itemsPath)">Apply</button>
               </div>
               @if (records.length > 0) {

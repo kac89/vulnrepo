@@ -403,7 +403,13 @@ export class DialogImportAdvancedComponent implements OnInit {
   applyItemsPath(path: string) {
     this.itemsPath = path;
     if (path === '$') {
-      this.records = Array.isArray(this.parsedRaw) ? this.parsedRaw : [];
+      if (Array.isArray(this.parsedRaw)) {
+        this.records = this.parsedRaw;
+      } else if (this.parsedRaw && typeof this.parsedRaw === 'object') {
+        this.records = [this.parsedRaw];
+      } else {
+        this.records = [];
+      }
     } else {
       const val = this.resolvePath(this.parsedRaw, path);
       this.records = Array.isArray(val) ? val : (val ? [val] : []);
