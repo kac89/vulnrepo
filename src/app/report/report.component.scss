@@ -1571,8 +1571,99 @@ mat-paginator {
 
 .issue-bounty-search { flex-shrink: 0; }
 
+.attach-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 4px;
+
+  .attach-divider {
+    flex: 1;
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 0;
+  }
+
+  .attach-section-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.4;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
 .issue-form-files-row {
   padding-bottom: 4px;
+}
+
+.attach-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+
+  .attach-type-icon {
+    opacity: 0.4;
+    flex-shrink: 0;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .attach-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .attach-title-link {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 0;
+    min-width: 0;
+    width: fit-content;
+    max-width: 100%;
+    line-height: 1.4;
+    color: var(--accent-color, #69f0ae);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .attach-title-plain {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .attach-meta {
+    font-size: 11px;
+    opacity: 0.5;
+  }
+
+  .attach-actions {
+    display: flex;
+    flex-shrink: 0;
+  }
 }
 
 // Slim action strip (replaces mat-action-row FABs)

@@ -310,6 +310,16 @@ pre.hljs code {
   background-color: #000 !important;
 }
 
+.attach-title-link .mdc-button__label {
+  display: block;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.attach-title-link .mat-mdc-button-touch-target {
+  width: 100%;
+}
+
 .tablemd {
   width: 100%;
   border: 0px;
