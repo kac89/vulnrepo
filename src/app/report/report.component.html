@@ -427,7 +427,6 @@
               <div class="issue-form-main-grid">
                 <mat-form-field appearance="outline" class="example-full-width poc-form-field" color="accent">
                   <mat-label>Proof of Concept</mat-label>
-                  <mat-icon matPrefix style="margin-right:6px; opacity:0.7;">terminal</mat-icon>
                   <div class="poc-textarea-wrapper">
                     <textarea #textareaheight [(ngModel)]="dec_data.poc" (change)="changePoC(dec_data)" matInput
                       cdkTextareaAutosize cdkAutosizeMinRows="8" cdkAutosizeMaxRows="20"
@@ -553,28 +552,36 @@
               </div>
               <!-- Row 3: Attachments -->
               @if (dec_data.files.length > 0) {
+              <div class="attach-section-header">
+                
+                <span class="attach-section-label">
+                  <mat-icon>attach_file</mat-icon>Attachments
+                </span>
+                <hr class="attach-divider">
+              </div>
               <div class="issue-form-files-row">
                 @for (key of dec_data.files; track key) {
-                <mat-list>
-                  <mat-list-item class="mat-elevation-z4">
-                    <div matListItemTitle>{{key.title}}</div>
-                    <div matListItemLine><b>Date:</b> {{key.date | date:'medium'}} | <b>Size:</b> {{key.size |
-                      filesize}}</div>
-                    <div matListItemMeta>
-                      @if (key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000) {
-                        <button mat-icon-button (click)="openattachfullscreen(key, dec_data)" title="Preview file">
-                        <mat-icon color="accent">search</mat-icon>
-                        </button>
-                        }
-                        <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
-                          <mat-icon color="accent">file_download</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
-                          <mat-icon color="warn">delete_forever</mat-icon>
-                        </button>
-                    </div>
-                  </mat-list-item>
-                </mat-list>
+                <div class="attach-row">
+                  <mat-icon class="attach-type-icon">
+                    {{key.type.includes('image') ? 'image' : key.type.includes('video') ? 'videocam' : 'attach_file'}}
+                  </mat-icon>
+                  <div class="attach-info">
+                    @if (key.type.includes('image') || key.type.includes('video') && key.data.length <= 30000000) {
+                      <button class="attach-title-link" mat-button (click)="openattachfullscreen(key, dec_data)">{{key.title}}</button>
+                    } @else {
+                      <span class="attach-title-plain">{{key.title}}</span>
+                    }
+                    <span class="attach-meta">{{key.date | date:'medium'}} &middot; {{key.size | filesize}}</span>
+                  </div>
+                  <div class="attach-actions">
+                    <button mat-icon-button (click)="downloadAttach(key.data, key.title)" title="Download file">
+                      <mat-icon color="accent">file_download</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="removeAttach(key, dec_data)" title="Remove file">
+                      <mat-icon color="warn">delete_forever</mat-icon>
+                    </button>
+                  </div>
+                </div>
                 }
               </div>
               }
