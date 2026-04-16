@@ -1487,12 +1487,14 @@ mat-paginator {
 
   &.status-btn-active { opacity: 1; }
 
-  &.status-1 { color: #FF7518; border-color: rgba(#FF7518, 0.5);
-    &.status-btn-active { background: rgba(#FF7518, 0.12); } }
-  &.status-2 { color: #5b9cf6; border-color: rgba(#2780E3, 0.5);
-    &.status-btn-active { background: rgba(#2780E3, 0.12); } }
+  &.status-1 { color: #FF0039; border-color: rgba(#FF0039, 0.5);
+    &.status-btn-active { background: rgba(#FF0039, 0.12); } }
+  &.status-2 { color: #FF9800; border-color: rgba(#FF9800, 0.5);
+    &.status-btn-active { background: rgba(#FF9800, 0.12); } }
   &.status-3 { color: #3FB618; border-color: rgba(#3FB618, 0.5);
     &.status-btn-active { background: rgba(#3FB618, 0.12); } }
+  &.status-4 { color: #9E9E9E; border-color: rgba(#9E9E9E, 0.5);
+    &.status-btn-active { background: rgba(#9E9E9E, 0.12); } }
 }
 
 .sev-btn {
