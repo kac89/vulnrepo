@@ -20,6 +20,7 @@
           <mat-option value="GHSA"><mat-icon color="accent" style="font-size:16px;vertical-align:middle;margin-right:4px">public</mat-icon> GHSA — GitHub Advisory</mat-option>
           <mat-option value="AIVULNS">AI Systems Issues</mat-option>
           <mat-option value="CWE">CWE Research Concepts</mat-option>
+          <mat-option value="OWASPTOP2025">OWASP Top 10 2025</mat-option>
           <mat-option value="OWASPTOP2021">OWASP Top 10 2021</mat-option>
           <mat-option value="OWASPTOP2017">OWASP Top 10 2017</mat-option>
           <mat-option value="OWASPTOP10CICD">OWASP CI/CD Top 10</mat-option>
@@ -221,7 +222,7 @@
     }
 
     <!-- OWASP / MITRE / AI table (no sort/pagination) -->
-    @if (sourceSelect == 'OWASP_mobile' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017' || sourceSelect == 'AIVULNS') {
+    @if (sourceSelect == 'OWASP_mobile' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP2025' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017' || sourceSelect == 'AIVULNS') {
       <div class="section-block">
         <div class="table-wrapper">
           <table mat-table [dataSource]="dataSource" class="issues-table">
@@ -269,7 +270,7 @@
         @if (sourceSelect == 'OWASPTOP10CICD') {
           <div class="ref-link-row"><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-10-ci-cd-security-risks/">owasp.org</a></div>
         }
-        @if (sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017') {
+        @if (sourceSelect == 'OWASPTOP2025' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2017') {
           <div class="ref-link-row"><a class="active-link" target="_blank" href="https://owasp.org/www-project-top-ten/">owasp.org</a></div>
         }
       </div>
@@ -315,7 +316,7 @@
         </button>
       }
       @if (selection.selected.length > 0) {
-        @if (sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE' || sourceSelect == 'MENTERPRISE' || sourceSelect == 'MMOBILE') {
+        @if (sourceSelect == 'OWASPTOP2017' || sourceSelect == 'OWASPTOP2021' || sourceSelect == 'OWASPTOP2025' || sourceSelect == 'OWASPTOP10CICD' || sourceSelect == 'OWASPTOP10k8s' || sourceSelect == 'OWASP_mobile' || sourceSelect == 'AIVULNS' || sourceSelect == 'CWE' || sourceSelect == 'MENTERPRISE' || sourceSelect == 'MMOBILE') {
           <button class="action-btn action-primary" (click)="addtop10(selection.selected)">
             <mat-icon>add</mat-icon> Add selected ({{selection.selected.length}})
           </button>

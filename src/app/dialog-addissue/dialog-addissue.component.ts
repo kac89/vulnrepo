@@ -75,6 +75,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   pcidssv3: any;
   owasptop2017: Vulns[] = [];
   owasptop2021: Vulns[] = [];
+  owasptop2025: Vulns[] = [];
   OWASPTOP10CICD: Vulns[] = [];
   OWASPTOP10k8s: Vulns[] = [];
   AIVULNS: Vulns[] = [];
@@ -229,6 +230,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
   retrieveSourcesTOP10(): void {
     const owasptop2017api = this.http.get<any>('/assets/OWASPtop102017.json?v=' + + new Date());
     const owasptop2021api = this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date());
+    const owasptop2025api = this.http.get<any>('/assets/OWASPtop102025.json?v=' + + new Date());
     const OWASPTOP10CICDapi = this.http.get<any>('/assets/OWASPtop10cicd.json?v=' + + new Date());
     const OWASPTOP10k8sapi = this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date());
     const AIVULNSapi = this.http.get<any>('/assets/AIVULNS.json?v=' + + new Date());
@@ -237,18 +239,19 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     const mitreenterpriseapi = this.http.get<any>('/assets/enterprise-attack.json?v=' + + new Date());
     const mitremobileapi = this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date());
 
-    forkJoin([owasptop2017api, owasptop2021api, OWASPTOP10CICDapi, OWASPTOP10k8sapi, AIVULNSapi, owaspmobile2024api, cweapi, mitreenterpriseapi, mitremobileapi])
+    forkJoin([owasptop2017api, owasptop2021api, owasptop2025api, OWASPTOP10CICDapi, OWASPTOP10k8sapi, AIVULNSapi, owaspmobile2024api, cweapi, mitreenterpriseapi, mitremobileapi])
       .subscribe(
         result => {
           this.owasptop2017 = result[0];
           this.owasptop2021 = result[1];
-          this.OWASPTOP10CICD = result[2];
-          this.OWASPTOP10k8s = result[3];
-          this.AIVULNS = result[4];
-          this.owaspmobile2024 = result[5];
-          this.cwe = result[6];
-          this.mitreenterprise = result[7];
-          this.mitremobile = result[8];
+          this.owasptop2025 = result[2];
+          this.OWASPTOP10CICD = result[3];
+          this.OWASPTOP10k8s = result[4];
+          this.AIVULNS = result[5];
+          this.owaspmobile2024 = result[6];
+          this.cwe = result[7];
+          this.mitreenterprise = result[8];
+          this.mitremobile = result[9];
           this.freeztype = false;
         }
       )
@@ -394,6 +397,10 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
 
     if (this.sourceSelect === 'AIVULNS') {
       this.dataSource.data = this.AIVULNS;
+    }
+
+    if (this.sourceSelect === 'OWASPTOP2025') {
+      this.dataSource.data = this.owasptop2025;
     }
 
     if (this.sourceSelect === 'OWASPTOP2021') {
