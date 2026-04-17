@@ -1,0 +1,102 @@
+[
+  {
+    "title": "A01: Broken Access Control",
+    "poc": "",
+    "desc": "Access control is intended to ensure users can only perform actions within their permitted authorization. Failures commonly result in unauthorized data access, modification, or performing functions outside the user's intended privileges. Typical issues include bypassing checks by manipulating URLs/requests, IDOR-style access to other users' records, missing authorization on API endpoints (e.g., POST/PUT/DELETE), privilege escalation, tampering with tokens (JWT/cookies/hidden fields), and CORS misconfiguration. Prevention includes deny-by-default, centralized server-side authorization, enforcing object ownership, logging/alerting on access-control failures, and rate limiting.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A02: Security Misconfiguration",
+    "poc": "",
+    "desc": "Security misconfiguration covers insecure or incorrectly configured settings across the application stack (application, framework, server, cloud services). Examples include default accounts, unnecessary features/services enabled, overly verbose error messages, missing security headers, improper permissions, and inconsistent environments. Prevention focuses on repeatable hardening, secure defaults, minimizing installed/enabled components, and continuously reviewing and validating configuration.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A03: Software Supply Chain Failures",
+    "poc": "",
+    "desc": "Software supply chain failures relate to compromised or untrusted dependencies, repositories, build artifacts, and CI/CD pipelines. Attackers may poison packages, tamper with build/release processes, or distribute malicious updates. Prevention includes using trusted sources, verifying integrity (e.g., signing), securing CI/CD, maintaining SBOMs, and continuously monitoring dependencies.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A03_2025-Software_Supply_Chain_Failures/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A04: Cryptographic Failures",
+    "poc": "",
+    "desc": "Cryptographic failures occur when sensitive data is not properly protected in transit or at rest due to missing encryption, weak/legacy algorithms or protocols, or poor key management. Prevention includes modern TLS, strong password hashing, encrypting sensitive data at rest, and robust key generation, storage, and rotation practices.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A04_2025-Cryptographic_Failures/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A05: Injection",
+    "poc": "",
+    "desc": "Injection flaws happen when untrusted data is interpreted as part of a command or query (e.g., SQL/NoSQL/LDAP/OS commands). They are commonly caused by unsafe concatenation and missing parameterization. Prevention includes using parameterized queries, safe APIs/ORMs, input validation, and context-aware escaping where needed.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A05_2025-Injection/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A06: Insecure Design",
+    "poc": "",
+    "desc": "Insecure design represents weaknesses introduced by missing or ineffective security controls at the design stage (not just implementation bugs). Prevention includes adopting a secure development lifecycle, performing threat modeling for critical flows, using proven security patterns, and validating key requirements with tests.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A06_2025-Insecure_Design/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A07: Authentication Failures",
+    "poc": "",
+    "desc": "Authentication failures include weaknesses in identity, authentication, and session management such as credential stuffing/brute force exposure, weak password policies, missing MFA, account enumeration, and insecure session/token handling. Prevention includes MFA, protections against automated attacks, secure session management, and consistent responses to reduce enumeration.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A07_2025-Authentication_Failures/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A08: Software or Data Integrity Failures",
+    "poc": "",
+    "desc": "Software or data integrity failures occur when code, updates, or critical data are not verified for integrity, enabling tampering (e.g., untrusted updates/artifacts or unsafe serialization patterns). Prevention includes verifying sources, using signatures and integrity checks, and controlling and monitoring artifact and dependency integrity.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A08_2025-Software_or_Data_Integrity_Failures/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A09: Security Logging and Alerting Failures",
+    "poc": "",
+    "desc": "Security logging and alerting failures reduce an organization's ability to detect and respond to attacks. Common issues include missing audit events, unclear logs, lack of centralized monitoring, and ineffective alerting/escalation. Prevention includes logging key events with context, centralizing and protecting logs, and implementing monitoring and incident response processes.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A09_2025-Security_Logging_and_Alerting_Failures/",
+    "cvss": "",
+    "cv_vector": "",
+    "cve": ""
+  },
+  {
+    "title": "A10: Mishandling of Exceptional Conditions",
+    "poc": "",
+    "desc": "Mishandling exceptional conditions covers insecure behavior when errors, edge cases, or unexpected states occur (e.g., crashes, inconsistent state, bypassed checks, information leakage via error handling). Prevention includes safe error handling, consistent fail-secure behavior, proper transaction handling/rollbacks, and avoiding disclosure of internal details to users.",
+    "severity": "High",
+    "ref": "https://owasp.org/Top10/2025/A10_2025-Mishandling_of_Exceptional_Conditions/",
+    "cvss": "",
+    "cvss_vector": "",
+    "cve": ""
+  }
+]
