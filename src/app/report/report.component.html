@@ -303,40 +303,62 @@
         <mat-card-content>
           @if (decryptedReportDataChanged.report_vulns.length > 0) {
           <div class="report-issue-filter-bar">
-            <mat-form-field appearance="outline" class="report-issue-search" color="accent" subscriptSizing="dynamic">
-              <mat-label>Search issues</mat-label>
-              <mat-icon matPrefix>search</mat-icon>
-              <input matInput [(ngModel)]="issueSearchText" (ngModelChange)="applyIssueFilter()"
-                placeholder="Title, PoC, description…">
-              @if (issueSearchText) {
-              <button matSuffix mat-icon-button (click)="issueSearchText=''; applyIssueFilter()" title="Clear search">
+            <mat-form-field appearance="outline" class="report-issue-search" color="accent" subscriptSizing="dynamic"
+              [class.has-error]="issueFilterError">
+              <mat-label>Filter issues</mat-label>
+              <mat-icon matPrefix>filter_alt</mat-icon>
+              <input matInput [(ngModel)]="issueFilterQuery" (ngModelChange)="applyIssueFilter()"
+                placeholder='severity:High cvss:>=7 -status:Fixed "sql injection"' spellcheck="false"
+                autocomplete="off">
+              <button matSuffix mat-icon-button type="button" title="Filter syntax help"
+                (click)="openIssueFilterHelp(); $event.stopPropagation()">
+                <mat-icon>help_outline</mat-icon>
+              </button>
+              @if (issueFilterQuery) {
+              <button matSuffix mat-icon-button type="button" (click)="clearIssueFilter()" title="Clear filter">
                 <mat-icon>close</mat-icon>
               </button>
               }
             </mat-form-field>
             <div class="report-sev-filters">
-              @for (sev of dataSourceforseverity; track sev) {
-              <button mat-stroked-button class="sev-filter-btn sev-filter-{{ sev.severity | lowercase }}"
-                [class.active]="issueFilterSeverity === sev.severity"
-                (click)="issueFilterSeverity = issueFilterSeverity === sev.severity ? '' : sev.severity; applyIssueFilter()">
-                {{ sev.severity }}
-              </button>
-              }
-              @if (issueFilterSeverity || issueSearchText) {
-              <button mat-icon-button title="Clear all filters"
-                (click)="issueFilterSeverity=''; issueSearchText=''; applyIssueFilter()">
-                <mat-icon>filter_alt_off</mat-icon>
+              @for (sev of issueFilterSeverities; track sev) {
+              <button mat-stroked-button type="button" class="sev-filter-btn sev-filter-{{ sev | lowercase }}"
+                [class.active]="isIssueSeverityActive(sev)" (click)="toggleIssueSeverityToken(sev)"
+                title="Toggle severity:{{ sev }}">
+                {{ sev }}
               </button>
               }
             </div>
           </div>
-          @if (selectedResult.length === 0 && (issueFilterSeverity || issueSearchText)) {
+          @if (issueFilterError) {
+          <div class="report-filter-error">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ issueFilterError }}</span>
+          </div>
+          }
+          @if (!issueFilterError && issueFilterPills.length > 0) {
+          <div class="report-filter-pills" title="Parsed filter expression">
+            @for (pill of issueFilterPills; track $index) {
+            @if (pill.connector) {
+            <span class="filter-pill-connector">{{ pill.connector }}</span>
+            }
+            <span class="filter-pill" [class.negated]="pill.negated">
+              @if (pill.negated) {<span class="filter-pill-not">NOT</span>}
+              <span class="filter-pill-label">{{ pill.label }}</span>
+              <button type="button" class="filter-pill-remove" (click)="removeIssueFilterPill(pill)"
+                [title]="'Remove ' + (pill.negated ? 'NOT ' : '') + pill.label" aria-label="Remove filter">
+                <mat-icon>close</mat-icon>
+              </button>
+            </span>
+            }
+          </div>
+          }
+          @if (selectedResult.length === 0 && issueFilterQuery && !issueFilterError) {
           <div class="report-filter-empty">
             <mat-icon>search_off</mat-icon>
             <p>No issues match your filter.</p>
-            <button mat-stroked-button color="accent"
-              (click)="issueFilterSeverity=''; issueSearchText=''; applyIssueFilter()">
-              Clear filters
+            <button mat-stroked-button color="accent" (click)="clearIssueFilter()">
+              Clear filter
             </button>
           </div>
           }

@@ -1,0 +1,34 @@
+<div class="filter-help-shell">
+
+  <div class="filter-help-header" mat-dialog-title>
+    <div class="filter-help-header-left">
+      <mat-icon>filter_alt</mat-icon>
+      <div class="filter-help-header-text">
+        <span class="filter-help-title-main">Filter syntax</span>
+        <span class="filter-help-subtitle">Click a row to insert it into the search</span>
+      </div>
+    </div>
+    <button mat-icon-button (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="filter-help-body">
+    <div class="filter-help-rows">
+      @for (ex of examples; track ex.snippet) {
+      <button type="button" class="filter-help-row" (click)="insert(ex.snippet)"
+        [title]="'Insert: ' + ex.snippet">
+        <code class="filter-help-code">{{ ex.label }}</code>
+        <span class="filter-help-desc">{{ ex.description }}</span>
+        <mat-icon class="filter-help-arrow">add</mat-icon>
+      </button>
+      }
+    </div>
+
+    <div class="filter-help-footer">
+      <mat-icon>info</mat-icon>
+      <span>Multiple tokens are combined with AND. Use <code>OR</code> for alternatives and parentheses to group.</span>
+    </div>
+  </mat-dialog-content>
+
+</div>

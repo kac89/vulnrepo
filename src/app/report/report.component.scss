@@ -922,6 +922,116 @@ mat-paginator {
 .sev-filter-info             { color: #5b9cf6 !important; border-color: rgba(#2780E3, 0.4) !important; }
 .sev-filter-info.active      { background: #2780E3 !important; color: #fff !important; }
 
+.report-issue-search.has-error ::ng-deep .mat-mdc-form-field-flex .mdc-notched-outline > * {
+  border-color: #FF0039 !important;
+}
+
+// ── Parsed filter pills (shown below the input) ───────────────
+.report-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 8px;
+  border-radius: 10px;
+  background: rgba(#2780E3, 0.12);
+  color: #5b9cf6;
+  border: 1px solid rgba(#2780E3, 0.3);
+  line-height: 1.4;
+
+  &.negated {
+    background: rgba(#FF0039, 0.10);
+    color: #FF0039;
+    border-color: rgba(#FF0039, 0.3);
+
+    .filter-pill-remove:hover {
+      background: rgba(#FF0039, 0.25);
+    }
+  }
+}
+
+.filter-pill-label {
+  padding: 0 2px 0 0;
+}
+
+.filter-pill-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin-left: 2px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: background 0.12s, opacity 0.12s;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  &:hover {
+    opacity: 1;
+    background: rgba(#2780E3, 0.25);
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 1px;
+  }
+}
+
+.filter-pill-not {
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+
+.filter-pill-connector {
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: $text-secondary;
+  padding: 0 2px;
+}
+
+// ── Filter parse error banner ─────────────────────────────────
+.report-filter-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 0 0 10px;
+  border-radius: 6px;
+  background: rgba(#FF0039, 0.08);
+  border: 1px solid rgba(#FF0039, 0.3);
+  color: #FF0039;
+  font-size: 0.8rem;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
 // ── Filter empty state (no results for filter) ────────────────
 .report-filter-empty {
   display: flex;
