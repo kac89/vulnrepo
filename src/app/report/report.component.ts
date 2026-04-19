@@ -51,6 +51,8 @@ import { CurrentdateService } from '../currentdate.service';
 import { DialogMergeIssuesComponent } from '../dialog-merge-issues/dialog-merge-issues.component';
 import { DialogReportHistoryComponent } from '../dialog-report-history/dialog-report-history.component';
 import { DialogSpinnerComponent } from '../dialog-spinner/dialog-spinner.component';
+import { IssueFilterService, FilterPill } from '../issue-filter.service';
+import { DialogFilterHelpComponent } from '../dialog-filter-help/dialog-filter-help.component';
 
 export interface Tags {
   name: string;
@@ -197,31 +199,65 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   aiconnected = false;
   models: any;
 
-  issueSearchText = '';
-  issueFilterSeverity = '';
+  issueFilterQuery = '';
+  issueFilterError: string | null = null;
+  issueFilterPills: FilterPill[] = [];
+  readonly issueFilterSeverities = ['Critical', 'High', 'Medium', 'Low', 'Info'];
 
   getFilteredVulns(): any[] {
-    let vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
-    if (this.issueFilterSeverity) {
-      vulns = vulns.filter(v => v.severity === this.issueFilterSeverity);
-    }
-    if (this.issueSearchText) {
-      const term = this.issueSearchText.toLowerCase();
-      vulns = vulns.filter(v =>
-        v.title?.toLowerCase().includes(term) ||
-        v.poc?.toLowerCase().includes(term) ||
-        v.desc?.toLowerCase().includes(term)
-      );
-    }
-    return vulns;
+    const vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
+    const { result, error } = this.issueFilterService.filter(vulns, this.issueFilterQuery);
+    this.issueFilterError = error;
+    return result;
   }
 
   applyIssueFilter() {
     this.pageIndex = 0;
+    const parsed = this.issueFilterService.parse(this.issueFilterQuery);
+    this.issueFilterError = parsed.error;
+    this.issueFilterPills = this.issueFilterService.describe(parsed.ast);
     const filtered = this.getFilteredVulns();
     this.issesTable = new MatTableDataSource(filtered);
     this.issesTable.paginator = this.paginator;
     this.selectedResult = filtered.slice(0, this.pageSize);
+  }
+
+  toggleIssueSeverityToken(severity: string) {
+    this.issueFilterQuery = this.issueFilterService.toggleFieldToken(
+      this.issueFilterQuery, 'severity', severity,
+    );
+    this.applyIssueFilter();
+  }
+
+  isIssueSeverityActive(severity: string): boolean {
+    return this.issueFilterService.hasFieldToken(this.issueFilterQuery, 'severity', severity);
+  }
+
+  clearIssueFilter() {
+    this.issueFilterQuery = '';
+    this.applyIssueFilter();
+  }
+
+  removeIssueFilterPill(pill: FilterPill) {
+    this.issueFilterQuery = this.issueFilterService.removeRange(
+      this.issueFilterQuery, pill.start, pill.end,
+    );
+    this.applyIssueFilter();
+  }
+
+  openIssueFilterHelp() {
+    const ref = this.dialog.open(DialogFilterHelpComponent, {
+      width: '520px',
+      maxWidth: '95vw',
+      autoFocus: false,
+      panelClass: 'dialog-filter-help-panel',
+    });
+    ref.afterClosed().subscribe((snippet: string | undefined) => {
+      if (!snippet) return;
+      const current = this.issueFilterQuery.trim();
+      this.issueFilterQuery = current ? `${current} ${snippet}` : snippet;
+      this.applyIssueFilter();
+    });
   }
 
   @HostListener('window:keydown.control.shift.l', ['$event'])
@@ -244,7 +280,8 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     private datePipe: DatePipe,
     private dateAdapter: DateAdapter<Date>,
     private utilsService: UtilsService,
-    private currentdateService: CurrentdateService) {
+    private currentdateService: CurrentdateService,
+    private issueFilterService: IssueFilterService) {
     //console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
