@@ -127,24 +127,45 @@ export class IssueFilterService {
 
   /**
    * Add the token `key:value` if absent, remove it if already present (as a top-level atom).
+   * Recognizes comma-lists (`key:a,b,c`): toggling removes the matching entry from the list,
+   * or appends to an existing list rather than producing a duplicate token.
    * Used by chip shortcuts.
    */
   toggleFieldToken(query: string, key: string, value: string): string {
     const q = (query ?? '').trim();
-    const target = `${key}:${value}`;
+    const prefix = `${key.toLowerCase()}:`;
+    const valueLower = value.toLowerCase();
     const parts = q.length ? this.splitTopLevel(q) : [];
-    const idx = parts.findIndex(p => p.toLowerCase() === target.toLowerCase());
+
+    const idx = parts.findIndex(p => p.toLowerCase().startsWith(prefix));
     if (idx >= 0) {
-      parts.splice(idx, 1);
+      const list = parts[idx].slice(prefix.length).split(',').map(s => s.trim()).filter(Boolean);
+      const pos = list.findIndex(s => this.stripQuotes(s).toLowerCase() === valueLower);
+      if (pos >= 0) {
+        list.splice(pos, 1);
+      } else {
+        list.push(value);
+      }
+      if (list.length === 0) {
+        parts.splice(idx, 1);
+      } else {
+        parts[idx] = `${key}:${list.join(',')}`;
+      }
       return parts.join(' ').trim();
     }
-    parts.push(target);
+    parts.push(`${key}:${value}`);
     return parts.join(' ').trim();
   }
 
   hasFieldToken(query: string, key: string, value: string): boolean {
-    const target = `${key}:${value}`.toLowerCase();
-    return this.splitTopLevel(query ?? '').some(p => p.toLowerCase() === target);
+    const prefix = `${key.toLowerCase()}:`;
+    const valueLower = value.toLowerCase();
+    return this.splitTopLevel(query ?? '').some(p => {
+      if (!p.toLowerCase().startsWith(prefix)) return false;
+      return p.slice(prefix.length)
+        .split(',')
+        .some(s => this.stripQuotes(s.trim()).toLowerCase() === valueLower);
+    });
   }
 
   // ── Internals ────────────────────────────────────────────────
