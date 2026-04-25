@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
-import * as Crypto from 'crypto-js';
 import { Observable } from 'rxjs';
 
 import { MessageService } from './message.service';
@@ -11,6 +10,7 @@ import { ApiService } from './api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SessionstorageserviceService } from "./sessionstorageservice.service"
 import { CurrentdateService } from './currentdate.service';
+import { CryptoUtilsService } from './crypto-utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class IndexeddbService {
 
   constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
     private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,
-    private currentdateService: CurrentdateService) {
+    private currentdateService: CurrentdateService, private cryptoUtils: CryptoUtilsService) {
 
     this.updateEncStatus(false);
     /*
@@ -116,7 +116,7 @@ export class IndexeddbService {
 
   }
 
-  addnewReport(title: string, pass: string, profile: any) {
+  async addnewReport(title: string, pass: string, profile: any) {
 
     if (title && pass) {
 
@@ -221,14 +221,14 @@ export class IndexeddbService {
         empty_vulns = this.setProfile(empty_vulns, profile);
 
         // Encrypt
-        const ciphertext = Crypto.AES.encrypt(JSON.stringify(empty_vulns), pass);
+        const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(empty_vulns), pass);
         const reportId = uuid();
         const data = {
           report_id: reportId,
           report_name: title,
           report_createdate: today,
           report_lastupdate: '',
-          encrypted_data: ciphertext.toString()
+          encrypted_data: ciphertext
         };
 
         // indexeddb communication
@@ -263,7 +263,7 @@ export class IndexeddbService {
 
   }
 
-  addnewReportonAPI(apiurl: string, apikey: string, title: string, pass: string, profile: any) {
+  async addnewReportonAPI(apiurl: string, apikey: string, title: string, pass: string, profile: any) {
 
     if (title && pass) {
 
@@ -323,14 +323,14 @@ export class IndexeddbService {
         empty_vulns = this.setProfile(empty_vulns, profile);
 
         // Encrypt
-        const ciphertext = Crypto.AES.encrypt(JSON.stringify(empty_vulns), pass);
+        const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(empty_vulns), pass);
         const reportid = uuid();
         const data = {
           report_id: reportid,
           report_name: title,
           report_createdate: today,
           report_lastupdate: '',
-          encrypted_data: ciphertext.toString()
+          encrypted_data: ciphertext
         };
 
 
@@ -529,21 +529,20 @@ export class IndexeddbService {
 
 
 
-  decodeAES(data: any, pass: string) {
-
+  async decodeAES(data: any, pass: string): Promise<boolean> {
     try {
       // Decrypt
-      const bytes = Crypto.AES.decrypt(data.encrypted_data.toString(), pass);
-      const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
+      const plaintext = await this.cryptoUtils.decrypt(data.encrypted_data.toString(), pass);
+      const decryptedData = JSON.parse(plaintext);
       if (decryptedData) {
         this.sessionsub.setSessionStorageItem(data.report_id, pass);
       }
       this.updateEncStatus(true);
       this.messageService.sendDecrypted(decryptedData);
       return true;
-
     } catch (except) {
       console.log('wrong pass');
+      return false;
     }
   }
 
@@ -906,81 +905,66 @@ export class IndexeddbService {
     });
   }
 
-  prepareupdatereport(data: any, pass: string, reportid: any, reportname: any, reportcreatedate: any, reportorder: any) {
-    return new Promise<any>((resolve, reject) => {
-      try {
-        // Encrypt
-        const ciphertext = Crypto.AES.encrypt(JSON.stringify(data), pass);
-        const now: number = Date.now();
-        const to_update = {
-          report_id: reportid,
-          report_name: reportname,
-          report_createdate: reportcreatedate,
-          report_lastupdate: now,
-          encrypted_data: ciphertext.toString()
-        };
+  async prepareupdatereport(data: any, pass: string, reportid: any, reportname: any, reportcreatedate: any, reportorder: any): Promise<any> {
+    try {
+      // Encrypt
+      const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(data), pass);
+      const now: number = Date.now();
+      const to_update = {
+        report_id: reportid,
+        report_name: reportname,
+        report_createdate: reportcreatedate,
+        report_lastupdate: now,
+        encrypted_data: ciphertext
+      };
 
+      //add to history
+      this.add_report_to_history(to_update).then(_ => { });
 
-
-        //add to history
-        this.add_report_to_history(to_update).then(data => { });
-
-
-        this.updatereportDB(reportorder, to_update).then(retu => {
-          if (retu === 'encrypted:ok') {
-            //execute navbar refresh
-            this.sessionsub.removeSessionStorageItem('encrypted:ok');
-            resolve(now);
-          }
-        });
-
-      } catch (except) {
-        console.log(except);
+      const retu = await this.updatereportDB(reportorder, to_update);
+      if (retu === 'encrypted:ok') {
+        //execute navbar refresh
+        this.sessionsub.removeSessionStorageItem('encrypted:ok');
+        return now;
       }
-
-    });
-
+    } catch (except) {
+      console.log(except);
+    }
   }
 
 
-  prepareupdateAPIreport(apiurl: string, apikey: string, data: any, pass: string, reportid: any, reportname: any, reportcreatedate: any) {
-    return new Promise<any>((resolve, reject) => {
-      try {
-        // Encrypt
-        const ciphertext = Crypto.AES.encrypt(JSON.stringify(data), pass);
-        const now: number = Date.now();
-        const to_update = {
-          report_id: reportid,
-          report_name: reportname,
-          report_createdate: reportcreatedate,
-          report_lastupdate: now,
-          encrypted_data: ciphertext.toString()
-        };
+  async prepareupdateAPIreport(apiurl: string, apikey: string, data: any, pass: string, reportid: any, reportname: any, reportcreatedate: any): Promise<any> {
+    try {
+      // Encrypt
+      const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(data), pass);
+      const now: number = Date.now();
+      const to_update = {
+        report_id: reportid,
+        report_name: reportname,
+        report_createdate: reportcreatedate,
+        report_lastupdate: now,
+        encrypted_data: ciphertext
+      };
 
-        const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
-        if (localkey) {
-          // tslint:disable-next-line:max-line-length
-          this.apiService.APISend(apiurl, apikey, 'updatereport', 'reportdata=' + btoa(JSON.stringify(to_update))).then(resp => {
-            if (resp.STORAGE === 'NOSPACE') {
-              this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
-                duration: 3000,
-                panelClass: ['notify-snackbar-fail']
-              });
-              resolve('NOSPACE');
-            } else if (resp.REPORT_UPDATE === 'OK') {
-              //execute navbar refresh
-              this.sessionsub.removeSessionStorageItem('encrypted:ok');
-              resolve(now);
-            }
+      const localkey = this.sessionsub.getSessionStorageItem('VULNREPO-API');
+      if (localkey) {
+        // tslint:disable-next-line:max-line-length
+        const resp = await this.apiService.APISend(apiurl, apikey, 'updatereport', 'reportdata=' + btoa(JSON.stringify(to_update)));
+        if (resp.STORAGE === 'NOSPACE') {
+          this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
+            duration: 3000,
+            panelClass: ['notify-snackbar-fail']
           });
+          return 'NOSPACE';
+        } else if (resp.REPORT_UPDATE === 'OK') {
+          //execute navbar refresh
+          this.sessionsub.removeSessionStorageItem('encrypted:ok');
+          return now;
         }
-
-      } catch (except) {
-        console.log(except);
       }
-
-    });
-
+    } catch (except) {
+      console.log(except);
+    }
   }
 
 
@@ -1039,19 +1023,12 @@ export class IndexeddbService {
     });
   }
 
-  encryptKEY(key, pass) {
-    return new Promise<any>((resolve, reject) => {
-      const ciphertext = Crypto.AES.encrypt(key, pass);
-      resolve(ciphertext.toString());
-    });
+  encryptKEY(key: string, pass: string): Promise<string> {
+    return this.cryptoUtils.encrypt(key, pass);
   }
 
-  decryptKEY(key, pass) {
-    return new Promise<any>((resolve, reject) => {
-      const bytes = Crypto.AES.decrypt(key.toString(), pass);
-      const decryptedData = bytes.toString(Crypto.enc.Utf8);
-      resolve(decryptedData.toString());
-    });
+  decryptKEY(key: string, pass: string): Promise<string> {
+    return this.cryptoUtils.decrypt(key.toString(), pass);
   }
 
   saveKEYinDB(key) {

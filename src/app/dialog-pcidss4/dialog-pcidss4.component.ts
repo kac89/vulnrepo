@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import * as Crypto from 'crypto-js';
 import { UntypedFormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CurrentdateService } from '../currentdate.service';
+import { CryptoUtilsService } from '../crypto-utils.service';
 
 @Component({
   standalone: false,
@@ -24,7 +24,7 @@ export class DialogPcidss4Component {
 
   // @ts-ignore
   constructor(public dialogRef: MatDialogRef<DialogPcidss4Component>, @Inject(MAT_DIALOG_DATA) public data: any, public datePipe: DatePipe,
-  private currentdateService: CurrentdateService) {
+  private currentdateService: CurrentdateService, private cryptoUtils: CryptoUtilsService) {
 
   }
 
@@ -58,12 +58,12 @@ export class DialogPcidss4Component {
     
   }
 
-  exportvuln(data, pass, pass2) {
+  async exportvuln(data, pass, pass2) {
 
     if (pass !== pass2) {
       this.text = 'Password fields not match';
     } else {
-  
+
       const toexport = data.map((res, key) => {
         const def = {
           title: 'PCI DSS v4.0 requirement ' + res.id,
@@ -79,14 +79,14 @@ export class DialogPcidss4Component {
           bounty: [],
           date: this.currentdateService.getcurrentDate()
         };
-  
+
         return def;
       });
-  
+
         const json = JSON.stringify(toexport);
         // Encrypt
-        const ciphertext:any = Crypto.AES.encrypt(json, pass);
-  
+        const ciphertext = await this.cryptoUtils.encrypt(json, pass);
+
         const element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));
         element.setAttribute('download', 'Vulnrepo PCI DSS v4.0 export.vuln');

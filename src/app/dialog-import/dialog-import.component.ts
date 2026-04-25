@@ -2,10 +2,10 @@ import { Component, OnInit, Inject, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import * as xml2js from 'xml2js';
-import * as Crypto from 'crypto-js';
 import { CurrentdateService } from '../currentdate.service';
 import { UntypedFormControl } from '@angular/forms';
 import { UtilsService } from '../utils.service';
+import { CryptoUtilsService } from '../crypto-utils.service';
 
 interface Importsource {
   value: string;
@@ -95,6 +95,7 @@ export class DialogImportComponent implements OnInit {
     public datePipe: DatePipe,
     private currentdateService: CurrentdateService,
     private utilsService: UtilsService,
+    private cryptoUtils: CryptoUtilsService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -754,12 +755,11 @@ export class DialogImportComponent implements OnInit {
 
   }
 
-  vulnrepojson(json:any, pass:string) {
-
+  async vulnrepojson(json:any, pass:string) {
     try {
       // Decrypt
-      const bytes = Crypto.AES.decrypt(json.toString(), pass);
-      const decryptedData = JSON.parse(bytes.toString(Crypto.enc.Utf8));
+      const plaintext = await this.cryptoUtils.decrypt(json.toString(), pass);
+      const decryptedData = JSON.parse(plaintext);
 
       if (decryptedData) {
         this.dialogRef.close(decryptedData);
@@ -769,7 +769,6 @@ export class DialogImportComponent implements OnInit {
       this.vulnrepojsonplease_wait = false;
       this.vulnrepowrongpass = true;
     }
-
   }
 
   nmaponFileSelect(input: HTMLInputElement) {
