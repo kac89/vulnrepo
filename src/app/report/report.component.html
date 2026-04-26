@@ -23,20 +23,22 @@
 <div class="report-page" [class.report-page--bar-visible]="stickyBarVisible">
 
   <!-- Hero -->
-  <div class="report-hero">
-    <div class="report-hero-glow"></div>
-    <div class="report-hero-grid"></div>
-    <div class="report-hero-inner">
+  <div class="rh">
+    <div class="rh-glow"></div>
+    <div class="rh-grid"></div>
+    <div class="rh-stripe"></div>
 
-      <!-- Top row: icon + title -->
-      <div class="report-hero-top">
-        <div class="report-hero-icon">
-          <img title="VULNRΞPO REPORT" src="assets/issue.png">
+    <div class="rh-body">
+
+      <!-- Title row -->
+      <div class="rh-title-row">
+        <div class="rh-icon">
+          <img title="VULNRΞPO REPORT" src="assets/issue.png" alt="Report icon">
         </div>
-        <h1 class="report-hero-title">
+        <h1 class="rh-title">
           {{reportdesc?.report_name}}
           @if (decryptedReportDataChanged) {
-          <a class="report-hero-edit-btn" title="Edit report name" [routerLink]="[]"
+          <a class="rh-edit-btn" title="Edit report name" [routerLink]="[]"
             (click)="editreporttitle(reportdesc)">
             <mat-icon>edit</mat-icon>
           </a>
@@ -44,34 +46,57 @@
         </h1>
       </div>
 
-      <!-- Meta strip -->
+      <!-- Progress states -->
+      @if (api_connection_status) {
+      <div class="rh-progress">
+        <span class="rh-progress-label">API connection — please wait</span>
+        <mat-progress-bar style="width:260px;" color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+      }
+      @if (report_decryption_in_progress) {
+      <div class="rh-progress">
+        <span class="rh-progress-label">Decrypting report — please wait</span>
+        <mat-progress-bar style="width:260px;" color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+      }
+      @if (report_encryption_in_progress) {
+      <div class="rh-progress">
+        <span class="rh-progress-label">Encrypting report — please wait</span>
+        <mat-progress-bar style="width:260px;" color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+      }
+
+      <!-- Meta data-grid -->
       @if (!api_connection_status) {
-      <div class="report-hero-meta">
+      <div class="rh-meta-grid">
         @if (!report_decryption_in_progress) {
-        <div class="report-hero-meta-item">
-          <mat-icon class="report-hero-meta-icon">fingerprint</mat-icon>
-          <span class="report-hero-meta-label">ID</span>
-          <span class="report-hero-meta-value">
+        <div class="rh-meta-cell">
+          <span class="rh-meta-label">
+            <mat-icon class="rh-meta-icon">fingerprint</mat-icon>ID
+          </span>
+          <span class="rh-meta-value">
             {{reportdesc?.report_id}}
-            @if (report_source_api) { <mat-icon color="accent" class="report-hero-api-icon">public</mat-icon> }
+            @if (report_source_api) { <mat-icon class="rh-meta-inline-icon" color="accent">public</mat-icon> }
           </span>
         </div>
-        <span class="report-hero-meta-sep"></span>
-        <div class="report-hero-meta-item">
-          <mat-icon class="report-hero-meta-icon">calendar_today</mat-icon>
-          <span class="report-hero-meta-label">Created</span>
-          <span class="report-hero-meta-value">{{reportdesc?.report_createdate | date:'mediumDate'}}</span>
+        <div class="rh-meta-div"></div>
+        <div class="rh-meta-cell">
+          <span class="rh-meta-label">
+            <mat-icon class="rh-meta-icon">calendar_today</mat-icon>Created
+          </span>
+          <span class="rh-meta-value">{{reportdesc?.report_createdate | date:'mediumDate'}}</span>
         </div>
         }
         @if (decryptedReportDataChanged) {
-        <span class="report-hero-meta-sep"></span>
-        <div class="report-hero-meta-item">
-          <mat-icon class="report-hero-meta-icon">local_offer</mat-icon>
-          <span class="report-hero-meta-label">Version</span>
-          <span class="report-hero-meta-value">
-            <b class="labelversion">v{{decryptedReportDataChanged?.report_version}}</b>
-            <button class="report-hero-history-btn" matButton="outlined" (click)="showHistory(reportdesc.report_id)">
-              <mat-icon>history</mat-icon> History
+        <div class="rh-meta-div"></div>
+        <div class="rh-meta-cell">
+          <span class="rh-meta-label">
+            <mat-icon class="rh-meta-icon">local_offer</mat-icon>Version
+          </span>
+          <span class="rh-meta-value">
+            <b class="rh-version-badge">v{{decryptedReportDataChanged?.report_version}}</b>
+            <button class="rh-history-btn" (click)="showHistory(reportdesc.report_id)">
+              <mat-icon>history</mat-icon>History
             </button>
           </span>
         </div>
@@ -79,26 +104,11 @@
       </div>
       }
 
-      <!-- Progress states -->
-      @if (api_connection_status) {
-      <p class="report-hero-progress-msg">API connection please wait…<mat-progress-bar
-          style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-      @if (report_decryption_in_progress) {
-      <p class="report-hero-progress-msg">Report is decrypted please wait…<mat-progress-bar
-          style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-      @if (report_encryption_in_progress) {
-      <p class="report-hero-progress-msg">Report is encrypted please wait…<mat-progress-bar
-          style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-
       <!-- Severity findings strip -->
       @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
-      <div class="report-hero-findings">
-        <span class="report-hero-findings-label">
-          <mat-icon>bug_report</mat-icon>
-          Findings
+      <div class="rh-findings">
+        <span class="rh-findings-label">
+          <mat-icon>bug_report</mat-icon>Findings
         </span>
         <div class="report-severity-strip">
           @for (sev of severitytable; track sev) {
@@ -113,10 +123,10 @@
       </div>
       }
 
-      <!-- Save row -->
+      <!-- Save action bar -->
       @if (decryptedReportDataChanged) {
-      <div class="report-save-row">
-        <div class="report-save-meta">
+      <div class="rh-action-bar">
+        <div class="rh-action-meta">
           @if (reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == '')
           {
           @if (!youhaveunsavedchanges && savemsg) {
@@ -138,7 +148,8 @@
           </div>
           }
         </div>
-        <button mat-fab extended class="mat-elevation-z9" color="primary"
+        <button mat-fab extended class="mat-elevation-z9 rh-save-btn"
+          [class.rh-save-btn--pulse]="youhaveunsavedchanges" color="primary"
           (click)="saveReportChanges(reportdesc.report_id)">
           <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save &amp; release new version
         </button>
@@ -837,59 +848,63 @@
             <mat-icon>group</mat-icon>
           </div>
           <mat-card-title>Researchers</mat-card-title>
-          <div class="researcher-header-actions">
-            <button mat-stroked-button class="researcher-add-btn" (click)="addresearcher()">
-              <mat-icon>add</mat-icon>Add researcher
-            </button>
-          </div>
         </mat-card-header>
         <mat-card-content>
-          @for (researchers of decryptedReportDataChanged.researcher; track researchers) {
-          <div class="researcher-row">
-            <div class="researcher-avatar">
-              {{ researchers.reportername ? researchers.reportername[0] : '?' }}
+          <div class="researcher-grid">
+            @for (researchers of decryptedReportDataChanged.researcher; track researchers) {
+            <div class="researcher-card">
+              <div class="researcher-card__header">
+                <div class="researcher-card__avatar" aria-hidden="true">
+                  {{ researchers.reportername ? researchers.reportername[0] : '?' }}
+                </div>
+                <mat-form-field class="researcher-card__name-field" color="accent">
+                  <mat-label>Name</mat-label>
+                  <input matInput [(ngModel)]="researchers.reportername">
+                  <mat-icon matSuffix>person_pin</mat-icon>
+                </mat-form-field>
+                <button mat-icon-button class="researcher-card__delete"
+                  [attr.aria-label]="'Remove researcher ' + (researchers.reportername || '')"
+                  (click)="removeresearcher(researchers)">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </div>
+              <div class="researcher-card__fields">
+                <mat-form-field class="example-full-width" color="accent">
+                  <mat-label>E-mail</mat-label>
+                  <input matInput [(ngModel)]="researchers.reporteremail">
+                  <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
+                <mat-form-field class="example-full-width" color="accent">
+                  <mat-label>Social link</mat-label>
+                  <input matInput [(ngModel)]="researchers.reportersocial">
+                  <mat-icon matSuffix>share</mat-icon>
+                </mat-form-field>
+                <mat-form-field class="example-full-width" color="accent">
+                  <mat-label>Website</mat-label>
+                  <input matInput [(ngModel)]="researchers.reporterwww">
+                  <mat-icon matSuffix>public</mat-icon>
+                </mat-form-field>
+              </div>
             </div>
-            <div class="researcher-fields">
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>Name</mat-label>
-                <input matInput [(ngModel)]="researchers.reportername">
-                <mat-icon matSuffix>person_pin</mat-icon>
-              </mat-form-field>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>E-mail</mat-label>
-                <input matInput [(ngModel)]="researchers.reporteremail">
-                <mat-icon matSuffix>email</mat-icon>
-              </mat-form-field>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>Social link</mat-label>
-                <input matInput [(ngModel)]="researchers.reportersocial">
-                <mat-icon matSuffix>share</mat-icon>
-              </mat-form-field>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>Website</mat-label>
-                <input matInput [(ngModel)]="researchers.reporterwww">
-                <mat-icon matSuffix>public</mat-icon>
-              </mat-form-field>
-            </div>
-            <div class="researcher-row-actions">
-              <button mat-icon-button class="researcher-delete-btn" (click)="removeresearcher(researchers)"
-                title="Remove researcher">
-                <mat-icon>delete_outline</mat-icon>
+            } @empty {
+            <div class="researcher-empty">
+              <div class="researcher-empty__icon">
+                <mat-icon>verified_user</mat-icon>
+              </div>
+              <p class="researcher-empty__title">No researchers assigned</p>
+              <p class="researcher-empty__desc">Researchers credited in this report will appear here. Add at least one person before publishing.</p>
+              <button mat-flat-button class="researcher-empty__cta" (click)="addresearcher()">
+                <mat-icon>add</mat-icon>Add first researcher
               </button>
             </div>
-          </div>
-          } @empty {
-          <div class="researcher-empty">
-            <div class="researcher-empty-icon">
-              <mat-icon>group_add</mat-icon>
-            </div>
-            <p class="researcher-empty-title">No researchers yet</p>
-            <p class="researcher-empty-desc">Add the people who worked on this report.</p>
-            <button mat-stroked-button class="researcher-add-btn" (click)="addresearcher()">
-              <mat-icon>add</mat-icon>Add researcher
+            }
+            @if (decryptedReportDataChanged.researcher?.length) {
+            <button class="researcher-add-card" (click)="addresearcher()" aria-label="Add researcher">
+              <mat-icon class="researcher-add-card__icon">add_circle_outline</mat-icon>
+              <span class="researcher-add-card__label">Add researcher</span>
             </button>
+            }
           </div>
-          }
         </mat-card-content>
       </mat-card>
       <!-- changelog -->
@@ -934,23 +949,25 @@
               </div>
               <div class="changelog-entry-body">
                 <div class="changelog-entry-meta">
-                  @if (item.version) {
-                  <span class="changelog-version-badge">
-                    <mat-icon>new_releases</mat-icon>
-                    v{{ item.version }}
-                  </span>
-                  }
-                  <span class="changelog-entry-date">
-                    <mat-icon>schedule</mat-icon>
-                    {{ item.date | date:'MMM d, y · HH:mm' }}
-                  </span>
+                  <div class="changelog-entry-meta-left">
+                    @if (item.version) {
+                    <span class="changelog-version-badge">
+                      <mat-icon>new_releases</mat-icon>
+                      v{{ item.version }}
+                    </span>
+                    }
+                    <span class="changelog-entry-date">
+                      <mat-icon>schedule</mat-icon>
+                      {{ item.date | date:'MMM d, y · HH:mm' }}
+                    </span>
+                  </div>
                   <div class="changelog-entry-actions">
                     <button mat-icon-button class="changelog-action-btn" (click)="editchangelog(item)"
-                      title="Edit entry">
+                      title="Edit entry" aria-label="Edit entry">
                       <mat-icon>edit</mat-icon>
                     </button>
                     <button mat-icon-button class="changelog-action-btn changelog-action-btn--danger"
-                      (click)="removefromchangelog(item)" title="Delete entry">
+                      (click)="removefromchangelog(item)" title="Delete entry" aria-label="Delete entry">
                       <mat-icon>delete_outline</mat-icon>
                     </button>
                   </div>
@@ -960,26 +977,27 @@
             </div>
             }
           </div>
-          @if (changelogLimit < listchangelog.length) { <div class="changelog-load-more">
+          @if (changelogLimit < listchangelog.length) {
+          <div class="changelog-load-more">
             <button mat-stroked-button class="changelog-load-more-btn" (click)="changelogLimit = changelogLimit + 5">
-              <mat-icon>expand_more</mat-icon>
+              <mat-icon>unfold_more</mat-icon>
               Load older entries
               <span class="changelog-load-more-count">({{ listchangelog.length - changelogLimit }} remaining)</span>
             </button>
-    </div>
-    }
-    } @else {
-    <div class="changelog-empty">
-      <div class="changelog-empty-icon">
-        <mat-icon>history_toggle_off</mat-icon>
-      </div>
-      <p class="changelog-empty-title">No entries yet</p>
-      <p class="changelog-empty-desc">Track changes and version releases by adding your first changelog entry.</p>
-      <button mat-stroked-button class="changelog-add-btn" (click)="addchangelog()">
-        <mat-icon>add</mat-icon> Add first entry
-      </button>
-    </div>
-    }
+          </div>
+          }
+          } @else {
+          <div class="changelog-empty">
+            <div class="changelog-empty__icon">
+              <mat-icon>history_toggle_off</mat-icon>
+            </div>
+            <p class="changelog-empty__title">No entries yet</p>
+            <p class="changelog-empty__desc">Track changes and version releases by adding your first changelog entry.</p>
+            <button mat-flat-button class="changelog-empty__cta" (click)="addchangelog()">
+              <mat-icon>add</mat-icon> Add first entry
+            </button>
+          </div>
+          }
 
     <!-- Hidden table + paginator — keep for Angular ViewChild wiring -->
     <div style="display:none">

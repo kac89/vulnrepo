@@ -43,13 +43,18 @@ export class DialogPassComponent implements OnInit {
         this.dialogRef.close({ data: pass });
       } else {
 
-        if (this.indexeddbService.decodeAES(this.data, pass)) {
-          this.insertpass.setErrors(null);
-          this.dialogRef.close({ data: pass });
-        } else {
+        this.indexeddbService.decodeAES(this.data, pass).then(result => {
+          if (result) {
+            this.insertpass.setErrors(null);
+            this.dialogRef.close({ data: pass });
+          } else {
+            this.msg = '';
+            this.insertpass.setErrors({'incorrect': true});
+          }
+        }).catch(() => {
           this.msg = '';
           this.insertpass.setErrors({'incorrect': true});
-        }
+        });
 
       }
 

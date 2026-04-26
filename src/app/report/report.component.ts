@@ -29,7 +29,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import * as Crypto from 'crypto-js';
 import { v4 as uuid } from 'uuid';
 import DOMPurify from 'dompurify';
 import { ApiService } from '../api.service';
@@ -53,6 +52,7 @@ import { DialogReportHistoryComponent } from '../dialog-report-history/dialog-re
 import { DialogSpinnerComponent } from '../dialog-spinner/dialog-spinner.component';
 import { IssueFilterService, FilterPill } from '../issue-filter.service';
 import { DialogFilterHelpComponent } from '../dialog-filter-help/dialog-filter-help.component';
+import { CryptoUtilsService } from '../crypto-utils.service';
 
 export interface Tags {
   name: string;
@@ -281,7 +281,8 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     private dateAdapter: DateAdapter<Date>,
     private utilsService: UtilsService,
     private currentdateService: CurrentdateService,
-    private issueFilterService: IssueFilterService) {
+    private issueFilterService: IssueFilterService,
+    private cryptoUtils: CryptoUtilsService) {
     //console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
@@ -398,10 +399,12 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
                   const pass = this.sessionsub.getSessionStorageItem(re.report_id);
                   if (pass !== null) {
                     this.report_decryption_in_progress = true;
-                    if (this.indexeddbService.decodeAES(re, pass)) {
-                      this.report_decryption_in_progress = false;
-                      this.report_source_api = true;
-                    }
+                    this.indexeddbService.decodeAES(re, pass).then(result => {
+                      if (result) {
+                        this.report_decryption_in_progress = false;
+                        this.report_source_api = true;
+                      }
+                    }).catch(() => { this.report_decryption_in_progress = false; });
                   } else {
                     this.report_source_api = true;
                     setTimeout(_ => this.openDialog(re)); // BUGFIX: https://github.com/angular/angular/issues/6005#issuecomment-165911194
@@ -688,10 +691,12 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (pass !== null) {
       this.report_decryption_in_progress = true;
       if (this.report_source_api) {
-        if (this.indexeddbService.decodeAES(this.report_info, pass)) {
-          this.report_decryption_in_progress = false;
-          this.removeSureYouWanttoLeave();
-        }
+        this.indexeddbService.decodeAES(this.report_info, pass).then(result => {
+          if (result) {
+            this.report_decryption_in_progress = false;
+            this.removeSureYouWanttoLeave();
+          }
+        }).catch(() => { this.report_decryption_in_progress = false; });
       } else {
         this.indexeddbService.decrypt(pass, this.report_info.report_id).then(returned => {
           if (returned) {
@@ -1401,7 +1406,7 @@ Sample code here\n\
                     disableClose: true
                   });
 
-                  dialogRef.afterClosed().subscribe(result => {
+                  dialogRef.afterClosed().subscribe(async result => {
 
                     if (result === 'tryagain') {
                       console.log('User select: try again');
@@ -1414,14 +1419,14 @@ Sample code here\n\
                         this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
                         this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
                         // Encrypt
-                        const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
+                        const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
                         const now: number = Date.now();
                         const to_update = {
                           report_id: uuid(),
                           report_name: this.report_info.report_name,
                           report_createdate: this.report_info.report_createdate,
                           report_lastupdate: now,
-                          encrypted_data: ciphertext.toString()
+                          encrypted_data: ciphertext
                         };
 
                         this.indexeddbService.cloneReportadd(to_update).then(data => {
@@ -1476,7 +1481,7 @@ Sample code here\n\
                 disableClose: true
               });
 
-              dialogRef.afterClosed().subscribe(result => {
+              dialogRef.afterClosed().subscribe(async result => {
 
                 if (result === 'tryagain') {
                   console.log('User select: try again');
@@ -1489,14 +1494,14 @@ Sample code here\n\
                     this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
                     this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
                     // Encrypt
-                    const ciphertext = Crypto.AES.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
+                    const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
                     const now: number = Date.now();
                     const to_update = {
                       report_id: uuid(),
                       report_name: this.report_info.report_name,
                       report_createdate: this.report_info.report_createdate,
                       report_lastupdate: now,
-                      encrypted_data: ciphertext.toString()
+                      encrypted_data: ciphertext
                     };
 
                     this.indexeddbService.cloneReportadd(to_update).then(data => {
@@ -2739,7 +2744,7 @@ Info       | ${sevCounts.Info}\n\n`;
   }
 
 
-  DownloadHTMLv2(report_info, encrypted, type_dep, encpass): void {
+  async DownloadHTMLv2(report_info, encrypted, type_dep, encpass): Promise<void> {
     this.showspinner();
     const json = {
       "report_name": report_info.report_name,
@@ -2773,11 +2778,12 @@ Info       | ${sevCounts.Info}\n\n`;
       { "filename": "marked-highlight/2.2.1/index.umd.min.js", "integrity": "sha512-T5TNAGHd65imlc6xoRDq9hARHowETqOlOGMJ443E+PohphJHbzPpwQNBtcpmcjmHmQKLctZ/W3H2cY/T8EGDPA==" }
 
     ];
-    let ciphertext: any = "";
+    let ciphertext = "";
+    const plaintext = JSON.stringify(json);
     if (encpass === 'userepokey') {
-      ciphertext = Crypto.AES.encrypt(JSON.stringify(json), this.sessionsub.getSessionStorageItem(report_info.report_id));
+      ciphertext = await this.cryptoUtils.encrypt(plaintext, this.sessionsub.getSessionStorageItem(report_info.report_id));
     } else {
-      ciphertext = Crypto.AES.encrypt(JSON.stringify(json), encpass);
+      ciphertext = await this.cryptoUtils.encrypt(plaintext, encpass);
     }
 
 

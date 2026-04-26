@@ -1,242 +1,290 @@
-# VULNRΞPO API Reference
+# VULNRΞPO API Integration Reference
 
-If you want to build your own backend system for VULNRΞPO you are in the right place! You choose the technology in which you will manage and store the reports. VULNRΞPO has a simple integration with the backend api, the requests described below.
+This document describes the HTTP API that VULNRΞPO uses to communicate with an optional backend storage server. Implementing this API lets you store encrypted reports on your own infrastructure instead of (or in addition to) browser-local IndexedDB.
 
-## Example API server
+**All report data sent to and from the API is AES-256-GCM encrypted ciphertext.** Plaintext report content never leaves the browser.
 
-Please note that this is just example how to integrate with VULNRΞPO. The server is intended for personal use!
+## Example Server
 
-Visit: [https://github.com/kac89/vulnrepo-server](https://github.com/kac89/vulnrepo-server)
+An example server implementation is available at:
+[https://github.com/kac89/vulnrepo-server](https://github.com/kac89/vulnrepo-server)
 
-## API Reference
+> **Note:** The example server is intended for personal or small-team use. Review and harden it before using in a production environment.
 
-#### Init request: apiconnect
+---
 
-Request:
-```http
-POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
-Vulnrepo-Action: apiconnect
+## Authentication
+
+All requests must include two custom HTTP headers:
+
+| Header | Description |
+|---|---|
+| `Vulnrepo-Auth` | Your API access key |
+| `Vulnrepo-Action` | The action to perform (see endpoints below) |
+
+Your server must also return the following CORS headers to allow requests from browser-hosted instances:
 
 ```
-
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
-
-{"AUTH": "OK", "WELCOME": "John Doe", "CREATEDATE": "2021-05-14", "EXPIRYDATE": "2025-03-18", "CURRENT_STORAGE": "1000000", "MAX_STORAGE": "10000000"}
-
 ```
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
-| `WELCOME` | `string` | User name |
-| `CREATEDATE` | `string` | Create account date |
-| `EXPIRYDATE` | `string` | Access validity period (is not mandatory) |
-| `CURRENT_STORAGE` | `string` | Current storage used (in bytes) on API |
-| `MAX_STORAGE` | `string` | Max storage available (in bytes) on API |
+---
 
-#### getreportslist: Get all reports items
+## Endpoints
 
-Request:
+All requests use `POST /api/`.
+
+### `apiconnect` — Verify API key and retrieve account info
+
+**Request:**
+
 ```http
 POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Auth: <API-ACCESS-KEY>
+Vulnrepo-Action: apiconnect
+```
+
+**Response:**
+
+```json
+{
+  "AUTH": "OK",
+  "WELCOME": "John Doe",
+  "CREATEDATE": "2021-05-14",
+  "EXPIRYDATE": "2025-03-18",
+  "CURRENT_STORAGE": "1000000",
+  "MAX_STORAGE": "10000000"
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `AUTH` | `string` | `"OK"` on success |
+| `WELCOME` | `string` | Display name for the account |
+| `CREATEDATE` | `string` | Account creation date (`YYYY-MM-DD`) |
+| `EXPIRYDATE` | `string` | Access expiry date (`YYYY-MM-DD`); optional |
+| `CURRENT_STORAGE` | `string` | Bytes currently used on the server |
+| `MAX_STORAGE` | `string` | Maximum storage quota in bytes |
+
+---
+
+### `getreportslist` — List all reports
+
+**Request:**
+
+```http
+POST /api/ HTTP/2
+Vulnrepo-Auth: <API-ACCESS-KEY>
 Vulnrepo-Action: getreportslist
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+**Response:**
 
-[{"report_id":"[report_id]","report_name":"Test Report","report_createdate":1606571788759,"report_lastupdate":1608657635687}]
-
+```json
+[
+  {
+    "report_id": "<report_id>",
+    "report_name": "Test Report",
+    "report_createdate": 1606571788759,
+    "report_lastupdate": 1608657635687
+  }
+]
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
+| Field | Type | Description |
+|---|---|---|
+| `report_id` | `string` | Unique report identifier (UUID) |
+| `report_name` | `string` | Human-readable report name |
+| `report_createdate` | `number` | Unix timestamp (ms) of creation |
+| `report_lastupdate` | `number` | Unix timestamp (ms) of last update |
 
-#### getreport
+---
 
-Request:
+### `getreport` — Retrieve a single report
+
+**Request:**
+
 ```http
 POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Auth: <API-ACCESS-KEY>
 Vulnrepo-Action: getreport
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-reportid=[report_id]
-
+reportid=<report_id>
 ```
 
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+**Request body parameters:**
 
-[{"report_id":"[report_id]","report_name":"Test report 21","report_createdate":1616859952914,"report_lastupdate":"","encrypted_data":"U2FsdGVkX1+t8fhgoP...[trunked]"}]
+| Parameter | Type | Description |
+|---|---|---|
+| `reportid` | `string` | **Required.** The ID of the report to retrieve |
+
+**Response:**
+
+```json
+[
+  {
+    "report_id": "<report_id>",
+    "report_name": "Test report",
+    "report_createdate": 1616859952914,
+    "report_lastupdate": "",
+    "encrypted_data": "U2FsdGVkX1+t8fhgoP...[truncated]"
+  }
+]
 ```
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
-| `report_id` | `string` | **Required**. Report ID to remove |
+| Field | Type | Description |
+|---|---|---|
+| `report_id` | `string` | Report identifier |
+| `report_name` | `string` | Report name |
+| `report_createdate` | `number` | Unix timestamp (ms) of creation |
+| `report_lastupdate` | `number` \| `string` | Unix timestamp (ms) of last update, or `""` if never updated |
+| `encrypted_data` | `string` | Base64-encoded AES-256-GCM encrypted report data |
 
-#### removereport
+---
 
-Request:
-```http
-POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
-Vulnrepo-Action: removereport
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+### `savereport` — Save a new report
 
-reportid=[report_id]
+**Request:**
 
-```
-
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
-
-{"REMOVE_REPORT": "OK"}
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
-| `report_id` | `string` | **Required**. Report ID to remove |
-
-#### savereport
-
-Request:
 ```http
 POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Auth: <API-ACCESS-KEY>
 Vulnrepo-Action: savereport
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-reportdata=[base64_encode(report)]
-
+reportdata=<base64_encoded_report_json>
 ```
 
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+**Request body parameters:**
 
+| Parameter | Type | Description |
+|---|---|---|
+| `reportdata` | `string` | **Required.** Base64-encoded JSON containing the report object (including `encrypted_data`) |
+
+**Success response:**
+
+```json
 {"REPORT_SAVED": "OK"}
 ```
 
-ERROR response:
+**Error response — no storage quota remaining:**
 
-No space on API:
-```http
+```json
 {"STORAGE": "NOSPACE"}
 ```
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
-| `reportdata` | `string` | **Required**. Report data encrypted base64 |
+---
 
-#### updatereport
+### `updatereport` — Update an existing report
 
-Request:
+**Request:**
+
 ```http
 POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Auth: <API-ACCESS-KEY>
 Vulnrepo-Action: updatereport
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-reportdata=[base64_encode(report)]
+reportdata=<base64_encoded_report_json>
 ```
 
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+**Request body parameters:**
 
+| Parameter | Type | Description |
+|---|---|---|
+| `reportdata` | `string` | **Required.** Base64-encoded JSON containing the updated report object |
+
+**Success response:**
+
+```json
 {"REPORT_UPDATE": "OK"}
 ```
 
-ERROR response:
+**Error response — no storage quota remaining:**
 
-No space on API:
-```http
+```json
 {"STORAGE": "NOSPACE"}
 ```
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
-| `reportdata` | `string` | **Required**. Report data encrypted base64 |
+---
 
+### `removereport` — Delete a report
 
-#### getreportprofiles: Get all reports profiles settings
+**Request:**
 
-Request:
 ```http
 POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Auth: <API-ACCESS-KEY>
+Vulnrepo-Action: removereport
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+reportid=<report_id>
+```
+
+**Request body parameters:**
+
+| Parameter | Type | Description |
+|---|---|---|
+| `reportid` | `string` | **Required.** The ID of the report to delete |
+
+**Response:**
+
+```json
+{"REMOVE_REPORT": "OK"}
+```
+
+---
+
+### `getreportprofiles` — Retrieve report profiles
+
+Report profiles store reusable configuration (logo, researcher info, theme, CSS).
+
+**Request:**
+
+```http
+POST /api/ HTTP/2
+Vulnrepo-Auth: <API-ACCESS-KEY>
 Vulnrepo-Action: getreportprofiles
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+**Response:** JSON array of report profile objects.
 
-[{"[trunked]"}]
+---
 
-```
+### `getreporttemplates` — Retrieve issue templates
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
+**Request:**
 
-#### getreporttemplates: Get all issue templates
-
-Request:
 ```http
 POST /api/ HTTP/2
-Vulnrepo-Auth: [API-ACCESS-KEY]
+Vulnrepo-Auth: <API-ACCESS-KEY>
 Vulnrepo-Action: getreporttemplates
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
-Response:
-```http
-HTTP/2 200 OK
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: vulnrepo-auth, vulnrepo-action
+**Response:** JSON array of issue template objects.
 
-[{"[trunked]"}]
+---
 
+## Report Object Schema
+
+The `reportdata` field sent in `savereport` and `updatereport` is a Base64-encoded JSON string with the following top-level structure:
+
+```json
+{
+  "report_id": "<uuid>",
+  "report_name": "My Assessment",
+  "report_createdate": 1616859952914,
+  "report_lastupdate": 1616900000000,
+  "encrypted_data": "<base64-encoded AES-256-GCM ciphertext>"
+}
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `API-ACCESS-KEY` | `string` | **Required**. Your API key |
+The `encrypted_data` field is a versioned binary blob encoded in Base64:
+
+- **v2 format** (current): `[0x76, 0x32] + salt(16 bytes) + iv(12 bytes) + ciphertext`
+- **Legacy format**: CryptoJS-compatible AES ciphertext (automatically detected for backward compatibility)

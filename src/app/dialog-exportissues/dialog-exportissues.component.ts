@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import * as Crypto from 'crypto-js';
+import { CryptoUtilsService } from '../crypto-utils.service';
 
 interface Exportsource {
   value: string;
@@ -47,7 +47,8 @@ export class DialogExportissuesComponent implements OnInit {
     { value: 'jira', viewValue: 'Atlassian Jira', viewImg: '/assets/vendors/jira-logo.png' }
   ];
   // @ts-ignore
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogExportissuesComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogExportissuesComponent>,
+    private cryptoUtils: CryptoUtilsService) { }
 
     ngOnInit() {
 
@@ -262,7 +263,7 @@ this.curlcmd = `curl \
   }
 
 
-  vulnrepojsonexport(pass, pass2) {
+  async vulnrepojsonexport(pass, pass2) {
 
     if (pass === pass2) {
 
@@ -272,7 +273,7 @@ this.curlcmd = `curl \
 
       const json = JSON.stringify(this.data);
       // Encrypt
-      const ciphertext:any = Crypto.AES.encrypt(json, pass);
+      const ciphertext = await this.cryptoUtils.encrypt(json, pass);
 
       const element = document.createElement('a');
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));

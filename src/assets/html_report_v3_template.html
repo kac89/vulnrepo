@@ -1423,8 +1423,7 @@
 			const modal = new Promise(function (resolve, reject) {
 				const localkey = sessionStorage.getItem('VULNREPO-PASS');
 				if (localkey) {
-					var xx = decodeAES(obj, localkey);
-					if (xx) { resolve(xx); }
+					decodeAES(obj, localkey).then(function(xx) { if (xx) { resolve(xx); } });
 				} else {
 					$('#passprompt').modal('show');
 					$('#passprompt').on('keypress', function (event) {
@@ -1432,8 +1431,9 @@
 						if (keycode == '13') { $('#passprompt .tbtn').click(); }
 					});
 					$('#passprompt .tbtn').click(function () {
-						var xx = decodeAES(obj, $('#inputPassword').val());
-						if (xx) { resolve(xx); } else { $('.wrongpass').show(); }
+						decodeAES(obj, $('#inputPassword').val()).then(function(xx) {
+							if (xx) { resolve(xx); } else { $('.wrongpass').show(); }
+						});
 					});
 				}
 			}).then(function(dec_data) {
@@ -1490,12 +1490,32 @@
 			return fil;
 		}
 
-		function decodeAES(data, pass) {
+		async function decodeAES(data, pass) {
 			try {
-				const bytes = CryptoJS.AES.decrypt(data, pass);
-				const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-				if (decryptedData) { return decryptedData; }
-			} catch (except) { console.log('wrong pass'); }
+				const raw = atob(data);
+				// v2 format: first two bytes are 0x76 ('v') and 0x32 ('2')
+				if (raw.charCodeAt(0) === 0x76 && raw.charCodeAt(1) === 0x32) {
+					const combined = new Uint8Array(raw.length);
+					for (let i = 0; i < raw.length; i++) combined[i] = raw.charCodeAt(i);
+					const salt = combined.slice(2, 18);
+					const iv = combined.slice(18, 30);
+					const cipherBuf = combined.slice(30);
+					const keyMaterial = await crypto.subtle.importKey(
+						'raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']
+					);
+					const key = await crypto.subtle.deriveKey(
+						{ name: 'PBKDF2', salt, iterations: 600000, hash: 'SHA-256' },
+						keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+					);
+					const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipherBuf);
+					return JSON.parse(new TextDecoder().decode(plainBuf));
+				} else {
+					// Legacy CryptoJS format
+					const bytes = CryptoJS.AES.decrypt(data, pass);
+					const result = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+					return result || null;
+				}
+			} catch (e) { return null; }
 		}
 
 		function getStatusClass(status) {
