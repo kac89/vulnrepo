@@ -23,20 +23,22 @@
 <div class="report-page" [class.report-page--bar-visible]="stickyBarVisible">
 
   <!-- Hero -->
-  <div class="report-hero">
-    <div class="report-hero-glow"></div>
-    <div class="report-hero-grid"></div>
-    <div class="report-hero-inner">
+  <div class="rh">
+    <div class="rh-glow"></div>
+    <div class="rh-grid"></div>
+    <div class="rh-stripe"></div>
 
-      <!-- Top row: icon + title -->
-      <div class="report-hero-top">
-        <div class="report-hero-icon">
-          <img title="VULNRΞPO REPORT" src="assets/issue.png">
+    <div class="rh-body">
+
+      <!-- Title row -->
+      <div class="rh-title-row">
+        <div class="rh-icon">
+          <img title="VULNRΞPO REPORT" src="assets/issue.png" alt="Report icon">
         </div>
-        <h1 class="report-hero-title">
+        <h1 class="rh-title">
           {{reportdesc?.report_name}}
           @if (decryptedReportDataChanged) {
-          <a class="report-hero-edit-btn" title="Edit report name" [routerLink]="[]"
+          <a class="rh-edit-btn" title="Edit report name" [routerLink]="[]"
             (click)="editreporttitle(reportdesc)">
             <mat-icon>edit</mat-icon>
           </a>
@@ -44,34 +46,57 @@
         </h1>
       </div>
 
-      <!-- Meta strip -->
+      <!-- Progress states -->
+      @if (api_connection_status) {
+      <div class="rh-progress">
+        <span class="rh-progress-label">API connection — please wait</span>
+        <mat-progress-bar style="width:260px;" color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+      }
+      @if (report_decryption_in_progress) {
+      <div class="rh-progress">
+        <span class="rh-progress-label">Decrypting report — please wait</span>
+        <mat-progress-bar style="width:260px;" color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+      }
+      @if (report_encryption_in_progress) {
+      <div class="rh-progress">
+        <span class="rh-progress-label">Encrypting report — please wait</span>
+        <mat-progress-bar style="width:260px;" color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+      }
+
+      <!-- Meta data-grid -->
       @if (!api_connection_status) {
-      <div class="report-hero-meta">
+      <div class="rh-meta-grid">
         @if (!report_decryption_in_progress) {
-        <div class="report-hero-meta-item">
-          <mat-icon class="report-hero-meta-icon">fingerprint</mat-icon>
-          <span class="report-hero-meta-label">ID</span>
-          <span class="report-hero-meta-value">
+        <div class="rh-meta-cell">
+          <span class="rh-meta-label">
+            <mat-icon class="rh-meta-icon">fingerprint</mat-icon>ID
+          </span>
+          <span class="rh-meta-value">
             {{reportdesc?.report_id}}
-            @if (report_source_api) { <mat-icon color="accent" class="report-hero-api-icon">public</mat-icon> }
+            @if (report_source_api) { <mat-icon class="rh-meta-inline-icon" color="accent">public</mat-icon> }
           </span>
         </div>
-        <span class="report-hero-meta-sep"></span>
-        <div class="report-hero-meta-item">
-          <mat-icon class="report-hero-meta-icon">calendar_today</mat-icon>
-          <span class="report-hero-meta-label">Created</span>
-          <span class="report-hero-meta-value">{{reportdesc?.report_createdate | date:'mediumDate'}}</span>
+        <div class="rh-meta-div"></div>
+        <div class="rh-meta-cell">
+          <span class="rh-meta-label">
+            <mat-icon class="rh-meta-icon">calendar_today</mat-icon>Created
+          </span>
+          <span class="rh-meta-value">{{reportdesc?.report_createdate | date:'mediumDate'}}</span>
         </div>
         }
         @if (decryptedReportDataChanged) {
-        <span class="report-hero-meta-sep"></span>
-        <div class="report-hero-meta-item">
-          <mat-icon class="report-hero-meta-icon">local_offer</mat-icon>
-          <span class="report-hero-meta-label">Version</span>
-          <span class="report-hero-meta-value">
-            <b class="labelversion">v{{decryptedReportDataChanged?.report_version}}</b>
-            <button class="report-hero-history-btn" matButton="outlined" (click)="showHistory(reportdesc.report_id)">
-              <mat-icon>history</mat-icon> History
+        <div class="rh-meta-div"></div>
+        <div class="rh-meta-cell">
+          <span class="rh-meta-label">
+            <mat-icon class="rh-meta-icon">local_offer</mat-icon>Version
+          </span>
+          <span class="rh-meta-value">
+            <b class="rh-version-badge">v{{decryptedReportDataChanged?.report_version}}</b>
+            <button class="rh-history-btn" (click)="showHistory(reportdesc.report_id)">
+              <mat-icon>history</mat-icon>History
             </button>
           </span>
         </div>
@@ -79,26 +104,11 @@
       </div>
       }
 
-      <!-- Progress states -->
-      @if (api_connection_status) {
-      <p class="report-hero-progress-msg">API connection please wait…<mat-progress-bar
-          style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-      @if (report_decryption_in_progress) {
-      <p class="report-hero-progress-msg">Report is decrypted please wait…<mat-progress-bar
-          style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-      @if (report_encryption_in_progress) {
-      <p class="report-hero-progress-msg">Report is encrypted please wait…<mat-progress-bar
-          style="width:260px;margin-top:6px;" color="accent" mode="indeterminate"></mat-progress-bar></p>
-      }
-
       <!-- Severity findings strip -->
       @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
-      <div class="report-hero-findings">
-        <span class="report-hero-findings-label">
-          <mat-icon>bug_report</mat-icon>
-          Findings
+      <div class="rh-findings">
+        <span class="rh-findings-label">
+          <mat-icon>bug_report</mat-icon>Findings
         </span>
         <div class="report-severity-strip">
           @for (sev of severitytable; track sev) {
@@ -113,10 +123,10 @@
       </div>
       }
 
-      <!-- Save row -->
+      <!-- Save action bar -->
       @if (decryptedReportDataChanged) {
-      <div class="report-save-row">
-        <div class="report-save-meta">
+      <div class="rh-action-bar">
+        <div class="rh-action-meta">
           @if (reportdesc?.report_lastupdate !== '' && reportdesc?.report_lastupdate !== 0 && lastsavereportdata == '')
           {
           @if (!youhaveunsavedchanges && savemsg) {
@@ -138,7 +148,8 @@
           </div>
           }
         </div>
-        <button mat-fab extended class="mat-elevation-z9" color="primary"
+        <button mat-fab extended class="mat-elevation-z9 rh-save-btn"
+          [class.rh-save-btn--pulse]="youhaveunsavedchanges" color="primary"
           (click)="saveReportChanges(reportdesc.report_id)">
           <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save &amp; release new version
         </button>
