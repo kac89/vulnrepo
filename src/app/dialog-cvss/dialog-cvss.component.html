@@ -7,10 +7,16 @@
         <mat-icon class="cvss-icon">security</mat-icon>
       </div>
       <div class="cvss-header-text">
-        <span class="cvss-title">CVSS 3.1 Calculator</span>
+        <span class="cvss-title">CVSS Calculator</span>
         <span class="cvss-subtitle">Common Vulnerability Scoring System</span>
       </div>
     </div>
+
+    <div class="version-toggle">
+      <button class="version-btn" [class.active]="cvssVersion === '4.0'" (click)="switchVersion('4.0')">v4.0</button>
+      <button class="version-btn" [class.active]="cvssVersion === '3.1'" (click)="switchVersion('3.1')">v3.1</button>
+    </div>
+
     <div class="cvss-header-right">
       @if (show) {
         <span class="severity-badge severity-{{severity | lowercase}}">
@@ -22,138 +28,327 @@
 
   <mat-dialog-content class="cvss-body">
 
-    <!-- Exploitability Metrics -->
-    <p class="section-label">Exploitability Metrics</p>
-    <div class="metrics-grid">
+    <!-- ═══════════════════════════════════════════════════════════════ CVSS 4.0 -->
+    @if (cvssVersion === '4.0') {
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="This metric reflects the context by which vulnerability exploitation is possible.">Attack Vector</span>
-          <span class="metric-code">AV</span>
+      <!-- Exploitability Metrics -->
+      <p class="section-label">Exploitability Metrics</p>
+      <div class="metrics-grid metrics-grid-5">
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="This metric reflects the context by which vulnerability exploitation is possible.">Attack Vector</span>
+            <span class="metric-code">AV</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[20]">
+            @for (item of AV4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="AV4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
         </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[0]">
-          @for (item of AV; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="AVonclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Conditions beyond the attacker's control that must exist in order to exploit the vulnerability.">Attack Complexity</span>
+            <span class="metric-code">AC</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[21]">
+            @for (item of AC4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="AC4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Specific deployment and execution conditions of the vulnerable system required for attack.">Attack Requirements</span>
+            <span class="metric-code">AT</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[22]">
+            @for (item of AT4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="AT4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="The level of privileges an attacker must possess before successfully exploiting the vulnerability.">Privileges Required</span>
+            <span class="metric-code">PR</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[23]">
+            @for (item of PR4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="PR4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Captures the requirement for a human user, other than the attacker, to participate in the successful compromise.">User Interaction</span>
+            <span class="metric-code">UI</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[24]">
+            @for (item of UI4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="UI4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
       </div>
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="Conditions beyond the attacker's control that must exist in order to exploit the vulnerability.">Attack Complexity</span>
-          <span class="metric-code">AC</span>
+      <!-- Vulnerable System Impact -->
+      <p class="section-label">Vulnerable System Impact</p>
+      <div class="metrics-grid metrics-grid-3">
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to confidentiality of the vulnerable system.">Confidentiality</span>
+            <span class="metric-code">VC</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[25]">
+            @for (item of VC4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="VC4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
         </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[1]">
-          @for (item of AC; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="AConclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to integrity of the vulnerable system.">Integrity</span>
+            <span class="metric-code">VI</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[26]">
+            @for (item of VI4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="VI4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to availability of the vulnerable system.">Availability</span>
+            <span class="metric-code">VA</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[27]">
+            @for (item of VA4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="VA4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
       </div>
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="The level of privileges an attacker must possess before successfully exploiting the vulnerability.">Privileges Required</span>
-          <span class="metric-code">PR</span>
+      <!-- Subsequent System Impact -->
+      <p class="section-label">Subsequent System Impact</p>
+      <div class="metrics-grid metrics-grid-3">
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to confidentiality of downstream systems.">Confidentiality</span>
+            <span class="metric-code">SC</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[28]">
+            @for (item of SC4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="SC4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
         </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[2]">
-          @for (item of PR; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="PRonclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to integrity of downstream systems.">Integrity</span>
+            <span class="metric-code">SI</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[29]">
+            @for (item of SI4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="SI4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to availability of downstream systems.">Availability</span>
+            <span class="metric-code">SA</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[30]">
+            @for (item of SA4; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="SA4onclick(item)"
+                [value]="" [checked]="item[3]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
       </div>
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="Captures the requirement for a user, other than the attacker, to participate in the successful compromise.">User Interaction</span>
-          <span class="metric-code">UI</span>
-        </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[3]">
-          @for (item of UI; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="UIonclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
+      <!-- Vector string (v4.0) -->
+      <div class="vector-row">
+        <mat-form-field class="vector-field" color="accent">
+          <mat-label>Score Vector</mat-label>
+          <input [formControl]="scorevector40" matInput
+            placeholder="CVSS:4.0/AV:_/AC:_/AT:_/PR:_/UI:_/VC:_/VI:_/VA:_/SC:_/SI:_/SA:_" value="">
+          <button matSuffix mat-icon-button aria-label="Load score vector" title="Load score vector" color="accent"
+            (click)="refreshfromvector40(scorevector40.value)" matTooltip="Load score vector" matTooltipPosition="below">
+            <mat-icon>sync</mat-icon>
+          </button>
+          <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy score vector" title="Copy score vector"
+            color="accent" [cdkCopyToClipboard]="scorevector40.value" (click)="copyText()"
+            matTooltip="Copy to clipboard" matTooltipPosition="below">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </mat-form-field>
       </div>
 
-    </div>
+    }
 
-    <!-- Impact Metrics -->
-    <p class="section-label">Impact Metrics</p>
-    <div class="metrics-grid">
+    <!-- ═══════════════════════════════════════════════════════════════ CVSS 3.1 -->
+    @if (cvssVersion === '3.1') {
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="Does a successful attack impact a component other than the vulnerable component?">Scope</span>
-          <span class="metric-code">S</span>
+      <!-- Exploitability Metrics -->
+      <p class="section-label">Exploitability Metrics</p>
+      <div class="metrics-grid">
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="This metric reflects the context by which vulnerability exploitation is possible.">Attack Vector</span>
+            <span class="metric-code">AV</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[0]">
+            @for (item of AV; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="AVonclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
         </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[4]">
-          @for (item of S; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Sonclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Conditions beyond the attacker's control that must exist in order to exploit the vulnerability.">Attack Complexity</span>
+            <span class="metric-code">AC</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[1]">
+            @for (item of AC; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="AConclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="The level of privileges an attacker must possess before successfully exploiting the vulnerability.">Privileges Required</span>
+            <span class="metric-code">PR</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[2]">
+            @for (item of PR; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="PRonclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Captures the requirement for a user, other than the attacker, to participate in the successful compromise.">User Interaction</span>
+            <span class="metric-code">UI</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[3]">
+            @for (item of UI; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="UIonclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
       </div>
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="Impact to the confidentiality of the information resources managed by a software component.">Confidentiality</span>
-          <span class="metric-code">C</span>
+      <!-- Impact Metrics -->
+      <p class="section-label">Impact Metrics</p>
+      <div class="metrics-grid">
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Does a successful attack impact a component other than the vulnerable component?">Scope</span>
+            <span class="metric-code">S</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[4]">
+            @for (item of S; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Sonclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
         </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[5]">
-          @for (item of C; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Conclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to the confidentiality of the information resources managed by a software component.">Confidentiality</span>
+            <span class="metric-code">C</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[5]">
+            @for (item of C; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Conclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to integrity of a successfully exploited vulnerability.">Integrity</span>
+            <span class="metric-code">I</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[6]">
+            @for (item of I; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Ionclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name" title="Impact to the availability of the impacted component resulting from a successfully exploited vulnerability.">Availability</span>
+            <span class="metric-code">A</span>
+          </div>
+          <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[7]">
+            @for (item of A; track item) {
+              <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Aonclick(item)"
+                [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+
       </div>
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="Impact to integrity of a successfully exploited vulnerability.">Integrity</span>
-          <span class="metric-code">I</span>
-        </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[6]">
-          @for (item of I; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Ionclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
+      <!-- Vector string (v3.1) -->
+      <div class="vector-row">
+        <mat-form-field class="vector-field" color="accent">
+          <mat-label>Score Vector</mat-label>
+          <input [formControl]="scorevector" matInput placeholder="CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_" value="">
+          <button matSuffix mat-icon-button aria-label="Load score vector" title="Load score vector" color="accent"
+            (click)="refreshfromvector(scorevector.value)" matTooltip="Load score vector" matTooltipPosition="below">
+            <mat-icon>sync</mat-icon>
+          </button>
+          <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy score vector" title="Copy score vector"
+            color="accent" [cdkCopyToClipboard]="scorevector.value" (click)="copyText()"
+            matTooltip="Copy to clipboard" matTooltipPosition="below">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </mat-form-field>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-header">
-          <span class="metric-name" title="Impact to the availability of the impacted component resulting from a successfully exploited vulnerability.">Availability</span>
-          <span class="metric-code">A</span>
-        </div>
-        <mat-radio-group class="btn-group" [(ngModel)]="selectedAnswers[7]">
-          @for (item of A; track item) {
-            <mat-radio-button class="btn-option" [matTooltip]="item[1]" (change)="Aonclick(item)"
-              [value]="" [checked]="item[4]">{{item[0]}}</mat-radio-button>
-          }
-        </mat-radio-group>
-      </div>
-
-    </div>
-
-    <!-- Vector string -->
-    <div class="vector-row">
-      <mat-form-field class="vector-field" color="accent">
-        <mat-label>Score Vector</mat-label>
-        <input [formControl]="scorevector" matInput placeholder="CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_" value="">
-        <button matSuffix mat-icon-button aria-label="Load score vector" title="Load score vector" color="accent"
-          (click)="refreshfromvector(scorevector.value)" matTooltip="Load score vector" matTooltipPosition="below">
-          <mat-icon>sync</mat-icon>
-        </button>
-        <button matSuffix mat-icon-button #tooltip="matTooltip" aria-label="Copy score vector" title="Copy score vector"
-          color="accent" [cdkCopyToClipboard]="scorevector.value" (click)="copyText()"
-          matTooltip="Copy to clipboard" matTooltipPosition="below">
-          <mat-icon>content_copy</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
+    }
 
     @if (mobile) {
       <div class="mobile-hint">{{selectedItem}}</div>
@@ -163,7 +358,7 @@
 
   <mat-dialog-actions class="cvss-actions">
     @if (show) {
-      <button mat-flat-button class="save-btn" (click)="save(basescore, severity, scorevector.value)">
+      <button mat-flat-button class="save-btn" (click)="save(basescore, severity, activeVector)">
         <mat-icon>save</mat-icon> Save CVSS and Severity
       </button>
     }

@@ -66,6 +66,36 @@
   align-items: center;
 }
 
+// ── Version toggle ────────────────────────────────────────────────────────────
+.version-toggle {
+  display: flex;
+  gap: 4px;
+  margin: 0 12px;
+}
+
+.version-btn {
+  padding: 4px 12px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: #757575;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    color: #e0e0e0;
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  &.active {
+    background: #424242;
+    color: #f5f5f5;
+    border-color: #616161;
+  }
+}
+
 // ── Severity badge ────────────────────────────────────────────────────────────
 .severity-badge {
   display: inline-flex;
@@ -140,6 +170,36 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-bottom: 8px;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// 5-column grid for CVSS 4.0 exploitability (5 metrics)
+.metrics-grid-5 {
+  grid-template-columns: repeat(5, 1fr);
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// 3-column grid for CVSS 4.0 impact groups
+.metrics-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
 
   @media (max-width: 700px) {
     grid-template-columns: 1fr 1fr;
