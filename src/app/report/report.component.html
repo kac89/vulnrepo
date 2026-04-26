@@ -837,59 +837,63 @@
             <mat-icon>group</mat-icon>
           </div>
           <mat-card-title>Researchers</mat-card-title>
-          <div class="researcher-header-actions">
-            <button mat-stroked-button class="researcher-add-btn" (click)="addresearcher()">
-              <mat-icon>add</mat-icon>Add researcher
-            </button>
-          </div>
         </mat-card-header>
         <mat-card-content>
-          @for (researchers of decryptedReportDataChanged.researcher; track researchers) {
-          <div class="researcher-row">
-            <div class="researcher-avatar">
-              {{ researchers.reportername ? researchers.reportername[0] : '?' }}
+          <div class="researcher-grid">
+            @for (researchers of decryptedReportDataChanged.researcher; track researchers) {
+            <div class="researcher-card">
+              <div class="researcher-card__header">
+                <div class="researcher-card__avatar" aria-hidden="true">
+                  {{ researchers.reportername ? researchers.reportername[0] : '?' }}
+                </div>
+                <mat-form-field class="researcher-card__name-field" color="accent">
+                  <mat-label>Name</mat-label>
+                  <input matInput [(ngModel)]="researchers.reportername">
+                  <mat-icon matSuffix>person_pin</mat-icon>
+                </mat-form-field>
+                <button mat-icon-button class="researcher-card__delete"
+                  [attr.aria-label]="'Remove researcher ' + (researchers.reportername || '')"
+                  (click)="removeresearcher(researchers)">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </div>
+              <div class="researcher-card__fields">
+                <mat-form-field class="example-full-width" color="accent">
+                  <mat-label>E-mail</mat-label>
+                  <input matInput [(ngModel)]="researchers.reporteremail">
+                  <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
+                <mat-form-field class="example-full-width" color="accent">
+                  <mat-label>Social link</mat-label>
+                  <input matInput [(ngModel)]="researchers.reportersocial">
+                  <mat-icon matSuffix>share</mat-icon>
+                </mat-form-field>
+                <mat-form-field class="example-full-width" color="accent">
+                  <mat-label>Website</mat-label>
+                  <input matInput [(ngModel)]="researchers.reporterwww">
+                  <mat-icon matSuffix>public</mat-icon>
+                </mat-form-field>
+              </div>
             </div>
-            <div class="researcher-fields">
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>Name</mat-label>
-                <input matInput [(ngModel)]="researchers.reportername">
-                <mat-icon matSuffix>person_pin</mat-icon>
-              </mat-form-field>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>E-mail</mat-label>
-                <input matInput [(ngModel)]="researchers.reporteremail">
-                <mat-icon matSuffix>email</mat-icon>
-              </mat-form-field>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>Social link</mat-label>
-                <input matInput [(ngModel)]="researchers.reportersocial">
-                <mat-icon matSuffix>share</mat-icon>
-              </mat-form-field>
-              <mat-form-field class="example-full-width" color="accent">
-                <mat-label>Website</mat-label>
-                <input matInput [(ngModel)]="researchers.reporterwww">
-                <mat-icon matSuffix>public</mat-icon>
-              </mat-form-field>
-            </div>
-            <div class="researcher-row-actions">
-              <button mat-icon-button class="researcher-delete-btn" (click)="removeresearcher(researchers)"
-                title="Remove researcher">
-                <mat-icon>delete_outline</mat-icon>
+            } @empty {
+            <div class="researcher-empty">
+              <div class="researcher-empty__icon">
+                <mat-icon>verified_user</mat-icon>
+              </div>
+              <p class="researcher-empty__title">No researchers assigned</p>
+              <p class="researcher-empty__desc">Researchers credited in this report will appear here. Add at least one person before publishing.</p>
+              <button mat-flat-button class="researcher-empty__cta" (click)="addresearcher()">
+                <mat-icon>add</mat-icon>Add first researcher
               </button>
             </div>
-          </div>
-          } @empty {
-          <div class="researcher-empty">
-            <div class="researcher-empty-icon">
-              <mat-icon>group_add</mat-icon>
-            </div>
-            <p class="researcher-empty-title">No researchers yet</p>
-            <p class="researcher-empty-desc">Add the people who worked on this report.</p>
-            <button mat-stroked-button class="researcher-add-btn" (click)="addresearcher()">
-              <mat-icon>add</mat-icon>Add researcher
+            }
+            @if (decryptedReportDataChanged.researcher?.length) {
+            <button class="researcher-add-card" (click)="addresearcher()" aria-label="Add researcher">
+              <mat-icon class="researcher-add-card__icon">add_circle_outline</mat-icon>
+              <span class="researcher-add-card__label">Add researcher</span>
             </button>
+            }
           </div>
-          }
         </mat-card-content>
       </mat-card>
       <!-- changelog -->
@@ -934,23 +938,25 @@
               </div>
               <div class="changelog-entry-body">
                 <div class="changelog-entry-meta">
-                  @if (item.version) {
-                  <span class="changelog-version-badge">
-                    <mat-icon>new_releases</mat-icon>
-                    v{{ item.version }}
-                  </span>
-                  }
-                  <span class="changelog-entry-date">
-                    <mat-icon>schedule</mat-icon>
-                    {{ item.date | date:'MMM d, y · HH:mm' }}
-                  </span>
+                  <div class="changelog-entry-meta-left">
+                    @if (item.version) {
+                    <span class="changelog-version-badge">
+                      <mat-icon>new_releases</mat-icon>
+                      v{{ item.version }}
+                    </span>
+                    }
+                    <span class="changelog-entry-date">
+                      <mat-icon>schedule</mat-icon>
+                      {{ item.date | date:'MMM d, y · HH:mm' }}
+                    </span>
+                  </div>
                   <div class="changelog-entry-actions">
                     <button mat-icon-button class="changelog-action-btn" (click)="editchangelog(item)"
-                      title="Edit entry">
+                      title="Edit entry" aria-label="Edit entry">
                       <mat-icon>edit</mat-icon>
                     </button>
                     <button mat-icon-button class="changelog-action-btn changelog-action-btn--danger"
-                      (click)="removefromchangelog(item)" title="Delete entry">
+                      (click)="removefromchangelog(item)" title="Delete entry" aria-label="Delete entry">
                       <mat-icon>delete_outline</mat-icon>
                     </button>
                   </div>
@@ -960,26 +966,27 @@
             </div>
             }
           </div>
-          @if (changelogLimit < listchangelog.length) { <div class="changelog-load-more">
+          @if (changelogLimit < listchangelog.length) {
+          <div class="changelog-load-more">
             <button mat-stroked-button class="changelog-load-more-btn" (click)="changelogLimit = changelogLimit + 5">
-              <mat-icon>expand_more</mat-icon>
+              <mat-icon>unfold_more</mat-icon>
               Load older entries
               <span class="changelog-load-more-count">({{ listchangelog.length - changelogLimit }} remaining)</span>
             </button>
-    </div>
-    }
-    } @else {
-    <div class="changelog-empty">
-      <div class="changelog-empty-icon">
-        <mat-icon>history_toggle_off</mat-icon>
-      </div>
-      <p class="changelog-empty-title">No entries yet</p>
-      <p class="changelog-empty-desc">Track changes and version releases by adding your first changelog entry.</p>
-      <button mat-stroked-button class="changelog-add-btn" (click)="addchangelog()">
-        <mat-icon>add</mat-icon> Add first entry
-      </button>
-    </div>
-    }
+          </div>
+          }
+          } @else {
+          <div class="changelog-empty">
+            <div class="changelog-empty__icon">
+              <mat-icon>history_toggle_off</mat-icon>
+            </div>
+            <p class="changelog-empty__title">No entries yet</p>
+            <p class="changelog-empty__desc">Track changes and version releases by adding your first changelog entry.</p>
+            <button mat-flat-button class="changelog-empty__cta" (click)="addchangelog()">
+              <mat-icon>add</mat-icon> Add first entry
+            </button>
+          </div>
+          }
 
     <!-- Hidden table + paginator — keep for Angular ViewChild wiring -->
     <div style="display:none">

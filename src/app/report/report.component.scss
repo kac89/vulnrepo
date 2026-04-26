@@ -1112,27 +1112,20 @@ mat-paginator {
   display: flex;
   flex-direction: column;
   padding: 4px 0 0;
+  gap: 10px;
 }
 
 .changelog-entry {
   display: flex;
   gap: 0;
   position: relative;
-
-  &:hover .changelog-entry-actions {
-    opacity: 1;
-  }
-
-  &:hover .changelog-entry-dot {
-    border-color: $accent-green;
-  }
 }
 
 .changelog-entry-line {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 28px;
+  width: 32px;
   flex-shrink: 0;
 
   &::after {
@@ -1140,8 +1133,8 @@ mat-paginator {
     flex: 1;
     width: 1px;
     background: $border-color;
-    margin-top: 6px;
-    min-height: 16px;
+    margin-top: 8px;
+    min-height: 10px;
   }
 }
 
@@ -1150,40 +1143,64 @@ mat-paginator {
 }
 
 .changelog-entry-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: $surface-nested;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  margin-top: 5px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  margin-top: 16px;
   flex-shrink: 0;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 
   &--release {
     background: $accent-green;
     border-color: $accent-green;
-    box-shadow: 0 0 8px rgba($accent-green, 0.45);
+    box-shadow: 0 0 0 3px rgba($accent-green, 0.2), 0 0 10px rgba($accent-green, 0.4);
   }
 
   &--old {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
   }
 }
 
+// ── Entry body card ───────────────────────────────────────────
 .changelog-entry-body {
   flex: 1;
-  padding: 0 0 24px 14px;
   min-width: 0;
+  margin-bottom: 0;
+  padding: 14px 16px;
+  background: $surface-nested;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+
+    .changelog-entry-actions { opacity: 1; }
+  }
+}
+
+.changelog-entry--release .changelog-entry-body {
+  border-left: 3px solid $accent-green;
+  background: rgba($accent-green, 0.04);
 }
 
 .changelog-entry-meta {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.changelog-entry-meta-left {
+  display: flex;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  min-height: 20px;
-  margin-bottom: 5px;
+  min-width: 0;
 }
 
 .changelog-entry-date {
@@ -1193,6 +1210,7 @@ mat-paginator {
   font-size: 0.775rem;
   color: $text-secondary;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 
   mat-icon {
     font-size: 14px !important;
@@ -1205,14 +1223,15 @@ mat-paginator {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 2px 8px 2px 5px;
+  padding: 3px 9px 3px 6px;
   border-radius: 20px;
-  background: rgba($accent-green, 0.1);
-  border: 1px solid rgba($accent-green, 0.28);
+  background: rgba($accent-green, 0.12);
+  border: 1px solid rgba($accent-green, 0.3);
   color: $accent-green;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 
   mat-icon {
     font-size: 13px !important;
@@ -1225,20 +1244,21 @@ mat-paginator {
   display: flex;
   align-items: center;
   gap: 0;
-  margin-left: auto;
-  opacity: 0;
+  flex-shrink: 0;
+  opacity: 0.35;
   transition: opacity 0.15s;
 }
 
 .changelog-action-btn {
-  width: 28px !important;
-  height: 28px !important;
-  line-height: 28px !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
   padding: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   color: $text-secondary !important;
+  transition: color 0.15s !important;
 
   .mat-icon {
     font-size: 16px !important;
@@ -1247,22 +1267,27 @@ mat-paginator {
     line-height: 16px !important;
   }
 
-  &:hover { color: rgba(255, 255, 255, 0.87) !important; }
-
+  &:hover { color: rgba(255, 255, 255, 0.9) !important; }
   &--danger:hover { color: #ff5252 !important; }
+
+  &:focus-visible {
+    outline: 2px solid $accent-green;
+    outline-offset: 2px;
+  }
 }
 
 .changelog-entry-desc {
   margin: 0;
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.82);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
+// ── Load more ─────────────────────────────────────────────────
 .changelog-load-more {
   display: flex;
   justify-content: center;
-  padding: 4px 0 8px;
+  padding: 8px 0 4px;
 }
 
 .changelog-load-more-btn {
@@ -1291,6 +1316,7 @@ mat-paginator {
   margin-left: 2px;
 }
 
+// ── Empty state ────────────────────────────────────────────────
 .changelog-empty {
   display: flex;
   flex-direction: column;
@@ -1300,55 +1326,46 @@ mat-paginator {
   text-align: center;
 }
 
-.changelog-empty-icon {
+.changelog-empty__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
   border: 1px solid $border-color;
   background: $surface-nested;
 
   mat-icon {
-    font-size: 28px !important;
-    width: 28px !important;
-    height: 28px !important;
-    color: $text-secondary;
-    opacity: 0.5;
+    font-size: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    color: $accent-green;
+    opacity: 0.7;
   }
 }
 
-.changelog-empty-title {
+.changelog-empty__title {
   margin: 4px 0 0;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
-.changelog-empty-desc {
+.changelog-empty__desc {
   margin: 0 0 6px;
   font-size: 0.825rem;
   color: $text-secondary;
-  max-width: 300px;
+  max-width: 320px;
   line-height: 1.6;
 }
 
-// ── Researcher section ────────────────────────────────────────
-.researcher-header-actions {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-.researcher-add-btn {
-  height: 32px !important;
-  line-height: 32px !important;
-  font-size: 0.78rem !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  color: rgba(255, 255, 255, 0.7) !important;
-  padding: 0 12px !important;
+.changelog-empty__cta {
+  background: $accent-green !important;
+  color: #000 !important;
+  border-radius: 8px !important;
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
 
   mat-icon {
     font-size: 16px !important;
@@ -1357,89 +1374,132 @@ mat-paginator {
     margin-right: 4px;
     vertical-align: middle;
   }
-
-  &:hover {
-    border-color: $accent-green !important;
-    color: $accent-green !important;
-  }
 }
 
-.researcher-row {
+// ── Researcher section ────────────────────────────────────────
+
+.researcher-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+.researcher-card {
+  background: $surface-nested;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.15s;
+
+  &:focus-within { border-color: rgba(255, 255, 255, 0.28); }
+}
+
+.researcher-card__header {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid $border-color;
-  position: relative;
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  &:first-child { padding-top: 0; }
-
-  &:hover .researcher-row-actions { opacity: 1; }
+  gap: 12px;
+  margin-bottom: 4px;
 }
 
-.researcher-avatar {
+.researcher-card__avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: $surface-nested;
-  border: 1px solid $border-color;
-  color: $accent-green;
-  font-size: 1rem;
-  font-weight: 700;
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
-  margin-top: 10px;
+  border-radius: 50%;
+  background: $surface;
+  box-shadow: 0 0 0 2px $surface-nested, 0 0 0 4px $accent-green;
+  color: $accent-green;
+  font-size: 1.1rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0;
+  margin-top: 8px;
 }
 
-.researcher-fields {
+.researcher-card__name-field {
   flex: 1;
+  width: 100%;
+}
+
+.researcher-card__delete {
+  flex-shrink: 0;
+  margin-top: 4px;
+  opacity: 0.4;
+  color: $text-secondary !important;
+  transition: opacity 0.15s, color 0.15s !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+
+  &:hover {
+    opacity: 1;
+    color: #ff5252 !important;
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: 2px solid $accent-green;
+    outline-offset: 2px;
+  }
+}
+
+.researcher-card__fields {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0 16px;
 
   @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
   @media (max-width: 600px) { grid-template-columns: 1fr; }
 }
 
-.researcher-row-actions {
+// ── Ghost add card ─────────────────────────────────────────────
+.researcher-add-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-top: 10px;
-  opacity: 0;
-  transition: opacity 0.15s;
-  flex-shrink: 0;
-}
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px dashed rgba(255, 255, 255, 0.18);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  color: $text-secondary;
+  min-height: 80px;
 
-.researcher-delete-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  width: 36px !important;
-  height: 36px !important;
-  line-height: 36px !important;
-  color: $text-secondary !important;
-  transition: color 0.15s !important;
+  &:hover {
+    border-color: $accent-green;
+    background: rgba(105, 240, 174, 0.05);
+    color: $accent-green;
 
-  .mat-icon {
-    font-size: 18px !important;
-    width: 18px !important;
-    height: 18px !important;
-    line-height: 18px !important;
+    .researcher-add-card__icon { color: $accent-green; }
   }
 
-  &:hover { color: #ff5252 !important; }
+  &:focus-visible {
+    outline: 2px solid $accent-green;
+    outline-offset: 2px;
+    border-color: $accent-green;
+  }
 }
 
+.researcher-add-card__icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  transition: color 0.15s;
+}
+
+.researcher-add-card__label {
+  font-size: 0.825rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+// ── Empty state ────────────────────────────────────────────────
 .researcher-empty {
   display: flex;
   flex-direction: column;
@@ -1447,40 +1507,57 @@ mat-paginator {
   gap: 10px;
   padding: 48px 24px;
   text-align: center;
+  grid-column: 1 / -1;
 }
 
-.researcher-empty-icon {
+.researcher-empty__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
   border: 1px solid $border-color;
   background: $surface-nested;
 
   mat-icon {
-    font-size: 28px !important;
-    width: 28px !important;
-    height: 28px !important;
-    color: $text-secondary;
-    opacity: 0.5;
+    font-size: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    color: $accent-green;
+    opacity: 0.7;
   }
 }
 
-.researcher-empty-title {
+.researcher-empty__title {
   margin: 4px 0 0;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
-.researcher-empty-desc {
+.researcher-empty__desc {
   margin: 0 0 6px;
   font-size: 0.825rem;
   color: $text-secondary;
-  max-width: 300px;
+  max-width: 320px;
   line-height: 1.6;
+}
+
+.researcher-empty__cta {
+  background: $accent-green !important;
+  color: #000 !important;
+  border-radius: 8px !important;
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
 }
 
 // ── Issue panels ─────────────────────────────
