@@ -98,12 +98,13 @@ $destructive:   #ef5350;
 }
 
 .accent-btn {
-  background: $surface-2 !important;
-  color: $text !important;
-  border: 1px solid $border-strong !important;
+  background: rgba(105, 240, 174, 0.1) !important;
+  color: #69f0ae !important;
+  border: 1px solid rgba(105, 240, 174, 0.22) !important;
 
   &:hover {
-    background: $icon !important;
+    background: rgba(105, 240, 174, 0.17) !important;
+    border-color: rgba(105, 240, 174, 0.38) !important;
   }
 }
 
