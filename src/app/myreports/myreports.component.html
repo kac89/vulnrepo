@@ -12,11 +12,13 @@
       <button (click)="Redirectme('/new-report')" class="action-btn accent-btn" mat-button>
         <mat-icon>add_circle_outline</mat-icon> New report
       </button>
-      <button (click)="Redirectme('/import-report')" class="action-btn primary-btn" mat-button>
+      <button (click)="Redirectme('/import-report')" class="action-btn ghost-btn" mat-button>
         <mat-icon>playlist_add</mat-icon> Import report
       </button>
     </div>
   </div>
+
+  <div class="header-divider"></div>
 
   <div class="reports-panel">
 
@@ -25,8 +27,7 @@
         @if (dataSource.data.length != 0) {
           <mat-form-field appearance="outline" color="accent" class="filter-field">
             <mat-icon matPrefix>search</mat-icon>
-            <mat-label>Filter reports</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. external pentest" #input>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Filter reports..." #input>
           </mat-form-field>
         }
         @if (dataSource.data.length != 0) {
@@ -69,11 +70,13 @@
                 @if (!element.api) {
                   <span class="storage-badge local" title="Stored locally">
                     <mat-icon>computer</mat-icon>
+                    <span class="badge-label">LOCAL</span>
                   </span>
                 }
                 @if (element.api == 'remote') {
                   <span class="storage-badge remote" title="Remote API: {{element.apiname}} - [{{element.apiurl}}]">
                     <mat-icon>public</mat-icon>
+                    <span class="badge-label">REMOTE</span>
                   </span>
                 }
                 <div class="name-cell-inner">
