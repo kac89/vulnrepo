@@ -211,34 +211,34 @@
   line-height: 1.4;
 
   &.severity-critical {
-    background: rgba(255, 0, 57, 0.14);
+    background: rgba(255, 0, 57, 0.10);
     color: #ff4d6d;
-    border: 1px solid rgba(255, 0, 57, 0.28);
+    border: 1px solid rgba(#ff4d6d, 0.35);
   }
 
   &.severity-high {
-    background: rgba(255, 117, 24, 0.14);
+    background: rgba(255, 117, 24, 0.10);
     color: #ff9a3c;
-    border: 1px solid rgba(255, 117, 24, 0.28);
+    border: 1px solid rgba(#ff9a3c, 0.35);
   }
 
   &.severity-medium {
-    background: rgba(249, 238, 6, 0.1);
+    background: rgba(249, 238, 6, 0.08);
     color: #f5d020;
-    border: 1px solid rgba(249, 238, 6, 0.22);
+    border: 1px solid rgba(#f5d020, 0.30);
   }
 
   &.severity-low {
-    background: rgba(105, 240, 174, 0.1);
+    background: rgba(105, 240, 174, 0.08);
     color: #69f0ae;
-    border: 1px solid rgba(105, 240, 174, 0.22);
+    border: 1px solid rgba(#69f0ae, 0.30);
   }
 
   &.severity-info,
   &.severity-informational {
-    background: rgba(39, 128, 227, 0.12);
+    background: rgba(39, 128, 227, 0.10);
     color: #60a5fa;
-    border: 1px solid rgba(39, 128, 227, 0.25);
+    border: 1px solid rgba(#60a5fa, 0.32);
   }
 }
 
