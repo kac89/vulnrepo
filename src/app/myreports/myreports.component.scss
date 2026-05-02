@@ -303,6 +303,14 @@ $sev-info:     #60a5fa;
       opacity: 1;
       pointer-events: auto;
     }
+
+    .storage-badge.local {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.22);
+      color: $text;
+
+      mat-icon { color: $text; }
+    }
   }
 }
 
@@ -359,11 +367,11 @@ $sev-info:     #60a5fa;
   }
 
   &.local {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid $border;
-    color: $icon;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: $text-dim;
 
-    mat-icon { color: $icon; }
+    mat-icon { color: $text-dim; }
   }
 
   &.remote {
