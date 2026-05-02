@@ -428,43 +428,45 @@ table {
   border: 1px solid rgba($accent-green, 0.25);
 }
 
-.label {
-  color: white;
-  display: inline-block;
-  font-family: verdana, sans-serif;
-  font-size: 0.72rem;
+.sev-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  white-space: nowrap;
+  vertical-align: middle;
+  line-height: 1.5;
+
+  &--critical { color: #ff4d6d; border-color: rgba(#ff4d6d, 0.35); background: rgba(#FF0039, 0.1); }
+  &--high     { color: #ff9a3c; border-color: rgba(#ff9a3c, 0.35); background: rgba(#FF7518, 0.1); }
+  &--medium   { color: #f5d020; border-color: rgba(#f5d020, 0.30); background: rgba(#F9EE06, 0.08); }
+  &--low      { color: #69f0ae; border-color: rgba(#69f0ae, 0.30); background: rgba(#3FB618, 0.08); }
+  &--info     { color: #60a5fa; border-color: rgba(#60a5fa, 0.32); background: rgba(#2780E3, 0.1); }
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 2px 7px;
   border-radius: 4px;
-}
+  border: 1px solid;
+  white-space: nowrap;
+  vertical-align: middle;
+  line-height: 1.5;
 
-/*critical*/
-.critical {
-  border-color: #FF0039;
-  background-color: #FF0039;
-}
-/*high*/
-.high {
-  border-color: #FF7518;
-  background-color: #FF7518;
-}
-/*medium*/
-.medium {
-  color: #000;
-  border-color: #F9EE06;
-  background-color: #F9EE06;
-}
-/*low*/
-.low {
-  border-color: #3FB618;
-  background-color: #3FB618;
-}
-/*information*/
-.info {
-  border-color: #2780E3;
-  background-color: #2780E3;
+  &--1 { color: #ef5350; border-color: rgba(#ef5350, 0.32); background: rgba(#ef5350, 0.08); }
+  &--2 { color: #ffa726; border-color: rgba(#ffa726, 0.32); background: rgba(#ffa726, 0.08); }
+  &--3 { color: #66bb6a; border-color: rgba(#66bb6a, 0.32); background: rgba(#66bb6a, 0.08); }
+  &--4 { color: #78909c; border-color: rgba(#78909c, 0.32); background: rgba(#78909c, 0.08); }
 }
 
 .card-container-right {

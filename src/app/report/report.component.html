@@ -388,7 +388,7 @@
                   <div style="white-space: nowrap;">
                     <mat-checkbox [checked]="checkcheckbox(i)" (change)="toggle(i,$event.checked)"
                       (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
-                    <span class="label {{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
+                    <span class="sev-chip sev-chip--{{dec_data.severity | lowercase}}">{{dec_data.severity}}</span>
                     &nbsp;&nbsp;{{dec_data.title}}
                   </div>
                 </mat-panel-title>
@@ -414,28 +414,14 @@
                     }
                   </div>
                   }
-                  @if (dec_data?.status === 1) {
+                  @if (dec_data?.status) {
                   <div fxHide.xs fxHide.sm>
-                    <mat-icon style="color:red" title="Issue status: Open (Waiting for review)"
-                      class="vertical-align-middle valign-issues-center padding-bottom-3">report</mat-icon>
-                  </div>
-                  }
-                  @if (dec_data?.status === 2) {
-                  <div fxHide.xs fxHide.sm>
-                    <mat-icon style="color:yellow" title="Issue status: Fix In Progress"
-                      class="vertical-align-middle valign-issues-center padding-bottom-3">warning</mat-icon>
-                  </div>
-                  }
-                  @if (dec_data?.status === 3) {
-                  <div fxHide.xs fxHide.sm>
-                    <mat-icon style="color:green" title="Issue status: Fixed"
-                      class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
-                  </div>
-                  }
-                  @if (dec_data?.status === 4) {
-                  <div fxHide.xs fxHide.sm>
-                    <mat-icon style="color:grey" title="Issue status: Won't Fix"
-                      class="vertical-align-middle valign-issues-center padding-bottom-3">check_circle</mat-icon>
+                    <span class="status-chip status-chip--{{dec_data.status}}">
+                      @if (dec_data.status === 1) { Open }
+                      @if (dec_data.status === 2) { In Progress }
+                      @if (dec_data.status === 3) { Fixed }
+                      @if (dec_data.status === 4) { Won't Fix }
+                    </span>
                   </div>
                   }
                   &nbsp;

@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IndexeddbService } from '../indexeddb.service';
 import { DialogEditComponent } from '../dialog-edit/dialog-edit.component';
@@ -12,6 +11,16 @@ import { ApiService } from '../api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+export interface ReportStats {
+  total: number;
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+  info: number;
+}
 
 export interface MyReportElement {
   select: any;
@@ -21,42 +30,43 @@ export interface MyReportElement {
   report_createdate: number;
   encrypted_data: string;
   report_lastupdate: number;
+  report_stats?: ReportStats;
+  api?: string;
+  apiurl?: string;
+  apikey?: string;
+  apiname?: string;
 }
 
 @Component({
   standalone: false,
-  //imports: [],
   selector: 'app-myreports',
   templateUrl: './myreports.component.html',
   styleUrls: ['./myreports.component.scss']
 })
-export class MyreportsComponent implements OnInit {
+export class MyreportsComponent implements OnInit, OnDestroy {
 
-  displayedColumns: string[] = ['select', 'report_name', 'report_createdate', 'report_lastupdate', 'settings'];
   dataSource = new MatTableDataSource([]);
   selection = new SelectionModel<MyReportElement>(true, []);
+  displayItems: MyReportElement[] = [];
   msg = '';
   keyfound = false;
   apilist: any = [];
   list: any = [];
   public dialogRef: MatDialogRef<DialogEditComponent> | undefined;
   private paginator: MatPaginator | undefined;
-  private sort: MatSort | undefined;
+  private dataSubscription: Subscription | undefined;
 
-
-  @ViewChild(MatSort) set matSort(ms: MatSort) {
-    this.sort = ms;
-    this.setDataSourceAttributes();
-  }
+  readonly sevOrder: (keyof ReportStats)[] = ['critical', 'high', 'medium', 'low', 'info'];
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
-    this.setDataSourceAttributes();
+    if (mp) {
+      this.dataSource.paginator = mp;
+    }
   }
 
-  setDataSourceAttributes() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  get totalFilteredCount(): number {
+    return this.dataSource.filteredData.length;
   }
 
   constructor(public dialog: MatDialog, private indexeddbService: IndexeddbService, private apiService: ApiService,
@@ -68,13 +78,24 @@ export class MyreportsComponent implements OnInit {
     this.getallreports();
   }
 
+  ngAfterViewInit() {
+    this.dataSubscription = this.dataSource.connect().subscribe(data => {
+      this.displayItems = data as MyReportElement[];
+    });
+  }
+
+  ngOnDestroy() {
+    this.dataSubscription?.unsubscribe();
+    this.dataSource.disconnect();
+  }
+
   getallreports() {
     this.list = [];
     this.indexeddbService.getReports().then(data => {
       if (data) {
         this.list.push(...data);
+        this.list.sort((a: any, b: any) => (b.report_lastupdate || b.report_createdate) - (a.report_lastupdate || a.report_createdate));
         this.dataSource.data = this.list;
-        this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       }
     });
@@ -109,8 +130,8 @@ export class MyreportsComponent implements OnInit {
           }
 
         }).then(() => {
+          this.list.sort((a: any, b: any) => (b.report_lastupdate || b.report_createdate) - (a.report_lastupdate || a.report_createdate));
           this.dataSource.data = this.list;
-          this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
         }).catch(() => { });
 
@@ -289,6 +310,9 @@ export class MyreportsComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
   }
 
   Redirectme(url: any) {

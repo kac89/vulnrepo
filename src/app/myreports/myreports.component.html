@@ -30,160 +30,158 @@
             <input matInput (keyup)="applyFilter($event)" placeholder="Filter reports..." #input>
           </mat-form-field>
         }
+        @if (selection.selected.length > 0) {
+          <button mat-button color="warn" (click)="removeSelecteditems()" class="delete-selected-btn">
+            <mat-icon>delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
+          </button>
+        }
+        <span class="filter-spacer"></span>
         @if (dataSource.data.length != 0) {
-          <mat-paginator class="compact-paginator" color="accent" [pageSizeOptions]="[10, 50, 100]"
+          <mat-paginator class="compact-paginator" color="accent" [pageSizeOptions]="[12, 24, 48]"
             showFirstLastButtons></mat-paginator>
         }
       </div>
     </div>
 
     @if (dataSource.data.length != 0) {
-      <div class="table-wrapper">
-        <table mat-table [dataSource]="dataSource" matSort
-          matSortActive="report_createdate" matSortDirection="desc" class="reports-table">
 
-          <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox (change)="$event ? masterToggle() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-                [aria-label]="checkboxLabel()">
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
-                [aria-label]="checkboxLabel(row)">
-              </mat-checkbox>
-            </td>
-          </ng-container>
+      @if (displayItems.length > 0) {
+        <div class="cards-grid">
+          @for (element of displayItems; track element.report_id) {
+            <div class="report-card" [class.is-selected]="selection.isSelected(element)">
 
-          <!-- Title Column -->
-          <ng-container matColumnDef="report_name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              <mat-icon class="col-icon">folder</mat-icon> Title
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <div class="name-cell">
-                @if (!element.api) {
-                  <span class="storage-badge local" title="Stored locally">
-                    <mat-icon>computer</mat-icon>
-                    <span class="badge-label">LOCAL</span>
-                  </span>
-                }
-                @if (element.api == 'remote') {
-                  <span class="storage-badge remote" title="Remote API: {{element.apiname}} - [{{element.apiurl}}]">
-                    <mat-icon>public</mat-icon>
-                    <span class="badge-label">REMOTE</span>
-                  </span>
-                }
-                <div class="name-cell-inner">
-                  <a class="report-name-link active-link" routerLink="/report/{{element.report_id}}/"
-                    href="#">{{element.report_name}}</a>
-                  @if (element.report_lastupdate != 0) {
-                    <span class="mobile-meta">
-                      <mat-icon class="mobile-meta-icon">update</mat-icon>
-                      {{element.report_lastupdate | date:'mediumDate'}}
+              <div class="card-top">
+                <div class="card-select">
+                  <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(element) : null"
+                    [checked]="selection.isSelected(element)">
+                  </mat-checkbox>
+                </div>
+                <div class="card-badges">
+                  @if (!element.api) {
+                    <span class="storage-badge local" title="Stored locally">
+                      <mat-icon>computer</mat-icon>
+                      <span class="badge-label">LOCAL</span>
+                    </span>
+                  }
+                  @if (element.api == 'remote') {
+                    <span class="storage-badge remote" title="Remote API: {{element.apiname}} - [{{element.apiurl}}]">
+                      <mat-icon>public</mat-icon>
+                      <span class="badge-label">REMOTE</span>
                     </span>
                   }
                 </div>
+                <div class="card-actions">
+                  <button mat-icon-button class="menu-btn" [matMenuTriggerFor]="cardMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #cardMenu="matMenu">
+                    <a [routerLink]="[]" (click)="shareReport(element.report_id)" class="active-link" mat-menu-item>
+                      <mat-icon>cloud_download</mat-icon> Download report
+                    </a>
+                    @if (!element.api) {
+                      <a [routerLink]="[]" (click)="cloneReport(element)" class="active-link" mat-menu-item>
+                        <mat-icon>flip_to_front</mat-icon> Clone report
+                      </a>
+                    }
+                    @if (!element.api && keyfound) {
+                      <a [routerLink]="[]" [matMenuTriggerFor]="apiMenu" mat-menu-item>
+                        <mat-icon>public</mat-icon> Save on API
+                      </a>
+                    }
+                    @if (element.api) {
+                      <a [routerLink]="[]" (click)="fromAPIcloneReport(element)" class="active-link" mat-menu-item>
+                        <mat-icon>save_alt</mat-icon> Save locally
+                      </a>
+                    }
+                    <a [routerLink]="[]" (click)="removeReport(element)" class="active-link" mat-menu-item>
+                      <mat-icon>delete_forever</mat-icon> Remove report
+                    </a>
+                  </mat-menu>
+                  <mat-menu #apiMenu="matMenu">
+                    @for (apis of apilist; track apis) {
+                      <a [routerLink]="[]" (click)="toAPIcloneReport(element, apis.value, apis.apikey)"
+                        class="active-link" title="API: {{apis.value}}" mat-menu-item>
+                        <mat-icon>public</mat-icon> {{apis.viewValue}}
+                      </a>
+                    }
+                  </mat-menu>
+                </div>
               </div>
-            </td>
-          </ng-container>
 
-          <!-- Create Date Column -->
-          <ng-container matColumnDef="report_createdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              <mat-icon class="col-icon">date_range</mat-icon> Created
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <div class="date-cell">
-                @if (element.report_createdate != 0) {
-                  <span class="date-primary">{{element.report_createdate | date:'mediumDate'}}</span>
-                  <span class="date-time">{{element.report_createdate | date:'shortTime'}}</span>
+              <a class="card-title-link active-link" routerLink="/report/{{element.report_id}}/">
+                {{element.report_name}}
+              </a>
+
+              @if (element.report_stats && element.report_stats.total > 0) {
+                <div class="card-sev-strip">
+                  @if (element.report_stats.critical > 0) {
+                    <span class="sev-pill sev-critical">
+                      <span class="sev-pill-count">{{element.report_stats.critical}}</span>
+                      <span class="sev-pill-label">C</span>
+                    </span>
+                  }
+                  @if (element.report_stats.high > 0) {
+                    <span class="sev-pill sev-high">
+                      <span class="sev-pill-count">{{element.report_stats.high}}</span>
+                      <span class="sev-pill-label">H</span>
+                    </span>
+                  }
+                  @if (element.report_stats.medium > 0) {
+                    <span class="sev-pill sev-medium">
+                      <span class="sev-pill-count">{{element.report_stats.medium}}</span>
+                      <span class="sev-pill-label">M</span>
+                    </span>
+                  }
+                  @if (element.report_stats.low > 0) {
+                    <span class="sev-pill sev-low">
+                      <span class="sev-pill-count">{{element.report_stats.low}}</span>
+                      <span class="sev-pill-label">L</span>
+                    </span>
+                  }
+                  @if (element.report_stats.info > 0) {
+                    <span class="sev-pill sev-info">
+                      <span class="sev-pill-count">{{element.report_stats.info}}</span>
+                      <span class="sev-pill-label">I</span>
+                    </span>
+                  }
+                  <span class="sev-total">{{element.report_stats.total}} finding{{element.report_stats.total !== 1 ? 's' : ''}}</span>
+                </div>
+              }
+              @if (!element.report_stats || element.report_stats.total === 0) {
+                <div class="card-no-stats">
+                  <mat-icon>lock_outline</mat-icon>
+                  <span>Save report to see findings summary</span>
+                </div>
+              }
+
+              <div class="card-footer">
+                <div class="card-date">
+                  <mat-icon class="date-icon">date_range</mat-icon>
+                  <div class="date-stack">
+                    <span class="date-label">Created</span>
+                    <span class="date-value">{{element.report_createdate | date:'mediumDate'}}</span>
+                  </div>
+                </div>
+                @if (element.report_lastupdate) {
+                  <div class="card-date">
+                    <mat-icon class="date-icon">update</mat-icon>
+                    <div class="date-stack">
+                      <span class="date-label">Updated</span>
+                      <span class="date-value">{{element.report_lastupdate | date:'mediumDate'}}</span>
+                    </div>
+                  </div>
                 }
               </div>
-            </td>
-          </ng-container>
 
-          <!-- Last Update Column -->
-          <ng-container matColumnDef="report_lastupdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              <mat-icon class="col-icon">update</mat-icon> Last update
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <div class="date-cell">
-                @if (element.report_lastupdate != 0) {
-                  <span class="date-primary">{{element.report_lastupdate | date:'mediumDate'}}</span>
-                  <span class="date-time">{{element.report_lastupdate | date:'shortTime'}}</span>
-                }
-              </div>
-            </td>
-          </ng-container>
+            </div>
+          }
+        </div>
+      }
 
-          <!-- Settings Column -->
-          <ng-container matColumnDef="settings">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">
-              <div class="actions-cell">
-              <button mat-icon-button class="menu-btn" [matMenuTriggerFor]="myreportssettings">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #myreportssettings="matMenu">
-                <a [routerLink]="[]" (click)="shareReport(element.report_id)" class="active-link"
-                  mat-menu-item>
-                  <mat-icon>cloud_download</mat-icon> Download report
-                </a>
-                @if (!element.api) {
-                  <a [routerLink]="[]" (click)="cloneReport(element)" class="active-link"
-                    mat-menu-item>
-                    <mat-icon>flip_to_front</mat-icon> Clone report
-                  </a>
-                }
-                @if (!element.api && keyfound) {
-                  <a [routerLink]="[]" [matMenuTriggerFor]="apiMenu"
-                    mat-menu-item>
-                    <mat-icon>public</mat-icon> Save on API
-                  </a>
-                }
-                @if (element.api) {
-                  <a [routerLink]="[]" (click)="fromAPIcloneReport(element)" class="active-link"
-                    mat-menu-item>
-                    <mat-icon>save_alt</mat-icon> Save locally
-                  </a>
-                }
-                <a [routerLink]="[]" (click)="removeReport(element)" class="active-link"
-                  mat-menu-item>
-                  <mat-icon>delete_forever</mat-icon> Remove report
-                </a>
-              </mat-menu>
-              <mat-menu #apiMenu="matMenu">
-                @for (apis of apilist; track apis) {
-                  <a [routerLink]="[]" (click)="toAPIcloneReport(element, apis.value, apis.apikey)"
-                    class="active-link" title="API: {{apis.value}}" mat-menu-item>
-                    <mat-icon>public</mat-icon> {{apis.viewValue}}
-                  </a>
-                }
-              </mat-menu>
-              </div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="report-row"></tr>
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell no-data" colspan="5">No data matching the filter "{{input.value}}"</td>
-          </tr>
-        </table>
-      </div>
-
-      @if (selection.selected.length > 0) {
-        <div class="bulk-actions">
-          <button mat-button color="warn" (click)="removeSelecteditems()" class="delete-selected-btn">
-            <mat-icon>delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
-          </button>
+      @if (displayItems.length === 0 && dataSource.filter) {
+        <div class="empty-state" style="padding: 60px 24px;">
+          <p class="empty-title">No reports match "{{dataSource.filter}}"</p>
         </div>
       }
 

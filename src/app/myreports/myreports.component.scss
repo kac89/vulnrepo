@@ -3,14 +3,21 @@
 $bg:            #383838;
 $surface:       #424242;
 $surface-2:     #4e4e4e;
-$border:        rgba(255, 255, 255, 0.12);
-$border-strong: rgba(255, 255, 255, 0.12);
+$surface-3:     #565656;
+$border:        rgba(255, 255, 255, 0.10);
+$border-strong: rgba(255, 255, 255, 0.14);
 $text:          #f5f5f5;
 $text-muted:    #757575;
 $text-dim:      #9e9e9e;
 $icon:          #616161;
 $accent:        #69f0ae;
 $destructive:   #ef5350;
+
+$sev-critical: #ff4d6d;
+$sev-high:     #ff9a3c;
+$sev-medium:   #f5d020;
+$sev-low:      #69f0ae;
+$sev-info:     #60a5fa;
 
 // ─── Page layout ─────────────────────────────────────────────────────────────
 
@@ -119,7 +126,7 @@ $destructive:   #ef5350;
   }
 }
 
-// ─── Reports panel card ───────────────────────────────────────────────────────
+// ─── Reports panel ────────────────────────────────────────────────────────────
 
 .reports-panel {
   border: 1px solid $border;
@@ -144,6 +151,10 @@ $destructive:   #ef5350;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+
+  .filter-spacer {
+    flex: 1;
+  }
 
   .filter-field {
     width: 260px;
@@ -194,7 +205,6 @@ $destructive:   #ef5350;
   }
 
   .compact-paginator {
-    flex: 1;
     background: transparent;
     color: $text-muted;
     min-height: unset;
@@ -219,109 +229,109 @@ $destructive:   #ef5350;
   }
 }
 
-// ─── Table ────────────────────────────────────────────────────────────────────
+// ─── Bulk delete ─────────────────────────────────────────────────────────────
 
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
+.delete-selected-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 6px !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0 12px !important;
+  height: 32px;
+  background: rgba($destructive, 0.1) !important;
+  color: $destructive !important;
+  border: 1px solid rgba($destructive, 0.2) !important;
+  transition: background 0.1s ease, border-color 0.1s ease;
+
+  &:hover {
+    background: rgba($destructive, 0.18) !important;
+    border-color: rgba($destructive, 0.32) !important;
+  }
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+  }
 }
 
-.reports-table {
-  width: 100%;
-  background: transparent !important;
+// ─── Cards grid ───────────────────────────────────────────────────────────────
 
-  .mat-mdc-header-row {
-    background: transparent !important;
-    border-bottom: 1px solid $border !important;
-  }
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: $border;
+}
 
-  ::ng-deep .mat-mdc-row,
-  ::ng-deep .mdc-data-table__row {
-    border-bottom: none !important;
-  }
+// ─── Individual report card ───────────────────────────────────────────────────
 
-  .mat-mdc-header-cell {
-    font-size: 0.65rem !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.08em !important;
-    text-transform: uppercase !important;
-    color: $text-muted !important;
-    border-bottom: none !important;
-    padding: 10px 16px !important;
+.report-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: $surface;
+  padding: 16px;
+  transition: background 0.12s ease;
+  cursor: default;
+  border-left: 2px solid transparent;
 
-    .col-icon {
-      font-size: 12px;
-      width: 12px;
-      height: 12px;
-      vertical-align: middle;
-      margin-right: 5px;
-      color: $text-muted;
-      opacity: 0.6;
+  &:hover {
+    background: $surface-2;
+    border-left-color: $accent;
+
+    .card-title-link {
+      color: $accent !important;
+      text-decoration: underline;
+      text-decoration-color: rgba($accent, 0.4);
+      text-underline-offset: 3px;
+    }
+
+    .card-select {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 
-  .mat-mdc-cell {
-    border-bottom: none !important;
-    padding: 0 16px !important;
-    color: rgba($text, 0.85);
-    font-size: 0.875rem;
-  }
+  &.is-selected {
+    background: rgba($accent, 0.04);
+    border-left-color: rgba($accent, 0.6);
 
-  .mat-column-select {
-    width: 44px;
-    flex: 0 0 44px;
-    padding-left: 16px !important;
-    padding-right: 4px !important;
-  }
-
-  .mat-column-settings {
-    width: 52px;
-    flex: 0 0 52px;
-    text-align: right;
-    padding-right: 12px !important;
-  }
-
-  .report-row {
-    cursor: pointer;
-    position: relative;
-    transition: background 0.1s ease;
-    border-bottom: 1px solid $border !important;
-    border-left: 2px solid transparent;
-
-    .mat-mdc-cell {
-      padding-top: 14px !important;
-      padding-bottom: 14px !important;
-    }
-
-    &:hover {
-      background: $surface-2 !important;
-      border-left-color: $accent !important;
-
-      .report-name-link {
-        color: $accent !important;
-        text-decoration: underline;
-        text-decoration-color: rgba($accent, 0.4);
-        text-underline-offset: 3px;
-      }
-    }
-
-    &:last-child {
-      border-bottom: none !important;
+    .card-select {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 }
 
-// ─── Name cell ────────────────────────────────────────────────────────────────
+// ─── Card top row (select + badges + menu) ────────────────────────────────────
 
-.name-cell {
+.card-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
-.name-cell-inner {
-  display: block;
+.card-select {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  flex-shrink: 0;
+}
+
+.card-badges {
+  display: flex;
+  gap: 5px;
+  flex: 1;
   min-width: 0;
+}
+
+.card-actions {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .storage-badge {
@@ -353,9 +363,7 @@ $destructive:   #ef5350;
     border: 1px solid $border;
     color: $icon;
 
-    mat-icon {
-      color: $icon;
-    }
+    mat-icon { color: $icon; }
   }
 
   &.remote {
@@ -363,66 +371,16 @@ $destructive:   #ef5350;
     border: 1px solid rgba($accent, 0.2);
     color: rgba($accent, 0.8);
 
-    mat-icon {
-      color: $accent;
-    }
+    mat-icon { color: $accent; }
   }
 }
 
-.report-name-link {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.3;
-  color: rgba($text, 0.9) !important;
-  text-decoration: none;
-  transition: color 0.1s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 38vw;
-  padding: 8px 0;
-  margin: -8px 0;
-}
-
-// ─── Date cell ────────────────────────────────────────────────────────────────
-
-.date-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  white-space: nowrap;
-  gap: 2px;
-}
-
-.date-primary {
-  display: block;
-  font-size: 0.8125rem;
-  color: rgba($text, 0.65);
-  font-variant-numeric: tabular-nums;
-}
-
-.date-time {
-  display: block;
-  font-size: 0.7rem;
-  color: $text-muted;
-  font-variant-numeric: tabular-nums;
-}
-
-// ─── Actions cell ─────────────────────────────────────────────────────────────
-
-.actions-cell {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
 .menu-btn {
-  --mdc-icon-button-state-layer-size: 30px;
-  width: 30px !important;
-  height: 30px !important;
+  --mdc-icon-button-state-layer-size: 28px;
+  width: 28px !important;
+  height: 28px !important;
   padding: 0 !important;
-  border-radius: 6px !important;
+  border-radius: 5px !important;
   color: $icon !important;
   transition: background 0.1s ease, color 0.1s ease;
 
@@ -432,47 +390,139 @@ $destructive:   #ef5350;
   }
 
   .mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
   }
 }
 
-// ─── Bulk actions bar ─────────────────────────────────────────────────────────
+// ─── Card title link ──────────────────────────────────────────────────────────
 
-.bulk-actions {
+.card-title-link {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba($text, 0.92) !important;
+  text-decoration: none;
+  transition: color 0.1s ease;
+  word-break: break-word;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+// ─── Severity strip ───────────────────────────────────────────────────────────
+
+.card-sev-strip {
   display: flex;
   align-items: center;
-  padding: 10px 16px;
-  border-top: 1px solid $border;
-  background: rgba($destructive, 0.05);
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 14px;
 }
 
-.delete-selected-btn {
+.sev-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  border-radius: 6px !important;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0 12px !important;
-  height: 32px;
-  background: rgba($destructive, 0.1) !important;
-  color: $destructive !important;
-  border: 1px solid rgba($destructive, 0.2) !important;
-  transition: background 0.1s ease, border-color 0.1s ease;
+  gap: 4px;
+  padding: 2px 7px 2px 6px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid;
+  white-space: nowrap;
 
-  &:hover {
-    background: rgba($destructive, 0.18) !important;
-    border-color: rgba($destructive, 0.32) !important;
+  .sev-pill-count {
+    font-size: 0.7rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
   }
+
+  .sev-pill-label {
+    font-size: 0.6rem;
+    opacity: 0.75;
+    font-weight: 700;
+  }
+
+  &.sev-critical { color: $sev-critical; border-color: rgba($sev-critical, 0.32); background: rgba($sev-critical, 0.1); }
+  &.sev-high     { color: $sev-high;     border-color: rgba($sev-high, 0.32);     background: rgba($sev-high, 0.1); }
+  &.sev-medium   { color: $sev-medium;   border-color: rgba($sev-medium, 0.28);   background: rgba($sev-medium, 0.08); }
+  &.sev-low      { color: $sev-low;      border-color: rgba($sev-low, 0.28);      background: rgba($sev-low, 0.08); }
+  &.sev-info     { color: $sev-info;     border-color: rgba($sev-info, 0.3);      background: rgba($sev-info, 0.09); }
+}
+
+.sev-total {
+  font-size: 0.68rem;
+  color: $text-muted;
+  font-variant-numeric: tabular-nums;
+  margin-left: 2px;
+}
+
+// ─── No stats placeholder ─────────────────────────────────────────────────────
+
+.card-no-stats {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 14px;
+  color: rgba($text-muted, 0.55);
+  font-size: 0.7rem;
 
   mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    opacity: 0.5;
   }
+}
+
+// ─── Card footer (dates) ──────────────────────────────────────────────────────
+
+.card-footer {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid $border;
+  flex-wrap: wrap;
+}
+
+.card-date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.date-icon {
+  font-size: 13px;
+  width: 13px;
+  height: 13px;
+  color: $text-muted;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.date-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-label {
+  font-size: 0.6rem;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.date-value {
+  font-size: 0.72rem;
+  color: rgba($text, 0.6);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
 }
 
 // ─── Progress state ───────────────────────────────────────────────────────────
@@ -492,16 +542,6 @@ $destructive:   #ef5350;
   mat-progress-bar {
     border-radius: 2px;
   }
-}
-
-// ─── No data row ─────────────────────────────────────────────────────────────
-
-.no-data {
-  text-align: center !important;
-  padding: 56px 20px !important;
-  color: $text-muted !important;
-  font-size: 0.8125rem;
-  border-bottom: none !important;
 }
 
 // ─── Empty state ──────────────────────────────────────────────────────────────
@@ -553,131 +593,43 @@ $destructive:   #ef5350;
 // ─── Responsive — tablet (< 960px) ───────────────────────────────────────────
 
 @media (max-width: 959px) {
-  .page-title h1 {
-    font-size: 1.3rem;
-  }
+  .page-title h1 { font-size: 1.3rem; }
+  .filter-bar .filter-field { width: 200px; }
+  .panel-sticky { padding: 10px 14px; }
 
-  .filter-bar .filter-field {
-    width: 200px;
-  }
-
-  .panel-sticky {
-    padding: 10px 14px;
-  }
-}
-
-// ─── Mobile meta (hidden on desktop) ─────────────────────────────────────────
-
-.mobile-meta {
-  display: none;
-}
-
-// ─── Responsive — tablet (< 768px) ───────────────────────────────────────────
-
-@media (max-width: 767px) {
-  .mat-column-report_createdate,
-  .mat-column-report_lastupdate {
-    display: none;
-  }
-
-  .mobile-meta {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 0.68rem;
-    color: $text-muted;
-    margin-top: 4px;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .mobile-meta-icon {
-    font-size: 11px;
-    width: 11px;
-    height: 11px;
-    color: $text-muted;
-    opacity: 0.6;
-  }
-
-  .name-cell-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .report-name-link {
-    max-width: 55vw;
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 // ─── Responsive — mobile (< 600px) ───────────────────────────────────────────
 
 @media (max-width: 599px) {
-  .page-header {
-    padding-bottom: 14px;
-  }
-
-  .header-divider {
-    margin-bottom: 14px;
-  }
-
-  .page-title h1 {
-    font-size: 1.15rem;
-  }
-
-  .page-title .page-subtitle {
-    display: none;
-  }
-
-  .page-title .title-icon {
-    font-size: 1.25rem;
-    width: 1.25rem;
-    height: 1.25rem;
-  }
+  .page-header { padding-bottom: 14px; }
+  .header-divider { margin-bottom: 14px; }
+  .page-title h1 { font-size: 1.15rem; }
+  .page-title .page-subtitle { display: none; }
+  .page-title .title-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
 
   .header-actions {
     width: 100%;
-
-    .action-btn {
-      flex: 1;
-      justify-content: center;
-    }
+    .action-btn { flex: 1; justify-content: center; }
   }
 
-  .reports-panel {
-    border-radius: 6px;
-  }
-
-  .panel-sticky {
-    padding: 8px 12px;
-  }
+  .reports-panel { border-radius: 6px; }
+  .panel-sticky { padding: 8px 12px; }
 
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
 
-    .filter-field {
-      width: 100%;
-    }
-
-    .compact-paginator {
-      width: 100%;
-    }
+    .filter-field { width: 100%; }
+    .compact-paginator { width: 100%; }
   }
 
-  .mat-column-select {
-    display: none;
+  .cards-grid {
+    grid-template-columns: 1fr;
   }
 
-  .reports-table .mat-mdc-cell,
-  .reports-table .mat-mdc-header-cell {
-    padding: 10px !important;
-  }
-
-  .report-name-link {
-    max-width: 68vw;
-  }
-
-  .storage-badge .badge-label {
-    display: none;
-  }
+  .storage-badge .badge-label { display: none; }
 }

@@ -910,11 +910,21 @@ export class IndexeddbService {
       // Encrypt
       const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(data), pass);
       const now: number = Date.now();
+      const vulns = data.report_vulns || [];
+      const report_stats = {
+        total: vulns.length,
+        critical: vulns.filter((v: any) => v.severity === 'Critical').length,
+        high: vulns.filter((v: any) => v.severity === 'High').length,
+        medium: vulns.filter((v: any) => v.severity === 'Medium').length,
+        low: vulns.filter((v: any) => v.severity === 'Low').length,
+        info: vulns.filter((v: any) => v.severity === 'Info').length,
+      };
       const to_update = {
         report_id: reportid,
         report_name: reportname,
         report_createdate: reportcreatedate,
         report_lastupdate: now,
+        report_stats,
         encrypted_data: ciphertext
       };
 
@@ -938,11 +948,21 @@ export class IndexeddbService {
       // Encrypt
       const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(data), pass);
       const now: number = Date.now();
+      const vulns = data.report_vulns || [];
+      const report_stats = {
+        total: vulns.length,
+        critical: vulns.filter((v: any) => v.severity === 'Critical').length,
+        high: vulns.filter((v: any) => v.severity === 'High').length,
+        medium: vulns.filter((v: any) => v.severity === 'Medium').length,
+        low: vulns.filter((v: any) => v.severity === 'Low').length,
+        info: vulns.filter((v: any) => v.severity === 'Info').length,
+      };
       const to_update = {
         report_id: reportid,
         report_name: reportname,
         report_createdate: reportcreatedate,
         report_lastupdate: now,
+        report_stats,
         encrypted_data: ciphertext
       };
 
