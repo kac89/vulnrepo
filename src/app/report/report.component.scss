@@ -1807,6 +1807,250 @@ mat-paginator {
   }
 }
 
+// ── Remediation progress indicator ───────────────────────────
+.rh-remediation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 4px;
+}
+
+.rh-remediation-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+
+  mat-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+    opacity: 0.7;
+  }
+}
+
+.rh-remediation-track {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.rh-remediation-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: #4ade80;
+  transition: width 0.4s ease;
+
+  &--done { background: #4ade80; box-shadow: 0 0 6px rgba(74, 222, 128, 0.5); }
+}
+
+.rh-remediation-pct {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 34px;
+  text-align: right;
+}
+
+// ── Kanban board ─────────────────────────────────────────────
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 8px 0 16px;
+  min-height: 200px;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+}
+
+.kanban-col {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  min-height: 120px;
+}
+
+.kanban-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+  &--open       { border-top: 3px solid #FF0039; }
+  &--inprogress { border-top: 3px solid #FF9800; }
+  &--fixed      { border-top: 3px solid #4ade80; }
+  &--wontfix    { border-top: 3px solid #9E9E9E; }
+}
+
+.kanban-col-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.kanban-col-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 1px 7px;
+  min-width: 22px;
+  text-align: center;
+}
+
+.kanban-col-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  flex: 1;
+}
+
+.kanban-col-empty {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.2);
+  text-align: center;
+  padding: 20px 0;
+  font-style: italic;
+}
+
+.kanban-card {
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.09);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &--critical { border-left-color: #FF0039; }
+  &--high     { border-left-color: #FF7518; }
+  &--medium   { border-left-color: #e8d900; }
+  &--low      { border-left-color: #3FB618; }
+  &--info     { border-left-color: #5b9cf6; }
+}
+
+.kanban-card-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.kanban-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.kanban-sev-chip {
+  font-size: 9px !important;
+  padding: 1px 6px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+}
+
+.kanban-card-cvss {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.kanban-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.kanban-tag {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: rgba(255, 255, 255, 0.5);
+
+  &--more { color: rgba(255, 255, 255, 0.3); }
+}
+
+// drag handle shown on card hover
+.kanban-drag-handle {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  opacity: 0;
+  cursor: grab;
+  color: rgba(255, 255, 255, 0.25);
+  transition: opacity 0.15s;
+  line-height: 1;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.kanban-card {
+  position: relative; // needed for absolute drag-handle
+
+  &:hover .kanban-drag-handle { opacity: 1; }
+}
+
+// CDK drag preview (floating card while dragging)
+.cdk-drag-preview.kanban-card {
+  background: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  opacity: 0.95;
+  z-index: 9999;
+}
+
+// slot left behind while dragging
+.cdk-drag-placeholder.kanban-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  opacity: 0.5;
+
+  * { visibility: hidden; }
+}
+
+// highlight drop target column while a card is being dragged over it
+.kanban-col-body.cdk-drop-list-dragging,
+.kanban-col-body.cdk-drop-list-receiving {
+  background: rgba(105, 240, 174, 0.06);
+  border-radius: 0 0 10px 10px;
+  outline: 1px dashed rgba(105, 240, 174, 0.3);
+}
+
 .issue-form-cvss-row {
   display: grid;
   grid-template-columns: 1fr 1.5fr;

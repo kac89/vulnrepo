@@ -204,6 +204,15 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   issueFilterPills: FilterPill[] = [];
   readonly issueFilterSeverities = ['Critical', 'High', 'Medium', 'Low', 'Info'];
 
+  kanbanView = false;
+  tagFilterInput = '';
+  readonly kanbanColumns = [
+    { status: 1, label: 'Open',         cssClass: 'open' },
+    { status: 2, label: 'In Progress',  cssClass: 'inprogress' },
+    { status: 3, label: 'Fixed',        cssClass: 'fixed' },
+    { status: 4, label: "Won't Fix",    cssClass: 'wontfix' },
+  ];
+
   getFilteredVulns(): any[] {
     const vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
     const { result, error } = this.issueFilterService.filter(vulns, this.issueFilterQuery);
@@ -258,6 +267,54 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       this.issueFilterQuery = current ? `${current} ${snippet}` : snippet;
       this.applyIssueFilter();
     });
+  }
+
+  get issueProgress(): number {
+    const vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
+    if (vulns.length === 0) return 0;
+    const closed = vulns.filter(v => v.status === 3 || v.status === 4).length;
+    return Math.round((closed / vulns.length) * 100);
+  }
+
+  getKanbanIssues(status: number): any[] {
+    return (this.decryptedReportDataChanged?.report_vulns ?? []).filter((v: any) => v.status === status);
+  }
+
+  getTagSuggestions(input: string, issue: any): string[] {
+    const all = this.getAllTAgs();
+    const existing = new Set((issue.tags || []).map((t: any) => t.name as string));
+    const q = input.toLowerCase();
+    return all.filter(t => !existing.has(t) && t.toLowerCase().includes(q));
+  }
+
+  onTagAutoSelect(event: any, dec_data: any, input: HTMLInputElement): void {
+    const value: string = (event.option.value || '').trim();
+    if (value) {
+      const index = this.decryptedReportDataChanged.report_vulns.indexOf(dec_data);
+      if (!this.decryptedReportDataChanged.report_vulns[index].tags.some((t: any) => t.name === value)) {
+        this.decryptedReportDataChanged.report_vulns[index].tags.push({ name: value });
+      }
+    }
+    input.value = '';
+    this.tagFilterInput = '';
+  }
+
+  onPasteAttach(event: ClipboardEvent, dec_data: any): void {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith('image/')) {
+        event.preventDefault();
+        const file = items[i].getAsFile();
+        if (!file) continue;
+        this.upload_in_progress = true;
+        const fileReader = new FileReader();
+        fileReader.onload = () => { this.checksumfile(fileReader.result, file, dec_data); };
+        fileReader.readAsDataURL(file);
+        this.snackBar.open('Screenshot pasted as attachment', 'OK', { duration: 2000, panelClass: ['notify-snackbar-success'] });
+        break;
+      }
+    }
   }
 
   @HostListener('window:keydown.control.shift.l', ['$event'])
@@ -1342,6 +1399,42 @@ Sample code here\n\
     moveItemInArray(this.decryptedReportDataChanged.report_vulns, event.previousIndex, event.currentIndex);
     moveItemInArray(this.selectedResult, event.previousIndex, event.currentIndex);
     moveItemInArray(this.scopePreviewHTML, event.previousIndex, event.currentIndex);
+  }
+
+  copyIssueMarkdown(issue: any): void {
+    const statusMap: Record<number, string> = { 1: 'Open', 2: 'In Progress', 3: 'Fixed', 4: "Won't Fix" };
+    const date = issue.date ? new Date(issue.date).toISOString().slice(0, 10) : '';
+    const tags = (issue.tags || []).map((t: any) => `\`${t.name}\``).join(', ');
+
+    const rows: [string, string][] = [['Severity', issue.severity ?? ''], ['Status', statusMap[issue.status] ?? '']];
+    if (issue.cvss) rows.push(['CVSS', String(issue.cvss)]);
+    if (issue.cve)  rows.push(['CVE', issue.cve]);
+    if (date)       rows.push(['Date', date]);
+    if (tags)       rows.push(['Tags', tags]);
+
+    const table = ['| Property | Value |', '|---|---|', ...rows.map(([k, v]) => `| ${k} | ${v} |`)].join('\n');
+    const sections: string[] = [`## [${issue.severity}] ${issue.title}`, '', table];
+
+    if (issue.desc?.trim())  sections.push('', '### Description', '',  issue.desc.trim());
+    if (issue.poc?.trim())   sections.push('', '### Proof of Concept', '', '```', issue.poc.trim(), '```');
+    if (issue.ref?.trim()) {
+      const refs = issue.ref.trim().split('\n').filter(Boolean).map((r: string) => `- ${r.trim()}`).join('\n');
+      sections.push('', '### References', '', refs);
+    }
+
+    navigator.clipboard.writeText(sections.join('\n')).then(() => {
+      this.snackBar.open('Issue copied as Markdown', 'OK', { duration: 2000, panelClass: ['notify-snackbar-success'] });
+    }).catch(() => {
+      this.snackBar.open('Copy failed — clipboard access denied', '', { duration: 3000 });
+    });
+  }
+
+  dropKanban(event: CdkDragDrop<number>): void {
+    if (event.previousContainer === event.container) return;
+    const issue = event.item.data;
+    issue.status = event.container.data;
+    this.doStats();
+    this.sureYouWanttoLeave();
   }
 
   saveReportChanges(report_id: any) {
