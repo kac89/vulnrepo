@@ -38,13 +38,13 @@
         <span class="filter-spacer"></span>
         @if (dataSource.data.length != 0) {
           <div class="view-toggle">
-            <button mat-icon-button class="view-btn" [class.active]="viewMode === 'card'"
-              (click)="setViewMode('card')" title="Card view">
-              <mat-icon>view_module</mat-icon>
-            </button>
             <button mat-icon-button class="view-btn" [class.active]="viewMode === 'list'"
               (click)="setViewMode('list')" title="List view">
               <mat-icon>view_list</mat-icon>
+            </button>
+            <button mat-icon-button class="view-btn" [class.active]="viewMode === 'card'"
+              (click)="setViewMode('card')" title="Card view">
+              <mat-icon>view_module</mat-icon>
             </button>
           </div>
         }

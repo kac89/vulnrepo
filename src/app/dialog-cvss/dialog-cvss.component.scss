@@ -64,6 +64,7 @@
 .cvss-header-right {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 // ── Version toggle ────────────────────────────────────────────────────────────
@@ -357,11 +358,29 @@
   }
 }
 
-.cancel-btn {
-  color: #757575 !important;
-  font-size: 13px !important;
+.cvss-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #757575;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
 
   &:hover {
-    color: #9e9e9e !important;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
   }
 }

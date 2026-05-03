@@ -57,7 +57,7 @@ export class MyreportsComponent implements OnInit, OnDestroy {
   private dataSubscription: Subscription | undefined;
 
   readonly sevOrder: (keyof ReportStats)[] = ['critical', 'high', 'medium', 'low', 'info'];
-  viewMode: 'card' | 'list' = 'card';
+  viewMode: 'card' | 'list' = 'list';
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
