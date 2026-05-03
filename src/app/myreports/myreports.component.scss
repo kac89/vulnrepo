@@ -229,6 +229,45 @@ $sev-info:     #60a5fa;
   }
 }
 
+// ─── View toggle ─────────────────────────────────────────────────────────────
+
+.view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: $surface-2;
+  border: 1px solid $border;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.view-btn {
+  --mdc-icon-button-state-layer-size: 28px;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border-radius: 4px !important;
+  color: $icon !important;
+  transition: background 0.1s ease, color 0.1s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: $text-dim !important;
+  }
+
+  &.active {
+    background: rgba($accent, 0.12) !important;
+    color: $accent !important;
+  }
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+}
+
 // ─── Bulk delete ─────────────────────────────────────────────────────────────
 
 .delete-selected-btn {
@@ -264,6 +303,65 @@ $sev-info:     #60a5fa;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: $border;
+}
+
+// ─── List view overrides ──────────────────────────────────────────────────────
+
+.cards-grid.list-view {
+  grid-template-columns: 1fr;
+
+  .report-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    padding-right: 52px;
+    min-height: 52px;
+    position: relative;
+
+    .card-top {
+      margin-bottom: 0;
+      flex-shrink: 0;
+
+      .card-actions {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    .card-title-link {
+      flex: 1;
+      margin-bottom: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-sev-strip {
+      margin-bottom: 0;
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+    }
+
+    .card-no-stats {
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .card-footer {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .sev-total { display: none; }
+
+    .card-no-stats span { display: none; }
+  }
 }
 
 // ─── Individual report card ───────────────────────────────────────────────────

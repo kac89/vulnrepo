@@ -57,6 +57,7 @@ export class MyreportsComponent implements OnInit, OnDestroy {
   private dataSubscription: Subscription | undefined;
 
   readonly sevOrder: (keyof ReportStats)[] = ['critical', 'high', 'medium', 'low', 'info'];
+  viewMode: 'card' | 'list' = 'card';
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
@@ -75,7 +76,16 @@ export class MyreportsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const saved = localStorage.getItem('VULNREPO-view-mode');
+    if (saved === 'list' || saved === 'card') {
+      this.viewMode = saved;
+    }
     this.getallreports();
+  }
+
+  setViewMode(mode: 'card' | 'list') {
+    this.viewMode = mode;
+    localStorage.setItem('VULNREPO-view-mode', mode);
   }
 
   ngAfterViewInit() {
