@@ -121,51 +121,53 @@
                 </div>
               </div>
 
-              <a class="card-title-link active-link" routerLink="/report/{{element.report_id}}/">
-                {{element.report_name}}
-              </a>
+              <div class="card-title-col">
+                <a class="card-title-link active-link" routerLink="/report/{{element.report_id}}/">
+                  {{element.report_name}}
+                </a>
 
-              @if (element.report_stats && element.report_stats.total > 0) {
-                <div class="card-sev-strip">
-                  @if (element.report_stats.critical > 0) {
-                    <span class="sev-pill sev-critical">
-                      <span class="sev-pill-count">{{element.report_stats.critical}}</span>
-                      <span class="sev-pill-label">C</span>
-                    </span>
-                  }
-                  @if (element.report_stats.high > 0) {
-                    <span class="sev-pill sev-high">
-                      <span class="sev-pill-count">{{element.report_stats.high}}</span>
-                      <span class="sev-pill-label">H</span>
-                    </span>
-                  }
-                  @if (element.report_stats.medium > 0) {
-                    <span class="sev-pill sev-medium">
-                      <span class="sev-pill-count">{{element.report_stats.medium}}</span>
-                      <span class="sev-pill-label">M</span>
-                    </span>
-                  }
-                  @if (element.report_stats.low > 0) {
-                    <span class="sev-pill sev-low">
-                      <span class="sev-pill-count">{{element.report_stats.low}}</span>
-                      <span class="sev-pill-label">L</span>
-                    </span>
-                  }
-                  @if (element.report_stats.info > 0) {
-                    <span class="sev-pill sev-info">
-                      <span class="sev-pill-count">{{element.report_stats.info}}</span>
-                      <span class="sev-pill-label">I</span>
-                    </span>
-                  }
-                  <span class="sev-total">{{element.report_stats.total}} finding{{element.report_stats.total !== 1 ? 's' : ''}}</span>
-                </div>
-              }
-              @if (!element.report_stats || element.report_stats.total === 0) {
-                <div class="card-no-stats">
-                  <mat-icon>lock_outline</mat-icon>
-                  <span>Save report to see findings summary</span>
-                </div>
-              }
+                @if (element.report_stats && element.report_stats.total > 0) {
+                  <div class="card-sev-strip">
+                    @if (element.report_stats.critical > 0) {
+                      <span class="sev-pill sev-critical">
+                        <span class="sev-pill-count">{{element.report_stats.critical}}</span>
+                        <span class="sev-pill-label">C</span>
+                      </span>
+                    }
+                    @if (element.report_stats.high > 0) {
+                      <span class="sev-pill sev-high">
+                        <span class="sev-pill-count">{{element.report_stats.high}}</span>
+                        <span class="sev-pill-label">H</span>
+                      </span>
+                    }
+                    @if (element.report_stats.medium > 0) {
+                      <span class="sev-pill sev-medium">
+                        <span class="sev-pill-count">{{element.report_stats.medium}}</span>
+                        <span class="sev-pill-label">M</span>
+                      </span>
+                    }
+                    @if (element.report_stats.low > 0) {
+                      <span class="sev-pill sev-low">
+                        <span class="sev-pill-count">{{element.report_stats.low}}</span>
+                        <span class="sev-pill-label">L</span>
+                      </span>
+                    }
+                    @if (element.report_stats.info > 0) {
+                      <span class="sev-pill sev-info">
+                        <span class="sev-pill-count">{{element.report_stats.info}}</span>
+                        <span class="sev-pill-label">I</span>
+                      </span>
+                    }
+                    <span class="sev-total">{{element.report_stats.total}} finding{{element.report_stats.total !== 1 ? 's' : ''}}</span>
+                  </div>
+                }
+                @if (!element.report_stats || element.report_stats.total === 0) {
+                  <div class="card-no-stats">
+                    <mat-icon>lock_outline</mat-icon>
+                    <span>Save report to see findings summary</span>
+                  </div>
+                }
+              </div>
 
               <div class="card-footer">
                 <div class="card-date">
