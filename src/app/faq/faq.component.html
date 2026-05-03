@@ -1,30 +1,31 @@
 <div class="faq-page">
 
-  <!-- Hero Header -->
-  <div class="faq-hero">
-    <div class="faq-hero-inner">
-      <div class="faq-hero-icon">
-        <mat-icon>live_help</mat-icon>
-      </div>
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-title">
+      <mat-icon class="title-icon">live_help</mat-icon>
       <div>
-        <h1 class="faq-title">Frequently Asked Questions</h1>
-        <p class="faq-subtitle">Everything you need to know about VULNREPO</p>
+        <h1>Frequently Asked Questions</h1>
+        <span class="page-subtitle">Everything you need to know about VULNREPO</span>
       </div>
-    </div>
-    <div class="faq-search-wrap">
-      <mat-icon class="faq-search-icon">search</mat-icon>
-      <input
-        class="faq-search-input"
-        type="text"
-        placeholder="Search sections…"
-        [(ngModel)]="searchQuery"
-        autocomplete="off"
-      />
-      <button *ngIf="searchQuery" class="faq-search-clear" (click)="searchQuery = ''" aria-label="Clear search">
-        <mat-icon>close</mat-icon>
-      </button>
     </div>
   </div>
+
+  <div class="faq-search-wrap">
+    <mat-icon class="faq-search-icon">search</mat-icon>
+    <input
+      class="faq-search-input"
+      type="text"
+      placeholder="Search sections…"
+      [(ngModel)]="searchQuery"
+      autocomplete="off"
+    />
+    <button *ngIf="searchQuery" class="faq-search-clear" (click)="searchQuery = ''" aria-label="Clear search">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="header-divider"></div>
 
   <!-- Two-column layout -->
   <div class="faq-layout">

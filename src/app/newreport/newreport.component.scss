@@ -1,83 +1,73 @@
-// ── Page shell ────────────────────────────────────────────────────────────────
+// ─── Design tokens (aligned with myreports.component) ──────────────────────
+
+$bg:          #383838;
+$surface:     #424242;
+$surface-2:   #4e4e4e;
+$surface-3:   #565656;
+$border:      rgba(255, 255, 255, 0.10);
+$text:        #f5f5f5;
+$text-muted:  #757575;
+$text-dim:    #9e9e9e;
+$icon:        #616161;
+$accent:      #69f0ae;
+$accent-hover: #a5f3c8;
+
+// ─── Page shell ───────────────────────────────────────────────────────────────
+
 .nr-page {
   max-width: 860px;
   margin: 0 auto;
-  padding: 40px 24px 64px;
 }
 
-// ── Hero header (matches faq-hero pattern) ────────────────────────────────────
-.nr-hero {
-  padding: 48px 0 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  margin-bottom: 36px;
-}
+// ─── Page header (matches myreports pattern) ──────────────────────────────────
 
-.nr-hero-inner {
+.page-header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
 }
 
-.nr-hero-icon {
+.page-title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #555555;
-  flex-shrink: 0;
+  gap: 12px;
 
-  mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-    color: #69f0ae;
-  }
-}
-
-.nr-hero-title {
-  margin: 0 0 4px;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: #fff;
-}
-
-.nr-hero-subtitle {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 1rem;
-}
-
-@media (max-width: 599px) {
-  .nr-hero {
-    padding: 28px 0 24px;
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: $text;
+    line-height: 1.2;
   }
 
-  .nr-hero-icon {
-    width: 42px;
-    height: 42px;
-
-    mat-icon {
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
-    }
+  .page-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    color: $text-muted;
+    margin-top: 3px;
   }
 
-  .nr-hero-title {
+  .title-icon {
     font-size: 1.4rem;
-  }
-
-  .nr-hero-subtitle {
-    font-size: 0.875rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    color: $accent;
+    flex-shrink: 0;
   }
 }
 
-// ── Two-column grid ────────────────────────────────────────────────────────────
+.header-divider {
+  height: 1px;
+  background: $border;
+  margin-bottom: 20px;
+}
+
+// ─── Two-column grid ──────────────────────────────────────────────────────────
+
 .nr-grid {
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -89,11 +79,12 @@
   }
 }
 
-// ── Form card (left) ──────────────────────────────────────────────────────────
+// ─── Form card (left) ─────────────────────────────────────────────────────────
+
 .nr-card {
-  background: #424242;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 8px;
   padding: 28px 24px 20px;
   overflow: hidden;
 }
@@ -103,58 +94,52 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+  color: $text-muted;
   margin-bottom: 12px;
 
-  &--mt {
-    margin-top: 24px;
-  }
+  &--mt { margin-top: 24px; }
 }
 
-.nr-field {
-  width: 100%;
-}
+.nr-field { width: 100%; }
 
 .nr-field-prefix {
-  color: rgba(255, 255, 255, 0.3);
+  color: $icon;
   font-size: 18px;
   margin-right: 4px;
 }
 
 .nr-suffix-icon {
-  color: rgba(255, 255, 255, 0.3);
+  color: $icon;
   cursor: pointer;
   font-size: 18px;
   transition: color 0.15s ease;
 
-  &:hover {
-    color: #69f0ae;
-  }
+  &:hover { color: $accent; }
 }
 
 .nr-option-icon {
   vertical-align: middle;
   margin-right: 6px;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.3);
+  color: $icon;
 
-  &--remote {
-    color: #69f0ae;
-  }
+  &--remote { color: $accent; }
 }
 
-// ── Right side column ─────────────────────────────────────────────────────────
+// ─── Right side column ────────────────────────────────────────────────────────
+
 .nr-side {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-// ── Strength card ─────────────────────────────────────────────────────────────
+// ─── Strength card ────────────────────────────────────────────────────────────
+
 .nr-strength-card {
-  background: #424242;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 8px;
   padding: 20px;
 }
 
@@ -170,7 +155,7 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+  color: $text-muted;
 }
 
 .nr-strength-value {
@@ -181,8 +166,8 @@
   padding: 2px 10px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.38);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: $text-dim;
+  border: 1px solid $border;
 
   &--tooshort,
   &--common {
@@ -192,7 +177,7 @@
   }
 
   &--weak {
-    background: rgba(249, 238, 6, 0.1);
+    background: rgba(249, 238, 6, 0.10);
     color: #f5d020;
     border: 1px solid rgba(249, 238, 6, 0.22);
   }
@@ -204,8 +189,8 @@
   }
 
   &--strong {
-    background: rgba(105, 240, 174, 0.1);
-    color: #69f0ae;
+    background: rgba(105, 240, 174, 0.10);
+    color: $accent;
     border: 1px solid rgba(105, 240, 174, 0.22);
   }
 }
@@ -215,41 +200,40 @@
   height: 6px;
 }
 
-// ── Notice box ────────────────────────────────────────────────────────────────
+// ─── Notice box ───────────────────────────────────────────────────────────────
+
 .nr-notice {
   display: flex;
   gap: 12px;
-  background: #424242;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 3px solid #69f0ae;
+  background: $surface;
+  border: 1px solid $border;
+  border-left: 3px solid $accent;
   border-radius: 8px;
   padding: 16px;
 
   &__icon {
     flex-shrink: 0;
     mat-icon {
-      color: #69f0ae;
+      color: $accent;
       font-size: 20px;
       width: 20px;
       height: 20px;
     }
   }
 
-  &__body {
-    flex: 1;
-  }
+  &__body { flex: 1; }
 
   &__title {
     margin: 0 0 4px;
     font-size: 13px;
     font-weight: 600;
-    color: #fff;
+    color: $text;
   }
 
   &__text {
     margin: 0;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.55);
+    color: $text-dim;
     line-height: 1.6;
   }
 
@@ -259,17 +243,18 @@
     height: 14px;
     vertical-align: middle;
     cursor: pointer;
-    color: #69f0ae;
+    color: $accent;
   }
 }
 
-// ── Action bar ────────────────────────────────────────────────────────────────
+// ─── Action bar ───────────────────────────────────────────────────────────────
+
 .nr-actions {
   display: flex;
   gap: 12px;
   margin-top: 28px;
   padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid $border;
 }
 
 .nr-btn {
@@ -278,7 +263,7 @@
   gap: 6px;
   font-size: 14px;
   font-weight: 500;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   padding: 0 20px !important;
   height: 40px;
 
@@ -289,23 +274,29 @@
   }
 
   &--primary {
-    background: #69f0ae !important;
+    background: $accent !important;
     color: #000 !important;
 
     mat-icon { color: #000; }
 
-    &:hover {
-      background: #a5f3c8 !important;
-    }
+    &:hover { background: $accent-hover !important; }
   }
 
   &--cancel {
-    border-color: rgba(255, 255, 255, 0.15) !important;
-    color: rgba(255, 255, 255, 0.55) !important;
+    border-color: $border !important;
+    color: $text-dim !important;
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.4) !important;
-      color: #fff !important;
+      border-color: rgba(255, 255, 255, 0.30) !important;
+      color: $text !important;
     }
   }
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+
+@media (max-width: 599px) {
+  .page-title h1 { font-size: 1.3rem; }
+  .page-title .page-subtitle { display: none; }
+  .page-title .title-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
 }

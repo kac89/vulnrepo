@@ -23,6 +23,9 @@
           {{severity}}&nbsp;&nbsp;<strong>{{basescore}}</strong>
         </span>
       }
+      <button class="cvss-close-btn" mat-dialog-close aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
   </div>
 
@@ -362,7 +365,6 @@
         <mat-icon>save</mat-icon> Save CVSS and Severity
       </button>
     }
-    <button mat-button class="cancel-btn" mat-dialog-close>Cancel</button>
   </mat-dialog-actions>
 
 </div>

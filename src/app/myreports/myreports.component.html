@@ -37,6 +37,18 @@
         }
         <span class="filter-spacer"></span>
         @if (dataSource.data.length != 0) {
+          <div class="view-toggle">
+            <button mat-icon-button class="view-btn" [class.active]="viewMode === 'list'"
+              (click)="setViewMode('list')" title="List view">
+              <mat-icon>view_list</mat-icon>
+            </button>
+            <button mat-icon-button class="view-btn" [class.active]="viewMode === 'card'"
+              (click)="setViewMode('card')" title="Card view">
+              <mat-icon>view_module</mat-icon>
+            </button>
+          </div>
+        }
+        @if (dataSource.data.length != 0) {
           <mat-paginator class="compact-paginator" color="accent" [pageSizeOptions]="[12, 24, 48]"
             showFirstLastButtons></mat-paginator>
         }
@@ -46,7 +58,7 @@
     @if (dataSource.data.length != 0) {
 
       @if (displayItems.length > 0) {
-        <div class="cards-grid">
+        <div [class]="viewMode === 'list' ? 'cards-grid list-view' : 'cards-grid'">
           @for (element of displayItems; track element.report_id) {
             <div class="report-card" [class.is-selected]="selection.isSelected(element)">
 
