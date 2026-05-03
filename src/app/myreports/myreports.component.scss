@@ -331,9 +331,12 @@ $sev-info:     #60a5fa;
       }
     }
 
+    .card-title-col {
+      justify-content: center;
+    }
+
     .card-title-link {
-      flex: 1;
-      margin-bottom: 0;
+      margin-bottom: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -341,13 +344,11 @@ $sev-info:     #60a5fa;
 
     .card-sev-strip {
       margin-bottom: 0;
-      flex-shrink: 0;
       flex-wrap: nowrap;
     }
 
     .card-no-stats {
       margin-bottom: 0;
-      flex-shrink: 0;
     }
 
     .card-footer {
@@ -505,6 +506,13 @@ $sev-info:     #60a5fa;
 
 // ─── Card title link ──────────────────────────────────────────────────────────
 
+.card-title-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
 .card-title-link {
   display: block;
   font-size: 0.9rem;
@@ -515,7 +523,6 @@ $sev-info:     #60a5fa;
   transition: color 0.1s ease;
   word-break: break-word;
   margin-bottom: 12px;
-  flex: 1;
 }
 
 // ─── Severity strip ───────────────────────────────────────────────────────────
@@ -738,5 +745,4 @@ $sev-info:     #60a5fa;
   }
 
   .storage-badge .badge-label { display: none; }
-  .card-sev-strip { display: none; }
 }
