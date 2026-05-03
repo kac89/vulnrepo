@@ -1,80 +1,85 @@
-// ──────────────────────────────────────────────
-// Import Report — matches faq.component style
-// ──────────────────────────────────────────────
+// ─── Design tokens (aligned with myreports.component) ──────────────────────
 
-$border-color: rgba(255, 255, 255, 0.12);
-$surface: #424242;
-$surface-hover: #4e4e4e;
-$surface-nested: #555555;
-$surface-nested-hover: #5e5e5e;
-$text-secondary: rgba(255, 255, 255, 0.55);
-$accent-green: #69f0ae;
+$bg:                  #383838;
+$surface:             #424242;
+$surface-2:           #4e4e4e;
+$surface-3:           #565656;
+$surface-3-hover:     #5e5e5e;
+$border:              rgba(255, 255, 255, 0.10);
+$text:                #f5f5f5;
+$text-muted:          #757575;
+$text-dim:            #9e9e9e;
+$icon:                #616161;
+$accent:              #69f0ae;
 
-// ── Page wrapper ────────────────────────────────
+// ─── Page wrapper ─────────────────────────────────────────────────────────────
+
 .import-page {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 24px 80px;
 }
 
-// ── Hero ────────────────────────────────────────
-.import-hero {
-  padding: 48px 0 40px;
-  border-bottom: 1px solid $border-color;
-  margin-bottom: 40px;
-}
+// ─── Page header (matches myreports pattern) ──────────────────────────────────
 
-.import-hero-inner {
+.page-header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
 }
 
-.import-hero-icon {
+.page-title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  border: 1px solid $border-color;
-  background: $surface-nested;
-  flex-shrink: 0;
+  gap: 12px;
 
-  mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-    color: $accent-green;
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: $text;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    color: $text-muted;
+    margin-top: 3px;
+  }
+
+  .title-icon {
+    font-size: 1.4rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    color: $accent;
+    flex-shrink: 0;
   }
 }
 
-.import-title {
-  margin: 0 0 4px;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+.header-divider {
+  height: 1px;
+  background: $border;
+  margin-bottom: 20px;
 }
 
-.import-subtitle {
-  margin: 0;
-  color: $text-secondary;
-  font-size: 1rem;
-}
+// ─── Two-column grid ──────────────────────────────────────────────────────────
 
-// ── Two-column grid ──────────────────────────────
 .import-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-// ── Card ─────────────────────────────────────────
+// ─── Card ─────────────────────────────────────────────────────────────────────
+
 .import-card {
   background: $surface;
-  border: 1px solid $border-color;
-  border-radius: 10px;
+  border: 1px solid $border;
+  border-radius: 8px;
   padding: 28px;
   display: flex;
   flex-direction: column;
@@ -82,7 +87,7 @@ $accent-green: #69f0ae;
   transition: border-color 0.15s;
 
   &:hover {
-    border-color: rgba($accent-green, 0.25);
+    border-color: rgba($accent, 0.25);
   }
 }
 
@@ -99,15 +104,15 @@ $accent-green: #69f0ae;
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  border: 1px solid $border-color;
-  background: $surface-nested;
+  border: 1px solid $border;
+  background: $surface-3;
   flex-shrink: 0;
 
   mat-icon {
     font-size: 20px;
     width: 20px;
     height: 20px;
-    color: $accent-green;
+    color: $accent;
   }
 }
 
@@ -117,11 +122,12 @@ $accent-green: #69f0ae;
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.3;
+  color: $text;
 }
 
 .import-card-subtitle {
   margin: 0;
-  color: $text-secondary;
+  color: $text-dim;
   font-size: 0.85rem;
   line-height: 1.5;
 }
@@ -133,20 +139,19 @@ $accent-green: #69f0ae;
   flex: 1;
 }
 
-.import-card-footer {
-  padding-top: 4px;
-}
+.import-card-footer { padding-top: 4px; }
 
-// ── Button ───────────────────────────────────────
+// ─── Button ───────────────────────────────────────────────────────────────────
+
 .import-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 9px 18px;
-  background: $surface-nested;
-  border: 1px solid $border-color;
+  background: $surface-3;
+  border: 1px solid $border;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.9);
+  color: $text;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -157,75 +162,49 @@ $accent-green: #69f0ae;
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: $accent-green;
+    color: $accent;
   }
 
   &:hover {
-    background: $surface-nested-hover;
-    border-color: rgba($accent-green, 0.35);
-    color: #fff;
+    background: $surface-3-hover;
+    border-color: rgba($accent, 0.35);
+    color: $text;
   }
 }
 
-// ── Badge ────────────────────────────────────────
+// ─── Badge ────────────────────────────────────────────────────────────────────
+
 .import-badge {
   font-family: 'Roboto Mono', monospace;
   font-size: 0.78rem;
   font-weight: 600;
-  color: $accent-green;
-  background: rgba($accent-green, 0.08);
+  color: $accent;
+  background: rgba($accent, 0.08);
   padding: 1px 6px;
   border-radius: 4px;
 }
 
-// ── Hint text ────────────────────────────────────
+// ─── Hint text ────────────────────────────────────────────────────────────────
+
 .import-hint {
   margin: 0;
-  color: $text-secondary;
+  color: $text-dim;
   font-size: 0.82rem;
   line-height: 1.5;
 }
 
-// ── Textarea field ───────────────────────────────
-.import-textarea-field {
-  width: 100%;
-}
+// ─── Textarea field ───────────────────────────────────────────────────────────
 
-// ── Responsive ───────────────────────────────────
+.import-textarea-field { width: 100%; }
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+
 @media (max-width: 768px) {
-  .import-page {
-    padding: 0 16px 60px;
-  }
+  .page-title h1 { font-size: 1.3rem; }
+  .page-title .page-subtitle { display: none; }
+  .page-title .title-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
 
-  .import-hero {
-    padding: 28px 0 24px;
-    margin-bottom: 24px;
-  }
+  .import-grid { grid-template-columns: 1fr; }
 
-  .import-hero-icon {
-    width: 42px;
-    height: 42px;
-
-    mat-icon {
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
-    }
-  }
-
-  .import-title {
-    font-size: 1.4rem;
-  }
-
-  .import-subtitle {
-    font-size: 0.875rem;
-  }
-
-  .import-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .import-card {
-    padding: 20px;
-  }
+  .import-card { padding: 20px; }
 }

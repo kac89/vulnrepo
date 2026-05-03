@@ -1,9 +1,14 @@
-// Settings page — colours matching cve-search.component
+// ─── Design tokens (aligned with myreports.component) ──────────────────────
 
-$card-bg:         #424242;
-$card-bg-sticky:  rgba(66, 66, 66, 0.92);
-$border:          rgba(255, 255, 255, 0.08);
+$bg:              #383838;
+$surface:         #424242;
+$surface-2:       #4e4e4e;
+$border:          rgba(255, 255, 255, 0.10);
 $border-inner:    rgba(255, 255, 255, 0.07);
+$text:            #f5f5f5;
+$text-muted:      #757575;
+$text-dim:        #9e9e9e;
+$icon:            #616161;
 $accent:          #69f0ae;
 $accent-hover:    #a5f3c8;
 $accent-tint:     rgba(105, 240, 174, 0.12);
@@ -11,59 +16,67 @@ $accent-border:   rgba(105, 240, 174, 0.2);
 $accent-hover-row: rgba(105, 240, 174, 0.025);
 $danger-tint:     rgba(183, 28, 28, 0.15);
 $danger-border:   rgba(183, 28, 28, 0.3);
-$text-primary:    #fff;
-$text-sub:        rgba(255, 255, 255, 0.38);
-$text-muted:      rgba(255, 255, 255, 0.28);
-$text-body:       rgba(255, 255, 255, 0.72);
-$icon-bg:         rgba(255, 255, 255, 0.05);
 
 * { box-sizing: border-box; }
 
-// ─── Page shell ────────────────────────────────────────────────────────────────
+// ─── Page shell ───────────────────────────────────────────────────────────────
 
 .settings-page {
-  padding: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
+
+// ─── Page header ─────────────────────────────────────────────────────────────
 
 .page-header {
-  margin-bottom: 36px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid $border-inner;
-}
-
-.page-header-inner {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 16px;
-}
-
-.page-header-icon {
-  font-size: 2rem;
-  height: 2rem;
-  width: 2rem;
-  color: $accent;
-  flex-shrink: 0;
+  padding-bottom: 20px;
 }
 
 .page-title {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: $text-primary;
-  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: $text;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    color: $text-muted;
+    margin-top: 3px;
+    letter-spacing: 0;
+  }
+
+  .title-icon {
+    font-size: 1.4rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    color: $accent;
+    flex-shrink: 0;
+  }
 }
 
-.page-description {
-  display: block;
-  margin: 3px 0 0;
-  font-size: 0.8rem;
-  color: $text-sub;
+// ─── Header divider ───────────────────────────────────────────────────────────
+
+.header-divider {
+  height: 1px;
+  background: $border;
+  margin-bottom: 20px;
 }
 
-// ─── Two-column grid ────────────────────────────────────────────────────────────
+// ─── Two-column grid ──────────────────────────────────────────────────────────
 
 .settings-grid {
   display: grid;
@@ -82,12 +95,12 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   gap: 16px;
 }
 
-// ─── Section card ───────────────────────────────────────────────────────────────
+// ─── Section card ─────────────────────────────────────────────────────────────
 
 .settings-section {
   border: 1px solid $border;
-  border-radius: 12px;
-  background: $card-bg;
+  border-radius: 8px;
+  background: $surface;
   overflow: hidden;
   transition: border-color 0.15s ease;
 
@@ -102,13 +115,13 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   }
 }
 
-// ─── Section header ─────────────────────────────────────────────────────────────
+// ─── Section header ───────────────────────────────────────────────────────────
 
 .section-header {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 18px 20px 14px;
+  padding: 16px 18px 14px;
   border-bottom: 1px solid $border-inner;
   position: relative;
 }
@@ -117,7 +130,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  background: $icon-bg;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
@@ -133,7 +146,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   font-size: 17px;
   height: 17px;
   width: 17px;
-  color: $text-sub;
+  color: $icon;
 
   .section-header-icon-wrap--ai &,
   .section-header-icon-wrap--vault & { color: $accent; }
@@ -150,13 +163,13 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
 .section-title {
   font-size: 0.9rem;
   font-weight: 500;
-  color: $text-primary;
+  color: $text;
   line-height: 1.3;
 }
 
 .section-subtitle {
   font-size: 0.78rem;
-  color: $text-sub;
+  color: $text-muted;
   line-height: 1.4;
 }
 
@@ -165,20 +178,20 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   height: 28px;
   line-height: 28px;
   flex-shrink: 0;
-  color: $text-sub;
+  color: $icon;
 
-  &:hover { color: $text-primary; }
+  &:hover { color: $text; }
 }
 
-// ─── Section body ───────────────────────────────────────────────────────────────
+// ─── Section body ─────────────────────────────────────────────────────────────
 
 .section-body {
-  padding: 16px 20px 20px;
+  padding: 16px 18px 18px;
 }
 
 .section-note {
   font-size: 0.8rem;
-  color: $text-body;
+  color: rgba($text, 0.72);
   margin: 0 0 14px;
   padding: 9px 12px;
   background: rgba(255, 255, 255, 0.03);
@@ -187,7 +200,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   line-height: 1.5;
 }
 
-// ─── Danger confirm ─────────────────────────────────────────────────────────────
+// ─── Danger confirm ───────────────────────────────────────────────────────────
 
 .danger-confirm-row {
   display: flex;
@@ -207,7 +220,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   line-height: 1.4;
 }
 
-// ─── Action rows ────────────────────────────────────────────────────────────────
+// ─── Action rows ──────────────────────────────────────────────────────────────
 
 .action-row {
   display: flex;
@@ -227,7 +240,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   align-items: center;
 }
 
-// ─── Add FAB ────────────────────────────────────────────────────────────────────
+// ─── Add FAB ──────────────────────────────────────────────────────────────────
 
 .add-fab {
   width: 36px !important;
@@ -254,7 +267,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   &:hover { background: $accent-hover !important; }
 }
 
-// ─── Data tables ────────────────────────────────────────────────────────────────
+// ─── Data tables ──────────────────────────────────────────────────────────────
 
 .data-table-wrap {
   border: 1px solid $border;
@@ -276,7 +289,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
     font-weight: 700 !important;
     letter-spacing: 0.09em !important;
     text-transform: uppercase !important;
-    color: rgba(255, 255, 255, 0.3) !important;
+    color: $text-muted !important;
     border-bottom: 1px solid $border-inner !important;
     padding: 10px 14px !important;
   }
@@ -284,7 +297,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   .mat-mdc-cell {
     border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
     padding: 12px 14px !important;
-    color: $text-body;
+    color: rgba($text, 0.72);
   }
 
   .mat-mdc-row {
@@ -302,12 +315,12 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   width: 28px;
   height: 28px;
   line-height: 28px;
-  color: $text-sub;
+  color: $icon;
 
-  &:hover { color: $text-primary; }
+  &:hover { color: $text; }
 }
 
-// ─── Count / status badge (reused from cve-search) ──────────────────────────────
+// ─── Count / status badge ─────────────────────────────────────────────────────
 
 .count-badge {
   background: $accent-tint;
@@ -319,7 +332,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   border: 1px solid $accent-border;
 }
 
-// ─── Empty state ────────────────────────────────────────────────────────────────
+// ─── Empty state ──────────────────────────────────────────────────────────────
 
 .empty-state {
   display: flex;
@@ -336,7 +349,7 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   }
 }
 
-// ─── Loading state ───────────────────────────────────────────────────────────────
+// ─── Loading state ────────────────────────────────────────────────────────────
 
 .loading-state {
   padding: 4px 0 14px;
@@ -351,18 +364,18 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   mat-progress-bar { border-radius: 4px; }
 }
 
-// ─── Icon links ─────────────────────────────────────────────────────────────────
+// ─── Icon links ───────────────────────────────────────────────────────────────
 
 .icon-link {
   display: inline-flex;
   align-items: center;
-  color: $text-sub !important;
+  color: $icon !important;
   transition: color 0.15s;
 
   &:hover { color: $accent !important; }
 }
 
-// ─── Status icon ────────────────────────────────────────────────────────────────
+// ─── Status icon ──────────────────────────────────────────────────────────────
 
 .status-icon {
   font-size: 15px;
@@ -371,13 +384,13 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   margin-right: 4px;
 }
 
-// ─── Form fields ─────────────────────────────────────────────────────────────────
+// ─── Form fields ──────────────────────────────────────────────────────────────
 
 .full-width { width: 100%; }
 
 .filter-field { margin-bottom: 8px; }
 
-// ─── Table cell flex ratios (preserved from original) ───────────────────────────
+// ─── Table cell flex ratios ───────────────────────────────────────────────────
 
 .mat-mdc-header-cell:first-child,
 .mat-mdc-cell:first-child   { flex: 40%; }
@@ -401,7 +414,8 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   justify-content: flex-end;
 }
 
-// ── Import vector table extras ────────────────────────────────────────────────
+// ─── Import vector table extras ───────────────────────────────────────────────
+
 .vector-fmt-chip {
   font-size: 10px;
   font-weight: 600;
@@ -430,3 +444,10 @@ $icon-bg:         rgba(255, 255, 255, 0.05);
   padding: 4px 0;
 }
 
+// ─── Responsive ───────────────────────────────────────────────────────────────
+
+@media (max-width: 599px) {
+  .page-title h1 { font-size: 1.3rem; }
+  .page-title .page-subtitle { display: none; }
+  .page-title .title-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
+}

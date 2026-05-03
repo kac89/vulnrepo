@@ -1,88 +1,93 @@
-// ──────────────────────────────────────────────
-// FAQ Page — modern layout
-// ──────────────────────────────────────────────
+// ─── Design tokens (aligned with myreports.component) ──────────────────────
 
-$border-color: rgba(255, 255, 255, 0.12);
-$surface: #424242;
-$surface-hover: #4e4e4e;
-$surface-nested: #555555;
-$surface-nested-hover: #5e5e5e;
-$text-secondary: rgba(255, 255, 255, 0.55);
-$accent-green: #69f0ae; // Material green A200
+$bg:               #383838;
+$surface:          #424242;
+$surface-2:        #4e4e4e;
+$surface-3:        #565656;
+$surface-3-hover:  #5e5e5e;
+$border:           rgba(255, 255, 255, 0.10);
+$text:             #f5f5f5;
+$text-muted:       #757575;
+$text-dim:         #9e9e9e;
+$icon:             #616161;
+$accent:           #69f0ae;
 
-// Page wrapper
+// ─── Page wrapper ─────────────────────────────────────────────────────────────
+
 .faq-page {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px 80px;
 }
 
-// ── Hero ────────────────────────────────────────
-.faq-hero {
-  padding: 48px 0 40px;
-  border-bottom: 1px solid $border-color;
-  margin-bottom: 0;
-}
+// ─── Page header (matches myreports pattern) ──────────────────────────────────
 
-.faq-hero-inner {
+.page-header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
 }
 
-.faq-hero-icon {
+.page-title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  border: 1px solid $border-color;
-  background: $surface-nested;
-  flex-shrink: 0;
+  gap: 12px;
 
-  mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-    color: $accent-green;
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: $text;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    color: $text-muted;
+    margin-top: 3px;
+  }
+
+  .title-icon {
+    font-size: 1.4rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    color: $accent;
+    flex-shrink: 0;
   }
 }
 
-.faq-title {
-  margin: 0 0 4px;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+.header-divider {
+  height: 1px;
+  background: $border;
+  margin-bottom: 20px;
 }
 
-.faq-subtitle {
-  margin: 0;
-  color: $text-secondary;
-  font-size: 1rem;
-}
+// ─── Search ───────────────────────────────────────────────────────────────────
 
-// ── Search ──────────────────────────────────────
 .faq-search-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 20px;
+  margin-bottom: 16px;
   padding: 10px 14px;
-  border: 1px solid $border-color;
+  border: 1px solid $border;
   border-radius: 8px;
   background: $surface;
   transition: border-color 0.15s;
   max-width: 480px;
 
   &:focus-within {
-    border-color: rgba($accent-green, 0.45);
+    border-color: rgba($accent, 0.45);
   }
 }
 
 .faq-search-icon {
-  color: $text-secondary;
+  color: $text-muted;
   font-size: 20px;
   width: 20px;
   height: 20px;
@@ -94,13 +99,11 @@ $accent-green: #69f0ae; // Material green A200
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: $text;
   font-size: 0.9rem;
   line-height: 1.5;
 
-  &::placeholder {
-    color: $text-secondary;
-  }
+  &::placeholder { color: $text-muted; }
 }
 
 .faq-search-clear {
@@ -111,53 +114,42 @@ $accent-green: #69f0ae; // Material green A200
   border: none;
   padding: 0;
   cursor: pointer;
-  color: $text-secondary;
+  color: $text-dim;
   transition: color 0.15s;
   flex-shrink: 0;
 
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
 
-  &:hover {
-    color: #fff;
-  }
+  &:hover { color: $text; }
 }
 
-// ── No results ───────────────────────────────────
+// ─── No results ───────────────────────────────────────────────────────────────
+
 .faq-no-results {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   padding: 48px 24px;
-  color: $text-secondary;
+  color: $text-dim;
   text-align: center;
 
-  mat-icon {
-    font-size: 40px;
-    width: 40px;
-    height: 40px;
-  }
+  mat-icon { font-size: 40px; width: 40px; height: 40px; }
 
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
+  p { margin: 0; font-size: 0.95rem; line-height: 1.5; }
 }
 
-// ── Two-column layout ───────────────────────────
+// ─── Two-column layout ────────────────────────────────────────────────────────
+
 .faq-layout {
   display: flex;
   align-items: flex-start;
   gap: 60px;
-  padding-top: 40px;
+  padding-top: 24px;
 }
 
-// ── Sidebar TOC ─────────────────────────────────
+// ─── Sidebar TOC ──────────────────────────────────────────────────────────────
+
 .faq-sidebar {
   width: 220px;
   flex-shrink: 0;
@@ -165,9 +157,7 @@ $accent-green: #69f0ae; // Material green A200
   top: 80px;
 }
 
-.faq-toc {
-  padding: 16px 0;
-}
+.faq-toc { padding: 16px 0; }
 
 .faq-toc-heading {
   margin: 0 0 12px;
@@ -175,50 +165,46 @@ $accent-green: #69f0ae; // Material green A200
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: $text-secondary;
+  color: $text-muted;
 }
 
 .faq-toc-link {
   display: block;
   padding: 5px 0 5px 12px;
   font-size: 0.82rem;
-  color: $text-secondary;
+  color: $text-dim;
   text-decoration: none;
   border-left: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;
   line-height: 1.5;
 
   &:hover {
-    color: #fff;
-    border-left-color: $accent-green;
+    color: $text;
+    border-left-color: $accent;
   }
 
   &.faq-toc-link--active {
-    color: $accent-green;
-    border-left-color: $accent-green;
+    color: $accent;
+    border-left-color: $accent;
     font-weight: 500;
   }
 }
 
-// ── Main content ────────────────────────────────
-.faq-content {
-  flex: 1;
-  min-width: 0;
-}
+// ─── Main content ─────────────────────────────────────────────────────────────
 
-// ── FAQ item ────────────────────────────────────
+.faq-content { flex: 1; min-width: 0; }
+
+// ─── FAQ item ─────────────────────────────────────────────────────────────────
+
 .faq-item {
-  padding: 28px 28px;
+  padding: 28px;
   scroll-margin-top: 100px;
   background: $surface;
-  border-radius: 10px;
-  border: 1px solid $border-color;
+  border-radius: 8px;
+  border: 1px solid $border;
 }
 
-.faq-divider {
-  height: 12px;
-  background: transparent;
-}
+.faq-divider { height: 12px; background: transparent; }
 
 .faq-item-title-row {
   display: flex;
@@ -226,13 +212,11 @@ $accent-green: #69f0ae; // Material green A200
   gap: 10px;
   margin-bottom: 10px;
 
-  &:hover .faq-anchor-link {
-    opacity: 1;
-  }
+  &:hover .faq-anchor-link { opacity: 1; }
 }
 
 .faq-item-icon {
-  color: $accent-green;
+  color: $accent;
   font-size: 20px;
   width: 20px;
   height: 20px;
@@ -245,52 +229,45 @@ $accent-green: #69f0ae; // Material green A200
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.4;
+  color: $text;
   flex: 1;
 }
 
 .faq-anchor-link {
   opacity: 0;
   transition: opacity 0.15s;
-  color: $text-secondary;
+  color: $text-dim;
   text-decoration: none;
   display: flex;
   align-items: center;
 
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-  }
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
 
-  &:hover {
-    color: $accent-green;
-  }
+  &:hover { color: $accent; }
 }
 
 .faq-item-desc {
   margin: 6px 0 0;
-  color: $text-secondary;
+  color: $text-dim;
   font-size: 0.9rem;
   line-height: 1.65;
 }
 
-.faq-item-body {
-  margin-top: 16px;
-}
+.faq-item-body { margin-top: 16px; }
 
-// ── Links ────────────────────────────────────────
+// ─── Links ────────────────────────────────────────────────────────────────────
+
 .faq-link {
-  color: $accent-green;
+  color: $accent;
   text-decoration: none;
-  border-bottom: 1px solid rgba($accent-green, 0.3);
+  border-bottom: 1px solid rgba($accent, 0.3);
   transition: border-color 0.15s;
 
-  &:hover {
-    border-bottom-color: $accent-green;
-  }
+  &:hover { border-bottom-color: $accent; }
 }
 
-// ── Check list ──────────────────────────────────
+// ─── Check list ───────────────────────────────────────────────────────────────
+
 .faq-check-list {
   list-style: none;
   padding: 0;
@@ -304,17 +281,14 @@ $accent-green: #69f0ae; // Material green A200
     align-items: center;
     gap: 8px;
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba($text, 0.8);
 
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
   }
 }
 
-// ── Status list ─────────────────────────────────
+// ─── Status list ──────────────────────────────────────────────────────────────
+
 .faq-status-list {
   list-style: none;
   padding: 0;
@@ -329,42 +303,34 @@ $accent-green: #69f0ae; // Material green A200
     gap: 10px;
     font-size: 0.9rem;
 
-    mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
+    mat-icon { font-size: 20px; width: 20px; height: 20px; flex-shrink: 0; }
   }
 }
 
 .faq-status-label {
   margin-left: 4px;
-  color: $text-secondary;
+  color: $text-dim;
   font-size: 0.8rem;
 }
 
-// ── Option cards (PDF) ──────────────────────────
+// ─── Option cards (PDF) ───────────────────────────────────────────────────────
+
 .faq-option-card {
   padding: 16px 18px;
-  border: 1px solid $border-color;
+  border: 1px solid $border;
   border-radius: 8px;
-  background: $surface-nested;
+  background: $surface-3;
   margin-bottom: 10px;
   transition: background 0.15s;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+  &:last-child { margin-bottom: 0; }
 
-  &:hover {
-    background: $surface-nested-hover;
-  }
+  &:hover { background: $surface-3-hover; }
 
   p {
     margin: 8px 0 0;
     font-size: 0.875rem;
-    color: $text-secondary;
+    color: $text-dim;
     line-height: 1.6;
   }
 }
@@ -375,13 +341,14 @@ $accent-green: #69f0ae; // Material green A200
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: $accent-green;
+  color: $accent;
   padding: 2px 8px;
-  border: 1px solid rgba($accent-green, 0.3);
+  border: 1px solid rgba($accent, 0.3);
   border-radius: 4px;
 }
 
-// ── Extension table ─────────────────────────────
+// ─── Extension table ──────────────────────────────────────────────────────────
+
 .faq-ext-table {
   display: flex;
   flex-direction: column;
@@ -393,68 +360,61 @@ $accent-green: #69f0ae; // Material green A200
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  border: 1px solid $border-color;
+  border: 1px solid $border;
   border-radius: 8px;
-  background: $surface-nested;
+  background: $surface-3;
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba($text, 0.8);
   transition: background 0.15s;
 
-  &:hover {
-    background: $surface-nested-hover;
-  }
+  &:hover { background: $surface-3-hover; }
 }
 
 .faq-ext-badge {
   font-family: 'Roboto Mono', monospace;
   font-size: 0.78rem;
   font-weight: 600;
-  color: $accent-green;
-  background: rgba($accent-green, 0.08);
+  color: $accent;
+  background: rgba($accent, 0.08);
   padding: 2px 8px;
   border-radius: 4px;
   flex-shrink: 0;
 }
 
-// ── Resource link ────────────────────────────────
+// ─── Resource link ────────────────────────────────────────────────────────────
+
 .faq-resource-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  border: 1px solid $border-color;
+  border: 1px solid $border;
   border-radius: 8px;
-  background: $surface-nested;
+  background: $surface-3;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba($text, 0.85);
   font-size: 0.875rem;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    color: $accent-green;
-  }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: $accent; }
 
   &:hover {
-    background: $surface-nested-hover;
-    border-color: rgba($accent-green, 0.3);
-    color: #fff;
+    background: $surface-3-hover;
+    border-color: rgba($accent, 0.3);
+    color: $text;
   }
 }
 
 .faq-resource-arrow {
   margin-left: 2px;
-  color: $text-secondary !important;
+  color: $text-dim !important;
   transition: color 0.15s;
 
-  .faq-resource-link:hover & {
-    color: $accent-green !important;
-  }
+  .faq-resource-link:hover & { color: $accent !important; }
 }
 
-// ── Steps list ───────────────────────────────────
+// ─── Steps list ───────────────────────────────────────────────────────────────
+
 .faq-steps {
   list-style: none;
   padding: 0;
@@ -468,7 +428,7 @@ $accent-green: #69f0ae; // Material green A200
     gap: 14px;
     align-items: flex-start;
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba($text, 0.8);
     line-height: 1.65;
   }
 }
@@ -480,22 +440,23 @@ $accent-green: #69f0ae; // Material green A200
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 1px solid rgba($accent-green, 0.4);
-  color: $accent-green;
+  border: 1px solid rgba($accent, 0.4);
+  color: $accent;
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
   margin-top: 1px;
 }
 
-// ── Inline code & code blocks ────────────────────
+// ─── Inline code & code blocks ────────────────────────────────────────────────
+
 .faq-code {
   font-family: 'Roboto Mono', monospace;
   font-size: 0.82em;
   background: rgba(255, 255, 255, 0.07);
   padding: 1px 5px;
   border-radius: 4px;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba($text, 0.9);
 }
 
 .faq-codeblock {
@@ -503,86 +464,47 @@ $accent-green: #69f0ae; // Material green A200
   font-family: 'Roboto Mono', monospace;
   font-size: 0.82rem;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid $border-color;
+  border: 1px solid $border;
   padding: 4px 10px;
   border-radius: 6px;
   margin: 6px 0;
-  color: $accent-green;
+  color: $accent;
 }
 
-// ── Section highlight (on ?q= navigation) ───────
+// ─── Section highlight (on ?q= navigation) ────────────────────────────────────
+
 .faq-item--highlighted {
-  border-radius: 10px;
+  border-radius: 8px;
   animation: faq-highlight-fade 2.5s ease forwards;
 }
 
 @keyframes faq-highlight-fade {
-  0%   { background: rgba($accent-green, 0.28); box-shadow: 0 0 0 1px rgba($accent-green, 0.45); }
+  0%   { background: rgba($accent, 0.28); box-shadow: 0 0 0 1px rgba($accent, 0.45); }
   100% { background: $surface; box-shadow: none; }
 }
 
-// ── Responsive ──────────────────────────────────
+// ─── Responsive ───────────────────────────────────────────────────────────────
+
 @media (max-width: 768px) {
-  .faq-page {
-    padding: 0 16px 60px;
-  }
+  .faq-page { padding: 0 16px 60px; }
 
-  .faq-hero {
-    padding: 28px 0 24px;
-  }
+  .page-title h1 { font-size: 1.3rem; }
+  .page-title .page-subtitle { display: none; }
+  .page-title .title-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
 
-  .faq-hero-icon {
-    width: 42px;
-    height: 42px;
+  .faq-sidebar { display: none; }
 
-    mat-icon {
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
-    }
-  }
+  .faq-layout { gap: 0; padding-top: 16px; }
 
-  .faq-title {
-    font-size: 1.4rem;
-  }
+  .faq-item { padding: 24px 0; }
 
-  .faq-subtitle {
-    font-size: 0.875rem;
-  }
+  .faq-item-title { font-size: 1rem; }
 
-  .faq-sidebar {
-    display: none;
-  }
+  .faq-option-card { padding: 14px; }
 
-  .faq-layout {
-    gap: 0;
-    padding-top: 24px;
-  }
+  .faq-ext-row { flex-wrap: wrap; gap: 8px; }
 
-  .faq-item {
-    padding: 24px 0;
-  }
+  .faq-resource-link { width: 100%; box-sizing: border-box; }
 
-  .faq-item-title {
-    font-size: 1rem;
-  }
-
-  .faq-option-card {
-    padding: 14px;
-  }
-
-  .faq-ext-row {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .faq-resource-link {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .faq-codeblock {
-    word-break: break-all;
-    white-space: normal;
-  }
+  .faq-codeblock { word-break: break-all; white-space: normal; }
 }
