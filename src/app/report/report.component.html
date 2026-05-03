@@ -12,6 +12,7 @@
         <mat-icon>undo</mat-icon> Discard
       </button>
       <button mat-flat-button color="primary" class="report-sticky-save-btn"
+        [class.rh-save-btn--pulse]="youhaveunsavedchanges"
         (click)="saveReportChanges(reportdesc.report_id)">
         <mat-icon>save</mat-icon> Save &amp; release v.{{ decryptedReportDataChanged.report_version + 1 }}
       </button>
@@ -140,19 +141,7 @@
           }
           Last release: <b style="color:#4ade80;"><i>{{lastsavereportdata | date:'medium'}}</i></b>
           }
-          @if (youhaveunsavedchanges) {
-          <div class="youhaveunsavedchanges">
-            <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon>
-            You have unsaved changes!
-            <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
-          </div>
-          }
         </div>
-        <button mat-fab extended class="mat-elevation-z9 rh-save-btn"
-          [class.rh-save-btn--pulse]="youhaveunsavedchanges" color="primary"
-          (click)="saveReportChanges(reportdesc.report_id)">
-          <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save &amp; release new version
-        </button>
       </div>
       }
     </div>

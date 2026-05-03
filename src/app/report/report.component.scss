@@ -387,16 +387,6 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
   }
 }
 
-// ── Unsaved changes banner ────────────────────────────────────
-.youhaveunsavedchanges {
-  padding-top: 4px !important;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #ff9800;
-  font-size: 0.82rem;
-  font-weight: 500;
-}
 
 // ── Severity labels (pills) ───────────────────────────────────
 .example-full-width {
