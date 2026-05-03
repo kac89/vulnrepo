@@ -12,6 +12,7 @@
         <mat-icon>undo</mat-icon> Discard
       </button>
       <button mat-flat-button color="primary" class="report-sticky-save-btn"
+        [class.rh-save-btn--pulse]="youhaveunsavedchanges"
         (click)="saveReportChanges(reportdesc.report_id)">
         <mat-icon>save</mat-icon> Save &amp; release v.{{ decryptedReportDataChanged.report_version + 1 }}
       </button>
@@ -123,6 +124,20 @@
       </div>
       }
 
+      <!-- Remediation progress -->
+      @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
+      <div class="rh-remediation">
+        <span class="rh-remediation-label">
+          <mat-icon>check_circle_outline</mat-icon>Remediation
+        </span>
+        <div class="rh-remediation-track">
+          <div class="rh-remediation-fill" [style.width.%]="issueProgress"
+            [class.rh-remediation-fill--done]="issueProgress === 100"></div>
+        </div>
+        <span class="rh-remediation-pct">{{ issueProgress }}%</span>
+      </div>
+      }
+
       <!-- Save action bar -->
       @if (decryptedReportDataChanged) {
       <div class="rh-action-bar">
@@ -140,19 +155,7 @@
           }
           Last release: <b style="color:#4ade80;"><i>{{lastsavereportdata | date:'medium'}}</i></b>
           }
-          @if (youhaveunsavedchanges) {
-          <div class="youhaveunsavedchanges">
-            <mat-icon class="vertical-align-middle padding-bottom-3">notifications_active</mat-icon>
-            You have unsaved changes!
-            <mat-icon class="vertical-align-middle padding-bottom-3" color="accent">arrow_upward</mat-icon>
-          </div>
-          }
         </div>
-        <button mat-fab extended class="mat-elevation-z9 rh-save-btn"
-          [class.rh-save-btn--pulse]="youhaveunsavedchanges" color="primary"
-          (click)="saveReportChanges(reportdesc.report_id)">
-          <mat-icon class="vertical-align-middle padding-bottom-3">save</mat-icon> Save &amp; release new version
-        </button>
       </div>
       }
     </div>
@@ -262,6 +265,11 @@
           <div class="issues-header-actions">
             <button mat-button (click)="import_issues()">
               <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
+            </button>
+            <button mat-icon-button (click)="kanbanView = !kanbanView"
+              [title]="kanbanView ? 'List view' : 'Board view'"
+              [color]="kanbanView ? 'accent' : ''">
+              <mat-icon>{{ kanbanView ? 'view_list' : 'view_column' }}</mat-icon>
             </button>
             <div id="rightopts">
               @if (decryptedReportDataChanged.report_vulns.length != 0) {
@@ -374,6 +382,57 @@
           </div>
           }
           }
+          <!-- Kanban board view -->
+          @if (kanbanView) {
+          <div class="kanban-board" cdkDropListGroup>
+            @for (col of kanbanColumns; track col.status) {
+            <div class="kanban-col">
+              <div class="kanban-col-header kanban-col-header--{{ col.cssClass }}">
+                <span class="kanban-col-title">{{ col.label }}</span>
+                <span class="kanban-col-count">{{ getKanbanIssues(col.status).length }}</span>
+              </div>
+              <div class="kanban-col-body"
+                cdkDropList
+                cdkDropListSortingDisabled
+                [cdkDropListData]="col.status"
+                (cdkDropListDropped)="dropKanban($event)">
+                @for (issue of getKanbanIssues(col.status); track issue) {
+                <div class="kanban-card kanban-card--{{ issue.severity | lowercase }}"
+                  cdkDrag [cdkDragData]="issue"
+                  (click)="editissuetitle(issue)" role="button" [title]="issue.title">
+                  <div class="kanban-card-title">{{ issue.title }}</div>
+                  <div class="kanban-card-meta">
+                    <span class="sev-chip sev-chip--{{ issue.severity | lowercase }} kanban-sev-chip">{{ issue.severity }}</span>
+                    @if (issue.cvss) {
+                    <span class="kanban-card-cvss">CVSS {{ issue.cvss }}</span>
+                    }
+                  </div>
+                  @if (issue.tags?.length > 0) {
+                  <div class="kanban-card-tags">
+                    @for (tag of issue.tags.slice(0, 3); track tag) {
+                    <span class="kanban-tag">{{ tag.name }}</span>
+                    }
+                    @if (issue.tags.length > 3) {
+                    <span class="kanban-tag kanban-tag--more">+{{ issue.tags.length - 3 }}</span>
+                    }
+                  </div>
+                  }
+                  <!-- drag handle affordance -->
+                  <div class="kanban-drag-handle" cdkDragHandle title="Drag to change status">
+                    <mat-icon>drag_indicator</mat-icon>
+                  </div>
+                </div>
+                } @empty {
+                <div class="kanban-col-empty">Drop issues here</div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+          }
+
+          <!-- List view (paginator + accordion) -->
+          @if (!kanbanView) {
           <div [hidden]="decryptedReportDataChanged.report_vulns.length == 0">
             <mat-paginator #paginatorIssues color="accent" [pageSizeOptions]="[20, 50, 100, 250]"
               (page)="pageEvent=getData($event)" showFirstLastButtons></mat-paginator>
@@ -382,7 +441,8 @@
           <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" multi="true">
             @for (dec_data of selectedResult; track dec_data; let i = $index) {
             <mat-expansion-panel class="issue-panel issue-panel--{{dec_data.severity | lowercase}}"
-              (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag>
+              (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag
+              (paste)="onPasteAttach($event, dec_data)">
               <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
                 <mat-panel-title fxLayoutAlign="start">
                   <div style="white-space: nowrap;">
@@ -511,10 +571,18 @@
                         }
                       </mat-chip-row>
                       }
-                      <input placeholder="New tag..." [matChipInputFor]="tagList"
+                      <input placeholder="New tag..." #tagInputEl
+                        [matChipInputFor]="tagList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                        (matChipInputTokenEnd)="TAGadd($event, dec_data)">
+                        (matChipInputTokenEnd)="TAGadd($event, dec_data)"
+                        [matAutocomplete]="tagAuto"
+                        (input)="tagFilterInput = $event.target['value']">
                     </mat-chip-grid>
+                    <mat-autocomplete #tagAuto="matAutocomplete" (optionSelected)="onTagAutoSelect($event, dec_data, tagInputEl)">
+                      @for (suggestion of getTagSuggestions(tagFilterInput, dec_data); track suggestion) {
+                      <mat-option [value]="suggestion">{{ suggestion }}</mat-option>
+                      }
+                    </mat-autocomplete>
                   </mat-form-field>
                   }
                 </div>
@@ -618,6 +686,10 @@
                 </span>
                 }
                 <span class="issue-action-strip-spacer"></span>
+                <button mat-stroked-button class="issue-action-btn" (click)="copyIssueMarkdown(dec_data)"
+                  title="Copy issue as Markdown">
+                  <mat-icon>content_copy</mat-icon>Copy MD
+                </button>
                 <button mat-stroked-button class="issue-action-btn" (click)="saveTemplate(dec_data)"
                   title="Save issue as template">
                   <mat-icon>save_as</mat-icon>Save template
@@ -630,6 +702,7 @@
             </mat-expansion-panel>
             }
           </mat-accordion>
+          } <!-- /!kanbanView -->
           @if (pok == 1) {
           <div>
             <br>
