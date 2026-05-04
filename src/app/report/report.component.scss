@@ -996,6 +996,86 @@ mat-paginator {
 .sev-filter-info             { color: #5b9cf6 !important; border-color: rgba(#2780E3, 0.4) !important; }
 .sev-filter-info.active      { background: #2780E3 !important; color: #fff !important; }
 
+// ── Tag quick-filter bar ──────────────────────────────────────────────────────
+.report-tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.tag-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 2px 10px;
+  height: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  color: rgba(255, 255, 255, 0.55);
+
+  &::before {
+    content: '#';
+    margin-right: 1px;
+    opacity: 0.6;
+  }
+}
+
+// ── Tag colour palette (0-7, hash-assigned per tag name) ─────────────────────
+
+// 0: blue
+.tag-color-0 { --tc-bg: 59,130,246; --tc-fg: #93c5fd; }
+// 1: emerald
+.tag-color-1 { --tc-bg: 16,185,129;  --tc-fg: #6ee7b7; }
+// 2: amber
+.tag-color-2 { --tc-bg: 245,158,11;  --tc-fg: #fcd34d; }
+// 3: red
+.tag-color-3 { --tc-bg: 239,68,68;   --tc-fg: #fca5a5; }
+// 4: purple
+.tag-color-4 { --tc-bg: 168,85,247;  --tc-fg: #d8b4fe; }
+// 5: pink
+.tag-color-5 { --tc-bg: 236,72,153;  --tc-fg: #f9a8d4; }
+// 6: teal
+.tag-color-6 { --tc-bg: 20,184,166;  --tc-fg: #5eead4; }
+// 7: orange
+.tag-color-7 { --tc-bg: 249,115,22;  --tc-fg: #fdba74; }
+
+// Apply palette to kanban tag spans
+.kanban-tag[class*="tag-color-"] {
+  background: rgba(var(--tc-bg), 0.2);
+  color: var(--tc-fg);
+}
+
+// Apply palette to tag filter buttons
+.tag-filter-btn[class*="tag-color-"] {
+  color: var(--tc-fg);
+  border-color: rgba(var(--tc-bg), 0.45);
+
+  &.active,
+  &:hover {
+    background: rgba(var(--tc-bg), 0.22);
+    border-color: var(--tc-fg);
+  }
+}
+
+// Apply palette to Material chip rows (tag edit field)
+::ng-deep mat-chip-row[class*="tag-color-"] {
+  --mdc-chip-elevated-container-color: rgba(var(--tc-bg), 0.22);
+  --mdc-chip-label-text-color: var(--tc-fg);
+  --mdc-chip-with-trailing-icon-trailing-icon-color: var(--tc-fg);
+}
+
+// Apply palette to Material chip options (issue panel header)
+::ng-deep mat-chip-option.issue-tag-chip[class*="tag-color-"] {
+  --mdc-chip-elevated-container-color: rgba(var(--tc-bg), 0.18);
+  --mdc-chip-label-text-color: var(--tc-fg);
+}
+
 .report-issue-search.has-error ::ng-deep .mat-mdc-form-field-flex .mdc-notched-outline > * {
   border-color: #FF0039 !important;
 }
