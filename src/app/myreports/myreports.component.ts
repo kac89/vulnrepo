@@ -58,6 +58,8 @@ export class MyreportsComponent implements OnInit, OnDestroy {
 
   readonly sevOrder: (keyof ReportStats)[] = ['critical', 'high', 'medium', 'low', 'info'];
   viewMode: 'card' | 'list' = 'list';
+  sortField: 'name' | 'created' | 'updated' = 'updated';
+  sortDir: 'asc' | 'desc' = 'desc';
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
@@ -79,6 +81,14 @@ export class MyreportsComponent implements OnInit, OnDestroy {
     const saved = localStorage.getItem('VULNREPO-view-mode');
     if (saved === 'list' || saved === 'card') {
       this.viewMode = saved;
+    }
+    const savedSortField = localStorage.getItem('VULNREPO-sort-field');
+    const savedSortDir = localStorage.getItem('VULNREPO-sort-dir');
+    if (savedSortField === 'name' || savedSortField === 'created' || savedSortField === 'updated') {
+      this.sortField = savedSortField;
+    }
+    if (savedSortDir === 'asc' || savedSortDir === 'desc') {
+      this.sortDir = savedSortDir;
     }
     this.getallreports();
   }
@@ -104,9 +114,7 @@ export class MyreportsComponent implements OnInit, OnDestroy {
     this.indexeddbService.getReports().then(data => {
       if (data) {
         this.list.push(...data);
-        this.list.sort((a: any, b: any) => (b.report_lastupdate || b.report_createdate) - (a.report_lastupdate || a.report_createdate));
-        this.dataSource.data = this.list;
-        this.dataSource.paginator = this.paginator;
+        this.applySort();
       }
     });
     this.getAPIallreports();
@@ -140,9 +148,7 @@ export class MyreportsComponent implements OnInit, OnDestroy {
           }
 
         }).then(() => {
-          this.list.sort((a: any, b: any) => (b.report_lastupdate || b.report_createdate) - (a.report_lastupdate || a.report_createdate));
-          this.dataSource.data = this.list;
-          this.dataSource.paginator = this.paginator;
+          this.applySort();
         }).catch(() => { });
 
         //progress bar on api reports
@@ -323,6 +329,37 @@ export class MyreportsComponent implements OnInit, OnDestroy {
     if (this.paginator) {
       this.paginator.firstPage();
     }
+  }
+
+  setSort(field: 'name' | 'created' | 'updated') {
+    if (this.sortField === field) {
+      this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDir = field === 'name' ? 'asc' : 'desc';
+    }
+    localStorage.setItem('VULNREPO-sort-field', this.sortField);
+    localStorage.setItem('VULNREPO-sort-dir', this.sortDir);
+    this.applySort();
+  }
+
+  applySort() {
+    this.list.sort((a: any, b: any) => {
+      if (this.sortField === 'name') {
+        const na = (a.report_name || '').toLowerCase();
+        const nb = (b.report_name || '').toLowerCase();
+        return this.sortDir === 'asc' ? na.localeCompare(nb) : nb.localeCompare(na);
+      }
+      const va = this.sortField === 'created'
+        ? (a.report_createdate || 0)
+        : (a.report_lastupdate || a.report_createdate || 0);
+      const vb = this.sortField === 'created'
+        ? (b.report_createdate || 0)
+        : (b.report_lastupdate || b.report_createdate || 0);
+      return this.sortDir === 'asc' ? va - vb : vb - va;
+    });
+    this.dataSource.data = this.list;
+    this.dataSource.paginator = this.paginator;
   }
 
   Redirectme(url: any) {

@@ -268,6 +268,58 @@ $sev-info:     #60a5fa;
   }
 }
 
+// ─── Sort controls ───────────────────────────────────────────────────────────
+
+.sort-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+
+.sort-label {
+  font-size: 0.7rem;
+  color: $text-muted;
+  margin-right: 2px;
+  white-space: nowrap;
+}
+
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid $border;
+  border-radius: 4px;
+  background: transparent;
+  color: $text-muted;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+  white-space: nowrap;
+
+  mat-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: $text-dim;
+  }
+
+  &.active {
+    background: rgba($accent, 0.1);
+    color: $accent;
+    border-color: rgba($accent, 0.25);
+  }
+}
+
 // ─── Bulk delete ─────────────────────────────────────────────────────────────
 
 .delete-selected-btn {
@@ -738,6 +790,7 @@ $sev-info:     #60a5fa;
 
     .filter-field { width: 100%; }
     .compact-paginator { width: 100%; }
+    .sort-group { flex-wrap: wrap; }
   }
 
   .cards-grid {

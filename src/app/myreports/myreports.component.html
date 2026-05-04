@@ -37,6 +37,27 @@
         }
         <span class="filter-spacer"></span>
         @if (dataSource.data.length != 0) {
+          <div class="sort-group">
+            <span class="sort-label">Sort:</span>
+            <button class="sort-btn" [class.active]="sortField === 'name'" (click)="setSort('name')">
+              Name
+              @if (sortField === 'name') {
+                <mat-icon>{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
+              }
+            </button>
+            <button class="sort-btn" [class.active]="sortField === 'created'" (click)="setSort('created')">
+              Created
+              @if (sortField === 'created') {
+                <mat-icon>{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
+              }
+            </button>
+            <button class="sort-btn" [class.active]="sortField === 'updated'" (click)="setSort('updated')">
+              Updated
+              @if (sortField === 'updated') {
+                <mat-icon>{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
+              }
+            </button>
+          </div>
           <div class="view-toggle">
             <button mat-icon-button class="view-btn" [class.active]="viewMode === 'list'"
               (click)="setViewMode('list')" title="List view">
