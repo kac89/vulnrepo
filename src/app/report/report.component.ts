@@ -3065,6 +3065,25 @@ Info       | ${sevCounts.Info}\n\n`;
   }
 
 
+  tagColor(name: string): number {
+    let h = 0;
+    for (let i = 0; i < name.length; i++) {
+      h = (h * 31 + name.charCodeAt(i)) >>> 0;
+    }
+    return h % 8;
+  }
+
+  toggleIssueTagToken(tag: string) {
+    this.issueFilterQuery = this.issueFilterService.toggleFieldToken(
+      this.issueFilterQuery, 'tag', tag,
+    );
+    this.applyIssueFilter();
+  }
+
+  isIssueTagActive(tag: string): boolean {
+    return this.issueFilterService.hasFieldToken(this.issueFilterQuery, 'tag', tag);
+  }
+
   TAGadd(event: MatChipInputEvent, dec_data): void {
 
     const value = (event.value || '').trim();

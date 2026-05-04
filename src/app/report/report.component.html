@@ -348,6 +348,17 @@
               </button>
               }
             </div>
+            @if (getAllTAgs().length > 0) {
+            <div class="report-tag-filters">
+              @for (tag of getAllTAgs(); track tag) {
+              <button type="button" class="tag-filter-btn tag-color-{{ tagColor(tag) }}"
+                [class.active]="isIssueTagActive(tag)" (click)="toggleIssueTagToken(tag)"
+                title="Filter tag:{{ tag }}">
+                {{ tag }}
+              </button>
+              }
+            </div>
+            }
           </div>
           @if (issueFilterError) {
           <div class="report-filter-error">
@@ -410,7 +421,7 @@
                   @if (issue.tags?.length > 0) {
                   <div class="kanban-card-tags">
                     @for (tag of issue.tags.slice(0, 3); track tag) {
-                    <span class="kanban-tag">{{ tag.name }}</span>
+                    <span class="kanban-tag tag-color-{{ tagColor(tag.name) }}">{{ tag.name }}</span>
                     }
                     @if (issue.tags.length > 3) {
                     <span class="kanban-tag kanban-tag--more">+{{ issue.tags.length - 3 }}</span>
@@ -458,7 +469,8 @@
                       fxHide.sm>
                       <mat-chip-listbox style="white-space: nowrap;">
                         @for (tag of dec_data.tags.slice(0, 3); track tag) {
-                        <mat-chip-option [selectable]="false" ngDefaultControl>
+                        <mat-chip-option [selectable]="false" ngDefaultControl
+                          [class]="'issue-tag-chip tag-color-' + tagColor(tag.name)">
                           {{tag.name}}
                         </mat-chip-option>
                         }
@@ -564,7 +576,8 @@
                     <mat-chip-grid #tagList aria-label="Tags">
                       @for (tag of dec_data.tags; track tag) {
                       <mat-chip-row [(ngModel)]="dec_data.tags" [selectable]="selectable" [removable]="removable"
-                        (removed)="TAGremove(tag, dec_data)" ngDefaultControl>
+                        (removed)="TAGremove(tag, dec_data)" ngDefaultControl
+                        [class]="'tag-color-' + tagColor(tag.name)">
                         {{tag.name}}
                         @if (removable) {
                         <mat-icon matChipRemove>cancel</mat-icon>
