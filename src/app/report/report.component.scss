@@ -738,6 +738,33 @@ mat-paginator {
   height: 32px !important;
   line-height: 32px !important;
   font-size: 0.78rem !important;
+
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 4px;
+    vertical-align: middle;
+  }
+
+  &__spinner {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: sticky-btn-spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+
+    @media (prefers-reduced-motion: reduce) { animation: none; }
+  }
+}
+
+@keyframes sticky-btn-spin {
+  to { transform: rotate(360deg); }
 }
 
 .report-sticky-close-btn {

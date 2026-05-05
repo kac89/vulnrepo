@@ -12,9 +12,15 @@
         <mat-icon>undo</mat-icon> Discard
       </button>
       <button mat-flat-button color="primary" class="report-sticky-save-btn"
-        [class.rh-save-btn--pulse]="youhaveunsavedchanges"
+        [class.rh-save-btn--pulse]="youhaveunsavedchanges && !report_encryption_in_progress"
+        [disabled]="report_encryption_in_progress"
         (click)="saveReportChanges(reportdesc.report_id)">
-        <mat-icon>save</mat-icon> Save &amp; release v.{{ decryptedReportDataChanged.report_version + 1 }}
+        @if (report_encryption_in_progress) {
+          <span class="report-sticky-save-btn__spinner"></span>
+          Please wait…
+        } @else {
+          <span class="report-sticky-save-btn__label"><mat-icon>save</mat-icon> Save &amp; release v.{{ decryptedReportDataChanged.report_version + 1 }}</span>
+        }
       </button>
     </div>
   </div>
@@ -263,13 +269,13 @@
           <mat-card-title>Issues ({{decryptedReportDataChanged.report_vulns.length}})</mat-card-title>
           <span style="flex:1"></span>
           <div class="issues-header-actions">
-            <button mat-button (click)="import_issues()">
-              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
-            </button>
             <button mat-icon-button (click)="kanbanView = !kanbanView"
               [title]="kanbanView ? 'List view' : 'Board view'"
               [color]="kanbanView ? 'accent' : ''">
               <mat-icon>{{ kanbanView ? 'view_list' : 'view_column' }}</mat-icon>
+            </button>
+            <button mat-button (click)="import_issues()">
+              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
             </button>
             <div id="rightopts">
               @if (decryptedReportDataChanged.report_vulns.length != 0) {
