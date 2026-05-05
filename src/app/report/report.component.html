@@ -12,9 +12,15 @@
         <mat-icon>undo</mat-icon> Discard
       </button>
       <button mat-flat-button color="primary" class="report-sticky-save-btn"
-        [class.rh-save-btn--pulse]="youhaveunsavedchanges"
+        [class.rh-save-btn--pulse]="youhaveunsavedchanges && !report_encryption_in_progress"
+        [disabled]="report_encryption_in_progress"
         (click)="saveReportChanges(reportdesc.report_id)">
-        <mat-icon>save</mat-icon> Save &amp; release v.{{ decryptedReportDataChanged.report_version + 1 }}
+        @if (report_encryption_in_progress) {
+          <span class="report-sticky-save-btn__spinner"></span>
+          Please wait…
+        } @else {
+          <span class="report-sticky-save-btn__label"><mat-icon>save</mat-icon> Save &amp; release v.{{ decryptedReportDataChanged.report_version + 1 }}</span>
+        }
       </button>
     </div>
   </div>
