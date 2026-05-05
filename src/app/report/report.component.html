@@ -263,13 +263,13 @@
           <mat-card-title>Issues ({{decryptedReportDataChanged.report_vulns.length}})</mat-card-title>
           <span style="flex:1"></span>
           <div class="issues-header-actions">
-            <button mat-button (click)="import_issues()">
-              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
-            </button>
             <button mat-icon-button (click)="kanbanView = !kanbanView"
               [title]="kanbanView ? 'List view' : 'Board view'"
               [color]="kanbanView ? 'accent' : ''">
               <mat-icon>{{ kanbanView ? 'view_list' : 'view_column' }}</mat-icon>
+            </button>
+            <button mat-button (click)="import_issues()">
+              <mat-icon class="vertical-align-middle padding-bottom-3">playlist_add</mat-icon>Import
             </button>
             <div id="rightopts">
               @if (decryptedReportDataChanged.report_vulns.length != 0) {
