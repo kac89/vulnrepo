@@ -432,12 +432,20 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     setTimeout(() => this.extractAssetsFromText(), 60);
   }
 
-  // Parse the free-text Description for URLs, IPv4 (with optional CIDR),
-  // and bare hostnames; add each as a structured asset, skipping duplicates.
+  get hasExtractableContent(): boolean {
+    if (this.decryptedReportDataChanged?.report_scope?.trim()) return true;
+    return (this.decryptedReportDataChanged?.report_vulns ?? []).some((v: any) => v.poc?.trim());
+  }
+
+  // Parse the free-text Description and issue PoC fields for URLs, IPv4 (with
+  // optional CIDR), and bare hostnames; add each as a structured asset, skipping duplicates.
   extractAssetsFromText() {
-    const text = this.decryptedReportDataChanged?.report_scope || '';
+    const scopeText = this.decryptedReportDataChanged?.report_scope || '';
+    const vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
+    const pocText = vulns.map((v: any) => v.poc || '').join('\n');
+    const text = [scopeText, pocText].filter(t => t.trim()).join('\n');
     if (!text.trim()) {
-      this.snackBar.open('Description is empty — nothing to extract', 'OK', {
+      this.snackBar.open('Nothing to extract — add a description or PoC content to issues', 'OK', {
         duration: 2500,
         panelClass: ['notify-snackbar-fail']
       });
@@ -500,23 +508,54 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
         name: '',
         type: info.type,
         target: info.target,
-        notes: 'Extracted from scope description',
+        notes: 'Extracted from report content',
         in_scope: true
       });
       added++;
     }
 
     if (added === 0) {
-      this.snackBar.open('No new URLs, hosts or IPs found in description', 'OK', {
+      this.snackBar.open('No new URLs, hosts or IPs found', 'OK', {
         duration: 2500
       });
     } else {
       this.snackBar.open(
-        `Extracted ${added} asset${added === 1 ? '' : 's'} from description`,
+        `Extracted ${added} asset${added === 1 ? '' : 's'} from report content`,
         'OK',
         { duration: 3000, panelClass: ['notify-snackbar-success'] }
       );
     }
+  }
+  insertInventoryAsTable() {
+    const assets: any[] = this.decryptedReportDataChanged?.report_assets ?? [];
+    if (assets.length === 0) {
+      this.snackBar.open('Inventory is empty — add assets first', 'OK', { duration: 2500 });
+      return;
+    }
+    const typeLabels: Record<string, string> = {
+      web: 'Web', api: 'API', host: 'Host', mobile: 'Mobile',
+      cloud: 'Cloud', iot: 'IoT', code: 'Code', other: 'Other'
+    };
+    const rows = assets.map((a: any) => {
+      const type = typeLabels[a.type] ?? a.type ?? '';
+      const name = (a.name || '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
+      const target = (a.target || '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
+      const scope = a.in_scope ? 'Yes' : 'No';
+      return `| ${type} | ${name} | ${target} | ${scope} |`;
+    });
+    const table = [
+      '| Type | Name | Target | In Scope |',
+      '|------|------|--------|----------|',
+      ...rows
+    ].join('\n');
+    const current = this.decryptedReportDataChanged.report_scope || '';
+    this.decryptedReportDataChanged.report_scope = current
+      ? current.trimEnd() + '\n\n' + table
+      : table;
+    this.scopeTabIndex = 0;
+    this.snackBar.open('Inventory table inserted into Description', 'OK', {
+      duration: 2500, panelClass: ['notify-snackbar-success']
+    });
   }
   // ─────────────────────────────────────────────────────────────────────
 
