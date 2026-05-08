@@ -141,6 +141,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   stickyBarVisible = false;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
+  lastSavedSnapshot: any = null;
   setLocal = 'en-GB';  //dd/MM/yyyy
   subscription: Subscription;
   displayedSeverityColumns: string[] = ['severity', 'count'];
@@ -279,6 +280,246 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     return Math.round((closed / vulns.length) * 100);
   }
 
+  // ─── Asset inventory ────────────────────────────────────────────────
+  scopeTabIndex = 0;
+
+  assetsPageIndex = 0;
+  assetsPageSize = 10;
+  readonly assetsPageSizeOptions = [10, 25, 50, 100];
+  assetsSortField: 'type' | 'name' | 'target' | 'scope' | 'findings' | null = null;
+  assetsSortDir: 'asc' | 'desc' = 'desc';
+
+  readonly assetTypes = [
+    { value: 'web',    label: 'Web',    icon: 'language' },
+    { value: 'api',    label: 'API',    icon: 'api' },
+    { value: 'host',   label: 'Host',   icon: 'dns' },
+    { value: 'mobile', label: 'Mobile', icon: 'smartphone' },
+    { value: 'cloud',  label: 'Cloud',  icon: 'cloud' },
+    { value: 'iot',    label: 'IoT',    icon: 'router' },
+    { value: 'code',   label: 'Code',   icon: 'code' },
+    { value: 'other',  label: 'Other',  icon: 'category' },
+  ];
+
+  assetIcon(type: string): string {
+    return this.assetTypes.find(t => t.value === type)?.icon || 'category';
+  }
+
+  addAsset() {
+    if (!this.decryptedReportDataChanged) return;
+    if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+      this.decryptedReportDataChanged.report_assets = [];
+    }
+    this.decryptedReportDataChanged.report_assets.push({
+      id: uuid(),
+      name: '',
+      type: 'web',
+      target: '',
+      notes: '',
+      in_scope: true
+    });
+  }
+
+  removeAsset(asset: any) {
+    if (!this.decryptedReportDataChanged?.report_assets) return;
+    const idx = this.decryptedReportDataChanged.report_assets.indexOf(asset);
+    if (idx >= 0) this.decryptedReportDataChanged.report_assets.splice(idx, 1);
+  }
+
+  toggleAssetScope(asset: any) {
+    asset.in_scope = !asset.in_scope;
+  }
+
+  // Heuristic: a finding belongs to an asset if its title/desc/poc/refs contain
+  // the asset's name or target (case-insensitive substring). Each vuln counted once.
+  countFindingsForAsset(asset: any): number {
+    const vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
+    const needles: string[] = [];
+    if (asset?.name)   needles.push(String(asset.name).toLowerCase().trim());
+    if (asset?.target) needles.push(String(asset.target).toLowerCase().trim());
+    const filtered = needles.filter(n => n.length >= 2);
+    if (filtered.length === 0) return 0;
+    let n = 0;
+    for (const v of vulns) {
+      const haystack = (
+        (v.title || '') + ' ' +
+        (v.desc  || '') + ' ' +
+        (v.poc   || '') + ' ' +
+        (Array.isArray(v.ref) ? v.ref.map((r: any) => r?.refs ?? r ?? '').join(' ') : '')
+      ).toLowerCase();
+      if (filtered.some(needle => haystack.includes(needle))) n++;
+    }
+    return n;
+  }
+
+  filterIssuesByAsset(asset: any) {
+    const term = (asset?.target || asset?.name || '').trim();
+    if (!term) return;
+    // Quote so the parser treats it as a free-text search across all fields.
+    this.issueFilterQuery = `"${term.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+    this.applyIssueFilter();
+    // Smooth scroll to the issues list
+    setTimeout(() => {
+      const el = document.querySelector('.report-issue-filter-bar');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
+  trackAsset = (_: number, a: any) => a?.id ?? _;
+
+  get assetTotals() {
+    const list: any[] = this.decryptedReportDataChanged?.report_assets ?? [];
+    const total = list.length;
+    const inScope = list.filter(a => a.in_scope !== false).length;
+    return { total, inScope, outOfScope: total - inScope };
+  }
+
+  get sortedAssets(): any[] {
+    const list: any[] = this.decryptedReportDataChanged?.report_assets ?? [];
+    if (!this.assetsSortField) return list;
+    const dir = this.assetsSortDir === 'asc' ? 1 : -1;
+    const field = this.assetsSortField;
+    return [...list].sort((a, b) => {
+      let av: any;
+      let bv: any;
+      if (field === 'findings') {
+        av = this.countFindingsForAsset(a);
+        bv = this.countFindingsForAsset(b);
+      } else if (field === 'scope') {
+        av = a.in_scope === false ? 0 : 1;
+        bv = b.in_scope === false ? 0 : 1;
+      } else {
+        av = String(a?.[field] ?? '').toLowerCase();
+        bv = String(b?.[field] ?? '').toLowerCase();
+      }
+      if (av < bv) return -1 * dir;
+      if (av > bv) return  1 * dir;
+      return 0;
+    });
+  }
+
+  get displayedAssets(): any[] {
+    const sorted = this.sortedAssets;
+    const totalPages = Math.max(1, Math.ceil(sorted.length / this.assetsPageSize));
+    if (this.assetsPageIndex >= totalPages) {
+      // Clamp when assets are removed below the current page; runs during the
+      // same change-detection cycle so the next read returns the right slice.
+      this.assetsPageIndex = totalPages - 1;
+    }
+    if (sorted.length <= this.assetsPageSize) return sorted;
+    const start = this.assetsPageIndex * this.assetsPageSize;
+    return sorted.slice(start, start + this.assetsPageSize);
+  }
+
+  setAssetsSort(field: 'type' | 'name' | 'target' | 'scope' | 'findings') {
+    if (this.assetsSortField === field) {
+      this.assetsSortDir = this.assetsSortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.assetsSortField = field;
+      // Findings is most useful in descending order (worst-first); others ascending.
+      this.assetsSortDir = field === 'findings' ? 'desc' : 'asc';
+    }
+    this.assetsPageIndex = 0;
+  }
+
+  onAssetsPage(e: PageEvent) {
+    this.assetsPageIndex = e.pageIndex;
+    this.assetsPageSize = e.pageSize;
+  }
+
+  // Switch to Inventory tab and immediately run the extractor.
+  goToInventoryAndExtract() {
+    this.scopeTabIndex = 1;
+    setTimeout(() => this.extractAssetsFromText(), 60);
+  }
+
+  // Parse the free-text Description for URLs, IPv4 (with optional CIDR),
+  // and bare hostnames; add each as a structured asset, skipping duplicates.
+  extractAssetsFromText() {
+    const text = this.decryptedReportDataChanged?.report_scope || '';
+    if (!text.trim()) {
+      this.snackBar.open('Description is empty — nothing to extract', 'OK', {
+        duration: 2500,
+        panelClass: ['notify-snackbar-fail']
+      });
+      return;
+    }
+    if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+      this.decryptedReportDataChanged.report_assets = [];
+    }
+
+    const norm = (s: any) => String(s ?? '').toLowerCase().trim();
+    const existing = new Set<string>(
+      this.decryptedReportDataChanged.report_assets
+        .map((a: any) => norm(a.target) || norm(a.name))
+        .filter((s: string) => s.length > 0)
+    );
+
+    const found = new Map<string, { target: string; type: string }>();
+
+    // 1) Full URLs (highest priority)
+    const urlRe = /\bhttps?:\/\/[^\s<>'"`)]+/gi;
+    let m: RegExpExecArray | null;
+    while ((m = urlRe.exec(text)) !== null) {
+      const v = m[0].replace(/[.,;:!?)\]\}]+$/, '').toLowerCase();
+      if (!existing.has(v) && !found.has(v)) {
+        found.set(v, { target: v, type: 'web' });
+      }
+    }
+
+    // 2) IPv4 addresses with optional CIDR
+    const ipRe = /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d?\d)(?:\/\d{1,2})?\b/g;
+    while ((m = ipRe.exec(text)) !== null) {
+      const v = m[0].toLowerCase();
+      if (!existing.has(v) && !found.has(v)) {
+        found.set(v, { target: v, type: 'host' });
+      }
+    }
+
+    // 3) Bare hostnames — must contain a dot, end with letters TLD (≥2 chars).
+    //    Skip those already inside a captured URL, and skip common file extensions.
+    const fileExtRe = /\.(md|txt|json|html?|css|jpe?g|png|svg|gif|pdf|docx?|xlsx?|csv|xml|zip|tar|gz|bz2|js|ts|py|rb|sh|yml|yaml|toml|ini|log|bak)$/i;
+    const hostRe = /\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}\b/gi;
+    while ((m = hostRe.exec(text)) !== null) {
+      const v = m[0].toLowerCase();
+      if (existing.has(v)) continue;
+      if (found.has(v)) continue;
+      if (fileExtRe.test(v)) continue;
+      // Skip if this hostname appears inside an already-captured URL
+      let inUrl = false;
+      for (const k of found.keys()) {
+        if (k.startsWith('http') && k.includes(v)) { inUrl = true; break; }
+      }
+      if (inUrl) continue;
+      found.set(v, { target: v, type: 'web' });
+    }
+
+    let added = 0;
+    for (const [, info] of found) {
+      this.decryptedReportDataChanged.report_assets.push({
+        id: uuid(),
+        name: '',
+        type: info.type,
+        target: info.target,
+        notes: 'Extracted from scope description',
+        in_scope: true
+      });
+      added++;
+    }
+
+    if (added === 0) {
+      this.snackBar.open('No new URLs, hosts or IPs found in description', 'OK', {
+        duration: 2500
+      });
+    } else {
+      this.snackBar.open(
+        `Extracted ${added} asset${added === 1 ? '' : 's'} from description`,
+        'OK',
+        { duration: 3000, panelClass: ['notify-snackbar-success'] }
+      );
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────
+
   getKanbanIssues(status: number): any[] {
     return (this.decryptedReportDataChanged?.report_vulns ?? []).filter((v: any) => v.status === status);
   }
@@ -348,6 +589,11 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
       this.decryptedReportDataChanged = this.decryptedReportData;
+      // Backward-compat: older reports do not have report_assets.
+      if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+        this.decryptedReportDataChanged.report_assets = [];
+      }
+      this.snapshotForSave();
       this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
@@ -1520,7 +1766,7 @@ Sample code here\n\
 
           // update report
           this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-          this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+          this.addSaveChangelog();
           // tslint:disable-next-line:max-line-length
           this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
             if (retu) {
@@ -1528,6 +1774,7 @@ Sample code here\n\
               this.report_encryption_in_progress = false;
               this.savemsg = 'All changes saved successfully!';
               this.lastsavereportdata = retu;
+              this.snapshotForSave();
               this.doStats();
 
               this.removeSureYouWanttoLeave();
@@ -1577,7 +1824,7 @@ Sample code here\n\
                       console.log('User select: save locally');
                       try {
                         this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                        this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                        this.addSaveChangelog();
                         // Encrypt
                         const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
                         const now: number = Date.now();
@@ -1605,7 +1852,7 @@ Sample code here\n\
 
                 } else {
                   this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                  this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                  this.addSaveChangelog();
                   // tslint:disable-next-line:max-line-length
                   this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
                     if (retu === 'NOSPACE') {
@@ -1616,6 +1863,7 @@ Sample code here\n\
                       this.reportdesc.report_lastupdate = retu;
                       this.savemsg = 'All changes saved on remote API successfully!';
                       this.lastsavereportdata = retu;
+                      this.snapshotForSave();
                       this.doStats();
                       this.removeSureYouWanttoLeave();
 
@@ -1652,7 +1900,7 @@ Sample code here\n\
                   console.log('User select: save locally');
                   try {
                     this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                    this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                    this.addSaveChangelog();
                     // Encrypt
                     const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
                     const now: number = Date.now();
@@ -1853,7 +2101,7 @@ Sample code here\n\
     // update report
     this.addtochangelog('Change report security key');
     this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-    this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+    this.addSaveChangelog();
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
@@ -1866,6 +2114,7 @@ Sample code here\n\
             if (retu) {
               this.savemsg = 'All changes saved successfully!';
               this.lastsavereportdata = retu;
+              this.snapshotForSave();
               this.doStats();
             }
           });
@@ -1980,6 +2229,89 @@ Sample code here\n\
 
     this.decryptedReportDataChanged.report_changelog.push(add_changelog);
     this.doStats();
+  }
+
+  private snapshotForSave(): void {
+    if (this.decryptedReportDataChanged) {
+      try {
+        this.lastSavedSnapshot = JSON.parse(JSON.stringify(this.decryptedReportDataChanged));
+      } catch {
+        this.lastSavedSnapshot = null;
+      }
+    }
+  }
+
+  private buildSaveDiff(): string {
+    const before = this.lastSavedSnapshot;
+    const after = this.decryptedReportDataChanged;
+    if (!before || !after) return '';
+
+    const lines: string[] = [];
+    const trim = (s: string, n = 60) => (s && s.length > n ? s.slice(0, n - 1) + '…' : s);
+
+    // Issues — match by title (best-effort)
+    const beforeVulns: any[] = Array.isArray(before.report_vulns) ? before.report_vulns : [];
+    const afterVulns: any[] = Array.isArray(after.report_vulns) ? after.report_vulns : [];
+    const beforeTitles = new Set(beforeVulns.map((v: any) => v.title));
+    const afterTitles = new Set(afterVulns.map((v: any) => v.title));
+
+    const added = afterVulns.filter((v: any) => !beforeTitles.has(v.title));
+    const removed = beforeVulns.filter((v: any) => !afterTitles.has(v.title));
+    const modified: any[] = [];
+    afterVulns.forEach((av: any) => {
+      if (!beforeTitles.has(av.title)) return;
+      const bv = beforeVulns.find((b: any) => b.title === av.title);
+      if (bv && JSON.stringify(bv) !== JSON.stringify(av)) modified.push(av);
+    });
+
+    if (added.length) {
+      lines.push(`+ Added ${added.length} issue${added.length > 1 ? 's' : ''}: ${added.map((v: any) => trim(v.title || '(untitled)')).join(', ')}`);
+    }
+    if (removed.length) {
+      lines.push(`- Removed ${removed.length} issue${removed.length > 1 ? 's' : ''}: ${removed.map((v: any) => trim(v.title || '(untitled)')).join(', ')}`);
+    }
+    if (modified.length) {
+      lines.push(`~ Modified ${modified.length} issue${modified.length > 1 ? 's' : ''}: ${modified.map((v: any) => trim(v.title || '(untitled)')).join(', ')}`);
+    }
+
+    // Assets
+    const beforeAssets: any[] = Array.isArray(before.report_assets) ? before.report_assets : [];
+    const afterAssets: any[] = Array.isArray(after.report_assets) ? after.report_assets : [];
+    const aDelta = afterAssets.length - beforeAssets.length;
+    if (aDelta > 0) lines.push(`+ Added ${aDelta} asset${aDelta > 1 ? 's' : ''}`);
+    else if (aDelta < 0) lines.push(`- Removed ${-aDelta} asset${-aDelta > 1 ? 's' : ''}`);
+    else if (JSON.stringify(beforeAssets) !== JSON.stringify(afterAssets)) lines.push(`~ Assets updated`);
+
+    // Researchers
+    const beforeR: any[] = Array.isArray(before.researcher) ? before.researcher : [];
+    const afterR: any[] = Array.isArray(after.researcher) ? after.researcher : [];
+    const rDelta = afterR.length - beforeR.length;
+    if (rDelta > 0) lines.push(`+ Added ${rDelta} researcher${rDelta > 1 ? 's' : ''}`);
+    else if (rDelta < 0) lines.push(`- Removed ${-rDelta} researcher${-rDelta > 1 ? 's' : ''}`);
+    else if (JSON.stringify(beforeR) !== JSON.stringify(afterR)) lines.push(`~ Researchers updated`);
+
+    // Scope / summary
+    if ((before.report_scope || '') !== (after.report_scope || '')) lines.push(`~ Scope updated`);
+    if ((before.report_summary || '') !== (after.report_summary || '')) lines.push(`~ Summary updated`);
+
+    // Test dates
+    const bMeta = before.report_metadata || {};
+    const aMeta = after.report_metadata || {};
+    if ((bMeta.starttest || '') !== (aMeta.starttest || '')) lines.push(`~ Test start date updated`);
+    if ((bMeta.endtest || '') !== (aMeta.endtest || '')) lines.push(`~ Test end date updated`);
+
+    // Settings (logo + flags)
+    if (JSON.stringify(before.report_settings || {}) !== JSON.stringify(after.report_settings || {})) {
+      lines.push(`~ Report settings updated`);
+    }
+
+    return lines.length ? '\n' + lines.join('\n') : '';
+  }
+
+  private addSaveChangelog(): void {
+    const version = this.decryptedReportDataChanged.report_version;
+    const diff = this.buildSaveDiff();
+    this.addtochangelog('Save report v.' + version + diff);
   }
   removefromchangelog(item) {
     const remo = 'changelog';
@@ -2345,7 +2677,8 @@ Info       | ${sevCounts.Info}\n\n`;
       str_changelog = `## Changelog\n\nDate       | Description\n-----------|------------\n`;
       data.report_changelog.forEach((item: any) => {
         const rdate = new Date(item.date).toLocaleDateString(this.setLocal);
-        str_changelog += `${rdate} | ${item.desc}\n`;
+        const cellDesc = String(item.desc || '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
+        str_changelog += `${rdate} | ${cellDesc}\n`;
       });
       str_changelog += '\n\n';
     }
@@ -2442,8 +2775,12 @@ Info       | ${sevCounts.Info}\n\n`;
       ? new TextRun('')
       : new TextRun('© Generated by vulnrepo.com | ');
 
-    const buildchangelog = (): any[] => data.report_changelog.map((entry: any) =>
-      new TableRow({
+    const buildchangelog = (): any[] => data.report_changelog.map((entry: any) => {
+      const descLines = String(entry.desc || '').split(/\r?\n/);
+      const descRuns: TextRun[] = descLines.map((line, i) =>
+        i === 0 ? new TextRun({ text: line }) : new TextRun({ text: line, break: 1 })
+      );
+      return new TableRow({
         children: [
           new TableCell({
             width: { size: 1500, type: WidthType.DXA },
@@ -2451,11 +2788,11 @@ Info       | ${sevCounts.Info}\n\n`;
           }),
           new TableCell({
             width: { size: 7510, type: WidthType.DXA },
-            children: [new Paragraph(entry.desc)],
+            children: [new Paragraph({ children: descRuns })],
           }),
         ],
-      })
-    );
+      });
+    });
 
     // ── REPORT SUMMARY ───────────────────────────────────────────────────────
     const buildreportsummary = (): any[] => {

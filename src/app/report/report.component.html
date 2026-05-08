@@ -173,69 +173,309 @@
 
     @if (decryptedReportDataChanged) {
     <div>
-      <!-- Report details -->
-      <mat-card appearance="outlined" class="report-section">
+      <!-- Combined Report scope + Details card -->
+      <mat-card appearance="outlined" class="report-section report-scope-card">
         <mat-card-header>
           <div mat-card-avatar>
-            <mat-icon>description</mat-icon>
+            <mat-icon>policy</mat-icon>
           </div>
-          <mat-card-title>Details</mat-card-title>
+          <mat-card-title>Report scope</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div fxLayout="row wrap" fxLayoutGap="10px grid">
-            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                <mat-label>Report scope</mat-label>
-                <div style="position:relative;">
-                  <textarea matInput style="display:block;" rows="6"
-                    [(ngModel)]="decryptedReportDataChanged.report_scope"
-                    value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
-                  <div style="position:absolute;top: 10px; right: 10px;">
-                    <button mat-icon-button color="accent" (click)="editorFullscreenScope()"
-                      title="Fullscreen Text Editor">
-                      <mat-icon>fullscreen</mat-icon>
+          <mat-tab-group [(selectedIndex)]="scopeTabIndex" color="accent" animationDuration="150ms"
+            mat-stretch-tabs="false" class="scope-tabs">
+
+            <!-- Tab: free-text description (canonical export source) -->
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">description</mat-icon>
+                Description
+              </ng-template>
+              <div class="scope-tab-body">
+                <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                  <mat-label>Report scope</mat-label>
+                  <div style="position:relative;">
+                    <textarea matInput style="display:block;" rows="6"
+                      [(ngModel)]="decryptedReportDataChanged.report_scope"
+                      value="{{decryptedReportDataChanged?.report_scope}}"></textarea>
+                    <div style="position:absolute;top: 10px; right: 10px;">
+                      <button mat-icon-button color="accent" (click)="editorFullscreenScope()"
+                        title="Fullscreen Text Editor">
+                        <mat-icon>fullscreen</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <mat-hint>You can use Markdown or HTML.
+                    <a class="active-link" href="javascript:void(0);" (click)="addtablescope()"
+                      title="Insert table to scope.">[T]</a>&nbsp;
+                    <a class="active-link" href="javascript:void(0);" (click)="addcodescope()"
+                      title="Insert code to scope.">[C]</a>
+                  </mat-hint>
+                </mat-form-field>
+                @if (decryptedReportDataChanged.report_scope?.trim()) {
+                  <div class="scope-text-hint">
+                    <mat-icon>auto_fix_high</mat-icon>
+                    <span>
+                      Found URLs, hostnames or IPs above? Open <b>Inventory</b> and click
+                      <i>Extract from text</i> to turn them into structured assets.
+                    </span>
+                    <button mat-stroked-button type="button" class="scope-text-hint-btn"
+                      (click)="goToInventoryAndExtract()"
+                      title="Switch to Inventory and extract assets from this text">
+                      <mat-icon>auto_fix_high</mat-icon>
+                      Extract now
+                    </button>
+                  </div>
+                }
+              </div>
+            </mat-tab>
+
+            <!-- Tab: structured asset inventory -->
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">inventory_2</mat-icon>
+                Inventory
+                @if (decryptedReportDataChanged.report_assets?.length > 0) {
+                  <span class="scope-tab-badge">{{decryptedReportDataChanged.report_assets.length}}</span>
+                }
+              </ng-template>
+              <div class="scope-tab-body">
+
+                <div class="assets-toolbar">
+                  <div class="assets-toolbar-left">
+                    @if (decryptedReportDataChanged.report_assets?.length > 0) {
+                      <span class="assets-header-stats" title="Scope summary">
+                        <mat-icon class="vertical-align-middle padding-bottom-3">check_circle_outline</mat-icon>
+                        {{ assetTotals.inScope }} in scope
+                        @if (assetTotals.outOfScope > 0) {
+                          <span class="assets-header-stats-out">· {{ assetTotals.outOfScope }} out</span>
+                        }
+                      </span>
+                    }
+                  </div>
+                  <div class="assets-toolbar-right">
+                    @if (decryptedReportDataChanged.report_scope?.trim()) {
+                      <button mat-stroked-button type="button" (click)="extractAssetsFromText()"
+                        title="Scan the Description tab for URLs, hosts and IPs and add them as assets">
+                        <mat-icon class="vertical-align-middle padding-bottom-3">auto_fix_high</mat-icon>
+                        Extract from text
+                      </button>
+                    }
+                    <button mat-stroked-button color="accent" type="button" (click)="addAsset()"
+                      title="Add a new asset">
+                      <mat-icon class="vertical-align-middle padding-bottom-3">add_circle_outline</mat-icon>
+                      Add asset
                     </button>
                   </div>
                 </div>
-                <mat-hint>You can use Markdown or HTML.
-                  <a class="active-link" href="javascript:void(0);" (click)="addtablescope()"
-                    title="Insert table to scope.">[T]</a>&nbsp;
-                  <a class="active-link" href="javascript:void(0);" (click)="addcodescope()"
-                    title="Insert code to scope.">[C]</a>
-                </mat-hint>
-              </mat-form-field>
-            </div>
-            <div fxFlex="50%" fxFlex.sm="100%" fxFlex.xs="100%">
-              <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                      <mat-form-field class="example-full-width" color="accent">
-                        <mat-label>Research start date</mat-label>
-                        <input matInput [matDatepicker]="picker" (dateChange)="onDateChangeReportstart($event)"
-                          [value]="renderdateformat(decryptedReportDataChanged.report_metadata.starttest)">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                      </mat-form-field>
-                    </div>
-                    <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
-                      <mat-form-field class="example-full-width" color="accent">
-                        <mat-label>Research end date</mat-label>
-                        <input matInput [matDatepicker]="pickerend" (dateChange)="onDateChangeReportend($event)"
-                          [value]="renderdateformat(decryptedReportDataChanged.report_metadata.endtest)">
-                        <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerend></mat-datepicker>
-                      </mat-form-field>
+
+                @if (!decryptedReportDataChanged.report_assets || decryptedReportDataChanged.report_assets.length === 0) {
+                  <div class="assets-empty">
+                    <mat-icon class="assets-empty-icon">inventory_2</mat-icon>
+                    <p class="assets-empty-title">No assets recorded yet</p>
+                    <p class="assets-empty-sub">
+                      Track in-scope hosts, URLs, APIs, mobile apps and code repositories.
+                      The <b>Description</b> tab stays the canonical scope text — this view
+                      adds structure on top, so findings can be linked to specific assets.
+                    </p>
+                    <div class="assets-empty-actions">
+                      @if (decryptedReportDataChanged.report_scope?.trim()) {
+                        <button mat-stroked-button type="button" (click)="extractAssetsFromText()">
+                          <mat-icon>auto_fix_high</mat-icon>
+                          Extract from description
+                        </button>
+                      }
+                      <button mat-flat-button color="accent" type="button" (click)="addAsset()">
+                        <mat-icon>add_circle_outline</mat-icon>
+                        Add first asset
+                      </button>
                     </div>
                   </div>
+                }
+
+                @if (decryptedReportDataChanged.report_assets?.length > 0) {
+                  <div class="assets-table-wrap">
+                    <table class="assets-table">
+                      <thead>
+                        <tr>
+                          <th class="assets-col-type">
+                            <button type="button" class="assets-sort-th"
+                              [class.active]="assetsSortField === 'type'"
+                              (click)="setAssetsSort('type')" title="Sort by type">
+                              Type
+                              @if (assetsSortField === 'type') {
+                                <mat-icon>{{ assetsSortDir === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                              }
+                            </button>
+                          </th>
+                          <th class="assets-col-name">
+                            <button type="button" class="assets-sort-th"
+                              [class.active]="assetsSortField === 'name'"
+                              (click)="setAssetsSort('name')" title="Sort by name">
+                              Name
+                              @if (assetsSortField === 'name') {
+                                <mat-icon>{{ assetsSortDir === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                              }
+                            </button>
+                          </th>
+                          <th class="assets-col-target">
+                            <button type="button" class="assets-sort-th"
+                              [class.active]="assetsSortField === 'target'"
+                              (click)="setAssetsSort('target')" title="Sort by target">
+                              Target (URL / IP / CIDR)
+                              @if (assetsSortField === 'target') {
+                                <mat-icon>{{ assetsSortDir === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                              }
+                            </button>
+                          </th>
+                          <th class="assets-col-notes">Notes</th>
+                          <th class="assets-col-scope">
+                            <button type="button" class="assets-sort-th"
+                              [class.active]="assetsSortField === 'scope'"
+                              (click)="setAssetsSort('scope')" title="Sort by scope">
+                              Scope
+                              @if (assetsSortField === 'scope') {
+                                <mat-icon>{{ assetsSortDir === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                              }
+                            </button>
+                          </th>
+                          <th class="assets-col-findings" title="Findings linked to this asset">
+                            <button type="button" class="assets-sort-th"
+                              [class.active]="assetsSortField === 'findings'"
+                              (click)="setAssetsSort('findings')" title="Sort by findings count">
+                              Findings
+                              @if (assetsSortField === 'findings') {
+                                <mat-icon>{{ assetsSortDir === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                              }
+                            </button>
+                          </th>
+                          <th class="assets-col-actions"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (asset of displayedAssets; track trackAsset($index, asset)) {
+                          <tr class="assets-row" [class.assets-row--out]="asset.in_scope === false">
+                            <td class="assets-col-type">
+                              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="assets-type-field" color="accent">
+                                <mat-select [(value)]="asset.type" panelClass="assets-type-panel">
+                                  @for (t of assetTypes; track t.value) {
+                                    <mat-option [value]="t.value">
+                                      <mat-icon class="assets-type-opt-icon">{{t.icon}}</mat-icon>
+                                      {{t.label}}
+                                    </mat-option>
+                                  }
+                                </mat-select>
+                              </mat-form-field>
+                            </td>
+                            <td class="assets-col-name">
+                              <input matInput class="assets-input" [(ngModel)]="asset.name"
+                                placeholder="e.g. payments-app" maxlength="200" autocomplete="off" spellcheck="false">
+                            </td>
+                            <td class="assets-col-target">
+                              <input matInput class="assets-input assets-input--mono" [(ngModel)]="asset.target"
+                                placeholder="https://app.example.com  ·  10.0.0.0/24  ·  api.example.com"
+                                maxlength="500" autocomplete="off" spellcheck="false">
+                            </td>
+                            <td class="assets-col-notes">
+                              <input matInput class="assets-input" [(ngModel)]="asset.notes"
+                                placeholder="Auth flow, env, owner..." maxlength="500" autocomplete="off">
+                            </td>
+                            <td class="assets-col-scope">
+                              <button mat-stroked-button type="button" class="assets-scope-btn"
+                                [class.assets-scope-btn--out]="asset.in_scope === false"
+                                (click)="toggleAssetScope(asset)"
+                                [title]="asset.in_scope !== false ? 'In scope — click to mark out of scope' : 'Out of scope — click to mark in scope'">
+                                <mat-icon>{{ asset.in_scope !== false ? 'verified' : 'block' }}</mat-icon>
+                                <span>{{ asset.in_scope !== false ? 'In' : 'Out' }}</span>
+                              </button>
+                            </td>
+                            <td class="assets-col-findings">
+                              @if (countFindingsForAsset(asset) > 0) {
+                                <button class="assets-findings-pill"
+                                  (click)="filterIssuesByAsset(asset)"
+                                  [title]="'Filter issues by ' + (asset.target || asset.name)">
+                                  <mat-icon>bug_report</mat-icon>
+                                  {{ countFindingsForAsset(asset) }}
+                                </button>
+                              }
+                              @if (countFindingsForAsset(asset) === 0) {
+                                <span class="assets-findings-empty" title="No issues match name or target">—</span>
+                              }
+                            </td>
+                            <td class="assets-col-actions">
+                              <button mat-icon-button color="warn" type="button"
+                                (click)="removeAsset(asset)" title="Remove asset">
+                                <mat-icon>delete_outline</mat-icon>
+                              </button>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                  @if (decryptedReportDataChanged.report_assets.length > 10) {
+                    <mat-paginator class="assets-paginator"
+                      color="accent"
+                      [length]="decryptedReportDataChanged.report_assets.length"
+                      [pageSize]="assetsPageSize"
+                      [pageIndex]="assetsPageIndex"
+                      [pageSizeOptions]="assetsPageSizeOptions"
+                      (page)="onAssetsPage($event)"
+                      showFirstLastButtons>
+                    </mat-paginator>
+                  }
+                  <div class="assets-footer-hint">
+                    <mat-icon>info_outline</mat-icon>
+                    Findings are linked by case-insensitive match of asset name/target against issue title, description, PoC and references.
+                    The <b>Description</b> tab remains the canonical scope text used in exports.
+                  </div>
+                }
+
+              </div>
+            </mat-tab>
+
+            <!-- Tab: research timeframe + report summary -->
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">event_note</mat-icon>
+                Timeframe &amp; Summary
+              </ng-template>
+              <div class="scope-tab-body">
+                <div class="report-details-subhead">
+                  <mat-icon>event_note</mat-icon>
+                  <span>Research timeframe</span>
                 </div>
-                <div fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%">
-                  <mat-form-field appearance="outline" class="example-full-width" color="accent">
-                    <mat-label>Report summary</mat-label>
-                    <div style="position:relative;">
-                      <textarea matInput rows="2" [(ngModel)]="decryptedReportDataChanged.report_summary"
-                        value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
-                      @if (aiconnected) {
+                <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                    <mat-form-field class="example-full-width" color="accent">
+                      <mat-label>Research start date</mat-label>
+                      <input matInput [matDatepicker]="picker" (dateChange)="onDateChangeReportstart($event)"
+                        [value]="renderdateformat(decryptedReportDataChanged.report_metadata.starttest)">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                    <mat-form-field class="example-full-width" color="accent">
+                      <mat-label>Research end date</mat-label>
+                      <input matInput [matDatepicker]="pickerend" (dateChange)="onDateChangeReportend($event)"
+                        [value]="renderdateformat(decryptedReportDataChanged.report_metadata.endtest)">
+                      <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerend></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="report-details-subhead">
+                  <mat-icon>summarize</mat-icon>
+                  <span>Report summary</span>
+                </div>
+                <mat-form-field appearance="outline" class="example-full-width" color="accent">
+                  <mat-label>Report summary</mat-label>
+                  <div style="position:relative;">
+                    <textarea matInput rows="6" [(ngModel)]="decryptedReportDataChanged.report_summary"
+                      value="{{decryptedReportDataChanged?.report_summary}}"></textarea>
+                    @if (aiconnected) {
                       <div style="position:absolute;top: 10px; right: 10px;">
                         <button mat-icon-button color="accent" title="AI report summary" [matMenuTriggerFor]="menu">
                           <mat-icon>photo_filter</mat-icon>
@@ -248,18 +488,19 @@
                               class="vertical-align-middle padding-bottom-3">settings</mat-icon> Settings</button>
                         </mat-menu>
                       </div>
-                      }
-                    </div>
-                  </mat-form-field>
-                  @if (aiprogress) {
+                    }
+                  </div>
+                </mat-form-field>
+                @if (aiprogress) {
                   <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-                  }
-                </div>
+                }
               </div>
-            </div>
-          </div>
+            </mat-tab>
+
+          </mat-tab-group>
         </mat-card-content>
       </mat-card>
+
       <!-- Issues list -->
       <mat-card appearance="outlined" class="report-section">
         <mat-card-header>

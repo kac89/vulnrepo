@@ -178,6 +178,7 @@ export class IndexeddbService {
         let empty_vulns = {
           report_vulns: [],
           report_scope: '',
+          report_assets: [],
           report_summary: '',
           report_changelog: [
             {
@@ -291,6 +292,7 @@ export class IndexeddbService {
         let empty_vulns = {
           report_vulns: [],
           report_scope: '',
+          report_assets: [],
           report_summary: '',
           report_changelog: [
             {
