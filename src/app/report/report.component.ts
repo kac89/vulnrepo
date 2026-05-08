@@ -538,8 +538,8 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     const rows = assets.map((a: any) => {
       const type = typeLabels[a.type] ?? a.type ?? '';
-      const name = (a.name || '').replace(/\|/g, '\\|');
-      const target = (a.target || '').replace(/\|/g, '\\|');
+      const name = (a.name || '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
+      const target = (a.target || '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
       const scope = a.in_scope ? 'Yes' : 'No';
       return `| ${type} | ${name} | ${target} | ${scope} |`;
     });
