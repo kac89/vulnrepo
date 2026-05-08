@@ -326,6 +326,33 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
   padding-top: 28px;
 }
 
+// ── Combined Report scope + Details card ─────────────────────
+// Subhead labels used inside the Description tab to separate
+// Research timeframe / Report summary / Report scope sections.
+.report-scope-card .report-details-subhead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: $accent-green;
+  }
+}
+
+.report-scope-card .report-details-subhead:not(:first-child) {
+  margin-top: 14px;
+}
+
+
 // ── Section card (overrides mat-card) ────────────────────────
 .report-section {
   background: $surface !important;
@@ -3020,5 +3047,436 @@ $sev-info:     #2780E3;
     .mat-calendar-body-cell-content {
       font-size: 0.75rem !important;
     }
+  }
+}
+
+// ── Report scope (tabs container) ───────────────────────────────
+.scope-tabs {
+  ::ng-deep .mat-mdc-tab-header {
+    border-bottom: 1px solid $border-color;
+    margin-bottom: 18px;
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .example-tab-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+}
+
+.scope-tab-body {
+  padding: 4px 2px 0;
+  // contain fxLayoutGap="… grid" negative margins so they don't trigger
+  // a horizontal scrollbar on the surrounding card / page
+  overflow-x: hidden;
+}
+
+.scope-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  padding: 0 6px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: rgba(105, 240, 174, 0.18);
+  color: $accent-green;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.scope-text-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  border: 1px dashed rgba(105, 240, 174, 0.28);
+  border-radius: 8px;
+  background: rgba(105, 240, 174, 0.04);
+  color: $text-secondary;
+  font-size: 0.85rem;
+  line-height: 1.45;
+
+  > mat-icon {
+    color: $accent-green;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex: 1;
+
+    b {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    i {
+      color: $accent-green;
+      font-style: normal;
+    }
+  }
+
+  .scope-text-hint-btn {
+    flex-shrink: 0;
+    color: $accent-green !important;
+    border-color: rgba(105, 240, 174, 0.45) !important;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+    }
+  }
+}
+
+.assets-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+
+  .assets-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 32px;
+  }
+
+  .assets-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.assets-empty-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+// ── Asset inventory ─────────────────────────────────────────────
+.assets-title-count {
+  margin-left: 8px;
+  color: $text-secondary;
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.assets-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.assets-header-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: $text-secondary;
+  white-space: nowrap;
+
+  mat-icon {
+    color: $accent-green;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .assets-header-stats-out {
+    color: rgba(255, 117, 24, 0.85);
+    margin-left: 4px;
+  }
+}
+
+.assets-empty {
+  text-align: center;
+  padding: 40px 24px;
+  border: 1px dashed $border-color;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.015);
+
+  .assets-empty-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    color: $text-secondary;
+    opacity: 0.5;
+    margin-bottom: 12px;
+  }
+
+  .assets-empty-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0 0 6px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .assets-empty-sub {
+    color: $text-secondary;
+    font-size: 0.9rem;
+    max-width: 520px;
+    margin: 0 auto 18px;
+    line-height: 1.5;
+  }
+}
+
+.assets-table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid $border-color;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.assets-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 880px;
+
+  thead th {
+    text-align: left;
+    padding: 0;
+    font-weight: 500;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $text-secondary;
+    background: rgba(255, 255, 255, 0.025);
+    border-bottom: 1px solid $border-color;
+    white-space: nowrap;
+  }
+
+  thead th:not(:has(.assets-sort-th)) {
+    padding: 10px 12px;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.12s ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    &.assets-row--out {
+      opacity: 0.55;
+    }
+  }
+
+  td {
+    padding: 6px 8px;
+    vertical-align: middle;
+  }
+
+  .assets-col-type    { width: 130px; }
+  .assets-col-name    { width: 180px; }
+  .assets-col-target  { min-width: 240px; }
+  .assets-col-notes   { min-width: 180px; }
+  .assets-col-scope   { width: 100px;  text-align: center; }
+  .assets-col-findings{ width: 90px;   text-align: center; }
+  .assets-col-actions { width: 48px;   text-align: center; }
+}
+
+.assets-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: inherit;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: $accent-green;
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.28);
+  }
+
+  &--mono {
+    font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.83rem;
+  }
+}
+
+.assets-type-field {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
+  ::ng-deep .mat-mdc-text-field-wrapper           { padding: 0 8px; height: 38px; }
+  ::ng-deep .mat-mdc-form-field-infix             { min-height: 38px; padding: 8px 0; }
+}
+
+.assets-type-opt-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 6px;
+  color: $accent-green;
+}
+
+.assets-scope-btn {
+  min-width: 0 !important;
+  padding: 0 10px !important;
+  line-height: 30px !important;
+  height: 30px !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.04em;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 4px;
+  border-color: rgba(105, 240, 174, 0.4) !important;
+  color: $accent-green !important;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 2px;
+  }
+
+  &--out {
+    border-color: rgba(255, 117, 24, 0.45) !important;
+    color: #ff7518 !important;
+  }
+}
+
+.assets-findings-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(105, 240, 174, 0.12);
+  color: $accent-green;
+  border: 1px solid rgba(105, 240, 174, 0.35);
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background-color 0.12s ease, transform 0.08s ease;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background: rgba(105, 240, 174, 0.22);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.assets-findings-empty {
+  color: $text-secondary;
+  font-family: monospace;
+  opacity: 0.6;
+}
+
+.assets-footer-hint {
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: $text-secondary;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.6;
+  }
+}
+
+.assets-sort-th {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  white-space: nowrap;
+  transition: color 0.12s ease, background-color 0.12s ease;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &.active {
+    color: $accent-green;
+  }
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    opacity: 0.85;
+  }
+}
+
+.assets-paginator {
+  background: transparent;
+  margin-top: 6px;
+
+  ::ng-deep .mat-mdc-paginator-container {
+    min-height: 44px;
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 720px) {
+  .assets-table {
+    min-width: 680px;
+  }
+
+  .assets-col-notes {
+    display: none;
   }
 }

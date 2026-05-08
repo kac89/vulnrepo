@@ -279,6 +279,246 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     return Math.round((closed / vulns.length) * 100);
   }
 
+  // ─── Asset inventory ────────────────────────────────────────────────
+  scopeTabIndex = 0;
+
+  assetsPageIndex = 0;
+  assetsPageSize = 10;
+  readonly assetsPageSizeOptions = [10, 25, 50, 100];
+  assetsSortField: 'type' | 'name' | 'target' | 'scope' | 'findings' | null = null;
+  assetsSortDir: 'asc' | 'desc' = 'desc';
+
+  readonly assetTypes = [
+    { value: 'web',    label: 'Web',    icon: 'language' },
+    { value: 'api',    label: 'API',    icon: 'api' },
+    { value: 'host',   label: 'Host',   icon: 'dns' },
+    { value: 'mobile', label: 'Mobile', icon: 'smartphone' },
+    { value: 'cloud',  label: 'Cloud',  icon: 'cloud' },
+    { value: 'iot',    label: 'IoT',    icon: 'router' },
+    { value: 'code',   label: 'Code',   icon: 'code' },
+    { value: 'other',  label: 'Other',  icon: 'category' },
+  ];
+
+  assetIcon(type: string): string {
+    return this.assetTypes.find(t => t.value === type)?.icon || 'category';
+  }
+
+  addAsset() {
+    if (!this.decryptedReportDataChanged) return;
+    if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+      this.decryptedReportDataChanged.report_assets = [];
+    }
+    this.decryptedReportDataChanged.report_assets.push({
+      id: uuid(),
+      name: '',
+      type: 'web',
+      target: '',
+      notes: '',
+      in_scope: true
+    });
+  }
+
+  removeAsset(asset: any) {
+    if (!this.decryptedReportDataChanged?.report_assets) return;
+    const idx = this.decryptedReportDataChanged.report_assets.indexOf(asset);
+    if (idx >= 0) this.decryptedReportDataChanged.report_assets.splice(idx, 1);
+  }
+
+  toggleAssetScope(asset: any) {
+    asset.in_scope = !asset.in_scope;
+  }
+
+  // Heuristic: a finding belongs to an asset if its title/desc/poc/refs contain
+  // the asset's name or target (case-insensitive substring). Each vuln counted once.
+  countFindingsForAsset(asset: any): number {
+    const vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
+    const needles: string[] = [];
+    if (asset?.name)   needles.push(String(asset.name).toLowerCase().trim());
+    if (asset?.target) needles.push(String(asset.target).toLowerCase().trim());
+    const filtered = needles.filter(n => n.length >= 2);
+    if (filtered.length === 0) return 0;
+    let n = 0;
+    for (const v of vulns) {
+      const haystack = (
+        (v.title || '') + ' ' +
+        (v.desc  || '') + ' ' +
+        (v.poc   || '') + ' ' +
+        (Array.isArray(v.ref) ? v.ref.map((r: any) => r?.refs ?? r ?? '').join(' ') : '')
+      ).toLowerCase();
+      if (filtered.some(needle => haystack.includes(needle))) n++;
+    }
+    return n;
+  }
+
+  filterIssuesByAsset(asset: any) {
+    const term = (asset?.target || asset?.name || '').trim();
+    if (!term) return;
+    // Quote so the parser treats it as a free-text search across all fields.
+    this.issueFilterQuery = `"${term.replace(/"/g, '\\"')}"`;
+    this.applyIssueFilter();
+    // Smooth scroll to the issues list
+    setTimeout(() => {
+      const el = document.querySelector('.report-issue-filter-bar');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
+  trackAsset = (_: number, a: any) => a?.id ?? _;
+
+  get assetTotals() {
+    const list: any[] = this.decryptedReportDataChanged?.report_assets ?? [];
+    const total = list.length;
+    const inScope = list.filter(a => a.in_scope !== false).length;
+    return { total, inScope, outOfScope: total - inScope };
+  }
+
+  get sortedAssets(): any[] {
+    const list: any[] = this.decryptedReportDataChanged?.report_assets ?? [];
+    if (!this.assetsSortField) return list;
+    const dir = this.assetsSortDir === 'asc' ? 1 : -1;
+    const field = this.assetsSortField;
+    return [...list].sort((a, b) => {
+      let av: any;
+      let bv: any;
+      if (field === 'findings') {
+        av = this.countFindingsForAsset(a);
+        bv = this.countFindingsForAsset(b);
+      } else if (field === 'scope') {
+        av = a.in_scope === false ? 0 : 1;
+        bv = b.in_scope === false ? 0 : 1;
+      } else {
+        av = String(a?.[field] ?? '').toLowerCase();
+        bv = String(b?.[field] ?? '').toLowerCase();
+      }
+      if (av < bv) return -1 * dir;
+      if (av > bv) return  1 * dir;
+      return 0;
+    });
+  }
+
+  get displayedAssets(): any[] {
+    const sorted = this.sortedAssets;
+    const totalPages = Math.max(1, Math.ceil(sorted.length / this.assetsPageSize));
+    if (this.assetsPageIndex >= totalPages) {
+      // Clamp when assets are removed below the current page; runs during the
+      // same change-detection cycle so the next read returns the right slice.
+      this.assetsPageIndex = totalPages - 1;
+    }
+    if (sorted.length <= this.assetsPageSize) return sorted;
+    const start = this.assetsPageIndex * this.assetsPageSize;
+    return sorted.slice(start, start + this.assetsPageSize);
+  }
+
+  setAssetsSort(field: 'type' | 'name' | 'target' | 'scope' | 'findings') {
+    if (this.assetsSortField === field) {
+      this.assetsSortDir = this.assetsSortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.assetsSortField = field;
+      // Findings is most useful in descending order (worst-first); others ascending.
+      this.assetsSortDir = field === 'findings' ? 'desc' : 'asc';
+    }
+    this.assetsPageIndex = 0;
+  }
+
+  onAssetsPage(e: PageEvent) {
+    this.assetsPageIndex = e.pageIndex;
+    this.assetsPageSize = e.pageSize;
+  }
+
+  // Switch to Inventory tab and immediately run the extractor.
+  goToInventoryAndExtract() {
+    this.scopeTabIndex = 1;
+    setTimeout(() => this.extractAssetsFromText(), 60);
+  }
+
+  // Parse the free-text Description for URLs, IPv4 (with optional CIDR),
+  // and bare hostnames; add each as a structured asset, skipping duplicates.
+  extractAssetsFromText() {
+    const text = this.decryptedReportDataChanged?.report_scope || '';
+    if (!text.trim()) {
+      this.snackBar.open('Description is empty — nothing to extract', 'OK', {
+        duration: 2500,
+        panelClass: ['notify-snackbar-fail']
+      });
+      return;
+    }
+    if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+      this.decryptedReportDataChanged.report_assets = [];
+    }
+
+    const norm = (s: any) => String(s ?? '').toLowerCase().trim();
+    const existing = new Set<string>(
+      this.decryptedReportDataChanged.report_assets
+        .map((a: any) => norm(a.target) || norm(a.name))
+        .filter((s: string) => s.length > 0)
+    );
+
+    const found = new Map<string, { target: string; type: string }>();
+
+    // 1) Full URLs (highest priority)
+    const urlRe = /\bhttps?:\/\/[^\s<>'"`)]+/gi;
+    let m: RegExpExecArray | null;
+    while ((m = urlRe.exec(text)) !== null) {
+      const v = m[0].replace(/[.,;:!?)\]\}]+$/, '').toLowerCase();
+      if (!existing.has(v) && !found.has(v)) {
+        found.set(v, { target: v, type: 'web' });
+      }
+    }
+
+    // 2) IPv4 addresses with optional CIDR
+    const ipRe = /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d?\d)(?:\/\d{1,2})?\b/g;
+    while ((m = ipRe.exec(text)) !== null) {
+      const v = m[0].toLowerCase();
+      if (!existing.has(v) && !found.has(v)) {
+        found.set(v, { target: v, type: 'host' });
+      }
+    }
+
+    // 3) Bare hostnames — must contain a dot, end with letters TLD (≥2 chars).
+    //    Skip those already inside a captured URL, and skip common file extensions.
+    const fileExtRe = /\.(md|txt|json|html?|css|jpe?g|png|svg|gif|pdf|docx?|xlsx?|csv|xml|zip|tar|gz|bz2|js|ts|py|rb|sh|yml|yaml|toml|ini|log|bak)$/i;
+    const hostRe = /\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}\b/gi;
+    while ((m = hostRe.exec(text)) !== null) {
+      const v = m[0].toLowerCase();
+      if (existing.has(v)) continue;
+      if (found.has(v)) continue;
+      if (fileExtRe.test(v)) continue;
+      // Skip if this hostname appears inside an already-captured URL
+      let inUrl = false;
+      for (const k of found.keys()) {
+        if (k.startsWith('http') && k.includes(v)) { inUrl = true; break; }
+      }
+      if (inUrl) continue;
+      found.set(v, { target: v, type: 'web' });
+    }
+
+    let added = 0;
+    for (const [, info] of found) {
+      this.decryptedReportDataChanged.report_assets.push({
+        id: uuid(),
+        name: '',
+        type: info.type,
+        target: info.target,
+        notes: 'Extracted from scope description',
+        in_scope: true
+      });
+      added++;
+    }
+
+    if (added === 0) {
+      this.snackBar.open('No new URLs, hosts or IPs found in description', 'OK', {
+        duration: 2500
+      });
+    } else {
+      this.snackBar.open(
+        `Extracted ${added} asset${added === 1 ? '' : 's'} from description`,
+        'OK',
+        { duration: 3000, panelClass: ['notify-snackbar-success'] }
+      );
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────
+
   getKanbanIssues(status: number): any[] {
     return (this.decryptedReportDataChanged?.report_vulns ?? []).filter((v: any) => v.status === status);
   }
@@ -348,6 +588,10 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
       this.decryptedReportDataChanged = this.decryptedReportData;
+      // Backward-compat: older reports do not have report_assets.
+      if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+        this.decryptedReportDataChanged.report_assets = [];
+      }
       this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
