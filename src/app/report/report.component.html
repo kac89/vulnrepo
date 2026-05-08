@@ -254,11 +254,18 @@
                     }
                   </div>
                   <div class="assets-toolbar-right">
-                    @if (decryptedReportDataChanged.report_scope?.trim()) {
+                    @if (hasExtractableContent) {
                       <button mat-stroked-button type="button" (click)="extractAssetsFromText()"
-                        title="Scan the Description tab for URLs, hosts and IPs and add them as assets">
+                        title="Scan the Description and issue PoC fields for URLs, hosts and IPs and add them as assets">
                         <mat-icon class="vertical-align-middle padding-bottom-3">auto_fix_high</mat-icon>
                         Extract from text
+                      </button>
+                    }
+                    @if (decryptedReportDataChanged.report_assets?.length > 0) {
+                      <button mat-stroked-button type="button" (click)="insertInventoryAsTable()"
+                        title="Insert inventory as a Markdown table into the Description tab">
+                        <mat-icon class="vertical-align-middle padding-bottom-3">table_chart</mat-icon>
+                        Insert as table
                       </button>
                     }
                     <button mat-stroked-button color="accent" type="button" (click)="addAsset()"
@@ -279,10 +286,10 @@
                       adds structure on top, so findings can be linked to specific assets.
                     </p>
                     <div class="assets-empty-actions">
-                      @if (decryptedReportDataChanged.report_scope?.trim()) {
+                      @if (hasExtractableContent) {
                         <button mat-stroked-button type="button" (click)="extractAssetsFromText()">
                           <mat-icon>auto_fix_high</mat-icon>
-                          Extract from description
+                          Extract from text
                         </button>
                       }
                       <button mat-flat-button color="accent" type="button" (click)="addAsset()">
