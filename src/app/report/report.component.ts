@@ -355,7 +355,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     const term = (asset?.target || asset?.name || '').trim();
     if (!term) return;
     // Quote so the parser treats it as a free-text search across all fields.
-    this.issueFilterQuery = `"${term.replace(/"/g, '\\"')}"`;
+    this.issueFilterQuery = `"${term.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
     this.applyIssueFilter();
     // Smooth scroll to the issues list
     setTimeout(() => {
@@ -2677,7 +2677,7 @@ Info       | ${sevCounts.Info}\n\n`;
       str_changelog = `## Changelog\n\nDate       | Description\n-----------|------------\n`;
       data.report_changelog.forEach((item: any) => {
         const rdate = new Date(item.date).toLocaleDateString(this.setLocal);
-        const cellDesc = String(item.desc || '').replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
+        const cellDesc = String(item.desc || '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
         str_changelog += `${rdate} | ${cellDesc}\n`;
       });
       str_changelog += '\n\n';
