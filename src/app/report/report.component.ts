@@ -141,6 +141,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   stickyBarVisible = false;
   decryptedReportData: any;
   decryptedReportDataChanged: any;
+  lastSavedSnapshot: any = null;
   setLocal = 'en-GB';  //dd/MM/yyyy
   subscription: Subscription;
   displayedSeverityColumns: string[] = ['severity', 'count'];
@@ -592,6 +593,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
         this.decryptedReportDataChanged.report_assets = [];
       }
+      this.snapshotForSave();
       this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
       this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
 
@@ -1764,7 +1766,7 @@ Sample code here\n\
 
           // update report
           this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-          this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+          this.addSaveChangelog();
           // tslint:disable-next-line:max-line-length
           this.indexeddbService.prepareupdatereport(this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate, data.key).then(retu => {
             if (retu) {
@@ -1772,6 +1774,7 @@ Sample code here\n\
               this.report_encryption_in_progress = false;
               this.savemsg = 'All changes saved successfully!';
               this.lastsavereportdata = retu;
+              this.snapshotForSave();
               this.doStats();
 
               this.removeSureYouWanttoLeave();
@@ -1821,7 +1824,7 @@ Sample code here\n\
                       console.log('User select: save locally');
                       try {
                         this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                        this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                        this.addSaveChangelog();
                         // Encrypt
                         const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
                         const now: number = Date.now();
@@ -1849,7 +1852,7 @@ Sample code here\n\
 
                 } else {
                   this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                  this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                  this.addSaveChangelog();
                   // tslint:disable-next-line:max-line-length
                   this.indexeddbService.prepareupdateAPIreport(ret.api, ret.apikey, this.decryptedReportDataChanged, pass, this.report_info.report_id, this.report_info.report_name, this.report_info.report_createdate).then(retu => {
                     if (retu === 'NOSPACE') {
@@ -1860,6 +1863,7 @@ Sample code here\n\
                       this.reportdesc.report_lastupdate = retu;
                       this.savemsg = 'All changes saved on remote API successfully!';
                       this.lastsavereportdata = retu;
+                      this.snapshotForSave();
                       this.doStats();
                       this.removeSureYouWanttoLeave();
 
@@ -1896,7 +1900,7 @@ Sample code here\n\
                   console.log('User select: save locally');
                   try {
                     this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-                    this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+                    this.addSaveChangelog();
                     // Encrypt
                     const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(this.decryptedReportDataChanged), pass);
                     const now: number = Date.now();
@@ -2097,7 +2101,7 @@ Sample code here\n\
     // update report
     this.addtochangelog('Change report security key');
     this.decryptedReportDataChanged.report_version = this.decryptedReportDataChanged.report_version + 1;
-    this.addtochangelog('Save report v.' + this.decryptedReportDataChanged.report_version);
+    this.addSaveChangelog();
 
     this.indexeddbService.getkeybyReportID(report_id).then(data => {
       if (data) {
@@ -2110,6 +2114,7 @@ Sample code here\n\
             if (retu) {
               this.savemsg = 'All changes saved successfully!';
               this.lastsavereportdata = retu;
+              this.snapshotForSave();
               this.doStats();
             }
           });
@@ -2224,6 +2229,89 @@ Sample code here\n\
 
     this.decryptedReportDataChanged.report_changelog.push(add_changelog);
     this.doStats();
+  }
+
+  private snapshotForSave(): void {
+    if (this.decryptedReportDataChanged) {
+      try {
+        this.lastSavedSnapshot = JSON.parse(JSON.stringify(this.decryptedReportDataChanged));
+      } catch {
+        this.lastSavedSnapshot = null;
+      }
+    }
+  }
+
+  private buildSaveDiff(): string {
+    const before = this.lastSavedSnapshot;
+    const after = this.decryptedReportDataChanged;
+    if (!before || !after) return '';
+
+    const lines: string[] = [];
+    const trim = (s: string, n = 60) => (s && s.length > n ? s.slice(0, n - 1) + '…' : s);
+
+    // Issues — match by title (best-effort)
+    const beforeVulns: any[] = Array.isArray(before.report_vulns) ? before.report_vulns : [];
+    const afterVulns: any[] = Array.isArray(after.report_vulns) ? after.report_vulns : [];
+    const beforeTitles = new Set(beforeVulns.map((v: any) => v.title));
+    const afterTitles = new Set(afterVulns.map((v: any) => v.title));
+
+    const added = afterVulns.filter((v: any) => !beforeTitles.has(v.title));
+    const removed = beforeVulns.filter((v: any) => !afterTitles.has(v.title));
+    const modified: any[] = [];
+    afterVulns.forEach((av: any) => {
+      if (!beforeTitles.has(av.title)) return;
+      const bv = beforeVulns.find((b: any) => b.title === av.title);
+      if (bv && JSON.stringify(bv) !== JSON.stringify(av)) modified.push(av);
+    });
+
+    if (added.length) {
+      lines.push(`+ Added ${added.length} issue${added.length > 1 ? 's' : ''}: ${added.map((v: any) => trim(v.title || '(untitled)')).join(', ')}`);
+    }
+    if (removed.length) {
+      lines.push(`- Removed ${removed.length} issue${removed.length > 1 ? 's' : ''}: ${removed.map((v: any) => trim(v.title || '(untitled)')).join(', ')}`);
+    }
+    if (modified.length) {
+      lines.push(`~ Modified ${modified.length} issue${modified.length > 1 ? 's' : ''}: ${modified.map((v: any) => trim(v.title || '(untitled)')).join(', ')}`);
+    }
+
+    // Assets
+    const beforeAssets: any[] = Array.isArray(before.report_assets) ? before.report_assets : [];
+    const afterAssets: any[] = Array.isArray(after.report_assets) ? after.report_assets : [];
+    const aDelta = afterAssets.length - beforeAssets.length;
+    if (aDelta > 0) lines.push(`+ Added ${aDelta} asset${aDelta > 1 ? 's' : ''}`);
+    else if (aDelta < 0) lines.push(`- Removed ${-aDelta} asset${-aDelta > 1 ? 's' : ''}`);
+    else if (JSON.stringify(beforeAssets) !== JSON.stringify(afterAssets)) lines.push(`~ Assets updated`);
+
+    // Researchers
+    const beforeR: any[] = Array.isArray(before.researcher) ? before.researcher : [];
+    const afterR: any[] = Array.isArray(after.researcher) ? after.researcher : [];
+    const rDelta = afterR.length - beforeR.length;
+    if (rDelta > 0) lines.push(`+ Added ${rDelta} researcher${rDelta > 1 ? 's' : ''}`);
+    else if (rDelta < 0) lines.push(`- Removed ${-rDelta} researcher${-rDelta > 1 ? 's' : ''}`);
+    else if (JSON.stringify(beforeR) !== JSON.stringify(afterR)) lines.push(`~ Researchers updated`);
+
+    // Scope / summary
+    if ((before.report_scope || '') !== (after.report_scope || '')) lines.push(`~ Scope updated`);
+    if ((before.report_summary || '') !== (after.report_summary || '')) lines.push(`~ Summary updated`);
+
+    // Test dates
+    const bMeta = before.report_metadata || {};
+    const aMeta = after.report_metadata || {};
+    if ((bMeta.starttest || '') !== (aMeta.starttest || '')) lines.push(`~ Test start date updated`);
+    if ((bMeta.endtest || '') !== (aMeta.endtest || '')) lines.push(`~ Test end date updated`);
+
+    // Settings (logo + flags)
+    if (JSON.stringify(before.report_settings || {}) !== JSON.stringify(after.report_settings || {})) {
+      lines.push(`~ Report settings updated`);
+    }
+
+    return lines.length ? '\n' + lines.join('\n') : '';
+  }
+
+  private addSaveChangelog(): void {
+    const version = this.decryptedReportDataChanged.report_version;
+    const diff = this.buildSaveDiff();
+    this.addtochangelog('Save report v.' + version + diff);
   }
   removefromchangelog(item) {
     const remo = 'changelog';
@@ -2589,7 +2677,8 @@ Info       | ${sevCounts.Info}\n\n`;
       str_changelog = `## Changelog\n\nDate       | Description\n-----------|------------\n`;
       data.report_changelog.forEach((item: any) => {
         const rdate = new Date(item.date).toLocaleDateString(this.setLocal);
-        str_changelog += `${rdate} | ${item.desc}\n`;
+        const cellDesc = String(item.desc || '').replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
+        str_changelog += `${rdate} | ${cellDesc}\n`;
       });
       str_changelog += '\n\n';
     }
@@ -2686,8 +2775,12 @@ Info       | ${sevCounts.Info}\n\n`;
       ? new TextRun('')
       : new TextRun('© Generated by vulnrepo.com | ');
 
-    const buildchangelog = (): any[] => data.report_changelog.map((entry: any) =>
-      new TableRow({
+    const buildchangelog = (): any[] => data.report_changelog.map((entry: any) => {
+      const descLines = String(entry.desc || '').split(/\r?\n/);
+      const descRuns: TextRun[] = descLines.map((line, i) =>
+        i === 0 ? new TextRun({ text: line }) : new TextRun({ text: line, break: 1 })
+      );
+      return new TableRow({
         children: [
           new TableCell({
             width: { size: 1500, type: WidthType.DXA },
@@ -2695,11 +2788,11 @@ Info       | ${sevCounts.Info}\n\n`;
           }),
           new TableCell({
             width: { size: 7510, type: WidthType.DXA },
-            children: [new Paragraph(entry.desc)],
+            children: [new Paragraph({ children: descRuns })],
           }),
         ],
-      })
-    );
+      });
+    });
 
     // ── REPORT SUMMARY ───────────────────────────────────────────────────────
     const buildreportsummary = (): any[] => {
