@@ -12,6 +12,7 @@ import { SessionstorageserviceService } from "./sessionstorageservice.service"
 import { CurrentdateService } from './currentdate.service';
 import { CryptoUtilsService } from './crypto-utils.service';
 import { KeyVaultService } from './key-vault.service';
+import { ReportSchemaService } from './report-schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class IndexeddbService {
   constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
     private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,
     private currentdateService: CurrentdateService, private cryptoUtils: CryptoUtilsService,
-    private keyVault: KeyVaultService) {
+    private keyVault: KeyVaultService, private reportSchema: ReportSchemaService) {
 
     this.updateEncStatus(false);
     /*
@@ -364,39 +365,52 @@ export class IndexeddbService {
 
 
   importReport(data) {
-    return new Promise<any>((resolve, reject) => {
-    data = JSON.parse(data);
-    // indexeddb communication
-    const indexedDB = window.indexedDB;
-    const open = indexedDB.open('vulnrepo-db', 1);
+    return new Promise<any>((resolve) => {
+      const result = this.reportSchema.validateReportFile(data);
+      if (!result.valid) {
+        this.snackBar.open('Import rejected: ' + result.error, 'OK', {
+          duration: 4000,
+          panelClass: ['notify-snackbar-fail']
+        });
+        resolve(false);
+        return;
+      }
 
-    open.onupgradeneeded = function () {
-      const db = open.result;
-      db.createObjectStore('reports', { autoIncrement: true });
-    };
+      const indexedDB = window.indexedDB;
+      const open = indexedDB.open('vulnrepo-db', 1);
 
-    open.onsuccess = function () {
-      const db = open.result;
-      const tx = db.transaction('reports', 'readwrite');
-      const store = tx.objectStore('reports');
-
-      store.put(data);
-
-      tx.oncomplete = function () {
-        db.close();
-        resolve(true);
+      open.onupgradeneeded = function () {
+        const db = open.result;
+        db.createObjectStore('reports', { autoIncrement: true });
       };
-    };
 
+      open.onsuccess = function () {
+        const db = open.result;
+        const tx = db.transaction('reports', 'readwrite');
+        const store = tx.objectStore('reports');
 
+        store.put(result.data);
+
+        tx.oncomplete = function () {
+          db.close();
+          resolve(true);
+        };
+      };
     });
   }
 
 
 
   importReportfromfile(data) {
-    data = JSON.parse(data);
-    // indexeddb communication
+    const result = this.reportSchema.validateReportFile(data);
+    if (!result.valid) {
+      this.snackBar.open('Import rejected: ' + result.error, 'OK', {
+        duration: 4000,
+        panelClass: ['notify-snackbar-fail']
+      });
+      return;
+    }
+
     const indexedDB = window.indexedDB;
     const open = indexedDB.open('vulnrepo-db', 1);
 
@@ -410,7 +424,7 @@ export class IndexeddbService {
       const tx = db.transaction('reports', 'readwrite');
       const store = tx.objectStore('reports');
 
-      store.put(data);
+      store.put(result.data);
 
       tx.oncomplete = function () {
         db.close();
@@ -421,8 +435,15 @@ export class IndexeddbService {
 
 
   importReportfromfileSettings(data) {
+    const result = this.reportSchema.validateReportObject(data);
+    if (!result.valid) {
+      this.snackBar.open('Backup entry skipped: ' + result.error, 'OK', {
+        duration: 4000,
+        panelClass: ['notify-snackbar-fail']
+      });
+      return;
+    }
 
-    // indexeddb communication
     const indexedDB = window.indexedDB;
     const open = indexedDB.open('vulnrepo-db', 1);
 
@@ -436,7 +457,7 @@ export class IndexeddbService {
       const tx = db.transaction('reports', 'readwrite');
       const store = tx.objectStore('reports');
 
-      store.put(data);
+      store.put(result.data);
 
       tx.oncomplete = function () {
         db.close();
