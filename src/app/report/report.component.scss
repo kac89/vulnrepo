@@ -257,19 +257,34 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
   }
 }
 
-// ── Findings strip ────────────────────────────────────────────
-.rh-findings {
+// ── Combined findings + remediation stat row ──────────────────
+.rh-stats {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   .report-severity-strip { margin-top: 0; }
 }
 
-.rh-findings-label {
+.rh-stats-findings,
+.rh-stats-remediation {
   display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.rh-stats-findings { flex: 1 1 auto; }
+.rh-stats-remediation { flex: 0 1 320px; min-width: 220px; }
+
+.rh-stats-label {
+  display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 0.75rem;
@@ -279,7 +294,28 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
   font-family: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
   white-space: nowrap;
 
-  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+  mat-icon { font-size: 14px; width: 14px; height: 14px; opacity: 0.7; }
+}
+
+.rh-stats-total {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.rh-stats-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 2px;
+}
+
+@media (max-width: 760px) {
+  .rh-stats { flex-direction: column; align-items: stretch; gap: 14px; }
+  .rh-stats-divider { display: none; }
+  .rh-stats-remediation { flex-basis: auto; }
 }
 
 // ── Action bar ────────────────────────────────────────────────
@@ -674,11 +710,6 @@ mat-paginator {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-  }
-
-  .rh-findings {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
 .report-section .mat-mdc-card-content {
@@ -1943,33 +1974,9 @@ mat-paginator {
   }
 }
 
-// ── Remediation progress indicator ───────────────────────────
-.rh-remediation {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0 4px;
-}
-
-.rh-remediation-label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
-  white-space: nowrap;
-  letter-spacing: 0.04em;
-
-  mat-icon {
-    font-size: 14px !important;
-    width: 14px !important;
-    height: 14px !important;
-    opacity: 0.7;
-  }
-}
-
+// ── Remediation progress bar (used inside .rh-stats-remediation) ──
 .rh-remediation-track {
-  flex: 1;
+  flex: 1 1 120px;
   height: 5px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.1);
@@ -2037,14 +2044,31 @@ mat-paginator {
 }
 
 .kanban-col-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
   font-size: 12px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.07);
   border-radius: 10px;
-  padding: 1px 7px;
+  padding: 1px 8px;
   min-width: 22px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  &--over {
+    color: #fff;
+    background: rgba(255, 0, 57, 0.78);
+    box-shadow: 0 0 0 2px rgba(255, 0, 57, 0.22);
+  }
+}
+
+.kanban-col-count-limit {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.75;
 }
 
 .kanban-col-body {
@@ -2184,6 +2208,183 @@ mat-paginator {
 .kanban-col-body.cdk-drop-list-receiving {
   background: rgba(105, 240, 174, 0.06);
   border-radius: 0 0 10px 10px;
+  outline: 1px dashed rgba(105, 240, 174, 0.3);
+}
+
+// ── Kanban toolbar (group toggle + WIP menu) ─────────────────
+.kanban-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 0 12px;
+}
+
+.kanban-toolbar-btn {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  height: 32px;
+  line-height: 32px;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+
+  mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  &--active {
+    color: #16bf6e !important;
+    border-color: rgba(22, 191, 110, 0.45) !important;
+    background: rgba(22, 191, 110, 0.08) !important;
+  }
+}
+
+.kanban-toolbar-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-left: auto;
+
+  mat-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+  }
+}
+
+// ── WIP-limit popover ────────────────────────────────────────
+.kanban-wip-menu {
+  min-width: 240px;
+  padding: 4px 0;
+}
+
+.kanban-wip-menu-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 8px 16px 6px;
+}
+
+.kanban-wip-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+
+  &:hover { background: rgba(255, 255, 255, 0.04); }
+}
+
+.kanban-wip-row-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  padding-left: 8px;
+  border-left: 3px solid transparent;
+
+  &.kanban-col-header--open       { border-left-color: #FF0039; }
+  &.kanban-col-header--inprogress { border-left-color: #FF9800; }
+  &.kanban-col-header--fixed      { border-left-color: #4ade80; }
+  &.kanban-col-header--wontfix    { border-left-color: #9E9E9E; }
+}
+
+.kanban-wip-input {
+  width: 64px;
+  height: 28px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s ease;
+
+  &:focus { border-color: rgba(22, 191, 110, 0.6); }
+
+  // hide native number spinners
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  -moz-appearance: textfield;
+}
+
+// ── Swimlanes view (severity × status grid) ──────────────────
+.kanban-swimlanes {
+  padding: 0 0 16px;
+}
+
+.kanban-swimlanes-grid {
+  display: grid;
+  grid-template-columns: 96px repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  align-items: stretch;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 72px repeat(4, minmax(0, 1fr));
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: 58px repeat(4, minmax(0, 1fr));
+  }
+}
+
+.kanban-swim-corner {
+  // empty top-left cell of the grid header row
+  min-height: 1px;
+}
+
+.kanban-swim-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6px 10px 6px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  border-right: 3px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px 0 0 6px;
+
+  &--critical { border-right-color: #FF0039; color: #FF0039; }
+  &--high     { border-right-color: #FF7518; color: #FF7518; }
+  &--medium   { border-right-color: #F9EE06; color: #e8d900; }
+  &--low      { border-right-color: #3FB618; color: #3FB618; }
+  &--info     { border-right-color: #5b9cf6; color: #5b9cf6; }
+}
+
+.kanban-swim-cell {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  min-height: 60px;
+}
+
+.kanban-swim-empty {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.15);
+  text-align: center;
+  padding: 8px 0;
+  user-select: none;
+}
+
+// swimlane cells get the same drop-target highlight
+.kanban-swim-cell.cdk-drop-list-dragging,
+.kanban-swim-cell.cdk-drop-list-receiving {
+  background: rgba(105, 240, 174, 0.06);
+  border-radius: 8px;
   outline: 1px dashed rgba(105, 240, 174, 0.3);
 }
 

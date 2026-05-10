@@ -111,36 +111,36 @@
       </div>
       }
 
-      <!-- Severity findings strip -->
+      <!-- Combined findings + remediation stat row -->
       @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
-      <div class="rh-findings">
-        <span class="rh-findings-label">
-          <mat-icon>bug_report</mat-icon>Findings
-        </span>
-        <div class="report-severity-strip">
-          @for (sev of severitytable; track sev) {
-          @if (sev.value > 0) {
-          <span class="report-sev-pill sev-{{ sev.name | lowercase }}">
-            <span class="report-sev-count">{{ sev.value }}</span>
-            {{ sev.name }}
+      <div class="rh-stats">
+        <div class="rh-stats-findings">
+          <span class="rh-stats-label">
+            <mat-icon>bug_report</mat-icon>Findings
           </span>
-          }
-          }
+          <span class="rh-stats-total">{{ decryptedReportDataChanged.report_vulns.length }}</span>
+          <div class="report-severity-strip">
+            @for (sev of severitytable; track sev) {
+            @if (sev.value > 0) {
+            <span class="report-sev-pill sev-{{ sev.name | lowercase }}">
+              <span class="report-sev-count">{{ sev.value }}</span>
+              {{ sev.name }}
+            </span>
+            }
+            }
+          </div>
         </div>
-      </div>
-      }
-
-      <!-- Remediation progress -->
-      @if (decryptedReportDataChanged && decryptedReportDataChanged.report_vulns.length > 0) {
-      <div class="rh-remediation">
-        <span class="rh-remediation-label">
-          <mat-icon>check_circle_outline</mat-icon>Remediation
-        </span>
-        <div class="rh-remediation-track">
-          <div class="rh-remediation-fill" [style.width.%]="issueProgress"
-            [class.rh-remediation-fill--done]="issueProgress === 100"></div>
+        <span class="rh-stats-divider" aria-hidden="true"></span>
+        <div class="rh-stats-remediation">
+          <span class="rh-stats-label">
+            <mat-icon>check_circle_outline</mat-icon>Remediation
+          </span>
+          <div class="rh-remediation-track">
+            <div class="rh-remediation-fill" [style.width.%]="issueProgress"
+              [class.rh-remediation-fill--done]="issueProgress === 100"></div>
+          </div>
+          <span class="rh-remediation-pct">{{ issueProgress }}%</span>
         </div>
-        <span class="rh-remediation-pct">{{ issueProgress }}%</span>
       </div>
       }
 
@@ -649,44 +649,98 @@
           }
           <!-- Kanban board view -->
           @if (kanbanView) {
+
+          <ng-template #kanbanCardTpl let-issue>
+            <div class="kanban-card kanban-card--{{ issue.severity | lowercase }}"
+              cdkDrag [cdkDragData]="issue"
+              (click)="editissuetitle(issue)" role="button" [title]="issue.title">
+              <div class="kanban-card-title">{{ issue.title }}</div>
+              <div class="kanban-card-meta">
+                <span class="sev-chip sev-chip--{{ issue.severity | lowercase }} kanban-sev-chip">{{ issue.severity }}</span>
+                @if (issue.cvss) {
+                <span class="kanban-card-cvss">CVSS {{ issue.cvss }}</span>
+                }
+              </div>
+              @if (issue.tags?.length > 0) {
+              <div class="kanban-card-tags">
+                @for (tag of issue.tags.slice(0, 3); track tag) {
+                <span class="kanban-tag tag-color-{{ tagColor(tag.name) }}">{{ tag.name }}</span>
+                }
+                @if (issue.tags.length > 3) {
+                <span class="kanban-tag kanban-tag--more">+{{ issue.tags.length - 3 }}</span>
+                }
+              </div>
+              }
+              <div class="kanban-drag-handle" cdkDragHandle title="Drag to change status">
+                <mat-icon>drag_indicator</mat-icon>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template #kanbanColHeaderTpl let-col>
+            <div class="kanban-col-header kanban-col-header--{{ col.cssClass }}">
+              <span class="kanban-col-title">{{ col.label }}</span>
+              <span class="kanban-col-count" [class.kanban-col-count--over]="isOverWIP(col.status)"
+                [title]="getWipLimit(col.status) ? (getKanbanIssues(col.status).length + ' / ' + getWipLimit(col.status) + ' WIP limit') : (getKanbanIssues(col.status).length + ' issues')">
+                {{ getKanbanIssues(col.status).length }}@if (getWipLimit(col.status)) {<span class="kanban-col-count-limit">/{{ getWipLimit(col.status) }}</span>}
+              </span>
+            </div>
+          </ng-template>
+
+          <div class="kanban-toolbar">
+            <button mat-stroked-button type="button" class="kanban-toolbar-btn"
+              [class.kanban-toolbar-btn--active]="kanbanSwimlanes"
+              (click)="kanbanSwimlanes = !kanbanSwimlanes"
+              title="Group rows by severity">
+              <mat-icon>view_agenda</mat-icon>
+              Group by severity
+            </button>
+
+            <button mat-stroked-button type="button" class="kanban-toolbar-btn"
+              [matMenuTriggerFor]="wipMenu" title="Set work-in-progress limits per column">
+              <mat-icon>tune</mat-icon>
+              WIP limits
+            </button>
+
+            <mat-menu #wipMenu="matMenu" class="kanban-wip-menu" xPosition="before">
+              <div class="kanban-wip-menu-title" (click)="$event.stopPropagation()">
+                Work-in-progress limits
+              </div>
+              @for (col of kanbanColumns; track col.status) {
+              <div class="kanban-wip-row" (click)="$event.stopPropagation()">
+                <span class="kanban-wip-row-label kanban-col-header--{{ col.cssClass }}">{{ col.label }}</span>
+                <input type="number" min="0" max="999" class="kanban-wip-input"
+                  [ngModel]="getWipLimit(col.status) ?? ''"
+                  (ngModelChange)="setWipLimit(col.status, $event)"
+                  placeholder="—">
+              </div>
+              }
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="clearAllWipLimits()">
+                <mat-icon>clear_all</mat-icon> Clear all
+              </button>
+            </mat-menu>
+
+            @if (kanbanSwimlanes) {
+            <span class="kanban-toolbar-hint">
+              <mat-icon>info_outline</mat-icon>
+              Drag changes status only — severity stays put.
+            </span>
+            }
+          </div>
+
+          @if (!kanbanSwimlanes) {
           <div class="kanban-board" cdkDropListGroup>
             @for (col of kanbanColumns; track col.status) {
             <div class="kanban-col">
-              <div class="kanban-col-header kanban-col-header--{{ col.cssClass }}">
-                <span class="kanban-col-title">{{ col.label }}</span>
-                <span class="kanban-col-count">{{ getKanbanIssues(col.status).length }}</span>
-              </div>
+              <ng-container *ngTemplateOutlet="kanbanColHeaderTpl; context: { $implicit: col }"></ng-container>
               <div class="kanban-col-body"
                 cdkDropList
                 cdkDropListSortingDisabled
                 [cdkDropListData]="col.status"
                 (cdkDropListDropped)="dropKanban($event)">
                 @for (issue of getKanbanIssues(col.status); track issue) {
-                <div class="kanban-card kanban-card--{{ issue.severity | lowercase }}"
-                  cdkDrag [cdkDragData]="issue"
-                  (click)="editissuetitle(issue)" role="button" [title]="issue.title">
-                  <div class="kanban-card-title">{{ issue.title }}</div>
-                  <div class="kanban-card-meta">
-                    <span class="sev-chip sev-chip--{{ issue.severity | lowercase }} kanban-sev-chip">{{ issue.severity }}</span>
-                    @if (issue.cvss) {
-                    <span class="kanban-card-cvss">CVSS {{ issue.cvss }}</span>
-                    }
-                  </div>
-                  @if (issue.tags?.length > 0) {
-                  <div class="kanban-card-tags">
-                    @for (tag of issue.tags.slice(0, 3); track tag) {
-                    <span class="kanban-tag tag-color-{{ tagColor(tag.name) }}">{{ tag.name }}</span>
-                    }
-                    @if (issue.tags.length > 3) {
-                    <span class="kanban-tag kanban-tag--more">+{{ issue.tags.length - 3 }}</span>
-                    }
-                  </div>
-                  }
-                  <!-- drag handle affordance -->
-                  <div class="kanban-drag-handle" cdkDragHandle title="Drag to change status">
-                    <mat-icon>drag_indicator</mat-icon>
-                  </div>
-                </div>
+                <ng-container *ngTemplateOutlet="kanbanCardTpl; context: { $implicit: issue }"></ng-container>
                 } @empty {
                 <div class="kanban-col-empty">Drop issues here</div>
                 }
@@ -694,6 +748,35 @@
             </div>
             }
           </div>
+          }
+
+          @if (kanbanSwimlanes) {
+          <div class="kanban-swimlanes" cdkDropListGroup>
+            <div class="kanban-swimlanes-grid">
+              <div class="kanban-swim-corner"></div>
+              @for (col of kanbanColumns; track col.status) {
+                <ng-container *ngTemplateOutlet="kanbanColHeaderTpl; context: { $implicit: col }"></ng-container>
+              }
+
+              @for (sev of swimlaneSeverities; track sev) {
+              <div class="kanban-swim-label kanban-swim-label--{{ sev | lowercase }}">{{ sev }}</div>
+              @for (col of kanbanColumns; track col.status) {
+              <div class="kanban-col-body kanban-swim-cell"
+                cdkDropList
+                cdkDropListSortingDisabled
+                [cdkDropListData]="col.status"
+                (cdkDropListDropped)="dropKanban($event)">
+                @for (issue of getSwimlaneIssues(col.status, sev); track issue) {
+                <ng-container *ngTemplateOutlet="kanbanCardTpl; context: { $implicit: issue }"></ng-container>
+                } @empty {
+                <div class="kanban-swim-empty">—</div>
+                }
+              </div>
+              }
+              }
+            </div>
+          </div>
+          }
           }
 
           <!-- List view (paginator + accordion) -->
