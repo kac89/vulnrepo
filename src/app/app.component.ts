@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 import { IndexeddbService } from './indexeddb.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -21,30 +21,44 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   animations: [
     trigger('statusBadge', [
       state('encrypted', style({
-        backgroundColor: 'rgba(22, 191, 110, 0.15)',
-        borderColor: 'rgba(22, 191, 110, 0.5)',
+        backgroundColor: 'rgba(22, 191, 110, 0.12)',
+        borderColor: 'rgba(22, 191, 110, 0.45)',
         color: '#16bf6e',
       })),
       state('decrypted', style({
-        backgroundColor: 'rgba(255, 82, 82, 0.15)',
-        borderColor: 'rgba(255, 82, 82, 0.5)',
+        backgroundColor: 'rgba(255, 82, 82, 0.14)',
+        borderColor: 'rgba(255, 82, 82, 0.55)',
         color: '#ff5252',
       })),
-      transition('encrypted <=> decrypted', [
-        animate('320ms cubic-bezier(0.4, 0, 0.2, 1)')
+      transition('encrypted => decrypted', [
+        animate('620ms cubic-bezier(0.34, 1.56, 0.64, 1)', keyframes([
+          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(255, 82, 82, 0.55)', offset: 0    }),
+          style({ transform: 'scale(1.10)', boxShadow: '0 0 0 14px rgba(255, 82, 82, 0)', offset: 0.55 }),
+          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(255, 82, 82, 0)',    offset: 1    }),
+        ])),
+      ]),
+      transition('decrypted => encrypted', [
+        animate('520ms cubic-bezier(0.34, 1.56, 0.64, 1)', keyframes([
+          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(22, 191, 110, 0.5)',  offset: 0    }),
+          style({ transform: 'scale(0.93)', boxShadow: '0 0 0 12px rgba(22, 191, 110, 0)', offset: 0.5  }),
+          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(22, 191, 110, 0)',    offset: 1    }),
+        ])),
+      ]),
+    ]),
+    trigger('statusIcon', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'rotate(-30deg) scale(0.55)' }),
+        animate('320ms 60ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+          style({ opacity: 1, transform: 'rotate(0) scale(1)' })),
       ]),
     ]),
     trigger('statusSlide', [
       transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-6px)' }),
-        animate('240ms 80ms cubic-bezier(0.4, 0, 0.2, 1)',
-          style({ opacity: 1, transform: 'translateY(0)' })
-        )
+        style({ opacity: 0 }),
+        animate('160ms ease-out', style({ opacity: 1 }))
       ]),
       transition(':leave', [
-        animate('200ms cubic-bezier(0.4, 0, 0.2, 1)',
-          style({ opacity: 0, transform: 'translateY(6px)' })
-        )
+        animate('120ms ease-out', style({ opacity: 0 }))
       ])
     ])
   ]

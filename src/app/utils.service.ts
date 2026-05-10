@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 
+interface SeverityEntry { readonly name: string; readonly value: number; }
+interface IssueStatusEntry { readonly status: string; readonly value: number; }
+
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
 
-  issueStatustable = [
+  readonly issueStatustable: readonly IssueStatusEntry[] = [
     { status: 'Open (Waiting for review)', value: 1 },
     { status: 'Fix In Progress', value: 2 },
     { status: 'Fixed', value: 3 },
     { status: 'Won\'t Fix', value: 4 }
   ];
 
-  severitytable = [
+  readonly severitytable: readonly SeverityEntry[] = [
     { name: 'Critical', value: 1 },
     { name: 'High', value: 2 },
     { name: 'Medium', value: 3 },
@@ -25,20 +28,8 @@ export class UtilsService {
 
 
   setseverity(severity: string): string {
-
-    if (severity === "5") {
-      severity = "Info";
-    } else if (severity === "4") {
-      severity = "Low";
-    } else if (severity === "3") {
-      severity = "Medium";
-    } else if (severity === "2") {
-      severity = "High";
-    } else if (severity === "1") {
-      severity = "Critical";
-    }
-
-    return severity;
+    const entry = this.severitytable.find(s => s.value === Number(severity));
+    return entry ? entry.name : severity;
   }
 
 
@@ -57,8 +48,15 @@ export class UtilsService {
       return charset[b % charset.length];
     };
 
-    // Guarantee at least one char from each category
-    const chars: string[] = [pick(lower), pick(upper), pick(numeric), pick(special)];
+    const chars: string[] = [];
+
+    // Seed one char from each category only when length leaves room for all four.
+    // For length < 4 the per-category guarantee is impossible, so draw from the
+    // full charset and let shuffle order things — previously the seed + slice path
+    // could silently discard the guaranteed digit/special.
+    if (length >= 4) {
+      chars.push(pick(lower), pick(upper), pick(numeric), pick(special));
+    }
     while (chars.length < length) { chars.push(pick(all)); }
 
     // Fisher-Yates shuffle using crypto (rejection sampling to avoid modulo bias)
@@ -71,7 +69,7 @@ export class UtilsService {
       [chars[i], chars[j]] = [chars[j], chars[i]];
     }
 
-    return chars.slice(0, length).join('');
+    return chars.join('');
   }
 
 
@@ -110,17 +108,24 @@ export class UtilsService {
       // Otherwise, append the current character to the current column
       arr[row][col] += cc;
     }
+
+    // Drop a trailing phantom row produced by extra blank lines at EOF
+    // (e.g. "a,b\nc,d\n\n" → [['a','b'],['c','d'],['']]). A genuine single-cell
+    // empty row would still equal [''], but CSVs don't legitimately encode that.
+    if (arr.length && arr[arr.length - 1].length === 1 && arr[arr.length - 1][0] === '') {
+      arr.pop();
+    }
     return arr;
   }
 
   removeHTMLTags(htmlString: string) {
-    // Create a new DOMParser instance
     const parser = new DOMParser();
-    // Parse the HTML string
     const doc = parser.parseFromString(htmlString, 'text/html');
-    // Extract text content
+    // textContent walks into <script>/<style>/<noscript>/<template> and emits
+    // their source as visible text — strip them so attacker-controlled imports
+    // (e.g. <script>alert(1)</script>) don't leak code into issue fields.
+    doc.querySelectorAll('script, style, noscript, template').forEach(el => el.remove());
     const textContent = doc.body.textContent || "";
-    // Trim whitespace
     return textContent.trim();
   }
 

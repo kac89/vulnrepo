@@ -19,10 +19,12 @@
           [class.is-decrypted]="enc_status">
 
           @if (enc_status) {
-            <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
-              <mat-icon class="status-icon">no_encryption</mat-icon>
-            </a>
-            <span>Report decrypted</span>
+            <span class="status-content" @statusIcon>
+              <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
+                <mat-icon class="status-icon">no_encryption</mat-icon>
+              </a>
+              <span>Report decrypted</span>
+            </span>
             @if (lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
               <span class="lock-timer"
                 [class.lock-warning]="lockSecondsRemaining < 120"
@@ -34,8 +36,10 @@
             }
           }
           @if (!enc_status) {
-            <mat-icon class="status-icon">lock</mat-icon>
-            <span>Report encrypted</span>
+            <span class="status-content" @statusIcon>
+              <mat-icon class="status-icon">lock</mat-icon>
+              <span>Report encrypted</span>
+            </span>
           }
         </div>
       </div>
@@ -56,6 +60,37 @@
         <mat-icon>list_alt</mat-icon>
         My Reports
       </a>
+
+      @if (show_active_reports) {
+        <button mat-button class="open-reports-btn"
+          [class.has-unsaved]="status_unsaved"
+          [matMenuTriggerFor]="openReportsMenu"
+          [title]="status_unsaved ? 'Open reports — unsaved changes' : 'Open reports'">
+          <mat-icon>lock_open</mat-icon>
+          <span class="open-reports-btn-count">{{ arr_oreports.length }}</span>
+        </button>
+
+        <mat-menu #openReportsMenu="matMenu" class="open-reports-menu">
+          <div class="open-reports-menu-title" (click)="$event.stopPropagation()">
+            <mat-icon>lock_open</mat-icon>
+            <span>Open reports ({{ arr_oreports.length }})</span>
+            @if (status_unsaved) {
+              <span class="open-reports-unsaved-pill" title="Current report has unsaved changes">
+                Unsaved
+              </span>
+            }
+          </div>
+          @for (activreport of arr_oreports; track activreport) {
+            <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
+              <mat-icon>description</mat-icon>
+              @if (activreport.report_source == 'api') {
+                <mat-icon color="accent">public</mat-icon>
+              }
+              {{activreport.report_name}}
+            </a>
+          }
+        </mat-menu>
+      }
 
       <button mat-icon-button class="nav-more-btn" [matMenuTriggerFor]="menu" title="More">
         <mat-icon>more_vert</mat-icon>
@@ -83,23 +118,6 @@
         <button mat-menu-item (click)="goAbout()">
           <mat-icon>info</mat-icon> About
         </button>
-
-        @if (show_active_reports) {
-          <mat-divider></mat-divider>
-          <button mat-menu-item disabled>
-            <mat-icon>lock_open</mat-icon>
-            <span>Open reports</span>
-          </button>
-          @for (activreport of arr_oreports; track activreport) {
-            <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
-              <mat-icon>lock_open</mat-icon>
-              @if (activreport.report_source == 'api') {
-                <mat-icon color="accent">public</mat-icon>
-              }
-              {{activreport.report_name}}
-            </a>
-          }
-        }
       </mat-menu>
 
       <mat-menu #tools="matMenu" xPosition="after" yPosition="above">

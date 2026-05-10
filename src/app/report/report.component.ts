@@ -209,6 +209,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly issueFilterSeverities = ['Critical', 'High', 'Medium', 'Low', 'Info'];
 
   kanbanView = false;
+  kanbanSwimlanes = false;
   tagFilterInput = '';
   readonly kanbanColumns = [
     { status: 1, label: 'Open',         cssClass: 'open' },
@@ -216,6 +217,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     { status: 3, label: 'Fixed',        cssClass: 'fixed' },
     { status: 4, label: "Won't Fix",    cssClass: 'wontfix' },
   ];
+  readonly swimlaneSeverities = ['Critical', 'High', 'Medium', 'Low', 'Info'];
 
   getFilteredVulns(): any[] {
     const vulns: any[] = this.decryptedReportDataChanged?.report_vulns ?? [];
@@ -561,6 +563,39 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getKanbanIssues(status: number): any[] {
     return (this.decryptedReportDataChanged?.report_vulns ?? []).filter((v: any) => v.status === status);
+  }
+
+  getSwimlaneIssues(status: number, severity: string): any[] {
+    return (this.decryptedReportDataChanged?.report_vulns ?? [])
+      .filter((v: any) => v.status === status && v.severity === severity);
+  }
+
+  getWipLimit(status: number): number | null {
+    const meta = this.decryptedReportDataChanged?.report_metadata;
+    const v = meta?.kanban_wip?.[status];
+    return (typeof v === 'number' && v > 0) ? v : null;
+  }
+
+  setWipLimit(status: number, value: any): void {
+    const meta = this.decryptedReportDataChanged?.report_metadata;
+    if (!meta) return;
+    if (!meta.kanban_wip) meta.kanban_wip = {};
+    const n = Number(value);
+    if (!Number.isFinite(n) || n <= 0) {
+      delete meta.kanban_wip[status];
+    } else {
+      meta.kanban_wip[status] = Math.floor(n);
+    }
+  }
+
+  isOverWIP(status: number): boolean {
+    const limit = this.getWipLimit(status);
+    return !!limit && this.getKanbanIssues(status).length > limit;
+  }
+
+  clearAllWipLimits(): void {
+    const meta = this.decryptedReportDataChanged?.report_metadata;
+    if (meta?.kanban_wip) meta.kanban_wip = {};
   }
 
   getTagSuggestions(input: string, issue: any): string[] {
@@ -1779,6 +1814,7 @@ Sample code here\n\
   dropKanban(event: CdkDragDrop<number>): void {
     if (event.previousContainer === event.container) return;
     const issue = event.item.data;
+    if (issue.status === event.container.data) return;
     issue.status = event.container.data;
     this.doStats();
     this.sureYouWanttoLeave();
