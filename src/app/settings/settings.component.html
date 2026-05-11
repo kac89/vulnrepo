@@ -370,6 +370,35 @@
         </div>
       </div>
 
+      <!-- Key Storage Security Level -->
+      <div class="settings-section">
+        <div class="section-header">
+          <div class="section-header-icon-wrap section-header-icon-wrap--vault">
+            <mat-icon class="section-icon">security</mat-icon>
+          </div>
+          <div class="section-header-text">
+            <span class="section-title">Key Storage Security Level</span>
+            <span class="section-subtitle">Controls how decryption keys are held in the browser</span>
+          </div>
+        </div>
+        <div class="section-body">
+          <mat-radio-group [(ngModel)]="keyVaultMode" (change)="setKeyVaultMode($event.value)" class="security-level-group">
+            <mat-radio-button value="memory" color="accent">
+              <div class="security-option">
+                <span class="security-option-label">Secure &mdash; Memory only <span class="security-badge security-badge--secure">Default</span></span>
+                <span class="security-option-desc">Keys live only in JavaScript memory. Automatically wiped on tab switch, 15-minute idle, or page reload.</span>
+              </div>
+            </mat-radio-button>
+            <mat-radio-button value="session" color="warn">
+              <div class="security-option">
+                <span class="security-option-label">Legacy &mdash; Session Storage <span class="security-badge security-badge--legacy">Lower security</span></span>
+                <span class="security-option-desc">Keys persisted in sessionStorage. Survive page reloads and tab switches within the same session. Cleared when the browser tab closes.</span>
+              </div>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
       <!-- Report Templates -->
       <div class="settings-section">
         <div class="section-header">

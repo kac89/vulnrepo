@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogAddreportprofileComponent } from '../dialog-addreportprofile/dialog-addreportprofile.component';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
-import { KeyVaultService } from '../key-vault.service';
+import { KeyVaultService, KeyVaultMode } from '../key-vault.service';
 import { CurrentdateService } from '../currentdate.service';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
 import {OllamaServiceService} from '../ollama-service.service';
@@ -76,6 +76,8 @@ export class SettingsComponent implements OnInit {
   temperature = 0.7;
   ollamaurlinput = new UntypedFormControl();
 
+  keyVaultMode: KeyVaultMode = 'memory';
+
   vaultList:any = [];
   reportProfileList:any = [];
   reportTemplateList:any = [];
@@ -130,6 +132,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
 
+    this.keyVaultMode = this.keyVault.mode;
     this.getVault();
     this.loadVectors();
     this.loadStorageStats();
@@ -148,6 +151,11 @@ export class SettingsComponent implements OnInit {
        this.temperature = Number(temperaturet);
      }
 
+  }
+
+  setKeyVaultMode(newMode: KeyVaultMode): void {
+    this.keyVault.setMode(newMode);
+    this.keyVaultMode = this.keyVault.mode;
   }
 
   foundvault(bool: boolean): boolean {

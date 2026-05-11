@@ -491,6 +491,57 @@ $danger-border:   rgba(183, 28, 28, 0.3);
   mat-icon { color: $accent; }
 }
 
+// ─── Key vault security level ────────────────────────────────────────────────
+
+.security-level-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.security-option {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 2px 0;
+}
+
+.security-option-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $text;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.security-option-desc {
+  font-size: 0.75rem;
+  color: $text-muted;
+  line-height: 1.45;
+}
+
+.security-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 1px 6px;
+  border-radius: 4px;
+
+  &--secure {
+    background: rgba(105, 240, 174, 0.1);
+    color: $accent;
+    border: 1px solid $accent-border;
+  }
+
+  &--legacy {
+    background: rgba(239, 83, 80, 0.1);
+    color: #ef9a9a;
+    border: 1px solid rgba(239, 83, 80, 0.25);
+  }
+}
+
 // ─── Responsive ───────────────────────────────────────────────────────────────
 
 @media (max-width: 599px) {
