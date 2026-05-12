@@ -68,7 +68,7 @@
                 <mat-label>Keep N</mat-label>
                 <input matInput type="number" [(ngModel)]="historyKeepN" min="1" max="999">
               </mat-form-field>
-              <button mat-flat-button color="warn" (click)="purgeOldHistory()" [disabled]="historyPurging">
+              <button class="sh-btn sh-btn--danger" (click)="purgeOldHistory()" [disabled]="historyPurging">
                 <mat-icon>auto_delete</mat-icon> Purge old
               </button>
               <button mat-icon-button (click)="loadStorageStats()" title="Refresh" [disabled]="storageLoading">
@@ -133,12 +133,12 @@
           <div class="section-body">
             <p class="section-note">Restoring a backup will add items to the current configuration.</p>
             <div class="action-row">
-              <button mat-stroked-button type="button" (click)="myreportimporall.click()">
+              <button class="sh-btn sh-btn--ghost" type="button" (click)="myreportimporall.click()">
                 <mat-icon>playlist_add</mat-icon> Restore
               </button>
               <input hidden type="file" accept=".vulnrepo-backup" #myreportimporall
                 (change)="restoreMybackup($event.target)" />
-              <button mat-flat-button color="primary" (click)="dumpallmyreports()">
+              <button class="sh-btn sh-btn--accent" (click)="dumpallmyreports()">
                 <mat-icon>file_download</mat-icon> Backup all
               </button>
             </div>
@@ -162,7 +162,7 @@
               <mat-checkbox [(ngModel)]="wipeall" color="warn">Confirm</mat-checkbox>
             </div>
             @if (wipeall == true) {
-              <button mat-flat-button color="warn" (click)="wipealldata()">
+              <button class="sh-btn sh-btn--danger" (click)="wipealldata()">
                 <mat-icon>clear</mat-icon> Yes, delete everything
               </button>
             }
@@ -543,12 +543,12 @@
             <div class="action-row action-row--spaced">
               <div>
                 @if (aiconnected != true) {
-                  <button mat-flat-button color="primary" (click)="connectAI()">
+                  <button class="sh-btn sh-btn--accent" (click)="connectAI()">
                     <mat-icon>add</mat-icon> Connect
                   </button>
                 }
                 @if (aiconnected) {
-                  <button mat-stroked-button color="warn" (click)="disconnectAI()">Disconnect</button>
+                  <button class="sh-btn sh-btn--danger" (click)="disconnectAI()">Disconnect</button>
                 }
               </div>
               <div class="action-row-end">
@@ -612,27 +612,27 @@
             <div class="action-row action-row--spaced">
               <div>
                 @if (!apiconneted && !tryconnectdb) {
-                  <button mat-flat-button color="accent" (click)="openDialogAPIADD()">
+                  <button class="sh-btn sh-btn--accent" (click)="openDialogAPIADD()">
                     <mat-icon>cloud_upload</mat-icon> Create Vault
                   </button>
                 }
                 @if (tryconnectdb) {
-                  <button mat-flat-button color="accent" (click)="tryconnect()">
+                  <button class="sh-btn sh-btn--accent" (click)="tryconnect()">
                     <mat-icon>lock_open</mat-icon> Access Vault
                   </button>
                 }
                 @if (apiconneted) {
-                  <button mat-stroked-button color="warn" (click)="apidisconnect()">Disconnect</button>
+                  <button class="sh-btn sh-btn--danger" (click)="apidisconnect()">Disconnect</button>
                 }
               </div>
               <div class="action-row-end">
                 @if (apiconneted || tryconnectdb) {
-                  <button mat-stroked-button (click)="exportvault()">
+                  <button class="sh-btn sh-btn--ghost" (click)="exportvault()">
                     <mat-icon>file_download</mat-icon> Export Vault
                   </button>
                 }
                 @if (!apiconneted && !tryconnectdb) {
-                  <button mat-stroked-button (click)="VaultFileInput.click()">
+                  <button class="sh-btn sh-btn--ghost" (click)="VaultFileInput.click()">
                     <mat-icon>playlist_add</mat-icon> Import Vault
                   </button>
                 }
