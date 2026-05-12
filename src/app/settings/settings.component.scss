@@ -244,6 +244,17 @@ $danger-border:   rgba(183, 28, 28, 0.3);
   }
 }
 
+.sh-btn--accent {
+  background: rgba(105, 240, 174, 0.1);
+  border-color: rgba(105, 240, 174, 0.22);
+  color: $accent;
+
+  &:hover:not(:disabled) {
+    background: rgba(105, 240, 174, 0.17);
+    border-color: rgba(105, 240, 174, 0.38);
+  }
+}
+
 .sh-btn--danger {
   background: $danger-tint;
   border-color: $danger-border;
