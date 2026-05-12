@@ -23,60 +23,6 @@
 
         <div class="settings-section-row">
 
-        <!-- Backup & Import -->
-        <div class="settings-section">
-          <div class="section-header">
-            <div class="section-header-icon-wrap">
-              <mat-icon class="section-icon">restore</mat-icon>
-            </div>
-            <div class="section-header-text">
-              <span class="section-title">Backup &amp; Import</span>
-              <span class="section-subtitle">Save or import reports, profiles, templates and vault</span>
-            </div>
-          </div>
-          <div class="section-body">
-            <p class="section-note">Restoring a backup will add items to the current configuration.</p>
-            <div class="action-row">
-              <button mat-stroked-button type="button" (click)="myreportimporall.click()">
-                <mat-icon>playlist_add</mat-icon> Restore
-              </button>
-              <input hidden type="file" accept=".vulnrepo-backup" #myreportimporall
-                (change)="restoreMybackup($event.target)" />
-              <button mat-flat-button color="primary" (click)="dumpallmyreports()">
-                <mat-icon>file_download</mat-icon> Backup all
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Remove all data -->
-        <div class="settings-section settings-section--danger">
-          <div class="section-header">
-            <div class="section-header-icon-wrap section-header-icon-wrap--danger">
-              <mat-icon class="section-icon">delete_forever</mat-icon>
-            </div>
-            <div class="section-header-text">
-              <span class="section-title">Remove all stored data</span>
-              <span class="section-subtitle">Wipe all reports and settings stored in the browser</span>
-            </div>
-          </div>
-          <div class="section-body">
-            <div class="danger-confirm-row">
-              <span class="danger-confirm-text">This action is irreversible. All data will be permanently deleted.</span>
-              <mat-checkbox [(ngModel)]="wipeall" color="warn">Confirm</mat-checkbox>
-            </div>
-            @if (wipeall == true) {
-              <button mat-flat-button color="warn" (click)="wipealldata()">
-                <mat-icon>clear</mat-icon> Yes, delete everything
-              </button>
-            }
-          </div>
-        </div>
-
-        </div><!-- /settings-section-row backup+danger -->
-
-        <div class="settings-section-row">
-
         <!-- Storage & History -->
         <div class="settings-section">
           <div class="section-header">
@@ -171,6 +117,60 @@
 
         </div><!-- /settings-section-row -->
 
+        <div class="settings-section-row">
+
+        <!-- Backup & Import -->
+        <div class="settings-section">
+          <div class="section-header">
+            <div class="section-header-icon-wrap">
+              <mat-icon class="section-icon">restore</mat-icon>
+            </div>
+            <div class="section-header-text">
+              <span class="section-title">Backup &amp; Import</span>
+              <span class="section-subtitle">Save or import reports, profiles, templates and vault</span>
+            </div>
+          </div>
+          <div class="section-body">
+            <p class="section-note">Restoring a backup will add items to the current configuration.</p>
+            <div class="action-row">
+              <button mat-stroked-button type="button" (click)="myreportimporall.click()">
+                <mat-icon>playlist_add</mat-icon> Restore
+              </button>
+              <input hidden type="file" accept=".vulnrepo-backup" #myreportimporall
+                (change)="restoreMybackup($event.target)" />
+              <button mat-flat-button color="primary" (click)="dumpallmyreports()">
+                <mat-icon>file_download</mat-icon> Backup all
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remove all data -->
+        <div class="settings-section settings-section--danger">
+          <div class="section-header">
+            <div class="section-header-icon-wrap section-header-icon-wrap--danger">
+              <mat-icon class="section-icon">delete_forever</mat-icon>
+            </div>
+            <div class="section-header-text">
+              <span class="section-title">Remove all stored data</span>
+              <span class="section-subtitle">Wipe all reports and settings stored in the browser</span>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="danger-confirm-row">
+              <span class="danger-confirm-text">This action is irreversible. All data will be permanently deleted.</span>
+              <mat-checkbox [(ngModel)]="wipeall" color="warn">Confirm</mat-checkbox>
+            </div>
+            @if (wipeall == true) {
+              <button mat-flat-button color="warn" (click)="wipealldata()">
+                <mat-icon>clear</mat-icon> Yes, delete everything
+              </button>
+            }
+          </div>
+        </div>
+
+        </div><!-- /settings-section-row backup+danger -->
+
 
       </div>
     </mat-tab>
@@ -192,6 +192,22 @@
             <div class="section-header-text">
               <span class="section-title">Report Profiles</span>
               <span class="section-subtitle">Manage saved settings for reports</span>
+            </div>
+            <div class="section-header-actions">
+              <button class="sh-btn sh-btn--primary" (click)="openDialogReportProfiles('open')"
+                title="Add report profile">
+                <mat-icon>add</mat-icon> Add
+              </button>
+              <button class="sh-btn sh-btn--ghost" (click)="imreportprofiles.click()">
+                <mat-icon>playlist_add</mat-icon> Import
+              </button>
+              @if (reportProfileList.length > 0) {
+                <button class="sh-btn sh-btn--ghost" (click)="exportprofiles()">
+                  <mat-icon>file_download</mat-icon> Export
+                </button>
+              }
+              <input hidden type="file" accept=".vulnrepo-profiles" #imreportprofiles
+                (change)="importReportProfile($event.target)" />
             </div>
           </div>
           <div class="section-body">
@@ -268,25 +284,6 @@
               </div>
             }
 
-            <div class="action-row action-row--spaced">
-              <button mat-icon-button color="primary" (click)="openDialogReportProfiles('open')"
-                title="Add report profile" class="add-fab">
-                <mat-icon>add</mat-icon>
-              </button>
-              <div class="action-row-end">
-                <button mat-stroked-button (click)="imreportprofiles.click()">
-                  <mat-icon>playlist_add</mat-icon> Import
-                </button>
-                @if (reportProfileList.length > 0) {
-                  <button mat-stroked-button (click)="exportprofiles()">
-                    <mat-icon>file_download</mat-icon> Export
-                  </button>
-                }
-                <input hidden type="file" accept=".vulnrepo-profiles" #imreportprofiles
-                  (change)="importReportProfile($event.target)" />
-              </div>
-            </div>
-
           </div>
         </div>
 
@@ -299,6 +296,22 @@
             <div class="section-header-text">
               <span class="section-title">Report Templates</span>
               <span class="section-subtitle">Manage custom issue templates</span>
+            </div>
+            <div class="section-header-actions">
+              <button class="sh-btn sh-btn--primary" (click)="openDialogReportTemplates()"
+                title="Add report template">
+                <mat-icon>add</mat-icon> Add
+              </button>
+              <button class="sh-btn sh-btn--ghost" (click)="imreporttemplatess.click()">
+                <mat-icon>playlist_add</mat-icon> Import
+              </button>
+              @if (reportTemplateList.length > 0) {
+                <button class="sh-btn sh-btn--ghost" (click)="exporttemplates()">
+                  <mat-icon>file_download</mat-icon> Export
+                </button>
+              }
+              <input hidden type="file" accept=".vulnrepo-templates" #imreporttemplatess
+                (change)="importReportTemplates($event.target)" />
             </div>
           </div>
           <div class="section-body">
@@ -375,25 +388,6 @@
               </div>
             }
 
-            <div class="action-row action-row--spaced">
-              <button mat-icon-button color="primary" (click)="openDialogReportTemplates()"
-                title="Add report template" class="add-fab">
-                <mat-icon>add</mat-icon>
-              </button>
-              <div class="action-row-end">
-                <button mat-stroked-button (click)="imreporttemplatess.click()">
-                  <mat-icon>playlist_add</mat-icon> Import
-                </button>
-                @if (reportTemplateList.length > 0) {
-                  <button mat-stroked-button (click)="exporttemplates()">
-                    <mat-icon>file_download</mat-icon> Export
-                  </button>
-                }
-                <input hidden type="file" accept=".vulnrepo-templates" #imreporttemplatess
-                  (change)="importReportTemplates($event.target)" />
-              </div>
-            </div>
-
           </div>
         </div>
 
@@ -406,6 +400,23 @@
             <div class="section-header-text">
               <span class="section-title">Import Vectors</span>
               <span class="section-subtitle">Reusable field-mapping configurations for the Custom Import Wizard</span>
+            </div>
+            <div class="section-header-actions">
+              @if (selectedVectorIds.size > 0) {
+                <button class="sh-btn sh-btn--danger" (click)="deleteSelectedVectors()">
+                  <mat-icon>delete</mat-icon> Delete selected ({{ selectedVectorIds.size }})
+                </button>
+              }
+              <button class="sh-btn sh-btn--ghost" (click)="vectorsBackupInput.click()">
+                <mat-icon>playlist_add</mat-icon> Restore
+              </button>
+              <input hidden type="file" accept=".vulnrepo-vectors" #vectorsBackupInput
+                (change)="restoreVectors(vectorsBackupInput)" />
+              @if (vectorList.length > 0) {
+                <button class="sh-btn sh-btn--primary" (click)="backupVectors()">
+                  <mat-icon>file_download</mat-icon> Backup vectors
+                </button>
+              }
             </div>
           </div>
           <div class="section-body">
@@ -491,28 +502,6 @@
                 {{ vectorRestoreError }}
               </div>
             }
-
-            <div class="action-row action-row--spaced">
-              <div>
-                @if (selectedVectorIds.size > 0) {
-                  <button mat-flat-button color="warn" (click)="deleteSelectedVectors()">
-                    <mat-icon>delete</mat-icon> Delete selected ({{ selectedVectorIds.size }})
-                  </button>
-                }
-              </div>
-              <div class="action-row-end">
-                <button mat-stroked-button (click)="vectorsBackupInput.click()">
-                  <mat-icon>playlist_add</mat-icon> Restore
-                </button>
-                <input hidden type="file" accept=".vulnrepo-vectors" #vectorsBackupInput
-                  (change)="restoreVectors(vectorsBackupInput)" />
-                @if (vectorList.length > 0) {
-                  <button mat-flat-button color="primary" (click)="backupVectors()">
-                    <mat-icon>file_download</mat-icon> Backup vectors
-                  </button>
-                }
-              </div>
-            </div>
 
           </div>
         </div>
