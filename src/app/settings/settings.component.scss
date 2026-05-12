@@ -22,7 +22,7 @@ $danger-border:   rgba(183, 28, 28, 0.3);
 // ─── Page shell ───────────────────────────────────────────────────────────────
 
 .settings-page {
-  padding: 0;
+  padding: 0 0 48px;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
@@ -184,6 +184,75 @@ $danger-border:   rgba(183, 28, 28, 0.3);
   gap: 2px;
   flex: 1;
   min-width: 0;
+}
+
+.section-header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+// ─── Section-header custom buttons (dialog-import-advanced style) ─────────────
+
+.sh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  padding: 5px 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  border: 1px solid transparent;
+  line-height: 1;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  &:disabled { opacity: 0.38; cursor: not-allowed; }
+}
+
+.sh-btn--primary {
+  background: rgba(0, 0, 0, 0.22);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: $text;
+
+  &:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.35);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+}
+
+.sh-btn--ghost {
+  background: transparent;
+  border-color: $border;
+  color: $text-muted;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    color: $text-dim;
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+}
+
+.sh-btn--danger {
+  background: $danger-tint;
+  border-color: $danger-border;
+  color: #ef9a9a;
+
+  &:hover:not(:disabled) {
+    background: rgba(183, 28, 28, 0.25);
+    border-color: rgba(183, 28, 28, 0.5);
+  }
 }
 
 .section-title {
