@@ -21,6 +21,8 @@
 
       <div class="settings-tab-content">
 
+        <div class="settings-section-row">
+
         <!-- Backup & Import -->
         <div class="settings-section">
           <div class="section-header">
@@ -46,6 +48,32 @@
             </div>
           </div>
         </div>
+
+        <!-- Remove all data -->
+        <div class="settings-section settings-section--danger">
+          <div class="section-header">
+            <div class="section-header-icon-wrap section-header-icon-wrap--danger">
+              <mat-icon class="section-icon">delete_forever</mat-icon>
+            </div>
+            <div class="section-header-text">
+              <span class="section-title">Remove all stored data</span>
+              <span class="section-subtitle">Wipe all reports and settings stored in the browser</span>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="danger-confirm-row">
+              <span class="danger-confirm-text">This action is irreversible. All data will be permanently deleted.</span>
+              <mat-checkbox [(ngModel)]="wipeall" color="warn">Confirm</mat-checkbox>
+            </div>
+            @if (wipeall == true) {
+              <button mat-flat-button color="warn" (click)="wipealldata()">
+                <mat-icon>clear</mat-icon> Yes, delete everything
+              </button>
+            }
+          </div>
+        </div>
+
+        </div><!-- /settings-section-row backup+danger -->
 
         <div class="settings-section-row">
 
@@ -143,29 +171,6 @@
 
         </div><!-- /settings-section-row -->
 
-        <!-- Remove all data -->
-        <div class="settings-section settings-section--danger">
-          <div class="section-header">
-            <div class="section-header-icon-wrap section-header-icon-wrap--danger">
-              <mat-icon class="section-icon">delete_forever</mat-icon>
-            </div>
-            <div class="section-header-text">
-              <span class="section-title">Remove all stored data</span>
-              <span class="section-subtitle">Wipe all reports and settings stored in the browser</span>
-            </div>
-          </div>
-          <div class="section-body">
-            <div class="danger-confirm-row">
-              <span class="danger-confirm-text">This action is irreversible. All data will be permanently deleted.</span>
-              <mat-checkbox [(ngModel)]="wipeall" color="warn">Confirm</mat-checkbox>
-            </div>
-            @if (wipeall == true) {
-              <button mat-flat-button color="warn" (click)="wipealldata()">
-                <mat-icon>clear</mat-icon> Yes, delete everything
-              </button>
-            }
-          </div>
-        </div>
 
       </div>
     </mat-tab>
