@@ -379,6 +379,12 @@ $accent:           #69f0ae;
   padding: 2px 8px;
   border-radius: 4px;
   flex-shrink: 0;
+
+  &--legacy {
+    background: rgba(239, 83, 80, 0.1);
+    color: #ef9a9a;
+    border: 1px solid rgba(239, 83, 80, 0.25);
+  }
 }
 
 // ─── Resource link ────────────────────────────────────────────────────────────

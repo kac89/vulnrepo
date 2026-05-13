@@ -38,6 +38,7 @@
           <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Browser-support'" routerLink="/faq" [queryParams]="{q: 'Browser-support'}">Browser support</a>
           <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'How-are-reports-stored'" routerLink="/faq" [queryParams]="{q: 'How-are-reports-stored'}">How are reports stored?</a>
           <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Key-lifetime-auto-lock'" routerLink="/faq" [queryParams]="{q: 'Key-lifetime-auto-lock'}">Key lifetime &amp; auto-lock</a>
+          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Key-Storage-Security-Level'" routerLink="/faq" [queryParams]="{q: 'Key-Storage-Security-Level'}">Key Storage Security Level</a>
           <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'How-to-create-PDF-report'" routerLink="/faq" [queryParams]="{q: 'How-to-create-PDF-report'}">Create PDF report</a>
           <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'I-forgot-my-security-key'" routerLink="/faq" [queryParams]="{q: 'I-forgot-my-security-key'}">Forgot security key</a>
           <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Can-I-change-report-security-key'" routerLink="/faq" [queryParams]="{q: 'Can-I-change-report-security-key'}">Change security key</a>
@@ -120,7 +121,52 @@
         </div>
       </section>
 
-      <div class="faq-divider" [hidden]="!sectionVisible('Key-lifetime-auto-lock') && !sectionVisible('How-to-create-PDF-report')"></div>
+      <div class="faq-divider" [hidden]="!sectionVisible('Key-lifetime-auto-lock') && !sectionVisible('Key-Storage-Security-Level')"></div>
+
+      <section class="faq-item" id="Key-Storage-Security-Level" [hidden]="!sectionVisible('Key-Storage-Security-Level')">
+        <div class="faq-item-header">
+          <div class="faq-item-title-row">
+            <mat-icon class="faq-item-icon">shield</mat-icon>
+            <h2 class="faq-item-title">Key Storage Security Level</h2>
+            <a class="faq-anchor-link" href="/faq?q=Key-Storage-Security-Level" title="Link to this section">
+              <mat-icon>link</mat-icon>
+            </a>
+          </div>
+          <p class="faq-item-desc">VULNREPO offers two modes for holding decryption keys in the browser, configurable in <strong>Settings → Key Storage Security Level</strong>.</p>
+        </div>
+        <div class="faq-item-body">
+          <div class="faq-ext-table">
+            <div class="faq-ext-row">
+              <span class="faq-ext-badge">Secure</span>
+              <div>
+                <strong>Memory only</strong> <em>(Default)</em><br>
+                Keys live exclusively in JavaScript memory and are <strong>never written to any browser storage</strong>.
+                The vault is wiped automatically on tab switch, 15-minute idle, or page reload.
+                Re-entering the security key after switching tabs is expected — it is a deliberate security measure to ensure
+                that keys cannot be read from browser developer tools or recovered from disk.
+              </div>
+            </div>
+            <div class="faq-ext-row">
+              <span class="faq-ext-badge faq-ext-badge--legacy">Legacy</span>
+              <div>
+                <strong>Session Storage</strong> <em>(Lower security)</em><br>
+                Keys are persisted in <code class="faq-code">sessionStorage</code> and survive tab switches and page reloads within the same browser session.
+                They are cleared only when the tab is closed.
+                Choose this mode if convenience is more important than strict key isolation, and you accept the trade-off
+                that keys may be visible in browser developer tools while the session is open.
+              </div>
+            </div>
+          </div>
+          <p class="faq-item-desc" style="margin-top:12px">
+            <strong>Why am I prompted for my key again after switching tabs?</strong><br>
+            You are using the default <em>Secure — Memory only</em> mode. Switching away from the tab clears the in-memory vault immediately.
+            This prevents decryption keys from remaining accessible in an unattended or shared browser.
+            If you find this disruptive, switch to <em>Legacy — Session Storage</em> in Settings, but be aware of the reduced security.
+          </p>
+        </div>
+      </section>
+
+      <div class="faq-divider" [hidden]="!sectionVisible('Key-Storage-Security-Level') && !sectionVisible('How-to-create-PDF-report')"></div>
 
       <section class="faq-item" id="How-to-create-PDF-report" [hidden]="!sectionVisible('How-to-create-PDF-report')">
         <div class="faq-item-header">
