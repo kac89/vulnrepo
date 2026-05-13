@@ -48,6 +48,8 @@ export class KeyVaultService implements OnDestroy {
       // Persist any currently unlocked keys to sessionStorage immediately
       this.keys.forEach((val, key) => sessionStorage.setItem(SS_KEY_PREFIX + key, val));
       if (this.apiVault !== null) sessionStorage.setItem(SS_VAULT_KEY, this.apiVault);
+      if (this.idleTimer) { clearTimeout(this.idleTimer); this.idleTimer = null; }
+      this.idleResetAtSubject.next(null);
     } else {
       // Switching back to secure memory-only mode: wipe sessionStorage entries and clear memory
       this.wipeSessionStorage();
@@ -166,6 +168,7 @@ export class KeyVaultService implements OnDestroy {
   };
 
   private resetIdle = (): void => {
+    if (this.mode === 'session') return;
     if (this.idleTimer) clearTimeout(this.idleTimer);
     this.idleTimer = setTimeout(this.clearAll, IDLE_TIMEOUT_MS);
     if (this.keys.size > 0 || this.apiVault !== null) {
