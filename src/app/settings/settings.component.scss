@@ -186,6 +186,47 @@ $danger-border:   rgba(183, 28, 28, 0.3);
   min-width: 0;
 }
 
+.section-header-filter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  transition: border-color 0.15s, background 0.15s;
+
+  &:focus-within {
+    border-color: $accent-border;
+    background: rgba(105, 240, 174, 0.04);
+  }
+}
+
+.header-search-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: $icon;
+  flex-shrink: 0;
+}
+
+.header-search-input {
+  background: none;
+  border: none;
+  outline: none;
+  color: $text;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  width: 160px;
+
+  &::placeholder { color: $text-muted; }
+}
+
 .section-header-actions {
   display: flex;
   gap: 6px;
@@ -271,6 +312,10 @@ $danger-border:   rgba(183, 28, 28, 0.3);
   font-weight: 500;
   color: $text;
   line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .section-subtitle {
@@ -496,28 +541,45 @@ $danger-border:   rgba(183, 28, 28, 0.3);
 
 .filter-field { margin-bottom: 8px; }
 
-// ─── Table cell flex ratios ───────────────────────────────────────────────────
+.table-filter-field {
+  display: block;
+  width: 280px;
+  max-width: 100%;
+  margin-bottom: 8px;
+}
 
-.mat-mdc-header-cell:first-child,
-.mat-mdc-cell:first-child   { flex: 40%; }
+// ─── Column widths (per mat-column-* class) ──────────────────────────────────
 
-.mat-mdc-header-cell:nth-child(2),
-.mat-mdc-cell:nth-child(2)  { flex: 5%; }
+.data-table-wrap {
+  // Source icon column
+  .mat-column-source             { width: 52px; flex: none; }
 
-.mat-mdc-header-cell:nth-child(3),
-.mat-mdc-cell:nth-child(3)  { flex: 5%; }
+  // Primary name / label columns — expand to fill
+  .mat-column-profile_name,
+  .mat-column-title,
+  .mat-column-vault_name,
+  .mat-column-apiname,
+  .mat-column-organisation       { flex: 1; min-width: 100px; }
 
-.mat-mdc-header-cell:nth-child(4),
-.mat-mdc-cell:nth-child(4)  { flex: 5%; }
+  // Action / settings columns — narrow, right-aligned
+  .mat-column-profile_settings,
+  .mat-column-template_settings,
+  .mat-column-vault_settings,
+  .mat-column-settings,
+  .mat-column-actions            { width: 52px; flex: none; justify-content: flex-end; }
 
-.mat-mdc-header-cell:nth-child(5),
-.mat-mdc-cell:nth-child(5)  { flex: 40%; }
+  // API List columns
+  .mat-column-status             { width: 130px; flex: none; }
+  .mat-column-created,
+  .mat-column-expires            { width: 160px; flex: none; }
+  .mat-column-storage            { width: 120px; flex: none; }
 
-.mat-mdc-header-cell:last-child,
-.mat-mdc-cell:last-child {
-  flex: 5%;
-  text-align: right;
-  justify-content: flex-end;
+  // Import Vectors columns
+  .mat-column-select             { width: 52px; flex: none; }
+  .mat-column-format             { width: 80px;  flex: none; }
+  .mat-column-name               { flex: 2; min-width: 120px; }
+  .mat-column-path               { flex: 2; min-width: 120px; }
+  .mat-column-fields             { width: 90px;  flex: none; }
 }
 
 // ─── Import vector table extras ───────────────────────────────────────────────
@@ -654,4 +716,16 @@ $danger-border:   rgba(183, 28, 28, 0.3);
   .page-title h1 { font-size: 1.3rem; }
   .page-title .page-subtitle { display: none; }
   .page-title .title-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
+
+  .section-header { flex-wrap: wrap; }
+
+  .section-header-filter {
+    position: static;
+    transform: none;
+    order: 10;
+    flex-basis: 100%;
+    margin-top: 4px;
+
+    .header-search-input { width: 100%; min-width: 0; }
+  }
 }
