@@ -18,6 +18,7 @@ $accent:           #69f0ae;
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px 80px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 // ─── Page header (matches myreports pattern) ──────────────────────────────────
@@ -379,6 +380,12 @@ $accent:           #69f0ae;
   padding: 2px 8px;
   border-radius: 4px;
   flex-shrink: 0;
+
+  &--legacy {
+    background: rgba(239, 83, 80, 0.1);
+    color: #ef9a9a;
+    border: 1px solid rgba(239, 83, 80, 0.25);
+  }
 }
 
 // ─── Resource link ────────────────────────────────────────────────────────────
