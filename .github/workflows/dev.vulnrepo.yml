@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Node ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
     - name: cmd add version
@@ -31,7 +31,7 @@ jobs:
           npm run build -- -c production
     
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: deploy_dist
         path: dist
@@ -41,14 +41,14 @@ jobs:
     needs: build
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
           fetch-depth: 0
           token: ${{ secrets.TOKEN }}
           
       - name: Download build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: deploy_dist
           path: .
