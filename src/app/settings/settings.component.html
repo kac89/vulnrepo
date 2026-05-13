@@ -190,9 +190,21 @@
               <mat-icon class="section-icon">settings_applications</mat-icon>
             </div>
             <div class="section-header-text">
-              <span class="section-title">Report Profiles</span>
+              <span class="section-title">
+                Report Profiles
+                @if (reportProfileList.length > 0) {
+                  <span class="count-badge">{{ reportProfileList.length }}</span>
+                }
+              </span>
               <span class="section-subtitle">Manage saved settings for reports</span>
             </div>
+            @if (reportProfileList.length > 0) {
+              <div class="section-header-filter">
+                <mat-icon class="header-search-icon">search</mat-icon>
+                <input class="header-search-input" type="text"
+                  (keyup)="applyFilterProfiles($event)" #inputree placeholder="Filter profiles…">
+              </div>
+            }
             <div class="section-header-actions">
               <button class="sh-btn sh-btn--primary" (click)="openDialogReportProfiles('open')"
                 title="Add report profile">
@@ -213,20 +225,12 @@
           <div class="section-body">
 
             <div [hidden]="reportProfileList.length == 0">
-              <mat-form-field color="accent" class="full-width filter-field">
-                <mat-label>Filter profiles</mat-label>
-                <mat-icon matPrefix>search</mat-icon>
-                <input matInput (keyup)="applyFilterProfiles($event)" #inputree placeholder="Ex. My profile">
-              </mat-form-field>
-
               <div class="data-table-wrap">
                 <table mat-table #table1 style="width:100%;" [dataSource]="ReportProfilesdataSource" matSort
                   matSortActive="profile_name">
 
                   <ng-container matColumnDef="source">
-                    <th mat-header-cell *matHeaderCellDef>
-                      <mat-icon title="Where profiles are stored">folder</mat-icon>
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Source</th>
                     <td mat-cell *matCellDef="let element">
                       @if (!element.api) {
                         <mat-icon title="Local Host">computer</mat-icon>
@@ -279,7 +283,7 @@
 
             @if (reportProfileList.length == 0) {
               <div class="empty-state">
-                <mat-icon>sentiment_dissatisfied</mat-icon>
+                <mat-icon>library_books</mat-icon>
                 <span>No profiles found</span>
               </div>
             }
@@ -294,9 +298,21 @@
               <mat-icon class="section-icon">description</mat-icon>
             </div>
             <div class="section-header-text">
-              <span class="section-title">Report Templates</span>
+              <span class="section-title">
+                Report Templates
+                @if (reportTemplateList.length > 0) {
+                  <span class="count-badge">{{ reportTemplateList.length }}</span>
+                }
+              </span>
               <span class="section-subtitle">Manage custom issue templates</span>
             </div>
+            @if (reportTemplateList.length > 0) {
+              <div class="section-header-filter">
+                <mat-icon class="header-search-icon">search</mat-icon>
+                <input class="header-search-input" type="text"
+                  (keyup)="applyFilterTemplates($event)" #inputtemplates placeholder="Filter templates…">
+              </div>
+            }
             <div class="section-header-actions">
               <button class="sh-btn sh-btn--primary" (click)="openDialogReportTemplates()"
                 title="Add report template">
@@ -317,20 +333,12 @@
           <div class="section-body">
 
             <div [hidden]="reportTemplateList.length == 0">
-              <mat-form-field color="accent" class="full-width filter-field">
-                <mat-label>Filter templates</mat-label>
-                <mat-icon matPrefix>search</mat-icon>
-                <input matInput (keyup)="applyFilterTemplates($event)" placeholder="Ex. My template" #inputtemplates>
-              </mat-form-field>
-
               <div class="data-table-wrap">
                 <table mat-table #table2 style="width:100%;" [dataSource]="ReportTemplatesdataSource" matSort
                   matSortActive="title">
 
                   <ng-container matColumnDef="source">
-                    <th mat-header-cell *matHeaderCellDef>
-                      <mat-icon title="Where templates are stored">folder</mat-icon>
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Source</th>
                     <td mat-cell *matCellDef="let element">
                       @if (!element.api) {
                         <mat-icon title="Local">computer</mat-icon>
@@ -383,7 +391,7 @@
 
             @if (reportTemplateList.length == 0) {
               <div class="empty-state">
-                <mat-icon>sentiment_dissatisfied</mat-icon>
+                <mat-icon>article</mat-icon>
                 <span>No custom templates found</span>
               </div>
             }
@@ -398,7 +406,12 @@
               <mat-icon class="section-icon">schema</mat-icon>
             </div>
             <div class="section-header-text">
-              <span class="section-title">Import Vectors</span>
+              <span class="section-title">
+                Import Vectors
+                @if (!vectorsLoading && vectorList.length > 0) {
+                  <span class="count-badge">{{ vectorList.length }}</span>
+                }
+              </span>
               <span class="section-subtitle">Reusable field-mapping configurations for the Custom Import Wizard</span>
             </div>
             <div class="section-header-actions">
@@ -430,7 +443,7 @@
 
             @if (!vectorsLoading && vectorList.length === 0) {
               <div class="empty-state">
-                <mat-icon>sentiment_dissatisfied</mat-icon>
+                <mat-icon>schema</mat-icon>
                 <span>No import vectors saved yet</span>
               </div>
             }
@@ -484,9 +497,9 @@
                   <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let v">
-                      <a [routerLink]="[]" (click)="deleteSingleVector(v.id)" title="Remove">
-                        <mat-icon color="warn" class="vertical-align-middle">delete_forever</mat-icon>
-                      </a>
+                      <button mat-icon-button class="row-action-btn" (click)="deleteSingleVector(v.id)" title="Remove">
+                        <mat-icon color="warn">delete_forever</mat-icon>
+                      </button>
                     </td>
                   </ng-container>
 
