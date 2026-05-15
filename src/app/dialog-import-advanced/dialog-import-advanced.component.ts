@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
-import * as xml2js from 'xml2js';
+import { XMLParser } from 'fast-xml-parser';
 import { CurrentdateService } from '../currentdate.service';
 import { ImportVectorService, ImportVector } from '../import-vector.service';
 
@@ -365,12 +365,12 @@ export class DialogImportAdvancedComponent implements OnInit {
   }
 
   private parseXML(text: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      xml2js.parseString(text, { explicitArray: false, mergeAttrs: true }, (err: any, result: any) => {
-        if (err) reject(err);
-        else resolve(result);
-      });
-    });
+    try {
+      const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '', trimValues: true, parseTagValue: false, parseAttributeValue: false });
+      return Promise.resolve(parser.parse(text));
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   // ── Step 2 – Structure ───────────────────────────────────────────────────────
