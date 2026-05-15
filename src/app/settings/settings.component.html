@@ -253,16 +253,16 @@
                         <mat-icon>more_vert</mat-icon>
                       </button>
                       <mat-menu #reportprofilesettings="matMenu">
-                        <a [routerLink]="[]" (click)="downloadProfileItem(element)" class="active-link" mat-menu-item>
+                        <a [routerLink]="[]" (click)="downloadProfileItem(element)" mat-menu-item>
                           <mat-icon>file_download</mat-icon> Download profile
                         </a>
                         @if (!element.api) {
-                          <a [routerLink]="[]" (click)="editProfileItem(element)" class="active-link" mat-menu-item>
+                          <a [routerLink]="[]" (click)="editProfileItem(element)" mat-menu-item>
                             <mat-icon>edit</mat-icon> Edit profile
                           </a>
                         }
                         @if (!element.api) {
-                          <a [routerLink]="[]" (click)="removeProfileItem(element)" class="active-link" mat-menu-item>
+                          <a [routerLink]="[]" (click)="removeProfileItem(element)" mat-menu-item>
                             <mat-icon>delete_forever</mat-icon> Remove
                           </a>
                         }
@@ -361,16 +361,16 @@
                         <mat-icon>more_vert</mat-icon>
                       </button>
                       <mat-menu #templatessettings="matMenu">
-                        <a [routerLink]="[]" (click)="downloadTemplateItem(element)" class="active-link" mat-menu-item>
+                        <a [routerLink]="[]" (click)="downloadTemplateItem(element)" mat-menu-item>
                           <mat-icon>file_download</mat-icon> Download template
                         </a>
                         @if (!element.api) {
-                          <a [routerLink]="[]" (click)="editTemplateItem(element)" class="active-link" mat-menu-item>
+                          <a [routerLink]="[]" (click)="editTemplateItem(element)" mat-menu-item>
                             <mat-icon>edit</mat-icon> Edit template
                           </a>
                         }
                         @if (!element.api) {
-                          <a [routerLink]="[]" (click)="removeTemplate(element)" class="active-link" mat-menu-item>
+                          <a [routerLink]="[]" (click)="removeTemplate(element)" mat-menu-item>
                             <mat-icon>delete_forever</mat-icon> Remove
                           </a>
                         }
@@ -608,7 +608,7 @@
                         </button>
                         <mat-menu #vaultsettings="matMenu">
                           @if (!element.api) {
-                            <a [routerLink]="[]" (click)="removeapikey()" class="active-link" mat-menu-item>
+                            <a [routerLink]="[]" (click)="removeapikey()" mat-menu-item>
                               <mat-icon>delete_forever</mat-icon> Remove
                             </a>
                           }
@@ -671,10 +671,10 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #apimenu="matMenu">
-                <a [routerLink]="[]" (click)="openDialogAPIaddtovault()" class="active-link" mat-menu-item>
+                <a [routerLink]="[]" (click)="openDialogAPIaddtovault()" mat-menu-item>
                   <mat-icon>add_circle</mat-icon> Add API
                 </a>
-                <a target="_blank" class="active-link" rel="noopener noreferrer"
+                <a target="_blank" rel="noopener noreferrer"
                   href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md" mat-menu-item>
                   <mat-icon>build</mat-icon> Build own API
                 </a>

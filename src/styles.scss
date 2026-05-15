@@ -387,7 +387,7 @@ mat-toolbar.app-navbar {
 
 // ── Compact slate menu (aligns with .app-navbar toolbar look) ───
 .mat-mdc-menu-panel {
-  --mat-menu-container-color: rgba(20, 24, 28, 0.92);
+  --mat-menu-container-color: rgba(26, 26, 26, 0.78);
   --mat-menu-container-shape: 10px;
   --mat-menu-item-label-text-size: 13px;
   --mat-menu-item-label-text-weight: 500;
@@ -455,7 +455,7 @@ mat-toolbar.app-navbar {
 // ── Compact slate sidenav (mobile drawer — matches toolbar look) ──
 .mat-sidenav {
   min-width: 240px;
-  background: rgba(14, 18, 22, 0.96) !important;
+  background: rgba(26, 26, 26, 0.78) !important;
   border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
   box-shadow:
     1px 0 0 rgba(22, 191, 110, 0.10),
