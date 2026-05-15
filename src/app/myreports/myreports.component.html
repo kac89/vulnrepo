@@ -109,11 +109,11 @@
                     <mat-icon>more_vert</mat-icon>
                   </button>
                   <mat-menu #cardMenu="matMenu">
-                    <a [routerLink]="[]" (click)="shareReport(element.report_id)" class="active-link" mat-menu-item>
+                    <a [routerLink]="[]" (click)="shareReport(element.report_id)" mat-menu-item>
                       <mat-icon>cloud_download</mat-icon> Download report
                     </a>
                     @if (!element.api) {
-                      <a [routerLink]="[]" (click)="cloneReport(element)" class="active-link" mat-menu-item>
+                      <a [routerLink]="[]" (click)="cloneReport(element)" mat-menu-item>
                         <mat-icon>flip_to_front</mat-icon> Clone report
                       </a>
                     }
@@ -123,18 +123,18 @@
                       </a>
                     }
                     @if (element.api) {
-                      <a [routerLink]="[]" (click)="fromAPIcloneReport(element)" class="active-link" mat-menu-item>
+                      <a [routerLink]="[]" (click)="fromAPIcloneReport(element)" mat-menu-item>
                         <mat-icon>save_alt</mat-icon> Save locally
                       </a>
                     }
-                    <a [routerLink]="[]" (click)="removeReport(element)" class="active-link" mat-menu-item>
+                    <a [routerLink]="[]" (click)="removeReport(element)" mat-menu-item>
                       <mat-icon>delete_forever</mat-icon> Remove report
                     </a>
                   </mat-menu>
                   <mat-menu #apiMenu="matMenu">
                     @for (apis of apilist; track apis) {
                       <a [routerLink]="[]" (click)="toAPIcloneReport(element, apis.value, apis.apikey)"
-                        class="active-link" title="API: {{apis.value}}" mat-menu-item>
+                        title="API: {{apis.value}}" mat-menu-item>
                         <mat-icon>public</mat-icon> {{apis.viewValue}}
                       </a>
                     }
