@@ -8,10 +8,10 @@
     <!-- Logo -->
     <a routerLink="/home" class="logo-link">
       <img width="30px" src="assets/logo/vulnrepo_logo.png" alt="logo">
-      <span class="neon flash">VULNRÎžPO<span>VULNRÎžPO</span></span>
+      <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
     </a>
 
-    <!-- Status badge â€” single element, animated between states -->
+    <!-- Status badge — single element, animated between states -->
     @if (show_status) {
       <div class="title-center" @statusSlide>
         <div class="status-badge"
@@ -65,7 +65,7 @@
         <button mat-button class="open-reports-btn"
           [class.has-unsaved]="status_unsaved"
           [matMenuTriggerFor]="openReportsMenu"
-          [title]="status_unsaved ? 'Open reports â€” unsaved changes' : 'Open reports'">
+          [title]="status_unsaved ? 'Open reports — unsaved changes' : 'Open reports'">
           <mat-icon>lock_open</mat-icon>
           <span class="open-reports-btn-count">{{ arr_oreports.length }}</span>
         </button>
