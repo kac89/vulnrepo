@@ -862,7 +862,12 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   canDeactivate() {
     if (this.youhaveunsavedchanges == true) {
-      return confirm("You have unsaved changes, Do you really want to leave?");
+      const confirmed = confirm("You have unsaved changes, Do you really want to leave?");
+      if (confirmed) {
+        this.youhaveunsavedchanges = false;
+        this.indexeddbService.updatechangesStatus(false);
+      }
+      return confirmed;
     }
     return true;
   }

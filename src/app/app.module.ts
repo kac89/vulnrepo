@@ -11,7 +11,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -152,7 +151,6 @@ import { MatStepperModule } from '@angular/material/stepper';
         MatButtonModule,
         MatCheckboxModule,
         MatSidenavModule,
-        FlexLayoutModule,
         MatIconModule,
         MatToolbarModule,
         MatCardModule,

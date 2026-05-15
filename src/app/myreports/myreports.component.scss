@@ -13,6 +13,8 @@ $icon:          #616161;
 $accent:        #69f0ae;
 $destructive:   #ef5350;
 
+// severity SCSS vars kept for SCSS rgba() calls; the source-of-truth colors
+// live in :root as --sev-* CSS vars (styles.scss) — keep values in sync.
 $sev-critical: #ff4d6d;
 $sev-high:     #ff9a3c;
 $sev-medium:   #f5d020;
@@ -611,11 +613,11 @@ $sev-info:     #60a5fa;
     font-weight: 700;
   }
 
-  &.sev-critical { color: $sev-critical; border-color: rgba($sev-critical, 0.32); background: rgba($sev-critical, 0.1); }
-  &.sev-high     { color: $sev-high;     border-color: rgba($sev-high, 0.32);     background: rgba($sev-high, 0.1); }
-  &.sev-medium   { color: $sev-medium;   border-color: rgba($sev-medium, 0.28);   background: rgba($sev-medium, 0.08); }
-  &.sev-low      { color: $sev-low;      border-color: rgba($sev-low, 0.28);      background: rgba($sev-low, 0.08); }
-  &.sev-info     { color: $sev-info;     border-color: rgba($sev-info, 0.3);      background: rgba($sev-info, 0.09); }
+  &.sev-critical { color: var(--sev-critical); border-color: rgba(var(--sev-critical-rgb), 0.32); background: rgba(var(--sev-critical-rgb), 0.1); }
+  &.sev-high     { color: var(--sev-high);     border-color: rgba(var(--sev-high-rgb), 0.32);     background: rgba(var(--sev-high-rgb), 0.1); }
+  &.sev-medium   { color: var(--sev-medium);   border-color: rgba(var(--sev-medium-rgb), 0.28);   background: rgba(var(--sev-medium-rgb), 0.08); }
+  &.sev-low      { color: var(--sev-low);      border-color: rgba(var(--sev-low-rgb), 0.28);      background: rgba(var(--sev-low-rgb), 0.08); }
+  &.sev-info     { color: var(--sev-info);     border-color: rgba(var(--sev-info-rgb), 0.3);      background: rgba(var(--sev-info-rgb), 0.09); }
 }
 
 .sev-total {
