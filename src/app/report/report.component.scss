@@ -158,7 +158,7 @@ $accent-green: #69f0ae;
   transition: padding-top 0.18s ease;
 
   &--bar-visible {
-    padding-top: 48px; // pushes content down by sticky bar height so hero isn't clipped
+    padding-top: 44px; // pushes content down by sticky bar height so hero isn't clipped
   }
 }
 
@@ -482,13 +482,28 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
 }
 
 @keyframes rh-save-pulse {
-  0%   { box-shadow: 0 0 0 0   rgba(74,222,128,0.45); }
-  70%  { box-shadow: 0 0 0 8px rgba(74,222,128,0);    }
-  100% { box-shadow: 0 0 0 0   rgba(74,222,128,0);    }
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(22, 191, 110, 0.55),
+      0 0 0 1px rgba(22, 191, 110, 0.55),
+      0 0 14px rgba(22, 191, 110, 0.35);
+  }
+  70% {
+    box-shadow:
+      0 0 0 10px rgba(22, 191, 110, 0),
+      0 0 0 1px rgba(22, 191, 110, 0.35),
+      0 0 14px rgba(22, 191, 110, 0.18);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(22, 191, 110, 0),
+      0 0 0 1px rgba(22, 191, 110, 0.35),
+      0 0 14px rgba(22, 191, 110, 0.18);
+  }
 }
 
 .rh-save-btn--pulse {
-  animation: rh-save-pulse 2s ease-out infinite;
+  animation: rh-save-pulse 1.8s ease-out infinite;
 
   @media (prefers-reduced-motion: reduce) { animation: none; }
 }
@@ -869,14 +884,20 @@ mat-paginator {
 // ── Sticky save bar (sub-navbar, sits below mat-toolbar) ─────
 .report-sticky-bar {
   position: fixed;
-  top: 64px;           // height of the main mat-toolbar
+  top: 48px;           // height of the main mat-toolbar
   left: 0;
   right: 0;
   z-index: 999;        // one below .app-toolbar (z-index: 1000)
-  height: 48px;
-  background: #212121; // matches mat-toolbar color="primary" (grey-900)
-  border-bottom: 2px solid rgba($accent-green, 0.5);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  height: 44px;
+  background:
+    linear-gradient(180deg, rgba(255, 152, 0, 0.06), rgba(255, 152, 0, 0.02)),
+    rgba(20, 24, 28, 0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 1px 0 rgba(255, 183, 77, 0.22),
+    0 6px 16px rgba(0, 0, 0, 0.32);
   animation: slide-down 0.18s ease;
 }
 
@@ -889,52 +910,81 @@ mat-paginator {
   max-width: 1200px;
   height: 100%;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .report-sticky-bar-msg {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 0.825rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: #ff9800;
+  letter-spacing: 0.01em;
+  color: #ffb74d;
   flex: 1;
 
   mat-icon {
-    font-size: 17px;
-    width: 17px;
-    height: 17px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    filter: drop-shadow(0 0 4px rgba(255, 183, 77, 0.45));
+    animation: sticky-msg-pulse 2.2s ease-in-out infinite;
   }
+}
+
+@keyframes sticky-msg-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
 }
 
 .report-sticky-bar-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .report-sticky-discard-btn {
-  height: 32px !important;
-  line-height: 32px !important;
-  font-size: 0.78rem !important;
-  color: $text-secondary !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  padding: 0 12px !important;
+  border-radius: 6px !important;
+  font-size: 0.76rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.62) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease !important;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    margin-right: 2px;
+  }
 
   &:hover {
     color: #fff !important;
-    border-color: rgba(255, 255, 255, 0.45) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
   }
 }
 
 .report-sticky-save-btn {
-  height: 32px !important;
-  line-height: 32px !important;
-  font-size: 0.78rem !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  padding: 0 14px !important;
+  border-radius: 6px !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.015em;
+  box-shadow: 0 0 0 1px rgba(22, 191, 110, 0.35), 0 0 12px rgba(22, 191, 110, 0.18);
 
   &__label {
     display: inline-flex;
@@ -1107,7 +1157,7 @@ mat-paginator {
 }
 
 @media (max-width: 768px) {
-  .report-sticky-bar { top: 56px; } // mobile toolbar is 56px
+  .report-sticky-bar { top: 48px; } // mobile toolbar is 48px
 }
 
 // ── Severity summary strip ────────────────────────────────────
