@@ -45,7 +45,8 @@
               "uuid",
               "rxjs-compat/Subject",
               "rxjs/Subject",
-              "rfdc"
+              "rfdc",
+              "buffer"
            ],
             "scripts": [],
             "extractLicenses": false,
