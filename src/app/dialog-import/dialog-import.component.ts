@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
-import * as xml2js from 'xml2js';
+import { XMLParser } from 'fast-xml-parser';
 import { CurrentdateService } from '../currentdate.service';
 import { UntypedFormControl } from '@angular/forms';
 import { UtilsService } from '../utils.service';
@@ -352,11 +352,8 @@ export class DialogImportComponent implements OnInit {
       return cvss;
     }
 
-    this.xmltojson = [];
-    const parser = new xml2js.Parser({ strict: true, trim: true });
-    parser.parseString(xml, (err, result) => {
-      this.xmltojson = result.issues.issue;
-    });
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '', attributesGroupName: '$', textNodeName: '_', isArray: (_n: string, jpath: any) => typeof jpath === 'string' && jpath.includes('.'), trimValues: true, parseTagValue: false, parseAttributeValue: false });
+    this.xmltojson = parser.parse(xml).issues.issue;
 
 
     const emp: any = [];
@@ -452,22 +449,20 @@ export class DialogImportComponent implements OnInit {
 
   parseOpenvas9(xml:any) {
 
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '', attributesGroupName: '$', textNodeName: '_', isArray: (_n: string, jpath: any) => typeof jpath === 'string' && jpath.includes('.'), trimValues: true, parseTagValue: false, parseAttributeValue: false });
+    const result = parser.parse(xml);
     this.xmltojson = [];
-    const parser = new xml2js.Parser({ strict: true, trim: true });
-
-    parser.parseString(xml, (err, result) => {
-      if (result.report !== undefined) {
-        if (result.report.report) {
-          this.xmltojson = result.report.report;
-        }
-      } else {
-        if (result.get_results_response !== undefined) {
-          this.parseOpenvasxml(result.get_results_response.result);
-        }
+    if (result.report !== undefined) {
+      if (result.report.report) {
+        this.xmltojson = result.report.report;
       }
-    });
+    } else {
+      if (result.get_results_response !== undefined) {
+        this.parseOpenvasxml(result.get_results_response.result);
+      }
+    }
 
-    this.xmltojson.forEach((myObject, index) => {
+    (this.xmltojson || []).forEach((myObject, index) => {
       if (myObject.results) {
         myObject.results.forEach((myarrdeep) => {
           this.parseOpenvasxml(myarrdeep.result);
@@ -576,13 +571,10 @@ export class DialogImportComponent implements OnInit {
 
     this.xmltojson = [];
     const issues: any = [];
-    const parser = new xml2js.Parser({ strict: true, trim: true });
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '', attributesGroupName: '$', textNodeName: '_', isArray: (_n: string, jpath: any) => typeof jpath === 'string' && jpath.includes('.'), trimValues: true, parseTagValue: false, parseAttributeValue: false });
+    this.xmltojson = parser.parse(xml).NessusClientData_v2.Report;
 
-    parser.parseString(xml, (err, result) => {
-      this.xmltojson = result.NessusClientData_v2.Report;
-    });
-
-    this.xmltojson.forEach((myObject, index) => {
+    (this.xmltojson || []).forEach((myObject, index) => {
       if (myObject.ReportHost) {
         myObject.ReportHost.forEach((myarrdeep) => {
 
@@ -795,14 +787,11 @@ export class DialogImportComponent implements OnInit {
 
   parseNmap(xml:any) {
 
-    let json = '';
     let hosts: any = [];
-    const parser = new xml2js.Parser({ strict: true, trim: true });
-
-    parser.parseString(xml, (err, result) => {
-      json = result.nmaprun;
-      hosts = result.nmaprun.host;
-    });
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '', attributesGroupName: '$', textNodeName: '_', isArray: (_n: string, jpath: any) => typeof jpath === 'string' && jpath.includes('.'), trimValues: true, parseTagValue: false, parseAttributeValue: false });
+    const parseResult = parser.parse(xml);
+    const json = parseResult.nmaprun;
+    hosts = parseResult.nmaprun.host;
 
     // only state up ip's
     if (this.checked) {
@@ -1036,10 +1025,8 @@ export class DialogImportComponent implements OnInit {
 
   parseJiraxml(xml: any) {
     let xmltojson: any[] = [];
-    const parser = new xml2js.Parser({ strict: true, trim: true });
-    parser.parseString(xml, (err, result) => {
-      xmltojson = result.rss.channel[0].item;
-    });
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '', attributesGroupName: '$', textNodeName: '_', isArray: (_n: string, jpath: any) => typeof jpath === 'string' && jpath.includes('.'), trimValues: true, parseTagValue: false, parseAttributeValue: false });
+    xmltojson = parser.parse(xml).rss.channel[0].item;
 
     const info = xmltojson.map((res: any, key) => {
 

@@ -180,6 +180,15 @@ mat-toolbar.app-navbar {
   display: flex;
   align-items: center;
   gap: 2px;
+
+  @media (max-width: 959px) { display: none; }
+}
+
+/* ── Mobile hamburger ─────────────────────────────────────── */
+.menu-toggle {
+  display: none;
+
+  @media (max-width: 959px) { display: inline-flex !important; }
 }
 
 .nav-link {

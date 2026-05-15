@@ -1,7 +1,7 @@
-<mat-toolbar class="app-navbar">
+﻿<mat-toolbar class="app-navbar">
   <mat-toolbar-row>
     <!-- Hamburger (mobile) -->
-    <button mat-icon-button class="menu-toggle" (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+    <button mat-icon-button class="menu-toggle" (click)="sidenav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
 
@@ -50,7 +50,7 @@
     }
 
     <!-- Desktop nav -->
-    <nav class="desktop-nav" fxShow="true" fxHide.lt-md="true">
+    <nav class="desktop-nav" >
       <a routerLink="/home" routerLinkActive="active-link" mat-button class="nav-link">
         <mat-icon>home</mat-icon>
         Home
@@ -160,7 +160,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-sidenav-container fxFlexFill>
+<mat-sidenav-container>
   <mat-sidenav #sidenav>
     <mat-nav-list>
       <button routerLink="/home" routerLinkActive="active-link" mat-menu-item>
@@ -202,9 +202,11 @@
     </mat-nav-list>
   </mat-sidenav>
 
-  <mat-sidenav-content fxFlexFill>
+  <mat-sidenav-content>
     <div class="container">
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+

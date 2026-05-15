@@ -452,8 +452,8 @@
                   <mat-icon>event_note</mat-icon>
                   <span>Research timeframe</span>
                 </div>
-                <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                <div class="report-date-row">
+                  <div>
                     <mat-form-field class="example-full-width" color="accent">
                       <mat-label>Research start date</mat-label>
                       <input matInput [matDatepicker]="picker" (dateChange)="onDateChangeReportstart($event)"
@@ -462,7 +462,7 @@
                       <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="50%" fxFlex.sm="50%" fxFlex.xs="100%">
+                  <div>
                     <mat-form-field class="example-full-width" color="accent">
                       <mat-label>Research end date</mat-label>
                       <input matInput [matDatepicker]="pickerend" (dateChange)="onDateChangeReportend($event)"
@@ -791,8 +791,8 @@
             <mat-expansion-panel class="issue-panel issue-panel--{{dec_data.severity | lowercase}}"
               (opened)="panelOpenState = true" (closed)="panelOpenState = false" cdkDrag
               (paste)="onPasteAttach($event, dec_data)">
-              <mat-expansion-panel-header fxLayout="row wrap" cdkDragHandle>
-                <mat-panel-title fxLayoutAlign="start">
+              <mat-expansion-panel-header cdkDragHandle>
+                <mat-panel-title>
                   <div style="white-space: nowrap;">
                     <mat-checkbox [checked]="checkcheckbox(i)" (change)="toggle(i,$event.checked)"
                       (click)="$event.stopPropagation()"></mat-checkbox>&nbsp;&nbsp;
@@ -800,10 +800,9 @@
                     &nbsp;&nbsp;{{dec_data.title}}
                   </div>
                 </mat-panel-title>
-                <mat-panel-description fxLayoutAlign="end center">
-                  <div>
-                    <div fxLayoutAlign="center start" fxFlex="100%" fxFlex.sm="100%" fxFlex.xs="100%" fxHide.xs
-                      fxHide.sm>
+                <mat-panel-description>
+                  <div class="issue-desc-row">
+                    <div class="issue-tags-hide-mobile">
                       <mat-chip-listbox style="white-space: nowrap;">
                         @for (tag of dec_data.tags.slice(0, 3); track tag) {
                         <mat-chip-option [selectable]="false" ngDefaultControl
@@ -813,28 +812,24 @@
                         }
                       </mat-chip-listbox>
                     </div>
-                  </div>
-                  &nbsp;
-                  @if (dec_data?.bounty) {
-                  <div fxHide.xs fxHide.sm>
-                    @if (dec_data?.bounty.length > 0) {
-                    <mat-icon title="Found bug-bounty program related to the issue"
-                      color="accent">attach_money</mat-icon>
+                    @if (dec_data?.bounty) {
+                    <div class="issue-hide-mobile">
+                      @if (dec_data?.bounty.length > 0) {
+                      <mat-icon title="Found bug-bounty program related to the issue"
+                        color="accent">attach_money</mat-icon>
+                      }
+                    </div>
                     }
-                  </div>
-                  }
-                  @if (dec_data?.status) {
-                  <div fxHide.xs fxHide.sm>
-                    <span class="status-chip status-chip--{{dec_data.status}}">
-                      @if (dec_data.status === 1) { Open }
-                      @if (dec_data.status === 2) { In Progress }
-                      @if (dec_data.status === 3) { Fixed }
-                      @if (dec_data.status === 4) { Won't Fix }
-                    </span>
-                  </div>
-                  }
-                  &nbsp;
-                  <div>
+                    @if (dec_data?.status) {
+                    <div class="issue-hide-mobile">
+                      <span class="status-chip status-chip--{{dec_data.status}}">
+                        @if (dec_data.status === 1) { Open }
+                        @if (dec_data.status === 2) { In Progress }
+                        @if (dec_data.status === 3) { Fixed }
+                        @if (dec_data.status === 4) { Won't Fix }
+                      </span>
+                    </div>
+                    }
                     @if (decryptedReportDataChanged) {
                     <button mat-icon-button
                       style="width: 30px; height: 30px; line-height: 5px; border-radius: 70%;padding: 0px;"
@@ -843,11 +838,11 @@
                       <mat-icon class="vertical-align-middle valign-issues-center padding-bottom-3">edit</mat-icon>
                     </button>
                     }
+                    @if (dec_data.files.length > 0) {
+                    <mat-icon title="Attached file" style="color:grey"
+                      class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
+                    }
                   </div>
-                  @if (dec_data.files.length > 0) {
-                  <mat-icon title="Attached file" style="color:grey"
-                    class="vertical-align-middle padding-bottom-3">attach_file</mat-icon>
-                  }
                 </mat-panel-description>
               </mat-expansion-panel-header>
               <mat-expansion-panel-header *cdkDragPlaceholder></mat-expansion-panel-header>
@@ -1023,8 +1018,7 @@
               </div>
               }
               <div class="issue-action-strip">
-                <button mat-stroked-button class="issue-action-btn" (click)="fileuploadInput.click()"
-                  title="Attach file">
+                <button class="sel-btn sel-btn--ghost" (click)="fileuploadInput.click()" title="Attach file">
                   <mat-icon>attach_file</mat-icon>Attach
                   <input type="file" #fileuploadInput id="file" accept=".*"
                     (change)="uploadAttach($event.target, dec_data)" style="display:none;" multiple>
@@ -1036,16 +1030,13 @@
                 </span>
                 }
                 <span class="issue-action-strip-spacer"></span>
-                <button mat-stroked-button class="issue-action-btn" (click)="copyIssueMarkdown(dec_data)"
-                  title="Copy issue as Markdown">
+                <button class="sel-btn sel-btn--ghost" (click)="copyIssueMarkdown(dec_data)" title="Copy issue as Markdown">
                   <mat-icon>content_copy</mat-icon>Copy MD
                 </button>
-                <button mat-stroked-button class="issue-action-btn" (click)="saveTemplate(dec_data)"
-                  title="Save issue as template">
+                <button class="sel-btn sel-btn--ghost" (click)="saveTemplate(dec_data)" title="Save issue as template">
                   <mat-icon>save_as</mat-icon>Save template
                 </button>
-                <button mat-stroked-button class="issue-action-btn issue-action-btn--danger"
-                  (click)="removeIssiue(dec_data)" title="Remove issue">
+                <button class="sel-btn sel-btn--danger" (click)="removeIssiue(dec_data)" title="Remove issue">
                   <mat-icon>delete_forever</mat-icon>Delete
                 </button>
               </div>
@@ -1058,41 +1049,34 @@
             <br>
             <mat-expansion-panel class="mat-elevation-z9" disabled>
               <mat-expansion-panel-header>
-                <mat-panel-title fxLayoutAlign="start center" style="margin-left: 13px;">
-                  <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
-                    settings</mat-icon>
-                  <div fxLayout="row wrap" fxLayoutGap="0px" class="example-full-width">
-                    <div fxLayoutAlign="start start" fxFlex="80%" fxFlex.sm="80%" fxFlex.xs="100%">
-                      <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                <mat-panel-title class="sel-panel-title">
+                  <mat-icon>settings</mat-icon>
+                  <div class="sel-actions-row">
+                    <div class="sel-actions-left">
+                      <button class="sel-btn sel-btn--accent" (click)="selectall()">
                         <mat-icon>done_all</mat-icon>
                         Select all
                       </button>
-                      &nbsp;
-                      <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                      <button class="sel-btn sel-btn--accent" (click)="deselectall()">
                         <mat-icon>done_all</mat-icon>
-                        Clear selected ({{ selectedIssues.length }})
+                        Clear ({{ selectedIssues.length }})
                       </button>
-                      &nbsp;
-                      <button mat-stroked-button color="accent" [routerLink]="[]"
-                        (click)="openissuesedit(selectedIssues)">
+                      <button class="sel-btn sel-btn--accent" (click)="openissuesedit(selectedIssues)">
                         <mat-icon>edit</mat-icon>
                         Edit ({{ selectedIssues.length }})
                       </button>
-                      &nbsp;
                       @if (selectedIssues.length >= 2) {
-                      <button mat-stroked-button color="accent" [routerLink]="[]"
-                        (click)="openissuesmerge(selectedIssues)">
+                      <button class="sel-btn sel-btn--accent" (click)="openissuesmerge(selectedIssues)">
                         <mat-icon>low_priority</mat-icon>
                         Merge ({{ selectedIssues.length }})
                       </button>
                       }
                     </div>
-                    <div fxLayoutAlign="end end" fxFlex="20%" fxFlex.sm="20%" fxFlex.xs="100%">
-                      <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)"
+                    <div class="sel-actions-right">
+                      <button class="sel-btn sel-btn--danger" (click)="removeSelecteditems(selectedIssues)"
                         [matMenuTriggerFor]="trewwertwe">
-                        <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon>
-                        Remove
-                        ({{ selectedIssues.length }})
+                        <mat-icon>remove_circle</mat-icon>
+                        Remove ({{ selectedIssues.length }})
                       </button>
                     </div>
                   </div>

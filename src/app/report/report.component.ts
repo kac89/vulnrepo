@@ -862,7 +862,12 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   canDeactivate() {
     if (this.youhaveunsavedchanges == true) {
-      return confirm("You have unsaved changes, Do you really want to leave?");
+      const confirmed = confirm("You have unsaved changes, Do you really want to leave?");
+      if (confirmed) {
+        this.youhaveunsavedchanges = false;
+        this.indexeddbService.updatechangesStatus(false);
+      }
+      return confirmed;
     }
     return true;
   }
@@ -1705,13 +1710,17 @@ Sample code here\n\
   }
 
   private applyImportResult(result: any[]) {
+    let importedCount = 0;
     result.forEach(eachObj => {
       if (eachObj.title !== '' && eachObj.title !== undefined && eachObj.cvss !== 'Active') {
         this.decryptedReportDataChanged.report_vulns.push(eachObj);
-        this.addtochangelog('Create issue: ' + eachObj.title);
+        importedCount++;
         this.afterDetectionNow();
       }
     });
+    if (importedCount > 0) {
+      this.addtochangelog('Imported x' + importedCount + ' issue' + (importedCount > 1 ? 's' : ''));
+    }
     this.doStats();
   }
 

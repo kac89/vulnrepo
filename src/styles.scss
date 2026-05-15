@@ -25,6 +25,20 @@ $dark-theme: mat.m2-define-dark-theme((color: (primary: $primary,
   @include mat.all-component-typographies($my-typography);
   @include mat.typography-hierarchy($my-typography);
 
+  // ── Severity palette ─────────────────────────────────────────────────────────
+  // Single source of truth consumed by all component stylesheets via var(--sev-*)
+  // and rgba(var(--sev-*-rgb), alpha) for transparency variants.
+  --sev-critical:     #ff4d6d;
+  --sev-critical-rgb: 255, 77, 109;
+  --sev-high:         #ff9a3c;
+  --sev-high-rgb:     255, 154, 60;
+  --sev-medium:       #f5d020;
+  --sev-medium-rgb:   245, 208, 32;
+  --sev-low:          #69f0ae;
+  --sev-low-rgb:      105, 240, 174;
+  --sev-info:         #60a5fa;
+  --sev-info-rgb:     96, 165, 250;
+
 }
 
 @include mat.elevation-classes();
@@ -57,6 +71,7 @@ body {
 .mat-drawer-container {
   background-color: #000;
   color: white;
+  height: 100%;
 }
 
 

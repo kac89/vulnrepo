@@ -43,10 +43,10 @@
               "crypto-js",
               "js-sha256",
               "uuid",
-              "xml2js",
               "rxjs-compat/Subject",
               "rxjs/Subject",
-              "rfdc"
+              "rfdc",
+              "buffer"
            ],
             "scripts": [],
             "extractLicenses": false,
