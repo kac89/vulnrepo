@@ -47,36 +47,107 @@ $accent-green: #69f0ae;
 }
 
 // Selection toolbar inside the bulk-edit expansion panel
+::ng-deep .mat-elevation-z9.mat-expansion-panel .mat-expansion-panel-header {
+  height: auto !important;
+  padding: 6px 16px !important;
+}
+
 .sel-panel-title {
-  display: flex;
+  display: flex !important;
   align-items: center;
-  margin-left: 13px;
   width: 100%;
+  padding: 4px 0;
+  gap: 10px;
+
+  > mat-icon {
+    flex-shrink: 0;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #69f0ae;
+  }
 }
 
 .sel-actions-row {
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
+  align-items: center;
+  flex: 1 1 0;
+  gap: 6px;
 }
 
 .sel-actions-left {
-  flex: 0 0 80%;
+  flex: 1 1 auto;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
-
-  @media (max-width: 599px) { flex: 0 0 100%; }
+  gap: 6px;
 }
 
 .sel-actions-right {
-  flex: 0 0 20%;
+  flex: 0 0 auto;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: center;
+}
 
-  @media (max-width: 599px) { flex: 0 0 100%; }
+// Toolbar action buttons (mirrors settings.component sh-btn)
+.sel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  border: 1px solid transparent;
+  line-height: 1;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  &:disabled { opacity: 0.38; cursor: not-allowed; }
+}
+
+.sel-btn--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.55);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.88);
+  }
+}
+
+.sel-btn--accent {
+  background: rgba(105, 240, 174, 0.1);
+  border-color: rgba(105, 240, 174, 0.22);
+  color: #69f0ae;
+
+  &:hover:not(:disabled) {
+    background: rgba(105, 240, 174, 0.17);
+    border-color: rgba(105, 240, 174, 0.38);
+  }
+}
+
+.sel-btn--danger {
+  background: rgba(183, 28, 28, 0.15);
+  border-color: rgba(183, 28, 28, 0.3);
+  color: #ef9a9a;
+
+  &:hover:not(:disabled) {
+    background: rgba(183, 28, 28, 0.25);
+    border-color: rgba(183, 28, 28, 0.5);
+  }
 }
 
 // ── Page wrapper ─────────────────────────────────────────────
@@ -2589,42 +2660,6 @@ mat-paginator {
 }
 
 .issue-action-strip-spacer { flex: 1; }
-
-.issue-action-btn {
-  height: 30px !important;
-  line-height: 30px !important;
-  font-size: 0.775rem !important;
-  padding: 0 12px !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  color: rgba(255, 255, 255, 0.6) !important;
-  border-radius: 6px !important;
-  gap: 4px;
-
-  mat-icon, .mat-icon {
-    font-size: 15px !important;
-    width: 15px !important;
-    height: 15px !important;
-    vertical-align: middle;
-    margin-right: 3px;
-  }
-
-  &:hover {
-    border-color: rgba(255, 255, 255, 0.32) !important;
-    color: rgba(255, 255, 255, 0.88) !important;
-    background: rgba(255, 255, 255, 0.04) !important;
-  }
-}
-
-.issue-action-btn--danger {
-  border-color: rgba(#f44336, 0.28) !important;
-  color: rgba(#f44336, 0.7) !important;
-
-  &:hover {
-    border-color: #f44336 !important;
-    color: #f44336 !important;
-    background: rgba(#f44336, 0.06) !important;
-  }
-}
 
 .issue-upload-hint {
   display: flex;

@@ -1018,8 +1018,7 @@
               </div>
               }
               <div class="issue-action-strip">
-                <button mat-stroked-button class="issue-action-btn" (click)="fileuploadInput.click()"
-                  title="Attach file">
+                <button class="sel-btn sel-btn--ghost" (click)="fileuploadInput.click()" title="Attach file">
                   <mat-icon>attach_file</mat-icon>Attach
                   <input type="file" #fileuploadInput id="file" accept=".*"
                     (change)="uploadAttach($event.target, dec_data)" style="display:none;" multiple>
@@ -1031,16 +1030,13 @@
                 </span>
                 }
                 <span class="issue-action-strip-spacer"></span>
-                <button mat-stroked-button class="issue-action-btn" (click)="copyIssueMarkdown(dec_data)"
-                  title="Copy issue as Markdown">
+                <button class="sel-btn sel-btn--ghost" (click)="copyIssueMarkdown(dec_data)" title="Copy issue as Markdown">
                   <mat-icon>content_copy</mat-icon>Copy MD
                 </button>
-                <button mat-stroked-button class="issue-action-btn" (click)="saveTemplate(dec_data)"
-                  title="Save issue as template">
+                <button class="sel-btn sel-btn--ghost" (click)="saveTemplate(dec_data)" title="Save issue as template">
                   <mat-icon>save_as</mat-icon>Save template
                 </button>
-                <button mat-stroked-button class="issue-action-btn issue-action-btn--danger"
-                  (click)="removeIssiue(dec_data)" title="Remove issue">
+                <button class="sel-btn sel-btn--danger" (click)="removeIssiue(dec_data)" title="Remove issue">
                   <mat-icon>delete_forever</mat-icon>Delete
                 </button>
               </div>
@@ -1054,40 +1050,33 @@
             <mat-expansion-panel class="mat-elevation-z9" disabled>
               <mat-expansion-panel-header>
                 <mat-panel-title class="sel-panel-title">
-                  <mat-icon style="margin-right: inherit;" class="vertical-align-middle padding-bottom-3" matSuffix>
-                    settings</mat-icon>
-                  <div class="sel-actions-row example-full-width">
+                  <mat-icon>settings</mat-icon>
+                  <div class="sel-actions-row">
                     <div class="sel-actions-left">
-                      <button mat-stroked-button color="accent" [routerLink]="[]" (click)="selectall()">
+                      <button class="sel-btn sel-btn--accent" (click)="selectall()">
                         <mat-icon>done_all</mat-icon>
                         Select all
                       </button>
-                      &nbsp;
-                      <button mat-stroked-button color="accent" [routerLink]="[]" (click)="deselectall()">
+                      <button class="sel-btn sel-btn--accent" (click)="deselectall()">
                         <mat-icon>done_all</mat-icon>
-                        Clear selected ({{ selectedIssues.length }})
+                        Clear ({{ selectedIssues.length }})
                       </button>
-                      &nbsp;
-                      <button mat-stroked-button color="accent" [routerLink]="[]"
-                        (click)="openissuesedit(selectedIssues)">
+                      <button class="sel-btn sel-btn--accent" (click)="openissuesedit(selectedIssues)">
                         <mat-icon>edit</mat-icon>
                         Edit ({{ selectedIssues.length }})
                       </button>
-                      &nbsp;
                       @if (selectedIssues.length >= 2) {
-                      <button mat-stroked-button color="accent" [routerLink]="[]"
-                        (click)="openissuesmerge(selectedIssues)">
+                      <button class="sel-btn sel-btn--accent" (click)="openissuesmerge(selectedIssues)">
                         <mat-icon>low_priority</mat-icon>
                         Merge ({{ selectedIssues.length }})
                       </button>
                       }
                     </div>
                     <div class="sel-actions-right">
-                      <button mat-stroked-button color="warn" (click)="removeSelecteditems(selectedIssues)"
+                      <button class="sel-btn sel-btn--danger" (click)="removeSelecteditems(selectedIssues)"
                         [matMenuTriggerFor]="trewwertwe">
-                        <mat-icon class="vertical-align-middle padding-bottom-3" matSuffix>remove_circle</mat-icon>
-                        Remove
-                        ({{ selectedIssues.length }})
+                        <mat-icon>remove_circle</mat-icon>
+                        Remove ({{ selectedIssues.length }})
                       </button>
                     </div>
                   </div>
