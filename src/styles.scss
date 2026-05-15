@@ -385,6 +385,134 @@ mat-toolbar.app-navbar {
   --mat-toolbar-container-background-color: transparent;
 }
 
+// ── Compact slate menu (aligns with .app-navbar toolbar look) ───
+.mat-mdc-menu-panel {
+  --mat-menu-container-color: rgba(20, 24, 28, 0.92);
+  --mat-menu-container-shape: 10px;
+  --mat-menu-item-label-text-size: 13px;
+  --mat-menu-item-label-text-weight: 500;
+  --mat-menu-item-icon-size: 16px;
+  --mat-menu-item-leading-spacing: 12px;
+  --mat-menu-item-trailing-spacing: 14px;
+
+  min-height: auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 1px 0 rgba(22, 191, 110, 0.10),
+    0 10px 28px rgba(0, 0, 0, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.32) !important;
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+
+  .mat-mdc-menu-content {
+    padding: 4px !important;
+  }
+
+  .mat-mdc-menu-item {
+    min-height: 34px !important;
+    height: 34px;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.82);
+    letter-spacing: 0.01em;
+    transition: background 160ms ease, color 160ms ease;
+
+    .mat-mdc-menu-item-text {
+      font-size: 13px;
+    }
+
+    .mat-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+      opacity: 0.78;
+      margin-right: 10px;
+      transition: opacity 160ms ease, color 160ms ease;
+    }
+
+    &:hover:not([disabled]) {
+      background: rgba(255, 255, 255, 0.06) !important;
+      color: #fff !important;
+
+      .mat-icon { opacity: 1; }
+    }
+
+    // routerLinkActive
+    &.active-link {
+      color: #16bf6e !important;
+      background: rgba(22, 191, 110, 0.10) !important;
+
+      .mat-icon { color: #16bf6e !important; opacity: 1; }
+    }
+
+    // submenu chevron
+    .mat-mdc-menu-submenu-icon {
+      color: rgba(255, 255, 255, 0.45);
+    }
+  }
+}
+
+// ── Compact slate sidenav (mobile drawer — matches toolbar look) ──
+.mat-sidenav {
+  min-width: 240px;
+  background: rgba(14, 18, 22, 0.96) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow:
+    1px 0 0 rgba(22, 191, 110, 0.10),
+    8px 0 28px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+
+  mat-nav-list,
+  .mat-mdc-nav-list {
+    padding: 6px !important;
+  }
+
+  // mat-menu-item directive is used inside mat-nav-list here
+  .mat-mdc-menu-item {
+    display: flex;
+    align-items: center;
+    min-height: 36px !important;
+    height: 36px;
+    border-radius: 6px;
+    margin: 1px 0;
+    padding: 0 12px !important;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    transition: background 160ms ease, color 160ms ease;
+
+    .mat-icon {
+      font-size: 17px !important;
+      width: 17px !important;
+      height: 17px !important;
+      line-height: 17px !important;
+      opacity: 0.78;
+      margin-right: 12px;
+      transition: opacity 160ms ease, color 160ms ease;
+    }
+
+    &:hover:not([disabled]) {
+      background: rgba(255, 255, 255, 0.06) !important;
+      color: #fff !important;
+
+      .mat-icon { opacity: 1; }
+    }
+
+    &.active-link {
+      color: #16bf6e !important;
+      background: rgba(22, 191, 110, 0.10) !important;
+
+      .mat-icon { color: #16bf6e !important; opacity: 1; }
+    }
+  }
+}
+
+// Stronger dim behind the dark drawer
+.mat-drawer-backdrop.mat-drawer-shown {
+  background: rgba(0, 0, 0, 0.55);
+}
+
 
 @keyframes rotate {
   0% {

@@ -3,34 +3,41 @@ mat-toolbar.app-navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(66, 66, 66, 0.85) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: none;
-  height: 56px;
-  padding: 0 12px;
+  background: rgba(20, 24, 28, 0.78) !important;
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 0 rgba(22, 191, 110, 0.08);
+  min-height: 48px;
+  height: 48px;
+  padding: 0 10px;
+
+  mat-toolbar-row {
+    min-height: 48px;
+    height: 48px;
+    padding: 0;
+  }
 }
 
 /* ── Logo ─────────────────────────────────────────────────── */
 .logo-link {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
   color: inherit;
-  padding-right: 16px;
+  padding-right: 12px;
 }
 
 .neon {
   position: relative;
   display: inline-block;
   color: transparent;
-  -webkit-text-stroke: 1.5px #16bf6e;
-  text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-  font-size: 15px;
+  -webkit-text-stroke: 1.25px #16bf6e;
+  text-shadow: 0 0 16px rgba(0, 255, 0, 0.45);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
 }
 
 .neon span {
@@ -179,7 +186,7 @@ mat-toolbar.app-navbar {
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 
   @media (max-width: 959px) { display: none; }
 }
@@ -192,45 +199,68 @@ mat-toolbar.app-navbar {
 }
 
 .nav-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 13.5px;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 0 12px !important;
-  border-radius: 8px !important;
-  height: 36px;
-  line-height: 36px;
-  color: rgba(255, 255, 255, 0.75) !important;
+  padding: 0 10px !important;
+  border-radius: 6px !important;
+  height: 32px;
+  line-height: 32px;
+  color: rgba(255, 255, 255, 0.78) !important;
   text-decoration: none;
   letter-spacing: 0.01em;
-  transition: background 200ms ease, color 200ms ease;
+  transition: background 180ms ease, color 180ms ease;
 
   mat-icon {
-    font-size: 17px;
-    height: 17px;
-    width: 17px;
-    line-height: 17px;
-    opacity: 0.7;
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    opacity: 0.85;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.07) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
     color: #fff !important;
   }
 
   &.active-link {
     color: #16bf6e !important;
-    background: rgba(22, 191, 110, 0.1) !important;
+    background: rgba(22, 191, 110, 0.08) !important;
 
     mat-icon { opacity: 1; }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 2px;
+      height: 2px;
+      border-radius: 2px;
+      background: #16bf6e;
+      box-shadow: 0 0 6px rgba(22, 191, 110, 0.55);
+    }
   }
 }
 
 .nav-more-btn {
-  color: rgba(255, 255, 255, 0.6);
-  width: 36px;
-  height: 36px;
+  --mdc-icon-button-state-layer-size: 32px;
+  --mdc-icon-button-icon-size: 18px;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  color: rgba(255, 255, 255, 0.65);
+
+  mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+  }
 
   &:hover { color: #fff; }
 }
@@ -288,13 +318,19 @@ mat-toolbar.app-navbar {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px 6px;
+  // Negative horizontal margins span past the 4px content padding so
+  // the bottom border meets the panel edges. Top margin pulls under
+  // the panel's rounded corner.
+  margin: -4px -4px 4px -4px;
+  padding: 10px 14px 8px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   cursor: default;
 
   mat-icon {
@@ -320,24 +356,24 @@ mat-toolbar.app-navbar {
 .social-links {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-left: 4px;
+  gap: 2px;
+  margin-left: 6px;
   padding-left: 8px;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .social-icon {
   display: flex;
   align-items: center;
-  padding: 6px;
-  border-radius: 8px;
-  transition: background 200ms ease, opacity 200ms ease;
-  opacity: 0.6;
+  padding: 5px;
+  border-radius: 6px;
+  transition: background 180ms ease, opacity 180ms ease;
+  opacity: 0.55;
 
   img { display: block; }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.06);
     opacity: 1;
   }
 }
