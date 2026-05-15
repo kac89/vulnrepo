@@ -1710,13 +1710,17 @@ Sample code here\n\
   }
 
   private applyImportResult(result: any[]) {
+    let importedCount = 0;
     result.forEach(eachObj => {
       if (eachObj.title !== '' && eachObj.title !== undefined && eachObj.cvss !== 'Active') {
         this.decryptedReportDataChanged.report_vulns.push(eachObj);
-        this.addtochangelog('Create issue: ' + eachObj.title);
+        importedCount++;
         this.afterDetectionNow();
       }
     });
+    if (importedCount > 0) {
+      this.addtochangelog('Imported x' + importedCount + ' issue' + (importedCount > 1 ? 's' : ''));
+    }
     this.doStats();
   }
 
