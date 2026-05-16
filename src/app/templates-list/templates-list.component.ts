@@ -12,7 +12,7 @@ import {
   trigger
 } from '@angular/animations';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SessionstorageserviceService } from "../sessionstorageservice.service"
 import { KeyVaultService } from '../key-vault.service';
 import { ApiService } from '../api.service';
@@ -30,7 +30,6 @@ export interface VulnsList {
 
 @Component({
   standalone: false,
-  //imports: [],
   selector: 'app-templates-list',
   templateUrl: './templates-list.component.html',
   styleUrls: ['./templates-list.component.scss'],
@@ -47,218 +46,113 @@ export interface VulnsList {
 })
 export class TemplatesListComponent implements OnInit {
 
-  displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve'];
-  dataSource = new MatTableDataSource<VulnsList[]>();
+  displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve', 'expand'];
+  dataSource = new MatTableDataSource<VulnsList>();
   getvulnlistStatus = '';
-  countvulns:any = [];
-  expandedElement: VulnsList | null;
+  countvulns: any[] = [];
+  filterValue = '';
   sourceSelect = 'VULNREPO';
-  reportTemplateList_int:any = [];
-  reportTemplateList:any = [];
-  local = [];
-  json = [];
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  reportTemplateList_int: any[] = [];
+  reportTemplateList: any[] = [];
+  local: any[] = [];
+  json: any[] = [];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  private readonly SOURCE_ASSETS: Record<string, string> = {
+    CWE:            '/assets/CWE_V.4.3.json',
+    MMOBILE:        '/assets/mobile-attack.json',
+    MENTERPRISE:    '/assets/enterprise-attack.json',
+    OWASPTOP2017:   '/assets/OWASPtop102017.json',
+    OWASPTOP2021:   '/assets/OWASPtop102021.json',
+    OWASPTOP10CICD: '/assets/OWASPtop10cicd.json',
+    OWASPTOP10k8s:  '/assets/OWASPtop10k8s.json',
+  };
 
   constructor(private http: HttpClient, public dialog: MatDialog, private indexeddbService: IndexeddbService,
     private apiService: ApiService, public sessionsub: SessionstorageserviceService,
     private keyVault: KeyVaultService) {
 
     this.getvulnlistStatus = 'Loading...';
-
-
   }
 
   ngOnInit() {
-
     this.gettemplates();
+  }
 
+  private setTableData(data: any[]) {
+    this.countvulns = data;
+    this.dataSource.data = data;
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.getvulnlistStatus = '';
+  }
+
+  applyFilter(value: string) {
+    this.filterValue = value;
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 
   gettemplates() {
-
     this.indexeddbService.retrieveReportTemplates().then(ret => {
       if (ret) {
         this.local = ret;
 
-        this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
+        this.http.get<any>('/assets/vulns.json?v=' + +new Date()).subscribe(res => {
           if (res) {
             this.json = res;
-
-            let xxx = [...this.local, ...this.json];
-            this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
-            this.reportTemplateList = this.dataSource.data;
-            this.countvulns = xxx;
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-            this.getvulnlistStatus = '';
-
+            const merged = [...this.local, ...this.json];
+            this.dataSource = new MatTableDataSource<VulnsList>(merged);
+            this.reportTemplateList = merged;
+            this.setTableData(merged);
             this.getAPITemplates();
           }
         });
-
       }
     });
-
-
   }
 
   getAPITemplates() {
-
     const localkey = this.keyVault.getApiVault();
-    if (localkey) {
-      //this.msg = 'API connection please wait...';
+    if (!localkey) return;
 
-      const vaultobj = JSON.parse(localkey);
+    const vaultobj = JSON.parse(localkey);
+    this.reportTemplateList_int = [];
 
-      vaultobj.forEach((element) => {
-
-        this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
-          this.reportTemplateList_int = [];
-          if (resp.length > 0) {
-            resp.forEach((ele) => {
-              ele.api = 'remote';
-              ele.apiurl = element.value;
-              ele.apikey = element.apikey;
-              ele.apiname = element.viewValue;
-            });
-            this.reportTemplateList_int.push(...resp);
-          }
-
-        }).then(() => {
-
-          let xxx = [...this.reportTemplateList, ...this.reportTemplateList_int];
-          this.dataSource = new MatTableDataSource<VulnsList[]>(xxx);
-          this.countvulns = xxx;
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-          this.getvulnlistStatus = '';
-
-          //this.msg = '';
-        }).catch(() => { });
-
-        //setTimeout(() => {
-        // console.log('hide progress timeout');
-        //this.msg = '';
-        //}, 10000);
-
-      });
-
-    }
+    vaultobj.forEach((element: any) => {
+      this.apiService.APISend(element.value, element.apikey, 'getreporttemplates', '').then(resp => {
+        if (resp.length > 0) {
+          resp.forEach((ele: any) => {
+            ele.api = 'remote';
+            ele.apiurl = element.value;
+            ele.apikey = element.apikey;
+            ele.apiname = element.viewValue;
+          });
+          this.reportTemplateList_int.push(...resp);
+        }
+      }).then(() => {
+        this.setTableData([...this.reportTemplateList, ...this.reportTemplateList_int]);
+      }).catch(() => { });
+    });
   }
 
   changeselect() {
-
-    if (this.sourceSelect === "VULNREPO") {
-
+    if (this.sourceSelect === 'VULNREPO') {
       this.getvulnlistStatus = 'Loading...';
       this.gettemplates();
-
-
-    } else if (this.sourceSelect === "CWE") {
-
-      this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/CWE_V.4.3.json?v=' + + new Date()).subscribe(res => {
-
-        this.dataSource.data = res;
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-
-      });
-
-
-    } else if (this.sourceSelect === "MMOBILE") {
-
-      this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/mobile-attack.json?v=' + + new Date()).subscribe(res => {
-
-        this.dataSource.data = res;
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-
-      });
-
-
-    } else if (this.sourceSelect === "MENTERPRISE") {
-
-      this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/enterprise-attack.json?v=' + + new Date()).subscribe(res => {
-
-        this.dataSource.data = res;
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-
-      });
-
-
-    } else if (this.sourceSelect === "OWASPTOP2017") {
-
-      this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/OWASPtop102017.json?v=' + + new Date()).subscribe(res => {
-
-        this.dataSource.data = res;
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-
-      });
-
-
-    } else if (this.sourceSelect === "OWASPTOP2021") {
-
-      this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/OWASPtop102021.json?v=' + + new Date()).subscribe(res => {
-
-        this.dataSource.data = res;
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-
-      });
-
-
-    } else if (this.sourceSelect === "OWASPTOP10CICD") {
-
-      this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/OWASPtop10cicd.json?v=' + + new Date()).subscribe(res => {
-
-        this.dataSource.data = res;
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-
-      });
-
-
-    } else if (this.sourceSelect === "OWASPTOP10k8s") {
-
-      this.getvulnlistStatus = 'Loading...';
-      this.http.get<any>('/assets/OWASPtop10k8s.json?v=' + + new Date()).subscribe(res => {
-
-        this.dataSource.data = res;
-        this.countvulns = res;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.getvulnlistStatus = '';
-
-      });
-
-
+      return;
     }
 
+    const assetPath = this.SOURCE_ASSETS[this.sourceSelect];
+    if (!assetPath) return;
+
+    this.getvulnlistStatus = 'Loading...';
+    this.http.get<any>(assetPath + '?v=' + +new Date()).subscribe(res => {
+      this.setTableData(res);
+    });
   }
 
   create_issue(): void {
-
     const dialogRef = this.dialog.open(DialogAddCustomTemplateComponent, {
       width: '600px',
       disableClose: false,
@@ -266,20 +160,14 @@ export class TemplatesListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The add custom template dialog was closed');
-
-
       if (result) {
-
-        console.log(result);
-
-        this.indexeddbService.saveReportTemplateinDB({ "title": result.title, "poc": "", "desc": result.desc, "severity": result.severity, "ref": result.ref, "cvss": result.cvss, "cvss_vector": result.cvss_vector, "cve": result.cve, "tags": result.tags });
-
+        this.indexeddbService.saveReportTemplateinDB({
+          title: result.title, poc: '', desc: result.desc, severity: result.severity,
+          ref: result.ref, cvss: result.cvss, cvss_vector: result.cvss_vector,
+          cve: result.cve, tags: result.tags
+        });
       }
-
       this.gettemplates();
     });
-
   }
-
 }
