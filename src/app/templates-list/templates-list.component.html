@@ -4,12 +4,12 @@
     <div class="tl-title-group">
       <mat-icon class="tl-title-icon">bug_report</mat-icon>
       <h1 class="tl-title">Templates List</h1>
-      <span class="tl-count-badge">{{ this.countvulns.length }}</span>
+      <span class="tl-count-badge">{{ countvulns.length }}</span>
     </div>
 
     <div class="tl-actions">
       @if (sourceSelect == 'VULNREPO') {
-        <button mat-stroked-button class="tl-add-btn" (click)="create_issue()">
+        <button class="tl-add-btn" (click)="create_issue()">
           <mat-icon>add</mat-icon>
           Add template
         </button>
@@ -37,6 +37,19 @@
       Templates are used when creating a report. Edit <code>/assets/vulns.json</code> and open a Pull Request to the <code>dev</code> branch to contribute.
     </p>
   }
+
+  <div class="tl-search-bar">
+    <div class="tl-search-filter">
+      <mat-icon class="tl-search-icon">search</mat-icon>
+      <input class="tl-search-input" type="text" [value]="filterValue"
+        (input)="applyFilter($any($event.target).value)" placeholder="Search by title, severity, CVE…">
+      @if (filterValue) {
+        <button class="tl-search-clear" (click)="applyFilter('')" title="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+  </div>
 
   <div class="tl-table-wrapper">
     <mat-paginator [pageSizeOptions]="[100, 500, 1000]" showFirstLastButtons class="tl-paginator"></mat-paginator>
@@ -72,6 +85,13 @@
       <ng-container matColumnDef="cve">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>CVE</th>
         <td mat-cell *matCellDef="let element" class="tl-cell-mono">{{ element.cve }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="expand">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" class="tl-cell-expand">
+          <mat-icon class="tl-expand-icon" [class.tl-expand-icon--open]="element.expanded">expand_more</mat-icon>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="expandedDetail">
