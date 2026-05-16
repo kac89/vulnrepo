@@ -14,7 +14,7 @@
     <!-- Status badge — single element, animated between states -->
     @if (show_status) {
       <div class="title-center" @statusSlide>
-        <div class="status-badge"
+        <div class="status-badge status-badge--compact"
           [@statusBadge]="enc_status ? 'decrypted' : 'encrypted'"
           [class.is-decrypted]="enc_status">
 

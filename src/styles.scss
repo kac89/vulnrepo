@@ -578,3 +578,9 @@ mat-toolbar.app-navbar {
     }
   }
 }
+
+// ── Templates-list source menu — active item highlight ───────────────────────
+.tl-source-menu .mat-mdc-menu-item.tl-menu-item--active {
+  color: #69f0ae !important;
+  background: rgba(105, 240, 174, 0.10) !important;
+}
