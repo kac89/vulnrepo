@@ -46,6 +46,21 @@ export interface VulnsList {
 })
 export class TemplatesListComponent implements OnInit {
 
+  readonly sources = [
+    { value: 'VULNREPO',       label: 'VULNRΞPO' },
+    { value: 'CWE',            label: 'CWE Research Concepts' },
+    { value: 'MENTERPRISE',    label: 'MITRE ATT&CK Enterprise' },
+    { value: 'MMOBILE',        label: 'MITRE ATT&CK Mobile' },
+    { value: 'OWASPTOP2025',   label: 'OWASP Top 10 2025' },
+    { value: 'OWASPTOP2021',   label: 'OWASP Top 10 2021' },
+    { value: 'OWASPTOP2017',   label: 'OWASP Top 10 2017' },
+    { value: 'OWASPTOP10CICD', label: 'OWASP Top 10 CI/CD' },
+    { value: 'OWASPTOP10k8s',  label: 'OWASP Kubernetes Top 10' },
+  ];
+  readonly sourceLabels: Record<string, string> = Object.fromEntries(
+    this.sources.map(s => [s.value, s.label])
+  );
+
   displayedColumns: string[] = ['title', 'severity', 'cvss', 'cve', 'expand'];
   dataSource = new MatTableDataSource<VulnsList>();
   getvulnlistStatus = '';
@@ -65,6 +80,7 @@ export class TemplatesListComponent implements OnInit {
     MENTERPRISE:    '/assets/enterprise-attack.json',
     OWASPTOP2017:   '/assets/OWASPtop102017.json',
     OWASPTOP2021:   '/assets/OWASPtop102021.json',
+    OWASPTOP2025:   '/assets/OWASPtop102025.json',
     OWASPTOP10CICD: '/assets/OWASPtop10cicd.json',
     OWASPTOP10k8s:  '/assets/OWASPtop10k8s.json',
   };
@@ -134,6 +150,11 @@ export class TemplatesListComponent implements OnInit {
         this.setTableData([...this.reportTemplateList, ...this.reportTemplateList_int]);
       }).catch(() => { });
     });
+  }
+
+  selectSource(value: string) {
+    this.sourceSelect = value;
+    this.changeselect();
   }
 
   changeselect() {

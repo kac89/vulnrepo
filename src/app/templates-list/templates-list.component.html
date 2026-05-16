@@ -14,19 +14,23 @@
           Add template
         </button>
       }
-      <mat-form-field class="tl-source-select" appearance="outline" subscriptSizing="dynamic">
-        <mat-label>Source</mat-label>
-        <mat-select disableRipple [(value)]="sourceSelect" (selectionChange)="changeselect()">
-          <mat-option value="VULNREPO">VULNRΞPO</mat-option>
-          <mat-option value="CWE">CWE Research Concepts</mat-option>
-          <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-          <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
-          <mat-option value="OWASPTOP2021">OWASP Top 10 2021</mat-option>
-          <mat-option value="OWASPTOP2017">OWASP Top 10 2017</mat-option>
-          <mat-option value="OWASPTOP10CICD">OWASP Top 10 CI/CD</mat-option>
-          <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <button class="tl-source-btn" [matMenuTriggerFor]="sourceMenu">
+        <mat-icon class="tl-source-btn-icon">layers</mat-icon>
+        <span class="tl-source-btn-text">
+          <span class="tl-source-label">Source</span>
+          <span class="tl-source-value">{{ sourceLabels[sourceSelect] }}</span>
+        </span>
+        <mat-icon class="tl-source-btn-caret">expand_more</mat-icon>
+      </button>
+
+      <mat-menu #sourceMenu="matMenu" panelClass="tl-source-menu">
+        @for (src of sources; track src.value) {
+          <button mat-menu-item [class.tl-menu-item--active]="sourceSelect === src.value"
+            (click)="selectSource(src.value)">
+            {{ src.label }}
+          </button>
+        }
+      </mat-menu>
     </div>
   </div>
 
