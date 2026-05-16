@@ -213,7 +213,7 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
     this.indexeddbService.retrieveReportTemplates().then(ret => {
       if (ret) {
         this.http.get<any>('/assets/vulns.json?v=' + + new Date()).subscribe(res => {
-          this.options = [...res, ...ret];
+          this.options = [...ret,...res];
           this.optionsv = this.options;
           this.getAPITemplates();
         });

@@ -421,7 +421,7 @@
         "title": "[Mobile] Insecure Input Validation",
         "poc": "",
         "desc": "Insecure Input Validation allows an attacker to modify or manipulate user-supplied input, which can cause SQL injections, cross-site scripting (XSS) vulnerabilities if the mobile application does not adequately sanitize user input.",
-        "severity": "High",
+        "severity": "Critical",
         "ref": "https://medium.com/mobile-penetration-testing/13-insecure-input-validation-part-3-595b1439cd07\nhttps://cwe.mitre.org/data/definitions/20.html",
         "cvss": "9.8",
         "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
