@@ -11,7 +11,7 @@ import { KeyVaultService } from './key-vault.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -77,6 +77,8 @@ export class AppComponent implements OnInit, OnDestroy {
   lockSecondsRemaining: number | null = null;
   private keyVaultSub: Subscription;
   private lockTimerSub: Subscription;
+  private lockWarningSub: Subscription;
+  private lockWarningSnackRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
   @HostListener('window:keydown.control.shift.y', ['$event'])
   GoToNewReport(event: KeyboardEvent) {
@@ -105,9 +107,39 @@ export class AppComponent implements OnInit, OnDestroy {
       })
     ).subscribe(secs => { this.lockSecondsRemaining = secs; });
 
+    this.lockWarningSub = this.keyVault.warning$.subscribe(show => {
+      if (show) {
+        this.showLockWarning();
+      } else {
+        this.dismissLockWarning();
+      }
+    });
+
     this.getunsavedchang = this.indexeddbService.getchangesStatus().subscribe(value => {
       this.status_unsaved = value;
     });
+  }
+
+  private showLockWarning(): void {
+    this.dismissLockWarning();
+    this.lockWarningSnackRef = this.snackBar.open(
+      'Auto-lock in 30 seconds',
+      'Stay unlocked',
+      { duration: 30000 }
+    );
+    this.lockWarningSnackRef.onAction().subscribe(() => {
+      this.keyVault.extendSession();
+    });
+    this.lockWarningSnackRef.afterDismissed().subscribe(() => {
+      this.lockWarningSnackRef = null;
+    });
+  }
+
+  private dismissLockWarning(): void {
+    if (this.lockWarningSnackRef) {
+      this.lockWarningSnackRef.dismiss();
+      this.lockWarningSnackRef = null;
+    }
   }
 
   ngOnInit() {
@@ -179,6 +211,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.getunsavedchang.unsubscribe();
     if (this.keyVaultSub) this.keyVaultSub.unsubscribe();
     if (this.lockTimerSub) this.lockTimerSub.unsubscribe();
+    if (this.lockWarningSub) this.lockWarningSub.unsubscribe();
+    this.dismissLockWarning();
   }
 
   formatLockTimer(secs: number): string {

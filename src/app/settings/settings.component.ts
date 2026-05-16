@@ -77,6 +77,15 @@ export class SettingsComponent implements OnInit {
   ollamaurlinput = new UntypedFormControl();
 
   keyVaultMode: KeyVaultMode = 'memory';
+  lockOnHidden = true;
+  idleMinutes = 15;
+  readonly idleMinuteOptions = [
+    { value: 5,  label: '5 minutes' },
+    { value: 15, label: '15 minutes' },
+    { value: 30, label: '30 minutes' },
+    { value: 60, label: '1 hour' },
+    { value: 0,  label: 'Never (until reload)' },
+  ];
 
   vaultList:any = [];
   reportProfileList:any = [];
@@ -133,6 +142,8 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
 
     this.keyVaultMode = this.keyVault.mode;
+    this.lockOnHidden = this.keyVault.lockOnHidden;
+    this.idleMinutes = this.keyVault.idleMinutes;
     this.getVault();
     this.loadVectors();
     this.loadStorageStats();
@@ -156,6 +167,16 @@ export class SettingsComponent implements OnInit {
   setKeyVaultMode(newMode: KeyVaultMode): void {
     this.keyVault.setMode(newMode);
     this.keyVaultMode = this.keyVault.mode;
+  }
+
+  setLockOnHidden(enabled: boolean): void {
+    this.keyVault.setLockOnHidden(enabled);
+    this.lockOnHidden = this.keyVault.lockOnHidden;
+  }
+
+  setIdleMinutes(minutes: number): void {
+    this.keyVault.setIdleMinutes(minutes);
+    this.idleMinutes = this.keyVault.idleMinutes;
   }
 
   foundvault(bool: boolean): boolean {

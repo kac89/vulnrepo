@@ -102,7 +102,7 @@
               <mat-radio-button value="memory" color="accent">
                 <div class="security-option">
                   <span class="security-option-label">Secure &mdash; Memory only <span class="security-badge security-badge--secure">Default</span></span>
-                  <span class="security-option-desc">Keys live only in JavaScript memory. Automatically wiped on tab switch, 15-minute idle, or page reload.</span>
+                  <span class="security-option-desc">Keys live only in JavaScript memory. Wiped on page reload and according to the auto-lock triggers below.</span>
                 </div>
               </mat-radio-button>
               <mat-radio-button value="session" color="warn">
@@ -112,6 +112,46 @@
                 </div>
               </mat-radio-button>
             </mat-radio-group>
+
+            @if (keyVaultMode === 'memory') {
+              <div class="autolock-panel">
+                <div class="autolock-panel-title">
+                  <mat-icon>lock_clock</mat-icon>
+                  <span>Auto-lock triggers</span>
+                </div>
+
+                <div class="autolock-row">
+                  <div class="autolock-row-text">
+                    <span class="autolock-row-label">Lock when tab loses focus</span>
+                    <span class="autolock-row-desc">Wipe the key the moment the tab is hidden. Turn this off if you switch tabs frequently.</span>
+                  </div>
+                  <mat-slide-toggle color="accent"
+                    [checked]="lockOnHidden"
+                    (change)="setLockOnHidden($event.checked)"></mat-slide-toggle>
+                </div>
+
+                <div class="autolock-row">
+                  <div class="autolock-row-text">
+                    <span class="autolock-row-label">Lock after inactivity</span>
+                    <span class="autolock-row-desc">A warning appears 30 seconds before the lock fires so you can extend the session.</span>
+                  </div>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" color="accent" class="autolock-select">
+                    <mat-select [value]="idleMinutes" (selectionChange)="setIdleMinutes($event.value)">
+                      @for (opt of idleMinuteOptions; track opt.value) {
+                        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                @if (!lockOnHidden && idleMinutes === 0) {
+                  <div class="autolock-warning">
+                    <mat-icon>warning_amber</mat-icon>
+                    <span>Both triggers are disabled — the key will persist in memory until you reload or close the tab.</span>
+                  </div>
+                }
+              </div>
+            }
           </div>
         </div>
 
