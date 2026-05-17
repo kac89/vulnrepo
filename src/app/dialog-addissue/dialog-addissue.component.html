@@ -12,25 +12,23 @@
       </div>
     </div>
     <div class="header-right">
-      <mat-form-field appearance="outline" color="accent" class="source-select-field">
-        <mat-label>Templates source</mat-label>
-        <mat-select [(value)]="sourceSelect" (selectionChange)="changeselect()" [disabled]="freeztype">
-          <mat-option value="VULNREPO"><img width="16" height="16" src="/favicon-32x32.png" style="vertical-align:middle;margin-right:6px"> VULNRΞPO</mat-option>
-          <mat-option value="CVE"><mat-icon color="accent" style="font-size:16px;vertical-align:middle;margin-right:4px">public</mat-icon> CVE — Common Vulnerabilities</mat-option>
-          <mat-option value="GHSA"><mat-icon color="accent" style="font-size:16px;vertical-align:middle;margin-right:4px">public</mat-icon> GHSA — GitHub Advisory</mat-option>
-          <mat-option value="AIVULNS">AI Systems Issues</mat-option>
-          <mat-option value="CWE">CWE Research Concepts</mat-option>
-          <mat-option value="OWASPTOP2025">OWASP Top 10 2025</mat-option>
-          <mat-option value="OWASPTOP2021">OWASP Top 10 2021</mat-option>
-          <mat-option value="OWASPTOP2017">OWASP Top 10 2017</mat-option>
-          <mat-option value="OWASPTOP10CICD">OWASP CI/CD Top 10</mat-option>
-          <mat-option value="OWASPTOP10k8s">OWASP Kubernetes Top 10</mat-option>
-          <mat-option value="OWASP_mobile">OWASP Mobile Top 10 2024</mat-option>
-          <mat-option value="PCIDSS">PCI DSS Requirements v3.2.1</mat-option>
-          <mat-option value="MENTERPRISE">MITRE ATT&CK Enterprise</mat-option>
-          <mat-option value="MMOBILE">MITRE ATT&CK Mobile</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <button class="source-select-btn" [matMenuTriggerFor]="sourceMenu" [disabled]="freeztype">
+        <mat-icon class="source-select-btn-icon">layers</mat-icon>
+        <span class="source-select-btn-text">
+          <span class="source-select-label">Templates source</span>
+          <span class="source-select-value">{{ sourceLabels[sourceSelect] }}</span>
+        </span>
+        <mat-icon class="source-select-btn-caret">expand_more</mat-icon>
+      </button>
+
+      <mat-menu #sourceMenu="matMenu" panelClass="source-select-menu">
+        @for (src of sources; track src.value) {
+          <button mat-menu-item [class.source-menu-item--active]="sourceSelect === src.value"
+            (click)="selectSource(src.value)">
+            {{ src.label }}
+          </button>
+        }
+      </mat-menu>
     </div>
   </div>
 
