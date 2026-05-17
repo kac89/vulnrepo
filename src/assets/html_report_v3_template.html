@@ -65,7 +65,7 @@
 		   RESET & BASE
 		   ================================================================ */
 		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-		html { scroll-behavior: smooth; }
+		html { scroll-behavior: smooth; scroll-padding-top: 56px; }
 
 		body {
 			font-family: var(--body);
@@ -426,11 +426,46 @@
 		.stat-cell.s-info .stat-l { color: var(--blue); }
 
 		.chart-area {
-			display: flex; gap: 24px; align-items: center; margin-bottom: 22px;
+			display: flex; gap: 18px; flex-direction: column; margin-bottom: 22px;
 			background: var(--bg2); border: 1px solid var(--border);
 			border-radius: var(--r2); padding: 18px 20px;
 		}
-		.chart-box { width: 160px; flex-shrink: 0; }
+
+		.sev-bar-wrap { width: 100%; }
+		.sev-bar {
+			display: flex;
+			height: 30px;
+			border-radius: var(--r);
+			overflow: hidden;
+			background: var(--bg3);
+			border: 1px solid var(--border);
+			margin-bottom: 12px;
+		}
+		.sev-seg {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-family: var(--mono);
+			font-size: 11px;
+			font-weight: 700;
+			color: #000;
+			min-width: 0;
+			padding: 0 6px;
+			transition: flex-basis .4s ease;
+		}
+		.sev-seg.sev-seg-empty {
+			color: var(--text3);
+			background: var(--bg3);
+			flex: 1;
+			font-weight: 500;
+		}
+		.sev-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+		.sev-legend-item {
+			display: flex; align-items: center; gap: 6px;
+			font-family: var(--mono); font-size: 10.5px; color: var(--text2);
+		}
+		.sev-legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+		.sev-legend-n { color: var(--text); font-weight: 600; }
 
 		/* ================================================================
 		   RISK MATRIX
@@ -516,6 +551,7 @@
 		}
 		.fpill:hover { background: var(--bg3); color: var(--text); }
 		.fpill.on { background: var(--bg4); border-color: var(--border3); color: var(--text); }
+		.fpill-sep { width: 1px; align-self: stretch; background: var(--border2); margin: 2px 3px; }
 		.fpill.fp-crit.on { background:rgba(255,45,85,.12); color:var(--red); border-color:rgba(255,45,85,.3); }
 		.fpill.fp-high.on { background:rgba(255,104,32,.12); color:var(--orange); border-color:rgba(255,104,32,.3); }
 		.fpill.fp-med.on  { background:rgba(240,192,0,.12); color:var(--yellow); border-color:rgba(240,192,0,.3); }
@@ -648,7 +684,10 @@
 			display: flex; align-items: center; justify-content: center;
 			font-family: var(--display); font-weight: 800; font-size: 16px; color: #000;
 			flex-shrink: 0;
+			overflow: hidden;
 		}
+		.researcher-avatar-img { background: var(--bg3); padding: 0; }
+		.researcher-avatar-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 		.researcher-name { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--text); }
 		.researcher-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
@@ -850,13 +889,23 @@
 		.form-control:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 2px rgba(0,232,122,.15) !important; }
 		.col-form-label { color: var(--text2) !important; font-family: var(--mono) !important; font-size: 11px !important; }
 
+		.pass-input-wrap { position: relative; margin-top: 6px; }
+		.pass-input-wrap .form-control { padding-right: 40px !important; width: 100%; }
+		.pass-reveal-btn {
+			position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+			background: transparent; border: none; color: var(--text3);
+			cursor: pointer; padding: 5px; line-height: 0;
+			border-radius: 4px; transition: color .15s, background .15s;
+		}
+		.pass-reveal-btn:hover { color: var(--text); background: var(--bg3); }
+		.pass-reveal-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
 		/* ================================================================
 		   RESPONSIVE
 		   ================================================================ */
 		@media (max-width: 900px) {
 			.app-shell { grid-template-columns: 1fr; }
 			.sidebar { position: static; }
-			.chart-area { flex-direction: column; }
 		}
 
 		@media (max-width: 600px) {
@@ -1116,7 +1165,10 @@
 				</div>
 
 				<div class="chart-area">
-					<div class="chart-box"><canvas id="issueChart"></canvas></div>
+					<div class="sev-bar-wrap">
+						<div class="sev-bar" id="sev-bar" role="img" aria-label="Severity distribution"></div>
+						<div class="sev-legend" id="sev-legend"></div>
+					</div>
 					<p style="font-size:12.5px;color:var(--text2);line-height:1.7;margin:0;">
 						Risk is rated using a custom-tailored version of the
 						<a href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology" target="_blank">OWASP Risk Rating Methodology</a>.
@@ -1173,6 +1225,9 @@
 						<button class="fpill fp-med"  id="fp-med"  onclick="vrSetFpill('Medium',this)">Med</button>
 						<button class="fpill fp-low"  id="fp-low"  onclick="vrSetFpill('Low',this)">Low</button>
 						<button class="fpill fp-info" id="fp-info" onclick="vrSetFpill('Info',this)">Info</button>
+						<span class="fpill-sep" aria-hidden="true"></span>
+						<button class="fpill" type="button" onclick="vrExpandAll()" title="Expand all issues">Expand</button>
+						<button class="fpill" type="button" onclick="vrCollapseAll()" title="Collapse all issues">Collapse</button>
 					</div>
 				</div>
 
@@ -1224,22 +1279,28 @@
 
 <!-- PASSWORD MODAL -->
 <div class="modal fade" id="passprompt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-	role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	role="dialog" aria-modal="true" aria-labelledby="passpromptTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" style="display:flex;align-items:center;gap:8px;" id="exampleModalLongTitle">
+				<h5 class="modal-title" style="display:flex;align-items:center;gap:8px;" id="passpromptTitle">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
 					Report is encrypted
 				</h5>
 			</div>
 			<div class="modal-body">
 				<label for="inputPassword" class="col-form-label">Security key</label>
-				<input type="password" class="form-control" id="inputPassword" style="width:100%;margin-top:6px;"><br>
-				<div class="wrongpass" style="display:none;"><span class="badge bg-danger">Wrong security key</span></div>
+				<div class="pass-input-wrap">
+					<input type="password" class="form-control" id="inputPassword" autocomplete="current-password" aria-describedby="wrongpass-msg">
+					<button type="button" class="pass-reveal-btn" id="pass-reveal" aria-label="Show password" onclick="vrTogglePass()">
+						<svg class="pass-icon pass-icon-eye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+						<svg class="pass-icon pass-icon-eye-off" style="display:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+					</button>
+				</div>
+				<div class="wrongpass" id="wrongpass-msg" role="alert" style="display:none;margin-top:10px;"><span class="badge bg-danger">Wrong security key</span></div>
 			</div>
 			<div class="modal-footer">
-				<button class="tbtn" style="border-color:var(--border3);">Decrypt</button>
+				<button type="button" class="tbtn" id="decrypt-btn" style="border-color:var(--border3);">Decrypt</button>
 			</div>
 		</div>
 	</div>
@@ -1251,9 +1312,13 @@
      ============================================================ -->
 <script>
 	/* THEME */
+	function vrResolveTheme() {
+		var saved = localStorage.getItem('vr-theme');
+		if (saved === 'dark' || saved === 'light') return saved;
+		return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+	}
 	(function () {
-		var saved = localStorage.getItem('vr-theme') || 'light';
-		if (saved !== 'dark') document.getElementById('vr-body').classList.add('light-mode');
+		if (vrResolveTheme() !== 'dark') document.getElementById('vr-body').classList.add('light-mode');
 	})();
 
 	function vrSetTheme(t) {
@@ -1270,13 +1335,33 @@
 			btnL.classList.remove('active');
 		}
 		localStorage.setItem('vr-theme', t);
-		if (window._vrChart) window._vrChart.update();
+	}
+
+	/* PASSWORD REVEAL TOGGLE */
+	function vrTogglePass() {
+		var inp = document.getElementById('inputPassword');
+		var btn = document.getElementById('pass-reveal');
+		if (!inp || !btn) return;
+		var eye    = btn.querySelector('.pass-icon-eye');
+		var eyeOff = btn.querySelector('.pass-icon-eye-off');
+		if (inp.type === 'password') {
+			inp.type = 'text';
+			btn.setAttribute('aria-label', 'Hide password');
+			if (eye)    eye.style.display = 'none';
+			if (eyeOff) eyeOff.style.display = '';
+		} else {
+			inp.type = 'password';
+			btn.setAttribute('aria-label', 'Show password');
+			if (eye)    eye.style.display = '';
+			if (eyeOff) eyeOff.style.display = 'none';
+		}
 	}
 
 	/* ISSUE COLLAPSE TOGGLE */
 	function toggleIssue(header) {
 		var body = header.nextElementSibling;
 		var icon = header.querySelector('.toggle-icon');
+		var card = header.closest('.issue-card');
 		var isOpen = !body.classList.contains('hidden');
 		if (isOpen) {
 			body.classList.add('hidden');
@@ -1286,8 +1371,49 @@
 			body.classList.remove('hidden');
 			icon.classList.add('open');
 			header.classList.remove('collapsed');
+			if (card && card.id && window.history && history.replaceState) {
+				history.replaceState(null, '', '#' + card.id);
+			}
 		}
 	}
+
+	/* EXPAND / COLLAPSE ALL */
+	function vrSetAllIssues(open) {
+		document.querySelectorAll('.report_vulns .issue-card').forEach(function (card) {
+			var body = card.querySelector('.issue-body');
+			var header = card.querySelector('.issue-header');
+			var icon = card.querySelector('.toggle-icon');
+			if (!body || !header) return;
+			if (open) {
+				body.classList.remove('hidden');
+				if (icon) icon.classList.add('open');
+				header.classList.remove('collapsed');
+			} else {
+				body.classList.add('hidden');
+				if (icon) icon.classList.remove('open');
+				header.classList.add('collapsed');
+			}
+		});
+	}
+	function vrExpandAll()   { vrSetAllIssues(true); }
+	function vrCollapseAll() { vrSetAllIssues(false); }
+
+	/* OPEN TARGETED ISSUE FROM URL HASH */
+	function vrOpenFromHash() {
+		var h = window.location.hash;
+		if (!h || !/^#issue-\d+$/.test(h)) return;
+		var card = document.querySelector(h);
+		if (!card) return;
+		var body = card.querySelector('.issue-body');
+		var header = card.querySelector('.issue-header');
+		var icon = card.querySelector('.toggle-icon');
+		if (body && body.classList.contains('hidden')) {
+			body.classList.remove('hidden');
+			if (icon) icon.classList.add('open');
+			if (header) header.classList.remove('collapsed');
+		}
+	}
+	window.addEventListener('hashchange', vrOpenFromHash);
 
 	/* ISSUE FILTER */
 	var _vrActiveSev = 'all';
@@ -1401,10 +1527,13 @@
 		$('.list_researcher').hide();
 		$('.list_copyright').hide();
 
-		var saved = localStorage.getItem('vr-theme') || 'light';
+		var saved = (typeof vrResolveTheme === 'function') ? vrResolveTheme() : (localStorage.getItem('vr-theme') || 'light');
 		if (saved !== 'dark') {
 			$('#vr-btn-light').addClass('active');
 			$('#vr-btn-dark').removeClass('active');
+		} else {
+			$('#vr-btn-dark').addClass('active');
+			$('#vr-btn-light').removeClass('active');
 		}
 
 		let locale = navigator.language || 'en-GB';
@@ -1425,12 +1554,17 @@
 				if (localkey) {
 					decodeAES(obj, localkey).then(function(xx) { if (xx) { resolve(xx); } });
 				} else {
+					$('#passprompt').on('shown.bs.modal', function () {
+						var ip = document.getElementById('inputPassword');
+						if (ip) ip.focus();
+					});
 					$('#passprompt').modal('show');
 					$('#passprompt').on('keypress', function (event) {
 						var keycode = (event.keyCode ? event.keyCode : event.which);
-						if (keycode == '13') { $('#passprompt .tbtn').click(); }
+						if (keycode == '13') { $('#decrypt-btn').click(); }
 					});
-					$('#passprompt .tbtn').click(function () {
+					$('#inputPassword').on('input', function () { $('.wrongpass').hide(); });
+					$('#decrypt-btn').click(function () {
 						decodeAES(obj, $('#inputPassword').val()).then(function(xx) {
 							if (xx) { resolve(xx); } else { $('.wrongpass').show(); }
 						});
@@ -1469,6 +1603,14 @@
 
 		function escapeAttr(val) {
 			return DOMPurify.sanitize(String(val), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).replace(/"/g, '&quot;');
+		}
+
+		function linkifyCves(text) {
+			var safe = DOMPurify.sanitize(String(text), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+			return safe.replace(/CVE-\d{4}-\d{4,7}/gi, function (m) {
+				var id = m.toUpperCase();
+				return '<a href="https://nvd.nist.gov/vuln/detail/' + id + '" target="_blank" rel="noopener noreferrer">' + id + '</a>';
+			});
 		}
 
 		function filetype(type, title, data, isembed) {
@@ -1531,6 +1673,17 @@
 			var parts = name.trim().split(' ');
 			if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
 			return name.substring(0,2).toUpperCase();
+		}
+
+		function buildAvatar(name, avatarUrl) {
+			if (avatarUrl) {
+				var proto = '';
+				try { proto = decodeURIComponent(unescape(avatarUrl)).replace(/[^\w:]/g, '').toLowerCase(); } catch (e) {}
+				if (proto.indexOf('javascript:') !== 0 && proto.indexOf('vbscript:') !== 0) {
+					return '<div class="researcher-avatar researcher-avatar-img"><img src="' + escapeAttr(avatarUrl) + '" alt="' + escapeAttr(name || '') + '"></div>';
+				}
+			}
+			return '<div class="researcher-avatar">' + DOMPurify.sanitize(getInitials(name)) + '</div>';
 		}
 
 		/* ---- MAIN REPORT GENERATOR ---- */
@@ -1718,7 +1871,7 @@
 				}
 
 				const cveBlock = (!obj.report_settings.report_remove_issuecve && element.cve) ?
-					`<div class="ib-block"><div class="ib-lbl">CVE</div><div class="ib-val">${DOMPurify.sanitize(element.cve)}</div></div>` : '';
+					`<div class="ib-block"><div class="ib-lbl">CVE</div><div class="ib-val">${linkifyCves(element.cve)}</div></div>` : '';
 
 				const cvssBlock = (!obj.report_settings.report_remove_issuecvss && element.cvss) ?
 					`<div class="ib-block"><div class="ib-lbl">CVSS</div><div class="ib-val">${DOMPurify.sanitize(element.cvss)}</div></div>` : '';
@@ -1780,6 +1933,13 @@
 			}
 			initPocLineNumbers();
 
+			/* If page was loaded with #issue-N, ensure it's open and in view after late render */
+			if (/^#issue-\d+$/.test(window.location.hash)) {
+				vrOpenFromHash();
+				var target = document.querySelector(window.location.hash);
+				if (target) setTimeout(function () { target.scrollIntoView(); }, 0);
+			}
+
 			/* SEVERITY COUNTS */
 			const critical = obj.report_vulns.filter(function(el) { return el.severity === 'Critical'; });
 			const high     = obj.report_vulns.filter(function(el) { return el.severity === 'High'; });
@@ -1801,22 +1961,32 @@
 			$('#sbf-low').css('width',  Math.round(low.length     / total * 100) + '%');
 			$('#sbf-info').css('width', Math.round(info.length    / total * 100) + '%');
 
-			/* CHART */
-			const ctx = document.getElementById('issueChart');
-			window._vrChart = new Chart(ctx, {
-				type: "pie",
-				data: {
-					labels: ["Critical", "High", "Medium", "Low", "Info"],
-					datasets: [{
-						backgroundColor: ["#ff2d55", "#ff6820", "#f0c000", "#00e87a", "#4a9eff"],
-						data: [critical.length, high.length, medium.length, low.length, info.length]
-					}]
-				},
-				options: {
-					responsive: true,
-					plugins: { legend: { display: false } }
+			/* SEVERITY BAR */
+			const sevBarData = [
+				{ label: 'Critical', n: critical.length, color: '#ff2d55' },
+				{ label: 'High',     n: high.length,     color: '#ff6820' },
+				{ label: 'Medium',   n: medium.length,   color: '#f0c000' },
+				{ label: 'Low',      n: low.length,      color: '#00e87a' },
+				{ label: 'Info',     n: info.length,     color: '#4a9eff' }
+			];
+			const sevBarTotal = sevBarData.reduce(function (s, d) { return s + d.n; }, 0);
+			const sevBarEl = document.getElementById('sev-bar');
+			const sevLegendEl = document.getElementById('sev-legend');
+			if (sevBarEl) {
+				if (sevBarTotal === 0) {
+					sevBarEl.innerHTML = '<div class="sev-seg sev-seg-empty">No findings</div>';
+				} else {
+					sevBarEl.innerHTML = sevBarData.filter(function (d) { return d.n > 0; }).map(function (d) {
+						var pct = (d.n / sevBarTotal * 100).toFixed(1);
+						return '<div class="sev-seg" style="flex:' + d.n + ' 0 0;background:' + d.color + ';" title="' + d.label + ': ' + d.n + ' (' + pct + '%)">' + d.n + '</div>';
+					}).join('');
 				}
-			});
+			}
+			if (sevLegendEl) {
+				sevLegendEl.innerHTML = sevBarData.map(function (d) {
+					return '<div class="sev-legend-item"><span class="sev-legend-dot" style="background:' + d.color + ';"></span><span>' + d.label + '</span><span class="sev-legend-n">' + d.n + '</span></div>';
+				}).join('');
+			}
 
 			/* SUMMARY */
 			if (obj.report_summary !== "") {
@@ -1830,10 +2000,10 @@
 			var researcher_data = "";
 			for (let index = 0; index < obj.researcher.length; ++index) {
 				const element = obj.researcher[index];
-				const initials = getInitials(element.reportername);
+				const avatarHtml = buildAvatar(element.reportername, element.reporteravatar);
 				researcher_data += `
 				<div class="researcher-card">
-					<div class="researcher-avatar">${initials}</div>
+					${avatarHtml}
 					<div>
 						<div class="researcher-name">${DOMPurify.sanitize(element.reportername)}</div>
 						<div class="researcher-meta">Security Researcher</div>
