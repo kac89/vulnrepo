@@ -90,6 +90,25 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
 
   err_msg: string;
   sourceSelect = 'VULNREPO';
+  readonly sources = [
+    { value: 'VULNREPO',       label: 'VULNRΞPO' },
+    { value: 'CVE',            label: 'CVE — Common Vulnerabilities' },
+    { value: 'GHSA',           label: 'GHSA — GitHub Advisory' },
+    { value: 'AIVULNS',        label: 'AI Systems Issues' },
+    { value: 'CWE',            label: 'CWE Research Concepts' },
+    { value: 'OWASPTOP2025',   label: 'OWASP Top 10 2025' },
+    { value: 'OWASPTOP2021',   label: 'OWASP Top 10 2021' },
+    { value: 'OWASPTOP2017',   label: 'OWASP Top 10 2017' },
+    { value: 'OWASPTOP10CICD', label: 'OWASP CI/CD Top 10' },
+    { value: 'OWASPTOP10k8s',  label: 'OWASP Kubernetes Top 10' },
+    { value: 'OWASP_mobile',   label: 'OWASP Mobile Top 10 2024' },
+    { value: 'PCIDSS',         label: 'PCI DSS Requirements v3.2.1' },
+    { value: 'MENTERPRISE',    label: 'MITRE ATT&CK Enterprise' },
+    { value: 'MMOBILE',        label: 'MITRE ATT&CK Mobile' },
+  ];
+  readonly sourceLabels: Record<string, string> = Object.fromEntries(
+    this.sources.map(s => [s.value, s.label])
+  );
   show = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   announcer = inject(LiveAnnouncer);
@@ -375,6 +394,12 @@ export class DialogAddissueComponent implements OnInit, AfterViewInit {
 
   displayFn(template?: Vulns): string | undefined {
     return template ? template.title : undefined;
+  }
+
+  selectSource(value: string) {
+    if (this.freeztype) return;
+    this.sourceSelect = value;
+    this.changeselect();
   }
 
   changeselect() {
