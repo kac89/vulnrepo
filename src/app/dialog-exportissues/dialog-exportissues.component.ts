@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CryptoUtilsService } from '../crypto-utils.service';
+import { UtilsService } from '../utils.service';
 
 interface Exportsource {
   value: string;
@@ -48,7 +49,8 @@ export class DialogExportissuesComponent implements OnInit {
   ];
   // @ts-ignore
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogExportissuesComponent>,
-    private cryptoUtils: CryptoUtilsService) { }
+    private cryptoUtils: CryptoUtilsService,
+    private utilsService: UtilsService) { }
 
     ngOnInit() {
 
@@ -104,15 +106,10 @@ export class DialogExportissuesComponent implements OnInit {
       return ret;
     }
 
-    function dataownload(datajson, filename) {
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(datajson));
-      element.setAttribute('download', 'data' + String(filename) + '.json');
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    }
+    const dataownload = (datajson: string, filename: string | number) => {
+      const blob = new Blob([datajson], { type: 'application/json;charset=utf-8' });
+      this.utilsService.downloadWithIntegrity(blob, 'data' + String(filename) + '.json');
+    };
 
     if (this.isReturn.length > 0) {
       this.data = this.isReturn;
@@ -275,13 +272,8 @@ this.curlcmd = `curl \
       // Encrypt
       const ciphertext = await this.cryptoUtils.encrypt(json, pass);
 
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(ciphertext));
-      element.setAttribute('download', 'VULNREPO issues export.vuln');
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+      const blob = new Blob([ciphertext], { type: 'text/plain;charset=utf-8' });
+      this.utilsService.downloadWithIntegrity(blob, 'VULNREPO issues export.vuln');
     }
 
   }

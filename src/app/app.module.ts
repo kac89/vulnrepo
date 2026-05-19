@@ -94,6 +94,7 @@ import { DialogSpinnerComponent } from './dialog-spinner/dialog-spinner.componen
 import { BbListComponent } from './bb-list/bb-list.component';
 import { DialogImportAdvancedComponent } from './dialog-import-advanced/dialog-import-advanced.component';
 import { DialogFilterHelpComponent } from './dialog-filter-help/dialog-filter-help.component';
+import { DialogExportIntegrityComponent } from './dialog-export-integrity/dialog-export-integrity.component';
 import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({ declarations: [
@@ -142,7 +143,8 @@ import { MatStepperModule } from '@angular/material/stepper';
         BbListComponent,
         DialogSpinnerComponent,
         DialogImportAdvancedComponent,
-        DialogFilterHelpComponent
+        DialogFilterHelpComponent,
+        DialogExportIntegrityComponent
     ],
     exports: [],
     bootstrap: [AppComponent], imports: [BrowserModule,
