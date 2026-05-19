@@ -1,0 +1,104 @@
+<div class="integrity-shell">
+
+  <!-- Header -->
+  <div class="integrity-header">
+    <div class="integrity-header-left">
+      <div class="integrity-avatar">
+        <mat-icon class="avatar-icon">task_alt</mat-icon>
+      </div>
+      <div class="integrity-header-text">
+        <span class="integrity-title">Download complete</span>
+        <span class="integrity-subtitle">Verify the file with the SHA-256 below</span>
+      </div>
+    </div>
+    <div class="integrity-header-right">
+      <button mat-icon-button class="tool-btn close-btn" (click)="closedialog()" title="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div mat-dialog-content class="integrity-body">
+
+    <!-- File summary -->
+    <div class="info-hint">
+      <mat-icon class="hint-icon">description</mat-icon>
+      <div class="info-hint-body">
+        <span class="info-hint-name" [title]="data.filename">{{ data.filename }}</span>
+        <span class="info-hint-meta">{{ formatSize(data.size) }}</span>
+      </div>
+    </div>
+
+    <!-- Hash block -->
+    <div class="field-group">
+      <label class="field-label">SHA-256</label>
+      <div class="hash-block">
+        <code class="hash-code">{{ data.sha256 }}</code>
+        <button mat-icon-button class="tool-btn hash-copy"
+          [cdkCopyToClipboard]="data.sha256" (click)="flashCopied(hashTip, 'Copy SHA-256')"
+          #hashTip="matTooltip" matTooltip="Copy SHA-256" matTooltipPosition="below"
+          aria-label="Copy SHA-256">
+          <mat-icon class="action-icon">content_copy</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Verify hints (collapsible) -->
+    <div class="field-group">
+      <button type="button" class="collapse-toggle"
+        [class.open]="verifyOpen"
+        [attr.aria-expanded]="verifyOpen"
+        (click)="verifyOpen = !verifyOpen">
+        <span class="collapse-label">Verify on recipient side</span>
+        <mat-icon class="collapse-chevron">expand_more</mat-icon>
+      </button>
+
+      @if (verifyOpen) {
+        <div class="collapse-body">
+
+          <div class="tool-info">
+            <div class="tool-info-head">
+              <span class="tool-info-text">Linux / macOS</span>
+              <button mat-icon-button class="tool-btn tool-info-copy"
+                [cdkCopyToClipboard]="linuxCmd" (click)="flashCopied(linuxTip, 'Copy command')"
+                #linuxTip="matTooltip" matTooltip="Copy command" matTooltipPosition="below"
+                aria-label="Copy command">
+                <mat-icon class="action-icon">content_copy</mat-icon>
+              </button>
+            </div>
+            <div class="code-block">
+              <code>$ <span class="code-accent">{{ linuxCmd }}</span></code>
+            </div>
+          </div>
+
+          <div class="tool-info">
+            <div class="tool-info-head">
+              <span class="tool-info-text">Windows PowerShell</span>
+              <button mat-icon-button class="tool-btn tool-info-copy"
+                [cdkCopyToClipboard]="windowsCmd" (click)="flashCopied(winTip, 'Copy command')"
+                #winTip="matTooltip" matTooltip="Copy command" matTooltipPosition="below"
+                aria-label="Copy command">
+                <mat-icon class="action-icon">content_copy</mat-icon>
+              </button>
+            </div>
+            <div class="code-block">
+              <code>$ <span class="code-accent">{{ windowsCmd }}</span></code>
+            </div>
+          </div>
+
+        </div>
+      }
+    </div>
+
+    <div class="action-row">
+      <button class="primary-btn"
+        [cdkCopyToClipboard]="fullInstruction" (click)="flashCopied(instrTip, 'Copy instruction')"
+        #instrTip="matTooltip" matTooltip="Copy instruction" matTooltipPosition="above">
+        <mat-icon>content_copy</mat-icon> Copy instruction
+      </button>
+      <button class="ghost-btn" (click)="closedialog()">Close</button>
+    </div>
+
+  </div>
+</div>

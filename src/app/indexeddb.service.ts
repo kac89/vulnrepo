@@ -13,6 +13,7 @@ import { CurrentdateService } from './currentdate.service';
 import { CryptoUtilsService } from './crypto-utils.service';
 import { KeyVaultService } from './key-vault.service';
 import { ReportSchemaService } from './report-schema.service';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,8 @@ export class IndexeddbService {
   constructor(public router: Router, private messageService: MessageService, public dialog: MatDialog,
     private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,
     private currentdateService: CurrentdateService, private cryptoUtils: CryptoUtilsService,
-    private keyVault: KeyVaultService, private reportSchema: ReportSchemaService) {
+    private keyVault: KeyVaultService, private reportSchema: ReportSchemaService,
+    private utilsService: UtilsService) {
 
     this.updateEncStatus(false);
     /*
@@ -1031,14 +1033,10 @@ export class IndexeddbService {
   preparedownload(data) {
     const enc = btoa(JSON.stringify(data));
     const blob = new Blob([encodeURIComponent(enc)], { type: 'text/plain' });
-    const link = document.createElement('a');
-    const url = window.URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', data.report_name + ' ' + data.report_id + ' (vulnrepo.com).vulnr');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    this.utilsService.downloadWithIntegrity(
+      blob,
+      data.report_name + ' ' + data.report_id + ' (vulnrepo.com).vulnr'
+    );
   }
 
   cloneReportadd(report: any) {

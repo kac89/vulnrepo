@@ -2569,13 +2569,11 @@ Sample code here\n\
     const report_ascii = report_ascii_head + report_ascii_vulns + report_ascii_end;
 
     // download ascii report
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(report_ascii));
-    element.setAttribute('download', metadata.report_name + ' ' + metadata.report_id + ' ASCII (vulnrepo.com).txt');
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    const blob = new Blob([report_ascii], { type: 'text/plain;charset=utf-8' });
+    this.utilsService.downloadWithIntegrity(
+      blob,
+      metadata.report_name + ' ' + metadata.report_id + ' ASCII (vulnrepo.com).txt'
+    );
 
   }
 
@@ -2775,15 +2773,10 @@ Info       | ${sevCounts.Info}\n\n`;
     // download MARKDOWN report
     const content = str + str_dates + str_summary + str_scope + vulnstats + str_issues + str_researcher + str_changelog + str_footer;
     const blob = new Blob([content], { type: 'text/markdown' });
-    const link = document.createElement('a');
-    const url = window.URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${report_info.report_name} ${report_info.report_id} (vulnrepo.com).md`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    this.utilsService.downloadWithIntegrity(
+      blob,
+      `${report_info.report_name} ${report_info.report_id} (vulnrepo.com).md`
+    );
   }
 
   DownloadJSON(report_info): void {
@@ -2805,14 +2798,10 @@ Info       | ${sevCounts.Info}\n\n`;
 
     // download JSON report
     const blob = new Blob([JSON.stringify(json)], { type: 'application/json' });
-    const link = document.createElement('a');
-    const url = window.URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', report_info.report_name + ' ' + report_info.report_id + ' (vulnrepo.com).json');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    this.utilsService.downloadWithIntegrity(
+      blob,
+      report_info.report_name + ' ' + report_info.report_id + ' (vulnrepo.com).json'
+    );
   }
 
   DownloadDOCX(report_info): void {
@@ -3266,14 +3255,10 @@ Info       | ${sevCounts.Info}\n\n`;
     });
 
     Packer.toBlob(doc).then((blob) => {
-      const link = document.createElement('a');
-      const url = window.URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `${report_info.report_name} ${report_info.report_id} (vulnrepo.com).docx`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      this.utilsService.downloadWithIntegrity(
+        blob,
+        `${report_info.report_name} ${report_info.report_id} (vulnrepo.com).docx`
+      );
     });
   }
 
@@ -3292,19 +3277,12 @@ Info       | ${sevCounts.Info}\n\n`;
       blob = new Blob([res.replace("{'HERE':'REPLACE'};", "'" + btoa(encodeURIComponent(jsondata)) + "';")], { type: 'text/html' });
     }
 
-    const link = document.createElement('a');
-    const url = window.URL.createObjectURL(blob);
-    let encryptedtext = "";
-    if (encrypted) {
-      encryptedtext = " encrypted";
-    }
-    link.setAttribute('href', url);
-    link.setAttribute('download', report_info.report_name + ' ' + report_info.report_id + encryptedtext + ' (vulnrepo.com).html');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
+    const encryptedtext = encrypted ? ' encrypted' : '';
     this.hidespinner();
-    link.click();
-    document.body.removeChild(link);
+    this.utilsService.downloadWithIntegrity(
+      blob,
+      report_info.report_name + ' ' + report_info.report_id + encryptedtext + ' (vulnrepo.com).html'
+    );
   }
 
   encrypt_reportv2(report_info, encrypted, type_dep): void {

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogExportIntegrityComponent } from './dialog-export-integrity/dialog-export-integrity.component';
 
 interface SeverityEntry { readonly name: string; readonly value: number; }
 interface IssueStatusEntry { readonly status: string; readonly value: number; }
@@ -24,7 +26,33 @@ export class UtilsService {
     { name: 'Info', value: 5 }
   ];
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
+
+
+  // Triggers a download for `blob` as `filename`, computes SHA-256 of the actual
+  // bytes the recipient receives, and surfaces a dialog with the hex digest so the
+  // sender can share it for tamper-evident verification.
+  async downloadWithIntegrity(blob: Blob, filename: string): Promise<void> {
+    const buf = await blob.arrayBuffer();
+    const digest = await crypto.subtle.digest('SHA-256', buf);
+    const hex = Array.from(new Uint8Array(digest))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    this.dialog.open(DialogExportIntegrityComponent, {
+      data: { filename, size: blob.size, sha256: hex }
+    });
+  }
 
 
   setseverity(severity: string): string {
