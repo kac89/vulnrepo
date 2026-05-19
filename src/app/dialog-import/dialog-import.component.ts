@@ -1162,6 +1162,10 @@ export class DialogImportComponent implements OnInit {
           severity = 'Medium';
         }
 
+        if (typeof severity !== 'string' || severity.length === 0) {
+          return 'Info';
+        }
+
         let result = severity.charAt(0).toUpperCase() + severity.slice(1);
 
         return result
@@ -1171,6 +1175,10 @@ export class DialogImportComponent implements OnInit {
       for (const [key, value] of Object.entries<any>(data.vulnerabilities)) {
         if (value) {
           value["via"].forEach((item: any, index: number) => {
+
+            if (typeof item !== 'object' || item === null) {
+              return;
+            }
 
             const def = {
               title: item.name + ' ' + item.range + ' ' + item.title,
