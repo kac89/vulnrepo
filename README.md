@@ -47,7 +47,7 @@ A client-side, privacy-first vulnerability report manager for security professio
 - **Encrypted HTML export** — share an AES-encrypted, self-contained HTML report
 - **File attachments** — attach screenshots, tool output, or any file; SHA-256 checksum is computed automatically
 - **Changelog** — all significant report changes are versioned and logged automatically
-- **Issue export** — export issues to Atlassian Jira or as a portable encrypted file
+- **Issue export** — export issues to SARIF 2.1.0, Atlassian Jira, or as a portable encrypted file
 - **Report sharing** — share a full encrypted report with collaborators
 - **Report profiles** — save reusable report configurations (logo, researcher info, theme, CSS)
 - **Template customization** — edit the HTML report template and CSS directly in the app
@@ -111,6 +111,7 @@ Reports encrypted with older versions of the app (legacy CryptoJS AES format) ar
 | WIZ Issues | `.CSV` |
 | OWASP ZAP | `.JSON` |
 | BlackDuck Code Sight | `.JSON` |
+| SARIF 2.1.0 (CodeQL, Semgrep, Trivy, ESLint, Bandit, Checkov, …) | `.SARIF`, `.JSON` |
 
 ---
 
