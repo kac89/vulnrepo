@@ -398,6 +398,26 @@
         </div>
       }
 
+      <!-- SARIF -->
+      @if (selectedSource === 'sarif') {
+        <div class="source-panel">
+          <div class="tool-info">
+            <span class="tool-info-text">OASIS interchange format produced by CodeQL, Semgrep, Trivy, ESLint, Bandit, Checkov and most modern SAST/DAST tooling: <a class="tool-link" target="_blank" href="https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html">SARIF 2.1.0</a></span>
+            <div class="code-block">
+              <code>$ <span class="code-accent">semgrep scan --sarif -o results.sarif</span></code>
+            </div>
+            <div class="code-block">
+              <code>$ <span class="code-accent">trivy fs --format sarif -o results.sarif .</span></code>
+            </div>
+          </div>
+          <div class="upload-zone">
+            <mat-icon class="upload-icon">upload_file</mat-icon>
+            <span class="upload-label">Select .sarif or .json file</span>
+            <input cdkFocusInitial type="file" accept=".sarif,.json" (change)="sarifOnFileSelect($event.target)" class="file-input">
+          </div>
+        </div>
+      }
+
       @if (sourceBusy && selectedSource !== 'vulnrepojson') {
         <div class="progress-row">
           <span class="progress-label">Importing…</span>

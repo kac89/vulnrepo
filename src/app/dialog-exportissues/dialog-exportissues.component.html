@@ -85,6 +85,26 @@
       </div>
     }
 
+    <!-- ── SARIF ── -->
+    @if (selected_export == 'sarif') {
+      <div class="panel">
+        <div class="panel-notice">
+          <mat-icon class="notice-icon">warning</mat-icon>
+          <span>This file will not be encrypted.</span>
+        </div>
+        <div class="panel-notice">
+          <mat-icon class="notice-icon">info</mat-icon>
+          <span>SARIF 2.1.0 for CI pipelines and code-scanning dashboards. Attachment checksums are kept; attachment contents are not exported.</span>
+        </div>
+        <div class="action-row">
+          <button class="primary-btn" (click)="downloadSARIF()">
+            <mat-icon>file_download</mat-icon>Download SARIF
+          </button>
+          <button class="ghost-btn" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    }
+
     <!-- ── Jira ── -->
     @if (selected_export == 'jira') {
       <div class="panel">

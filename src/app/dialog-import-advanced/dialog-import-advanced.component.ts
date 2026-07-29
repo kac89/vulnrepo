@@ -7,6 +7,7 @@ import { CurrentdateService } from '../currentdate.service';
 import { ImportVectorService, ImportVector } from '../import-vector.service';
 import { UtilsService } from '../utils.service';
 import { CryptoUtilsService } from '../crypto-utils.service';
+import { SarifService } from '../sarif.service';
 
 interface ImportSource {
   value: string;
@@ -53,6 +54,7 @@ export class DialogImportAdvancedComponent implements OnInit {
     { value: 'wiz',           viewValue: 'WIZ',                   viewImg: '/assets/vendors/wiz.jpeg',                            format: '.CSV'    },
     { value: 'zaproxy',       viewValue: 'ZAP',                   viewImg: '/assets/vendors/zap-by-checkmarx.svg',                format: '.JSON'   },
     { value: 'codesight',     viewValue: 'BlackDuck Code Sight',  viewImg: '/assets/vendors/bd.png',                              format: '.JSON'   },
+    { value: 'sarif',         viewValue: 'SARIF 2.1.0',           viewImg: '/assets/vendors/sarif.svg',                           format: '.SARIF'  },
   ];
 
   // ── Source-upload sub-mode state ───────────────────────────────────────────
@@ -135,7 +137,8 @@ export class DialogImportAdvancedComponent implements OnInit {
     private currentdateService: CurrentdateService,
     private vectorService: ImportVectorService,
     private utilsService: UtilsService,
-    private cryptoUtils: CryptoUtilsService
+    private cryptoUtils: CryptoUtilsService,
+    private sarifService: SarifService
   ) {}
 
   ngOnInit() {
@@ -1261,6 +1264,20 @@ export class DialogImportAdvancedComponent implements OnInit {
     }
 
     this.dialogRef.close(arr);
+  }
+
+  // ── SARIF 2.1.0 ────────────────────────────────────────────────────────────
+
+  sarifOnFileSelect(input: HTMLInputElement) {
+    this.readSourceFile(input, (text) => {
+      const arr = this.sarifService.parse(text);
+      if (arr.length === 0) {
+        this.sourceBusy = false;
+        this.sourceError = 'No results found in this SARIF file.';
+        return;
+      }
+      this.dialogRef.close(arr);
+    });
   }
 
   // ── Step 1 – Upload ──────────────────────────────────────────────────────────

@@ -76,9 +76,17 @@ export class DialogApikeyComponent implements OnInit {
   removedialogFunc(event) {
     if (event.checked === true) {
       this.sessionsub.setSessionStorageItem('hidedialog', 'true');
+      this.removedialog = true;
+
+      // nothing to unlock, user just wants to dismiss the vault for this session
+      const keypass = this.insertkeypass.value;
+      if (!keypass) {
+        this.dialogRef.close();
+      }
     }
     if (event.checked === false) {
       this.sessionsub.removeSessionStorageItem('hidedialog');
+      this.removedialog = false;
     }
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/cor
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CryptoUtilsService } from '../crypto-utils.service';
 import { UtilsService } from '../utils.service';
+import { SarifService } from '../sarif.service';
 
 interface Exportsource {
   value: string;
@@ -46,12 +47,14 @@ export class DialogExportissuesComponent implements OnInit {
   sour: Exportsource[] = [
     { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)', viewImg: '/favicon-32x32.png' },
     { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/favicon-32x32.png' },
+    { value: 'sarif', viewValue: 'SARIF 2.1.0 (.SARIF)', viewImg: '/assets/vendors/sarif.svg' },
     { value: 'jira', viewValue: 'Atlassian Jira', viewImg: '/assets/vendors/jira-logo.png' }
   ];
   // @ts-ignore
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogExportissuesComponent>,
     private cryptoUtils: CryptoUtilsService,
-    private utilsService: UtilsService) { }
+    private utilsService: UtilsService,
+    private sarifService: SarifService) { }
 
     ngOnInit() {
 
@@ -308,6 +311,20 @@ this.curlcmd = `curl \
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
+
+  }
+
+
+  downloadSARIF() {
+
+    if (this.isReturn.length > 0) {
+      this.data = this.isReturn;
+    }
+
+    const sarif = this.sarifService.build(this.data);
+
+    const blob = new Blob([sarif], { type: 'application/sarif+json;charset=utf-8' });
+    this.utilsService.downloadWithIntegrity(blob, 'VULNREPO issues export.sarif');
 
   }
 
