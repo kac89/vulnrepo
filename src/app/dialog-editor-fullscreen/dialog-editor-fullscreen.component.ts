@@ -4,7 +4,7 @@ import { UntypedFormControl } from '@angular/forms';
 
 import DOMPurify from 'dompurify';
 import { markedHighlight } from "marked-highlight";
-import hljs from 'highlight.js';
+import hljs from '../syntax-highlight';
 import { Marked } from "marked";
 
 export interface Table {
@@ -13,6 +13,19 @@ export interface Table {
   align: Array<'center' | 'left' | 'right' | null>;
   header: TableCell[];
   rows: TableCell[][];
+}
+
+/** One row of the formatting reference panel. */
+export interface FormatHelpEntry {
+  /** Markdown as the user would type it. */
+  syntax: string;
+  /** What it produces. */
+  result: string;
+}
+
+export interface FormatHelpSection {
+  title: string;
+  entries: FormatHelpEntry[];
 }
 
 export interface TableRow {
@@ -38,9 +51,76 @@ export class DialogEditorFullscreenComponent implements OnInit {
 
   previewfield = new UntypedFormControl();
   showprev = false;
+  showHelp = false;
   selectedtextarea: any;
   selectedtextarea_start: any;
   selectedtextarea_end: any;
+
+  /**
+   * Languages the fenced-code highlighter actually knows about. Read from the
+   * curated hljs build (see src/app/syntax-highlight.ts) rather than hardcoded,
+   * so the panel can't drift out of sync when languages are added or removed.
+   */
+  readonly highlightLanguages: string[] = hljs.listLanguages().sort();
+
+  /**
+   * Formatting reference shown in the help drawer. Kept here rather than in the
+   * template so the markup stays readable; every entry reflects what this
+   * editor's renderer really does (see poc_preview_funct below).
+   */
+  readonly formatHelp: FormatHelpSection[] = [
+    {
+      title: 'Text',
+      entries: [
+        { syntax: '**bold**',            result: 'Bold' },
+        { syntax: '_italic_',            result: 'Italic' },
+        { syntax: '~~strikethrough~~',   result: 'Struck through' },
+        { syntax: '`inline code`',       result: 'Monospaced inline code' },
+      ],
+    },
+    {
+      title: 'Structure',
+      entries: [
+        { syntax: '# Heading 1',         result: 'Largest heading (# to ###### for levels 1-6)' },
+        { syntax: '- item',              result: 'Bulleted list' },
+        { syntax: '1. item',             result: 'Numbered list' },
+        { syntax: '> quoted text',       result: 'Block quote' },
+        { syntax: '---',                 result: 'Horizontal rule' },
+      ],
+    },
+    {
+      title: 'Blocks',
+      entries: [
+        {
+          syntax: '```bash\nnmap -sV 10.0.0.1\n```',
+          result: 'Fenced code block. Add a language after the opening ``` for syntax highlighting and line numbers.',
+        },
+        {
+          syntax: 'IP | hostname | role\n--- | --- | ---\n10.0.0.1 | web01 | PROD',
+          result: 'Table. The second row of dashes separates the header from the body.',
+        },
+      ],
+    },
+    {
+      title: 'Links',
+      entries: [
+        { syntax: '[link text](https://example.com)', result: 'Link — always opens in a new tab.' },
+        { syntax: 'https://example.com',              result: 'Bare URLs are turned into links automatically.' },
+      ],
+    },
+  ];
+
+  /**
+   * Behaviours specific to this editor that a generic Markdown cheat sheet
+   * would get wrong. Each of these was verified against the renderer below.
+   */
+  readonly editorNotes: string[] = [
+    'A single Enter starts a new line — you do not need two.',
+    'Blank lines between paragraphs are preserved in the report.',
+    'Raw HTML works, but is sanitized — scripts, event handlers and unsafe attributes are removed.',
+    'Images are disabled: an image tag renders as its URL. Attach screenshots to the issue instead.',
+    'javascript:, vbscript: and data: links render as plain text, never as links.',
+  ];
 
   @ViewChild('textareaEl', { static: false }) textareaElement: ElementRef<HTMLTextAreaElement>;
   @ViewChild('previewContentEl', { static: false }) previewContentEl: ElementRef<HTMLDivElement>;
@@ -79,15 +159,63 @@ export class DialogEditorFullscreenComponent implements OnInit {
     const escapeHtml = (str: string) =>
       str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-    const applyLineNumbers = (code: string) => {
-        const lines = code.trim().split('\n');
+    // marked-highlight has already run hljs over the code token and left the
+    // result in token.text (with token.escaped = true). That string is HTML, so
+    // it must not be escaped again — doing so renders the markup as visible
+    // text ("<span class="hljs-meta">&lt;?php</span>").
+    //
+    // It also can't simply be split on "\n": hljs emits spans that straddle
+    // line breaks (block comments, multi-line strings), which would leave every
+    // table row with unbalanced tags. Close the open spans at the end of each
+    // line and re-open them at the start of the next.
+    const splitHighlightedLines = (html: string): string[] => {
+      const lines: string[] = [];
+      const open: string[] = [];
+      let current = '';
+
+      const tokenRe = /(<\/?[a-zA-Z][^>]*>)|([^<]+)/g;
+      let match: RegExpExecArray | null;
+
+      while ((match = tokenRe.exec(html)) !== null) {
+        const [, tag, text] = match;
+
+        if (tag !== undefined) {
+          if (tag.startsWith('</')) {
+            open.pop();
+          } else if (!tag.endsWith('/>')) {
+            open.push(tag);
+          }
+          current += tag;
+          continue;
+        }
+
+        const parts = text.split('\n');
+        parts.forEach((part, i) => {
+          if (i > 0) {
+            lines.push(current + '</span>'.repeat(open.length));
+            current = open.join('');
+          }
+          current += part;
+        });
+      }
+
+      lines.push(current + '</span>'.repeat(open.length));
+      return lines;
+    };
+
+    const applyLineNumbers = (code: string, alreadyHighlighted: boolean) => {
+        // hljs escapes the code it emits, so the highlighted branch is still
+        // safe; the result is passed through DOMPurify either way.
+        const lines = alreadyHighlighted
+          ? splitHighlightedLines(code.trim())
+          : code.trim().split('\n').map(escapeHtml);
 
         const rows = lines.map((line, idx) => {
           const lineNumber = idx + 1;
 
           let html = '<tr>';
     	    html += `<td class="line-number">${lineNumber}</td>`;
-          html += `<td class="code-line">${escapeHtml(line)}</td>`;
+          html += `<td class="code-line">${line}</td>`;
       	    html += '</tr>';
       	    return html;
         });
@@ -99,8 +227,8 @@ export class DialogEditorFullscreenComponent implements OnInit {
     // add Markdown rendering
     const renderer = new marked.Renderer();
     renderer.code = function (token) {
-      token.text = applyLineNumbers(token.text);
-      return `<pre class="hljs"><code>` + DOMPurify.sanitize(token.text) + `</code></pre>`;
+      const table = applyLineNumbers(token.text, !!token.escaped);
+      return `<pre class="hljs"><code>` + DOMPurify.sanitize(table) + `</code></pre>`;
     };
 
     renderer.blockquote = function (token) {

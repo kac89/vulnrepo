@@ -8,42 +8,63 @@
       </div>
       <div class="editor-header-text">
         <span class="editor-title">Text Editor</span>
-        <span class="editor-subtitle">Markdown supported</span>
+        <button type="button" class="editor-subtitle-btn" (click)="showHelp=!showHelp"
+          aria-label="Show formatting help">
+          Markdown supported — <span class="editor-subtitle-link">formatting help</span>
+        </button>
       </div>
     </div>
 
     <div class="toolbar-group">
-      <button mat-icon-button class="tool-btn" title="Bold" (click)="parseBold(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Bold"
+        matTooltip="Bold — **text**" matTooltipClass="editor-tip" (click)="parseBold(data)">
         <mat-icon>format_bold</mat-icon>
       </button>
-      <button mat-icon-button class="tool-btn" title="Italic" (click)="parseItalic(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Italic"
+        matTooltip="Italic — _text_" matTooltipClass="editor-tip" (click)="parseItalic(data)">
         <mat-icon>format_italic</mat-icon>
       </button>
-      <button mat-icon-button class="tool-btn" title="Heading" (click)="parseHeading(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Heading"
+        matTooltip="Heading — # text (## to ###### for smaller)" matTooltipClass="editor-tip" (click)="parseHeading(data)">
         <mat-icon>title</mat-icon>
       </button>
-      <button mat-icon-button class="tool-btn" title="Strikethrough" (click)="parseStrikethrough(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Strikethrough"
+        matTooltip="Strikethrough — ~~text~~" matTooltipClass="editor-tip" (click)="parseStrikethrough(data)">
         <mat-icon>strikethrough_s</mat-icon>
       </button>
       <div class="toolbar-divider"></div>
-      <button mat-icon-button class="tool-btn" title="Link" (click)="parseLink(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Link"
+        matTooltip="Link — [text](https://…) — opens in a new tab" matTooltipClass="editor-tip" (click)="parseLink(data)">
         <mat-icon>link</mat-icon>
       </button>
-      <button mat-icon-button class="tool-btn" title="List" (click)="parseList(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Bulleted list"
+        matTooltip="List — - item on each line" matTooltipClass="editor-tip" (click)="parseList(data)">
         <mat-icon>list</mat-icon>
       </button>
-      <button mat-icon-button class="tool-btn" title="Code" (click)="parseCode(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Code block"
+        matTooltip="Code block — ``` fences. Add a language for highlighting." matTooltipClass="editor-tip" (click)="parseCode(data)">
         <mat-icon>code</mat-icon>
       </button>
-      <button mat-icon-button class="tool-btn" title="Quote" (click)="parseQuote(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Quote"
+        matTooltip="Quote — &gt; text" matTooltipClass="editor-tip" (click)="parseQuote(data)">
         <mat-icon>format_quote</mat-icon>
       </button>
-      <button mat-icon-button class="tool-btn" title="Table" (click)="parseTable(data)">
+      <button mat-icon-button class="tool-btn" aria-label="Table"
+        matTooltip="Table — pipe-separated columns, dashes under the header" matTooltipClass="editor-tip" (click)="parseTable(data)">
         <mat-icon>table_chart</mat-icon>
       </button>
       <div class="toolbar-divider"></div>
-      <button mat-icon-button class="tool-btn preview-btn" [class.preview-active]="!showprev" title="Toggle preview" (click)="showprev=!showprev">
+      <button mat-icon-button class="tool-btn preview-btn" [class.preview-active]="!showprev"
+        [attr.aria-label]="showprev ? 'Show preview' : 'Hide preview'"
+        [matTooltip]="showprev ? 'Show live preview' : 'Hide live preview'" matTooltipClass="editor-tip"
+        (click)="showprev=!showprev">
         <mat-icon>{{showprev ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <button mat-icon-button class="tool-btn help-btn" [class.preview-active]="showHelp"
+        aria-label="Formatting help" [attr.aria-expanded]="showHelp"
+        matTooltip="Formatting help — full Markdown reference" matTooltipClass="editor-tip"
+        (click)="showHelp=!showHelp">
+        <mat-icon>help_outline</mat-icon>
       </button>
     </div>
 
@@ -91,6 +112,64 @@
         placeholder="Start writing…"
       ></textarea>
     </div>
+
+    <!-- Formatting reference -->
+    @if (showHelp) {
+      <aside class="help-drawer" role="region" aria-label="Formatting reference">
+
+        <div class="help-header">
+          <mat-icon class="help-header-icon">help_outline</mat-icon>
+          <span class="help-header-title">Formatting reference</span>
+          <button mat-icon-button class="tool-btn help-close" aria-label="Close formatting help"
+            matTooltip="Close" matTooltipClass="editor-tip" (click)="showHelp=false">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="help-scroll">
+
+          @for (section of formatHelp; track section.title) {
+            <div class="help-section">
+              <div class="help-section-title">{{ section.title }}</div>
+              @for (entry of section.entries; track entry.syntax) {
+                <div class="help-entry">
+                  <pre class="help-syntax">{{ entry.syntax }}</pre>
+                  <div class="help-result">{{ entry.result }}</div>
+                </div>
+              }
+            </div>
+          }
+
+          <div class="help-section">
+            <div class="help-section-title">Good to know</div>
+            <ul class="help-notes">
+              @for (note of editorNotes; track note) {
+                <li>{{ note }}</li>
+              }
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <div class="help-section-title">
+              Highlighting languages
+              <span class="help-count">{{ highlightLanguages.length }}</span>
+            </div>
+            <p class="help-lang-intro">
+              Use one of these after the opening <code>```</code> fence:
+            </p>
+            <div class="help-langs">
+              @for (lang of highlightLanguages; track lang) {
+                <span class="help-lang">{{ lang }}</span>
+              }
+            </div>
+            <p class="help-lang-note">
+              Anything else falls back to plain, unhighlighted text.
+            </p>
+          </div>
+
+        </div>
+      </aside>
+    }
 
   </div>
 

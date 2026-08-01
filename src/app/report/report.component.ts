@@ -40,7 +40,12 @@ import { DialogEncryptReportComponent } from '../dialog-encrypt-report/dialog-en
 import { PageEvent } from '@angular/material/paginator';
 import { DialogEditorFullscreenComponent } from '../dialog-editor-fullscreen/dialog-editor-fullscreen.component';
 import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-attach-preview.component';
-import { AlignmentType, Document, ExternalHyperlink, Footer, Header, Packer, PageBreak, HeadingLevel, ImageRun, PageNumber, NumberFormat, Paragraph, TextRun, TableOfContents, Table, TableCell, TableRow, WidthType } from "docx";
+// NOTE: `docx` is intentionally NOT imported statically — it is ~1 MB of the
+// bundle and is only needed by DownloadDOCX(), which loads it on demand via
+// `await import('docx')`. Do not re-add a top-level value import here.
+// Type-only imports are erased at compile time and cost nothing; they are
+// aliased so they don't collide with the destructured locals in DownloadDOCX().
+import type { TextRun as DocxTextRun } from "docx";
 import { UtilsService } from '../utils.service';
 import { OllamaServiceService } from '../ollama-service.service';
 import { DialogOllamaSettingsComponent } from '../dialog-ollama-settings/dialog-ollama-settings.component';
@@ -1418,6 +1423,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       width: '1100px',
       maxWidth: '95vw',
       panelClass: 'cvss-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: false,
       data: data
     });
@@ -1437,6 +1443,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       maxWidth: '95vw',
       disableClose: false,
       panelClass: 'dark-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       data: data
     });
 
@@ -1826,7 +1833,9 @@ Sample code here\n\
 
     console.log('Add issue');
     const dialogRef = this.dialog.open(DialogAddissueComponent, {
-      width: '600px'
+      width: '600px',
+      panelClass: 'addissue-dialog-panel',
+      backdropClass: 'vr-blur-backdrop'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -1858,7 +1867,9 @@ Sample code here\n\
   import_issues() {
     const advRef = this.dialog.open(DialogImportAdvancedComponent, {
       width: '800px',
-      maxWidth: '95vw'
+      maxWidth: '95vw',
+      panelClass: 'import-advanced-dialog-panel',
+      backdropClass: 'vr-blur-backdrop'
     });
 
     advRef.afterClosed().subscribe(result => {
@@ -1889,6 +1900,8 @@ Sample code here\n\
     console.log('Export issues');
     const dialogRef = this.dialog.open(DialogExportissuesComponent, {
       width: '500px',
+      panelClass: 'export-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       data: filteredTags
     });
 
@@ -1907,6 +1920,8 @@ Sample code here\n\
       console.log('Export issues');
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
         width: '500px',
+        panelClass: 'export-dialog-panel',
+        backdropClass: 'vr-blur-backdrop',
         data: bySeverity
       });
 
@@ -1923,6 +1938,8 @@ Sample code here\n\
 
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
         width: '500px',
+        panelClass: 'export-dialog-panel',
+        backdropClass: 'vr-blur-backdrop',
         data: { sel: this.selectedIssues, orig: original }
       });
 
@@ -1934,6 +1951,8 @@ Sample code here\n\
 
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
         width: '500px',
+        panelClass: 'export-dialog-panel',
+        backdropClass: 'vr-blur-backdrop',
         data: original
       });
 
@@ -2963,7 +2982,14 @@ Info       | ${sevCounts.Info}\n\n`;
     );
   }
 
-  DownloadDOCX(report_info): void {
+  async DownloadDOCX(report_info): Promise<void> {
+    // Lazy-load the DOCX writer; keeps ~1 MB out of the initial bundle.
+    const {
+      AlignmentType, Document, ExternalHyperlink, Footer, Header, Packer,
+      PageBreak, HeadingLevel, ImageRun, PageNumber, NumberFormat, Paragraph,
+      TextRun, TableOfContents, Table, TableCell, TableRow, WidthType,
+    } = await import('docx');
+
     const data = this.decryptedReportDataChanged;
 
     // ── SEVERITY COLOUR MAP ───────────────────────────────────────────────────
@@ -3009,7 +3035,7 @@ Info       | ${sevCounts.Info}\n\n`;
 
     const buildchangelog = (): any[] => data.report_changelog.map((entry: any) => {
       const descLines = String(entry.desc || '').split(/\r?\n/);
-      const descRuns: TextRun[] = descLines.map((line, i) =>
+      const descRuns: DocxTextRun[] = descLines.map((line, i) =>
         i === 0 ? new TextRun({ text: line }) : new TextRun({ text: line, break: 1 })
       );
       return new TableRow({
@@ -3042,7 +3068,7 @@ Info       | ${sevCounts.Info}\n\n`;
 
     // ── RESEARCHERS ──────────────────────────────────────────────────────────
     const buildauthors = (): any[] => data.researcher.map((r: any) => {
-      const runs: TextRun[] = [new TextRun({ text: r.reportername, bold: true })];
+      const runs: DocxTextRun[] = [new TextRun({ text: r.reportername, bold: true })];
       if (r.reporteremail) runs.push(new TextRun({ text: '  ' + r.reporteremail }));
       if (r.reportersocial) runs.push(new TextRun({ text: r.reportersocial, break: 1 }));
       if (r.reporterwww) runs.push(new TextRun({ text: r.reporterwww, break: 1 }));
@@ -3413,12 +3439,11 @@ Info       | ${sevCounts.Info}\n\n`;
       }],
     });
 
-    Packer.toBlob(doc).then((blob) => {
-      this.utilsService.downloadWithIntegrity(
-        blob,
-        `${report_info.report_name} ${report_info.report_id} (vulnrepo.com).docx`
-      );
-    });
+    const blob = await Packer.toBlob(doc);
+    this.utilsService.downloadWithIntegrity(
+      blob,
+      `${report_info.report_name} ${report_info.report_id} (vulnrepo.com).docx`
+    );
   }
 
   getDataSynchronous(file) {
@@ -3448,6 +3473,8 @@ Info       | ${sevCounts.Info}\n\n`;
     const dialogRef = this.dialog.open(DialogEncryptReportComponent, {
       width: '600px',
       //height: '985px',
+      panelClass: 'encrypt-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: true,
       data: []
     });
@@ -4051,6 +4078,8 @@ Info       | ${sevCounts.Info}\n\n`;
 
     const dialogRef = this.dialog.open(DialogOllamaSettingsComponent, {
       width: '600px',
+      panelClass: 'ollama-settings-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: false,
       data: []
     });
@@ -4094,6 +4123,7 @@ Info       | ${sevCounts.Info}\n\n`;
       width: '1040px',
       maxWidth: '90vw',
       panelClass: 'ollama-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: true,
       data: [{ "prompt": ``, "files": [{ "filename": this.report_info.report_name + ".json", "date": String(this.currentdateService.getcurrentDate()), "filetype": "json", "file": btoa(unescape(encodeURIComponent(xxx))) }], "images": [] }]
     });
@@ -4127,6 +4157,8 @@ Info       | ${sevCounts.Info}\n\n`;
     const dialogRef = this.dialog.open(DialogReportHistoryComponent, {
       width: '600px',
       maxHeight: '80vh',
+      panelClass: 'history-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: false,
       data: report_id
     });

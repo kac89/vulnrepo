@@ -130,6 +130,62 @@ $mat-primary-tokens: (
   --sev-info:         #60a5fa;
   --sev-info-rgb:     96, 165, 250;
 
+  // ── App tokens (--vr-*) ──────────────────────────────────────────────────────
+  // Must live here, in the *global* stylesheet. A `:root` block inside a
+  // component .scss is rewritten by Angular's emulated encapsulation to
+  // `[_ngcontent-xxx]:root`, which never matches <html> — the declarations are
+  // silently dropped. These tokens previously lived in home.component.scss and
+  // so only ever applied inside that one component.
+
+  // Brand / accent
+  --vr-accent:        #69f0ae;
+  --vr-accent-rgb:    105, 240, 174;
+  --vr-accent-dim:    rgba(105, 240, 174, 0.12);
+  --vr-accent-glow:   rgba(105, 240, 174, 0.06);
+
+  // Surfaces — dark-to-light stack. The app previously used five near-identical
+  // card backgrounds (#1a1a1a/#1e1e1e/#1f1f1f/#242424/#2a2a2a) interchangeably;
+  // these are the canonical steps. Prefer the semantic --vr-bg-* aliases below.
+  --vr-surface-0:     #000000;
+  --vr-surface-1:     #0d0d0d;
+  --vr-surface-2:     #111111;
+  --vr-surface-3:     #1a1a1a;
+  --vr-surface-4:     #242424;
+  --vr-surface-5:     #2a2a2a;
+
+  --vr-bg:            var(--vr-surface-0);
+  --vr-bg-card:       var(--vr-surface-1);
+  --vr-bg-card-2:     var(--vr-surface-2);
+  --vr-bg-raised:     var(--vr-surface-3);
+  --vr-bg-overlay:    var(--vr-surface-4);
+
+  // Neutral scale (Material grey values already in de-facto use across the app)
+  --vr-grey-100:      #f5f5f5;
+  --vr-grey-300:      #e0e0e0;
+  --vr-grey-400:      #bdbdbd;
+  --vr-grey-500:      #9e9e9e;
+  --vr-grey-600:      #757575;
+  --vr-grey-700:      #616161;
+  --vr-grey-800:      #424242;
+
+  // Semantic text
+  --vr-text:          #e8e8e8;
+  --vr-text-strong:   var(--vr-grey-100);
+  --vr-text-secondary:var(--vr-grey-300);
+  --vr-text-muted:    #888888;
+  --vr-text-dim:      var(--vr-grey-500);
+  --vr-text-disabled: var(--vr-grey-600);
+
+  // Borders
+  --vr-border:        rgba(255, 255, 255, 0.07);
+  --vr-border-strong: var(--vr-grey-800);
+  --vr-border-hover:  rgba(105, 240, 174, 0.35);
+
+  // Radii
+  --vr-radius-sm:     6px;
+  --vr-radius:        10px;
+  --vr-radius-lg:     16px;
+
 }
 
 @include mat.elevation-classes();
@@ -383,6 +439,49 @@ pre.hljs code {
 
 /////////////////////// marked highlight end
 
+// ── AI chat bubbles: rendered Markdown code ──────────────────────────────────
+// Lives here, in the global sheet, on purpose. dialog-ollama styles chat code
+// with bare `::ng-deep code` / `::ng-deep pre code`, which Angular emits as
+// global rules that are only in the document while that dialog's stylesheet is
+// loaded — and they set `display` for `pre code` only. Inline `<code>` was left
+// to whatever else won the cascade (`pre code.hljs`, `.hljs-addition`, …), so a
+// bubble replayed from session history could lay its code out as a block and
+// stretch a two-word snippet across the full bubble. Pinning both cases here
+// makes a bubble render identically whether it was just streamed or restored.
+.bubble-text {
+
+  code {
+    display: inline;
+    width: auto;
+    max-width: 100%;
+    font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    background: #111;
+    color: #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  pre {
+    max-width: 100%;
+    margin: 8px 0;
+    overflow-x: auto;
+
+    code {
+      display: block;
+      width: auto;
+      padding: 1em;
+      border-radius: 8px;
+      white-space: pre;
+      word-break: normal;
+      overflow-x: auto;
+    }
+  }
+
+}
+
 /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 .mat-card-header-text {
   width: 100% !important;
@@ -393,6 +492,19 @@ pre.hljs code {
   border: dotted 3px rgb(43, 42, 42);
   min-height: 50px;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+// Tooltips in the fullscreen text editor spell out the Markdown syntax, so they
+// need room to breathe. Tooltips render in a CDK overlay outside the component,
+// so this has to be global.
+.editor-tip {
+  --mat-tooltip-supporting-text-line-height: 1.45;
+
+  .mdc-tooltip__surface {
+    max-width: 260px !important;
+    text-align: left !important;
+    font-size: 11.5px !important;
+  }
 }
 
 .notify-snackbar-success {
@@ -684,6 +796,34 @@ mat-toolbar.app-navbar {
   .mat-mdc-dialog-surface {
     max-width: none !important;
   }
+}
+
+// ── Blurred backdrop for large dark dialogs ──────────────────────────────────
+// These surfaces are near-black, the same as the app behind them, so on a dark
+// report the dialog edge disappeared into the page. Blur + a stronger dim push
+// the background out of focus; the panel rules below give the surface a visible
+// edge. Set as `backdropClass`, which replaces Material's default
+// `cdk-overlay-dark-backdrop` — hence the explicit background colour here.
+.vr-blur-backdrop {
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(7px) saturate(0.9);
+  -webkit-backdrop-filter: blur(7px) saturate(0.9);
+}
+
+.ollama-dialog-panel .mat-mdc-dialog-surface,
+.ollama-settings-dialog-panel .mat-mdc-dialog-surface,
+.addissue-dialog-panel .mat-mdc-dialog-surface,
+.cvss-dialog-panel .mat-mdc-dialog-surface,
+.about-dialog-panel .mat-mdc-dialog-surface,
+.integrity-dialog-panel .mat-mdc-dialog-surface,
+.import-advanced-dialog-panel .mat-mdc-dialog-surface,
+.history-dialog-panel .mat-mdc-dialog-surface,
+.export-dialog-panel .mat-mdc-dialog-surface,
+.encrypt-dialog-panel .mat-mdc-dialog-surface {
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7) !important;
+  overflow: hidden;
 }
 
 // ── CVSS dialog — opt out of M3 560px container max-width ────────────────────

@@ -8,6 +8,10 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   border-radius: 8px;
   overflow: hidden;
+  // dark-dialog-panel makes the surface transparent, so the visible edge has to
+  // come from the shell itself — matches the outline the other dark dialogs get
+  // from their panel class.
+  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────

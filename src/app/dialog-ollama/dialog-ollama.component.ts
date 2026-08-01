@@ -4,7 +4,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { CurrentdateService } from '../currentdate.service';
 import { OllamaServiceService } from '../ollama-service.service';
 import { markedHighlight } from "marked-highlight";
-import hljs from 'highlight.js';
+import hljs from '../syntax-highlight';
 import { Marked } from "marked";
 import DOMPurify from 'dompurify';
 import { IndexeddbService } from '../indexeddb.service';
@@ -313,6 +313,8 @@ export class DialogOllamaComponent implements OnInit {
   opensettings() {
     const dialogRef = this.dialog.open(DialogOllamaSettingsComponent, {
       width: '600px',
+      panelClass: 'ollama-settings-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: false,
       data: []
     });
