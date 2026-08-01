@@ -735,11 +735,123 @@ mat-toolbar.app-navbar {
   }
 }
 
-.my-css-class-spinner mat-dialog-container .mat-mdc-dialog-inner-container .mat-mdc-dialog-surface {
-  background-color: black;
-  border-radius: 50%;
+// Spinner dialog — the surface is the black disc, so it has to stay a square.
+// M3 puts min-width: var(--mat-dialog-container-min-width, 280px) on the panel and
+// min-width: inherit on the surface, so the 250px width lost to a 280px floor and
+// border-radius: 50% drew an ellipse. Lower the floor, then pin both axes.
+.my-css-class-spinner {
+  --mat-dialog-container-min-width: 250px;
 
-  width: 250px;
+  mat-dialog-container .mat-mdc-dialog-inner-container .mat-mdc-dialog-surface {
+    background-color: black;
+    border-radius: 50%;
+
+    box-sizing: border-box;
+    width: 250px;
+    height: 250px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    overflow: hidden;
+
+    // Lifts the disc off the dimmed page and gives its edge something to read against.
+    box-shadow:
+      0 0 0 1px rgba(105, 240, 174, 0.12),
+      0 0 70px rgba(105, 240, 174, 0.14),
+      0 30px 80px rgba(0, 0, 0, 0.7);
+  }
+
+  // A wave leaving the disc into the room, tying the two together.
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    height: 250px;
+    margin: -125px 0 0 -125px;
+    border-radius: 50%;
+    border: 1px solid rgba(105, 240, 174, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    animation: vr-spinner-halo 3.4s ease-out infinite;
+  }
+}
+
+// Spinner backdrop — dims and blurs the report so the scope is the only thing in focus.
+// MatDialogConfig.backdropClass defaults to '', and the CDK skips the class entirely when
+// it is falsy, so without this the spinner sat on a fully transparent backdrop.
+.vr-spinner-backdrop {
+  background: radial-gradient(circle at 50% 50%,
+    rgba(6, 24, 15, 0.55) 0%,
+    rgba(0, 0, 0, 0.86) 42%,
+    rgba(0, 0, 0, 0.94) 100%);
+  -webkit-backdrop-filter: blur(5px) saturate(0.65);
+  backdrop-filter: blur(5px) saturate(0.65);
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+
+  // Ambient glow under the disc, breathing on the same 2.8s period as the logo.
+  &::before {
+    top: 50%;
+    left: 50%;
+    width: 520px;
+    height: 520px;
+    margin: -260px 0 0 -260px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      rgba(105, 240, 174, 0.16) 0%,
+      rgba(105, 240, 174, 0.05) 40%,
+      transparent 70%);
+    animation: vr-spinner-glow 2.8s ease-in-out infinite;
+  }
+
+  // Scanline texture, drifting one tile so the loop is seamless. Faded out toward
+  // the edges so it never draws attention away from the center.
+  &::after {
+    inset: 0;
+    background: repeating-linear-gradient(to bottom,
+      rgba(105, 240, 174, 0.05) 0 1px,
+      transparent 1px 4px);
+    background-position: 0 0;
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 62%);
+    mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 62%);
+    animation: vr-spinner-scan 2.6s linear infinite;
+  }
+}
+
+@keyframes vr-spinner-halo {
+  0%   { transform: scale(1);    opacity: 0; }
+  10%  { opacity: 0.5; }
+  100% { transform: scale(1.9);  opacity: 0; }
+}
+
+@keyframes vr-spinner-glow {
+  0%, 100% { transform: scale(1);    opacity: 0.75; }
+  50%      { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes vr-spinner-scan {
+  to { background-position: 0 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .my-css-class-spinner::before,
+  .vr-spinner-backdrop::after {
+    animation: none;
+  }
+
+  .my-css-class-spinner::before { opacity: 0; }
+
+  .vr-spinner-backdrop::before {
+    animation: none;
+    opacity: 0.85;
+  }
 }
 
 .mat-mdc-dialog-surface {

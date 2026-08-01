@@ -1,13 +1,149 @@
-.spinner-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+// VULNREPO spinner — "radar scope".
+// The dialog surface is a 250px black circle (.my-css-class-spinner in styles.scss),
+// so the spinner is built as a scope: static range rings + a rotating sweep, two
+// counter-rotating arcs and outward pulses radiating from the logo in the center.
 
-.spinner-center {
+$vr-accent: #69f0ae;          // --vr-accent
+$vr-brand: #16bf6e;           // logo green
+
+:host {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 150px;
-  height: 150px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.vr-scope {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba($vr-accent, 0.10) 0%,
+      rgba($vr-accent, 0.035) 45%,
+      rgba($vr-accent, 0) 72%);
+}
+
+.vr-scope > * {
+  position: absolute;
+}
+
+// Range rings + crosshair — static backdrop, echoes the concentric arcs in the logo.
+.vr-grid {
+  inset: 0;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,
+      rgba($vr-accent, 0) 0 20px,
+      rgba($vr-accent, 0.10) 20px 21px),
+    linear-gradient(rgba($vr-accent, 0.06) 0 0) 50% 0 / 1px 100% no-repeat,
+    linear-gradient(rgba($vr-accent, 0.06) 0 0) 0 50% / 100% 1px no-repeat;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 66%, transparent 70%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 66%, transparent 70%);
+}
+
+// The sweep: a conic wedge with a bright leading edge, fading behind it.
+.vr-sweep {
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    rgba($vr-accent, 0) 0deg,
+    rgba($vr-accent, 0) 245deg,
+    rgba($vr-accent, 0.05) 300deg,
+    rgba($vr-accent, 0.30) 350deg,
+    rgba($vr-accent, 0.85) 360deg);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 24%, #000 32%, #000 66%, transparent 70%);
+  mask-image: radial-gradient(circle at 50% 50%, transparent 24%, #000 32%, #000 66%, transparent 70%);
+  animation: vr-spin 2.4s linear infinite;
+  will-change: transform;
+}
+
+// Two arcs, opposite directions, eased so they visibly accelerate and settle.
+.vr-arc {
+  inset: 3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    rgba($vr-accent, 0) 0 190deg,
+    rgba($vr-accent, 0.85) 335deg,
+    #b9ffdb 360deg);
+  -webkit-mask-image: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  mask-image: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  animation: vr-spin 1.7s cubic-bezier(0.6, 0.05, 0.35, 0.95) infinite;
+  will-change: transform;
+}
+
+.vr-arc--inner {
+  inset: 48px;
+  background: conic-gradient(from 0deg,
+    rgba($vr-brand, 0) 0 150deg,
+    rgba($vr-brand, 0.7) 330deg,
+    $vr-accent 360deg);
+  animation: vr-spin-rev 2.3s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+}
+
+// Detection pings leaving the logo.
+.vr-pulse {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  border: 1px solid rgba($vr-accent, 0.5);
+  opacity: 0;
+  animation: vr-ping 2.8s ease-out infinite;
+  will-change: transform, opacity;
+}
+
+.vr-pulse--late {
+  animation-delay: 1.4s;
+}
+
+.vr-logo {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  animation: vr-breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes vr-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes vr-spin-rev {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes vr-ping {
+  0%   { transform: scale(0.55); opacity: 0; }
+  12%  { opacity: 0.65; }
+  100% { transform: scale(2.15); opacity: 0; }
+}
+
+@keyframes vr-breathe {
+  0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 7px rgba($vr-accent, 0.25)); }
+  50%      { transform: scale(1.05); filter: drop-shadow(0 0 17px rgba($vr-accent, 0.5)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vr-sweep,
+  .vr-arc,
+  .vr-logo {
+    animation-duration: 6s;
+    animation-timing-function: linear;
+  }
+
+  .vr-logo {
+    animation: none;
+    filter: drop-shadow(0 0 10px rgba($vr-accent, 0.35));
+  }
+
+  .vr-pulse {
+    display: none;
+  }
 }

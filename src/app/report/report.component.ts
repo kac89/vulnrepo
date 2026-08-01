@@ -2983,6 +2983,23 @@ Info       | ${sevCounts.Info}\n\n`;
   }
 
   async DownloadDOCX(report_info): Promise<void> {
+    this.showspinner();
+
+    // The document build below is synchronous and blocks the thread, so give the
+    // dialog a frame to actually paint first — two rAFs guarantee we are past a
+    // paint, not just queued before one.
+    await new Promise<void>(resolve =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+    );
+
+    try {
+      await this.buildDOCX(report_info);
+    } finally {
+      this.hidespinner();
+    }
+  }
+
+  private async buildDOCX(report_info): Promise<void> {
     // Lazy-load the DOCX writer; keeps ~1 MB out of the initial bundle.
     const {
       AlignmentType, Document, ExternalHyperlink, Footer, Header, Packer,
@@ -4135,7 +4152,8 @@ Info       | ${sevCounts.Info}\n\n`;
   }
 
   hidespinner(): void {
-    this.spinner.close();
+    this.spinner?.close();
+    this.spinner = undefined;
   }
   showspinner(): void {
 
@@ -4146,6 +4164,7 @@ Info       | ${sevCounts.Info}\n\n`;
       width: '250px',
       disableClose: false,
       panelClass: 'my-css-class-spinner',
+      backdropClass: 'vr-spinner-backdrop',
       data: ''
     });
 
