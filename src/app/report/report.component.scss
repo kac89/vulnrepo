@@ -646,10 +646,13 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
     align-items: center !important;
   }
 
+  // Title block: title line + optional subtitle line, stacked.
   .mat-mdc-card-header-text {
     display: flex !important;
-    align-items: center !important;
+    flex-direction: column !important;
+    justify-content: center !important;
     margin: 0 !important;
+    min-width: 0;
   }
 
   .mat-mdc-card-content {
@@ -667,7 +670,9 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
     border: 1px solid $border-color !important;
     background: $surface-nested !important;
     overflow: hidden !important;
-    margin-right: 12px !important;
+    // Material ships margin-bottom: 16px here, which knocks the avatar
+    // off-centre against the title block. Reset to a plain right gap.
+    margin: 0 12px 0 0 !important;
 
     mat-icon {
       color: $accent-green !important;
@@ -677,10 +682,26 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
     }
   }
 
+  // Material adds `padding: 16px 16px 0` to the title/subtitle whenever an
+  // avatar is present — strip it so the text block sits flush and centred.
   .mat-mdc-card-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1.35 !important;
     font-size: 1rem !important;
     font-weight: 600 !important;
     letter-spacing: -0.01em !important;
+  }
+
+  .mat-mdc-card-subtitle {
+    padding: 0 !important;
+    margin: 1px 0 0 !important;
+    line-height: 1.35 !important;
+    font-size: 0.78rem !important;
+    color: $text-secondary !important;
   }
 
   // Nested cards inside (e.g. settings sub-cards)
@@ -690,6 +711,35 @@ $rh-text-muted: rgba(255, 255, 255, 0.38);
     border-radius: 8px !important;
     box-shadow: none !important;
   }
+}
+
+
+// ── Shared section-header parts ───────────────────────────────
+// Count badge shown inside a section title (Issues, Changelog, …).
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: rgba($accent-green, 0.12);
+  border: 1px solid rgba($accent-green, 0.25);
+  color: $accent-green;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+// Right-aligned action cluster in a section header.
+.section-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 
@@ -985,14 +1035,6 @@ mat-paginator {
 }
 
 // ── Issues header actions ─────────────────────────────────────
-.issues-header-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 2px;
-  flex-shrink: 0;
-}
-
 // ── Responsive ────────────────────────────────────────────────
 @media (max-width: 768px) {
   .report-page {
@@ -1037,8 +1079,9 @@ mat-paginator {
     gap: 6px;
   }
 
-  .issues-header-actions {
+  .section-actions {
     width: 100%;
+    margin-left: 0;
     justify-content: flex-start;
   }
 }
@@ -1646,36 +1689,6 @@ mat-paginator {
 }
 
 // ── Changelog timeline ────────────────────────────────────────
-.changelog-header-title {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-
-.changelog-count-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
-  background: rgba($accent-green, 0.12);
-  border: 1px solid rgba($accent-green, 0.25);
-  color: $accent-green;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.changelog-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
 .changelog-add-btn {
   height: 32px !important;
   line-height: 32px !important;
@@ -2928,20 +2941,6 @@ mat-paginator {
 }
 
 // ── Settings section ──────────────────────────────────────────
-.settings-header-title {
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.01em !important;
-  flex: 1;
-}
-
-.settings-header-actions {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
 .settings-more-btn {
   width: 32px !important;
   height: 32px !important;
@@ -3202,80 +3201,16 @@ $sev-medium:   #F9EE06;
 $sev-low:      #3FB618;
 $sev-info:     #2780E3;
 
-.stats-dashboard {
-  background: $surface;
-  border: 1px solid $border-color;
-  border-radius: 10px;
-  padding: 24px;
-  margin-bottom: 12px;
-
-  @media (max-width: 600px) {
-    padding: 14px 12px;
-    border-radius: 8px;
-  }
-}
-
-// Header
-.stats-db-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid $border-color;
-  flex-wrap: wrap;
-}
-
-.stats-db-header-text {
-  min-width: 0;
-}
-
-// Inline status pill row inside the header.
-.stats-db-header-meta {
-  display: flex;
-  flex-wrap: wrap;
+// Statistics uses the shared .report-section card chrome; only the
+// status-pill cluster in its header needs its own spacing.
+.stats-status-pills {
   gap: 6px;
-  margin-left: auto;
-  align-items: center;
 
   @media (max-width: 720px) {
     margin-left: 0;
     width: 100%;
     margin-top: 4px;
   }
-}
-
-.stats-db-header-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1px solid $border-color;
-  background: $surface-nested;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-
-  mat-icon {
-    color: $accent-green !important;
-    font-size: 18px !important;
-    width: 18px !important;
-    height: 18px !important;
-  }
-}
-
-.stats-db-header-title {
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.stats-db-header-sub {
-  display: block;
-  font-size: 0.78rem;
-  color: $text-secondary;
-  margin-top: 1px;
 }
 
 // KPI tile row

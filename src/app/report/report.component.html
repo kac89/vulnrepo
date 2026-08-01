@@ -514,9 +514,11 @@
           <div mat-card-avatar>
             <mat-icon>bug_report</mat-icon>
           </div>
-          <mat-card-title>Issues ({{decryptedReportDataChanged.report_vulns.length}})</mat-card-title>
-          <span style="flex:1"></span>
-          <div class="issues-header-actions">
+          <mat-card-title>
+            Issues
+            <span class="section-count">{{decryptedReportDataChanged.report_vulns.length}}</span>
+          </mat-card-title>
+          <div class="section-actions">
             <button mat-icon-button (click)="kanbanView = !kanbanView"
               [title]="kanbanView ? 'List view' : 'Board view'"
               [color]="kanbanView ? 'accent' : ''">
@@ -1159,18 +1161,16 @@
       </mat-card>
       <!-- Stats -->
       @if (decryptedReportDataChanged.report_vulns.length !== 0) {
-      <div class="stats-dashboard">
+      <mat-card appearance="outlined" class="report-section">
 
         <!-- Header — title + glanceable status pill row -->
-        <div class="stats-db-header">
-          <div class="stats-db-header-icon">
+        <mat-card-header>
+          <div mat-card-avatar>
             <mat-icon>analytics</mat-icon>
           </div>
-          <div class="stats-db-header-text">
-            <span class="stats-db-header-title">Statistics</span>
-            <span class="stats-db-header-sub">{{ decryptedReportDataChanged.report_vulns.length }} total findings</span>
-          </div>
-          <div class="stats-db-header-meta" role="list" aria-label="Issue status summary">
+          <mat-card-title>Statistics</mat-card-title>
+          <mat-card-subtitle>{{ decryptedReportDataChanged.report_vulns.length }} total findings</mat-card-subtitle>
+          <div class="section-actions stats-status-pills" role="list" aria-label="Issue status summary">
             @for (st of statusStatsTable; track st.status) {
             <div class="stats-status-pill" role="listitem" [title]="st.status + ': ' + st.value">
               <span class="stats-status-dot" [style.background]="st.color"></span>
@@ -1179,7 +1179,8 @@
             </div>
             }
           </div>
-        </div>
+        </mat-card-header>
+        <mat-card-content>
 
         <!-- Single severity visual summary: stacked proportional bar -->
         <div class="stats-stacked-bar stats-stacked-bar--top" role="img" aria-label="Severity distribution bar">
@@ -1373,7 +1374,8 @@
           </div>
 
         </div>
-      </div>
+        </mat-card-content>
+      </mat-card>
       }
       <!-- Researcher -->
       <mat-card appearance="outlined" class="report-section">
@@ -1447,13 +1449,13 @@
           <div mat-card-avatar>
             <mat-icon>history</mat-icon>
           </div>
-          <mat-card-title class="changelog-header-title">
+          <mat-card-title>
             <span>Changelog</span>
             @if (listchangelog?.length) {
-            <span class="changelog-count-pill">{{ listchangelog.length }}</span>
+            <span class="section-count">{{ listchangelog.length }}</span>
             }
           </mat-card-title>
-          <div class="changelog-header-actions">
+          <div class="section-actions">
             <button mat-stroked-button class="changelog-add-btn" (click)="addchangelog()" title="Add entry">
               <mat-icon>add</mat-icon> Add entry
             </button>
@@ -1564,8 +1566,8 @@
         <div mat-card-avatar>
           <mat-icon>settings</mat-icon>
         </div>
-        <mat-card-title class="settings-header-title">Settings</mat-card-title>
-        <div class="settings-header-actions">
+        <mat-card-title>Settings</mat-card-title>
+        <div class="section-actions">
           <button mat-icon-button [matMenuTriggerFor]="Settingsmenu" title="More options">
             <mat-icon>more_horiz</mat-icon>
           </button>
