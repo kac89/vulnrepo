@@ -130,6 +130,7 @@ to \`/assets/vulns.json\`.
       width: '1100px',
       maxWidth: '95vw',
       panelClass: 'cvss-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: false,
       data: []
     });

@@ -621,6 +621,20 @@
   color: #757575;
 }
 
+// ── Links in chat content ─────────────────────────────────────────────────────
+// Markdown links in an AI response had no rule at all and fell back to the
+// browser default blue. Match the fullscreen text editor's accent so links look
+// the same wherever rendered Markdown appears. Scoped to the bubble rather than
+// bare `::ng-deep a`, which would leak this rule to every dialog on the page.
+.bubble-text ::ng-deep a {
+  color: var(--vr-accent, #69f0ae);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 // ── Highlight.js override (dark) ──────────────────────────────────────────────
 pre code.hljs { display: block; padding: 1em; }
 code.hljs { padding: 3px 5px; }

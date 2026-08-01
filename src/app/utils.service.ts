@@ -50,6 +50,8 @@ export class UtilsService {
     window.URL.revokeObjectURL(url);
 
     this.dialog.open(DialogExportIntegrityComponent, {
+      panelClass: 'integrity-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       data: { filename, size: blob.size, sha256: hex }
     });
   }

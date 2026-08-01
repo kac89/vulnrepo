@@ -1127,6 +1127,8 @@ export class SettingsComponent implements OnInit {
   showaisettings() {
     const dialogRef = this.dialog.open(DialogOllamaSettingsComponent, {
       width: '600px',
+      panelClass: 'ollama-settings-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: false,
       data: []
     });

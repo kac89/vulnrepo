@@ -59,9 +59,33 @@
   letter-spacing: 0.01em;
 }
 
-.editor-subtitle {
+// Subtitle doubles as the discoverable entry point to the reference drawer.
+.editor-subtitle-btn {
+  font: inherit;
   font-size: 11px;
   color: #757575;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #9e9e9e;
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--vr-accent, #69f0ae);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+.editor-subtitle-link {
+  color: var(--vr-accent, #69f0ae);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .editor-header-right {
@@ -286,8 +310,212 @@
     color: #f5f5f5;
     font-weight: 600;
   }
+
+  // Fenced code blocks are rendered as a <table> too — one row per line, for the
+  // line-number gutter (see applyLineNumbers in the component). The Markdown
+  // table rules above would otherwise box every single line of code and space it
+  // out like a spreadsheet, so undo them here. Markdown tables keep their grid.
+  ::ng-deep pre.hljs code {
+    table {
+      font-size: inherit;
+    }
+
+    th, td {
+      border: 0;
+      padding: 0;
+      background: none;
+      // Long lines wrap; keep the number level with the first visual row
+      // instead of drifting to the middle of the wrapped block.
+      vertical-align: top;
+    }
+
+    // Keep only the vertical gutter rule separating numbers from code.
+    .line-number {
+      border-right: 1px solid var(--vr-accent, #69f0ae);
+      padding-right: 8px;
+      user-select: none;
+    }
+
+    .code-line {
+      padding-left: 10px;
+    }
+  }
 }
 
 [hidden] {
   display: none !important;
+}
+
+// ── Formatting reference drawer ───────────────────────────────────────────────
+.help-drawer {
+  width: 340px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.help-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px 10px 16px;
+  background: #242424;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.help-header-icon {
+  color: #9e9e9e;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.help-header-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f5f5f5;
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+
+.help-close {
+  margin-left: auto;
+
+  &:hover {
+    color: #ef5350 !important;
+    background: rgba(239, 83, 80, 0.1) !important;
+  }
+}
+
+.help-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 16px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+.help-section {
+  margin-top: 18px;
+}
+
+.help-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #757575;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.help-count {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: #9e9e9e;
+  background: rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+
+.help-entry {
+  margin-bottom: 10px;
+}
+
+.help-syntax {
+  margin: 0 0 3px;
+  padding: 6px 8px;
+  background: #141414;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 5px;
+  font-family: 'SF Mono', Monaco, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--vr-accent, #69f0ae);
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+}
+
+.help-result {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #9e9e9e;
+}
+
+.help-notes {
+  margin: 0;
+  padding-left: 16px;
+
+  li {
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: #bdbdbd;
+    margin-bottom: 6px;
+  }
+}
+
+.help-lang-intro,
+.help-lang-note {
+  margin: 0 0 8px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #9e9e9e;
+
+  code {
+    font-family: 'SF Mono', Monaco, Menlo, Consolas, monospace;
+    color: #e0e0e0;
+  }
+}
+
+.help-lang-note {
+  margin: 8px 0 0;
+  color: #757575;
+}
+
+.help-langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.help-lang {
+  font-family: 'SF Mono', Monaco, Menlo, Consolas, monospace;
+  font-size: 10.5px;
+  color: #bdbdbd;
+  background: #242424;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 2px 6px;
+  user-select: text;
+}
+
+// Narrow viewports: the drawer would crush the editor, so let it take over.
+@media (max-width: 900px) {
+  .help-drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(340px, 100%);
+    z-index: 5;
+    box-shadow: -8px 0 24px rgba(0,0,0,0.45);
+  }
+
+  .editor-body {
+    position: relative;
+  }
 }

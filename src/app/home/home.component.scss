@@ -35,21 +35,9 @@
 }
 
 /* ── Tokens ───────────────────────────────────────────────────── */
-:root,
-.vr-page {
-  --vr-accent:       #69f0ae;
-  --vr-accent-dim:   rgba(105, 240, 174, 0.12);
-  --vr-accent-glow:  rgba(105, 240, 174, 0.06);
-  --vr-bg:           #000000;
-  --vr-bg-card:      #0d0d0d;
-  --vr-bg-card-2:    #111111;
-  --vr-border:       rgba(255, 255, 255, 0.07);
-  --vr-border-hover: rgba(105, 240, 174, 0.35);
-  --vr-text:         #e8e8e8;
-  --vr-text-muted:   #888;
-  --vr-radius:       10px;
-  --vr-radius-lg:    16px;
-}
+/* The --vr-* tokens are defined globally in src/styles.scss under the real
+   :root. They are NOT redeclared here: a `:root` rule inside a component
+   stylesheet compiles to `[_ngcontent-xxx]:root` and never matches <html>. */
 
 /* ── Page shell ───────────────────────────────────────────────── */
 .vr-page {

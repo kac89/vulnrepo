@@ -231,6 +231,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const dialogRef = this.dialog.open(DialogAboutComponent, {
       width: '500px',
+      panelClass: 'about-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: false,
       data: []
     });
@@ -247,6 +249,7 @@ export class AppComponent implements OnInit, OnDestroy {
       width: '1040px',
       maxWidth: '90vw',
       panelClass: 'ollama-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: true,
       data: []
     });
