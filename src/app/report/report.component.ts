@@ -1833,9 +1833,14 @@ Sample code here\n\
 
     console.log('Add issue');
     const dialogRef = this.dialog.open(DialogAddissueComponent, {
-      width: '600px',
+      width: '1180px',
+      maxWidth: '96vw',
       panelClass: 'addissue-dialog-panel',
-      backdropClass: 'vr-blur-backdrop'
+      backdropClass: 'vr-blur-backdrop',
+      // Titles already in the report, so the dialog can flag a staged duplicate.
+      data: {
+        existing: (this.decryptedReportDataChanged?.report_vulns || []).map(v => v.title)
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

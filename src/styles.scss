@@ -938,6 +938,26 @@ mat-toolbar.app-navbar {
   overflow: hidden;
 }
 
+// ── Add-issue dialog — opt out of M3 560px container max-width ───────────────
+// The source rail, result list and staging tray sit side by side, so the panel
+// needs the width `MatDialogConfig.width` asks for.
+.addissue-dialog-panel {
+  --mat-dialog-container-max-width: none;
+  --mat-dialog-container-small-max-width: none;
+  max-width: none !important;
+
+  .mat-mdc-dialog-container,
+  .mat-mdc-dialog-inner-container,
+  .mat-mdc-dialog-surface,
+  .mdc-dialog__container,
+  .mdc-dialog__surface {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .mat-mdc-dialog-surface { padding: 0 !important; }
+}
+
 // ── CVSS dialog — opt out of M3 560px container max-width ────────────────────
 .cvss-dialog-panel {
   --mat-dialog-container-max-width: none;
