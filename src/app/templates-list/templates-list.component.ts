@@ -28,6 +28,13 @@ type Origin = 'local' | 'remote' | 'built-in';
 
 // Fields derived once per row at load time. Templates read these instead of
 // calling methods, which would re-run on every change detection pass.
+//
+// Everything here is display-only and interpolated, never bound as HTML. In
+// particular _desc is text extracted for reading: decoding "&lt;target
+// binary&gt;" so it reads as "<target binary>" means the result can contain
+// angle brackets, which is correct for text and unsafe as markup. Anything that
+// persists, copies or exports a row therefore writes the untouched source
+// `desc`, not this.
 interface DecoratedRow {
   _origin: Origin;
   _id: string;
@@ -118,6 +125,9 @@ export class TemplatesListComponent implements OnInit {
     OWASPTOP10k8s:  '/assets/OWASPtop10k8s.json',
   };
 
+  // One parser for every row — cleanDesc runs 939 times on the CWE catalog.
+  private static readonly htmlParser = new DOMParser();
+
   // A bracketed or prefixed catalog identifier: [T1059], [CAPEC-98], [APP-22],
   // CWE-79 - …, A01: …, K01: …, CICD-SEC-1: …. Deliberately requires a digit so
   // VULNRΞPO's category prefixes ([XSS], [RCE]) are not mistaken for IDs.
@@ -164,16 +174,30 @@ export class TemplatesListComponent implements OnInit {
     return '';
   }
 
-  // MITRE ships descriptions with HTML and citation markers in them — 432 of the
-  // 670 Enterprise entries. Interpolation escapes those, so without this the
-  // user reads "<code>" and "(Citation: Foo)" literally.
+  // Markup cannot be stripped correctly by string replacement: one pass over
+  // "<scr<script>ipt>" reassembles the thing it removed, and decoding entities
+  // afterwards turns "&lt;script&gt;" back into a tag. Hand the string to the
+  // platform parser instead and take the text out of it — one pass, no
+  // reassembly, entities resolved as part of parsing rather than after it.
+  // parseFromString builds an inert document: nothing here executes.
+  private toPlainText(value: string): string {
+    if (!/[<&]/.test(value)) { return value; }
+    const doc = TemplatesListComponent.htmlParser.parseFromString(value, 'text/html');
+    doc.body.querySelectorAll('script, style').forEach((el: Element) => el.remove());
+    return doc.body.textContent || '';
+  }
+
+  // MITRE ships descriptions with markup and citation markers in them — 432 of
+  // the 670 Enterprise entries. These are display text and nothing more: the
+  // detail panel interpolates them, and several entries quote real payloads
+  // (Rundll32's "javascript:" one-liner, CWE-83's dangerous attributes) that
+  // have to survive as readable text. Text extraction runs first so the tidying
+  // below only ever moves text around.
   private cleanDesc(desc: string): string {
-    return (desc || '')
+    return this.toPlainText(desc || '')
       .replace(/\(Citation:[^)]*\)/g, '')
       .replace(/\[Citation:[^\]]*\]/g, '')
       .replace(/\[([^\]]+)\]\((?:https?:\/\/)[^)]*\)/g, '$1')
-      .replace(/<\/?[a-z][^>]*>/gi, '')
-      .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"')
       .replace(/[ \t]{2,}/g, ' ')
       .replace(/\n{3,}/g, '\n\n')
       .trim();
@@ -536,7 +560,7 @@ export class TemplatesListComponent implements OnInit {
   adoptTemplate(element: any, event: Event) {
     event.stopPropagation();
     this.indexeddbService.saveReportTemplateinDB({
-      title: element.title, poc: '', desc: element._desc, severity: element._sev,
+      title: element.title, poc: '', desc: element.desc || '', severity: element._sev,
       ref: element.ref || '', cvss: element.cvss || '', cvss_vector: element.cvss_vector || '',
       cve: element.cve || '', tags: element._tags || []
     }).then(() => {
@@ -548,7 +572,7 @@ export class TemplatesListComponent implements OnInit {
   copyAsJson(element: any, event: Event) {
     event.stopPropagation();
     const payload = {
-      title: element.title, poc: '', desc: element._desc, severity: element._sev,
+      title: element.title, poc: '', desc: element.desc || '', severity: element._sev,
       ref: element.ref || '', cvss: element.cvss || '', cvss_vector: element.cvss_vector || '',
       cve: element.cve || '', tags: element._tags || []
     };
@@ -559,7 +583,7 @@ export class TemplatesListComponent implements OnInit {
 
   exportVisible() {
     const rows = this.dataSource.filteredData.map((r: any) => ({
-      title: r.title, poc: '', desc: r._desc, severity: r._sev,
+      title: r.title, poc: '', desc: r.desc || '', severity: r._sev,
       ref: r.ref || '', cvss: r.cvss || '', cvss_vector: (r as any).cvss_vector || '',
       cve: r.cve || '', tags: r._tags || []
     }));
