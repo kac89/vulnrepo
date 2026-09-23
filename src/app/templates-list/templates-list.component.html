@@ -3,141 +3,326 @@
   <div class="tl-header">
     <div class="tl-title-group">
       <mat-icon class="tl-title-icon">bug_report</mat-icon>
-      <h1 class="tl-title">Templates List</h1>
+      <div class="tl-title-text">
+        <h1 class="tl-title">Templates</h1>
+        <span class="tl-subtitle">{{ sourceLabels[sourceSelect] }}</span>
+      </div>
       <span class="tl-count-badge">{{ countvulns.length }}</span>
     </div>
 
     <div class="tl-actions">
       @if (sourceSelect == 'VULNREPO') {
-        <button class="tl-add-btn" (click)="create_issue()">
+        <button class="tl-btn tl-btn--accent" (click)="create_issue()">
           <mat-icon>add</mat-icon>
-          Add template
+          New template
         </button>
       }
-      <button class="tl-source-btn" [matMenuTriggerFor]="sourceMenu">
-        <mat-icon class="tl-source-btn-icon">layers</mat-icon>
-        <span class="tl-source-btn-text">
-          <span class="tl-source-label">Source</span>
-          <span class="tl-source-value">{{ sourceLabels[sourceSelect] }}</span>
-        </span>
-        <mat-icon class="tl-source-btn-caret">expand_more</mat-icon>
+      <button class="tl-btn" (click)="exportVisible()" [disabled]="filteredCount === 0"
+        matTooltip="Download the rows currently shown as a .vulnrepo-templates file">
+        <mat-icon>download</mat-icon>
+        Export
       </button>
-
-      <mat-menu #sourceMenu="matMenu" panelClass="tl-source-menu">
-        @for (src of sources; track src.value) {
-          <button mat-menu-item [class.tl-menu-item--active]="sourceSelect === src.value"
-            (click)="selectSource(src.value)">
-            {{ src.label }}
-          </button>
-        }
-      </mat-menu>
     </div>
+  </div>
+
+  <!-- Nine sources at rest, each with its weight. Was a mat-menu that hid both. -->
+  <div class="tl-sources" role="group" aria-label="Template source">
+    @for (src of sources; track src.value) {
+      <button class="tl-src" [attr.aria-pressed]="sourceSelect === src.value"
+        (click)="selectSource(src.value)" [matTooltip]="src.label">
+        <span class="tl-src-label">{{ src.short }}</span>
+        <span class="tl-src-count">{{ src.count }}</span>
+      </button>
+    }
   </div>
 
   <div class="tl-header-divider"></div>
 
   @if (sourceSelect == 'VULNREPO') {
     <p class="tl-hint">
-      Templates are used when creating a report. Edit <code>/assets/vulns.json</code> and open a Pull Request to the <code>dev</code> branch to contribute.
+      Templates are used when creating a report. Your own templates are stored in this browser —
+      edit or delete them from any row. To contribute one to everybody, edit
+      <code>/assets/vulns.json</code> and open a Pull Request to the <code>dev</code> branch.
     </p>
   }
 
-  <div class="tl-search-bar">
+  <div class="tl-filterbar">
     <div class="tl-search-filter">
       <mat-icon class="tl-search-icon">search</mat-icon>
-      <input class="tl-search-input" type="text" [value]="filterValue"
-        (input)="applyFilter($any($event.target).value)" placeholder="Search by title, severity, CVE…">
+      <input class="tl-search-input" type="text" [value]="filterValue" aria-label="Search templates"
+        (input)="onFilterInput($any($event.target).value)" placeholder="Search title, description, tag…">
       @if (filterValue) {
-        <button class="tl-search-clear" (click)="applyFilter('')" title="Clear">
+        <button class="tl-search-clear" (click)="applyFilter('')" title="Clear search" aria-label="Clear search">
           <mat-icon>close</mat-icon>
         </button>
       }
     </div>
+
+    <div class="tl-facets">
+      @for (facet of severityFacets; track facet.key) {
+        <button class="tl-chip severity-{{ facet.key | lowercase }}"
+          [attr.aria-pressed]="activeSeverities.has(facet.key)" (click)="toggleSeverity(facet.key)">
+          <span class="tl-chip-dot"></span>{{ facet.key }}
+          <span class="tl-chip-count">{{ facet.count }}</span>
+        </button>
+      }
+      @for (facet of originFacets; track facet.key) {
+        <button class="tl-chip origin-{{ facet.key }}"
+          [attr.aria-pressed]="activeOrigins.has(facet.key)" (click)="toggleOrigin(facet.key)">
+          <span class="tl-chip-dot"></span>{{ facet.label }}
+          <span class="tl-chip-count">{{ facet.count }}</span>
+        </button>
+      }
+      @if (hasActiveFilters) {
+        <button class="tl-chip tl-chip--clear" (click)="clearFilters()">
+          <mat-icon class="tl-chip-icon">close</mat-icon>Clear
+        </button>
+      }
+    </div>
+
+    <span class="tl-filterbar-spacer"></span>
+
+    @if (!loading) {
+      <span class="tl-resultline">
+        <b>{{ filteredCount }}</b>@if (filteredCount !== countvulns.length) { of {{ countvulns.length }} } shown
+      </span>
+    }
   </div>
 
-  <div class="tl-table-wrapper">
-    <mat-paginator [pageSizeOptions]="[100, 500, 1000]" showFirstLastButtons class="tl-paginator"></mat-paginator>
+  @if (loading) {
+    <div class="tl-state">
+      <mat-progress-bar mode="indeterminate" color="accent" class="tl-progress"></mat-progress-bar>
+      <p class="tl-state-text">Loading {{ sourceLabels[sourceSelect] }}…</p>
+    </div>
+  } @else if (getvulnlistStatus) {
+    <div class="tl-state">
+      <mat-icon class="tl-state-icon">error_outline</mat-icon>
+      <h2 class="tl-state-title">Source could not be loaded</h2>
+      <p class="tl-state-text">{{ getvulnlistStatus }}</p>
+      <button class="tl-btn tl-btn--accent" (click)="changeselect()">
+        <mat-icon>refresh</mat-icon> Try again
+      </button>
+    </div>
+  } @else {
 
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort matSortActive="cvss" matSortDirection="desc" class="tl-table">
+    @if (filteredCount === 0) {
+      <div class="tl-state">
+        <mat-icon class="tl-state-icon">filter_alt_off</mat-icon>
+        <h2 class="tl-state-title">No templates match these filters</h2>
+        <p class="tl-state-text">
+          All {{ countvulns.length }} rows in {{ sourceLabels[sourceSelect] }} are loaded — none passes
+          the active filters.
+        </p>
+        <button class="tl-btn tl-btn--accent" (click)="clearFilters()">
+          <mat-icon>close</mat-icon> Clear filters
+        </button>
+      </div>
+    }
 
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-        <td mat-cell *matCellDef="let element">
-          <div class="tl-cell-title">
-            @if (element.api == 'remote') {
-              <mat-icon class="tl-remote-icon" [title]="'Remote API: ' + element.apiname + ' [' + element.apiurl + ']'">public</mat-icon>
-            }
-            <span>{{ element.title }}</span>
-          </div>
-        </td>
-      </ng-container>
+    <div class="tl-table-wrapper" [class.tl-table-wrapper--empty]="filteredCount === 0">
+      <div class="tl-table-scroll">
+        <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
+          [matSortActive]="sortActive" [matSortDirection]="sortDirection" class="tl-table">
 
-      <ng-container matColumnDef="severity">
-        <th mat-header-cell *matHeaderCellDef>Severity</th>
-        <td mat-cell *matCellDef="let element">
-          <span class="tl-severity-badge" [ngClass]="'severity-' + (element.severity | lowercase)">
-            {{ element.severity }}
-          </span>
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let element" class="tl-cell-id">{{ element._id || '—' }}</td>
+          </ng-container>
 
-      <ng-container matColumnDef="cvss">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>CVSS</th>
-        <td mat-cell *matCellDef="let element" class="tl-cell-mono">{{ element.cvss }}</td>
-      </ng-container>
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+            <td mat-cell *matCellDef="let element">
+              <div class="tl-cell-title">
+                @if (element._origin == 'remote') {
+                  <mat-icon class="tl-remote-icon"
+                    [matTooltip]="'Remote API: ' + element.apiname + ' [' + element.apiurl + ']'">public</mat-icon>
+                }
+                <span>{{ element._name }}</span>
+              </div>
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="cve">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>CVE</th>
-        <td mat-cell *matCellDef="let element" class="tl-cell-mono">{{ element.cve }}</td>
-      </ng-container>
+          <ng-container matColumnDef="origin">
+            <th mat-header-cell *matHeaderCellDef>Origin</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="tl-origin tl-origin--{{ element._origin }}">
+                <span class="tl-origin-bar"></span>
+                {{ element._origin === 'local' ? 'Mine' : (element._origin === 'remote' ? 'Remote' : 'Built in') }}
+              </span>
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="expand">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element" class="tl-cell-expand">
-          <mat-icon class="tl-expand-icon" [class.tl-expand-icon--open]="element.expanded">expand_more</mat-icon>
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="severity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Severity</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="tl-severity-badge" [ngClass]="'severity-' + (element._sev | lowercase)">
+                {{ element._sev }}
+              </span>
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="expandedDetail">
-        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-          <div class="tl-detail" [@detailExpand]="element.expanded ? 'expanded' : 'collapsed'">
-            <div class="tl-detail-inner">
-              @if (element.desc) {
-                <div class="tl-detail-block">
-                  <span class="tl-detail-label">Description</span>
-                  <p class="tl-detail-text">{{ element.desc }}</p>
+          <ng-container matColumnDef="cvss">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>CVSS</th>
+            <td mat-cell *matCellDef="let element" class="tl-cell-mono">
+              @if (element._score !== null) { {{ element._score }} } @else { <span class="tl-nil">—</span> }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cve">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>CVE</th>
+            <td mat-cell *matCellDef="let element" class="tl-cell-mono">
+              @if (element.cve) { {{ element.cve }} } @else { <span class="tl-nil">—</span> }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="tags">
+            <th mat-header-cell *matHeaderCellDef>Tags</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="tl-tagrow">
+                @for (tag of element._tags; track tag) {
+                  <button class="tl-tag" (click)="filterByTag(tag, $event)"
+                    [matTooltip]="'Filter by ' + tag">{{ tag }}</button>
+                }
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" class="tl-cell-actions">
+              <span class="tl-rowacts">
+                @if (element._origin === 'local') {
+                  <button class="tl-iconbtn" (click)="editTemplate(element, $event)"
+                    matTooltip="Edit this template" aria-label="Edit template">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="tl-iconbtn tl-iconbtn--danger" [class.tl-iconbtn--armed]="element._armed"
+                    (click)="confirmDelete(element, $event)"
+                    [matTooltip]="element._armed ? 'Click again to delete' : 'Delete this template'"
+                    aria-label="Delete template">
+                    <mat-icon>{{ element._armed ? 'delete_forever' : 'delete_outline' }}</mat-icon>
+                  </button>
+                } @else {
+                  <button class="tl-iconbtn tl-iconbtn--go" (click)="adoptTemplate(element, $event)"
+                    matTooltip="Save to my templates" aria-label="Save to my templates">
+                    <mat-icon>bookmark_add</mat-icon>
+                  </button>
+                }
+                <button class="tl-iconbtn" (click)="copyAsJson(element, $event)"
+                  matTooltip="Copy as JSON" aria-label="Copy as JSON">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="expand">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" class="tl-cell-expand">
+              <mat-icon class="tl-expand-icon" [class.tl-expand-icon--open]="element.expanded">expand_more</mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnCount">
+              <div class="tl-detail" [class.tl-detail--open]="element.expanded">
+                <div class="tl-detail-inner">
+                  <div class="tl-detail-grid">
+
+                  <div class="tl-detail-main">
+                    @if (element._desc) {
+                      <div class="tl-detail-block">
+                        <span class="tl-detail-label">Description</span>
+                        <p class="tl-detail-text">{{ element._desc }}</p>
+                      </div>
+                    }
+                    <div class="tl-detail-acts">
+                      @if (element._origin === 'local') {
+                        <button class="tl-btn tl-btn--sm tl-btn--accent" (click)="editTemplate(element, $event)">
+                          <mat-icon>edit</mat-icon> Edit template
+                        </button>
+                        <button class="tl-btn tl-btn--sm" (click)="confirmDelete(element, $event)">
+                          <mat-icon>delete_outline</mat-icon>
+                          {{ element._armed ? 'Click again to delete' : 'Delete' }}
+                        </button>
+                      } @else {
+                        <button class="tl-btn tl-btn--sm tl-btn--accent" (click)="adoptTemplate(element, $event)">
+                          <mat-icon>bookmark_add</mat-icon> Save to my templates
+                        </button>
+                      }
+                      <button class="tl-btn tl-btn--sm" (click)="copyAsJson(element, $event)">
+                        <mat-icon>content_copy</mat-icon> Copy as JSON
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="tl-detail-side">
+                    <!-- Values whose column didn't earn a place still surface here. -->
+                    @if (element.cve && !hasColumn('cve')) {
+                      <div class="tl-detail-block">
+                        <span class="tl-detail-label">CVE</span>
+                        <span class="tl-vector">{{ element.cve }}</span>
+                      </div>
+                    }
+                    @if (element._score !== null && !hasColumn('cvss')) {
+                      <div class="tl-detail-block">
+                        <span class="tl-detail-label">CVSS</span>
+                        <span class="tl-vector">{{ element._score }}</span>
+                      </div>
+                    }
+                    @if (element.cvss_vector) {
+                      <div class="tl-detail-block">
+                        <span class="tl-detail-label">CVSS vector</span>
+                        <span class="tl-vector">{{ element.cvss_vector }}</span>
+                      </div>
+                    }
+                    @if (element._refs.length) {
+                      <div class="tl-detail-block">
+                        <span class="tl-detail-label">References · {{ element._refs.length }}</span>
+                        <span class="tl-reflist">
+                          @for (url of element._refs; track url) {
+                            <a [href]="url" target="_blank" rel="noopener noreferrer"
+                              [matTooltip]="url" (click)="$event.stopPropagation()">{{ url }}</a>
+                          }
+                        </span>
+                      </div>
+                    }
+                    @if (element._tags.length) {
+                      <div class="tl-detail-block">
+                        <span class="tl-detail-label">Tags</span>
+                        <span class="tl-tagrow">
+                          @for (tag of element._tags; track tag) {
+                            <button class="tl-tag" (click)="filterByTag(tag, $event)">{{ tag }}</button>
+                          }
+                        </span>
+                      </div>
+                    }
+                  </div>
+
+                  </div>
                 </div>
-              }
-              @if (element.cve) {
-                <div class="tl-detail-block">
-                  <span class="tl-detail-label">CVE</span>
-                  <p class="tl-detail-text tl-detail-text--mono">{{ element.cve }}</p>
-                </div>
-              }
-              @if (element.ref) {
-                <div class="tl-detail-block">
-                  <span class="tl-detail-label">References</span>
-                  <p class="tl-detail-text tl-detail-text--mono tl-detail-text--refs">{{ element.ref }}</p>
-                </div>
-              }
-            </div>
-          </div>
-        </td>
-      </ng-container>
+              </div>
+            </td>
+          </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let element; columns: displayedColumns;"
-          class="tl-row"
-          [class.tl-row--expanded]="element.expanded"
-          (click)="element.expanded = !element.expanded">
-      </tr>
-      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="tl-detail-row"></tr>
-    </table>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+              class="tl-row"
+              [class.tl-row--expanded]="element.expanded"
+              tabindex="0"
+              role="button"
+              [attr.aria-expanded]="!!element.expanded"
+              [attr.aria-label]="element._name"
+              (keydown)="onRowKeydown(element, $event)"
+              (click)="toggleRow(element)">
+          </tr>
+          <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="tl-detail-row"></tr>
+        </table>
+      </div>
 
-  </div>
-
-  @if (getvulnlistStatus) {
-    <p class="tl-status">{{ getvulnlistStatus }}</p>
+      <mat-paginator [pageSizeOptions]="[25, 50, 100, 500]" showFirstLastButtons
+        class="tl-paginator" aria-label="Select page of templates"></mat-paginator>
+    </div>
   }
 
 </div>
