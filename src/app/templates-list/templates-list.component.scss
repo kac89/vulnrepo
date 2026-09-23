@@ -20,6 +20,10 @@ $sev-medium:   #f5d020;
 $sev-low:      #69f0ae;
 $sev-info:     #60a5fa;
 
+$origin-local:  $accent;
+$origin-remote: $sev-info;
+$origin-built:  #b0b0b0;
+
 * { box-sizing: border-box; }
 
 // ── Page shell ────────────────────────────────────────────────────────────────
@@ -35,13 +39,19 @@ $sev-info:     #60a5fa;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  padding-bottom: 20px;
+  padding-bottom: 16px;
 }
 
 .tl-title-group {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.tl-title-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .tl-title-icon {
@@ -61,6 +71,12 @@ $sev-info:     #60a5fa;
   line-height: 1.2;
 }
 
+.tl-subtitle {
+  font-size: 0.78rem;
+  color: $text-muted;
+  line-height: 1.3;
+}
+
 .tl-count-badge {
   display: inline-flex;
   align-items: center;
@@ -73,27 +89,22 @@ $sev-info:     #60a5fa;
   font-weight: 700;
   padding: 1px 9px;
   line-height: 1.6;
-}
-
-// ── Header divider ─────────────────────────────────────────────────────────────
-.tl-header-divider {
-  height: 1px;
-  background: $border;
-  margin-bottom: 20px;
+  align-self: center;
 }
 
 // ── Actions bar ───────────────────────────────────────────────────────────────
 .tl-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-// ── Add button (action-btn + accent-btn pattern from myreports) ───────────────
-.tl-add-btn {
+// ── Buttons ───────────────────────────────────────────────────────────────────
+.tl-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   height: 36px;
   padding: 0 14px;
@@ -103,11 +114,11 @@ $sev-info:     #60a5fa;
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s ease, border-color 0.15s ease;
-  background: rgba(105, 240, 174, 0.1);
-  border: 1px solid rgba(105, 240, 174, 0.22);
-  color: $accent;
   line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: $text;
 
   mat-icon {
     font-size: 15px;
@@ -116,67 +127,95 @@ $sev-info:     #60a5fa;
     flex-shrink: 0;
   }
 
-  &:hover {
-    background: rgba(105, 240, 174, 0.17);
-    border-color: rgba(105, 240, 174, 0.38);
-  }
-}
-
-// ── Source button (action-btn pattern from myreports) ─────────────────────────
-.tl-source-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 36px;
-  padding: 0 10px 0 14px;
-  border-radius: 6px;
-  font-family: inherit;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s ease, border-color 0.15s ease;
-  background: rgba(0, 0, 0, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: $text;
-  line-height: 1;
-
-  &:hover {
+  &:hover:not(:disabled) {
     background: rgba(0, 0, 0, 0.35);
     border-color: rgba(255, 255, 255, 0.22);
   }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  &--accent {
+    background: rgba(105, 240, 174, 0.1);
+    border-color: rgba(105, 240, 174, 0.22);
+    color: $accent;
+
+    &:hover:not(:disabled) {
+      background: rgba(105, 240, 174, 0.17);
+      border-color: rgba(105, 240, 174, 0.38);
+    }
+  }
+
+  &--sm {
+    height: 30px;
+    padding: 0 11px;
+    font-size: 0.765rem;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
 }
 
-.tl-source-btn-icon {
-  font-size: 15px;
-  width: 15px;
-  height: 15px;
-  color: $icon;
-  flex-shrink: 0;
-}
-
-.tl-source-btn-text {
+// ── Source rail ───────────────────────────────────────────────────────────────
+// Replaces the mat-menu: nine sources of very different size, visible at rest
+// with their row counts, so the weight of a switch is known before the click.
+.tl-sources {
   display: flex;
-  align-items: baseline;
-  gap: 5px;
+  gap: 7px;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
 }
 
-.tl-source-label {
-  font-size: 0.8125rem;
-  font-weight: 400;
-  color: $text-muted;
+.tl-src {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 11px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.795rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s, border-color 0.14s, color 0.14s;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: rgba(245, 245, 245, 0.72);
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: $text;
+  }
+
+  &[aria-pressed="true"] {
+    background: $accent-tint;
+    border-color: $accent-border;
+    color: $accent;
+    font-weight: 500;
+  }
 }
 
-.tl-source-value {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: $text;
-}
-
-.tl-source-btn-caret {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
+.tl-src-count {
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.7rem;
   color: $icon;
-  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+
+  .tl-src[aria-pressed="true"] & {
+    color: $accent;
+    opacity: 0.72;
+  }
+}
+
+// ── Header divider ─────────────────────────────────────────────────────────────
+.tl-header-divider {
+  height: 1px;
+  background: $border;
+  margin-bottom: 20px;
 }
 
 // ── Hint text ─────────────────────────────────────────────────────────────────
@@ -185,6 +224,7 @@ $sev-info:     #60a5fa;
   color: $text-muted;
   margin: 0 0 20px;
   line-height: 1.6;
+  max-width: 88ch;
 
   code {
     font-family: 'Roboto Mono', 'Courier New', monospace;
@@ -197,9 +237,31 @@ $sev-info:     #60a5fa;
   }
 }
 
-// ── Search bar (inline pill — matches settings section-header-filter) ─────────
-.tl-search-bar {
+// ── Filter bar ────────────────────────────────────────────────────────────────
+.tl-filterbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   margin-bottom: 16px;
+}
+
+.tl-filterbar-spacer {
+  flex: 1 1 auto;
+  min-width: 8px;
+}
+
+.tl-resultline {
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.74rem;
+  color: $text-muted;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  b {
+    color: $accent;
+    font-weight: 500;
+  }
 }
 
 .tl-search-filter {
@@ -234,9 +296,10 @@ $sev-info:     #60a5fa;
   font-size: 12px;
   font-weight: 500;
   font-family: inherit;
-  width: 240px;
+  width: 248px;
+  max-width: 48vw;
 
-  &::placeholder { color: $text-muted; }
+  &::placeholder { color: $text-muted; font-weight: 400; }
 }
 
 .tl-search-clear {
@@ -258,12 +321,140 @@ $sev-info:     #60a5fa;
   }
 }
 
+// ── Facet chips ───────────────────────────────────────────────────────────────
+.tl-facets {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-family: inherit;
+  font-size: 0.735rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s, border-color 0.14s, color 0.14s;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(245, 245, 245, 0.68);
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    color: $text;
+  }
+}
+
+.tl-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+.tl-chip-count {
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.68rem;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.tl-chip-icon {
+  font-size: 13px;
+  width: 13px;
+  height: 13px;
+}
+
+@mixin chip-on($c) {
+  &[aria-pressed="true"] {
+    color: $c;
+    border-color: rgba($c, 0.42);
+    background: rgba($c, 0.13);
+  }
+}
+
+.tl-chip.severity-critical { @include chip-on($sev-critical); }
+.tl-chip.severity-high     { @include chip-on($sev-high); }
+.tl-chip.severity-medium   { @include chip-on($sev-medium); }
+.tl-chip.severity-low      { @include chip-on($sev-low); }
+.tl-chip.severity-info     { @include chip-on($sev-info); }
+.tl-chip.origin-local      { @include chip-on($origin-local); }
+.tl-chip.origin-remote     { @include chip-on($origin-remote); }
+.tl-chip.origin-built-in   { @include chip-on($origin-built); }
+
+.tl-chip--clear {
+  color: $text-dim;
+
+  &:hover {
+    color: $text;
+    border-color: rgba(255, 255, 255, 0.26);
+  }
+}
+
+// ── State blocks (loading / error / no matches) ───────────────────────────────
+.tl-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 52px 24px;
+  border: 1px solid $border;
+  border-radius: 8px;
+  background: $bg;
+  color: $text-muted;
+}
+
+.tl-state-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: $icon;
+}
+
+.tl-state-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $text;
+  letter-spacing: -0.01em;
+}
+
+.tl-state-text {
+  margin: 0;
+  font-size: 0.85rem;
+  max-width: 52ch;
+  line-height: 1.6;
+}
+
+.tl-progress {
+  width: 100%;
+  max-width: 260px;
+}
+
 // ── Table wrapper ─────────────────────────────────────────────────────────────
 .tl-table-wrapper {
   border: 1px solid $border;
   border-radius: 8px;
   background: $surface;
   overflow: hidden;
+
+  &--empty {
+    display: none;
+  }
+}
+
+.tl-table-scroll {
+  overflow-x: auto;
 }
 
 .tl-table {
@@ -282,17 +473,34 @@ $sev-info:     #60a5fa;
     color: $text-muted !important;
     border-bottom: 1px solid $border-inner !important;
     padding: 10px 14px !important;
+    white-space: nowrap;
   }
 
   .mat-mdc-cell {
     border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
-    padding: 12px 14px !important;
+    padding: 11px 14px !important;
     vertical-align: middle;
     color: rgba($text, 0.72);
     font-size: 0.875rem;
     white-space: normal;
     word-wrap: break-word;
     max-width: 420px;
+  }
+
+  // Title absorbs the slack so the data columns stay grouped together rather
+  // than drifting apart when a source drops two of them.
+  .mat-column-title {
+    width: 100%;
+    max-width: none;
+  }
+
+  .mat-column-id,
+  .mat-column-cvss,
+  .mat-column-cve,
+  .mat-column-severity,
+  .mat-column-origin {
+    width: 1%;
+    white-space: nowrap;
   }
 }
 
@@ -303,6 +511,11 @@ $sev-info:     #60a5fa;
 
   &:hover {
     background: $accent-hover-row !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: -2px;
   }
 
   &.tl-row--expanded {
@@ -340,7 +553,7 @@ $sev-info:     #60a5fa;
   font-size: 16px;
   width: 16px;
   height: 16px;
-  color: $icon;
+  color: $origin-remote;
   flex-shrink: 0;
 }
 
@@ -348,6 +561,134 @@ $sev-info:     #60a5fa;
   font-family: 'Roboto Mono', 'Courier New', monospace;
   font-size: 0.82rem;
   color: $text-dim;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tl-cell-id {
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.78rem;
+  color: $text-dim;
+  white-space: nowrap;
+  width: 1%;
+}
+
+.tl-nil {
+  color: $icon;
+}
+
+// ── Origin marker ─────────────────────────────────────────────────────────────
+// A rail rather than a second badge — severity already owns the pill shape here.
+.tl-origin {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $icon;
+  white-space: nowrap;
+}
+
+.tl-origin-bar {
+  width: 3px;
+  height: 13px;
+  border-radius: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.tl-origin--local  { color: $origin-local; }
+.tl-origin--remote { color: $origin-remote; }
+
+// ── Tags ──────────────────────────────────────────────────────────────────────
+.tl-tagrow {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tl-tag {
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.66rem;
+  color: $text-dim;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid $border;
+  border-radius: 3px;
+  padding: 0 6px;
+  line-height: 1.75;
+  cursor: pointer;
+  transition: border-color 0.14s, color 0.14s;
+
+  &:hover {
+    border-color: $accent-border;
+    color: $accent;
+  }
+}
+
+// ── Row actions ───────────────────────────────────────────────────────────────
+.tl-cell-actions {
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 6px !important;
+}
+
+.tl-rowacts {
+  display: flex;
+  gap: 2px;
+  opacity: 0.3;
+  transition: opacity 0.14s ease;
+
+  .tl-row:hover &,
+  .tl-row--expanded &,
+  .tl-row:focus-within & {
+    opacity: 1;
+  }
+}
+
+.tl-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 3px 5px;
+  cursor: pointer;
+  color: $icon;
+  transition: color 0.14s, background 0.14s, border-color 0.14s;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    color: $text;
+    background: rgba(255, 255, 255, 0.07);
+    border-color: $border;
+  }
+
+  &--go:hover {
+    color: $accent;
+    background: $accent-tint;
+    border-color: $accent-border;
+  }
+
+  &--danger:hover {
+    color: $sev-critical;
+    background: rgba($sev-critical, 0.1);
+    border-color: rgba($sev-critical, 0.3);
+  }
+
+  // Armed: one more click deletes.
+  &--armed {
+    color: $sev-critical;
+    background: rgba($sev-critical, 0.16);
+    border-color: rgba($sev-critical, 0.45);
+  }
 }
 
 // ── Expand indicator ──────────────────────────────────────────────────────────
@@ -396,68 +737,125 @@ $sev-info:     #60a5fa;
 }
 
 // ── Expanded detail panel ─────────────────────────────────────────────────────
+// Collapsed by a 0fr→1fr grid row rather than the @angular/animations trigger
+// this used to carry: the trigger never applied its state styles once the table
+// moved inside an @if block, and animations are deprecated in Angular 20+.
 .tl-detail {
-  overflow: hidden;
-  display: flex;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 225ms cubic-bezier(0.4, 0.0, 0.2, 1);
+
+  &--open {
+    grid-template-rows: 1fr;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
+// Clip box only. Padding and borders live on .tl-detail-grid — on this element
+// they would survive the 0fr collapse and leave a 37px stub behind.
 .tl-detail-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px 16px 20px 16px;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tl-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(220px, 0.85fr);
+  gap: 18px 30px;
+  padding: 16px 18px 20px;
   border-top: 1px solid $border-inner;
   width: 100%;
   min-width: 0;
-  overflow: hidden;
   background: rgba(0, 0, 0, 0.15);
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tl-detail-main,
+.tl-detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
 }
 
 .tl-detail-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+  min-width: 0;
 }
 
 .tl-detail-label {
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.1em;
   color: $text-muted;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
 }
 
 .tl-detail-text {
   margin: 0;
   font-size: 0.855rem;
   color: rgba($text, 0.72);
-  line-height: 1.6;
+  line-height: 1.62;
+  white-space: pre-line;
+}
 
-  &--mono {
+.tl-detail-acts {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+// References are newline-separated URLs in the data — link them, one per line.
+.tl-reflist {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+
+  a {
     font-family: 'Roboto Mono', 'Courier New', monospace;
-    font-size: 0.8rem;
-  }
-
-  &--refs {
-    white-space: pre-line;
-    word-break: break-word;
+    font-size: 0.755rem;
+    line-height: 1.5;
+    color: $text-dim;
+    text-decoration: none;
+    display: block;
+    word-break: break-all;
     overflow-wrap: anywhere;
-    color: $text-muted;
+
+    &:hover {
+      color: $accent;
+      text-decoration: underline;
+    }
   }
+}
+
+.tl-vector {
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.74rem;
+  color: $text-dim;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid $border;
+  border-radius: 5px;
+  padding: 5px 8px;
+  word-break: break-all;
+  line-height: 1.5;
 }
 
 // ── Paginator ─────────────────────────────────────────────────────────────────
+// Sits under the table: the controls are where you arrive, not where you began.
 .tl-paginator {
-  border-bottom: 1px solid $border-inner;
+  border-top: 1px solid $border-inner;
   background: rgba(255, 255, 255, 0.025);
   color: $text-muted;
   font-size: 0.82rem;
-}
-
-// ── Status line ───────────────────────────────────────────────────────────────
-.tl-status {
-  margin-top: 12px;
-  font-size: 0.82rem;
-  color: $text-muted;
-  text-align: center;
 }
