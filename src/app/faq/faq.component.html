@@ -3,26 +3,67 @@
   <!-- Page header -->
   <div class="page-header">
     <div class="page-title">
-      <mat-icon class="title-icon">live_help</mat-icon>
+      <mat-icon class="title-icon" aria-hidden="true">live_help</mat-icon>
       <div>
         <h1>Frequently Asked Questions</h1>
-        <span class="page-subtitle">Everything you need to know about VULNREPO</span>
+        <span class="page-subtitle">Search the answers, or browse by topic</span>
       </div>
+      <span class="faq-count-badge">{{ entries.length }} answers</span>
+    </div>
+
+    <div class="faq-header-actions">
+      <button class="faq-btn" (click)="toggleAll()" [disabled]="noResults">
+        <mat-icon aria-hidden="true">{{ anyOpen ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+        {{ anyOpen ? 'Collapse all' : 'Expand all' }}
+      </button>
+      <a class="faq-btn" target="_blank" rel="noopener" href="https://github.com/kac89/vulnrepo/issues">
+        <mat-icon aria-hidden="true">open_in_new</mat-icon>
+        Ask on GitHub
+      </a>
     </div>
   </div>
 
+  <!-- Search: matches question titles, answer text, badges, link labels and tags -->
   <div class="faq-search-wrap">
-    <mat-icon class="faq-search-icon">search</mat-icon>
+    <mat-icon class="faq-search-icon" aria-hidden="true">search</mat-icon>
     <input
+      #searchInput
       class="faq-search-input"
       type="text"
-      placeholder="Search sections…"
-      [(ngModel)]="searchQuery"
+      aria-label="Search the FAQ"
+      placeholder="Search questions and answers…"
       autocomplete="off"
+      [value]="searchQuery"
+      (input)="onSearch($any($event.target).value)"
     />
-    <button *ngIf="searchQuery" class="faq-search-clear" (click)="searchQuery = ''" aria-label="Clear search">
-      <mat-icon>close</mat-icon>
+    @if (searchQuery) {
+      <button class="faq-search-clear" (click)="clearSearch()" aria-label="Clear search">
+        <mat-icon aria-hidden="true">close</mat-icon>
+      </button>
+    }
+    <kbd class="faq-search-kbd" aria-hidden="true">/</kbd>
+  </div>
+
+  <!-- Topic filter — also the only navigation on a phone, where the sidebar is gone -->
+  <div class="faq-chips" role="group" aria-label="Filter by topic">
+    <button
+      class="faq-chip"
+      [class.faq-chip--on]="category === 'all'"
+      [attr.aria-pressed]="category === 'all'"
+      (click)="selectCategory('all')">
+      All answers
+      <span class="faq-chip-count">{{ counts['all'] }}</span>
     </button>
+    @for (cat of categories; track cat.id) {
+      <button
+        class="faq-chip"
+        [class.faq-chip--on]="category === cat.id"
+        [attr.aria-pressed]="category === cat.id"
+        (click)="selectCategory(cat.id)">
+        {{ cat.label }}
+        <span class="faq-chip-count">{{ counts[cat.id] }}</span>
+      </button>
+    }
   </div>
 
   <div class="header-divider"></div>
@@ -30,396 +71,141 @@
   <!-- Two-column layout -->
   <div class="faq-layout">
 
-    <!-- Sticky sidebar TOC -->
+    <!-- Sidebar: grouped, filtered alongside the list, marker driven by scroll -->
     <aside class="faq-sidebar">
       <div class="faq-toc">
         <p class="faq-toc-heading">On this page</p>
-        <nav>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Browser-support'" routerLink="/faq" [queryParams]="{q: 'Browser-support'}">Browser support</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'How-are-reports-stored'" routerLink="/faq" [queryParams]="{q: 'How-are-reports-stored'}">How are reports stored?</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Key-lifetime-auto-lock'" routerLink="/faq" [queryParams]="{q: 'Key-lifetime-auto-lock'}">Key lifetime &amp; auto-lock</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Key-Storage-Security-Level'" routerLink="/faq" [queryParams]="{q: 'Key-Storage-Security-Level'}">Key Storage Security Level</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'How-to-create-PDF-report'" routerLink="/faq" [queryParams]="{q: 'How-to-create-PDF-report'}">Create PDF report</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'I-forgot-my-security-key'" routerLink="/faq" [queryParams]="{q: 'I-forgot-my-security-key'}">Forgot security key</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Can-I-change-report-security-key'" routerLink="/faq" [queryParams]="{q: 'Can-I-change-report-security-key'}">Change security key</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Displaying-attachments'" routerLink="/faq" [queryParams]="{q: 'Displaying-attachments'}">Displaying attachments</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'VULN-VULNR'" routerLink="/faq" [queryParams]="{q: 'VULN-VULNR'}">.VULN vs .VULNR</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'What-is-the-issue-status'" routerLink="/faq" [queryParams]="{q: 'What-is-the-issue-status'}">Issue status</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'API'" routerLink="/faq" [queryParams]="{q: 'API'}">External storage</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'API-VAULT'" routerLink="/faq" [queryParams]="{q: 'API-VAULT'}">API VAULT</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Report-Profiles'" routerLink="/faq" [queryParams]="{q: 'Report-Profiles'}">Report Profiles</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Search-CVE'" routerLink="/faq" [queryParams]="{q: 'Search-CVE'}">CVE Search (NVD)</a>
-          <a class="faq-toc-link" [class.faq-toc-link--active]="activeSection === 'Private-LLM'" routerLink="/faq" [queryParams]="{q: 'Private-LLM'}">Private LLM</a>
-        </nav>
+        @for (group of groups; track group.id) {
+          <nav class="faq-toc-group" [attr.aria-label]="group.label">
+            <p class="faq-toc-group-label">{{ group.label }}</p>
+            @for (entry of group.items; track entry.id) {
+              <button
+                class="faq-toc-link"
+                [class.faq-toc-link--active]="activeSection === entry.id"
+                (click)="goto(entry.id)">{{ entry.short }}</button>
+            }
+          </nav>
+        }
+        @if (!groups.length) {
+          <p class="faq-toc-empty">Nothing matches the current filter.</p>
+        }
       </div>
     </aside>
 
-    <!-- Main content -->
+    <!-- Answers -->
     <main class="faq-content">
 
-      <section class="faq-item" id="Browser-support" [hidden]="!sectionVisible('Browser-support')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">devices</mat-icon>
-            <h2 class="faq-item-title">Browser support</h2>
-            <a class="faq-anchor-link" href="/faq?q=Browser-support" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Project is working on latest browsers (<strong>not in private browsing mode!</strong>):</p>
-        </div>
-        <div class="faq-item-body">
-          <ul class="faq-check-list">
-            <li><mat-icon color="accent">check_circle</mat-icon> Google Chrome</li>
-            <li><mat-icon color="accent">check_circle</mat-icon> Mozilla Firefox</li>
-            <li><mat-icon color="accent">check_circle</mat-icon> Microsoft Edge (Chromium)</li>
-            <li><mat-icon color="accent">check_circle</mat-icon> iOS Safari / Chrome</li>
-            <li><mat-icon color="accent">check_circle</mat-icon> Android Chrome</li>
-          </ul>
-        </div>
-      </section>
+      @for (entry of visible; track entry.id) {
+        <section
+          #entrySection
+          class="faq-entry"
+          [id]="entry.id"
+          [class.faq-entry--open]="isOpen(entry.id)"
+          [class.faq-entry--highlighted]="highlightId === entry.id">
 
-      <div class="faq-divider" [hidden]="!sectionVisible('Browser-support') && !sectionVisible('How-are-reports-stored')"></div>
-
-      <section class="faq-item" id="How-are-reports-stored" [hidden]="!sectionVisible('How-are-reports-stored')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">storage</mat-icon>
-            <h2 class="faq-item-title">How are reports stored?</h2>
-            <a class="faq-anchor-link" href="/faq?q=How-are-reports-stored" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
+          <div class="faq-entry-head">
+            <button
+              class="faq-entry-toggle"
+              (click)="toggle(entry.id)"
+              [attr.aria-expanded]="isOpen(entry.id)"
+              [attr.aria-controls]="entry.id + '-body'">
+              <mat-icon class="faq-entry-chevron" aria-hidden="true">chevron_right</mat-icon>
+              <h2 class="faq-entry-title">{{ entry.title }}</h2>
+              <span class="faq-entry-tag">{{ categoryLabel(entry.cat) }}</span>
+            </button>
+            <button
+              class="faq-entry-copy"
+              (click)="copyLink(entry, $event)"
+              [attr.aria-label]="'Copy a link to: ' + entry.short"
+              matTooltip="Copy link to this answer"
+              matTooltipPosition="left">
+              <mat-icon aria-hidden="true">link</mat-icon>
+            </button>
           </div>
-          <p class="faq-item-desc">Encrypted reports are stored in the browser's <strong>IndexedDB</strong> (local machine only by default, nothing is sent outside). Decryption keys are held in short-lived <strong>in-memory storage only</strong> — they are never written to sessionStorage, localStorage, or any other persistent medium.</p>
-          <p class="faq-item-desc">There is an option to use an external database/server to store encrypted reports — see:
-            <a class="faq-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a>,
-            <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>.
+
+          @if (isOpen(entry.id)) {
+            <div class="faq-entry-body" [id]="entry.id + '-body'">
+              @for (block of entry.blocks; track $index) {
+                @switch (block.kind) {
+
+                  @case ('p') {
+                    <p class="faq-p">@for (run of block.runs; track $index) {<ng-container [ngTemplateOutlet]="runTpl" [ngTemplateOutletContext]="{ run: run }"></ng-container>}</p>
+                  }
+
+                  @case ('bullets') {
+                    <ul class="faq-bullets">
+                      @for (item of block.items; track $index) {
+                        <li class="faq-bullet" [class.faq-bullet--plain]="!item.badge">
+                          @if (item.badge) {
+                            <span class="faq-badge" [ngClass]="'faq-badge--' + (item.tone || 'neutral')">{{ item.badge }}</span>
+                          } @else {
+                            <mat-icon class="faq-bullet-check" aria-hidden="true">check_circle</mat-icon>
+                          }
+                          <span class="faq-bullet-text">@for (run of item.runs; track $index) {<ng-container [ngTemplateOutlet]="runTpl" [ngTemplateOutletContext]="{ run: run }"></ng-container>}</span>
+                        </li>
+                      }
+                    </ul>
+                  }
+
+                  @case ('links') {
+                    <div class="faq-resources">
+                      @for (link of block.links; track link.href) {
+                        <a class="faq-resource-link" target="_blank" rel="noopener" [href]="link.href">
+                          <mat-icon aria-hidden="true">open_in_new</mat-icon>
+                          <span>{{ link.label }}</span>
+                        </a>
+                      }
+                    </div>
+                  }
+
+                  @case ('code') {
+                    <code class="faq-codeblock">{{ block.text }}</code>
+                  }
+
+                }
+              }
+            </div>
+          }
+        </section>
+      }
+
+      <!-- Dead end with a way out: what was searched, how to widen it, who to ask -->
+      @if (noResults) {
+        <div class="faq-no-results">
+          <mat-icon aria-hidden="true">search_off</mat-icon>
+          @if (searchQuery) {
+            <p>No answer matches "<strong>{{ searchQuery }}</strong>"</p>
+          } @else {
+            <p>No answers in <strong>{{ categoryLabel(category) }}</strong></p>
+          }
+          <p class="faq-no-results-hint">
+            Search covers every question title, answer body and tag. Try a single word, clear the
+            topic filter, or open an issue — recurring questions end up on this page.
           </p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('How-are-reports-stored') && !sectionVisible('Key-lifetime-auto-lock')"></div>
-
-      <section class="faq-item" id="Key-lifetime-auto-lock" [hidden]="!sectionVisible('Key-lifetime-auto-lock')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">timer_off</mat-icon>
-            <h2 class="faq-item-title">Key lifetime &amp; auto-lock</h2>
-            <a class="faq-anchor-link" href="/faq?q=Key-lifetime-auto-lock" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Decryption passwords are held exclusively in memory and are never persisted to any browser storage. The key vault is cleared automatically when any of the following occur:</p>
-        </div>
-        <div class="faq-item-body">
-          <ul class="faq-check-list">
-            <li><mat-icon color="accent">visibility_off</mat-icon> <strong>Tab hidden</strong> — switching away from the tab triggers an immediate clear</li>
-            <li><mat-icon color="accent">close</mat-icon> <strong>Tab closed / page reload</strong> — the vault is wiped before the page unloads</li>
-            <li><mat-icon color="accent">hourglass_empty</mat-icon> <strong>15-minute inactivity</strong> — the timer resets on any keyboard, mouse, or touch input</li>
-          </ul>
-          <p class="faq-item-desc" style="margin-top:12px">After the vault clears, re-opening a report will prompt for the password again. This ensures that decryption keys are never left accessible in browser developer tools or recoverable from a disk dump.</p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('Key-lifetime-auto-lock') && !sectionVisible('Key-Storage-Security-Level')"></div>
-
-      <section class="faq-item" id="Key-Storage-Security-Level" [hidden]="!sectionVisible('Key-Storage-Security-Level')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">shield</mat-icon>
-            <h2 class="faq-item-title">Key Storage Security Level</h2>
-            <a class="faq-anchor-link" href="/faq?q=Key-Storage-Security-Level" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">VULNREPO offers two modes for holding decryption keys in the browser, configurable in <strong>Settings → Key Storage Security Level</strong>.</p>
-        </div>
-        <div class="faq-item-body">
-          <div class="faq-ext-table">
-            <div class="faq-ext-row">
-              <span class="faq-ext-badge">Secure</span>
-              <div>
-                <strong>Memory only</strong> <em>(Default)</em><br>
-                Keys live exclusively in JavaScript memory and are <strong>never written to any browser storage</strong>.
-                The vault is wiped automatically on tab switch, 15-minute idle, or page reload.
-                Re-entering the security key after switching tabs is expected — it is a deliberate security measure to ensure
-                that keys cannot be read from browser developer tools or recovered from disk.
-              </div>
-            </div>
-            <div class="faq-ext-row">
-              <span class="faq-ext-badge faq-ext-badge--legacy">Legacy</span>
-              <div>
-                <strong>Session Storage</strong> <em>(Lower security)</em><br>
-                Keys are persisted in <code class="faq-code">sessionStorage</code> and survive tab switches and page reloads within the same browser session.
-                They are cleared only when the tab is closed.
-                Choose this mode if convenience is more important than strict key isolation, and you accept the trade-off
-                that keys may be visible in browser developer tools while the session is open.
-              </div>
-            </div>
-          </div>
-          <p class="faq-item-desc" style="margin-top:12px">
-            <strong>Why am I prompted for my key again after switching tabs?</strong><br>
-            You are using the default <em>Secure — Memory only</em> mode. Switching away from the tab clears the in-memory vault immediately.
-            This prevents decryption keys from remaining accessible in an unattended or shared browser.
-            If you find this disruptive, switch to <em>Legacy — Session Storage</em> in Settings, but be aware of the reduced security.
-          </p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('Key-Storage-Security-Level') && !sectionVisible('How-to-create-PDF-report')"></div>
-
-      <section class="faq-item" id="How-to-create-PDF-report" [hidden]="!sectionVisible('How-to-create-PDF-report')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">picture_as_pdf</mat-icon>
-            <h2 class="faq-item-title">How to create a PDF report?</h2>
-            <a class="faq-anchor-link" href="/faq?q=How-to-create-PDF-report" title="Link to this section">
-              <mat-icon>link</mat-icon>
+          <div class="faq-no-results-actions">
+            <button class="faq-btn" (click)="resetFilters()">Clear filters</button>
+            <a class="faq-btn faq-btn--accent" target="_blank" rel="noopener" href="https://github.com/kac89/vulnrepo/issues/new">
+              <mat-icon aria-hidden="true">open_in_new</mat-icon>
+              Ask a question
             </a>
           </div>
         </div>
-        <div class="faq-item-body">
-          <div class="faq-option-card">
-            <span class="faq-option-badge">Option 1 — Simple</span>
-            <p>Download the HTML report, open it, and use the browser's <strong>Print to PDF</strong> feature (<kbd>Ctrl+P</kbd>).
-              See: <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a> &bull;
-              <a class="faq-link" target="_blank" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20chrome">Chrome guide</a> &bull;
-              <a class="faq-link" target="_blank" href="https://www.google.com/search?q=print%20to%20pdf%20how%20to%20firefox%20browser">Firefox guide</a>
-            </p>
+      } @else {
+        <div class="faq-tail">
+          <div class="faq-tail-text">
+            <strong>Still stuck?</strong>
+            <span>Open an issue or read the API integration guide — every recurring question ends up on this page.</span>
           </div>
-          <div class="faq-option-card">
-            <span class="faq-option-badge">Option 2 — Advanced</span>
-            <p>Download the report as JSON and use the LaTeX generator:
-              <a class="faq-link" target="_blank" href="https://github.com/kac89/vulnrepo-json-to-latex-pdf">vulnrepo-json-to-latex-pdf</a>.
-              Build a custom LaTeX template and fill it with report data for full customisation.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('How-to-create-PDF-report') && !sectionVisible('I-forgot-my-security-key')"></div>
-
-      <section class="faq-item" id="I-forgot-my-security-key" [hidden]="!sectionVisible('I-forgot-my-security-key')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">lock</mat-icon>
-            <h2 class="faq-item-title">How to restore an encrypted report if I forgot my security key?</h2>
-            <a class="faq-anchor-link" href="/faq?q=I-forgot-my-security-key" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Use a bruteforce method — or, ideally, remember the security key. There is no other way to decrypt the data.</p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('I-forgot-my-security-key') && !sectionVisible('Can-I-change-report-security-key')"></div>
-
-      <section class="faq-item" id="Can-I-change-report-security-key" [hidden]="!sectionVisible('Can-I-change-report-security-key')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">key</mat-icon>
-            <h2 class="faq-item-title">Can I change the report security key?</h2>
-            <a class="faq-anchor-link" href="/faq?q=Can-I-change-report-security-key" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Yes — as long as you are able to decrypt the report with the current security key first.</p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('Can-I-change-report-security-key') && !sectionVisible('Displaying-attachments')"></div>
-
-      <section class="faq-item" id="Displaying-attachments" [hidden]="!sectionVisible('Displaying-attachments')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">attach_file</mat-icon>
-            <h2 class="faq-item-title">How does displaying attachments in the HTML report work?</h2>
-            <a class="faq-anchor-link" href="/faq?q=Displaying-attachments" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Images and <code class="faq-code">.txt</code> files are always displayed inline. All other file types are rendered as a download link.</p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('Displaying-attachments') && !sectionVisible('VULN-VULNR')"></div>
-
-      <section class="faq-item" id="VULN-VULNR" [hidden]="!sectionVisible('VULN-VULNR')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">description</mat-icon>
-            <h2 class="faq-item-title">What is the difference between <code class="faq-code">.VULN</code> and <code class="faq-code">.VULNR</code>?</h2>
-            <a class="faq-anchor-link" href="/faq?q=VULN-VULNR" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-        </div>
-        <div class="faq-item-body">
-          <div class="faq-ext-table">
-            <div class="faq-ext-row">
-              <span class="faq-ext-badge">.VULN</span>
-              <span>Contains <strong>issues only</strong></span>
-            </div>
-            <div class="faq-ext-row">
-              <span class="faq-ext-badge">.VULNR</span>
-              <span>Contains the <strong>full report</strong> — issues, metadata, author info, etc.</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('VULN-VULNR') && !sectionVisible('What-is-the-issue-status')"></div>
-
-      <section class="faq-item" id="What-is-the-issue-status" [hidden]="!sectionVisible('What-is-the-issue-status')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">flag</mat-icon>
-            <h2 class="faq-item-title">What is the issue status?</h2>
-            <a class="faq-anchor-link" href="/faq?q=What-is-the-issue-status" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Issue status reflects the current state of review, fixing, or existence of an issue — visible to both researcher and in the final report.</p>
-        </div>
-        <div class="faq-item-body">
-          <ul class="faq-status-list">
-            <li>
-              <mat-icon style="color:red">report</mat-icon>
-              <div><strong>Open</strong> <span class="faq-status-label">Waiting for review</span></div>
-            </li>
-            <li>
-              <mat-icon style="color:yellow">warning</mat-icon>
-              <div><strong>Fix In Progress</strong></div>
-            </li>
-            <li>
-              <mat-icon style="color:#4caf50">check_circle</mat-icon>
-              <div><strong>Fixed</strong></div>
-            </li>
-            <li>
-              <mat-icon style="color:grey">check_circle</mat-icon>
-              <div><strong>Won't Fix</strong></div>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('What-is-the-issue-status') && !sectionVisible('API')"></div>
-
-      <section class="faq-item" id="API" [hidden]="!sectionVisible('API')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">cloud</mat-icon>
-            <h2 class="faq-item-title">Can I use external storage for encrypted reports?</h2>
-            <a class="faq-anchor-link" href="/faq?q=API" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Yes — local or external server is supported. See the
-            <a class="faq-link" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API Reference</a>
-            and
-            <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>.
-          </p>
-        </div>
-        <div class="faq-item-body">
-          <a class="faq-resource-link" target="_blank" href="https://github.com/kac89/vulnrepo-server">
-            <mat-icon>open_in_browser</mat-icon>
-            <span>vulnrepo-server</span>
-            <mat-icon class="faq-resource-arrow">arrow_outward</mat-icon>
+          <a class="faq-btn faq-btn--accent" target="_blank" rel="noopener" href="https://github.com/kac89/vulnrepo/issues/new">
+            <mat-icon aria-hidden="true">open_in_new</mat-icon>
+            Open an issue
           </a>
         </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('API') && !sectionVisible('API-VAULT')"></div>
-
-      <section class="faq-item" id="API-VAULT" [hidden]="!sectionVisible('API-VAULT')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">security</mat-icon>
-            <h2 class="faq-item-title">What is the API VAULT?</h2>
-            <a class="faq-anchor-link" href="/faq?q=API-VAULT" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">API VAULT is an AES-encrypted configuration store for your APIs. You have a single VAULT that holds all your API configurations.</p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('API-VAULT') && !sectionVisible('Report-Profiles')"></div>
-
-      <section class="faq-item" id="Report-Profiles" [hidden]="!sectionVisible('Report-Profiles')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">tune</mat-icon>
-            <h2 class="faq-item-title">Can I save settings for existing/new reports?</h2>
-            <a class="faq-anchor-link" href="/faq?q=Report-Profiles" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Use <strong>Report Profiles</strong> in Settings to create and save reusable report configurations.
-            <a class="faq-link" target="_blank" href="https://www.youtube.com/watch?v=cW_kVPtUJbU">Video Tutorial</a>
-          </p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('Report-Profiles') && !sectionVisible('Search-CVE')"></div>
-
-      <section class="faq-item" id="Search-CVE" [hidden]="!sectionVisible('Search-CVE')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">manage_search</mat-icon>
-            <h2 class="faq-item-title">What is CVE Search (NVD)?</h2>
-            <a class="faq-anchor-link" href="/faq?q=Search-CVE" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">CVE Search queries the <a class="faq-link" target="_blank" href="https://nvd.nist.gov/vuln">NVD online database</a> via its public API, letting you pull CVE details directly into your reports.</p>
-        </div>
-      </section>
-
-      <div class="faq-divider" [hidden]="!sectionVisible('Search-CVE') && !sectionVisible('Private-LLM')"></div>
-
-      <section class="faq-item" id="Private-LLM" [hidden]="!sectionVisible('Private-LLM')">
-        <div class="faq-item-header">
-          <div class="faq-item-title-row">
-            <mat-icon class="faq-item-icon">smart_toy</mat-icon>
-            <h2 class="faq-item-title">How to add a private LLM?</h2>
-            <a class="faq-anchor-link" href="/faq?q=Private-LLM" title="Link to this section">
-              <mat-icon>link</mat-icon>
-            </a>
-          </div>
-          <p class="faq-item-desc">Integrate with <a class="faq-link" target="_blank" href="https://ollama.com">Ollama</a> to run a local model.</p>
-        </div>
-        <div class="faq-item-body">
-          <ol class="faq-steps">
-            <li>
-              <span class="faq-step-num">1</span>
-              <div>Install <a class="faq-link" target="_blank" href="https://ollama.com">ollama.com</a></div>
-            </li>
-            <li>
-              <span class="faq-step-num">2</span>
-              <div>
-                Download and run a model:<br>
-                <code class="faq-codeblock">$ ollama run llama3.2:latest</code><br>
-                Browse available <a class="faq-link" target="_blank" href="https://ollama.com/search">models</a>.
-              </div>
-            </li>
-            <li>
-              <span class="faq-step-num">3</span>
-              <div>
-                Allow additional web origins to access <a class="faq-link" target="_blank" href="https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama">Ollama</a>.
-                If using vulnrepo.com, set: <code class="faq-code">OLLAMA_ORIGINS=https://vulnrepo.com</code>
-              </div>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <div class="faq-no-results" *ngIf="noResults">
-        <mat-icon>search_off</mat-icon>
-        <p>No sections match "<strong>{{ searchQuery }}</strong>"</p>
-      </div>
+      }
 
     </main>
   </div>
-
 </div>
+
+<!-- One inline fragment of an answer -->
+<ng-template #runTpl let-run="run">@if (run.href) {<a class="faq-link" target="_blank" rel="noopener" [href]="run.href">{{ run.t }}</a>} @else if (run.code) {<code class="faq-code">{{ run.t }}</code>} @else if (run.b) {<strong>{{ run.t }}</strong>} @else {<span>{{ run.t }}</span>}</ng-template>
