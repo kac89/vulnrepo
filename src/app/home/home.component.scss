@@ -13,12 +13,21 @@
    CVSS vectors, labels — so that monospace keeps meaning something. */
 /* Horizontal bounds and the top gap come from the global `.container`
    (styles.scss) that wraps every route — don't double them up here. */
+/* The `overflow-x: hidden` guard against a wide child forcing a horizontal
+   scrollbar also makes this element a clip box, and with no horizontal padding
+   the clip edge ran exactly along the first and last card of the deck — the
+   hover lift and glow of .vr-act--primary were sliced off on the left. So pad
+   the clip box out past the widest shadow and pull the element back by the
+   same amount: the bleed lands inside the global `.container`'s 30px padding
+   (which it keeps at every width) and paints the same --vr-bg, so nothing
+   moves. Keep the two in step if either value changes. */
 .vr-page {
   background: var(--vr-bg);
   color: var(--vr-text);
   font-family: 'Roboto', sans-serif;
   overflow-x: hidden;
-  padding-bottom: 48px;
+  padding: 0 28px 48px;
+  margin: 0 -28px;
 }
 
 .vr-accent { color: var(--vr-accent); }
