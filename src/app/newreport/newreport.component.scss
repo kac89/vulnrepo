@@ -1,9 +1,51 @@
 /* ── Tokens ───────────────────────────────────────────────────── */
-/* The --vr-* tokens are defined globally in src/styles.scss under the real
-   :root. They are NOT redeclared here: a `:root` rule inside a component
-   stylesheet compiles to `[_ngcontent-xxx]:root` and never matches <html>.
-   This component used to hardcode its own $bg/$surface greys (#383838 /
-   #424242), which left it the one mid-grey route in a near-black app. */
+/* The rules below are written against the global --vr-* tokens, but this
+   route is re-pointed to the mid-grey palette of settings.component so the
+   two screens read as the same surface. The overrides are scoped to :host —
+   not :root, which inside a component stylesheet compiles to
+   `[_ngcontent-xxx]:root` and never matches <html>. Values mirror the
+   $bg/$surface/$text/$accent scale at the top of settings.component.scss. */
+:host {
+  /* surfaces */
+  --vr-bg:            #383838;
+  --vr-bg-card:       #424242;
+  --vr-bg-card-2:     #4e4e4e;
+  --vr-bg-raised:     #4e4e4e;
+  --vr-bg-overlay:    #4e4e4e;
+
+  /* borders */
+  --vr-border:        rgba(255, 255, 255, 0.10);
+  --vr-border-strong: rgba(255, 255, 255, 0.12);
+
+  /* text */
+  --vr-text:          #f5f5f5;
+  --vr-text-strong:   #f5f5f5;
+  --vr-text-secondary:rgba(245, 245, 245, 0.72);
+  --vr-text-muted:    #757575;
+  --vr-text-dim:      #9e9e9e;
+  --vr-text-disabled: #757575;
+
+  /* greys referenced directly: icon tone and the disabled-button fill */
+  --vr-grey-700:      #616161;
+  --vr-grey-800:      #4e4e4e;
+
+  /* accent: same green, same tints as settings */
+  --vr-accent:        #69f0ae;
+  --vr-accent-rgb:    105, 240, 174;
+  --vr-accent-dim:    rgba(105, 240, 174, 0.12);
+  --vr-accent-glow:   rgba(105, 240, 174, 0.025);
+
+  /* radii settings states inline as 8px / 6px */
+  --vr-radius:        8px;
+  --vr-radius-sm:     6px;
+}
+
+/* settings' local names, for the few spots that need a literal */
+$accent-hover:  #a5f3c8;
+$danger:        #ef9a9a;
+$danger-tint:   rgba(183, 28, 28, 0.15);
+$danger-border: rgba(183, 28, 28, 0.3);
+$warn:          #f5d020;
 
 * { box-sizing: border-box; }
 
@@ -225,19 +267,19 @@
 }
 .nr-strength__value--tooshort,
 .nr-strength__value--common {
-  background: rgba(255, 0, 57, 0.14);
-  color: #ff4d6d;
-  border-color: rgba(255, 0, 57, 0.28);
+  background: $danger-tint;
+  color: $danger;
+  border-color: $danger-border;
 }
 .nr-strength__value--weak {
-  background: rgba(249, 238, 6, 0.10);
-  color: #f5d020;
-  border-color: rgba(249, 238, 6, 0.22);
+  background: rgba(245, 208, 32, 0.08);
+  color: $warn;
+  border-color: rgba(245, 208, 32, 0.25);
 }
 .nr-strength__value--itsok {
-  background: rgba(39, 128, 227, 0.12);
-  color: #60a5fa;
-  border-color: rgba(39, 128, 227, 0.25);
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.25);
 }
 .nr-strength__value--strong {
   background: var(--vr-accent-dim);
@@ -282,8 +324,8 @@
   margin-top: 18px;
 }
 .nr-notice--warn {
-  border-left-color: #ff9f45;
-  background: rgba(255, 159, 69, 0.05);
+  border-left-color: $warn;
+  background: rgba(245, 208, 32, 0.08);
 }
 .nr-notice__icon { flex-shrink: 0; }
 .nr-notice__icon mat-icon {
@@ -292,7 +334,7 @@
   width: 20px;
   height: 20px;
 }
-.nr-notice--warn .nr-notice__icon mat-icon { color: #ff9f45; }
+.nr-notice--warn .nr-notice__icon mat-icon { color: $warn; }
 .nr-notice__body { flex: 1; min-width: 0; }
 .nr-notice__title {
   margin: 0 0 4px;
@@ -320,7 +362,7 @@
 .nr-inline-error {
   margin: 8px 0 0;
   font-size: 0.78rem;
-  color: #ff4d6d;
+  color: $danger;
 }
 
 /* ── Destination ──────────────────────────────────────────────── */
@@ -336,10 +378,10 @@
   padding: 6px 12px 6px 4px;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
-.nr-dest__item:hover { border-color: rgba(255, 255, 255, 0.16); }
+.nr-dest__item:hover { border-color: rgba(255, 255, 255, 0.14); }
 .nr-dest__item.mat-mdc-radio-checked {
-  border-color: rgba(var(--vr-accent-rgb), 0.4);
-  background: var(--vr-accent-glow);
+  border-color: rgba(105, 240, 174, 0.22);
+  background: rgba(105, 240, 174, 0.1);
 }
 
 .nr-dest__label {
@@ -379,8 +421,8 @@
   width: 16px;
   height: 16px;
 }
-.nr-loading--error { color: #ff9f45; }
-.nr-loading--error mat-icon { color: #ff9f45; }
+.nr-loading--error { color: $warn; }
+.nr-loading--error mat-icon { color: $warn; }
 
 /* ── Action bar ───────────────────────────────────────────────── */
 .nr-actions {
@@ -421,10 +463,10 @@
 
 .nr-btn--primary {
   background: var(--vr-accent) !important;
-  color: #0a0a0a !important;
+  color: #000 !important;
 }
-.nr-btn--primary mat-icon { color: #0a0a0a; }
-.nr-btn--primary:hover { background: #8fffca !important; }
+.nr-btn--primary mat-icon { color: #000; }
+.nr-btn--primary:hover { background: $accent-hover !important; }
 .nr-btn--primary[disabled] {
   background: var(--vr-grey-800) !important;
   color: var(--vr-text-disabled) !important;
@@ -440,10 +482,14 @@
 }
 
 .nr-btn--danger {
-  border-color: rgba(255, 77, 109, 0.4) !important;
-  color: #ff4d6d !important;
+  background: $danger-tint !important;
+  border-color: $danger-border !important;
+  color: $danger !important;
 }
-.nr-btn--danger:hover { background: rgba(255, 77, 109, 0.08) !important; }
+.nr-btn--danger:hover {
+  background: rgba(183, 28, 28, 0.25) !important;
+  border-color: rgba(183, 28, 28, 0.5) !important;
+}
 
 .nr-btn--mini {
   height: 32px;
