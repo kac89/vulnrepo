@@ -1,14 +1,14 @@
 <div class="export-shell">
 
-  <!-- Header -->
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
   <div class="export-header">
     <div class="export-header-left">
       <div class="export-avatar-logo">
         <mat-icon class="logo-icon">file_download</mat-icon>
       </div>
       <div class="export-header-text">
-        <span class="export-title">Export Issues</span>
-        <span class="export-subtitle">{{isReturn.length}} issue{{isReturn.length !== 1 ? 's' : ''}} selected</span>
+        <span class="export-title">Export issues</span>
+        <span class="export-subtitle">Everything happens in your browser</span>
       </div>
     </div>
     <div class="export-header-right">
@@ -18,178 +18,261 @@
     </div>
   </div>
 
-  <!-- Content -->
+  <!-- ── Selection strip ────────────────────────────────────────────────── -->
+  <div class="export-selection">
+    <div class="selection-top">
+      <span class="selection-count">{{isReturn.length}} issue{{isReturn.length !== 1 ? 's' : ''}}</span>
+      <div class="sev-bar">
+        @for (s of sevCounts; track s.name) {
+          <span class="sev-pill" [class]="'sev-pill ' + s.cls">
+            <i></i><b>{{s.count}}</b> {{s.name}}
+          </span>
+        }
+      </div>
+      @if (isReturn.length > 0) {
+        <button class="peek-btn" (click)="peek = !peek" [attr.aria-expanded]="peek" aria-controls="export-peek">
+          {{peek ? 'Hide' : 'Review'}}
+        </button>
+      }
+    </div>
+    @if (peek) {
+      <div class="selection-peek" id="export-peek">
+        @for (item of isReturn; track $index) {
+          <div class="peek-row">
+            <i [class]="'peek-dash ' + sevClass(item.severity)"></i>
+            <span>{{item.title}}</span>
+            <em>{{sevName(item.severity)}}</em>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ── Body ───────────────────────────────────────────────────────────── -->
   <mat-dialog-content class="export-body">
 
-    <!-- Format selector -->
-    <div class="section-label">Export format</div>
-    <mat-form-field color="accent" class="full-width" appearance="outline">
-      <mat-label>Select export</mat-label>
-      <mat-select [(value)]="selected_export">
-        @for (Exportsource of sour; track Exportsource) {
-          <mat-option [value]="Exportsource.value">
-            <img width="20" height="20" [src]="Exportsource.viewImg" style="vertical-align:middle;margin-right:8px;">
-            {{Exportsource.viewValue}}
-          </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <!-- Step rail — sticky inside the scroll area, so scrolled fields pass under it -->
+    <div class="export-rail" aria-hidden="true">
+      <span class="rail-step on"><b>1</b> Format</span>
+      <hr>
+      <span class="rail-step" [class.on]="canExport"><b>2</b> {{stepTwoLabel}}</span>
+    </div>
 
-    <!-- ── VulnRepo JSON (encrypted) ── -->
+    <!-- Format tiles -->
+    <div class="format-grid" role="group" aria-label="Export format">
+      @for (src of sour; track src.value) {
+        <button class="format-tile" (click)="pickFormat(src.value)" [attr.aria-pressed]="selected_export === src.value">
+          <span class="tile-ico">
+            @if (src.viewImg) {
+              <img [src]="src.viewImg" [alt]="src.viewValue">
+            } @else {
+              <mat-icon>{{src.icon}}</mat-icon>
+            }
+          </span>
+          <span class="tile-name">
+            {{src.viewValue}}
+            <span class="tile-chip" [class]="'tile-chip ' + src.badgeClass">{{src.badge}}</span>
+          </span>
+          <span class="tile-desc">{{src.desc}}</span>
+          <mat-icon class="tile-check">check</mat-icon>
+        </button>
+      }
+    </div>
+
+    <!-- ── VulnRepo archive (encrypted) ── -->
     @if (selected_export == 'vulnrepojson') {
-      <div class="panel">
-        <div class="panel-notice">
-          <mat-icon class="notice-icon">lock</mat-icon>
-          <span>Exported file will be encrypted by default.</span>
+      <div class="pane">
+        <div class="pane-note good">
+          <mat-icon class="note-icon">lock</mat-icon>
+          <span>Encrypted in your browser before it is written to disk. The key is never stored and
+            cannot be recovered — lose it and the archive is gone.</span>
         </div>
-        <mat-form-field class="full-width" color="accent" appearance="outline">
-          <mat-label>Security key</mat-label>
-          <input matInput cdkFocusInitial placeholder="Set report security key" #pass
-            [type]="hide ? 'password' : 'text'">
-          <mat-icon matSuffix (click)="hide = !hide" style="cursor:pointer">
-            {{hide ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
-        </mat-form-field>
-        <mat-form-field class="full-width" color="accent" appearance="outline">
-          <mat-label>Confirm security key</mat-label>
-          <input matInput placeholder="Re-enter report security key" #pass2
-            [type]="hide ? 'password' : 'text'">
-          <mat-icon matSuffix (click)="hide = !hide" style="cursor:pointer">
-            {{hide ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
-        </mat-form-field>
-        <div class="action-row">
-          @if (pass.value != '' && pass2.value != '' && pass.value == pass2.value) {
-            <button class="primary-btn" (click)="vulnrepojsonexport(pass.value,pass2.value)">
-              <mat-icon>file_download</mat-icon>Export encrypted
+
+        <div class="field">
+          <label class="field-label" for="exp-key">Security key</label>
+          <div class="input-wrap">
+            <input id="exp-key" class="vr-input pw" cdkFocusInitial [type]="hide1 ? 'password' : 'text'"
+              [(ngModel)]="exportKey" placeholder="Set the archive key" autocomplete="new-password">
+            <button mat-icon-button class="eye-btn" (click)="hide1 = !hide1"
+              [class.revealed]="!hide1" [title]="hide1 ? 'Show key' : 'Hide key'"
+              [attr.aria-label]="hide1 ? 'Show key' : 'Hide key'">
+              <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
-          }
-          <button class="ghost-btn" (click)="cancel()">Cancel</button>
+          </div>
+          <div class="meter">
+            <span class="meter-track">
+              <span class="meter-fill" [class]="'meter-fill ' + keyStrength.cls" [style.width.%]="keyStrength.pct"></span>
+            </span>
+            <span class="meter-txt" [class]="'meter-txt ' + keyStrength.cls">{{keyStrength.label}}</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="exp-key2">Confirm key</label>
+          <div class="input-wrap">
+            <input id="exp-key2" class="vr-input pw" [type]="hide2 ? 'password' : 'text'"
+              [(ngModel)]="exportKeyConfirm" placeholder="Re-enter the archive key" autocomplete="new-password">
+            <button mat-icon-button class="eye-btn" (click)="hide2 = !hide2"
+              [class.revealed]="!hide2" [title]="hide2 ? 'Show key' : 'Hide key'"
+              [attr.aria-label]="hide2 ? 'Show key' : 'Hide key'">
+              <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+          <span class="field-hint" [class]="'field-hint ' + keyMatch.cls">{{keyMatch.text}}</span>
         </div>
       </div>
     }
 
     <!-- ── Decrypted JSON ── -->
     @if (selected_export == 'decrypted_json') {
-      <div class="panel">
-        <div class="panel-notice">
-          <mat-icon class="notice-icon">warning</mat-icon>
-          <span>This file will not be encrypted.</span>
+      <div class="pane">
+        <div class="pane-note warn">
+          <mat-icon class="note-icon">warning</mat-icon>
+          <span><b>Not encrypted.</b> Every finding, proof of concept and client name is readable by
+            anyone who opens the file. Treat it as you would the report itself.</span>
         </div>
-        <div class="action-row">
-          <button class="primary-btn" (click)="downloaddecryptedJSON()">
-            <mat-icon>file_download</mat-icon>Download JSON
-          </button>
-          <button class="ghost-btn" (click)="cancel()">Cancel</button>
-        </div>
+        <dl class="manifest">
+          <dt class="yes"><mat-icon>check</mat-icon></dt>
+          <dd>All issue fields exactly as stored — title, description, PoC, references, CVSS, tags</dd>
+          <dt class="yes"><mat-icon>check</mat-icon></dt>
+          <dd>Attachment metadata and checksums</dd>
+          <dt class="no"><mat-icon>close</mat-icon></dt>
+          <dd class="off">Attachment file contents</dd>
+        </dl>
       </div>
     }
 
     <!-- ── SARIF ── -->
     @if (selected_export == 'sarif') {
-      <div class="panel">
-        <div class="panel-notice">
-          <mat-icon class="notice-icon">warning</mat-icon>
-          <span>This file will not be encrypted.</span>
+      <div class="pane">
+        <div class="pane-note">
+          <mat-icon class="note-icon">info</mat-icon>
+          <span>SARIF 2.1.0. Upload to GitHub code scanning, Azure DevOps or any SARIF viewer.
+            Severity maps to <code>error</code> / <code>warning</code> / <code>note</code>.</span>
         </div>
-        <div class="panel-notice">
-          <mat-icon class="notice-icon">info</mat-icon>
-          <span>SARIF 2.1.0 for CI pipelines and code-scanning dashboards. Attachment checksums are kept; attachment contents are not exported.</span>
-        </div>
-        <div class="action-row">
-          <button class="primary-btn" (click)="downloadSARIF()">
-            <mat-icon>file_download</mat-icon>Download SARIF
-          </button>
-          <button class="ghost-btn" (click)="cancel()">Cancel</button>
+        <dl class="manifest">
+          <dt class="yes"><mat-icon>check</mat-icon></dt>
+          <dd>One rule per finding, with help text and references</dd>
+          <dt class="yes"><mat-icon>check</mat-icon></dt>
+          <dd>Locations resolved from the issue scope</dd>
+          <dt class="no"><mat-icon>close</mat-icon></dt>
+          <dd class="off">Attachment contents — checksums only</dd>
+        </dl>
+        <div class="pane-note warn">
+          <mat-icon class="note-icon">warning</mat-icon>
+          <span><b>Not encrypted.</b> Findings travel in clear text to wherever you upload them.</span>
         </div>
       </div>
     }
 
     <!-- ── Jira ── -->
     @if (selected_export == 'jira') {
-      <div class="panel">
-        <mat-form-field class="full-width" color="accent" appearance="outline">
-          <mat-label>Jira URL</mat-label>
-          <input cdkFocusInitial matInput placeholder="https://yoursite.atlassian.net" #jira_c_url>
-        </mat-form-field>
-
-        <div class="two-col">
-          <mat-form-field color="accent" appearance="outline" class="flex1">
-            <mat-label>Project key</mat-label>
-            <input matInput placeholder="e.g. SEC" #jira_c_key>
-          </mat-form-field>
-          <mat-form-field color="accent" appearance="outline" class="flex1">
-            <mat-label>Ticket label</mat-label>
-            <input matInput placeholder="Optional label" #jira_c_label>
-          </mat-form-field>
-        </div>
-
-        <div class="two-col">
-          <mat-form-field color="accent" appearance="outline" class="flex1">
-            <mat-label>User e-mail / login</mat-label>
-            <input matInput placeholder="you@company.com" #jira_c_email>
-            <mat-hint>For Jira Cloud use e-mail.</mat-hint>
-          </mat-form-field>
-          <div class="split-col flex1">
-            <mat-checkbox [checked]="splitfilereport" (change)="splitfile($event)" class="split-check">
-              Split file<br><span class="split-hint">(smaller parts)</span>
-            </mat-checkbox>
-            @if (splitfilereport) {
-              <mat-form-field appearance="outline" color="accent" class="split-count">
-                <mat-label>Per file</mat-label>
-                <input matInput #splitcount value="49" maxlength="4">
-              </mat-form-field>
-            }
+      <div class="pane">
+        <div class="field">
+          <label class="field-label" for="jira-url">Jira site</label>
+          <div class="input-wrap">
+            <input id="jira-url" class="vr-input" cdkFocusInitial [(ngModel)]="jiraUrl"
+              (ngModelChange)="resetCmd()" placeholder="https://yoursite.atlassian.net">
           </div>
         </div>
 
-        <mat-form-field class="full-width" color="accent" appearance="outline">
-          <mat-label>WorkFlow fields</mat-label>
-          <textarea matInput value="{{fields_prop}}" #jira_workflow rows="4"></textarea>
-          <mat-hint>Variables: $key, $title, $desc, $poc, $ref, $severity, $label</mat-hint>
-        </mat-form-field>
-
-        <div class="action-row" style="margin-top:20px">
-          <button class="primary-btn"
-            (click)="jiraCloudExport(jira_c_url.value, jira_c_key.value, jira_c_email.value, jira_c_label.value, jira_workflow.value, splitcount.value)">
-            <mat-icon>terminal</mat-icon>Generate cURL
-          </button>
-          <button class="ghost-btn" (click)="cancel()">Cancel</button>
-        </div>
-
-        @if (curlhide) {
-          <div class="curl-block">
-            <div class="curl-label">
-              <mat-icon class="curl-icon">terminal</mat-icon>cURL command
-              <span class="curl-hint">— download <code>data.json</code> and run in the same folder</span>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="jira-key">Project key</label>
+            <div class="input-wrap">
+              <input id="jira-key" class="vr-input" [(ngModel)]="jiraKey"
+                (ngModelChange)="resetCmd()" placeholder="SEC">
             </div>
-            <mat-form-field class="full-width" color="accent" appearance="outline">
-              <textarea matInput value="{{curlcmd}}" rows="3"></textarea>
-            </mat-form-field>
           </div>
-        }
-
-        @if (multipartcurl) {
-          <div class="curl-block">
-            <div class="curl-label">
-              <mat-icon class="curl-icon">terminal</mat-icon>Multi-part cURL
-              <span class="curl-hint">— download <code>data[0-9].json</code> files and run</span>
+          <div class="field">
+            <label class="field-label" for="jira-email">E-mail or login</label>
+            <div class="input-wrap">
+              <input id="jira-email" class="vr-input" [(ngModel)]="jiraEmail"
+                (ngModelChange)="resetCmd()" placeholder="you@company.com">
             </div>
-            <mat-form-field class="full-width" color="accent" appearance="outline">
-              <textarea matInput value="{{multicurlcmd}}" rows="3"></textarea>
-            </mat-form-field>
+            <span class="field-hint">For Jira Cloud use your e-mail.</span>
           </div>
-        }
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="jira-label">Ticket label</label>
+          <div class="input-wrap">
+            <input id="jira-label" class="vr-input" [(ngModel)]="jiraLabel"
+              (ngModelChange)="resetCmd()" placeholder="Optional — e.g. pentest-q3">
+          </div>
+        </div>
+
+        <div class="pane-note">
+          <mat-icon class="note-icon">info</mat-icon>
+          <span>Nothing is sent from the browser. VULNREPO writes <code>data.json</code> and hands you
+            a command to run yourself — cURL will ask for your password or API token.</span>
+        </div>
+
+        <div class="switch-row">
+          <span class="switch-txt">
+            <b>Split into parts</b>
+            <span>Jira's bulk endpoint rejects very large payloads</span>
+          </span>
+          @if (splitfilereport) {
+            <span class="split-extra">
+              <label for="jira-split">per file</label>
+              <input id="jira-split" class="vr-input count" [(ngModel)]="splitcountval"
+                (ngModelChange)="resetCmd()" maxlength="4" inputmode="numeric">
+            </span>
+          }
+          <button class="vr-switch" role="switch" [attr.aria-checked]="splitfilereport"
+            (click)="toggleSplit()" aria-label="Split into parts"></button>
+        </div>
+
+        <details class="disc">
+          <summary>Field mapping — advanced</summary>
+          <div class="disc-in">
+            <div class="var-row">
+              @for (v of jiraVars; track v) {
+                <button class="var-chip" (click)="insertVar(workflowArea, v)">{{v}}</button>
+              }
+            </div>
+            <textarea #workflowArea class="vr-input code-area" rows="8" spellcheck="false"
+              [(ngModel)]="fields_prop" (ngModelChange)="resetCmd()"></textarea>
+            <span class="field-hint">Only the first occurrence of each variable is substituted —
+              repeat a variable and the second copy stays literal.</span>
+          </div>
+        </details>
 
         @if (curlhide || multipartcurl) {
-          <div class="panel-notice" style="margin-top:8px">
-            <mat-icon class="notice-icon">info</mat-icon>
-            <span>cURL will prompt for your user password or access token.</span>
+          <div class="cmd-block">
+            <div class="cmd-top">
+              <span class="cmd-label">Run this next to the downloaded file</span>
+              <button class="copy-btn" [cdkCopyToClipboard]="activeCmd" (click)="flashCopied(copyTip)"
+                #copyTip="matTooltip" matTooltip="Copy command" matTooltipPosition="above">
+                <mat-icon>content_copy</mat-icon>Copy
+              </button>
+            </div>
+            <pre class="cmd-code">{{activeCmd}}</pre>
+            <span class="field-hint">{{cmdHint}}</span>
           </div>
         }
       </div>
     }
 
   </mat-dialog-content>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <div class="export-footer">
+    <div class="out">
+      <span class="out-name">{{outputName}}</span>
+      <span class="out-meta">
+        <span>{{estSize}}</span><i class="dot"></i>
+        <span [class.enc]="selected_export === 'vulnrepojson'">{{outputSecurity}}</span>
+        <i class="dot"></i><span>checksum logged</span>
+      </span>
+    </div>
+    <div class="export-actions">
+      <button class="ghost-btn" (click)="cancel()">Cancel</button>
+      <button class="primary-btn" [disabled]="!canExport" (click)="runExport()">
+        <mat-icon>{{primaryIcon}}</mat-icon>{{primaryLabel}}
+      </button>
+    </div>
+  </div>
 
 </div>

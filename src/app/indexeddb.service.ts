@@ -15,6 +15,19 @@ import { KeyVaultService } from './key-vault.service';
 import { ReportSchemaService } from './report-schema.service';
 import { UtilsService } from './utils.service';
 
+// One save event, stripped of the report it belongs to. See getHistoryActivity.
+export interface HistoryActivityEntry {
+  report_id: string;
+  report_name: string;
+  ts: number;
+  total: number;
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+  info: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -121,51 +134,58 @@ export class IndexeddbService {
 
   }
 
-  async addnewReport(title: string, pass: string, profile: any) {
+  async addnewReport(title: string, pass: string, profile: any): Promise<boolean> {
 
-    if (title && pass) {
+    if (!title || !pass) {
+      this.failCreate('A report needs both a title and a key.');
+      return false;
+    }
 
-      // detect space in pass
-      if (/\s/.test(pass)) {
-        console.log('space');
-
-      } else {
-
-
-
-        //        report_vulns: [
-        //          {
-        //            title: '[XSS] Cross site scripting vulnerability',
-        //            poc: '',
-        //            files: [],
-        //            desc: 'desc',
-        //            severity: 'Medium',
-        //            status: 1,
-        //            ref: 'https://www.owasp.org/',
-        //            cvss: '4.3',
-        //            cve: '',
-        //            tags: [],
-        //            bounty: [],
-        //            date: today
-        //          },
-        //          {
-        //            title: '[XSS] DOM',
-        //            poc: '',
-        //            files: [],
-        //            desc: 'desc',
-        //            severity: 'Medium',
-        //            status: 1,
-        //            ref: 'https://www.owasp.org/',
-        //            cvss: '4.3',
-        //            cve: '',
-        //            tags: [],
-        //            bounty: [],
-        //            date: today
-        //          }
-        //        ],
+    // A key containing whitespace cannot be used. This used to be a
+    // console.log and a silent return: "Save report" did nothing, said
+    // nothing, and the strength meter had already rated such a key Strong
+    // because it counts a space as a special character. The form now blocks
+    // it at type time; this is the backstop, and it speaks.
+    if (/\s/.test(pass)) {
+      this.failCreate('A security key cannot contain spaces.');
+      return false;
+    }
 
 
-        const defaultContent = `### Methodology and Standards:
+
+    //        report_vulns: [
+    //          {
+    //            title: '[XSS] Cross site scripting vulnerability',
+    //            poc: '',
+    //            files: [],
+    //            desc: 'desc',
+    //            severity: 'Medium',
+    //            status: 1,
+    //            ref: 'https://www.owasp.org/',
+    //            cvss: '4.3',
+    //            cve: '',
+    //            tags: [],
+    //            bounty: [],
+    //            date: today
+    //          },
+    //          {
+    //            title: '[XSS] DOM',
+    //            poc: '',
+    //            files: [],
+    //            desc: 'desc',
+    //            severity: 'Medium',
+    //            status: 1,
+    //            ref: 'https://www.owasp.org/',
+    //            cvss: '4.3',
+    //            cve: '',
+    //            tags: [],
+    //            bounty: [],
+    //            date: today
+    //          }
+    //        ],
+
+
+    const defaultContent = `### Methodology and Standards:
 
 * OSTTMM(Open Source Security Testing Methodology Manual)
 * OWASP(Open Web Application Security Project)
@@ -176,110 +196,119 @@ export class IndexeddbService {
 * NIST SP800-115(Technical Guide to Information Security Testing and Assessment)
 `;
 
-        const today: number = Date.now();
+    const today: number = Date.now();
 
-        let empty_vulns = {
-          report_vulns: [],
-          report_scope: '',
-          report_assets: [],
-          report_summary: '',
-          report_changelog: [
-            {
-              date: today,
-              desc: 'Create report: \"' + title + '\".'
-            }
-          ],
-          report_version: 0,
-          report_metadata: {
-            starttest: today,
-            endtest: ''
-          },
-          researcher: [
-            {
-              reportername: '',
-              reportersocial: '',
-              reporterwww: '',
-              reporteremail: ''
-            }
-          ],
-          report_settings: {
-            report_html: defaultContent,
-            report_logo: {
-              logo: '',
-              width: 600,
-              height: 500
-            },
-            report_theme: 'white',
-            report_video_embed: true,
-            report_remove_lastpage: false,
-            report_remove_issuestatus: false,
-            report_remove_issuecvss: true,
-            report_remove_issuecve: true,
-            report_remove_researchers: false,
-            report_changelog_page: false,
-            report_remove_issuetags: false,
-            report_parsing_desc: false,
-            report_parsing_poc_markdown: true
-          }
-        };
-
-        // check profile and set profile
-        empty_vulns = this.setProfile(empty_vulns, profile);
-
-        // Encrypt
-        const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(empty_vulns), pass);
-        const reportId = uuid();
-        const data = {
-          report_id: reportId,
-          report_name: title,
-          report_createdate: today,
-          report_lastupdate: '',
-          encrypted_data: ciphertext
-        };
-
-        // indexeddb communication
-        const indexedDB = window.indexedDB;
-        const open = indexedDB.open('vulnrepo-db', 1);
-
-        open.onupgradeneeded = function () {
-          const db = open.result;
-          db.createObjectStore('reports', { autoIncrement: true });
-        };
-
-        open.onsuccess = function () {
-          const db = open.result;
-          const tx = db.transaction('reports', 'readwrite');
-          const store = tx.objectStore('reports');
-
-          store.put(data);
-
-          tx.oncomplete = function () {
-            db.close();
-          };
-        };
-
-
-        this.keyVault.set(reportId, pass);
-        this.router.navigate(['/my-reports']);
-
-
+    let empty_vulns = {
+      report_vulns: [],
+      report_scope: '',
+      report_assets: [],
+      report_summary: '',
+      report_changelog: [
+        {
+          date: today,
+          desc: 'Create report: \"' + title + '\".'
+        }
+      ],
+      report_version: 0,
+      report_metadata: {
+        starttest: today,
+        endtest: ''
+      },
+      researcher: [
+        {
+          reportername: '',
+          reportersocial: '',
+          reporterwww: '',
+          reporteremail: ''
+        }
+      ],
+      report_settings: {
+        report_html: defaultContent,
+        report_logo: {
+          logo: '',
+          width: 600,
+          height: 500
+        },
+        report_theme: 'white',
+        report_video_embed: true,
+        report_remove_lastpage: false,
+        report_remove_issuestatus: false,
+        report_remove_issuecvss: true,
+        report_remove_issuecve: true,
+        report_remove_researchers: false,
+        report_changelog_page: false,
+        report_remove_issuetags: false,
+        report_parsing_desc: false,
+        report_parsing_poc_markdown: true
       }
+    };
 
-    }
+    // check profile and set profile
+    empty_vulns = this.setProfile(empty_vulns, profile);
+
+    // Encrypt
+    const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(empty_vulns), pass);
+    const reportId = uuid();
+    const data = {
+      report_id: reportId,
+      report_name: title,
+      report_createdate: today,
+      report_lastupdate: '',
+      encrypted_data: ciphertext
+    };
+
+    // indexeddb communication
+    const indexedDB = window.indexedDB;
+    const open = indexedDB.open('vulnrepo-db', 1);
+
+    open.onupgradeneeded = function () {
+      const db = open.result;
+      db.createObjectStore('reports', { autoIncrement: true });
+    };
+
+    open.onsuccess = function () {
+      const db = open.result;
+      const tx = db.transaction('reports', 'readwrite');
+      const store = tx.objectStore('reports');
+
+      store.put(data);
+
+      tx.oncomplete = function () {
+        db.close();
+      };
+    };
+
+
+    this.keyVault.set(reportId, pass);
+    this.router.navigate(['/my-reports']);
+
+    return true;
 
   }
 
-  async addnewReportonAPI(apiurl: string, apikey: string, title: string, pass: string, profile: any) {
+  // One place where "the report was not created" becomes something the user
+  // can actually see. Every early return out of the two create paths goes
+  // through it, so no create can fail in silence again.
+  private failCreate(message: string) {
+    this.snackBar.open(message, 'OK', {
+      duration: 5000,
+      panelClass: ['notify-snackbar-fail']
+    });
+  }
 
-    if (title && pass) {
+  async addnewReportonAPI(apiurl: string, apikey: string, title: string, pass: string, profile: any): Promise<boolean> {
 
-      // detect space in pass
-      if (/\s/.test(pass)) {
-        console.log('space');
+    if (!title || !pass) {
+      this.failCreate('A report needs both a title and a key.');
+      return false;
+    }
 
-      } else {
+    if (/\s/.test(pass)) {
+      this.failCreate('A security key cannot contain spaces.');
+      return false;
+    }
 
-        const defaultContent = `### Methodology and Standards:
+    const defaultContent = `### Methodology and Standards:
 
 * OSTTMM(Open Source Security Testing Methodology Manual)
 * OWASP(Open Web Application Security Project)
@@ -290,77 +319,81 @@ export class IndexeddbService {
 * NIST SP800-115(Technical Guide to Information Security Testing and Assessment)
 `;
 
-        const today: number = Date.now();
+    const today: number = Date.now();
 
-        let empty_vulns = {
-          report_vulns: [],
-          report_scope: '',
-          report_assets: [],
-          report_summary: '',
-          report_changelog: [
-            {
-              date: today,
-              desc: 'Create report: \"' + title + '\".'
-            }
-          ],
-          report_version: 0,
-          report_metadata: {
-            starttest: today,
-            endtest: ''
-          },
-          researcher: [
-            {
-              reportername: '',
-              reportersocial: '',
-              reporterwww: '',
-              reporteremail: ''
-            }
-          ],
-          report_settings: {
-            report_html: defaultContent,
-            report_logo: {
-              logo: '',
-              width: 600,
-              height: 500
-            }
-          }
-        };
+    let empty_vulns = {
+      report_vulns: [],
+      report_scope: '',
+      report_assets: [],
+      report_summary: '',
+      report_changelog: [
+        {
+          date: today,
+          desc: 'Create report: \"' + title + '\".'
+        }
+      ],
+      report_version: 0,
+      report_metadata: {
+        starttest: today,
+        endtest: ''
+      },
+      researcher: [
+        {
+          reportername: '',
+          reportersocial: '',
+          reporterwww: '',
+          reporteremail: ''
+        }
+      ],
+      report_settings: {
+        report_html: defaultContent,
+        report_logo: {
+          logo: '',
+          width: 600,
+          height: 500
+        }
+      }
+    };
 
-        // check profile and set profile
-        empty_vulns = this.setProfile(empty_vulns, profile);
+    // check profile and set profile
+    empty_vulns = this.setProfile(empty_vulns, profile);
 
-        // Encrypt
-        const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(empty_vulns), pass);
-        const reportid = uuid();
-        const data = {
-          report_id: reportid,
-          report_name: title,
-          report_createdate: today,
-          report_lastupdate: '',
-          encrypted_data: ciphertext
-        };
-
-
-        // tslint:disable-next-line:max-line-length
-        this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(data))).then(resp => {
-          if (resp) {
-
-            if (resp.STORAGE === 'NOSPACE') {
-              this.snackBar.open('API ERROR: NO SPACE LEFT!', 'OK', {
-                duration: 3000,
-                panelClass: ['notify-snackbar-fail']
-              });
-            } else {
-              this.keyVault.set(reportid, pass);
-              this.router.navigate(['/my-reports']);
-            }
-
-          }
-        });
+    // Encrypt
+    const ciphertext = await this.cryptoUtils.encrypt(JSON.stringify(empty_vulns), pass);
+    const reportid = uuid();
+    const data = {
+      report_id: reportid,
+      report_name: title,
+      report_createdate: today,
+      report_lastupdate: '',
+      encrypted_data: ciphertext
+    };
 
 
+    // Awaited, so the caller learns whether the report exists. An
+    // unreachable host used to fall off the end of an un-caught .then()
+    // and leave the form looking like nothing had happened.
+    try {
+      // tslint:disable-next-line:max-line-length
+      const resp = await this.apiService.APISend(apiurl, apikey, 'savereport', 'reportdata=' + btoa(JSON.stringify(data)));
+
+      if (!resp) {
+        this.failCreate('No answer from ' + apiurl + '. The report was not created.');
+        return false;
       }
 
+      if (resp.STORAGE === 'NOSPACE') {
+        this.failCreate('API ERROR: NO SPACE LEFT! The report was not created.');
+        return false;
+      }
+
+      this.keyVault.set(reportid, pass);
+      this.router.navigate(['/my-reports']);
+      return true;
+
+    } catch {
+      this.failCreate('Could not reach ' + apiurl + '. The report was not created.');
+      return false;
     }
 
   }
@@ -1135,16 +1168,23 @@ export class IndexeddbService {
     });
   }
 
+  // ── Existence probes ──────────────────────────────────────────────────────
+  // These ask "is this report also on a configured server?" on the app's own
+  // initiative — the navbar runs one per held key every time the key vault
+  // changes. A local-only report is simply absent there, so a server that
+  // answers anything but 404 would otherwise raise "CAN'T CONNECT TO API" over
+  // a page that is working fine. They pass silent=true and report absence to
+  // their caller instead; user-initiated calls (save, update, remove, connect)
+  // keep the snackbar.
   checkAPIreport_single(reportid, url, key) {
     return new Promise<any>((resolve, reject) => {
 
-      this.apiService.APISend(url, key, 'getreport', 'reportid=' + reportid).then(resp => {
-        if (resp) {
-          if (resp.length > 0) {
-            console.log('Report exist in API: OK');
-            resolve(resp[0]);
-          }
+      this.apiService.APISend(url, key, 'getreport', 'reportid=' + reportid, true).then(resp => {
+        if (Array.isArray(resp) && resp.length > 0) {
+          console.log('Report exist in API: OK');
+          resolve(resp[0]);
         } else {
+          // Absent, or the endpoint did not answer — same thing to the caller.
           resolve(false);
         }
 
@@ -1161,7 +1201,7 @@ export class IndexeddbService {
 
         const vaultobj = JSON.parse(localkey);
         vaultobj.forEach((element) => {
-          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid, true).then(resp => {
             if (resp) {
               if (resp.length > 0) {
                 console.log('Report exist in API: OK');
@@ -1191,7 +1231,7 @@ export class IndexeddbService {
         const vaultobj = JSON.parse(localkey);
 
         vaultobj.forEach((element) => {
-          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid, true).then(resp => {
             if (resp) {
               if (resp.length > 0) {
                 console.log('Report exist in API changes: OK');
@@ -1221,7 +1261,7 @@ export class IndexeddbService {
 
         vaultobj.forEach((element) => {
 
-          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid).then(resp => {
+          this.apiService.APISend(element.value, element.apikey, 'getreport', 'reportid=' + reportid, true).then(resp => {
 
             if (resp) {
               if (resp.length > 0) {
@@ -1688,6 +1728,67 @@ export class IndexeddbService {
         tx.oncomplete = () => { db.close(); resolve(arr); };
         req.onerror = (e) => reject(e);
       };
+    });
+  }
+
+  // Every save event as metadata only — what /home's activity panel counts.
+  //
+  // A history snapshot is a whole report: report_stats plus the full
+  // encrypted_data ciphertext, attachments included. getAll() on this store
+  // would therefore hand back every version of every report at once, which is
+  // tens of MB on a working database. The cursor still deserializes each
+  // record (there is no index to project through), but only the metadata is
+  // kept, so what survives this call is a few dozen bytes per save.
+  //
+  // Returns one entry per save, in store order. The caller windows and buckets
+  // them in memory — that is what lets the activity period change without
+  // touching IndexedDB again. `cap` is a backstop for a database that was
+  // never purged; hitting it loses the oldest-written records, not the newest
+  // reports, so the panel degrades to a shorter usable window.
+  getHistoryActivity(cap: number = 20000): Promise<HistoryActivityEntry[]> {
+    return new Promise<HistoryActivityEntry[]>((resolve, reject) => {
+      const idb = window.indexedDB;
+      const open = idb.open('vulnrepo-db-history', 1);
+      open.onupgradeneeded = () => {
+        open.result.createObjectStore('reports-history', { autoIncrement: true });
+      };
+      open.onsuccess = () => {
+        const db = open.result;
+        const tx = db.transaction('reports-history', 'readonly');
+        const store = tx.objectStore('reports-history');
+        const req = store.openCursor();
+        const out: HistoryActivityEntry[] = [];
+        req.onsuccess = () => {
+          const cursor = req.result;
+          if (!cursor) { return; }
+          const val = cursor.value;
+          const ts = Number(val?.report_lastupdate) || 0;
+          // A snapshot with no usable timestamp cannot be placed on a day, and
+          // one with no report_id cannot be attributed — both are dropped
+          // rather than counted against an arbitrary report or date.
+          if (ts > 0 && val?.report_id) {
+            const stats = val.report_stats;
+            out.push({
+              report_id: val.report_id,
+              report_name: val.report_name || '',
+              ts,
+              total: stats?.total || 0,
+              critical: stats?.critical || 0,
+              high: stats?.high || 0,
+              medium: stats?.medium || 0,
+              low: stats?.low || 0,
+              info: stats?.info || 0
+            });
+          }
+          // Not calling continue() ends the walk; the transaction then
+          // completes normally and resolves with what was gathered.
+          if (out.length >= cap) { return; }
+          cursor.continue();
+        };
+        tx.oncomplete = () => { db.close(); resolve(out); };
+        req.onerror = (e) => reject(e);
+      };
+      open.onerror = (e) => reject(e);
     });
   }
 

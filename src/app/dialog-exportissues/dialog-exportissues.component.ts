@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTooltip } from '@angular/material/tooltip';
 import { CryptoUtilsService } from '../crypto-utils.service';
 import { UtilsService } from '../utils.service';
 import { SarifService } from '../sarif.service';
@@ -8,6 +9,10 @@ interface Exportsource {
   value: string;
   viewValue: string;
   viewImg: string;
+  icon: string;
+  desc: string;
+  badge: string;
+  badgeClass: string;
 }
 
 @Component({
@@ -27,8 +32,22 @@ export class DialogExportissuesComponent implements OnInit {
   multipartcurl = false;
   multicurlcmd = '';
   curlcmd = '';
+  cmdHint = '';
   selected_export = 'vulnrepojson';
-  hide = true;
+  // One flag per key field: a shared flag reveals both at once.
+  hide1 = true;
+  hide2 = true;
+  exportKey = '';
+  exportKeyConfirm = '';
+  jiraUrl = '';
+  jiraKey = '';
+  jiraEmail = '';
+  jiraLabel = '';
+  splitcountval = '49';
+  peek = false;
+  estSize = '';
+  sevCounts: Array<{ name: string, count: number, cls: string }> = [];
+  jiraVars = ['$key', '$title', '$desc', '$poc', '$ref', '$severity', '$label'];
   fields_prop = `"project": {
     "key": "$key"
   },
@@ -45,16 +64,38 @@ export class DialogExportissuesComponent implements OnInit {
   ]`;
 
   sour: Exportsource[] = [
-    { value: 'vulnrepojson', viewValue: 'VULNRΞPO (.VULN)', viewImg: '/favicon-32x32.png' },
-    { value: 'decrypted_json', viewValue: 'Decrypted Issue (.JSON)', viewImg: '/favicon-32x32.png' },
-    { value: 'sarif', viewValue: 'SARIF 2.1.0 (.SARIF)', viewImg: '/assets/vendors/sarif.svg' },
-    { value: 'jira', viewValue: 'Atlassian Jira', viewImg: '/assets/vendors/jira-logo.png' }
+    {
+      value: 'vulnrepojson', viewValue: 'VULNRΞPO', viewImg: '/favicon-32x32.png', icon: '',
+      desc: 'AES-GCM archive · re-importable', badge: 'encrypted', badgeClass: 'enc'
+    },
+    {
+      value: 'decrypted_json', viewValue: 'Raw JSON', viewImg: '', icon: 'data_object',
+      desc: 'Issue objects as stored · for scripts', badge: 'plaintext', badgeClass: 'plain'
+    },
+    {
+      value: 'sarif', viewValue: 'SARIF 2.1.0', viewImg: '/assets/vendors/sarif.svg', icon: '',
+      desc: 'For CI and code-scanning dashboards', badge: 'plaintext', badgeClass: 'plain'
+    },
+    {
+      value: 'jira', viewValue: 'Atlassian Jira', viewImg: '/assets/vendors/jira-logo.png', icon: '',
+      desc: 'Bulk-create tickets with cURL', badge: 'rest api', badgeClass: 'api'
+    }
   ];
+
+  private severityOrder = [
+    { name: 'Critical', cls: 'c' },
+    { name: 'High', cls: 'h' },
+    { name: 'Medium', cls: 'm' },
+    { name: 'Low', cls: 'l' },
+    { name: 'Info', cls: 'i' }
+  ];
+
   // @ts-ignore
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DialogExportissuesComponent>,
     private cryptoUtils: CryptoUtilsService,
     private utilsService: UtilsService,
-    private sarifService: SarifService) { }
+    private sarifService: SarifService,
+    private host: ElementRef<HTMLElement>) { }
 
     ngOnInit() {
 
@@ -62,7 +103,7 @@ export class DialogExportissuesComponent implements OnInit {
 
         this.data.sel.forEach((item, index) => {
           if (item.data) {
-            
+
             const index2: number = this.data.orig.findIndex(i => i === item.data)
             if (index2 !== -1) {
               this.isReturn.push(this.data.orig[index2]);
@@ -75,14 +116,202 @@ export class DialogExportissuesComponent implements OnInit {
           this.isReturn = this.data;
       }
 
+      this.countSeverities();
+      this.estSize = this.payloadSize();
+
     }
+
+  // Severity breakdown of the selection, so a filtered export (by tag, by severity)
+  // can be verified before a key is typed.
+  private countSeverities() {
+    this.sevCounts = this.severityOrder.map(s => ({
+      name: s.name,
+      cls: s.cls,
+      count: this.isReturn.filter(i => this.sevName(i.severity) === s.name).length
+    })).filter(s => s.count > 0);
+  }
+
+  private payloadSize(): string {
+    const bytes = new Blob([JSON.stringify(this.isReturn)]).size;
+    if (bytes < 1024) {
+      return '≈ ' + bytes + ' B';
+    }
+    if (bytes < 1024 * 1024) {
+      return '≈ ' + Math.round(bytes / 1024) + ' KB';
+    }
+    return '≈ ' + (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  // Issue severity is stored as a name in some reports and as a numeric id in others.
+  sevName(severity: any): string {
+    return this.utilsService.setseverity(String(severity));
+  }
+
+  sevClass(severity: any): string {
+    const entry = this.severityOrder.find(s => s.name === this.sevName(severity));
+    return entry ? entry.cls : 'i';
+  }
+
+  pickFormat(value: string) {
+    this.selected_export = value;
+    this.resetCmd();
+  }
+
+  resetCmd() {
+    this.curlhide = false;
+    this.multipartcurl = false;
+  }
+
+  private revealCmd() {
+    setTimeout(() => {
+      const block = this.host.nativeElement.querySelector('.cmd-block');
+      if (block) {
+        block.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    });
+  }
+
+  get activeCmd(): string {
+    return this.multipartcurl ? this.multicurlcmd : this.curlcmd;
+  }
+
+  get keyStrength(): { pct: number, label: string, cls: string } {
+    const v = this.exportKey;
+    if (!v) {
+      return { pct: 0, label: 'key strength', cls: '' };
+    }
+    let s = 0;
+    if (v.length >= 8) { s++; }
+    if (v.length >= 14) { s++; }
+    if (/[a-z]/.test(v) && /[A-Z]/.test(v)) { s++; }
+    if (/[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v)) { s++; }
+    const levels = [
+      { pct: 28, label: 'weak', cls: 'weak' },
+      { pct: 28, label: 'weak', cls: 'weak' },
+      { pct: 55, label: 'fair', cls: 'fair' },
+      { pct: 78, label: 'good', cls: 'good' },
+      { pct: 100, label: 'strong', cls: 'strong' }
+    ];
+    return levels[s];
+  }
+
+  get keyMatch(): { text: string, cls: string } {
+    if (!this.exportKey && !this.exportKeyConfirm) {
+      return { text: 'Both fields must match before the archive can be written.', cls: '' };
+    }
+    if (this.exportKey.length < 8) {
+      return { text: 'Use at least 8 characters.', cls: 'bad' };
+    }
+    if (!this.exportKeyConfirm) {
+      return { text: 'Re-enter the key to confirm it.', cls: '' };
+    }
+    if (this.exportKey !== this.exportKeyConfirm) {
+      return { text: 'Keys do not match.', cls: 'bad' };
+    }
+    return { text: 'Keys match — this archive cannot be opened without them.', cls: 'ok' };
+  }
+
+  get canExport(): boolean {
+    if (this.isReturn.length === 0) {
+      return false;
+    }
+    if (this.selected_export === 'vulnrepojson') {
+      return this.exportKey.length >= 8 && this.exportKey === this.exportKeyConfirm;
+    }
+    if (this.selected_export === 'jira') {
+      return this.jiraUrl.trim() !== '' && this.jiraKey.trim() !== '' && this.jiraEmail.trim() !== '';
+    }
+    return true;
+  }
+
+  get stepTwoLabel(): string {
+    switch (this.selected_export) {
+      case 'vulnrepojson': return 'Set key';
+      case 'jira': return 'Connection';
+      default: return 'Confirm';
+    }
+  }
+
+  get outputName(): string {
+    switch (this.selected_export) {
+      case 'vulnrepojson': return 'VULNREPO issues export.vuln';
+      case 'decrypted_json': return 'VULNREPO issues export.json';
+      case 'sarif': return 'VULNREPO issues export.sarif';
+      default: return this.splitfilereport ? 'data0.json … dataN.json' : 'data.json';
+    }
+  }
+
+  get outputSecurity(): string {
+    return this.selected_export === 'vulnrepojson' ? 'AES-GCM encrypted' : 'Not encrypted';
+  }
+
+  get primaryLabel(): string {
+    switch (this.selected_export) {
+      case 'vulnrepojson': return 'Export encrypted';
+      case 'decrypted_json': return 'Download JSON';
+      case 'sarif': return 'Download SARIF';
+      default: return 'Build command';
+    }
+  }
+
+  get primaryIcon(): string {
+    return this.selected_export === 'jira' ? 'terminal' : 'file_download';
+  }
+
+  runExport() {
+    switch (this.selected_export) {
+      case 'vulnrepojson':
+        this.vulnrepojsonexport(this.exportKey, this.exportKeyConfirm);
+        break;
+      case 'decrypted_json':
+        this.downloaddecryptedJSON();
+        break;
+      case 'sarif':
+        this.downloadSARIF();
+        break;
+      case 'jira':
+        // A blank or zero count would make the chunking loop splice nothing and
+        // spin forever, so it falls back to the default.
+        const per = Math.max(1, parseInt(this.splitcountval, 10) || 49);
+        this.splitcountval = String(per);
+        this.jiraCloudExport(this.jiraUrl, this.jiraKey, this.jiraEmail, this.jiraLabel,
+          this.fields_prop, per);
+        break;
+    }
+  }
+
+  insertVar(area: HTMLTextAreaElement, variable: string) {
+    const start = area.selectionStart ?? area.value.length;
+    const end = area.selectionEnd ?? start;
+    this.fields_prop = area.value.slice(0, start) + variable + area.value.slice(end);
+    this.resetCmd();
+    setTimeout(() => {
+      area.focus();
+      area.selectionStart = area.selectionEnd = start + variable.length;
+    });
+  }
+
+  flashCopied(tip: MatTooltip): void {
+    setTimeout(() => {
+      tip.show();
+      tip.message = 'Copied!';
+    });
+    setTimeout(() => {
+      tip.hide();
+      tip.message = 'Copy command';
+    }, 2000);
+  }
+
+  toggleSplit() {
+    this.splitfilereport = !this.splitfilereport;
+    this.resetCmd();
+  }
 
   cancel(): void {
     this.dialogRef.close();
   }
 
   jiraCloudExport(jira_c_url, jira_c_key, jira_c_email, jira_c_label, workflow, splitcount) {
-    this.hide = true;
     this.curlhide = false;
 
     function sevret(text) {
@@ -190,6 +419,9 @@ done`;
 
       }
 
+      this.cmdHint = 'Split into ' + fname + ' file' + (fname !== 1 ? 's' : '') + ' of up to ' +
+        splitcount + ' issues — run from your download folder.';
+      this.revealCmd();
 
     } else {
 
@@ -260,6 +492,9 @@ this.curlcmd = `curl \
 
     dataownload(datajson, '');
     this.curlhide = true;
+    this.cmdHint = 'data.json saved to your downloads — ' + this.isReturn.length + ' issue' +
+      (this.isReturn.length !== 1 ? 's' : '') + ', SHA-256 recorded in the export log.';
+    this.revealCmd();
   }
   }
 
@@ -282,20 +517,6 @@ this.curlcmd = `curl \
 
   }
 
-  splitfile(event) {
-
-    this.curlhide = false;
-    this.multipartcurl = false;
-
-    if (event.checked === false) {
-      this.splitfilereport = false;
-    }
-    if (event.checked === true) {
-      this.splitfilereport = true;
-    }
-  }
-
-
   downloaddecryptedJSON() {
 
       if (this.isReturn.length > 0) {
@@ -304,13 +525,10 @@ this.curlcmd = `curl \
 
       const json = JSON.stringify(this.data);
 
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
-      element.setAttribute('download', 'VULNREPO issues export.json');
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+      // Same integrity path as the other three exports, so every format gets a
+      // recorded SHA-256 the recipient can verify.
+      const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+      this.utilsService.downloadWithIntegrity(blob, 'VULNREPO issues export.json');
 
   }
 

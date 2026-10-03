@@ -1,129 +1,229 @@
+/* ── Tokens ───────────────────────────────────────────────────── */
+/* The --vr-* and --sev-* tokens are defined globally in src/styles.scss under
+   the real :root. They are NOT redeclared here: a `:root` rule inside a
+   component stylesheet compiles to `[_ngcontent-xxx]:root` and never matches
+   <html>. */
+
 * {
-    box-sizing: border-box;
-  }
-  
-  /* Create two equal columns that floats next to each other */
-  .column {
-    float: left;
-    width: 50%;
-    padding: 10px;
-
-  }
-  
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  
-  /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-  @media screen and (max-width: 600px) {
-    .column {
-      width: 100%;
-    }
-  }
-
-  .mat-expansion-panel {
-    background: #212121;
-  }
-
-  .logo {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+  box-sizing: border-box;
 }
 
-/* ── Tokens ───────────────────────────────────────────────────── */
-/* The --vr-* tokens are defined globally in src/styles.scss under the real
-   :root. They are NOT redeclared here: a `:root` rule inside a component
-   stylesheet compiles to `[_ngcontent-xxx]:root` and never matches <html>. */
-
 /* ── Page shell ───────────────────────────────────────────────── */
+/* Roboto for prose; Roboto Mono is reserved for data — IDs, counts, hashes,
+   CVSS vectors, labels — so that monospace keeps meaning something. */
+/* Horizontal bounds and the top gap come from the global `.container`
+   (styles.scss) that wraps every route — don't double them up here. */
+/* The `overflow-x: hidden` guard against a wide child forcing a horizontal
+   scrollbar also makes this element a clip box, and with no horizontal padding
+   the clip edge ran exactly along the first and last card of the deck — the
+   hover lift and glow of .vr-act--primary were sliced off on the left. So pad
+   the clip box out past the widest shadow and pull the element back by the
+   same amount: the bleed lands inside the global `.container`'s 30px padding
+   (which it keeps at every width) and paints the same --vr-bg, so nothing
+   moves. Keep the two in step if either value changes. */
 .vr-page {
   background: var(--vr-bg);
   color: var(--vr-text);
-  font-family: 'Roboto Mono', monospace, sans-serif;
-  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
   overflow-x: hidden;
+  padding: 0 28px 48px;
+  margin: 0 -28px;
 }
 
 .vr-accent { color: var(--vr-accent); }
 
-/* ── Hero ─────────────────────────────────────────────────────── */
-.vr-hero {
-  position: relative;
-  min-height: 92vh;
+/* ── A · Status bar ───────────────────────────────────────────── */
+.vr-status {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 80px 24px 60px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
   overflow: hidden;
 }
 
-/* Subtle noise texture overlay */
-.vr-hero__noise {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+.vr-status__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-right: 1px solid var(--vr-border);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+}
+.vr-status__item:last-child { border-right: 0; }
+.vr-status__item--end { margin-left: auto; }
+
+.vr-status__item strong {
+  font-weight: 500;
+  color: var(--vr-text);
+  font-variant-numeric: tabular-nums;
+}
+.vr-status__label,
+.vr-status__hint {
+  color: var(--vr-text-muted);
 }
 
-.vr-hero__inner {
-  position: relative;
-  z-index: 1;
-  max-width: 720px;
+.vr-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--vr-accent);
+  box-shadow: 0 0 8px rgba(var(--vr-accent-rgb), 0.8);
+}
+.vr-led--locked {
+  background: var(--vr-grey-600);
+  box-shadow: none;
 }
 
-.vr-hero__logo {
-  margin-bottom: 48px;
-  opacity: 0.95;
-  filter: drop-shadow(0 0 24px rgba(105,240,174,0.2));
+/* Inline unlock inside the status strip: a control that has to read as part of
+   the bar, not as a button dropped on top of it. */
+.vr-vault-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid rgba(var(--vr-accent-rgb), 0.45);
+  border-radius: var(--vr-radius-sm);
+  background: rgba(var(--vr-accent-rgb), 0.1);
+  color: var(--vr-accent);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.vr-vault-btn:hover {
+  background: rgba(var(--vr-accent-rgb), 0.2);
+  border-color: var(--vr-accent);
+}
+.vr-vault-btn mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
 }
 
-.vr-hero__headline {
+/* ── A2 · Remote vault call ───────────────────────────────────── */
+.vr-vault-call {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  padding: 14px 18px;
+  background: var(--vr-bg-card);
+  border: 1px solid rgba(var(--vr-accent-rgb), 0.35);
+  border-radius: var(--vr-radius);
+}
+.vr-vault-call__icon {
+  flex: none;
+  color: var(--vr-accent);
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+.vr-vault-call__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.vr-vault-call__text strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.vr-vault-call__text span {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--vr-text-muted);
+  overflow-wrap: anywhere;
+}
+/* .vr-btn was written for <a>; a <button> inherits neither the page font nor
+   the normal box, so both are restated here. */
+.vr-vault-call__btn {
+  margin-left: auto;
+  flex: none;
+  padding: 10px 18px;
   font-family: 'Roboto', sans-serif;
-  font-size: clamp(2rem, 5vw, 3.4rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin: 0 0 20px;
-  color: #fff;
+  cursor: pointer;
+}
+.vr-vault-call--warn {
+  border-color: rgba(var(--sev-medium-rgb), 0.45);
+}
+.vr-vault-call--warn .vr-vault-call__icon {
+  color: rgb(var(--sev-medium-rgb));
 }
 
-.vr-hero__sub {
-  font-size: 1rem;
+/* ── FIRST_RUN · Banner ───────────────────────────────────────── */
+/* ~320px, not 92vh: the first screen now reaches the actions. */
+.vr-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 34px 0 10px;
+}
+
+.vr-banner__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+.vr-banner__dot { color: var(--vr-border-strong); }
+
+.vr-banner__headline {
+  font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  margin: 0;
+  color: var(--vr-text-strong);
+  text-wrap: balance;
+}
+
+.vr-banner__sub {
+  font-size: 0.95rem;
   line-height: 1.7;
   color: var(--vr-text-muted);
-  max-width: 520px;
-  margin: 0 auto 40px;
-}
-
-.vr-hero__cta {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.vr-hero__cta--single {
-  justify-content: center;
+  max-width: 58ch;
+  margin: 0 0 6px;
 }
 
 /* ── Buttons ──────────────────────────────────────────────────── */
+.vr-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .vr-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 28px;
+  padding: 13px 24px;
   border-radius: var(--vr-radius);
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid transparent;
+}
+.vr-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .vr-btn--primary {
@@ -133,13 +233,13 @@
 .vr-btn--primary:hover {
   background: #8fffca;
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(105, 240, 174, 0.3);
+  box-shadow: 0 8px 28px rgba(var(--vr-accent-rgb), 0.3);
 }
 
 .vr-btn--outline {
   background: transparent;
   color: var(--vr-text);
-  border: 1px solid var(--vr-border);
+  border-color: var(--vr-border);
 }
 .vr-btn--outline:hover {
   border-color: var(--vr-border-hover);
@@ -147,260 +247,894 @@
   transform: translateY(-2px);
 }
 
-.vr-hero__scroll-hint {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
+.vr-btn--quiet {
+  background: transparent;
   color: var(--vr-text-muted);
-  animation: vr-bounce 2s ease-in-out infinite;
-  opacity: 0.5;
 }
-@keyframes vr-bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%       { transform: translateX(-50%) translateY(6px); }
-}
-
-/* ── Strip ────────────────────────────────────────────────────── */
-.vr-strip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px 24px;
-  padding: 18px 24px;
-  background: var(--vr-bg-card);
-  border-top: 1px solid var(--vr-border);
-  border-bottom: 1px solid var(--vr-border);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--vr-accent);
-}
-.vr-strip__dot {
-  color: var(--vr-border);
-}
+.vr-btn--quiet:hover { color: var(--vr-accent); }
 
 /* ── Sections ─────────────────────────────────────────────────── */
 .vr-section {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 72px 24px;
+  padding: 44px 0 0;
+}
+.vr-section--tight {
+  padding-top: 28px;
 }
 
 .vr-section__title {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--vr-text-muted);
-  margin: 0 0 36px;
+  margin: 0 0 22px;
 }
 .vr-section__title mat-icon {
   color: var(--vr-accent);
   font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
-
-/* ── About cards ──────────────────────────────────────────────── */
-.vr-about-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.vr-card--about {
-  background: var(--vr-bg-card);
-  border: 1px solid var(--vr-border);
-  border-radius: var(--vr-radius-lg);
-  padding: 28px 28px 24px;
-  transition: border-color 0.2s ease;
-}
-.vr-card--about:hover {
-  border-color: rgba(105, 240, 174, 0.2);
-}
-
-.vr-card__icon {
-  display: block;
-  color: var(--vr-accent);
-  font-size: 28px !important;
-  margin-bottom: 16px;
-  opacity: 0.85;
-}
-
-.vr-card--about p {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.75;
+.vr-section__more {
+  margin-left: auto;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
   color: var(--vr-text-muted);
+  text-decoration: none;
 }
+.vr-section__more:hover { color: var(--vr-accent); }
 
-/* ── Feature grid ─────────────────────────────────────────────── */
-.vr-features-grid {
+/* ── B · Action deck ──────────────────────────────────────────── */
+.vr-deck {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
 }
 
-.vr-feature-card {
+.vr-act {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 104px;
+  padding: 18px 20px;
   background: var(--vr-bg-card);
   border: 1px solid var(--vr-border);
   border-radius: var(--vr-radius);
-  padding: 22px 22px 20px;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  color: var(--vr-text);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
-.vr-feature-card:hover {
-  border-color: rgba(105, 240, 174, 0.2);
-  background: #191919;
+.vr-act:hover {
+  border-color: var(--vr-border-hover);
+  background: var(--vr-bg-card-2);
+  transform: translateY(-2px);
+}
+.vr-act mat-icon {
+  color: var(--vr-accent);
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+.vr-act__title {
+  margin-top: auto;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.vr-act__sub {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--vr-text-muted);
 }
 
-.vr-feature-card--accent {
-  border-color: rgba(105, 240, 174, 0.25);
-  background: var(--vr-accent-glow);
+.vr-act--primary {
+  background: var(--vr-accent);
+  border-color: var(--vr-accent);
+  color: #0a0a0a;
+}
+.vr-act--primary:hover {
+  background: #8fffca;
+  border-color: #8fffca;
+  box-shadow: 0 8px 28px rgba(var(--vr-accent-rgb), 0.25);
+}
+.vr-act--primary mat-icon { color: #0a0a0a; }
+.vr-act--primary .vr-act__sub { color: rgba(10, 10, 10, 0.7); }
+
+/* ── B2 · Activity panel ──────────────────────────────────────── */
+/* The window control sits in the section title, which is the one row above
+   the chart — the same place /my-reports keeps its filters. */
+.vr-win {
+  display: inline-flex;
+  margin-left: 4px;
+  background: var(--vr-bg-card-2);
+  border: 1px solid var(--vr-border-strong);
+  border-radius: 7px;
+  overflow: hidden;
 }
 
-.vr-feature-card__header {
+.vr-win__btn {
+  appearance: none;
+  border: 0;
+  border-right: 1px solid var(--vr-border-strong);
+  background: transparent;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--vr-text-muted);
+  padding: 9px 13px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.vr-win__btn:last-child { border-right: 0; }
+.vr-win__btn:hover { color: var(--vr-accent); }
+.vr-win__btn[aria-pressed="true"] {
+  background: rgba(var(--vr-accent-rgb), 0.14);
+  color: var(--vr-accent);
+}
+
+.vr-win__btn--custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.vr-win__btn--custom mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.vr-win__meta {
+  margin-left: auto;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--vr-text-disabled);
+}
+
+/* Custom range. The presets are in the control above, so this pane carries
+   only what they cannot express — plus the one caveat that matters. */
+.vr-win-pop {
+  max-width: 520px;
+  margin: -6px 0 24px;
+  padding: 18px 20px;
+  background: var(--vr-bg-raised);
+  border: 1px solid var(--vr-border-strong);
+  border-radius: var(--vr-radius);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+}
+
+.vr-win-pop__fields {
+  display: flex;
+  gap: 14px;
+}
+
+.vr-fld {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1 1 0;
+}
+.vr-fld label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+/* color-scheme keeps the native date popup dark instead of a white sheet. */
+.vr-fld input {
+  color-scheme: dark;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 11px;
+  background: var(--vr-bg-card-2);
+  border: 1px solid var(--vr-border-strong);
+  border-radius: var(--vr-radius-sm);
+  color: var(--vr-text-strong);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.8rem;
+}
+.vr-fld input:focus {
+  border-color: var(--vr-accent);
+  outline: none;
+}
+
+.vr-win-pop__err {
+  margin: 12px 0 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--sev-high);
+}
+
+.vr-win-pop__hint {
+  display: flex;
+  gap: 9px;
+  margin: 14px 0 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.64rem;
+  line-height: 1.65;
+  color: var(--vr-text-muted);
+}
+.vr-win-pop__hint mat-icon {
+  flex: none;
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: var(--sev-medium);
+}
+.vr-win-pop__hint a {
+  color: var(--vr-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--vr-accent-rgb), 0.35);
+}
+.vr-win-pop__hint a:hover { border-bottom-color: var(--vr-accent); }
+
+.vr-win-pop__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.vr-win-pop__actions .vr-btn {
+  padding: 10px 16px;
+  font-size: 0.75rem;
+}
+
+/* Headline figures: one hero (the figure the panel exists to show) and four
+   supporting tiles, so the hierarchy is read before any number is. */
+.vr-act-head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.vr-feature-card__header mat-icon {
-  color: var(--vr-accent);
-  font-size: 20px !important;
-  flex-shrink: 0;
-}
-.vr-feature-card__header span {
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #d8d8d8;
+  gap: 26px;
+  margin-bottom: 26px;
+  padding: 22px 26px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
 }
 
-.vr-feature-card p {
+.vr-act-hero {
+  flex: none;
+}
+.vr-act-hero__n {
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 3.4rem;
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--vr-accent);
+  font-variant-numeric: tabular-nums;
+}
+.vr-act-hero__n small {
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--vr-text-disabled);
+}
+.vr-act-hero__lbl {
+  display: block;
+  margin-top: 12px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+
+.vr-act-tiles {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 18px 0;
+}
+
+.vr-act-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1 1 150px;
+  padding: 0 24px;
+  border-left: 1px solid var(--vr-border);
+}
+.vr-act-tile strong {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--vr-text-strong);
+  font-variant-numeric: tabular-nums;
+}
+.vr-act-tile em {
+  font-style: normal;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+.vr-act-tile span {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.62rem;
+  line-height: 1.5;
+  color: var(--vr-text-disabled);
+}
+
+/* Stands in for the chart while history is read, and in place of it when
+   there is no history to read. */
+.vr-act-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 16px 18px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: var(--vr-text-muted);
+}
+.vr-act-note mat-icon {
+  flex: none;
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  color: var(--vr-text-disabled);
+}
+
+/* Save rhythm. Height and opacity both encode the same number against one
+   scale; hue is never a second variable here. */
+.vr-chart {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 24px;
+}
+
+.vr-chart__y {
+  position: absolute;
+  left: 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--vr-text-disabled);
+  font-variant-numeric: tabular-nums;
+}
+.vr-chart__y--top { top: -5px; }
+.vr-chart__y--zero { bottom: 26px; }
+
+.vr-chart__plot { position: relative; }
+
+.vr-chart__rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.vr-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 110px;
+}
+
+.vr-bar {
+  display: block;
+  flex: 1 1 0;
+  min-width: 3px;
+  min-height: 3px;
+  border-radius: 4px 4px 0 0;
+  background: var(--vr-accent);
+  transition: filter 0.15s ease;
+}
+.vr-bar:hover { filter: brightness(1.35); }
+
+/* A day with no save is a drawn zero, not a gap: an empty slot reads as
+   missing data, which is a different claim. */
+.vr-bar--zero {
+  height: 2px !important;
+  min-height: 2px;
+  border-radius: 2px;
+  background: var(--vr-surface-3);
+  opacity: 1 !important;
+}
+
+.vr-bar--today { box-shadow: 0 0 0 1px rgba(var(--vr-accent-rgb), 0.55); }
+
+.vr-chart__axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 9px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--vr-text-disabled);
+}
+.vr-chart__grain { color: var(--vr-text-muted); }
+
+/* Severity is the one place colour carries meaning, so it uses the reserved
+   --sev-* ramp and always ships the number beside the swatch. */
+.vr-added {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+  margin-bottom: 24px;
+}
+
+.vr-added__lbl {
+  flex: none;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+
+.vr-stack {
+  display: flex;
+  gap: 2px;
+  flex: 1 1 200px;
+  max-width: 420px;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.vr-stack__seg {
+  display: block;
+  flex-basis: 0;
+  background: rgb(var(--sev-rgb));
+}
+.vr-stack__seg--critical { --sev-rgb: var(--sev-critical-rgb); }
+.vr-stack__seg--high     { --sev-rgb: var(--sev-high-rgb); }
+.vr-stack__seg--medium   { --sev-rgb: var(--sev-medium-rgb); }
+.vr-stack__seg--low      { --sev-rgb: var(--sev-low-rgb); }
+.vr-stack__seg--info     { --sev-rgb: var(--sev-info-rgb); }
+
+.vr-added__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.vr-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--vr-text-muted);
+}
+.vr-legend i {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: rgb(var(--sev-rgb));
+}
+.vr-legend strong {
+  font-weight: 500;
+  color: var(--vr-text-strong);
+  font-variant-numeric: tabular-nums;
+}
+.vr-legend--critical { --sev-rgb: var(--sev-critical-rgb); }
+.vr-legend--high     { --sev-rgb: var(--sev-high-rgb); }
+.vr-legend--medium   { --sev-rgb: var(--sev-medium-rgb); }
+.vr-legend--low      { --sev-rgb: var(--sev-low-rgb); }
+.vr-legend--info     { --sev-rgb: var(--sev-info-rgb); }
+
+/* Pinned to 30 days whatever the chart window is: on a 7-day window nearly
+   every report would be "idle", which is noise rather than a nudge. */
+.vr-idle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: rgba(var(--sev-medium-rgb), 0.05);
+  border: 1px solid rgba(var(--sev-medium-rgb), 0.3);
+  border-radius: var(--vr-radius-sm);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: var(--vr-text);
+}
+.vr-idle mat-icon {
+  flex: none;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: rgb(var(--sev-medium-rgb));
+}
+.vr-idle a {
+  margin-left: auto;
+  color: var(--vr-text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+.vr-idle a:hover {
+  color: var(--vr-accent);
+  border-bottom-color: var(--vr-accent);
+}
+
+/* ── C · Recent work ──────────────────────────────────────────── */
+.vr-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.vr-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 18px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-bottom: 0;
+  color: var(--vr-text);
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.vr-row:first-child { border-radius: var(--vr-radius) var(--vr-radius) 0 0; }
+.vr-row:last-child {
+  border-bottom: 1px solid var(--vr-border);
+  border-radius: 0 0 var(--vr-radius) var(--vr-radius);
+}
+.vr-row:only-child { border-radius: var(--vr-radius); }
+.vr-row:hover {
+  background: var(--vr-bg-card-2);
+  border-color: var(--vr-border-hover);
+}
+/* Stacked rows collapse their shared edge (border-bottom: 0), so a hovered row
+   would highlight on three sides only. Paint the missing bottom edge with an
+   inset shadow: it completes the outline without adding a pixel of height. The
+   last row already carries a real bottom border, so it's excluded. */
+.vr-row:not(:last-child):hover {
+  box-shadow: inset 0 -1px 0 var(--vr-border-hover);
+}
+
+.vr-row__name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vr-row__name span {
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 400;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: var(--vr-text-muted);
+}
+
+.vr-counts {
+  display: flex;
+  gap: 4px;
+}
+.vr-counts--empty {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  color: var(--vr-text-disabled);
+}
+
+.vr-count {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  min-width: 22px;
+  padding: 2px 4px;
+  text-align: center;
+  border-radius: var(--vr-radius-sm);
+  font-variant-numeric: tabular-nums;
+  color: rgb(var(--sev-rgb));
+  background: rgba(var(--sev-rgb), 0.13);
+  border: 1px solid rgba(var(--sev-rgb), 0.32);
+}
+.vr-count--critical { --sev-rgb: var(--sev-critical-rgb); }
+.vr-count--high     { --sev-rgb: var(--sev-high-rgb); }
+.vr-count--medium   { --sev-rgb: var(--sev-medium-rgb); }
+.vr-count--low      { --sev-rgb: var(--sev-low-rgb); }
+.vr-count--info     { --sev-rgb: var(--sev-info-rgb); }
+
+.vr-row__when {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: var(--vr-text-muted);
+  white-space: nowrap;
+}
+
+/* Remote marker sits on the title line, so it must stay inline — the
+   `.vr-row__name span` block rule above is for the sub-line only. */
+.vr-row__remote {
+  display: inline-block;
+  vertical-align: -3px;
+  margin-left: 6px;
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: var(--vr-accent);
+}
+
+.vr-row__lock {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  color: var(--vr-text-disabled);
+}
+.vr-row__lock--open { color: var(--vr-accent); }
+
+/* ── D · Quickstart ───────────────────────────────────────────── */
+.vr-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.vr-step {
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+  padding: 20px 22px 22px;
+}
+.vr-step--active {
+  border-color: rgba(var(--vr-accent-rgb), 0.35);
+  background: var(--vr-accent-glow);
+}
+.vr-step__n {
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vr-accent);
+  margin-bottom: 11px;
+}
+.vr-step h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--vr-text);
+  margin: 0 0 8px;
+}
+.vr-step p {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   line-height: 1.7;
   color: var(--vr-text-muted);
 }
 
-/* ── Resources ────────────────────────────────────────────────── */
-.vr-resources-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* ── E · Capability tracks ────────────────────────────────────── */
+.vr-tracks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
 }
 
-.vr-resource-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 22px;
+.vr-track {
   background: var(--vr-bg-card);
   border: 1px solid var(--vr-border);
   border-radius: var(--vr-radius);
-  color: var(--vr-text);
-  text-decoration: none;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  padding: 18px 20px 20px;
+  transition: border-color 0.2s ease;
 }
-.vr-resource-card:hover {
-  border-color: var(--vr-border-hover);
-  background: var(--vr-bg-card-2);
+.vr-track:hover { border-color: rgba(var(--vr-accent-rgb), 0.2); }
+
+.vr-track h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--vr-text);
+  margin: 0 0 13px;
+}
+.vr-track h3 mat-icon {
+  color: var(--vr-accent);
+  font-size: 19px;
+  width: 19px;
+  height: 19px;
 }
 
-.vr-resource-card > mat-icon:first-child {
-  color: var(--vr-accent);
-  font-size: 22px !important;
-  flex-shrink: 0;
-}
-.vr-resource-card > div {
-  flex: 1;
+.vr-track ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 7px;
 }
-.vr-resource-card strong {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #ddd;
-}
-.vr-resource-card span {
+.vr-track li {
+  position: relative;
+  padding-left: 13px;
   font-size: 0.8rem;
+  line-height: 1.6;
   color: var(--vr-text-muted);
 }
-.vr-resource-card__arrow {
-  color: var(--vr-text-muted);
-  font-size: 18px !important;
-  transition: color 0.2s ease, transform 0.2s ease;
+.vr-track li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(var(--vr-accent-rgb), 0.5);
 }
-.vr-resource-card:hover .vr-resource-card__arrow {
+.vr-track a {
+  color: var(--vr-text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--vr-accent-rgb), 0.25);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.vr-track a:hover {
   color: var(--vr-accent);
-  transform: translateX(3px);
+  border-bottom-color: var(--vr-accent);
 }
 
-/* ── Community ────────────────────────────────────────────────── */
-.vr-community {
-  text-align: center;
-  padding-bottom: 96px;
+/* ── F · Proof panel ──────────────────────────────────────────── */
+.vr-proof {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 22px 24px;
+  background: var(--vr-accent-glow);
+  border: 1px solid rgba(var(--vr-accent-rgb), 0.22);
+  border-radius: var(--vr-radius);
 }
-.vr-community__title {
-  font-family: 'Roboto', sans-serif;
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 10px;
-}
-.vr-community__sub {
+
+.vr-proof__item dt {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
   color: var(--vr-text-muted);
-  font-size: 0.9rem;
-  margin: 0 0 40px;
+  margin-bottom: 7px;
 }
-.vr-community__links {
+.vr-proof__item dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--vr-accent);
+  font-variant-numeric: tabular-nums;
+}
+.vr-proof__item dd a {
+  color: var(--vr-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--vr-accent-rgb), 0.4);
+}
+.vr-proof__item dd a:hover { border-bottom-color: var(--vr-accent); }
+.vr-proof__item dd small {
+  display: block;
+  margin-top: 4px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  color: var(--vr-text-muted);
+}
+
+/* ── G · Footer ───────────────────────────────────────────────── */
+.vr-foot {
   display: flex;
-  justify-content: center;
-  gap: 16px;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 44px;
+  padding-top: 24px;
+  border-top: 1px solid var(--vr-border);
+}
+
+.vr-foot__links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
   flex-wrap: wrap;
 }
+.vr-foot__links a {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--vr-text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.vr-foot__links a:hover { color: var(--vr-accent); }
 
-.vr-social-btn {
+.vr-foot__social {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 24px;
-  background: var(--vr-bg-card);
-  border: 1px solid var(--vr-border);
-  border-radius: var(--vr-radius);
-  color: var(--vr-text);
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  gap: 14px;
+  margin-left: auto;
 }
-.vr-social-btn:hover {
-  border-color: var(--vr-border-hover);
-  background: var(--vr-bg-card-2);
-  color: var(--vr-accent);
-}
-.vr-social-btn img {
-  width: 22px;
-  height: 22px;
+.vr-foot__social img {
+  width: 20px;
+  height: 20px;
   object-fit: contain;
-  filter: grayscale(30%);
+  filter: grayscale(60%);
+  opacity: 0.7;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+.vr-foot__social a:hover img {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* ── Focus ────────────────────────────────────────────────────── */
+.vr-page a:focus-visible,
+.vr-page button:focus-visible {
+  outline: 2px solid var(--vr-accent);
+  outline-offset: 3px;
+}
+
+/* ── Motion ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .vr-page * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ── Responsive ───────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .vr-hero__cta {
+@media (max-width: 860px) {
+  .vr-deck { grid-template-columns: 1fr; }
+  /* The activity title carries a control and a date range, so it needs two
+     lines here; every other section title is a single line and unaffected. */
+  .vr-section__title { flex-wrap: wrap; }
+  .vr-win__meta {
+    width: 100%;
+    margin-left: 0;
+  }
+  .vr-act-head {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    gap: 22px;
   }
-  .vr-strip {
-    gap: 8px 16px;
+  .vr-act-tiles { width: 100%; }
+  .vr-act-tile:first-child {
+    padding-left: 0;
+    border-left: 0;
   }
-  .vr-strip__dot {
-    display: none;
+  .vr-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 14px;
   }
+  .vr-row__when { grid-column: 1; }
+  .vr-counts { justify-content: flex-end; }
+}
+
+@media (max-width: 600px) {
+  .vr-cta-row { flex-direction: column; align-items: stretch; }
+  .vr-vault-call { flex-wrap: wrap; }
+  .vr-vault-call__btn {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+  .vr-btn { justify-content: center; }
+  .vr-status__item--end { margin-left: 0; }
+  .vr-foot__social { margin-left: 0; }
+  .vr-win { flex-wrap: wrap; }
+  .vr-win-pop__fields { flex-direction: column; }
+  .vr-win-pop__actions { flex-direction: column; }
+  .vr-bars { height: 84px; }
+  .vr-act-hero__n { font-size: 2.8rem; }
+  .vr-idle { flex-wrap: wrap; }
+  .vr-idle a { margin-left: 0; }
 }

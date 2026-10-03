@@ -1,223 +1,509 @@
-
 <div class="vr-page">
 
-  <!-- ── HERO ─────────────────────────────────────────────────── -->
-  <section class="vr-hero">
-    <div class="vr-hero__noise"></div>
+  <!-- ── A · STATUS BAR ─────────────────────────────────────────── -->
+  <!-- Replaces the old tagline strip: live vault state instead of adjectives. -->
+  <div class="vr-status">
+    <div class="vr-status__item">
+      <span class="vr-led" [class.vr-led--locked]="!vaultUnlocked"></span>
+      @if (vaultUnlocked) {
+        <strong>Vault unlocked</strong>
+        <span class="vr-status__hint">{{unlockedCount}} key{{unlockedCount === 1 ? '' : 's'}} in memory</span>
+      } @else {
+        <strong>Vault locked</strong>
+        <span class="vr-status__hint">keys are never stored</span>
+      }
+    </div>
+    <div class="vr-status__item">
+      <span class="vr-status__label">Reports</span>
+      <strong>{{reportCount}}</strong>
+      @if (remoteCount > 0) {
+        <span class="vr-status__hint">({{localCount}} local · {{remoteCount}} remote)</span>
+      }
+    </div>
+    <div class="vr-status__item">
+      <span class="vr-status__label">Findings</span>
+      <strong>{{findingCount}}</strong>
+    </div>
+    @if (storageUsedBytes > 0) {
+      <div class="vr-status__item">
+        <span class="vr-status__label">Storage</span>
+        <strong>{{storageUsedBytes | filesize}}</strong>
+      </div>
+    }
+    <div class="vr-status__item vr-status__item--end">
+      @if (apiVaultOpen && remoteCount > 0) {
+        <span class="vr-accent">local + API</span>
+      } @else {
+        <span class="vr-accent">local only</span>
+      }
+    </div>
+  </div>
 
-    <div class="vr-hero__inner">
-      <img class="vr-hero__logo" src="assets/logo/vulnrepo_logo.png" alt="VULNREPO" width="280" />
+  <!-- ── A2 · REMOTE VAULT ──────────────────────────────────────── -->
+  <!-- Credentials for a self-hosted vulnrepo server live encrypted in this
+       browser. Locked, the server's reports cannot even be listed — so say so
+       and offer the unlock, instead of rendering a workspace (or a first-run
+       pitch) that silently omits them. -->
+  @if (apiVaultStored && !apiVaultOpen) {
+    <section class="vr-vault-call">
+      <mat-icon class="vr-vault-call__icon">cloud_off</mat-icon>
+      <div class="vr-vault-call__text">
+        <strong>Reports on your vulnrepo server are not listed</strong>
+        <span>Your API credentials are encrypted in this browser. Unlock the vault to list and resume remote reports.</span>
+      </div>
+      <button type="button" class="vr-btn vr-btn--primary vr-vault-call__btn" (click)="openApiVault()">
+        <mat-icon>lock_open</mat-icon>
+        Open vault
+      </button>
+    </section>
+  }
 
-      <h1 class="vr-hero__headline">
-        Vulnerability reports<br>
+  @if (apiVaultOpen && apiFailed.length > 0) {
+    <section class="vr-vault-call vr-vault-call--warn">
+      <mat-icon class="vr-vault-call__icon">error_outline</mat-icon>
+      <div class="vr-vault-call__text">
+        <strong>{{apiFailed.length}} of {{apiEndpointCount}} API endpoint{{apiEndpointCount === 1 ? '' : 's'}} did not answer</strong>
+        <span>
+          @for (f of apiFailed; track f.name) {
+            {{f.name}} ({{f.reason}}){{$last ? '' : ' · '}}
+          }
+          — reports held there are missing from this list.
+        </span>
+      </div>
+      <button type="button" class="vr-btn vr-btn--outline vr-vault-call__btn" (click)="retryApi()">
+        <mat-icon>refresh</mat-icon>
+        Retry
+      </button>
+    </section>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════
+       FIRST RUN — empty vault. Keep the pitch, add a doorway.
+       ══════════════════════════════════════════════════════════════ -->
+  @if (state === 'FIRST_RUN') {
+
+    <section class="vr-banner">
+      <div class="vr-banner__meta">
+        @if (isHostedBuild) {
+          <span>build {{app_ver_short}}</span>
+        } @else {
+          <span>local build</span>
+        }
+        <span class="vr-banner__dot">·</span>
+        <span>free &amp; open source</span>
+        <span class="vr-banner__dot">·</span>
+        <span>no account required</span>
+      </div>
+
+      <h1 class="vr-banner__headline">
+        Vulnerability reports,<br>
         <span class="vr-accent">create them like a pro.</span>
       </h1>
 
-      <p class="vr-hero__sub">
-        Store, manage and share security research locally — with end-to-end encryption by default.
-        Focus on finding bugs, not formatting reports.
+      <p class="vr-banner__sub">
+        Encrypted in your browser, stored on your machine, shared only when you say so.
+        No account, no backend, no telemetry — focus on finding bugs, not formatting reports.
       </p>
 
-      <!-- CTA buttons -->
-      @if (online) {
-        <div class="vr-hero__cta vr-hero__cta--single">
-          <button class="vr-btn vr-btn--primary" mat-ripple (click)="download()">
-            <mat-icon>file_download</mat-icon>
-            Download
-          </button>
-        </div>
-      } @else {
-        <div class="vr-hero__cta">
-          <button class="vr-btn vr-btn--primary" mat-ripple (click)="download()">
-            <mat-icon>file_download</mat-icon>
-            Download
-          </button>
-          <button class="vr-btn vr-btn--outline" mat-ripple (click)="demo()">
-            <mat-icon>cloud</mat-icon>
-            vulnrepo.com
-          </button>
-        </div>
-      }
-    </div>
-
-    <div class="vr-hero__scroll-hint">
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </div>
-  </section>
-
-  <!-- ── TAGLINE STRIP ─────────────────────────────────────────── -->
-  <div class="vr-strip">
-    <span>Free &amp; Open Source</span>
-    <span class="vr-strip__dot">·</span>
-    <span>End-to-End Encryption</span>
-    <span class="vr-strip__dot">·</span>
-    <span>Zero Backend</span>
-    <span class="vr-strip__dot">·</span>
-    <span>100% Client-Side</span>
-  </div>
-
-  <!-- ── ABOUT CARDS ────────────────────────────────────────────── -->
-  <section class="vr-section">
-    <div class="vr-about-grid">
-      <div class="vr-card vr-card--about">
-        <mat-icon class="vr-card__icon">security</mat-icon>
-        <p>
-          VULNR<span class="vr-accent">Ξ</span>PO is a free open-source project with end-to-end encryption
-          by default, designed to speed up IT security vulnerability reporting and serve as a
-          secure research repository.
-        </p>
+      <div class="vr-cta-row">
+        <a class="vr-btn vr-btn--primary" routerLink="/new-report">
+          <mat-icon>add</mat-icon>
+          Create your first report
+        </a>
+        <a class="vr-btn vr-btn--outline" routerLink="/import-report">
+          <mat-icon>playlist_add</mat-icon>
+          Import report
+        </a>
       </div>
-      <div class="vr-card vr-card--about">
-        <mat-icon class="vr-card__icon">rocket_launch</mat-icon>
-        <p>
-          Accelerate vulnerability reporting and securely share findings with vendors —
-          or use it as a private bug-bounty repository. The ideal tool for pentesters,
-          researchers, and anyone getting started in IT security.
-        </p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ── FEATURES ──────────────────────────────────────────────── -->
+    <!-- D · QUICKSTART -->
+    <section class="vr-section">
+      <h2 class="vr-section__title">
+        <mat-icon>flag</mat-icon>
+        Three steps to a delivered report
+      </h2>
+
+      <div class="vr-steps">
+        <div class="vr-step vr-step--active">
+          <span class="vr-step__n">Step 01 · start here</span>
+          <h3>Create your first report</h3>
+          <p>
+            Name the engagement and pick a security key. That passphrase derives the AES
+            key with PBKDF2-SHA-256 over {{pbkdf2Iterations | number}} iterations — it never
+            leaves the browser, and nobody, us included, can reset it.
+          </p>
+        </div>
+        <div class="vr-step">
+          <span class="vr-step__n">Step 02</span>
+          <h3>Add a finding</h3>
+          <p>
+            Title, severity, CVSS vector, proof of concept, remediation. Start from a
+            template, or import straight from your scanner output.
+          </p>
+        </div>
+        <div class="vr-step">
+          <span class="vr-step__n">Step 03</span>
+          <h3>Export or share</h3>
+          <p>
+            PDF or DOCX for the client, an AES-encrypted link for the vendor,
+            JSON for your own pipeline.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  } @else {
+
+    <!-- ══════════════════════════════════════════════════════════════
+         WORKSPACE — reports exist. Resume, don't re-pitch.
+         ══════════════════════════════════════════════════════════════ -->
+
+    <!-- B · ACTION DECK -->
+    <section class="vr-section vr-section--tight">
+      <div class="vr-deck">
+        <a class="vr-act vr-act--primary" routerLink="/new-report">
+          <mat-icon>add</mat-icon>
+          <span class="vr-act__title">New report</span>
+          <span class="vr-act__sub">Opens with your default report profile</span>
+        </a>
+        <a class="vr-act" routerLink="/import-report">
+          <mat-icon>playlist_add</mat-icon>
+          <span class="vr-act__title">Import report</span>
+          <span class="vr-act__sub">Manage your local report data — .VULNR files or pasted data</span>
+        </a>
+        <a class="vr-act" routerLink="/my-reports">
+          <mat-icon>grid_view</mat-icon>
+          <span class="vr-act__title">All reports</span>
+          <span class="vr-act__sub">Search, filter, merge, bulk export</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- B2 · ACTIVITY ───────────────────────────────────────────────
+         Tempo, not state: the status bar above says what exists, this says
+         what has been worked on. Counts come from records already written on
+         save — nothing new is collected, and nothing leaves the browser. -->
+    @if (activity) {
+      <section class="vr-section vr-section--tight">
+        <h2 class="vr-section__title">
+          <mat-icon>insights</mat-icon>
+          Your activity
+
+          <span class="vr-win" role="group" aria-label="Activity window">
+            @for (p of windowPresets; track p.value) {
+              <button type="button" class="vr-win__btn" [attr.aria-label]="p.aria"
+                [attr.aria-pressed]="windowPreset === p.value" (click)="setWindow(p.value)">
+                {{p.label}}
+              </button>
+            }
+            <button type="button" class="vr-win__btn vr-win__btn--custom" aria-haspopup="dialog"
+              [attr.aria-expanded]="pickerOpen" [attr.aria-pressed]="windowPreset === 'custom'"
+              (click)="setWindow('custom')">
+              {{windowPreset === 'custom' ? rangeLabel() : 'custom…'}}
+              <mat-icon>expand_more</mat-icon>
+            </button>
+          </span>
+
+          <span class="vr-win__meta">{{rangeLabel()}} · {{activity.reportsTouched}} of {{reportCount}} touched</span>
+        </h2>
+
+        <!-- Custom range. The presets live in the control above, so this pane
+             only holds what they cannot express. -->
+        @if (pickerOpen) {
+          <div class="vr-win-pop" role="dialog" aria-label="Custom activity window">
+            <div class="vr-win-pop__fields">
+              <div class="vr-fld">
+                <label for="vr-win-from">From</label>
+                <input id="vr-win-from" type="date" [value]="customFrom" [max]="todayInput()"
+                  (change)="onCustomFrom($any($event.target).value)">
+              </div>
+              <div class="vr-fld">
+                <label for="vr-win-to">To</label>
+                <input id="vr-win-to" type="date" [value]="customTo" [max]="todayInput()"
+                  (change)="onCustomTo($any($event.target).value)">
+              </div>
+            </div>
+
+            @if (customError) {
+              <p class="vr-win-pop__err" role="alert">{{customError}}</p>
+            }
+
+            <p class="vr-win-pop__hint">
+              <mat-icon>info_outline</mat-icon>
+              <span>
+                Saves are counted from report history. Purging history in
+                <a routerLink="/settings">Settings</a> trims older versions, so a long window can
+                miss days that have been cleaned up.
+              </span>
+            </p>
+
+            <div class="vr-win-pop__actions">
+              <button type="button" class="vr-btn vr-btn--primary" (click)="applyCustomWindow()">Apply window</button>
+              <button type="button" class="vr-btn vr-btn--outline" (click)="resetWindow()">Back to 30 days</button>
+            </div>
+          </div>
+        }
+
+        <!-- Headline figures -->
+        <div class="vr-act-head">
+          <div class="vr-act-hero">
+            <span class="vr-act-hero__n">{{activity.daysActive}}<small>/{{activity.days}}</small></span>
+            <span class="vr-act-hero__lbl">days active</span>
+          </div>
+          <div class="vr-act-tiles">
+            <div class="vr-act-tile">
+              <strong>{{activity.streak}}</strong>
+              <em>day streak</em>
+              <span>counted back from {{windowPreset === 'custom' ? 'the window end' : 'today'}}</span>
+            </div>
+            <div class="vr-act-tile">
+              <strong>{{activity.saves}}</strong>
+              <em>saves</em>
+              <span>on this device</span>
+            </div>
+            <div class="vr-act-tile">
+              <strong>{{activity.added.total}}</strong>
+              <em>findings added</em>
+              <span>{{activity.findingsOnActive}} on reports you touched</span>
+            </div>
+            <div class="vr-act-tile">
+              <strong>{{activity.newReports}}</strong>
+              <em>new reports</em>
+              <span>{{reportCount}} in total</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save rhythm. One scale, one hue: height and opacity both encode
+             saves, so colour never carries a second meaning here. -->
+        @if (activityLoading) {
+          <p class="vr-act-note">Reading report history…</p>
+        } @else if (!activity.historyAvailable) {
+          <p class="vr-act-note">
+            <mat-icon>info_outline</mat-icon>
+            No save history on this device yet — the figures above come from each report's
+            last-save time. History is written from now on, every time you save a report.
+          </p>
+        } @else {
+          <div class="vr-chart">
+            <span class="vr-chart__y vr-chart__y--top">{{activity.peakSaves}}</span>
+            <span class="vr-chart__y vr-chart__y--zero">0</span>
+            <div class="vr-chart__plot">
+              <div class="vr-chart__rule"></div>
+              <div class="vr-bars">
+                @for (b of activity.buckets; track b.start) {
+                  <span class="vr-bar" [class.vr-bar--zero]="b.saves === 0"
+                    [class.vr-bar--today]="b.today" [style.height.%]="b.height"
+                    [style.opacity]="b.fill" [title]="bucketTitle(b)"></span>
+                }
+              </div>
+              <div class="vr-chart__axis">
+                <span>{{activity.buckets[0]?.label}}</span>
+                <span class="vr-chart__grain">{{grainNote()}}</span>
+                <span class="vr-accent">{{windowPreset === 'custom' ? activity.buckets[activity.buckets.length - 1]?.label : 'today'}}</span>
+              </div>
+            </div>
+          </div>
+
+          @if (activity.added.total > 0) {
+            <div class="vr-added">
+              <span class="vr-added__lbl">findings added</span>
+              <span class="vr-stack">
+                @for (sev of sevOrder; track sev) {
+                  @if (addedCount(sev) > 0) {
+                    <b [class]="'vr-stack__seg vr-stack__seg--' + sev" [style.flex-grow]="addedCount(sev)"
+                      [title]="addedCount(sev) + ' ' + sev"></b>
+                  }
+                }
+              </span>
+              <span class="vr-added__legend">
+                @for (sev of sevOrder; track sev) {
+                  @if (addedCount(sev) > 0) {
+                    <span [class]="'vr-legend vr-legend--' + sev"><i></i><strong>{{addedCount(sev)}}</strong> {{sev}}</span>
+                  }
+                }
+              </span>
+            </div>
+          }
+        }
+
+        @if (idleCount > 0) {
+          <div class="vr-idle">
+            <mat-icon>schedule</mat-icon>
+            <span>
+              {{idleCount}} report{{idleCount === 1 ? '' : 's'}} with no save in the last {{idleDays}} days
+            </span>
+            <a routerLink="/my-reports">Review them</a>
+          </div>
+        }
+      </section>
+    }
+
+    <!-- C · RECENT WORK -->
+    <section class="vr-section vr-section--tight">
+      <h2 class="vr-section__title">
+        <mat-icon>history</mat-icon>
+        Continue where you left off
+        <a class="vr-section__more" routerLink="/my-reports">All {{reportCount}} reports</a>
+      </h2>
+
+      <div class="vr-rows">
+        @for (r of recent; track rowKey(r)) {
+          <a class="vr-row" routerLink="/report/{{r.report_id}}/">
+            <span class="vr-row__name">
+              {{r.report_name}}@if (isRemote(r)) {<mat-icon class="vr-row__remote"
+                [title]="'Remote API: ' + (r.apiname || r.apiurl)">public</mat-icon>}
+              @if (hasStats(r)) {
+                <span>{{r.report_stats?.total || 0}} finding{{(r.report_stats?.total || 0) === 1 ? '' : 's'}}</span>
+              } @else if (isRemote(r)) {
+                <span>on {{r.apiname || r.apiurl}}</span>
+              } @else {
+                <span>0 findings</span>
+              }
+            </span>
+
+            @if (r.report_stats && r.report_stats.total > 0) {
+              <span class="vr-counts">
+                @for (sev of sevOrder; track sev) {
+                  @if (sevCount(r, sev) > 0) {
+                    <span class="vr-count" [class]="'vr-count--' + sev" [title]="sevCount(r, sev) + ' ' + sev">
+                      {{sevCount(r, sev)}}
+                    </span>
+                  }
+                }
+              </span>
+            } @else if (hasStats(r)) {
+              <span class="vr-counts vr-counts--empty">no findings yet</span>
+            } @else {
+              <span class="vr-counts vr-counts--empty" title="This server does not publish severity counts">counts n/a</span>
+            }
+
+            <span class="vr-row__when">{{relativeTime(r)}}</span>
+
+            <mat-icon class="vr-row__lock" [class.vr-row__lock--open]="isUnlocked(r.report_id)"
+              [title]="isUnlocked(r.report_id) ? 'Key held for this session' : 'Encrypted — key required'">
+              {{isUnlocked(r.report_id) ? 'lock_open' : 'lock'}}
+            </mat-icon>
+          </a>
+        }
+      </div>
+    </section>
+
+  }
+
+  <!-- ── E · CAPABILITY TRACKS ──────────────────────────────────── -->
+  <!-- Four jobs, not nine feature names. Every bullet is a destination. -->
   <section class="vr-section">
     <h2 class="vr-section__title">
       <mat-icon>grid_view</mat-icon>
-      Feature highlights
+      @if (state === 'WORKSPACE') { Jump into a track } @else { Everything it does }
     </h2>
 
-    <div class="vr-features-grid">
+    <div class="vr-tracks">
 
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>lock</mat-icon>
-          <span>Security-first</span>
-        </div>
-        <p>AES encryption runs entirely in the browser. No data ever leaves your machine by default — no backend, no telemetry, pure JS client.</p>
+      <div class="vr-track">
+        <h3><mat-icon>edit_note</mat-icon> Write</h3>
+        <ul>
+          <li><a routerLink="/templates-list">Custom issue templates</a></li>
+          <li>CVSS 3.1 &amp; 4.0 calculator</li>
+          <li>Attachments, SHA-256 checksummed</li>
+          <li>Versioned changelog on every save</li>
+        </ul>
       </div>
 
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>share</mat-icon>
-          <span>Encrypted sharing</span>
-        </div>
-        <p>Share reports with vendors via AES-encrypted links. Recipients get the data, not the key — unless you send it.</p>
+      <div class="vr-track">
+        <h3><mat-icon>travel_explore</mat-icon> Enrich</h3>
+        <ul>
+          <li><a routerLink="/cve-search">CVE search</a></li>
+          <li><a routerLink="/asvs">OWASP ASVS</a> · <a routerLink="/tbhm">TBHM</a></li>
+          <li><a routerLink="/pcidss4">PCI DSS 4</a> · MITRE ATT&amp;CK</li>
+          <li>Summaries from your own local LLM</li>
+        </ul>
       </div>
 
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>sim_card_download</mat-icon>
-          <span>Multiple export formats</span>
-        </div>
-        <p>Export to HTML, TXT, JSON, Markdown, DOCX, or PDF. The JSON format unlocks custom integrations — LaTeX, CI pipelines, and more.</p>
+      <div class="vr-track">
+        <h3><mat-icon>input</mat-icon> Import</h3>
+        <ul>
+          <li><a routerLink="/import-report">Import report</a></li>
+          <li>SARIF &amp; JSON</li>
+          <li><a routerLink="/bugbounty-list">Bug-bounty programme lists</a></li>
+          <li>Edit and merge after import</li>
+        </ul>
       </div>
 
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>attach_file</mat-icon>
-          <span>File attachments</span>
-        </div>
-        <p>Attach screenshots, videos, or scanner output. Each file is automatically SHA-256 checksummed on upload.</p>
-      </div>
-
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>description</mat-icon>
-          <span>Issue templates</span>
-        </div>
-        <p>Build your own templates or start from defaults. Import CVE, CWE, MITRE ATT&amp;CK, or PCI DSS data in one click.</p>
-      </div>
-
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>input</mat-icon>
-          <span>Scanner imports</span>
-        </div>
-        <p>Import findings directly from Nmap, Nessus, Burp Suite, OpenVAS, Bugcrowd, and Trivy. Edit and manage after import.</p>
-      </div>
-
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>history</mat-icon>
-          <span>Changelog tracking</span>
-        </div>
-        <p>Every significant change is automatically logged and versioned in a built-in changelog — full audit trail, zero effort.</p>
-      </div>
-
-      <div class="vr-feature-card">
-        <div class="vr-feature-card__header">
-          <mat-icon>bug_report</mat-icon>
-          <span>Bug tracker export</span>
-        </div>
-        <p>Push issues directly to Atlassian JIRA or export as JSON for any other system. Write your own integration with the open API.</p>
-      </div>
-
-      <div class="vr-feature-card vr-feature-card--accent">
-        <div class="vr-feature-card__header">
-          <mat-icon>photo_filter</mat-icon>
-          <span>AI integration</span>
-        </div>
-        <p>Connect your own local LLM. Ask AI to generate report summaries, enrich findings, and surface insights — all without sending data externally.</p>
+      <div class="vr-track">
+        <h3><mat-icon>ios_share</mat-icon> Ship</h3>
+        <ul>
+          <li>PDF · DOCX · HTML · Markdown · TXT</li>
+          <li>AES-encrypted share links</li>
+          <li>Atlassian JIRA push</li>
+          <li><a target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">Open API for anything else</a></li>
+        </ul>
       </div>
 
     </div>
   </section>
 
-  <!-- ── RESOURCES ─────────────────────────────────────────────── -->
+  <!-- ── F · PROOF PANEL ────────────────────────────────────────── -->
+  <!-- The security claims, as verifiable state rather than adjectives. -->
   <section class="vr-section">
     <h2 class="vr-section__title">
-      <mat-icon>link</mat-icon>
-      Resources
+      <mat-icon>verified_user</mat-icon>
+      Don't take our word for it
     </h2>
 
-    <div class="vr-resources-grid">
-      <a class="vr-resource-card" target="_blank" href="https://www.youtube.com/@vulnrepo">
-        <mat-icon>play_arrow</mat-icon>
-        <div>
-          <strong>YouTube channel</strong>
-          <span>Video tutorials and walkthroughs</span>
-        </div>
-        <mat-icon class="vr-resource-card__arrow">arrow_forward</mat-icon>
-      </a>
-
-      <a class="vr-resource-card" target="_blank" href="https://github.com/kac89/vulnrepo-server">
-        <mat-icon>dns</mat-icon>
-        <div>
-          <strong>Local server</strong>
-          <span>Self-host VULNR<span class="vr-accent">Ξ</span>PO for your team</span>
-        </div>
-        <mat-icon class="vr-resource-card__arrow">arrow_forward</mat-icon>
-      </a>
-
-      <a class="vr-resource-card" target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">
-        <mat-icon>home_storage</mat-icon>
-        <div>
-          <strong>API reference</strong>
-          <span>Integrate VULNR<span class="vr-accent">Ξ</span>PO into your workflow</span>
-        </div>
-        <mat-icon class="vr-resource-card__arrow">arrow_forward</mat-icon>
-      </a>
-    </div>
+    <dl class="vr-proof">
+      <div class="vr-proof__item">
+        <dt>Encryption</dt>
+        <dd>AES-256-GCM<small>WebCrypto, in a dedicated worker</small></dd>
+      </div>
+      <div class="vr-proof__item">
+        <dt>Key derivation</dt>
+        <dd>PBKDF2-SHA-256<small>{{pbkdf2Iterations | number}} iterations, random salt</small></dd>
+      </div>
+      <div class="vr-proof__item">
+        <dt>Data at rest</dt>
+        <dd>IndexedDB<small>this device only — there is no backend</small></dd>
+      </div>
+      <div class="vr-proof__item">
+        <dt>Build</dt>
+        <dd>
+          @if (isHostedBuild) {
+            <a target="_blank" href="https://github.com/kac89/vulnrepo/commit/{{app_ver}}">{{app_ver_short}}</a>
+            <small>read the exact source for this build</small>
+          } @else {
+            self-hosted
+            <small>built from your own checkout</small>
+          }
+        </dd>
+      </div>
+    </dl>
   </section>
 
-  <!-- ── COMMUNITY ─────────────────────────────────────────────── -->
-  <section class="vr-section vr-community">
-    <h2 class="vr-community__title">Join the community</h2>
-    <p class="vr-community__sub">Follow along, contribute, and stay current.</p>
+  <!-- ── G · FOOTER ROW ─────────────────────────────────────────── -->
+  <!-- Resources + Community merged: four unique destinations, social once. -->
+  <footer class="vr-foot">
+    <nav class="vr-foot__links">
+      <a routerLink="/faq">FAQ</a>
+      <a target="_blank" href="https://github.com/kac89/vulnrepo/blob/master/API-INTEGRATION.md">API reference</a>
+      <a target="_blank" href="https://github.com/kac89/vulnrepo">Source</a>
+      @if (!isHostedBuild) {
+        <a target="_blank" href="https://vulnrepo.com/">vulnrepo.com</a>
+      }
+    </nav>
 
-    <div class="vr-community__links">
-      <a class="vr-social-btn" target="_blank" href="https://github.com/kac89/vulnrepo" aria-label="GitHub">
+    <div class="vr-foot__social">
+      <a target="_blank" href="https://github.com/kac89/vulnrepo" aria-label="GitHub" title="GitHub">
         <img src="assets/github.png" alt="GitHub" />
-        <span>GitHub</span>
       </a>
-      <a class="vr-social-btn" target="_blank" href="https://x.com/vulnrepo" aria-label="X / Twitter">
+      <a target="_blank" href="https://x.com/vulnrepo" aria-label="X / Twitter" title="X / Twitter">
         <img src="assets/twitter-x-48.ico" alt="X" />
-        <span>X / Twitter</span>
       </a>
-      <a class="vr-social-btn" target="_blank" href="https://www.youtube.com/@vulnrepo" aria-label="YouTube">
+      <a target="_blank" href="https://www.youtube.com/@vulnrepo" aria-label="YouTube" title="YouTube">
         <img src="assets/yt.png" alt="YouTube" />
-        <span>YouTube</span>
       </a>
     </div>
-  </section>
+  </footer>
 
 </div>
