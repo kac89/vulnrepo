@@ -211,7 +211,7 @@
 
         @if (profiles.length > 0) {
           <mat-form-field appearance="outline" class="nr-field nr-field--mt" color="accent">
-            <mat-label>Template (optional)</mat-label>
+            <mat-label>Profiles (optional)</mat-label>
             <mat-icon matPrefix class="nr-field-prefix">tune</mat-icon>
             <mat-select formControlName="profile">
               <mat-select-trigger>
@@ -220,7 +220,7 @@
                   <span class="nr-origin">· {{ profileOrigin(form.get('profile')?.value) }}</span>
                 }
               </mat-select-trigger>
-              <mat-option [value]="null">No template</mat-option>
+              <mat-option [value]="null">No profile</mat-option>
               @for (p of profiles; track p) {
                 <mat-option [value]="p">
                   {{ p.profile_name }}
