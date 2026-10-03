@@ -1,33 +1,21 @@
-// ─── Design tokens (aligned with settings.component) ─────────────────────────
-
-$bg:               #383838;
-$surface:          #424242;
-$surface-2:        #4e4e4e;
-$border:           rgba(255, 255, 255, 0.10);
-$border-inner:     rgba(255, 255, 255, 0.07);
-$text:             #f5f5f5;
-$text-muted:       #757575;
-$text-dim:         #9e9e9e;
-$icon:             #616161;
-$accent:           #69f0ae;
-$accent-hover:     #a5f3c8;
-$accent-tint:      rgba(105, 240, 174, 0.12);
-$accent-border:    rgba(105, 240, 174, 0.2);
-$danger-tint:      rgba(183, 28, 28, 0.15);
-$danger-border:    rgba(183, 28, 28, 0.3);
+/* ── Tokens ───────────────────────────────────────────────────── */
+/* The --vr-* tokens are defined globally in src/styles.scss under the real
+   :root. They are NOT redeclared here: a `:root` rule inside a component
+   stylesheet compiles to `[_ngcontent-xxx]:root` and never matches <html>.
+   This component used to hardcode its own $bg/$surface greys (#383838 /
+   #424242), which left it the one mid-grey route in a near-black app. */
 
 * { box-sizing: border-box; }
 
-// ─── Page shell ───────────────────────────────────────────────────────────────
-
+/* ── Page shell ───────────────────────────────────────────────── */
 .nr-page {
-  max-width: 860px;
+  max-width: 780px;
   margin: 0 auto;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  color: var(--vr-text);
+  font-family: 'Roboto', sans-serif;
 }
 
-// ─── Page header ──────────────────────────────────────────────────────────────
-
+/* ── Page header ──────────────────────────────────────────────── */
 .page-header {
   display: flex;
   align-items: center;
@@ -41,63 +29,76 @@ $danger-border:    rgba(183, 28, 28, 0.3);
   display: flex;
   align-items: center;
   gap: 12px;
-
-  h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    color: $text;
-    line-height: 1.2;
-  }
-
-  .page-subtitle {
-    display: block;
-    font-size: 0.8rem;
-    color: $text-muted;
-    margin-top: 3px;
-    letter-spacing: 0;
-  }
-
-  .title-icon {
-    font-size: 1.4rem;
-    width: 1.4rem;
-    height: 1.4rem;
-    color: $accent;
-    flex-shrink: 0;
-  }
+}
+.page-title h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--vr-text-strong);
+  line-height: 1.2;
+}
+.page-title .page-subtitle {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--vr-text-muted);
+  margin-top: 3px;
+}
+.page-title .title-icon {
+  font-size: 1.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--vr-accent);
+  flex-shrink: 0;
 }
 
 .header-divider {
   height: 1px;
-  background: $border;
-  margin-bottom: 20px;
+  background: var(--vr-border);
+  margin-bottom: 24px;
 }
 
-// ─── Two-column grid ──────────────────────────────────────────────────────────
-
-.nr-grid {
+/* ── Steps ────────────────────────────────────────────────────── */
+/* Numbered because this genuinely is a sequence: the key has to exist and be
+   saved before a report can be created around it. */
+.nr-step {
   display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 20px;
-  align-items: start;
-
-  @media (max-width: 680px) {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 30px 1fr;
+  gap: 0 16px;
+  padding-bottom: 28px;
 }
 
-// ─── Form card ────────────────────────────────────────────────────────────────
+.nr-step__n {
+  position: relative;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--vr-accent);
+  line-height: 1.6;
+}
+/* The rail that makes three blocks read as one run. */
+.nr-step__n::after {
+  content: '';
+  position: absolute;
+  top: 26px;
+  bottom: -28px;
+  left: 50%;
+  width: 1px;
+  background: var(--vr-border);
+}
+.nr-step--last {
+  padding-bottom: 0;
+}
+.nr-step--last .nr-step__n::after {
+  display: none;
+}
 
-.nr-card {
-  background: $surface;
-  border: 1px solid $border;
-  border-radius: 8px;
-  padding: 20px 18px 18px;
-  overflow: hidden;
-  transition: border-color 0.15s ease;
-
-  &:hover { border-color: rgba(255, 255, 255, 0.14); }
+.nr-step__body {
+  min-width: 0;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+  padding: 18px 20px 20px;
 }
 
 .nr-section-label {
@@ -105,94 +106,113 @@ $danger-border:    rgba(183, 28, 28, 0.3);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: $text-muted;
-  margin-bottom: 12px;
-
-  &--mt { margin-top: 24px; }
+  color: var(--vr-text-muted);
+  margin-bottom: 14px;
 }
 
-// ─── Form fields ──────────────────────────────────────────────────────────────
-
+/* ── Form fields ──────────────────────────────────────────────── */
 .nr-field {
   width: 100%;
 
-  // MDC outlined field tokens — aligned with settings dark UI
-  --mdc-outlined-text-field-container-shape:          8px;
-  --mdc-outlined-text-field-outline-color:            #{$border};
+  --mdc-outlined-text-field-container-shape:          var(--vr-radius-sm);
+  --mdc-outlined-text-field-outline-color:            var(--vr-border);
   --mdc-outlined-text-field-hover-outline-color:      rgba(255, 255, 255, 0.18);
-  --mdc-outlined-text-field-focus-outline-color:      #{$accent-border};
-  --mdc-outlined-text-field-label-text-color:         #{$text-muted};
-  --mdc-outlined-text-field-hover-label-text-color:   #{$text-dim};
-  --mdc-outlined-text-field-focus-label-text-color:   #{$accent};
-  --mdc-outlined-text-field-input-text-color:         #{$text};
+  --mdc-outlined-text-field-focus-outline-color:      rgba(var(--vr-accent-rgb), 0.5);
+  --mdc-outlined-text-field-label-text-color:         var(--vr-text-muted);
+  --mdc-outlined-text-field-hover-label-text-color:   var(--vr-text-dim);
+  --mdc-outlined-text-field-focus-label-text-color:   var(--vr-accent);
+  --mdc-outlined-text-field-input-text-color:         var(--vr-text);
   --mdc-outlined-text-field-label-text-size:          0.85rem;
 
-  // Select trigger
-  --mat-select-enabled-trigger-text-color:  #{$text};
-  --mat-select-enabled-arrow-color:         #{$icon};
-  --mat-select-focused-arrow-color:         #{$accent};
+  --mat-select-enabled-trigger-text-color:  var(--vr-text);
+  --mat-select-enabled-arrow-color:         var(--vr-grey-700);
+  --mat-select-focused-arrow-color:         var(--vr-accent);
 }
+.nr-field--mt { margin-top: 14px; }
+/* Stacked outlined fields: without this the subscript of one lands on the
+   floating label of the next the moment an error appears. */
+.nr-field + .nr-field { margin-top: 10px; }
 
 .nr-field-prefix {
-  color: $icon;
+  color: var(--vr-grey-700);
   font-size: 18px;
-  margin-right: 4px;
-}
-
-.nr-suffix-icon {
-  color: $icon;
-  cursor: pointer;
-  font-size: 18px;
-  transition: color 0.15s ease;
-
-  &:hover { color: $accent; }
-}
-
-.nr-option-icon {
-  vertical-align: middle;
   margin-right: 6px;
-  font-size: 16px;
-  color: $icon;
-
-  &--remote { color: $accent; }
 }
 
-// ─── Right side column ────────────────────────────────────────────────────────
+.nr-origin {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--vr-text-muted);
+  margin-left: 2px;
+}
 
-.nr-side {
+/* ── The generated key ────────────────────────────────────────── */
+/* Monospace, grouped in eights, and selectable: this is a value a person has
+   to move somewhere safe by hand. The grouping is display-only — the key
+   itself never contains the spaces, which the save path rejects. */
+.nr-key {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-// ─── Strength card ────────────────────────────────────────────────────────────
-
-.nr-strength-card {
-  background: $surface;
-  border: 1px solid $border;
-  border-radius: 8px;
-  padding: 16px 18px;
-  transition: border-color 0.15s ease;
-
-  &:hover { border-color: rgba(255, 255, 255, 0.14); }
-}
-
-.nr-strength-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 10px;
+  background: var(--vr-bg-card-2);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius-sm);
+  padding: 10px 8px 10px 14px;
 }
 
-.nr-strength-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: $text-muted;
+.nr-key__value {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  color: var(--vr-text-strong);
+  user-select: all;
+}
+.nr-key__value--masked {
+  color: var(--vr-text-dim);
+  user-select: none;
 }
 
-.nr-strength-value {
+.nr-key-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Real buttons, not clickable <mat-icon> glyphs: reveal, regenerate and copy
+   were unreachable by keyboard on the one screen whose job is making a key. */
+.nr-icon-btn {
+  color: var(--vr-grey-700);
+  flex-shrink: 0;
+}
+.nr-icon-btn:hover { color: var(--vr-accent); }
+.nr-icon-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Strength ─────────────────────────────────────────────────── */
+.nr-strength {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.nr-progress {
+  flex: 1;
+  border-radius: 4px;
+  height: 6px;
+}
+
+.nr-strength__value {
+  flex-shrink: 0;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -200,99 +220,188 @@ $danger-border:    rgba(183, 28, 28, 0.3);
   padding: 2px 10px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.05);
-  color: $text-dim;
-  border: 1px solid $border-inner;
-
-  &--tooshort,
-  &--common {
-    background: rgba(255, 0, 57, 0.14);
-    color: #ff4d6d;
-    border-color: rgba(255, 0, 57, 0.28);
-  }
-
-  &--weak {
-    background: rgba(249, 238, 6, 0.10);
-    color: #f5d020;
-    border-color: rgba(249, 238, 6, 0.22);
-  }
-
-  &--itsok {
-    background: rgba(39, 128, 227, 0.12);
-    color: #60a5fa;
-    border-color: rgba(39, 128, 227, 0.25);
-  }
-
-  &--strong {
-    background: $accent-tint;
-    color: $accent;
-    border-color: $accent-border;
-  }
+  color: var(--vr-text-dim);
+  border: 1px solid var(--vr-border);
+}
+.nr-strength__value--tooshort,
+.nr-strength__value--common {
+  background: rgba(255, 0, 57, 0.14);
+  color: #ff4d6d;
+  border-color: rgba(255, 0, 57, 0.28);
+}
+.nr-strength__value--weak {
+  background: rgba(249, 238, 6, 0.10);
+  color: #f5d020;
+  border-color: rgba(249, 238, 6, 0.22);
+}
+.nr-strength__value--itsok {
+  background: rgba(39, 128, 227, 0.12);
+  color: #60a5fa;
+  border-color: rgba(39, 128, 227, 0.25);
+}
+.nr-strength__value--strong {
+  background: var(--vr-accent-dim);
+  color: var(--vr-accent);
+  border-color: rgba(var(--vr-accent-rgb), 0.28);
 }
 
-.nr-progress {
-  border-radius: 4px;
-  height: 6px;
+/* Criteria, so "Strong" is a conclusion the user can check rather than a
+   colour they have to decode. */
+.nr-criteria {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--vr-text-disabled);
+}
+.nr-criteria li::before {
+  content: '✕ ';
+  color: var(--vr-text-disabled);
+}
+.nr-criteria li.nr-criteria--ok {
+  color: var(--vr-text-secondary);
+}
+.nr-criteria li.nr-criteria--ok::before {
+  content: '✓ ';
+  color: var(--vr-accent);
 }
 
-// ─── Notice box ───────────────────────────────────────────────────────────────
-
+/* ── Notice ───────────────────────────────────────────────────── */
 .nr-notice {
   display: flex;
   gap: 12px;
-  background: $surface;
-  border: 1px solid $border;
-  border-left: 3px solid $accent;
-  border-radius: 8px;
+  background: var(--vr-bg-card-2);
+  border: 1px solid var(--vr-border);
+  border-left: 3px solid var(--vr-accent);
+  border-radius: var(--vr-radius-sm);
   padding: 14px 16px;
-  transition: border-color 0.15s ease;
-
-  &:hover { border-color: rgba(255, 255, 255, 0.14); }
-
-  &__icon {
-    flex-shrink: 0;
-    mat-icon {
-      color: $accent;
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  &__body { flex: 1; }
-
-  &__title {
-    margin: 0 0 4px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: $text;
-  }
-
-  &__text {
-    margin: 0;
-    font-size: 0.8rem;
-    color: $text-muted;
-    line-height: 1.6;
-  }
-
-  &__inline-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
-    vertical-align: middle;
-    cursor: pointer;
-    color: $accent;
-  }
+  margin-top: 18px;
+}
+.nr-notice--warn {
+  border-left-color: #ff9f45;
+  background: rgba(255, 159, 69, 0.05);
+}
+.nr-notice__icon { flex-shrink: 0; }
+.nr-notice__icon mat-icon {
+  color: var(--vr-accent);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+.nr-notice--warn .nr-notice__icon mat-icon { color: #ff9f45; }
+.nr-notice__body { flex: 1; min-width: 0; }
+.nr-notice__title {
+  margin: 0 0 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--vr-text-strong);
+}
+.nr-notice__text {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--vr-text-muted);
+  line-height: 1.6;
+  max-width: 62ch;
 }
 
-// ─── Action bar ───────────────────────────────────────────────────────────────
+/* ── Acknowledgement ──────────────────────────────────────────── */
+.nr-ack {
+  display: block;
+  margin-top: 16px;
+  font-size: 0.875rem;
+  --mdc-checkbox-unselected-icon-color: var(--vr-grey-700);
+  --mdc-checkbox-unselected-hover-icon-color: var(--vr-accent);
+}
 
+.nr-inline-error {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: #ff4d6d;
+}
+
+/* ── Destination ──────────────────────────────────────────────── */
+.nr-dest {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nr-dest__item {
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius-sm);
+  padding: 6px 12px 6px 4px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.nr-dest__item:hover { border-color: rgba(255, 255, 255, 0.16); }
+.nr-dest__item.mat-mdc-radio-checked {
+  border-color: rgba(var(--vr-accent-rgb), 0.4);
+  background: var(--vr-accent-glow);
+}
+
+.nr-dest__label {
+  font-size: 0.875rem;
+  color: var(--vr-text);
+}
+.nr-dest__meta {
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--vr-text-muted);
+  margin-top: 1px;
+}
+
+.nr-dest__hint {
+  margin: 12px 0 0;
+  font-size: 0.78rem;
+  color: var(--vr-text-muted);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+.nr-dest__hint a { color: var(--vr-accent); }
+
+/* ── Remote template fetch ────────────────────────────────────── */
+/* The "API connection please wait..." string existed in the component but was
+   never rendered anywhere. Now it is, and so is a failure. */
+.nr-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 0.78rem;
+  color: var(--vr-text-muted);
+}
+.nr-loading mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+.nr-loading--error { color: #ff9f45; }
+.nr-loading--error mat-icon { color: #ff9f45; }
+
+/* ── Action bar ───────────────────────────────────────────────── */
 .nr-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 12px;
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 1px solid $border-inner;
+  border-top: 1px solid var(--vr-border);
 }
+
+.nr-gate {
+  flex-basis: 100%;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--vr-text-muted);
+  max-width: 70ch;
+}
+.nr-gate .nr-gate--ready { color: var(--vr-accent); }
 
 .nr-btn {
   display: inline-flex;
@@ -300,40 +409,71 @@ $danger-border:    rgba(183, 28, 28, 0.3);
   gap: 6px;
   font-size: 0.875rem;
   font-weight: 500;
-  border-radius: 8px !important;
-  padding: 0 20px !important;
+  border-radius: var(--vr-radius-sm) !important;
+  padding: 0 18px !important;
   height: 38px;
-
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-  }
-
-  &--primary {
-    background: $accent !important;
-    color: #000 !important;
-
-    mat-icon { color: #000; }
-
-    &:hover { background: $accent-hover !important; }
-  }
-
-  &--cancel {
-    border-color: $border !important;
-    color: $text-dim !important;
-
-    &:hover {
-      border-color: rgba(255, 255, 255, 0.24) !important;
-      color: $text !important;
-    }
-  }
+}
+.nr-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
 }
 
-// ─── Responsive ───────────────────────────────────────────────────────────────
+.nr-btn--primary {
+  background: var(--vr-accent) !important;
+  color: #0a0a0a !important;
+}
+.nr-btn--primary mat-icon { color: #0a0a0a; }
+.nr-btn--primary:hover { background: #8fffca !important; }
+.nr-btn--primary[disabled] {
+  background: var(--vr-grey-800) !important;
+  color: var(--vr-text-disabled) !important;
+}
 
+.nr-btn--cancel {
+  border-color: var(--vr-border-strong) !important;
+  color: var(--vr-text-dim) !important;
+}
+.nr-btn--cancel:hover {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  color: var(--vr-text) !important;
+}
+
+.nr-btn--danger {
+  border-color: rgba(255, 77, 109, 0.4) !important;
+  color: #ff4d6d !important;
+}
+.nr-btn--danger:hover { background: rgba(255, 77, 109, 0.08) !important; }
+
+.nr-btn--mini {
+  height: 32px;
+  font-size: 0.78rem;
+  padding: 0 12px !important;
+  border-color: var(--vr-border-strong) !important;
+  color: var(--vr-text-secondary) !important;
+}
+.nr-btn--mini:hover {
+  border-color: rgba(var(--vr-accent-rgb), 0.4) !important;
+  color: var(--vr-accent) !important;
+}
+
+.nr-btn--link {
+  height: 32px;
+  padding: 0 8px !important;
+  font-size: 0.78rem;
+  color: var(--vr-text-muted) !important;
+}
+.nr-btn--link:hover { color: var(--vr-accent) !important; }
+
+/* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 599px) {
   .page-title h1 { font-size: 1.3rem; }
   .page-title .page-subtitle { display: none; }
   .page-title .title-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
+
+  .nr-step { grid-template-columns: 1fr; gap: 8px; }
+  .nr-step__n { display: none; }
+  .nr-step__body { padding: 16px 14px 18px; }
+
+  .nr-gate { max-width: none; }
 }

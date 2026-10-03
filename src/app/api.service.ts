@@ -75,12 +75,35 @@ export class ApiService {
                .catch(error => this.nvdError(error));
   }
 
-  APISend(apiurl: string, apikey: string, action: string, body: string): Promise<any> {
+  // ── Background calls ───────────────────────────────────────────────────────
+  // A listing or an existence probe runs without the user asking for it, and
+  // the caller already has somewhere to put the failure. Raising the global
+  // snackbar as well produces "CAN'T CONNECT TO API" floating over a page that
+  // is visibly showing data from that same API — so `silent` callers get the
+  // reason back as a value (the same __error shape the NVD helpers use) and
+  // decide for themselves how to show it.
+  private apiError(apiurl: string, reason: any) {
+    const status = reason?.status ?? 0;
+    console.log('API error (' + apiurl + '): ', reason);
+    return { __error: true, status, message: this.apiErrorMessage(status) };
+  }
+
+  private apiErrorMessage(status: number): string {
+    if (status === 0) return 'no response';
+    if (status === 200) return 'invalid response (not JSON)';
+    if (status === 401 || status === 403) return 'HTTP ' + status + ', API key rejected';
+    if (status === 404) return 'HTTP 404, no API at this address';
+    return 'HTTP ' + status;
+  }
+
+  APISend(apiurl: string, apikey: string, action: string, body: string, silent = false): Promise<any> {
     const header = new HttpHeaders().set('VULNREPO-AUTH', apikey).set('VULNREPO-ACTION', action).set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
     return this.http.post<any>('https://' + apiurl + '/api/', body, {headers: header})
                .toPromise()
                .then(response => response, (reason) => {
-                 if (reason.AUTH_ACCESS === 'ACCOUNT_EXPIRES') {
+                 if (silent) {
+                  return this.apiError(apiurl, reason);
+                 } else if (reason.AUTH_ACCESS === 'ACCOUNT_EXPIRES') {
                   this.snackBar.open('API ' + apiurl + ' AUTH ERROR: ACCESS EXPIRES!', 'OK', {
                     duration: 3000,
                     panelClass: ['notify-snackbar-fail']

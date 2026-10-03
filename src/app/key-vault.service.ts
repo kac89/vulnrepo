@@ -11,7 +11,12 @@ const VAULT_MODE_KEY     = 'VULNREPO-KEY-VAULT-MODE';
 const LOCK_ON_HIDDEN_KEY = 'VULNREPO-LOCK-ON-HIDDEN';
 const IDLE_MINUTES_KEY   = 'VULNREPO-IDLE-MINUTES';
 const SS_KEY_PREFIX      = 'VULNREPO-SECKEY-';
-const SS_VAULT_KEY       = 'VULNREPO-SECKEY-VAULT';
+// Must NOT start with SS_KEY_PREFIX: restoreFromSession() reads every key under
+// that prefix as a report key, so the old name ('VULNREPO-SECKEY-VAULT') came
+// back as a report whose id was "VAULT" — inflating the held-key count and
+// sending getreport?reportid=VAULT to every configured server.
+const SS_VAULT_KEY       = 'VULNREPO-API-VAULT';
+const SS_LEGACY_VAULT_KEY = 'VULNREPO-SECKEY-VAULT';
 
 export type KeyVaultMode = 'memory' | 'session';
 
@@ -151,10 +156,23 @@ export class KeyVaultService implements OnDestroy {
     return null;
   }
 
+  // Presence test that does NOT count as activity. getApiVault() resets the
+  // idle timer on every hit, so UI that merely renders vault state (the home
+  // status bar) must not call it — that would keep the vault alive on an
+  // untouched tab.
+  hasApiVault(): boolean {
+    if (this.apiVault !== null) return true;
+    if (this.mode === 'session') return sessionStorage.getItem(SS_VAULT_KEY) !== null;
+    return false;
+  }
+
   removeApiVault(): void {
     if (this.apiVault !== null) {
       this.apiVault = null;
-      if (this.mode === 'session') sessionStorage.removeItem(SS_VAULT_KEY);
+      if (this.mode === 'session') {
+        sessionStorage.removeItem(SS_VAULT_KEY);
+        sessionStorage.removeItem(SS_LEGACY_VAULT_KEY);
+      }
       this.changeSubject.next('VULNREPO-API');
       if (this.keys.size === 0) {
         this.idleResetAtSubject.next(null);
@@ -170,13 +188,14 @@ export class KeyVaultService implements OnDestroy {
     for (let i = 0; i < sessionStorage.length; i++) {
       const k = sessionStorage.key(i);
       if (!k) continue;
+      if (k === SS_LEGACY_VAULT_KEY) continue;  // a session written before the rename
       if (k.startsWith(SS_KEY_PREFIX)) {
         const rid = k.slice(SS_KEY_PREFIX.length);
         const val = sessionStorage.getItem(k);
         if (val !== null) this.keys.set(rid, val);
       }
     }
-    const av = sessionStorage.getItem(SS_VAULT_KEY);
+    const av = sessionStorage.getItem(SS_VAULT_KEY) ?? sessionStorage.getItem(SS_LEGACY_VAULT_KEY);
     if (av !== null) this.apiVault = av;
   }
 
@@ -188,6 +207,7 @@ export class KeyVaultService implements OnDestroy {
     }
     toRemove.forEach(k => sessionStorage.removeItem(k));
     sessionStorage.removeItem(SS_VAULT_KEY);
+    sessionStorage.removeItem(SS_LEGACY_VAULT_KEY);
   }
 
   private clearAll = (): void => {

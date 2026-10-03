@@ -70,6 +70,85 @@
   box-shadow: none;
 }
 
+/* Inline unlock inside the status strip: a control that has to read as part of
+   the bar, not as a button dropped on top of it. */
+.vr-vault-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid rgba(var(--vr-accent-rgb), 0.45);
+  border-radius: var(--vr-radius-sm);
+  background: rgba(var(--vr-accent-rgb), 0.1);
+  color: var(--vr-accent);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.vr-vault-btn:hover {
+  background: rgba(var(--vr-accent-rgb), 0.2);
+  border-color: var(--vr-accent);
+}
+.vr-vault-btn mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+}
+
+/* ── A2 · Remote vault call ───────────────────────────────────── */
+.vr-vault-call {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  padding: 14px 18px;
+  background: var(--vr-bg-card);
+  border: 1px solid rgba(var(--vr-accent-rgb), 0.35);
+  border-radius: var(--vr-radius);
+}
+.vr-vault-call__icon {
+  flex: none;
+  color: var(--vr-accent);
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+.vr-vault-call__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.vr-vault-call__text strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.vr-vault-call__text span {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--vr-text-muted);
+  overflow-wrap: anywhere;
+}
+/* .vr-btn was written for <a>; a <button> inherits neither the page font nor
+   the normal box, so both are restated here. */
+.vr-vault-call__btn {
+  margin-left: auto;
+  flex: none;
+  padding: 10px 18px;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+}
+.vr-vault-call--warn {
+  border-color: rgba(var(--sev-medium-rgb), 0.45);
+}
+.vr-vault-call--warn .vr-vault-call__icon {
+  color: rgb(var(--sev-medium-rgb));
+}
+
 /* ── FIRST_RUN · Banner ───────────────────────────────────────── */
 /* ~320px, not 92vh: the first screen now reaches the actions. */
 .vr-banner {
@@ -351,6 +430,18 @@
   white-space: nowrap;
 }
 
+/* Remote marker sits on the title line, so it must stay inline — the
+   `.vr-row__name span` block rule above is for the sub-line only. */
+.vr-row__remote {
+  display: inline-block;
+  vertical-align: -3px;
+  margin-left: 6px;
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: var(--vr-accent);
+}
+
 .vr-row__lock {
   font-size: 17px;
   width: 17px;
@@ -584,6 +675,12 @@
 
 @media (max-width: 600px) {
   .vr-cta-row { flex-direction: column; align-items: stretch; }
+  .vr-vault-call { flex-wrap: wrap; }
+  .vr-vault-call__btn {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
   .vr-btn { justify-content: center; }
   .vr-status__item--end { margin-left: 0; }
   .vr-foot__social { margin-left: 0; }

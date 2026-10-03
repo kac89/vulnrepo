@@ -6,110 +6,225 @@
       <mat-icon class="title-icon">add_circle_outline</mat-icon>
       <div>
         <h1>New Report</h1>
-        <span class="page-subtitle">Configure and create a new vulnerability report</span>
+        <span class="page-subtitle">Encrypted in this browser before it is stored. The key never leaves this tab.</span>
       </div>
     </div>
   </div>
 
   <div class="header-divider"></div>
 
-  <form class="nr-form">
-    <div class="nr-grid">
+  <!-- The order is deliberate: the key first, because it is the only decision
+       on this page that cannot be undone. The title is renameable forever and
+       the destination is a radio button. -->
+  <form class="nr-form" [formGroup]="form" (ngSubmit)="create()">
 
-      <!-- Left column: inputs -->
-      <div class="nr-card">
+    <!-- ── 1 · Encryption key ────────────────────────────────────────────── -->
+    <section class="nr-step">
+      <div class="nr-step__n" aria-hidden="true">1</div>
+      <div class="nr-step__body">
 
-        <div class="nr-section-label">Report Details</div>
+        <div class="nr-section-label">Encryption key</div>
+
+        @if (keyMode === 'generated') {
+
+          <div class="nr-key">
+            <code class="nr-key__value" [class.nr-key__value--masked]="!revealKey">{{ revealKey ? groupedKey : '•••••••• •••••••• •••••••• ••••••••' }}</code>
+            <button mat-icon-button type="button" class="nr-icon-btn"
+              (click)="revealKey = !revealKey"
+              [attr.aria-label]="revealKey ? 'Hide key' : 'Show key'"
+              [matTooltip]="revealKey ? 'Hide key' : 'Show key'" matTooltipPosition="below">
+              <mat-icon>{{ revealKey ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+          </div>
+
+          <div class="nr-key-actions">
+            <button mat-stroked-button type="button" class="nr-btn nr-btn--mini" (click)="generateKey()">
+              <mat-icon>casino</mat-icon>
+              Regenerate
+            </button>
+            <button mat-stroked-button type="button" class="nr-btn nr-btn--mini" (click)="copyKey()">
+              <mat-icon>{{ keyCopied ? 'check' : 'content_copy' }}</mat-icon>
+              {{ keyCopied ? 'Copied' : 'Copy' }}
+            </button>
+            <button mat-stroked-button type="button" class="nr-btn nr-btn--mini" (click)="downloadKey()">
+              <mat-icon>{{ keyDownloaded ? 'check' : 'download' }}</mat-icon>
+              {{ keyDownloaded ? 'Downloaded' : 'Download key.txt' }}
+            </button>
+            <button mat-button type="button" class="nr-btn nr-btn--link" (click)="useOwnKey()">
+              Type my own key
+            </button>
+          </div>
+
+        } @else {
+
+          <mat-form-field appearance="outline" class="nr-field" color="accent">
+            <mat-label>Your key</mat-label>
+            <input id="nr-key" formControlName="key" matInput
+              placeholder="Min. 8 characters" [type]="revealOwnKey ? 'text' : 'password'"
+              autocomplete="new-password" spellcheck="false">
+            <mat-icon matPrefix class="nr-field-prefix">lock</mat-icon>
+            <button mat-icon-button matSuffix type="button" class="nr-icon-btn"
+              (click)="revealOwnKey = !revealOwnKey"
+              [attr.aria-label]="revealOwnKey ? 'Hide key' : 'Show key'"
+              [matTooltip]="revealOwnKey ? 'Hide key' : 'Show key'" matTooltipPosition="below">
+              <mat-icon>{{ revealOwnKey ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+            @if (form.get('key')?.hasError('whitespace')) {
+              <mat-error><strong>Spaces are not allowed in a key!</strong></mat-error>
+            } @else if (form.get('key')?.hasError('tooweakpass')) {
+              <mat-error><strong>Security key is too weak!</strong></mat-error>
+            } @else if (form.get('key')?.hasError('required')) {
+              <mat-error><strong>Enter a key or generate one!</strong></mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="nr-field" color="accent">
+            <mat-label>Confirm your key</mat-label>
+            <input formControlName="confirm" matInput
+              placeholder="Re-enter security key" [type]="revealOwnKey ? 'text' : 'password'"
+              autocomplete="new-password" spellcheck="false">
+            <mat-icon matPrefix class="nr-field-prefix">lock_outline</mat-icon>
+            @if (form.get('confirm')?.hasError('passnotmatch')) {
+              <mat-error><strong>Keys do not match!</strong></mat-error>
+            }
+          </mat-form-field>
+
+          <div class="nr-key-actions">
+            <button mat-stroked-button type="button" class="nr-btn nr-btn--mini" (click)="copyKey()">
+              <mat-icon>{{ keyCopied ? 'check' : 'content_copy' }}</mat-icon>
+              {{ keyCopied ? 'Copied' : 'Copy' }}
+            </button>
+            <button mat-stroked-button type="button" class="nr-btn nr-btn--mini" (click)="downloadKey()">
+              <mat-icon>{{ keyDownloaded ? 'check' : 'download' }}</mat-icon>
+              {{ keyDownloaded ? 'Downloaded' : 'Download key.txt' }}
+            </button>
+            <button mat-button type="button" class="nr-btn nr-btn--link" (click)="useGeneratedKey()">
+              Generate one for me
+            </button>
+          </div>
+
+        }
+
+        <!-- Strength is a property of the key, so only the key drives it. The
+             slot is always here: it used to appear on the first keystroke and
+             shove the column down. -->
+        <div class="nr-strength">
+          <mat-progress-bar class="nr-progress" [color]="color" [mode]="mode" [value]="value"></mat-progress-bar>
+          <span class="nr-strength__value" [class]="'nr-strength__value--' + strengthClass">{{ str || 'No key yet' }}</span>
+        </div>
+
+        <ul class="nr-criteria">
+          <li [class.nr-criteria--ok]="criteria.length">{{ MIN_LENGTH }}+ characters</li>
+          <li [class.nr-criteria--ok]="criteria.mixedcase">mixed case</li>
+          <li [class.nr-criteria--ok]="criteria.digitsymbol">digit + symbol</li>
+          <li [class.nr-criteria--ok]="criteria.nospaces">no spaces</li>
+        </ul>
+
+        <div class="nr-notice nr-notice--warn">
+          <div class="nr-notice__icon">
+            <mat-icon>warning_amber</mat-icon>
+          </div>
+          <div class="nr-notice__body">
+            <p class="nr-notice__title">This key is not stored and not sent anywhere</p>
+            <p class="nr-notice__text">
+              Without it this report cannot be opened, exported or decrypted — by you or by anyone else.
+              There is no reset and no recovery. Put it in a password manager before you continue.
+            </p>
+          </div>
+        </div>
+
+        <mat-checkbox formControlName="saved" color="accent" class="nr-ack">
+          I have saved this key somewhere I can get it back
+        </mat-checkbox>
+        @if (submitted && form.get('saved')?.invalid) {
+          <p class="nr-inline-error">Confirm you have saved the key before creating the report.</p>
+        }
+
+      </div>
+    </section>
+
+    <!-- ── 2 · Report name ───────────────────────────────────────────────── -->
+    <section class="nr-step">
+      <div class="nr-step__n" aria-hidden="true">2</div>
+      <div class="nr-step__body">
+
+        <div class="nr-section-label">Report name</div>
 
         <mat-form-field appearance="outline" class="nr-field" color="accent">
           <mat-label>Report title</mat-label>
-          <input matInput placeholder="e.g. External penetration testing report" #title
-            [formControl]="titlenewreport">
+          <input id="nr-title" formControlName="title" matInput
+            placeholder="e.g. External penetration testing report">
           <mat-icon matPrefix class="nr-field-prefix">description</mat-icon>
-          @if (titlenewreport.hasError('notempty')) {
+          <mat-hint>Shown in your report list. Renameable any time.</mat-hint>
+          @if (form.get('title')?.hasError('required')) {
             <mat-error><strong>Title must not be empty!</strong></mat-error>
           }
         </mat-form-field>
 
-        <div class="nr-section-label nr-section-label--mt">Security Key</div>
+      </div>
+    </section>
 
-        <mat-form-field appearance="outline" class="nr-field" color="accent">
-          <mat-label>Set security key</mat-label>
-          <input [formControl]="pass1model" (keyup)="passCheck(pass.value)" matInput
-            placeholder="Min. 8 characters" #pass [type]="hide ? 'password' : 'text'">
-          <mat-icon matPrefix class="nr-field-prefix">lock</mat-icon>
-          <mat-icon matSuffix class="nr-suffix-icon" (click)="hide = !hide"
-            matTooltip="Toggle visibility" matTooltipPosition="below">
-            {{hide ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
-          <mat-icon matSuffix class="nr-suffix-icon" (click)="generatePassword()"
-            matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
-          <mat-icon matSuffix class="nr-suffix-icon" #tooltip="matTooltip"
-            [cdkCopyToClipboard]="pass1model.value" (click)="copyText()"
-            matTooltip="Copy to clipboard" matTooltipPosition="below">content_copy</mat-icon>
-          @if (pass1model.hasError('tooweakpass')) {
-            <mat-error><strong>Security key is too weak!</strong></mat-error>
-          }
-          @if (pass1model.hasError('passnotmatch')) {
-            <mat-error><strong>Keys do not match!</strong></mat-error>
-          }
-        </mat-form-field>
+    <!-- ── 3 · Destination and template ──────────────────────────────────── -->
+    <section class="nr-step nr-step--last">
+      <div class="nr-step__n" aria-hidden="true">3</div>
+      <div class="nr-step__body">
 
-        <mat-form-field appearance="outline" class="nr-field" color="accent">
-          <mat-label>Confirm security key</mat-label>
-          <input [formControl]="pass2model" (keyup)="passCheck(pass2.value)" matInput
-            placeholder="Re-enter security key" #pass2 [type]="hide ? 'password' : 'text'">
-          <mat-icon matPrefix class="nr-field-prefix">lock_outline</mat-icon>
-          <mat-icon matSuffix class="nr-suffix-icon" (click)="hide = !hide"
-            matTooltip="Toggle visibility" matTooltipPosition="below">
-            {{hide ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
-          <mat-icon matSuffix class="nr-suffix-icon" (click)="generatePassword()"
-            matTooltip="Generate security key" matTooltipPosition="below">casino</mat-icon>
-          <mat-icon matSuffix class="nr-suffix-icon" #tooltip="matTooltip"
-            [cdkCopyToClipboard]="pass2model.value" (click)="copyText()"
-            matTooltip="Copy to clipboard" matTooltipPosition="below">content_copy</mat-icon>
-          @if (pass2model.hasError('tooweakpass')) {
-            <mat-error><strong>Security key is too weak!</strong></mat-error>
-          }
-          @if (pass2model.hasError('passnotmatch')) {
-            <mat-error><strong>Keys do not match!</strong></mat-error>
-          }
-        </mat-form-field>
+        <div class="nr-section-label">Where it is stored</div>
 
-        @if (localkeys.length > 0) {
-          <div class="nr-section-label nr-section-label--mt">Storage</div>
-          <mat-form-field appearance="outline" class="nr-field" color="accent">
-            <mat-label>Save report to</mat-label>
-            <mat-icon matPrefix class="nr-field-prefix">storage</mat-icon>
-            <mat-select (selectionChange)="selectchange($event)" [(value)]="selected">
-              <mat-option value="local">Local Host</mat-option>
-              <mat-optgroup label="API">
-                @for (apis of localkeys; track apis) {
-                  <mat-option [value]="apis">{{apis.viewValue}}</mat-option>
+        <mat-radio-group formControlName="destination" class="nr-dest" aria-label="Where the report is stored">
+          @for (d of destinations; track d.id) {
+            <mat-radio-button class="nr-dest__item" color="accent" [value]="d.id">
+              <span class="nr-dest__label">{{ d.label }}</span>
+              <span class="nr-dest__meta">
+                @if (d.id === 'local') {
+                  {{ d.hint }} · {{ localReportCount }} report{{ localReportCount === 1 ? '' : 's' }}
+                  @if (storageBytes > 0) { · {{ storageBytes | filesize }} }
+                } @else {
+                  API · {{ d.hint }}
                 }
-              </mat-optgroup>
-            </mat-select>
-          </mat-form-field>
+              </span>
+            </mat-radio-button>
+          }
+        </mat-radio-group>
+
+        @if (destinations.length === 1) {
+          <p class="nr-dest__hint">
+            Reports stored here live in this browser profile only. Clearing site data deletes them.
+            <a routerLink="/settings">Connect a vulnrepo server</a> to store them remotely as well.
+          </p>
         }
 
-        @if (ReportProfilesList.length > 0) {
-          <mat-form-field appearance="outline" class="nr-field" color="accent">
-            <mat-label>Settings profile (optional)</mat-label>
+        @if (profilesLoading) {
+          <div class="nr-loading">
+            <mat-spinner diameter="14" strokeWidth="2"></mat-spinner>
+            <span>Loading templates from your servers…</span>
+          </div>
+        }
+
+        @if (profilesError) {
+          <div class="nr-loading nr-loading--error">
+            <mat-icon>cloud_off</mat-icon>
+            <span>{{ profilesError }}</span>
+            <button mat-button type="button" class="nr-btn nr-btn--link" (click)="retryProfiles()">Retry</button>
+          </div>
+        }
+
+        @if (profiles.length > 0) {
+          <mat-form-field appearance="outline" class="nr-field nr-field--mt" color="accent">
+            <mat-label>Template (optional)</mat-label>
             <mat-icon matPrefix class="nr-field-prefix">tune</mat-icon>
-            <mat-select (selectionChange)="selectchangeProfiles($event)" [(value)]="selected_profile">
-              <mat-select-trigger>{{selected_profilefin}}</mat-select-trigger>
-              <mat-option>None</mat-option>
-              @for (profile of ReportProfilesList; track profile) {
-                <mat-option [value]="profile">
-                  @if (!profile.api) {
-                    <mat-icon class="nr-option-icon">computer</mat-icon>
-                  }
-                  @if (profile.api) {
-                    <mat-icon class="nr-option-icon nr-option-icon--remote"
-                      title="Remote API: {{profile.apiname}} - [{{profile.apiurl}}]">public</mat-icon>
-                  }
-                  {{profile.profile_name}}
+            <mat-select formControlName="profile">
+              <mat-select-trigger>
+                @if (form.get('profile')?.value) {
+                  {{ form.get('profile')?.value.profile_name }}
+                  <span class="nr-origin">· {{ profileOrigin(form.get('profile')?.value) }}</span>
+                }
+              </mat-select-trigger>
+              <mat-option [value]="null">No template</mat-option>
+              @for (p of profiles; track p) {
+                <mat-option [value]="p">
+                  {{ p.profile_name }}
+                  <span class="nr-origin">· {{ profileOrigin(p) }}</span>
                 </mat-option>
               }
             </mat-select>
@@ -117,49 +232,35 @@
         }
 
       </div>
-
-      <!-- Right column: strength + notice -->
-      <div class="nr-side">
-
-        @if (str !== '') {
-          <div class="nr-strength-card">
-            <div class="nr-strength-header">
-              <span class="nr-strength-label">Key strength</span>
-              <span class="nr-strength-value" [class]="'nr-strength-value--' + str.toLowerCase().replace(' ', '')">{{str}}</span>
-            </div>
-            <mat-progress-bar class="nr-progress" [color]="color" [mode]="mode"
-              [value]="value" [bufferValue]="bufferValue"></mat-progress-bar>
-          </div>
-        }
-
-        <div class="nr-notice">
-          <div class="nr-notice__icon">
-            <mat-icon>info_outline</mat-icon>
-          </div>
-          <div class="nr-notice__body">
-            <p class="nr-notice__title">Protect your report</p>
-            <p class="nr-notice__text">
-              Use the key generator <mat-icon class="nr-notice__inline-icon" (click)="generatePassword()">casino</mat-icon>
-              to create a strong security key.
-              <strong>Do not lose your key</strong> — there is no recovery option.
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
+    </section>
 
     <!-- Actions -->
     <div class="nr-actions">
-      <button mat-flat-button class="nr-btn nr-btn--primary"
-        (click)="addnewReport(title.value, pass.value, pass2.value)">
-        <mat-icon>save</mat-icon>
-        Save report
+      <button mat-flat-button type="submit" class="nr-btn nr-btn--primary" [disabled]="creating">
+        <mat-icon>{{ creating ? 'hourglass_top' : 'lock' }}</mat-icon>
+        {{ creating ? 'Encrypting…' : 'Create report' }}
       </button>
-      <button mat-stroked-button class="nr-btn nr-btn--cancel" (click)="cancel()">
-        <mat-icon>close</mat-icon>
-        Cancel
-      </button>
+
+      @if (cancelArmed) {
+        <button mat-stroked-button type="button" class="nr-btn nr-btn--danger" (click)="cancel()">
+          <mat-icon>delete_outline</mat-icon>
+          Discard draft
+        </button>
+        <button mat-button type="button" class="nr-btn nr-btn--link" (click)="keepEditing()">Keep editing</button>
+      } @else {
+        <button mat-stroked-button type="button" class="nr-btn nr-btn--cancel" (click)="cancel()">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+      }
+
+      <div class="nr-gate">
+        @if (missing.length === 0) {
+          <span class="nr-gate--ready">Ready · {{ stepsReady }} of 3</span>
+        } @else {
+          <span>Still needs {{ missing.join(', ') }}</span>
+        }
+      </div>
     </div>
 
   </form>
