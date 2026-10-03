@@ -122,7 +122,7 @@ export class NewreportComponent implements OnInit {
       this.form.get('confirm')!.updateValueAndValidity({ emitEvent: false });
     });
 
-    this.generateKey();
+    this.generateKey(false);
     this.buildDestinations();
     this.loadLocalStats();
 
@@ -165,12 +165,18 @@ export class NewreportComponent implements OnInit {
 
   // ── The key ────────────────────────────────────────────────────────────────
 
-  generateKey() {
+  // reveal: a key the user asked for is shown, because the click is the ask —
+  // they are looking at the field. The key minted on page load is not asked
+  // for, so it stays masked and the page never puts a secret on screen before
+  // anyone requested it.
+  generateKey(reveal = true) {
     this.form.get('key')!.setValue(this.utilsService.generatePassword(this.KEY_LENGTH));
     this.form.get('confirm')!.setValue('');
     this.keyCopied = false;
     this.keyDownloaded = false;
-    this.revealKey = false;
+    if (reveal) {
+      this.revealKey = true;
+    }
   }
 
   useOwnKey() {
