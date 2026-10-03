@@ -1904,7 +1904,7 @@ Sample code here\n\
 
     console.log('Export issues');
     const dialogRef = this.dialog.open(DialogExportissuesComponent, {
-      width: '500px',
+      width: '560px',
       panelClass: 'export-dialog-panel',
       backdropClass: 'vr-blur-backdrop',
       data: filteredTags
@@ -1924,7 +1924,7 @@ Sample code here\n\
     if (bySeverity.length > 0) {
       console.log('Export issues');
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
-        width: '500px',
+        width: '560px',
         panelClass: 'export-dialog-panel',
         backdropClass: 'vr-blur-backdrop',
         data: bySeverity
@@ -1942,7 +1942,7 @@ Sample code here\n\
     if (type === 'selected') {
 
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
-        width: '500px',
+        width: '560px',
         panelClass: 'export-dialog-panel',
         backdropClass: 'vr-blur-backdrop',
         data: { sel: this.selectedIssues, orig: original }
@@ -1955,7 +1955,7 @@ Sample code here\n\
     } else if (type === 'all') {
 
       const dialogRef = this.dialog.open(DialogExportissuesComponent, {
-        width: '500px',
+        width: '560px',
         panelClass: 'export-dialog-panel',
         backdropClass: 'vr-blur-backdrop',
         data: original
