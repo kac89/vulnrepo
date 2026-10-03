@@ -15,6 +15,19 @@ import { KeyVaultService } from './key-vault.service';
 import { ReportSchemaService } from './report-schema.service';
 import { UtilsService } from './utils.service';
 
+// One save event, stripped of the report it belongs to. See getHistoryActivity.
+export interface HistoryActivityEntry {
+  report_id: string;
+  report_name: string;
+  ts: number;
+  total: number;
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+  info: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -1715,6 +1728,67 @@ export class IndexeddbService {
         tx.oncomplete = () => { db.close(); resolve(arr); };
         req.onerror = (e) => reject(e);
       };
+    });
+  }
+
+  // Every save event as metadata only — what /home's activity panel counts.
+  //
+  // A history snapshot is a whole report: report_stats plus the full
+  // encrypted_data ciphertext, attachments included. getAll() on this store
+  // would therefore hand back every version of every report at once, which is
+  // tens of MB on a working database. The cursor still deserializes each
+  // record (there is no index to project through), but only the metadata is
+  // kept, so what survives this call is a few dozen bytes per save.
+  //
+  // Returns one entry per save, in store order. The caller windows and buckets
+  // them in memory — that is what lets the activity period change without
+  // touching IndexedDB again. `cap` is a backstop for a database that was
+  // never purged; hitting it loses the oldest-written records, not the newest
+  // reports, so the panel degrades to a shorter usable window.
+  getHistoryActivity(cap: number = 20000): Promise<HistoryActivityEntry[]> {
+    return new Promise<HistoryActivityEntry[]>((resolve, reject) => {
+      const idb = window.indexedDB;
+      const open = idb.open('vulnrepo-db-history', 1);
+      open.onupgradeneeded = () => {
+        open.result.createObjectStore('reports-history', { autoIncrement: true });
+      };
+      open.onsuccess = () => {
+        const db = open.result;
+        const tx = db.transaction('reports-history', 'readonly');
+        const store = tx.objectStore('reports-history');
+        const req = store.openCursor();
+        const out: HistoryActivityEntry[] = [];
+        req.onsuccess = () => {
+          const cursor = req.result;
+          if (!cursor) { return; }
+          const val = cursor.value;
+          const ts = Number(val?.report_lastupdate) || 0;
+          // A snapshot with no usable timestamp cannot be placed on a day, and
+          // one with no report_id cannot be attributed — both are dropped
+          // rather than counted against an arbitrary report or date.
+          if (ts > 0 && val?.report_id) {
+            const stats = val.report_stats;
+            out.push({
+              report_id: val.report_id,
+              report_name: val.report_name || '',
+              ts,
+              total: stats?.total || 0,
+              critical: stats?.critical || 0,
+              high: stats?.high || 0,
+              medium: stats?.medium || 0,
+              low: stats?.low || 0,
+              info: stats?.info || 0
+            });
+          }
+          // Not calling continue() ends the walk; the transaction then
+          // completes normally and resolves with what was gathered.
+          if (out.length >= cap) { return; }
+          cursor.continue();
+        };
+        tx.oncomplete = () => { db.close(); resolve(out); };
+        req.onerror = (e) => reject(e);
+      };
+      open.onerror = (e) => reject(e);
     });
   }
 

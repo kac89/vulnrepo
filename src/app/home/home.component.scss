@@ -347,6 +347,426 @@
 .vr-act--primary mat-icon { color: #0a0a0a; }
 .vr-act--primary .vr-act__sub { color: rgba(10, 10, 10, 0.7); }
 
+/* ── B2 · Activity panel ──────────────────────────────────────── */
+/* The window control sits in the section title, which is the one row above
+   the chart — the same place /my-reports keeps its filters. */
+.vr-win {
+  display: inline-flex;
+  margin-left: 4px;
+  background: var(--vr-bg-card-2);
+  border: 1px solid var(--vr-border-strong);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.vr-win__btn {
+  appearance: none;
+  border: 0;
+  border-right: 1px solid var(--vr-border-strong);
+  background: transparent;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--vr-text-muted);
+  padding: 9px 13px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.vr-win__btn:last-child { border-right: 0; }
+.vr-win__btn:hover { color: var(--vr-accent); }
+.vr-win__btn[aria-pressed="true"] {
+  background: rgba(var(--vr-accent-rgb), 0.14);
+  color: var(--vr-accent);
+}
+
+.vr-win__btn--custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.vr-win__btn--custom mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.vr-win__meta {
+  margin-left: auto;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--vr-text-disabled);
+}
+
+/* Custom range. The presets are in the control above, so this pane carries
+   only what they cannot express — plus the one caveat that matters. */
+.vr-win-pop {
+  max-width: 520px;
+  margin: -6px 0 24px;
+  padding: 18px 20px;
+  background: var(--vr-bg-raised);
+  border: 1px solid var(--vr-border-strong);
+  border-radius: var(--vr-radius);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+}
+
+.vr-win-pop__fields {
+  display: flex;
+  gap: 14px;
+}
+
+.vr-fld {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1 1 0;
+}
+.vr-fld label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+/* color-scheme keeps the native date popup dark instead of a white sheet. */
+.vr-fld input {
+  color-scheme: dark;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 11px;
+  background: var(--vr-bg-card-2);
+  border: 1px solid var(--vr-border-strong);
+  border-radius: var(--vr-radius-sm);
+  color: var(--vr-text-strong);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.8rem;
+}
+.vr-fld input:focus {
+  border-color: var(--vr-accent);
+  outline: none;
+}
+
+.vr-win-pop__err {
+  margin: 12px 0 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--sev-high);
+}
+
+.vr-win-pop__hint {
+  display: flex;
+  gap: 9px;
+  margin: 14px 0 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.64rem;
+  line-height: 1.65;
+  color: var(--vr-text-muted);
+}
+.vr-win-pop__hint mat-icon {
+  flex: none;
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: var(--sev-medium);
+}
+.vr-win-pop__hint a {
+  color: var(--vr-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--vr-accent-rgb), 0.35);
+}
+.vr-win-pop__hint a:hover { border-bottom-color: var(--vr-accent); }
+
+.vr-win-pop__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.vr-win-pop__actions .vr-btn {
+  padding: 10px 16px;
+  font-size: 0.75rem;
+}
+
+/* Headline figures: one hero (the figure the panel exists to show) and four
+   supporting tiles, so the hierarchy is read before any number is. */
+.vr-act-head {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-bottom: 26px;
+  padding: 22px 26px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+}
+
+.vr-act-hero {
+  flex: none;
+}
+.vr-act-hero__n {
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 3.4rem;
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--vr-accent);
+  font-variant-numeric: tabular-nums;
+}
+.vr-act-hero__n small {
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--vr-text-disabled);
+}
+.vr-act-hero__lbl {
+  display: block;
+  margin-top: 12px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+
+.vr-act-tiles {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 18px 0;
+}
+
+.vr-act-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1 1 150px;
+  padding: 0 24px;
+  border-left: 1px solid var(--vr-border);
+}
+.vr-act-tile strong {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--vr-text-strong);
+  font-variant-numeric: tabular-nums;
+}
+.vr-act-tile em {
+  font-style: normal;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+.vr-act-tile span {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.62rem;
+  line-height: 1.5;
+  color: var(--vr-text-disabled);
+}
+
+/* Stands in for the chart while history is read, and in place of it when
+   there is no history to read. */
+.vr-act-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 16px 18px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: var(--vr-text-muted);
+}
+.vr-act-note mat-icon {
+  flex: none;
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  color: var(--vr-text-disabled);
+}
+
+/* Save rhythm. Height and opacity both encode the same number against one
+   scale; hue is never a second variable here. */
+.vr-chart {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 24px;
+}
+
+.vr-chart__y {
+  position: absolute;
+  left: 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--vr-text-disabled);
+  font-variant-numeric: tabular-nums;
+}
+.vr-chart__y--top { top: -5px; }
+.vr-chart__y--zero { bottom: 26px; }
+
+.vr-chart__plot { position: relative; }
+
+.vr-chart__rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.vr-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 110px;
+}
+
+.vr-bar {
+  display: block;
+  flex: 1 1 0;
+  min-width: 3px;
+  min-height: 3px;
+  border-radius: 4px 4px 0 0;
+  background: var(--vr-accent);
+  transition: filter 0.15s ease;
+}
+.vr-bar:hover { filter: brightness(1.35); }
+
+/* A day with no save is a drawn zero, not a gap: an empty slot reads as
+   missing data, which is a different claim. */
+.vr-bar--zero {
+  height: 2px !important;
+  min-height: 2px;
+  border-radius: 2px;
+  background: var(--vr-surface-3);
+  opacity: 1 !important;
+}
+
+.vr-bar--today { box-shadow: 0 0 0 1px rgba(var(--vr-accent-rgb), 0.55); }
+
+.vr-chart__axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 9px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--vr-text-disabled);
+}
+.vr-chart__grain { color: var(--vr-text-muted); }
+
+/* Severity is the one place colour carries meaning, so it uses the reserved
+   --sev-* ramp and always ships the number beside the swatch. */
+.vr-added {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+  margin-bottom: 24px;
+}
+
+.vr-added__lbl {
+  flex: none;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+
+.vr-stack {
+  display: flex;
+  gap: 2px;
+  flex: 1 1 200px;
+  max-width: 420px;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.vr-stack__seg {
+  display: block;
+  flex-basis: 0;
+  background: rgb(var(--sev-rgb));
+}
+.vr-stack__seg--critical { --sev-rgb: var(--sev-critical-rgb); }
+.vr-stack__seg--high     { --sev-rgb: var(--sev-high-rgb); }
+.vr-stack__seg--medium   { --sev-rgb: var(--sev-medium-rgb); }
+.vr-stack__seg--low      { --sev-rgb: var(--sev-low-rgb); }
+.vr-stack__seg--info     { --sev-rgb: var(--sev-info-rgb); }
+
+.vr-added__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.vr-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--vr-text-muted);
+}
+.vr-legend i {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: rgb(var(--sev-rgb));
+}
+.vr-legend strong {
+  font-weight: 500;
+  color: var(--vr-text-strong);
+  font-variant-numeric: tabular-nums;
+}
+.vr-legend--critical { --sev-rgb: var(--sev-critical-rgb); }
+.vr-legend--high     { --sev-rgb: var(--sev-high-rgb); }
+.vr-legend--medium   { --sev-rgb: var(--sev-medium-rgb); }
+.vr-legend--low      { --sev-rgb: var(--sev-low-rgb); }
+.vr-legend--info     { --sev-rgb: var(--sev-info-rgb); }
+
+/* Pinned to 30 days whatever the chart window is: on a 7-day window nearly
+   every report would be "idle", which is noise rather than a nudge. */
+.vr-idle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: rgba(var(--sev-medium-rgb), 0.05);
+  border: 1px solid rgba(var(--sev-medium-rgb), 0.3);
+  border-radius: var(--vr-radius-sm);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: var(--vr-text);
+}
+.vr-idle mat-icon {
+  flex: none;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: rgb(var(--sev-medium-rgb));
+}
+.vr-idle a {
+  margin-left: auto;
+  color: var(--vr-text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+.vr-idle a:hover {
+  color: var(--vr-accent);
+  border-bottom-color: var(--vr-accent);
+}
+
 /* ── C · Recent work ──────────────────────────────────────────── */
 .vr-rows {
   display: flex;
@@ -674,6 +1094,23 @@
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 860px) {
   .vr-deck { grid-template-columns: 1fr; }
+  /* The activity title carries a control and a date range, so it needs two
+     lines here; every other section title is a single line and unaffected. */
+  .vr-section__title { flex-wrap: wrap; }
+  .vr-win__meta {
+    width: 100%;
+    margin-left: 0;
+  }
+  .vr-act-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+  .vr-act-tiles { width: 100%; }
+  .vr-act-tile:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
   .vr-row {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px 14px;
@@ -693,4 +1130,11 @@
   .vr-btn { justify-content: center; }
   .vr-status__item--end { margin-left: 0; }
   .vr-foot__social { margin-left: 0; }
+  .vr-win { flex-wrap: wrap; }
+  .vr-win-pop__fields { flex-direction: column; }
+  .vr-win-pop__actions { flex-direction: column; }
+  .vr-bars { height: 84px; }
+  .vr-act-hero__n { font-size: 2.8rem; }
+  .vr-idle { flex-wrap: wrap; }
+  .vr-idle a { margin-left: 0; }
 }

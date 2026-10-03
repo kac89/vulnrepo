@@ -180,6 +180,166 @@
       </div>
     </section>
 
+    <!-- B2 · ACTIVITY ───────────────────────────────────────────────
+         Tempo, not state: the status bar above says what exists, this says
+         what has been worked on. Counts come from records already written on
+         save — nothing new is collected, and nothing leaves the browser. -->
+    @if (activity) {
+      <section class="vr-section vr-section--tight">
+        <h2 class="vr-section__title">
+          <mat-icon>insights</mat-icon>
+          Your activity
+
+          <span class="vr-win" role="group" aria-label="Activity window">
+            @for (p of windowPresets; track p.value) {
+              <button type="button" class="vr-win__btn" [attr.aria-label]="p.aria"
+                [attr.aria-pressed]="windowPreset === p.value" (click)="setWindow(p.value)">
+                {{p.label}}
+              </button>
+            }
+            <button type="button" class="vr-win__btn vr-win__btn--custom" aria-haspopup="dialog"
+              [attr.aria-expanded]="pickerOpen" [attr.aria-pressed]="windowPreset === 'custom'"
+              (click)="setWindow('custom')">
+              {{windowPreset === 'custom' ? rangeLabel() : 'custom…'}}
+              <mat-icon>expand_more</mat-icon>
+            </button>
+          </span>
+
+          <span class="vr-win__meta">{{rangeLabel()}} · {{activity.reportsTouched}} of {{reportCount}} touched</span>
+        </h2>
+
+        <!-- Custom range. The presets live in the control above, so this pane
+             only holds what they cannot express. -->
+        @if (pickerOpen) {
+          <div class="vr-win-pop" role="dialog" aria-label="Custom activity window">
+            <div class="vr-win-pop__fields">
+              <div class="vr-fld">
+                <label for="vr-win-from">From</label>
+                <input id="vr-win-from" type="date" [value]="customFrom" [max]="todayInput()"
+                  (change)="onCustomFrom($any($event.target).value)">
+              </div>
+              <div class="vr-fld">
+                <label for="vr-win-to">To</label>
+                <input id="vr-win-to" type="date" [value]="customTo" [max]="todayInput()"
+                  (change)="onCustomTo($any($event.target).value)">
+              </div>
+            </div>
+
+            @if (customError) {
+              <p class="vr-win-pop__err" role="alert">{{customError}}</p>
+            }
+
+            <p class="vr-win-pop__hint">
+              <mat-icon>info_outline</mat-icon>
+              <span>
+                Saves are counted from report history. Purging history in
+                <a routerLink="/settings">Settings</a> trims older versions, so a long window can
+                miss days that have been cleaned up.
+              </span>
+            </p>
+
+            <div class="vr-win-pop__actions">
+              <button type="button" class="vr-btn vr-btn--primary" (click)="applyCustomWindow()">Apply window</button>
+              <button type="button" class="vr-btn vr-btn--outline" (click)="resetWindow()">Back to 30 days</button>
+            </div>
+          </div>
+        }
+
+        <!-- Headline figures -->
+        <div class="vr-act-head">
+          <div class="vr-act-hero">
+            <span class="vr-act-hero__n">{{activity.daysActive}}<small>/{{activity.days}}</small></span>
+            <span class="vr-act-hero__lbl">days active</span>
+          </div>
+          <div class="vr-act-tiles">
+            <div class="vr-act-tile">
+              <strong>{{activity.streak}}</strong>
+              <em>day streak</em>
+              <span>counted back from {{windowPreset === 'custom' ? 'the window end' : 'today'}}</span>
+            </div>
+            <div class="vr-act-tile">
+              <strong>{{activity.saves}}</strong>
+              <em>saves</em>
+              <span>on this device</span>
+            </div>
+            <div class="vr-act-tile">
+              <strong>{{activity.added.total}}</strong>
+              <em>findings added</em>
+              <span>{{activity.findingsOnActive}} on reports you touched</span>
+            </div>
+            <div class="vr-act-tile">
+              <strong>{{activity.newReports}}</strong>
+              <em>new reports</em>
+              <span>{{reportCount}} in total</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save rhythm. One scale, one hue: height and opacity both encode
+             saves, so colour never carries a second meaning here. -->
+        @if (activityLoading) {
+          <p class="vr-act-note">Reading report history…</p>
+        } @else if (!activity.historyAvailable) {
+          <p class="vr-act-note">
+            <mat-icon>info_outline</mat-icon>
+            No save history on this device yet — the figures above come from each report's
+            last-save time. History is written from now on, every time you save a report.
+          </p>
+        } @else {
+          <div class="vr-chart">
+            <span class="vr-chart__y vr-chart__y--top">{{activity.peakSaves}}</span>
+            <span class="vr-chart__y vr-chart__y--zero">0</span>
+            <div class="vr-chart__plot">
+              <div class="vr-chart__rule"></div>
+              <div class="vr-bars">
+                @for (b of activity.buckets; track b.start) {
+                  <span class="vr-bar" [class.vr-bar--zero]="b.saves === 0"
+                    [class.vr-bar--today]="b.today" [style.height.%]="b.height"
+                    [style.opacity]="b.fill" [title]="bucketTitle(b)"></span>
+                }
+              </div>
+              <div class="vr-chart__axis">
+                <span>{{activity.buckets[0]?.label}}</span>
+                <span class="vr-chart__grain">{{grainNote()}}</span>
+                <span class="vr-accent">{{windowPreset === 'custom' ? activity.buckets[activity.buckets.length - 1]?.label : 'today'}}</span>
+              </div>
+            </div>
+          </div>
+
+          @if (activity.added.total > 0) {
+            <div class="vr-added">
+              <span class="vr-added__lbl">findings added</span>
+              <span class="vr-stack">
+                @for (sev of sevOrder; track sev) {
+                  @if (addedCount(sev) > 0) {
+                    <b [class]="'vr-stack__seg vr-stack__seg--' + sev" [style.flex-grow]="addedCount(sev)"
+                      [title]="addedCount(sev) + ' ' + sev"></b>
+                  }
+                }
+              </span>
+              <span class="vr-added__legend">
+                @for (sev of sevOrder; track sev) {
+                  @if (addedCount(sev) > 0) {
+                    <span [class]="'vr-legend vr-legend--' + sev"><i></i><strong>{{addedCount(sev)}}</strong> {{sev}}</span>
+                  }
+                }
+              </span>
+            </div>
+          }
+        }
+
+        @if (idleCount > 0) {
+          <div class="vr-idle">
+            <mat-icon>schedule</mat-icon>
+            <span>
+              {{idleCount}} report{{idleCount === 1 ? '' : 's'}} with no save in the last {{idleDays}} days
+            </span>
+            <a routerLink="/my-reports">Review them</a>
+          </div>
+        }
+      </section>
+    }
+
     <!-- C · RECENT WORK -->
     <section class="vr-section vr-section--tight">
       <h2 class="vr-section__title">
