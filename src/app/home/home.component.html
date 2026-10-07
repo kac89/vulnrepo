@@ -180,7 +180,57 @@
       </div>
     </section>
 
-    <!-- B2 · ACTIVITY ───────────────────────────────────────────────
+    <!-- C · RECENT WORK -->
+    <section class="vr-section vr-section--tight">
+      <h2 class="vr-section__title">
+        <mat-icon>history</mat-icon>
+        Continue where you left off
+        <a class="vr-section__more" routerLink="/my-reports">All {{reportCount}} reports</a>
+      </h2>
+
+      <div class="vr-rows">
+        @for (r of recent; track rowKey(r)) {
+          <a class="vr-row" routerLink="/report/{{r.report_id}}/">
+            <span class="vr-row__name">
+              {{r.report_name}}@if (isRemote(r)) {<mat-icon class="vr-row__remote"
+                [title]="'Remote API: ' + (r.apiname || r.apiurl)">public</mat-icon>}
+              @if (hasStats(r)) {
+                <span>{{r.report_stats?.total || 0}} finding{{(r.report_stats?.total || 0) === 1 ? '' : 's'}}</span>
+              } @else if (isRemote(r)) {
+                <span>on {{r.apiname || r.apiurl}}</span>
+              } @else {
+                <span>0 findings</span>
+              }
+            </span>
+
+            @if (r.report_stats && r.report_stats.total > 0) {
+              <span class="vr-counts">
+                @for (sev of sevOrder; track sev) {
+                  @if (sevCount(r, sev) > 0) {
+                    <span class="vr-count" [class]="'vr-count--' + sev" [title]="sevCount(r, sev) + ' ' + sev">
+                      {{sevCount(r, sev)}}
+                    </span>
+                  }
+                }
+              </span>
+            } @else if (hasStats(r)) {
+              <span class="vr-counts vr-counts--empty">no findings yet</span>
+            } @else {
+              <span class="vr-counts vr-counts--empty" title="This server does not publish severity counts">counts n/a</span>
+            }
+
+            <span class="vr-row__when">{{relativeTime(r)}}</span>
+
+            <mat-icon class="vr-row__lock" [class.vr-row__lock--open]="isUnlocked(r.report_id)"
+              [title]="isUnlocked(r.report_id) ? 'Key held for this session' : 'Encrypted — key required'">
+              {{isUnlocked(r.report_id) ? 'lock_open' : 'lock'}}
+            </mat-icon>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- C2 · ACTIVITY ───────────────────────────────────────────────
          Tempo, not state: the status bar above says what exists, this says
          what has been worked on. Counts come from records already written on
          save — nothing new is collected, and nothing leaves the browser. -->
@@ -339,56 +389,6 @@
         }
       </section>
     }
-
-    <!-- C · RECENT WORK -->
-    <section class="vr-section vr-section--tight">
-      <h2 class="vr-section__title">
-        <mat-icon>history</mat-icon>
-        Continue where you left off
-        <a class="vr-section__more" routerLink="/my-reports">All {{reportCount}} reports</a>
-      </h2>
-
-      <div class="vr-rows">
-        @for (r of recent; track rowKey(r)) {
-          <a class="vr-row" routerLink="/report/{{r.report_id}}/">
-            <span class="vr-row__name">
-              {{r.report_name}}@if (isRemote(r)) {<mat-icon class="vr-row__remote"
-                [title]="'Remote API: ' + (r.apiname || r.apiurl)">public</mat-icon>}
-              @if (hasStats(r)) {
-                <span>{{r.report_stats?.total || 0}} finding{{(r.report_stats?.total || 0) === 1 ? '' : 's'}}</span>
-              } @else if (isRemote(r)) {
-                <span>on {{r.apiname || r.apiurl}}</span>
-              } @else {
-                <span>0 findings</span>
-              }
-            </span>
-
-            @if (r.report_stats && r.report_stats.total > 0) {
-              <span class="vr-counts">
-                @for (sev of sevOrder; track sev) {
-                  @if (sevCount(r, sev) > 0) {
-                    <span class="vr-count" [class]="'vr-count--' + sev" [title]="sevCount(r, sev) + ' ' + sev">
-                      {{sevCount(r, sev)}}
-                    </span>
-                  }
-                }
-              </span>
-            } @else if (hasStats(r)) {
-              <span class="vr-counts vr-counts--empty">no findings yet</span>
-            } @else {
-              <span class="vr-counts vr-counts--empty" title="This server does not publish severity counts">counts n/a</span>
-            }
-
-            <span class="vr-row__when">{{relativeTime(r)}}</span>
-
-            <mat-icon class="vr-row__lock" [class.vr-row__lock--open]="isUnlocked(r.report_id)"
-              [title]="isUnlocked(r.report_id) ? 'Key held for this session' : 'Encrypted — key required'">
-              {{isUnlocked(r.report_id) ? 'lock_open' : 'lock'}}
-            </mat-icon>
-          </a>
-        }
-      </div>
-    </section>
 
   }
 
