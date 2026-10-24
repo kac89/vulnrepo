@@ -1,0 +1,94 @@
+/* ============================================================================
+   SOLARIZED — Ethan Schoonover's precision palette, both modes.
+   Dark base03 ground / light base3 ground, shared accent hues.
+   ========================================================================== */
+
+:root {
+  --bg:      #002b36;  /* base03 */
+  --bg2:     #073642;  /* base02 */
+  --bg3:     #0a4552;
+  --bg4:     #0e5262;
+  --bg5:     #136073;
+  --border:  rgba(147, 161, 161, 0.14);
+  --border2: rgba(147, 161, 161, 0.24);
+  --border3: rgba(147, 161, 161, 0.40);
+  --text:    #fdf6e3;  /* base3 */
+  --text2:   #93a1a1;  /* base1 */
+  --text3:   #657b83;  /* base00 */
+  --accent:  #2aa198;  /* cyan */
+  --accent2: #268bd2;  /* blue */
+  --red:     #dc322f;
+  --orange:  #cb4b16;
+  --yellow:  #b58900;
+  --green:   #859900;
+  --blue:    #268bd2;
+  --r:       5px;
+  --r2:      8px;
+  --r3:      12px;
+}
+
+.light-mode {
+  --bg:      #fdf6e3;  /* base3 */
+  --bg2:     #fffbf0;
+  --bg3:     #eee8d5;  /* base2 */
+  --bg4:     #e3dcc6;
+  --bg5:     #d6cdb3;
+  --border:  rgba(0, 43, 54, 0.12);
+  --border2: rgba(0, 43, 54, 0.20);
+  --border3: rgba(0, 43, 54, 0.34);
+  --text:    #002b36;  /* base03 */
+  --text2:   #586e75;  /* base01 */
+  --text3:   #839496;  /* base0 */
+  --accent:  #1d7f78;
+  --accent2: #1f6f9e;
+  --red:     #c32b28;
+  --orange:  #b24213;
+  --yellow:  #8a6800;
+  --green:   #667500;
+  --blue:    #1f6f9e;
+}
+
+/* ── Accent-coupled details ──────────────────────────────────────────────── */
+.cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(42, 161, 152, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 161, 152, 0.055) 1px, transparent 1px);
+}
+.cover-glow { background: radial-gradient(circle, rgba(42, 161, 152, 0.10) 0%, transparent 70%); }
+#btn-back-to-top { color: #002b36; box-shadow: 0 4px 14px rgba(42, 161, 152, 0.35); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(42, 161, 152, 0.22) !important; }
+.light-mode .cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(29, 127, 120, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 127, 120, 0.06) 1px, transparent 1px);
+}
+.light-mode .cover-glow { background: radial-gradient(circle, rgba(29, 127, 120, 0.08) 0%, transparent 70%); }
+
+/* Severity tints realigned — Solarized green/red are far from the defaults */
+.sev-pill.sev-low, .label.Low, .label.low, .Low, .low,
+.fpill.fp-low.on, .s-fixed, .m-low {
+  background: rgba(133, 153, 0, 0.14) !important;
+  border-color: rgba(133, 153, 0, 0.30) !important;
+}
+.sev-pill.sev-critical, .label.Critical, .label.critical, .Critical, .critical,
+.fpill.fp-crit.on, .m-crit {
+  background: rgba(220, 50, 47, 0.14) !important;
+  border-color: rgba(220, 50, 47, 0.32) !important;
+}
+.sev-pill.sev-info, .label.Info, .label.info, .Info, .info,
+.fpill.fp-info.on, .m-info {
+  background: rgba(38, 139, 210, 0.13) !important;
+  border-color: rgba(38, 139, 210, 0.28) !important;
+}
+
+@media print {
+  :root, .light-mode {
+    --bg: #ffffff; --bg2: #ffffff; --bg3: #f4efdf; --bg4: #e9e3cf; --bg5: #ddd6bf;
+    --border: rgba(0,43,54,0.18); --border2: rgba(0,43,54,0.26); --border3: rgba(0,43,54,0.40);
+    --text: #002b36; --text2: #3f5458; --text3: #6b7f82;
+    --accent: #1a6f69; --accent2: #1a5e86;
+    --red: #b02623; --orange: #953710; --yellow: #705400; --green: #525e00; --blue: #1a5e86;
+  }
+  .cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+  .issue-card, .card, .summary-content { break-inside: avoid; }
+}

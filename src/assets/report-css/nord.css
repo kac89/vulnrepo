@@ -1,0 +1,104 @@
+/* ============================================================================
+   NORD — the arctic north-bluish palette. Cool, even-contrast, easy on long
+   reading sessions. Dark (Polar Night) + light (Snow Storm).
+   ========================================================================== */
+
+:root {
+  --bg:      #242933;
+  --bg2:     #2e3440;  /* nord0 */
+  --bg3:     #3b4252;  /* nord1 */
+  --bg4:     #434c5e;  /* nord2 */
+  --bg5:     #4c566a;  /* nord3 */
+  --border:  rgba(216, 222, 233, 0.10);
+  --border2: rgba(216, 222, 233, 0.18);
+  --border3: rgba(216, 222, 233, 0.32);
+  --text:    #eceff4;  /* nord6 */
+  --text2:   #a9b3c6;
+  --text3:   #74819b;
+  --accent:  #88c0d0;  /* nord8 */
+  --accent2: #5e81ac;  /* nord10 */
+  --red:     #bf616a;  /* nord11 */
+  --orange:  #d08770;  /* nord12 */
+  --yellow:  #ebcb8b;  /* nord13 */
+  --green:   #a3be8c;  /* nord14 */
+  --blue:    #81a1c1;  /* nord9 */
+  --r:       6px;
+  --r2:      10px;
+  --r3:      14px;
+}
+
+.light-mode {
+  --bg:      #eceff4;  /* nord6 */
+  --bg2:     #ffffff;
+  --bg3:     #e5e9f0;  /* nord5 */
+  --bg4:     #d8dee9;  /* nord4 */
+  --bg5:     #c3ccdb;
+  --border:  rgba(46, 52, 64, 0.11);
+  --border2: rgba(46, 52, 64, 0.18);
+  --border3: rgba(46, 52, 64, 0.32);
+  --text:    #2e3440;  /* nord0 */
+  --text2:   #4c566a;  /* nord3 */
+  --text3:   #7b869c;
+  --accent:  #3b7f94;
+  --accent2: #45698f;
+  --red:     #a8434d;
+  --orange:  #9c5637;
+  --yellow:  #7d6416;
+  --green:   #5b7344;
+  --blue:    #45698f;
+}
+
+/* ── Accent-coupled details ──────────────────────────────────────────────── */
+.cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(136, 192, 208, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(136, 192, 208, 0.055) 1px, transparent 1px);
+}
+.cover-glow { background: radial-gradient(circle, rgba(136, 192, 208, 0.10) 0%, transparent 70%); }
+#btn-back-to-top { color: #2e3440; box-shadow: 0 4px 14px rgba(94, 129, 172, 0.40); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(136, 192, 208, 0.25) !important; }
+.light-mode .cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(59, 127, 148, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 127, 148, 0.06) 1px, transparent 1px);
+}
+.light-mode .cover-glow { background: radial-gradient(circle, rgba(59, 127, 148, 0.08) 0%, transparent 70%); }
+
+/* Severity tints realigned — Nord's aurora hues are muted vs. the defaults */
+.sev-pill.sev-critical, .label.Critical, .label.critical, .Critical, .critical,
+.fpill.fp-crit.on, .m-crit {
+  background: rgba(191, 97, 106, 0.16) !important;
+  border-color: rgba(191, 97, 106, 0.34) !important;
+}
+.sev-pill.sev-high, .label.High, .label.high, .High, .high,
+.fpill.fp-high.on, .m-high {
+  background: rgba(208, 135, 112, 0.16) !important;
+  border-color: rgba(208, 135, 112, 0.34) !important;
+}
+.sev-pill.sev-medium, .label.Medium, .label.medium, .Medium, .medium,
+.fpill.fp-med.on, .m-med {
+  background: rgba(235, 203, 139, 0.15) !important;
+  border-color: rgba(235, 203, 139, 0.32) !important;
+}
+.sev-pill.sev-low, .label.Low, .label.low, .Low, .low,
+.fpill.fp-low.on, .s-fixed, .m-low {
+  background: rgba(163, 190, 140, 0.15) !important;
+  border-color: rgba(163, 190, 140, 0.32) !important;
+}
+.sev-pill.sev-info, .label.Info, .label.info, .Info, .info,
+.fpill.fp-info.on, .m-info {
+  background: rgba(129, 161, 193, 0.15) !important;
+  border-color: rgba(129, 161, 193, 0.32) !important;
+}
+
+@media print {
+  :root, .light-mode {
+    --bg: #ffffff; --bg2: #ffffff; --bg3: #f3f5f8; --bg4: #e8ecf2; --bg5: #dce2ea;
+    --border: rgba(46,52,64,0.18); --border2: rgba(46,52,64,0.26); --border3: rgba(46,52,64,0.40);
+    --text: #2e3440; --text2: #434c5e; --text3: #6b7489;
+    --accent: #2f6c80; --accent2: #3a5a7d;
+    --red: #93353f; --orange: #88482c; --yellow: #6a5412; --green: #4c6238; --blue: #3a5a7d;
+  }
+  .cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+  .issue-card, .card, .summary-content { break-inside: avoid; }
+}

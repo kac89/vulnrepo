@@ -1,0 +1,81 @@
+/* ============================================================================
+   SLATE — neutral graphite with an indigo accent. Quiet, modern, low-contrast
+   chrome that keeps attention on the findings. Dark + light.
+   ========================================================================== */
+
+:root {
+  --bg:      #101114;
+  --bg2:     #17181d;
+  --bg3:     #1e2026;
+  --bg4:     #282a32;
+  --bg5:     #33363f;
+  --border:  rgba(255, 255, 255, 0.07);
+  --border2: rgba(255, 255, 255, 0.13);
+  --border3: rgba(255, 255, 255, 0.24);
+  --text:    #eceef3;
+  --text2:   #9ba1ae;
+  --text3:   #64697a;
+  --accent:  #8b8cf7;
+  --accent2: #6d6ee8;
+  --red:     #f4566d;
+  --orange:  #f3873f;
+  --yellow:  #e8bb3c;
+  --green:   #45c98a;
+  --blue:    #5aa6f0;
+  --r:       6px;
+  --r2:      10px;
+  --r3:      14px;
+}
+
+.light-mode {
+  --bg:      #f6f7f9;
+  --bg2:     #ffffff;
+  --bg3:     #f0f1f4;
+  --bg4:     #e5e7ec;
+  --bg5:     #d6d9e0;
+  --border:  rgba(20, 22, 30, 0.09);
+  --border2: rgba(20, 22, 30, 0.15);
+  --border3: rgba(20, 22, 30, 0.27);
+  --text:    #15171e;
+  --text2:   #4b5160;
+  --text3:   #868d9d;
+  --accent:  #4f46d8;
+  --accent2: #3c34b8;
+  --red:     #cf2340;
+  --orange:  #ab5000;
+  --yellow:  #7d5e00;
+  --green:   #0f7a4d;
+  --blue:    #1e63c4;
+}
+
+/* ── Accent-coupled details ──────────────────────────────────────────────── */
+.cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(139, 140, 247, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 140, 247, 0.045) 1px, transparent 1px);
+}
+.cover-glow { background: radial-gradient(circle, rgba(139, 140, 247, 0.10) 0%, transparent 70%); }
+#btn-back-to-top { color: #fff; box-shadow: 0 4px 14px rgba(109, 110, 232, 0.38); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(139, 140, 247, 0.22) !important; }
+.light-mode .cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(79, 70, 216, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 70, 216, 0.055) 1px, transparent 1px);
+}
+.light-mode .cover-glow { background: radial-gradient(circle, rgba(79, 70, 216, 0.08) 0%, transparent 70%); }
+
+/* ── Softer surfaces ─────────────────────────────────────────────────────── */
+.issue-card, .card, .summary-content, .sidebar { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); }
+.light-mode .issue-card:hover { box-shadow: 0 2px 10px rgba(20, 22, 30, 0.07); }
+
+@media print {
+  :root, .light-mode {
+    --bg: #ffffff; --bg2: #ffffff; --bg3: #f4f5f7; --bg4: #eaebef; --bg5: #dfe1e6;
+    --border: rgba(0,0,0,0.16); --border2: rgba(0,0,0,0.24); --border3: rgba(0,0,0,0.38);
+    --text: #15171e; --text2: #353b49; --text3: #626a7a;
+    --accent: #3c34b8; --accent2: #2e2794;
+    --red: #b01d36; --orange: #8a4000; --yellow: #644b00; --green: #0b5f3c; --blue: #194fa0;
+  }
+  .cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+  .issue-card, .card, .summary-content { box-shadow: none; break-inside: avoid; }
+}

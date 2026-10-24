@@ -1,0 +1,87 @@
+/* ============================================================================
+   CORPORATE — navy + serif headings, built for client-facing deliverables.
+   Works in dark and light mode; designed to shine in light (topbar toggle).
+   ========================================================================== */
+
+/* ── Dark variant (no .light-mode class) ─────────────────────────────────── */
+:root {
+  --bg:      #0b1220;
+  --bg2:     #111a2c;
+  --bg3:     #16213a;
+  --bg4:     #1e2c49;
+  --bg5:     #27375a;
+  --border:  rgba(146, 180, 232, 0.09);
+  --border2: rgba(146, 180, 232, 0.17);
+  --border3: rgba(146, 180, 232, 0.30);
+  --text:    #e6edf8;
+  --text2:   #94a7c6;
+  --text3:   #5c729a;
+  --accent:  #5b9bf0;
+  --accent2: #3b7fd4;
+  --red:     #ff5f78;
+  --orange:  #ff8f4d;
+  --yellow:  #f2c544;
+  --green:   #3ddc97;
+  --blue:    #5b9bf0;
+  --display: Georgia, 'Times New Roman', 'Syne', serif;
+  --body:    'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --r:       4px;
+  --r2:      6px;
+  --r3:      10px;
+}
+
+/* ── Light variant ───────────────────────────────────────────────────────── */
+.light-mode {
+  --bg:      #f4f6f9;
+  --bg2:     #ffffff;
+  --bg3:     #eef2f7;
+  --bg4:     #e2e8f0;
+  --bg5:     #cfd8e3;
+  --border:  rgba(15, 35, 70, 0.10);
+  --border2: rgba(15, 35, 70, 0.17);
+  --border3: rgba(15, 35, 70, 0.30);
+  --text:    #0f2346;
+  --text2:   #42536b;
+  --text3:   #8696ad;
+  --accent:  #1b56a8;
+  --accent2: #14407e;
+  --red:     #c62742;
+  --orange:  #b65400;
+  --yellow:  #8a6500;
+  --green:   #16794a;
+  --blue:    #1b56a8;
+}
+
+/* ── Accent-coupled details the template hardcodes green ─────────────────── */
+.cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(91, 155, 240, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 155, 240, 0.05) 1px, transparent 1px);
+}
+.cover-glow { background: radial-gradient(circle, rgba(91, 155, 240, 0.09) 0%, transparent 70%); }
+#btn-back-to-top { color: #fff; box-shadow: 0 4px 14px rgba(27, 86, 168, 0.35); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(91, 155, 240, 0.20) !important; }
+.light-mode .cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(27, 86, 168, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 86, 168, 0.06) 1px, transparent 1px);
+}
+.light-mode .cover-glow { background: radial-gradient(circle, rgba(27, 86, 168, 0.07) 0%, transparent 70%); }
+
+/* ── Typographic character ───────────────────────────────────────────────── */
+.cover-title { letter-spacing: -0.015em; font-weight: 700; }
+.sec-lbl, .sb-name, .modal-title { letter-spacing: 0; }
+.summary-content, .ib-text { font-size: 13.5px; }
+
+/* ── Print: flip tokens light so a dark-mode read still prints clean ─────── */
+@media print {
+  :root, .light-mode {
+    --bg: #ffffff; --bg2: #ffffff; --bg3: #f5f7fa; --bg4: #eceff4; --bg5: #e0e5ec;
+    --border: rgba(0,0,0,0.16); --border2: rgba(0,0,0,0.24); --border3: rgba(0,0,0,0.38);
+    --text: #0d1b33; --text2: #2d3c54; --text3: #5e6e86;
+    --accent: #14407e; --accent2: #0e2f5e;
+    --red: #a81832; --orange: #8f4000; --yellow: #6b4e00; --green: #0f5d38; --blue: #14407e;
+  }
+  .cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+  .issue-card, .card, .summary-content { break-inside: avoid; }
+}

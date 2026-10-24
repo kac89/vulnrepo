@@ -1,9 +1,29 @@
+// ── Tokens ────────────────────────────────────────────────────────────────────
+:host {
+  --d-bg:      #1a1a1a;
+  --d-bg2:     #242424;
+  --d-bg3:     #2c2c2c;
+  --d-bg4:     #343434;
+  --d-line:    rgba(255, 255, 255, 0.08);
+  --d-line2:   rgba(255, 255, 255, 0.14);
+  --d-text:    #f5f5f5;
+  --d-text2:   #9e9e9e;
+  --d-text3:   #6b6b6b;
+  --d-accent:  #5b9bf0;
+  --d-danger:  #ef5350;
+  --d-warn:    #e0a33e;
+
+  display: block;
+  height: 100%;
+}
+
 // ── Shell ─────────────────────────────────────────────────────────────────────
 .css-shell {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #1a1a1a;
+  min-height: 0;
+  background: var(--d-bg);
   color: #e0e0e0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -13,9 +33,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: #242424;
+  gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--d-line);
+  background: var(--d-bg2);
   flex-shrink: 0;
 }
 
@@ -23,133 +44,577 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .css-avatar-logo {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   background: #424242;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 
   .logo-icon {
-    color: #9e9e9e;
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
+    color: var(--d-text2);
+    font-size: 21px;
+    width: 21px;
+    height: 21px;
   }
 }
 
 .css-header-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+  min-width: 0;
 }
 
 .css-title {
   font-size: 14px;
   font-weight: 600;
-  color: #f5f5f5;
+  color: var(--d-text);
   letter-spacing: 0.01em;
 }
 
 .css-subtitle {
   font-size: 11px;
   color: #757575;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .css-header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
-// ── Body ──────────────────────────────────────────────────────────────────────
+.dirty-flag {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--d-warn);
+  background: rgba(224, 163, 62, 0.12);
+  border: 1px solid rgba(224, 163, 62, 0.3);
+  border-radius: 5px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+// ── Body: two panes ───────────────────────────────────────────────────────────
 .css-body {
   flex: 1;
-  overflow-y: auto;
-  padding: 20px 20px 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  scrollbar-width: thin;
-  scrollbar-color: #424242 transparent;
-
-  &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: 0;
 }
 
-// ── Preset row ────────────────────────────────────────────────────────────────
-.preset-row {
+.pane {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// The pane itself does not scroll: the gallery takes the slack and scrolls
+// inside its own box, so the editor is always on screen at a usable size.
+.pane-edit {
+  padding: 16px 16px 12px;
+  gap: 14px;
+  overflow: hidden;
+  border-right: 1px solid var(--d-line);
+}
+
+.pane-preview {
+  padding: 16px 16px 10px;
+  gap: 10px;
+  background: #151515;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+// Gallery absorbs the leftover height and scrolls within it.
+.block-presets {
+  flex: 1 1 auto;
+  min-height: 108px;
+}
+
+// Collapsed, the editor is just its toggle row and the gallery keeps the
+// slack. Opened, it claims a fixed, comfortable writing area.
+.block-editor {
+  flex: 0 0 auto;
+  height: auto;
+
+  &.open { height: 268px; }
+}
+
+.block-head {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.preset-select {
-  font-size: 13px;
-  width: 220px;
-
-  ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
-}
-
-// ── Section label ─────────────────────────────────────────────────────────────
 .section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #616161;
+  color: #6f6f6f;
   white-space: nowrap;
 }
 
-// ── Editor block ──────────────────────────────────────────────────────────────
-.editor-block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-}
-
-.editor-label-row {
-  display: flex;
+.editor-toggle {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 3px 7px 3px 2px;
+  margin-left: -2px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: #6f6f6f;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: color .14s, background .14s;
+
+  &:hover { color: var(--d-text); background: var(--d-bg3); }
+  &:focus-visible { outline: 2px solid var(--d-accent); outline-offset: 1px; }
+
+  .chev {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: inherit;
+  }
+
+  .toggle-label { white-space: nowrap; }
 }
 
 .editor-label-icon {
-  font-size: 15px !important;
-  width: 15px !important;
-  height: 15px !important;
-  color: #616161;
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
 }
 
-.editor-field {
-  width: 100%;
+.block-hint {
+  font-size: 10px;
+  color: #5e8f5e;
+  letter-spacing: 0.04em;
 
-  textarea {
-    font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
-    font-size: 13px;
-    color: #e0e0e0;
-    line-height: 1.6;
-    resize: vertical;
+  &.edited { color: var(--d-warn); }
+}
+
+.editor-stats {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 10px;
+  color: var(--d-text3);
+}
+
+.head-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+// ── Preset gallery ────────────────────────────────────────────────────────────
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 7px;
+  overflow-y: auto;
+  align-content: start;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 5px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 3px; }
+}
+
+.preset-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 7px;
+  border-radius: 10px;
+  border: 1px solid var(--d-line);
+  background: var(--d-bg2);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: border-color .15s, background .15s, transform .12s;
+
+  &:hover:not(:disabled) {
+    background: var(--d-bg3);
+    border-color: var(--d-line2);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--d-accent);
+    outline-offset: 2px;
+  }
+
+  &.active {
+    border-color: var(--d-accent);
+    background: rgba(91, 155, 240, 0.09);
+  }
+
+  &:disabled { cursor: default; }
+  &.busy { opacity: .75; }
+
+  // Dim only the cards that are not the one loading.
+  &:disabled:not(.busy):not(.active) { opacity: .5; }
+}
+
+.swatch {
+  position: relative;
+  display: block;
+  height: 44px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 6px;
+}
+
+.swatch-panel {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.swatch-bar {
+  display: block;
+  height: 4px;
+  width: 42%;
+  border-radius: 2px;
+}
+
+.swatch-line {
+  display: block;
+  height: 3px;
+  width: 78%;
+  border-radius: 2px;
+  opacity: .55;
+
+  &.short { width: 52%; opacity: .32; }
+}
+
+.swatch-sev {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  display: flex;
+  gap: 3px;
+
+  i {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+}
+
+.preset-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.preset-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--d-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .check {
+    font-size: 13px !important;
+    width: 13px !important;
+    height: 13px !important;
+    color: var(--d-accent);
+    flex-shrink: 0;
+  }
+}
+
+.preset-support {
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--d-text3);
+
+  &.partial { color: #8a7a4e; }
+}
+
+.preset-spinner {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+// ── Inline confirm ────────────────────────────────────────────────────────────
+.inline-confirm {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  padding: 9px 11px;
+  border-radius: 9px;
+  border: 1px solid rgba(224, 163, 62, 0.32);
+  background: rgba(224, 163, 62, 0.09);
+}
+
+.confirm-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--d-warn);
+  flex-shrink: 0;
+}
+
+.confirm-text {
+  flex: 1;
+  min-width: 150px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #d9c9a6;
+
+  strong { color: var(--d-text); }
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 6px;
+}
+
+// ── Small buttons ─────────────────────────────────────────────────────────────
+.mini-btn {
+  height: 25px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--d-line2);
+  background: transparent;
+  color: var(--d-text2);
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background .14s, color .14s, border-color .14s;
+
+  &:hover:not(:disabled) {
+    background: var(--d-bg3);
+    color: var(--d-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--d-accent);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    opacity: .4;
+    cursor: default;
+  }
+
+  &.primary {
+    background: var(--d-accent);
+    border-color: var(--d-accent);
+    color: #0c1a2c;
+    font-weight: 600;
+
+    &:hover { background: #74aef5; color: #0c1a2c; }
+  }
+
+  &.ghost { border-color: transparent; }
+}
+
+// ── Editor ────────────────────────────────────────────────────────────────────
+.editor {
+  flex: 1;
+  width: 100%;
+  min-height: 170px;
+  resize: none;
+  padding: 11px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--d-line);
+  background: #121212;
+  color: #e0e0e0;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  tab-size: 2;
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a3a transparent;
+
+  &::placeholder { color: #4e4e4e; }
+
+  &:focus {
+    outline: none;
+    border-color: var(--d-accent);
+    box-shadow: 0 0 0 2px rgba(91, 155, 240, 0.16);
+  }
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 3px; }
+}
+
+.hint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #b9a371;
+
+  &.err { color: #e8958f; }
+
+  .hint-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+}
+
+.editor-foot {
+  min-height: 16px;
+}
+
+.kbd-hint {
+  font-size: 10.5px;
+  color: var(--d-text3);
+
+  b {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-weight: 600;
+    color: #8a8a8a;
+  }
+}
+
+// ── Preview ───────────────────────────────────────────────────────────────────
+.preview-head {
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  border: 1px solid var(--d-line2);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.seg {
+  padding: 4px 12px;
+  border: none;
+  background: transparent;
+  color: var(--d-text2);
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background .14s, color .14s;
+
+  &:hover { background: var(--d-bg3); color: var(--d-text); }
+  &:focus-visible { outline: 2px solid var(--d-accent); outline-offset: -2px; }
+
+  &.on {
+    background: var(--d-bg4);
+    color: var(--d-text);
+    font-weight: 600;
+  }
+}
+
+.preview-frame {
+  flex: 1;
+  min-height: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--d-line);
+  background: #0d0d0d;
+}
+
+.preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.preview-note {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--d-text3);
+  flex-shrink: 0;
 }
 
 // ── Footer ────────────────────────────────────────────────────────────────────
 .css-footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 12px 20px 16px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 18px 14px;
+  border-top: 1px solid var(--d-line);
+  background: var(--d-bg2);
   flex-shrink: 0;
+}
+
+.footer-left {
+  min-width: 0;
+}
+
+.cancel-prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #d9c9a6;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
 }
 
 .action-btn {
@@ -164,25 +629,47 @@
   font-family: inherit;
   cursor: pointer;
   border: none;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, opacity .15s;
+
+  &:focus-visible { outline: 2px solid var(--d-accent); outline-offset: 2px; }
 }
 
 .cancel-btn {
   background: transparent;
-  color: #757575;
-  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--d-text2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   &:hover {
-    background: rgba(255,255,255,0.05);
-    color: #9e9e9e;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--d-text);
   }
 }
 
-.save-btn {
-  background: #424242;
-  color: #f5f5f5;
+.danger-btn {
+  background: rgba(239, 83, 80, 0.14);
+  color: #ef9a9a;
+  border: 1px solid rgba(239, 83, 80, 0.4);
 
-  &:hover { background: #525252; }
+  &:hover { background: rgba(239, 83, 80, 0.22); color: #ffcdd2; }
+}
+
+.save-btn {
+  background: var(--vr-accent);
+  color: #0d0d0d;
+  font-weight: 600;
+  transition: box-shadow .15s, transform .1s, opacity .15s;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 4px 16px rgba(var(--vr-accent-rgb), 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) { transform: translateY(0); }
+
+  &:disabled {
+    opacity: .45;
+    cursor: default;
+  }
 
   .btn-icon {
     font-size: 16px !important;
@@ -213,7 +700,37 @@
     line-height: 18px !important;
   }
 
-  &:hover { color: #9e9e9e !important; }
+  &:hover { color: var(--d-text2) !important; }
 }
 
-.close-btn:hover { color: #ef5350 !important; }
+.close-btn:hover { color: var(--d-danger) !important; }
+
+// ── Narrow dialogs: stack the panes, preview below the editor ────────────────
+@media (max-width: 1000px) {
+  .css-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    overflow-y: auto;
+  }
+
+  // Rows must size to their content here. `.pane`'s `min-height: 0` -- needed
+  // for the side-by-side layout -- otherwise lets a row shrink below its
+  // content, and the editor spills out behind the preview below it.
+  .pane {
+    min-height: auto;
+  }
+
+  .pane-edit {
+    border-right: none;
+    border-bottom: 1px solid var(--d-line);
+    overflow: visible;
+    padding-bottom: 18px;
+  }
+
+  .block-presets { flex: 0 0 auto; min-height: 0; }
+  .preset-grid { overflow: visible; max-height: none; }
+  .block-editor { height: 240px; }
+
+  .preview-frame { height: 320px; flex: none; }
+  .preset-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+}

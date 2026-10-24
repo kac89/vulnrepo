@@ -1,0 +1,82 @@
+/* ============================================================================
+   CRIMSON — offensive-security red on near-black. Reads as an engagement
+   report rather than a dashboard. Dark + a light counterpart.
+   ========================================================================== */
+
+:root {
+  --bg:      #0a0708;
+  --bg2:     #130d0f;
+  --bg3:     #1b1215;
+  --bg4:     #251a1e;
+  --bg5:     #32232a;
+  --border:  rgba(255, 180, 190, 0.08);
+  --border2: rgba(255, 180, 190, 0.16);
+  --border3: rgba(255, 180, 190, 0.30);
+  --text:    #f6eaec;
+  --text2:   #b5959c;
+  --text3:   #79595f;
+  --accent:  #ff3355;
+  --accent2: #d41e3d;
+  --red:     #ff3355;
+  --orange:  #ff7a2f;
+  --yellow:  #ffc939;
+  --green:   #2fd98a;
+  --blue:    #5fa8ff;
+  --r:       5px;
+  --r2:      9px;
+  --r3:      13px;
+}
+
+.light-mode {
+  --bg:      #faf6f7;
+  --bg2:     #ffffff;
+  --bg3:     #f4eced;
+  --bg4:     #ebdfe1;
+  --bg5:     #dbc9cc;
+  --border:  rgba(60, 10, 20, 0.10);
+  --border2: rgba(60, 10, 20, 0.17);
+  --border3: rgba(60, 10, 20, 0.30);
+  --text:    #20090e;
+  --text2:   #5a4046;
+  --text3:   #94757c;
+  --accent:  #c20e2f;
+  --accent2: #9a0a25;
+  --red:     #c20e2f;
+  --orange:  #a84800;
+  --yellow:  #7d5a00;
+  --green:   #0d7049;
+  --blue:    #1c5fb8;
+}
+
+/* ── Accent-coupled details ──────────────────────────────────────────────── */
+.cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(255, 51, 85, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 51, 85, 0.05) 1px, transparent 1px);
+}
+.cover-glow { background: radial-gradient(circle, rgba(255, 51, 85, 0.10) 0%, transparent 70%); }
+#btn-back-to-top { color: #fff; box-shadow: 0 4px 16px rgba(255, 51, 85, 0.40); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(255, 51, 85, 0.22) !important; }
+.light-mode .cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(194, 14, 47, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(194, 14, 47, 0.055) 1px, transparent 1px);
+}
+.light-mode .cover-glow { background: radial-gradient(circle, rgba(194, 14, 47, 0.08) 0%, transparent 70%); }
+
+/* ── Character: the accent is also the Critical hue, so lean on weight ───── */
+.cover-title { font-weight: 800; }
+.sec-num, .sb-tag { color: var(--accent); }
+.topbar-accent { color: var(--accent); }
+
+@media print {
+  :root, .light-mode {
+    --bg: #ffffff; --bg2: #ffffff; --bg3: #f7f2f3; --bg4: #efe6e8; --bg5: #e3d6d9;
+    --border: rgba(0,0,0,0.16); --border2: rgba(0,0,0,0.24); --border3: rgba(0,0,0,0.38);
+    --text: #1b070b; --text2: #40282d; --text3: #6e5358;
+    --accent: #9a0a25; --accent2: #78071c;
+    --red: #9a0a25; --orange: #8a3b00; --yellow: #634800; --green: #0a5a3b; --blue: #164d94;
+  }
+  .cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+  .issue-card, .card, .summary-content { break-inside: avoid; }
+}

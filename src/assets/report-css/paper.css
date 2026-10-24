@@ -1,0 +1,67 @@
+/* ============================================================================
+   PAPER — grayscale serif, tuned for printing and PDF export. Locks to the
+   light look (the dark toggle is a deliberate no-op) and drops the decorative
+   cover chrome so page one reads as a title page.
+   ========================================================================== */
+
+:root, .light-mode {
+  --bg:      #ffffff;
+  --bg2:     #ffffff;
+  --bg3:     #f4f4f2;
+  --bg4:     #e9e9e6;
+  --bg5:     #dcdcd8;
+  --border:  rgba(0, 0, 0, 0.16);
+  --border2: rgba(0, 0, 0, 0.26);
+  --border3: rgba(0, 0, 0, 0.42);
+  --text:    #111111;
+  --text2:   #333333;
+  --text3:   #6a6a6a;
+  --accent:  #1a1a1a;
+  --accent2: #000000;
+  --red:     #a81228;
+  --orange:  #8a4300;
+  --yellow:  #6b5000;
+  --green:   #0d5c3a;
+  --blue:    #10418f;
+  --display: Georgia, 'Times New Roman', serif;
+  --body:    Georgia, 'Times New Roman', serif;
+  --r:       2px;
+  --r2:      3px;
+  --r3:      4px;
+}
+
+/* ── Strip the decorative cover ──────────────────────────────────────────── */
+.cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+.cover-page { min-height: auto; padding: 72px 40px 56px; border-bottom: 2px solid var(--text); }
+.cover-title { font-weight: 700; letter-spacing: -0.01em; }
+.cover-title .report_name { color: var(--text); }
+.cover-badge { background: transparent; border-color: var(--text3); color: var(--text2); }
+.pulse-dot { animation: none; background: var(--text2); }
+
+/* ── Print-first chrome ──────────────────────────────────────────────────── */
+#btn-back-to-top { color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.18) !important; }
+.topbar { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.issue-card, .card, .summary-content, .sidebar { box-shadow: none; }
+
+/* Readable body copy at print sizes */
+body { font-size: 14.5px; line-height: 1.7; }
+.ib-text, .summary-content { font-size: 14px; }
+.sec-lbl { font-size: 16px; }
+
+/* Severity stays legible without colour fills */
+.sev-pill, .label, .status-badge { background: transparent !important; font-weight: 700; }
+.sev-pill.sev-critical, .Critical, .critical { border-color: var(--red) !important; }
+.sev-pill.sev-high, .High, .high { border-color: var(--orange) !important; }
+.sev-pill.sev-medium, .Medium, .medium { border-color: var(--yellow) !important; }
+.sev-pill.sev-low, .Low, .low { border-color: var(--green) !important; }
+.sev-pill.sev-info, .Info, .info { border-color: var(--blue) !important; }
+
+@media print {
+  .topbar, .sidebar { display: none !important; }
+  .cover-page { min-height: auto; page-break-after: always; }
+  .issue-card, .card, .summary-content, .attach-card, .researcher-card { break-inside: avoid; }
+  .sec-div { break-after: avoid; }
+  pre, .code-block, .poc-snippet { break-inside: avoid; }
+  a { color: var(--text) !important; text-decoration: underline; }
+}

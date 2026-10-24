@@ -1,0 +1,105 @@
+/* ============================================================================
+   DRACULA — the classic purple/pink dark palette, plus a light counterpart
+   built from the same hues so the toggle stays coherent.
+   ========================================================================== */
+
+:root {
+  --bg:      #1a1b26;
+  --bg2:     #282a36;  /* dracula background */
+  --bg3:     #343746;
+  --bg4:     #44475a;  /* current line */
+  --bg5:     #565a72;
+  --border:  rgba(248, 248, 242, 0.09);
+  --border2: rgba(248, 248, 242, 0.17);
+  --border3: rgba(248, 248, 242, 0.30);
+  --text:    #f8f8f2;  /* foreground */
+  --text2:   #b3b8d4;
+  --text3:   #6272a4;  /* comment */
+  --accent:  #bd93f9;  /* purple */
+  --accent2: #9a6ef0;
+  --red:     #ff5555;
+  --orange:  #ffb86c;
+  --yellow:  #f1fa8c;
+  --green:   #50fa7b;
+  --blue:    #8be9fd;  /* cyan */
+  --r:       6px;
+  --r2:      10px;
+  --r3:      14px;
+}
+
+.light-mode {
+  --bg:      #f7f5fc;
+  --bg2:     #ffffff;
+  --bg3:     #f0ecf9;
+  --bg4:     #e4ddf4;
+  --bg5:     #d2c7e9;
+  --border:  rgba(40, 42, 54, 0.10);
+  --border2: rgba(40, 42, 54, 0.17);
+  --border3: rgba(40, 42, 54, 0.30);
+  --text:    #282a36;
+  --text2:   #4e5168;
+  --text3:   #8187a8;
+  --accent:  #7540d4;
+  --accent2: #5c2cb0;
+  --red:     #cc2a2a;
+  --orange:  #a65a00;
+  --yellow:  #6f7300;
+  --green:   #0f7a3d;
+  --blue:    #0d6f8a;
+}
+
+/* ── Accent-coupled details ──────────────────────────────────────────────── */
+.cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(189, 147, 249, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(189, 147, 249, 0.05) 1px, transparent 1px);
+}
+.cover-glow { background: radial-gradient(circle, rgba(189, 147, 249, 0.11) 0%, transparent 70%); }
+#btn-back-to-top { color: #282a36; box-shadow: 0 4px 16px rgba(189, 147, 249, 0.40); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(189, 147, 249, 0.25) !important; }
+.light-mode .cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(117, 64, 212, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(117, 64, 212, 0.055) 1px, transparent 1px);
+}
+.light-mode .cover-glow { background: radial-gradient(circle, rgba(117, 64, 212, 0.08) 0%, transparent 70%); }
+.light-mode #btn-back-to-top { color: #ffffff; box-shadow: 0 4px 16px rgba(117, 64, 212, 0.35); }
+
+/* Severity tints realigned to the Dracula hues */
+.sev-pill.sev-critical, .label.Critical, .label.critical, .Critical, .critical,
+.fpill.fp-crit.on, .m-crit {
+  background: rgba(255, 85, 85, 0.14) !important;
+  border-color: rgba(255, 85, 85, 0.32) !important;
+}
+.sev-pill.sev-high, .label.High, .label.high, .High, .high,
+.fpill.fp-high.on, .m-high {
+  background: rgba(255, 184, 108, 0.14) !important;
+  border-color: rgba(255, 184, 108, 0.32) !important;
+}
+.sev-pill.sev-medium, .label.Medium, .label.medium, .Medium, .medium,
+.fpill.fp-med.on, .m-med {
+  background: rgba(241, 250, 140, 0.13) !important;
+  border-color: rgba(241, 250, 140, 0.30) !important;
+}
+.sev-pill.sev-low, .label.Low, .label.low, .Low, .low,
+.fpill.fp-low.on, .s-fixed, .m-low {
+  background: rgba(80, 250, 123, 0.12) !important;
+  border-color: rgba(80, 250, 123, 0.28) !important;
+}
+.sev-pill.sev-info, .label.Info, .label.info, .Info, .info,
+.fpill.fp-info.on, .m-info {
+  background: rgba(139, 233, 253, 0.12) !important;
+  border-color: rgba(139, 233, 253, 0.28) !important;
+}
+
+@media print {
+  :root, .light-mode {
+    --bg: #ffffff; --bg2: #ffffff; --bg3: #f5f3fa; --bg4: #ebe6f5; --bg5: #ded6ee;
+    --border: rgba(40,42,54,0.18); --border2: rgba(40,42,54,0.26); --border3: rgba(40,42,54,0.40);
+    --text: #282a36; --text2: #3e4156; --text3: #676c8a;
+    --accent: #5c2cb0; --accent2: #45208a;
+    --red: #b02424; --orange: #8a4a00; --yellow: #5c5f00; --green: #0c6332; --blue: #0a5b72;
+  }
+  .cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+  .issue-card, .card, .summary-content { break-inside: avoid; }
+}

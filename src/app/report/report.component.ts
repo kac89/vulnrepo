@@ -2351,8 +2351,12 @@ Sample code here\n\
   addCustomcss(item) {
 
     const dialogRef = this.dialog.open(DialogReportcssComponent, {
-      width: '550px',
-      height: '450px',
+      width: '1120px',
+      maxWidth: '96vw',
+      height: '740px',
+      maxHeight: '92vh',
+      panelClass: 'reportcss-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       data: item
     });
 
