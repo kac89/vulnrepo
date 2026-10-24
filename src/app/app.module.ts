@@ -92,6 +92,7 @@ import { DialogOllamaSettingsComponent } from './dialog-ollama-settings/dialog-o
 import {MatSliderModule} from '@angular/material/slider';
 import { DialogMergeIssuesComponent } from './dialog-merge-issues/dialog-merge-issues.component';
 import { DialogReportHistoryComponent } from './dialog-report-history/dialog-report-history.component';
+import { DialogRestoreDraftComponent } from './dialog-restore-draft/dialog-restore-draft.component';
 import { DialogSpinnerComponent } from './dialog-spinner/dialog-spinner.component';
 import { BbListComponent } from './bb-list/bb-list.component';
 import { DialogImportAdvancedComponent } from './dialog-import-advanced/dialog-import-advanced.component';
@@ -143,6 +144,7 @@ import { MatStepperModule } from '@angular/material/stepper';
         DialogOllamaSettingsComponent,
         DialogMergeIssuesComponent,
         DialogReportHistoryComponent,
+        DialogRestoreDraftComponent,
         BbListComponent,
         DialogSpinnerComponent,
         DialogImportAdvancedComponent,

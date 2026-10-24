@@ -1,0 +1,204 @@
+::ng-deep .mat-mdc-dialog-container,
+::ng-deep .mat-mdc-dialog-surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+@keyframes shellIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);   }
+}
+
+.draft-shell {
+  display: flex;
+  flex-direction: column;
+  background: var(--vr-bg-raised);
+  color: var(--vr-text-secondary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-radius: 16px;
+  overflow: hidden;
+  min-width: 340px;
+  animation: shellIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.draft-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--vr-border);
+  background: var(--vr-bg-overlay);
+}
+
+.draft-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.draft-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--vr-accent-dim);
+  border: 1px solid var(--vr-border-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.draft-icon {
+  color: var(--vr-accent);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.draft-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.draft-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vr-text-strong);
+}
+
+.draft-subtitle {
+  font-size: 11px;
+  color: var(--vr-text-dim);
+}
+
+.draft-body {
+  padding: 20px !important;
+}
+
+.draft-text {
+  font-size: 14px;
+  color: var(--vr-text-secondary);
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.draft-compare {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.draft-compare-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius-sm);
+  background: var(--vr-bg-card-2);
+}
+
+.draft-compare-col--draft {
+  border-color: var(--vr-border-hover);
+  background: var(--vr-accent-glow);
+}
+
+.draft-compare-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vr-text-muted);
+}
+
+.draft-compare-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vr-text-strong);
+}
+
+.draft-compare-col--draft .draft-compare-value {
+  color: var(--vr-accent);
+}
+
+.draft-compare-arrow {
+  align-self: center;
+  color: var(--vr-text-disabled);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.draft-note {
+  font-size: 12px;
+  color: var(--vr-text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.draft-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--vr-border);
+  background: var(--vr-bg-card-2);
+}
+
+.btn-discard {
+  background: transparent;
+  border: 1px solid var(--vr-border-strong);
+  border-radius: 8px;
+  color: var(--vr-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--vr-bg-overlay);
+    color: var(--vr-text-strong);
+  }
+}
+
+.btn-restore {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--vr-accent);
+  border: none;
+  border-radius: 8px;
+  color: #0d0d0d;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.1s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(var(--vr-accent-rgb), 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active { transform: translateY(0); }
+}
+
+.btn-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draft-shell { animation: none; }
+  .btn-restore:hover { transform: none; }
+}
