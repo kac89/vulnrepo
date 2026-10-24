@@ -925,6 +925,7 @@ mat-toolbar.app-navbar {
 .ollama-dialog-panel .mat-mdc-dialog-surface,
 .ollama-settings-dialog-panel .mat-mdc-dialog-surface,
 .addissue-dialog-panel .mat-mdc-dialog-surface,
+.reportcss-dialog-panel .mat-mdc-dialog-surface,
 .cvss-dialog-panel .mat-mdc-dialog-surface,
 .about-dialog-panel .mat-mdc-dialog-surface,
 .integrity-dialog-panel .mat-mdc-dialog-surface,
@@ -955,6 +956,25 @@ mat-toolbar.app-navbar {
     width: 100% !important;
   }
 
+  .mat-mdc-dialog-surface { padding: 0 !important; }
+}
+
+// ── Report CSS dialog — editor beside a live preview, so it needs the width ──
+.reportcss-dialog-panel {
+  --mat-dialog-container-max-width: none;
+  --mat-dialog-container-small-max-width: none;
+  max-width: none !important;
+
+  .mat-mdc-dialog-container,
+  .mat-mdc-dialog-inner-container,
+  .mat-mdc-dialog-surface,
+  .mdc-dialog__container,
+  .mdc-dialog__surface {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  // The dialog paints its own header, panes and footer edge to edge.
   .mat-mdc-dialog-surface { padding: 0 !important; }
 }
 

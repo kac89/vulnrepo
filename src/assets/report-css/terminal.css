@@ -1,0 +1,74 @@
+/* ============================================================================
+   TERMINAL — phosphor green on black, monospace everywhere, zero radius.
+   Locks to the dark look: the light toggle is intentionally a no-op, since a
+   CRT theme has no sensible light counterpart.
+   ========================================================================== */
+
+:root, .light-mode {
+  --bg:      #000000;
+  --bg2:     #070a07;
+  --bg3:     #0c110c;
+  --bg4:     #121a12;
+  --bg5:     #1a251a;
+  --border:  rgba(51, 255, 102, 0.12);
+  --border2: rgba(51, 255, 102, 0.22);
+  --border3: rgba(51, 255, 102, 0.40);
+  --text:    #c8ffd4;
+  --text2:   #5fd97f;
+  --text3:   #2f8f4a;
+  --accent:  #33ff66;
+  --accent2: #16c943;
+  --red:     #ff3b4e;
+  --orange:  #ff9a3c;
+  --yellow:  #ffe14d;
+  --green:   #33ff66;
+  --blue:    #46d8ff;
+  --display: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  --body:    'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  --r:       0px;
+  --r2:      0px;
+  --r3:      0px;
+}
+
+/* ── Accent-coupled details ──────────────────────────────────────────────── */
+.cover-bg-grid {
+  background-image:
+    linear-gradient(rgba(51, 255, 102, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 255, 102, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.cover-glow { background: radial-gradient(circle, rgba(51, 255, 102, 0.09) 0%, transparent 70%); }
+#btn-back-to-top { color: #000; box-shadow: 0 0 14px rgba(51, 255, 102, 0.45); }
+.form-control:focus { box-shadow: 0 0 0 2px rgba(51, 255, 102, 0.25) !important; }
+
+/* ── Terminal character ──────────────────────────────────────────────────── */
+body { letter-spacing: 0.01em; }
+.cover-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-shadow: 0 0 18px rgba(51, 255, 102, 0.28);
+}
+.cover-title .report_name::before { content: '> '; }
+.sec-lbl { text-transform: uppercase; letter-spacing: 0.07em; font-size: 14px; }
+.issue-title { font-size: 12.5px; }
+.sb-sev-track, .sev-bar-wrap { border-radius: 0; }
+
+/* Severity tints realigned to the phosphor palette */
+.sev-pill.sev-low, .label.Low, .label.low, .Low, .low,
+.fpill.fp-low.on, .s-fixed, .m-low {
+  background: rgba(51, 255, 102, 0.10) !important;
+  border-color: rgba(51, 255, 102, 0.24) !important;
+}
+
+@media print {
+  :root, .light-mode {
+    --bg: #ffffff; --bg2: #ffffff; --bg3: #f2f4f2; --bg4: #e7eae7; --bg5: #dadeda;
+    --border: rgba(0,0,0,0.18); --border2: rgba(0,0,0,0.26); --border3: rgba(0,0,0,0.40);
+    --text: #0a140c; --text2: #2c3a2f; --text3: #5c6a5f;
+    --accent: #0a6b2a; --accent2: #075020;
+    --red: #a81828; --orange: #8a4300; --yellow: #5f4a00; --green: #0a6b2a; --blue: #0f4f7a;
+  }
+  .cover-title { text-shadow: none; }
+  .cover-bg-grid, .cover-glow, .cover-scroll-hint { display: none !important; }
+  .issue-card, .card, .summary-content { break-inside: avoid; }
+}

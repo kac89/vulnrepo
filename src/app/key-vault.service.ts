@@ -38,6 +38,8 @@ export class KeyVaultService implements OnDestroy {
   private warningSubject = new Subject<boolean>();
   public readonly warning$: Observable<boolean> = this.warningSubject.asObservable();
 
+  private prelockHandlers = new Set<() => void>();
+
   constructor() {
     if (this.mode === 'session') {
       this.restoreFromSession();
@@ -105,6 +107,26 @@ export class KeyVaultService implements OnDestroy {
   // Public alias for resetIdle so UI ("Stay unlocked") can extend the session.
   extendSession(): void {
     this.resetIdle();
+  }
+
+  /**
+   * Register a callback run synchronously immediately *before* the vault wipes
+   * its keys, so a holder of decrypted data gets one last chance to stash it.
+   *
+   * A handler must read the key it needs (get()/getApiVault()) and serialise
+   * what it is stashing inside the callback itself; it may then finish the work
+   * asynchronously from those locals, which outlive the wipe. This is the only
+   * window in which unsaved plaintext can still be re-encrypted.
+   *
+   * Best-effort on 'pagehide'/'beforeunload': the handler runs, but the page is
+   * gone before a 600k-iteration derive can finish. Callers that care about
+   * tab-close must also stash on a timer, not only here.
+   *
+   * Returns an unregister function.
+   */
+  onBeforeLock(handler: () => void): () => void {
+    this.prelockHandlers.add(handler);
+    return () => { this.prelockHandlers.delete(handler); };
   }
 
   set(reportId: string, password: string): void {
@@ -220,8 +242,21 @@ export class KeyVaultService implements OnDestroy {
     this.cancelTimers();
     this.dismissWarning();
     if (this.keys.size === 0 && this.apiVault === null) return;
+    // Last chance for holders of decrypted data to stash it — keys are still
+    // readable for the duration of these callbacks. A throwing handler must
+    // never be able to keep the vault unlocked.
+    for (const handler of this.prelockHandlers) {
+      try {
+        handler();
+      } catch (err) {
+        console.log('pre-lock handler failed', err);
+      }
+    }
     this.keys.clear();
     this.apiVault = null;
+    // A handler's get() call runs through resetIdle() and re-arms the timers;
+    // drop them again now that there is nothing left to lock.
+    this.cancelTimers();
     this.changeSubject.next(null);
     this.idleResetAtSubject.next(null);
   };

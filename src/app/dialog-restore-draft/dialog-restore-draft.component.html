@@ -1,0 +1,45 @@
+<div class="draft-shell">
+
+  <div class="draft-header">
+    <div class="draft-header-left">
+      <div class="draft-icon-wrap">
+        <mat-icon class="draft-icon">restore_page</mat-icon>
+      </div>
+      <div class="draft-header-text">
+        <span class="draft-title">Unreleased draft found</span>
+        <span class="draft-subtitle">Saved {{savedAt | date:'medium'}}</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-dialog-content class="draft-body">
+    <p class="draft-text">
+      This report has edits that were never released as a version — stashed
+      encrypted when the vault locked or the tab closed.
+    </p>
+    <div class="draft-compare">
+      <div class="draft-compare-col">
+        <span class="draft-compare-label">Stored</span>
+        <span class="draft-compare-value">v{{reportVersion}}</span>
+      </div>
+      <mat-icon class="draft-compare-arrow">arrow_forward</mat-icon>
+      <div class="draft-compare-col draft-compare-col--draft">
+        <span class="draft-compare-label">Draft</span>
+        <span class="draft-compare-value">{{savedAt | date:'short'}}</span>
+      </div>
+    </div>
+    <p class="draft-note">
+      Restoring loads the draft as unsaved changes. Nothing is released until you
+      save the report.
+    </p>
+  </mat-dialog-content>
+
+  <div class="draft-actions">
+    <button class="btn-discard" (click)="discard()">Discard draft</button>
+    <button class="btn-restore" (click)="restore()">
+      <mat-icon class="btn-icon">restore_page</mat-icon>
+      Restore draft
+    </button>
+  </div>
+
+</div>

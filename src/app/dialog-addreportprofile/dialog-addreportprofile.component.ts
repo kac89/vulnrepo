@@ -194,7 +194,12 @@ export class DialogAddreportprofileComponent implements OnInit {
   OpenDialogCSS(): void {
 
     const dialogRef = this.dialog.open(DialogReportcssComponent, {
-      width: '600px',
+      width: '1120px',
+      maxWidth: '96vw',
+      height: '740px',
+      maxHeight: '92vh',
+      panelClass: 'reportcss-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       disableClose: true,
       data: this.report_css.value
     });

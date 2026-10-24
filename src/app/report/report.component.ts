@@ -37,6 +37,8 @@ import { DatePipe } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
 import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/dialog-add-custom-template.component';
 import { DialogEncryptReportComponent } from '../dialog-encrypt-report/dialog-encrypt-report.component';
+import { DialogRestoreDraftComponent } from '../dialog-restore-draft/dialog-restore-draft.component';
+import { DraftService, DraftRecord } from '../draft.service';
 import { PageEvent } from '@angular/material/paginator';
 import { DialogEditorFullscreenComponent } from '../dialog-editor-fullscreen/dialog-editor-fullscreen.component';
 import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-attach-preview.component';
@@ -147,6 +149,14 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
   decryptedReportData: any;
   decryptedReportDataChanged: any;
   lastSavedSnapshot: any = null;
+  // Encrypted-draft recovery (see DraftService). draftSavedAt drives the
+  // "Draft saved HH:mm" hint next to the version badge; it is recovery state,
+  // deliberately separate from report_version, which only a release moves.
+  draftSavedAt: number | null = null;
+  private draftTimer: number | null = null;
+  private draftCheckPending = false;
+  private unregisterPrelock: (() => void) | null = null;
+  private readonly draftDebounceMs = 10000;
   setLocal = 'en-GB';  //dd/MM/yyyy
   subscription: Subscription;
   displayedSeverityColumns: string[] = ['severity', 'count'];
@@ -687,7 +697,11 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     private currentdateService: CurrentdateService,
     private issueFilterService: IssueFilterService,
     private cryptoUtils: CryptoUtilsService,
+    private draftService: DraftService,
     private keyVault: KeyVaultService) {
+
+    // Stash unsaved work before the vault wipes the key it is encrypted with.
+    this.unregisterPrelock = this.keyVault.onBeforeLock(() => this.flushDraft());
     //console.log(route);
     this.subscription = this.messageService.getDecrypted().subscribe(message => {
       this.decryptedReportData = message;
@@ -749,21 +763,34 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
       setTimeout(() => this.dataSource.sort = this.sort);
       setTimeout(() => this.dataSource.paginator = this.paginator2);
 
+      // Only on the first unlock of this report. The same subscription also
+      // fires for a re-auth mid-save and for discardChanges' reload, where
+      // offering a draft would interrupt or contradict what the user just did.
+      if (this.draftCheckPending) {
+        this.draftCheckPending = false;
+        this.checkForDraft();
+      }
+
     });
 
-    // When the vault is cleared (auto-lock or tab hidden) and the report has no
-    // unsaved changes, immediately flip back to the encrypted/locked state.
+    // When the vault is cleared (auto-lock or tab hidden), flip back to the
+    // encrypted/locked state. Unsaved changes no longer defer this: the
+    // pre-lock handler above has already stashed them as an encrypted draft,
+    // which the user is offered on re-unlock.
     this.vaultSub = this.keyVault.change$.subscribe(changedId => {
       const affectsThisReport = changedId === null || changedId === this.report_id;
       if (!affectsThisReport) return;
       if (!this.decryptedReportDataChanged) return;
-      if (this.youhaveunsavedchanges) return;
       if (this.report_id && this.keyVault.has(this.report_id)) return;
 
       this.decryptedReportData = null;
       this.decryptedReportDataChanged = null;
       this.report_decryption_in_progress = false;
-      this.removeSureYouWanttoLeave();
+      // keepDraft: the stash is the whole point of locking while dirty.
+      this.removeSureYouWanttoLeave(true);
+      // Re-locking does not re-route, so arm the draft check by hand — the
+      // dialog below is an unlock, and an unlock is when a draft is offered.
+      this.draftCheckPending = true;
       this.indexeddbService.updateEncStatus(false);
       // Re-show the password dialog so the user can re-enter their key,
       // same as on first page load (setTimeout avoids ExpressionChangedAfterItHasBeenCheckedError).
@@ -789,6 +816,8 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
           this.report_decryption_in_progress = true;
           this.report_id = routeParams.report_id;
           this.youhaveunsavedchanges = false;
+          this.draftCheckPending = true;
+          this.draftSavedAt = null;
           this.lastsavereportdata = '';
           this.savemsg = '';
           // check if report exist
@@ -993,6 +1022,9 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.youhaveunsavedchanges == true) {
       const confirmed = confirm("You have unsaved changes, Do you really want to leave?");
       if (confirmed) {
+        // Stash before clearing the flag — flushDraft() reads it as the
+        // "there is something worth stashing" test.
+        this.flushDraft();
         this.youhaveunsavedchanges = false;
         this.indexeddbService.updatechangesStatus(false);
       }
@@ -1119,11 +1151,19 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     this.youhaveunsavedchanges = true;
     this.stickyBarVisible = true;
 
+    this.scheduleDraftSave();
+
     this.indexeddbService.updatechangesStatus(true);
 
   }
 
-  removeSureYouWanttoLeave() {
+  /**
+   * @param keepDraft leave the encrypted draft in place. Only the vault-lock
+   * path sets this: there the report is being locked *with* unsaved changes, and
+   * the draft is the recovery copy. Every other caller means the report is now
+   * clean — released or discarded — so the draft is obsolete.
+   */
+  removeSureYouWanttoLeave(keepDraft = false) {
     window.removeEventListener('beforeunload', this.callListener, true);
     this.youhaveunsavedchanges = false;
     this.stickyBarVisible = false;
@@ -1131,6 +1171,11 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     while (id--) {
       window.clearTimeout(id); // will do nothing if no timeout with id is present
     }
+    // The loop above clears every pending timeout in the window, this
+    // component's draft debounce included — drop the stale handle so the next
+    // edit can schedule a fresh one.
+    this.draftTimer = null;
+    if (!keepDraft) this.discardDraft();
     this.indexeddbService.updatechangesStatus(false);
   }
 
@@ -2306,8 +2351,12 @@ Sample code here\n\
   addCustomcss(item) {
 
     const dialogRef = this.dialog.open(DialogReportcssComponent, {
-      width: '550px',
-      height: '450px',
+      width: '1120px',
+      maxWidth: '96vw',
+      height: '740px',
+      maxHeight: '92vh',
+      panelClass: 'reportcss-dialog-panel',
+      backdropClass: 'vr-blur-backdrop',
       data: item
     });
 
@@ -2413,6 +2462,14 @@ Sample code here\n\
     });
   }
   ngOnDestroy() {
+    // Last stash for teardowns that skip canDeactivate (a locked report being
+    // replaced, a parent route disposing this view).
+    this.flushDraft();
+    this.cancelDraftSave();
+    if (this.unregisterPrelock) {
+      this.unregisterPrelock();
+      this.unregisterPrelock = null;
+    }
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
     if (this.vaultSub) this.vaultSub.unsubscribe();
@@ -2497,6 +2554,46 @@ Sample code here\n\
     this.doStats();
   }
 
+  /**
+   * Prepare custom CSS for splicing into the export template's <style> block.
+   *
+   * DOMPurify is the wrong tool here and used to be what this did. It is an
+   * HTML sanitiser, so against a stylesheet it both under- and over-reaches:
+   * it happily returns the one sequence that matters in this context —
+   * '</style', which ends the raw-text element early and lets the rest of the
+   * value be parsed as markup — while HTML-encoding '<', which silently breaks
+   * valid CSS such as '@media (width < 600px)'.
+   *
+   * Neutralising the terminator is what this context actually needs. '<\/style'
+   * is not an end tag to the HTML parser, and the backslash is a no-op CSS
+   * escape, so a legitimate stylesheet is unchanged.
+   *
+   * Note this is containment, not trust: custom CSS can still style the report
+   * however it likes, including loading remote urls. It travels in report
+   * settings profiles, so treat an imported profile's CSS as untrusted content.
+   */
+  private sanitizeReportCss(css: string): string {
+    return String(css ?? '').replace(/<\/(style)/gi, '<\\/$1');
+  }
+
+  /**
+   * Normalise an uploaded file's name or MIME type for storage.
+   *
+   * This used to be DOMPurify.sanitize(), which is an HTML sanitiser: it left
+   * quotes untouched (the characters that break an HTML attribute) while
+   * eating anything that looked like a tag, so 'report<1>.txt' was stored as
+   * 'report.txt'. Renderers are responsible for escaping — this is just
+   * defence in depth, keeping markup characters out of a display name.
+   */
+  private sanitizeFilename(value: any): string {
+    return String(value ?? '')
+      // eslint-disable-next-line no-control-regex
+      .replace(/[\x00-\x1f\x7f]/g, '')
+      .replace(/["'<>]/g, '')
+      .trim()
+      .slice(0, 512);
+  }
+
   private snapshotForSave(): void {
     if (this.decryptedReportDataChanged) {
       try {
@@ -2505,6 +2602,143 @@ Sample code here\n\
         this.lastSavedSnapshot = null;
       }
     }
+  }
+
+  // ── Encrypted draft recovery (DraftService) ─────────────────────────────────
+  // Unsaved edits are stashed as an AES-GCM blob under the report's own
+  // in-memory key, so the vault can auto-lock without taking them with it and a
+  // closed tab is survivable. A draft is recovery only: releasing a version
+  // stays an explicit, user-driven save.
+
+  // Trailing-edge throttle: the first edit arms the timer, later edits ride it,
+  // so a long typing run costs one encrypt rather than one per keystroke.
+  private scheduleDraftSave(): void {
+    if (this.draftTimer !== null) return;
+    this.draftTimer = window.setTimeout(() => {
+      this.draftTimer = null;
+      this.flushDraft();
+    }, this.draftDebounceMs);
+  }
+
+  private cancelDraftSave(): void {
+    if (this.draftTimer !== null) {
+      window.clearTimeout(this.draftTimer);
+      this.draftTimer = null;
+    }
+  }
+
+  /**
+   * Write the draft now. Runs on the debounce, on route-leave, and from the
+   * vault's pre-lock hook — so the key read and the serialisation must both
+   * happen synchronously, before the vault wipe that may follow this call. Only
+   * the encrypt and the IndexedDB write are allowed to be async, working from
+   * locals that outlive the wipe.
+   */
+  private flushDraft(): void {
+    if (!this.report_id) return;
+    if (!this.youhaveunsavedchanges) return;
+    if (!this.decryptedReportDataChanged) return;
+
+    const reportId = this.report_id;
+    const pass = this.keyVault.get(reportId);
+    if (pass === null) return;
+
+    const version = this.decryptedReportDataChanged.report_version ?? 0;
+    let plaintext: string;
+    try {
+      plaintext = JSON.stringify(this.decryptedReportDataChanged);
+    } catch (err) {
+      console.log('draft serialise failed', err);
+      return;
+    }
+
+    this.draftService.save(reportId, version, plaintext, pass)
+      .then(savedAt => { this.draftSavedAt = savedAt; })
+      .catch(err => console.log('draft stash failed', err));
+  }
+
+  private discardDraft(): void {
+    this.draftSavedAt = null;
+    if (!this.report_id) return;
+    this.draftService.remove(this.report_id).catch(err => console.log('draft delete failed', err));
+  }
+
+  /** On unlock, offer any draft that is still ahead of the stored report. */
+  private checkForDraft(): void {
+    if (!this.report_id) return;
+    const reportId = this.report_id;
+
+    if (this.youhaveunsavedchanges) return;
+
+    this.draftService.get(reportId).then(draft => {
+      if (!draft) return;
+      if (this.report_id !== reportId) return;  // navigated away while reading
+      // Guard against a report that moved on since the stash: another tab or an
+      // import released a newer version, so restoring would roll it back.
+      const storedVersion = this.decryptedReportDataChanged?.report_version ?? 0;
+      if (draft.report_version < storedVersion) {
+        this.draftService.remove(reportId).catch(() => { });
+        return;
+      }
+      setTimeout(() => this.openDraftDialog(draft, storedVersion));
+    }).catch(err => console.log('draft lookup failed', err));
+  }
+
+  private openDraftDialog(draft: DraftRecord, storedVersion: number): void {
+    const dialogRef = this.dialog.open(DialogRestoreDraftComponent, {
+      width: '90vw',
+      maxWidth: '460px',
+      disableClose: true,
+      data: { saved_at: draft.saved_at, report_version: storedVersion },
+      panelClass: 'dark-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result !== 'restore') {
+        this.discardDraft();
+        return;
+      }
+
+      const pass = this.keyVault.get(draft.report_id);
+      if (pass === null) return;
+
+      const restored = await this.draftService.open(draft, pass);
+      if (!restored) {
+        // This key just opened the report, so it is the current one. A draft it
+        // cannot open was written under a key since replaced and can never be
+        // read again — drop it instead of re-offering it on every unlock.
+        this.discardDraft();
+        this.snackBar.open('Draft was written under a previous security key and cannot be opened. It has been removed.', 'OK', {
+          duration: 6000,
+          panelClass: ['notify-snackbar-fail']
+        });
+        return;
+      }
+
+      this.decryptedReportData = restored;
+      this.decryptedReportDataChanged = restored;
+      if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+        this.decryptedReportDataChanged.report_assets = [];
+      }
+      this.adv_html = this.decryptedReportDataChanged.report_settings.report_html;
+      this.advlogo_saved = this.decryptedReportDataChanged.report_settings.report_logo.logo;
+
+      this.issesTable = new MatTableDataSource(this.decryptedReportDataChanged.report_vulns);
+      this.issesTable.paginator = this.paginator;
+      this.selectedResult = this.decryptedReportDataChanged.report_vulns.slice(0, this.pageSize);
+
+      // Rebuild the differs against the restored object, then mark it dirty:
+      // a restored draft is unreleased work by definition.
+      this.afterDetectionNow();
+      this.doStats();
+      this.draftSavedAt = draft.saved_at;
+      this.sureYouWanttoLeave();
+
+      this.snackBar.open('Draft restored — save the report to release it as a version.', 'OK', {
+        duration: 4000,
+        panelClass: ['notify-snackbar-success']
+      });
+    });
   }
 
   private buildSaveDiff(): string {
@@ -3566,7 +3800,10 @@ Info       | ${sevCounts.Info}\n\n`;
     this.http.get('/assets/html_report_v3_template.html?v=' + new Date(), { responseType: 'text' }).subscribe(res => {
 
       if (this.decryptedReportDataChanged.report_settings.report_css !== '') {
-        res = res.replace("/*[CSS_Injection_here]*/", DOMPurify.sanitize(this.decryptedReportDataChanged.report_settings.report_css))
+        const safeCss = this.sanitizeReportCss(this.decryptedReportDataChanged.report_settings.report_css);
+        // Replacer function, not a replacement string: a literal would let a
+        // '$&' in the stylesheet expand to the matched placeholder.
+        res = res.replace("/*[CSS_Injection_here]*/", () => safeCss);
       }
 
 
@@ -3641,7 +3878,7 @@ Info       | ${sevCounts.Info}\n\n`;
     this.upload_in_progress = false;
     const linkprev = data;
     // tslint:disable-next-line:max-line-length
-    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': DOMPurify.sanitize(name), 'type': DOMPurify.sanitize(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
+    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': this.sanitizeFilename(name), 'type': this.sanitizeFilename(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
     this.afterDetectionNow();
 
   }
@@ -3713,8 +3950,8 @@ Info       | ${sevCounts.Info}\n\n`;
     this.uploadlogoprev = linkprev;
     this.advlogo = linkprev;
     this.decryptedReportDataChanged.report_settings.report_logo.logo = this.advlogo;
-    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = DOMPurify.sanitize(name);
-    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = DOMPurify.sanitize(type);
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = this.sanitizeFilename(name);
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = this.sanitizeFilename(type);
   }
 
   clearlogo() {

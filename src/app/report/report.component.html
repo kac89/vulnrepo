@@ -105,6 +105,13 @@
             <button class="rh-history-btn" (click)="showHistory(reportdesc.report_id)">
               <mat-icon>history</mat-icon>History
             </button>
+            @if (draftSavedAt) {
+            <span class="rh-draft-hint"
+              [title]="'Unsaved changes stashed encrypted at ' + (draftSavedAt | date:'medium') + ' — offered back if the vault locks or the tab closes'">
+              <mat-icon class="rh-draft-icon">cloud_done</mat-icon>
+              Draft {{ draftSavedAt | date:'HH:mm' }}
+            </span>
+            }
           </span>
         </div>
         }

@@ -7,56 +7,187 @@
         <mat-icon class="logo-icon">style</mat-icon>
       </div>
       <div class="css-header-text">
-        <span class="css-title">Custom CSS</span>
-        <span class="css-subtitle">Customize the HTML report appearance</span>
+        <span class="css-title">Report style</span>
+        <span class="css-subtitle">Pick a theme or write CSS — the preview updates as you type</span>
       </div>
     </div>
     <div class="css-header-right">
-      <button mat-icon-button mat-dialog-close class="tool-btn close-btn" title="Close">
+      <span class="dirty-flag" *ngIf="isDirty">Unsaved changes</span>
+      <button mat-icon-button class="tool-btn close-btn" (click)="cancel()"
+              aria-label="Close without saving" matTooltip="Close">
         <mat-icon>close</mat-icon>
       </button>
     </div>
   </div>
 
-  <!-- Body -->
-  <mat-dialog-content class="css-body">
+  <!-- Body: controls on the left, live preview on the right -->
+  <div class="css-body">
 
-    <div class="preset-row">
-      <span class="section-label">Example styles</span>
-      <mat-form-field appearance="outline" color="accent" class="preset-select">
-        <mat-label>Pick a preset</mat-label>
-        <mat-select (selectionChange)="selectcss($event)">
-          <mat-option value="none">None</mat-option>
-          <mat-option value="monospace">Monospace</mat-option>
-          <mat-option value="cypher">Midnight</mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="pane pane-edit">
+
+      <!-- Preset gallery -->
+      <section class="block block-presets">
+        <div class="block-head">
+          <span class="section-label">Themes</span>
+          <span class="block-hint" *ngIf="activePresetId && !presetEdited">Applied</span>
+          <span class="block-hint edited" *ngIf="activePresetId && presetEdited">Applied &amp; edited</span>
+        </div>
+
+        <!-- Guard: applying a preset would overwrite hand-written CSS -->
+        <div class="inline-confirm" *ngIf="pendingPreset" role="alertdialog">
+          <mat-icon class="confirm-icon">help_outline</mat-icon>
+          <span class="confirm-text">
+            Replace your CSS with <strong>{{ pendingPreset.name }}</strong>? Your current edits will be lost.
+          </span>
+          <span class="confirm-actions">
+            <button type="button" class="mini-btn" (click)="dismissPendingPreset()">Keep mine</button>
+            <button type="button" class="mini-btn primary" (click)="confirmPendingPreset()">Replace</button>
+          </span>
+        </div>
+
+        <div class="preset-grid" role="list">
+          <button
+            *ngFor="let p of presets"
+            type="button"
+            role="listitem"
+            class="preset-card"
+            [class.active]="activePresetId === p.id"
+            [class.busy]="loadingPresetId === p.id"
+            [attr.aria-pressed]="activePresetId === p.id"
+            [disabled]="loadingPresetId"
+            (click)="selectPreset(p)"
+            [matTooltip]="p.desc"
+            [matTooltipDisabled]="!!pendingPreset">
+
+            <span class="swatch" [style.background]="p.swatch.bg" aria-hidden="true">
+              <span class="swatch-panel" [style.background]="p.swatch.panel">
+                <span class="swatch-bar" [style.background]="p.swatch.accent"></span>
+                <span class="swatch-line" [style.background]="p.swatch.text"></span>
+                <span class="swatch-line short" [style.background]="p.swatch.text"></span>
+              </span>
+              <span class="swatch-sev">
+                <i *ngFor="let c of p.swatch.sev" [style.background]="c"></i>
+              </span>
+            </span>
+
+            <span class="preset-meta">
+              <span class="preset-name">
+                {{ p.name }}
+                <mat-icon class="check" *ngIf="activePresetId === p.id && !loadingPresetId">check_circle</mat-icon>
+              </span>
+              <span class="preset-support" [class.partial]="p.support !== 'both'">
+                {{ supportLabel[p.support] }}
+              </span>
+            </span>
+
+            <mat-spinner class="preset-spinner" *ngIf="loadingPresetId === p.id" diameter="16"></mat-spinner>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- Editor: collapsed by default — picking a theme is the common path -->
+      <section class="block block-editor" [class.open]="showEditor">
+        <div class="block-head">
+          <button
+            type="button"
+            class="editor-toggle"
+            (click)="toggleEditor()"
+            [attr.aria-expanded]="showEditor"
+            aria-controls="css-editor"
+            [matTooltip]="showEditor ? 'Hide the stylesheet' : 'Write or review the stylesheet by hand'">
+            <mat-icon class="chev">{{ showEditor ? 'expand_more' : 'chevron_right' }}</mat-icon>
+            <mat-icon class="editor-label-icon">code</mat-icon>
+            <span class="toggle-label">Custom CSS</span>
+            <span class="editor-stats" *ngIf="byteSize">
+              {{ lineCount }} {{ lineCount === 1 ? 'line' : 'lines' }} · {{ byteSize }} B
+            </span>
+          </button>
+
+          <span class="head-actions" *ngIf="showEditor">
+            <button type="button" class="mini-btn ghost" (click)="clearCss()"
+                    [disabled]="!report_css.value" matTooltip="Empty the stylesheet">Clear</button>
+            <button type="button" class="mini-btn ghost" (click)="resetChanges()"
+                    [disabled]="!canReset" matTooltip="Back to how it was when this dialog opened">Reset</button>
+          </span>
+        </div>
+
+        <ng-container *ngIf="showEditor">
+          <textarea
+            #editor
+            id="css-editor"
+            class="editor"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            aria-label="Custom report CSS"
+            placeholder="/* Your CSS is added after the report's own stylesheet, so it wins ties.
+   Most themes only need to override the design tokens:
+
+   :root      { --bg: #0b1220; --accent: #5b9bf0; }
+   .light-mode { --bg: #f4f6f9; --accent: #1b56a8; }  */"
+            [formControl]="report_css"
+            (keydown)="onEditorKeydown($event)"></textarea>
+
+          <div class="editor-foot" *ngIf="!hints.length">
+            <span class="kbd-hint"><b>Tab</b> indents · <b>Ctrl</b>+<b>S</b> saves</span>
+          </div>
+        </ng-container>
+
+        <!-- Stays visible while collapsed, so a disabled Save always has a reason -->
+        <div class="hint-list" *ngIf="hints.length">
+          <div class="hint" *ngFor="let h of hints" [class.err]="h.level === 'error'">
+            <mat-icon class="hint-icon">{{ h.level === 'error' ? 'error_outline' : 'info_outline' }}</mat-icon>
+            <span>{{ h.text }}</span>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <div class="editor-block">
-      <div class="editor-label-row">
-        <mat-icon class="editor-label-icon">code</mat-icon>
-        <span class="section-label">CSS editor</span>
+    <!-- Live preview -->
+    <div class="pane pane-preview">
+      <div class="block-head preview-head">
+        <span class="section-label">Live preview</span>
+        <span class="theme-toggle" role="group" aria-label="Preview theme">
+          <button type="button" class="seg" [class.on]="previewTheme === 'dark'"
+                  (click)="setPreviewTheme('dark')">Dark</button>
+          <button type="button" class="seg" [class.on]="previewTheme === 'light'"
+                  (click)="setPreviewTheme('light')">Light</button>
+        </span>
       </div>
-      <mat-form-field appearance="outline" class="editor-field" color="accent">
-        <textarea
-          rows="12"
-          matInput
-          placeholder="/* Add your custom CSS here */"
-          [formControl]="report_css"
-        ></textarea>
-        <mat-hint>CSS only — applied directly to the HTML report</mat-hint>
-      </mat-form-field>
+      <div class="preview-frame">
+        <iframe #preview class="preview-iframe" title="Report preview"
+                sandbox="allow-same-origin"></iframe>
+      </div>
+      <p class="preview-note">
+        A sample report rendered with your CSS. Check both themes — readers see whichever their system prefers.
+      </p>
     </div>
 
-  </mat-dialog-content>
+  </div>
 
-  <!-- Footer actions -->
+  <!-- Footer -->
   <div class="css-footer">
-    <button class="action-btn cancel-btn" (click)="cancel()">Cancel</button>
-    <button class="action-btn save-btn" (click)="savechange()">
-      <mat-icon class="btn-icon">save</mat-icon>Save
-    </button>
+    <div class="footer-left">
+      <span class="cancel-prompt" *ngIf="confirmingCancel">
+        <mat-icon class="confirm-icon">help_outline</mat-icon>
+        Discard your unsaved changes?
+      </span>
+    </div>
+    <div class="footer-right">
+      <ng-container *ngIf="confirmingCancel; else normalActions">
+        <button class="action-btn cancel-btn" (click)="dismissCancelPrompt()">Keep editing</button>
+        <button class="action-btn danger-btn" (click)="discardAndClose()">Discard</button>
+      </ng-container>
+      <ng-template #normalActions>
+        <button class="action-btn cancel-btn" (click)="cancel()">Cancel</button>
+        <button class="action-btn save-btn" (click)="savechange()"
+                [disabled]="hasErrors"
+                [matTooltip]="hasErrors ? 'Fix the errors above first' : 'Save (Ctrl+S)'">
+          <mat-icon class="btn-icon">save</mat-icon>Save
+        </button>
+      </ng-template>
+    </div>
   </div>
 
 </div>

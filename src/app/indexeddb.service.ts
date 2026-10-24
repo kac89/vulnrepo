@@ -14,6 +14,7 @@ import { CryptoUtilsService } from './crypto-utils.service';
 import { KeyVaultService } from './key-vault.service';
 import { ReportSchemaService } from './report-schema.service';
 import { UtilsService } from './utils.service';
+import { DraftService } from './draft.service';
 
 // One save event, stripped of the report it belongs to. See getHistoryActivity.
 export interface HistoryActivityEntry {
@@ -42,7 +43,7 @@ export class IndexeddbService {
     private apiService: ApiService, private snackBar: MatSnackBar, public sessionsub: SessionstorageserviceService,
     private currentdateService: CurrentdateService, private cryptoUtils: CryptoUtilsService,
     private keyVault: KeyVaultService, private reportSchema: ReportSchemaService,
-    private utilsService: UtilsService) {
+    private utilsService: UtilsService, private draftService: DraftService) {
 
     this.updateEncStatus(false);
     /*
@@ -510,6 +511,10 @@ export class IndexeddbService {
           if (data.NotFound === 'NOOK') {
             console.log('no locally report');
           } else {
+
+            // A recovery draft outliving the report it belongs to would be
+            // unreachable and undeletable from the UI.
+            this.draftService.remove(item.report_id).catch(() => { });
 
             if (removehistory) {
               //remove from history
