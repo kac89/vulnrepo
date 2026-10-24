@@ -2550,6 +2550,46 @@ Sample code here\n\
     this.doStats();
   }
 
+  /**
+   * Prepare custom CSS for splicing into the export template's <style> block.
+   *
+   * DOMPurify is the wrong tool here and used to be what this did. It is an
+   * HTML sanitiser, so against a stylesheet it both under- and over-reaches:
+   * it happily returns the one sequence that matters in this context —
+   * '</style', which ends the raw-text element early and lets the rest of the
+   * value be parsed as markup — while HTML-encoding '<', which silently breaks
+   * valid CSS such as '@media (width < 600px)'.
+   *
+   * Neutralising the terminator is what this context actually needs. '<\/style'
+   * is not an end tag to the HTML parser, and the backslash is a no-op CSS
+   * escape, so a legitimate stylesheet is unchanged.
+   *
+   * Note this is containment, not trust: custom CSS can still style the report
+   * however it likes, including loading remote urls. It travels in report
+   * settings profiles, so treat an imported profile's CSS as untrusted content.
+   */
+  private sanitizeReportCss(css: string): string {
+    return String(css ?? '').replace(/<\/(style)/gi, '<\\/$1');
+  }
+
+  /**
+   * Normalise an uploaded file's name or MIME type for storage.
+   *
+   * This used to be DOMPurify.sanitize(), which is an HTML sanitiser: it left
+   * quotes untouched (the characters that break an HTML attribute) while
+   * eating anything that looked like a tag, so 'report<1>.txt' was stored as
+   * 'report.txt'. Renderers are responsible for escaping — this is just
+   * defence in depth, keeping markup characters out of a display name.
+   */
+  private sanitizeFilename(value: any): string {
+    return String(value ?? '')
+      // eslint-disable-next-line no-control-regex
+      .replace(/[\x00-\x1f\x7f]/g, '')
+      .replace(/["'<>]/g, '')
+      .trim()
+      .slice(0, 512);
+  }
+
   private snapshotForSave(): void {
     if (this.decryptedReportDataChanged) {
       try {
@@ -3756,7 +3796,10 @@ Info       | ${sevCounts.Info}\n\n`;
     this.http.get('/assets/html_report_v3_template.html?v=' + new Date(), { responseType: 'text' }).subscribe(res => {
 
       if (this.decryptedReportDataChanged.report_settings.report_css !== '') {
-        res = res.replace("/*[CSS_Injection_here]*/", DOMPurify.sanitize(this.decryptedReportDataChanged.report_settings.report_css))
+        const safeCss = this.sanitizeReportCss(this.decryptedReportDataChanged.report_settings.report_css);
+        // Replacer function, not a replacement string: a literal would let a
+        // '$&' in the stylesheet expand to the matched placeholder.
+        res = res.replace("/*[CSS_Injection_here]*/", () => safeCss);
       }
 
 
@@ -3831,7 +3874,7 @@ Info       | ${sevCounts.Info}\n\n`;
     this.upload_in_progress = false;
     const linkprev = data;
     // tslint:disable-next-line:max-line-length
-    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': DOMPurify.sanitize(name), 'type': DOMPurify.sanitize(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
+    this.decryptedReportDataChanged.report_vulns[index].files.push({ 'data': linkprev, 'title': this.sanitizeFilename(name), 'type': this.sanitizeFilename(type), 'size': size, 'sha256checksum': sha256check, 'date': today });
     this.afterDetectionNow();
 
   }
@@ -3903,8 +3946,8 @@ Info       | ${sevCounts.Info}\n\n`;
     this.uploadlogoprev = linkprev;
     this.advlogo = linkprev;
     this.decryptedReportDataChanged.report_settings.report_logo.logo = this.advlogo;
-    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = DOMPurify.sanitize(name);
-    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = DOMPurify.sanitize(type);
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_name = this.sanitizeFilename(name);
+    this.decryptedReportDataChanged.report_settings.report_logo.logo_type = this.sanitizeFilename(type);
   }
 
   clearlogo() {

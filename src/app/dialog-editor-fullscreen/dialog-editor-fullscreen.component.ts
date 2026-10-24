@@ -7,6 +7,18 @@ import { markedHighlight } from "marked-highlight";
 import hljs from '../syntax-highlight';
 import { Marked } from "marked";
 
+/**
+ * The only safe way to put untrusted text inside an HTML attribute.
+ * DOMPurify.sanitize() alone is NOT enough: it sanitises HTML and leaves both
+ * quote characters intact, so a value holding a quote would close the
+ * attribute and let the rest inject an event handler.
+ */
+function escapeAttr(val: any): string {
+  return DOMPurify.sanitize(String(val ?? ''), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] })
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 export interface Table {
   type: 'table';
   raw: string;
@@ -236,6 +248,9 @@ export class DialogEditorFullscreenComponent implements OnInit {
     };
 
     renderer.image = function (token) {
+      // If image rendering is ever re-enabled, build it with escapeAttr() —
+      // DOMPurify.sanitize() leaves quotes intact, so the line below would let
+      // a crafted href close src="" and inject an event handler.
       //return `<img src="` + DOMPurify.sanitize(token.href) + `" alt="` + DOMPurify.sanitize(token.text) + `" title="` + DOMPurify.sanitize(token.title) + `">`;
       //disable image parse
       return DOMPurify.sanitize(token.href);
@@ -254,7 +269,10 @@ export class DialogEditorFullscreenComponent implements OnInit {
       return token.text;
     }
 
-      return '<a target="_blank" class="active-link" rel="nofollow" href="'+ DOMPurify.sanitize(token.href) +'" title="' + DOMPurify.sanitize(token.title) + '">' + DOMPurify.sanitize(token.text) + '</a>';
+      // escapeAttr, not sanitize: the scheme check above rejects javascript:,
+      // but a quote in an otherwise-http URL would still close href="" and
+      // inject a handler.
+      return '<a target="_blank" class="active-link" rel="nofollow" href="'+ escapeAttr(token.href) +'" title="' + escapeAttr(token.title) + '">' + DOMPurify.sanitize(token.text) + '</a>';
     }
 
     renderer.table = function(token: any) {
