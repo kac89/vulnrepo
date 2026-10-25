@@ -89,5 +89,5 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/kac89/vulnrepo-docker/dispatches \
-            -d '{"event_type":"app-build-prod","client_payload":{"sha":"${{ github.sha }}"}}'
+            -d '{"event_type":"app-build-prod","client_payload":{"sha":"${GITHUB_SHA}"}}'
           echo "Dispatched app-build-prod to kac89/vulnrepo-docker"
