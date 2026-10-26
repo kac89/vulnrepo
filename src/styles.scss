@@ -658,6 +658,31 @@ mat-toolbar.app-navbar {
     .mat-mdc-menu-submenu-icon {
       color: rgba(255, 255, 255, 0.45);
     }
+
+    // current choice in a single-select menu (e.g. sort order)
+    &.menu-checked {
+      color: #16bf6e !important;
+
+      .mat-icon { color: #16bf6e !important; opacity: 1; }
+    }
+
+    // irreversible action — never styled like the safe items above it
+    &.menu-danger {
+      color: #ef5350 !important;
+
+      .mat-icon { color: #ef5350 !important; opacity: 0.9; }
+
+      &:hover:not([disabled]) {
+        background: rgba(239, 83, 80, 0.12) !important;
+        color: #ef5350 !important;
+      }
+    }
+  }
+
+  .menu-divider {
+    height: 1px;
+    margin: 4px 6px;
+    background: rgba(255, 255, 255, 0.08);
   }
 }
 

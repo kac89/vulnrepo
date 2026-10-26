@@ -22,67 +22,231 @@
 
   <div class="reports-panel">
 
-    <div class="panel-sticky">
-      <div class="filter-bar">
-        @if (dataSource.data.length != 0) {
+    @if (dataSource.data.length != 0) {
+      <div class="panel-sticky">
+
+        <div class="toolbar">
           <mat-form-field appearance="outline" color="accent" class="filter-field">
             <mat-icon matPrefix>search</mat-icon>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Filter reports..." #input>
+            <input matInput [value]="searchTerm" (keyup)="applyFilter($event)" placeholder="Search reports" #input
+              aria-label="Search reports">
           </mat-form-field>
-        }
-        <span class="filter-spacer"></span>
-        @if (dataSource.data.length != 0) {
-          <div class="sort-group">
-            <span class="sort-label">Sort:</span>
-            <button class="sort-btn" [class.active]="sortField === 'name'" (click)="setSort('name')">
-              Name
-              @if (sortField === 'name') {
-                <mat-icon>{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
-              }
+
+          <div class="chips">
+            <button class="chip" [attr.aria-pressed]="activeFilter === 'all'" (click)="setFilter('all')">
+              All <span class="chip-n">{{counts.all}}</span>
             </button>
-            <button class="sort-btn" [class.active]="sortField === 'created'" (click)="setSort('created')">
-              Created
-              @if (sortField === 'created') {
-                <mat-icon>{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
-              }
+            <button class="chip" [attr.aria-pressed]="activeFilter === 'local'" (click)="setFilter('local')">
+              Local <span class="chip-n">{{counts.local}}</span>
             </button>
-            <button class="sort-btn" [class.active]="sortField === 'updated'" (click)="setSort('updated')">
-              Updated
-              @if (sortField === 'updated') {
-                <mat-icon>{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
-              }
-            </button>
+            @if (counts.remote > 0) {
+              <button class="chip" [attr.aria-pressed]="activeFilter === 'remote'" (click)="setFilter('remote')">
+                Remote <span class="chip-n">{{counts.remote}}</span>
+              </button>
+            }
+            @if (counts.crit > 0) {
+              <button class="chip chip-crit" [attr.aria-pressed]="activeFilter === 'crit'" (click)="setFilter('crit')">
+                <span class="chip-dot"></span> Has criticals <span class="chip-n">{{counts.crit}}</span>
+              </button>
+            }
           </div>
-          <div class="view-toggle">
-            <button mat-icon-button class="view-btn" [class.active]="viewMode === 'list'"
-              (click)="setViewMode('list')" title="List view">
-              <mat-icon>view_list</mat-icon>
+
+          <div class="toolbar-right">
+            <button class="tool-btn" [matMenuTriggerFor]="sortMenu" aria-label="Change sort order">
+              <mat-icon>sort</mat-icon>
+              <span>{{sortLabel}}</span>
+              <mat-icon class="dir-icon">{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
             </button>
-            <button mat-icon-button class="view-btn" [class.active]="viewMode === 'card'"
-              (click)="setViewMode('card')" title="Card view">
-              <mat-icon>view_module</mat-icon>
+            <mat-menu #sortMenu="matMenu">
+              @for (opt of sortOptions; track opt) {
+                <button mat-menu-item [class.menu-checked]="sortField === opt" (click)="setSortField(opt)">
+                  <mat-icon>{{sortField === opt ? 'check' : ''}}</mat-icon>
+                  {{sortLabels[opt]}}
+                </button>
+              }
+              <div class="menu-divider"></div>
+              <button mat-menu-item (click)="toggleSortDir()">
+                <mat-icon>{{sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
+                {{sortDir === 'asc' ? 'Ascending' : 'Descending'}}
+              </button>
+            </mat-menu>
+
+            @if (viewMode === 'list') {
+              <div class="seg-group">
+                <button mat-icon-button class="seg-btn" [class.active]="density === 'comfortable'"
+                  [attr.aria-pressed]="density === 'comfortable'" (click)="setDensity('comfortable')"
+                  title="Comfortable rows" aria-label="Comfortable rows">
+                  <mat-icon>density_medium</mat-icon>
+                </button>
+                <button mat-icon-button class="seg-btn" [class.active]="density === 'dense'"
+                  [attr.aria-pressed]="density === 'dense'" (click)="setDensity('dense')"
+                  title="Dense rows" aria-label="Dense rows">
+                  <mat-icon>density_small</mat-icon>
+                </button>
+              </div>
+            }
+
+            <div class="seg-group">
+              <button mat-icon-button class="seg-btn" [class.active]="viewMode === 'list'"
+                [attr.aria-pressed]="viewMode === 'list'" (click)="setViewMode('list')"
+                title="List view" aria-label="List view">
+                <mat-icon>view_list</mat-icon>
+              </button>
+              <button mat-icon-button class="seg-btn" [class.active]="viewMode === 'card'"
+                [attr.aria-pressed]="viewMode === 'card'" (click)="setViewMode('card')"
+                title="Card view" aria-label="Card view">
+                <mat-icon>view_module</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        @if (selection.selected.length > 0) {
+          <div class="selection-bar">
+            <mat-checkbox class="select-all-box" [checked]="isAllShownSelected()"
+              (change)="toggleAllShown()" aria-label="Select all shown reports">
+            </mat-checkbox>
+            <span class="selection-count">{{selection.selected.length}} selected</span>
+            <span class="selection-spacer"></span>
+            <button class="bulk-btn" (click)="downloadSelecteditems()">
+              <mat-icon>cloud_download</mat-icon> Download
             </button>
+            @if (keyfound && selectedLocalCount > 0) {
+              <button class="bulk-btn" [matMenuTriggerFor]="bulkApiMenu">
+                <mat-icon>public</mat-icon> Save on API
+              </button>
+              <mat-menu #bulkApiMenu="matMenu">
+                @for (apis of apilist; track apis) {
+                  <button mat-menu-item (click)="toAPIcloneSelecteditems(apis.value, apis.apikey)"
+                    title="API: {{apis.value}}">
+                    <mat-icon>public</mat-icon> {{apis.viewValue}}
+                  </button>
+                }
+              </mat-menu>
+            }
+            <button class="bulk-btn danger" (click)="removeSelecteditems()">
+              <mat-icon>delete_forever</mat-icon> Remove
+            </button>
+            <button class="bulk-btn quiet" (click)="selection.clear()">Clear</button>
           </div>
         }
-        @if (dataSource.data.length != 0) {
-          <mat-paginator class="compact-paginator" color="accent" [pageSizeOptions]="[10, 20, 50, 100]"
-            showFirstLastButtons></mat-paginator>
-        }
+
       </div>
-    </div>
+    }
 
     @if (dataSource.data.length != 0) {
 
-      @if (displayItems.length > 0) {
-        <div [class]="viewMode === 'list' ? 'cards-grid list-view' : 'cards-grid'">
+      @if (displayItems.length > 0 && viewMode === 'list') {
+        <div class="report-rows" [class.dense]="density === 'dense'">
           @for (element of displayItems; track element.report_id) {
-            <div class="report-card" [class.is-selected]="selection.isSelected(element)">
+            <div class="report-row" [class.is-selected]="selection.isSelected(element)">
+
+              <span [class]="'sev-stripe sev-stripe-' + element.top_sev"></span>
+
+              <mat-checkbox class="row-select" (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(element) : null"
+                [checked]="selection.isSelected(element)"
+                [aria-label]="'Select ' + element.report_name">
+              </mat-checkbox>
+
+              <span class="row-name">
+                @if (!element.api) {
+                  <span class="storage-badge local" title="Stored locally">
+                    <mat-icon>computer</mat-icon>
+                  </span>
+                }
+                @if (element.api == 'remote') {
+                  <span class="storage-badge remote" title="Remote API: {{element.apiname}} - [{{element.apiurl}}]">
+                    <mat-icon>public</mat-icon>
+                  </span>
+                }
+                <a class="row-title-link active-link" routerLink="/report/{{element.report_id}}/">
+                  {{element.report_name}}
+                </a>
+              </span>
+
+              <span class="risk-cell">
+                @if (element.sev_segments && element.sev_segments.length > 0) {
+                  <span class="risk">
+                    <span class="risk-track" role="img" [attr.aria-label]="element.sev_label">
+                      @for (seg of element.sev_segments; track seg.key) {
+                        <i [class]="'risk-seg sev-' + seg.key" [style.flex]="seg.count"></i>
+                      }
+                    </span>
+                    <span class="risk-total">{{element.report_stats.total}}</span>
+                    <span class="risk-pop">
+                      @for (seg of element.sev_segments; track seg.key) {
+                        <span [class]="'pop-item sev-' + seg.key">{{seg.count}} {{seg.short}}</span>
+                      }
+                    </span>
+                  </span>
+                }
+                @if (!element.sev_segments || element.sev_segments.length === 0) {
+                  <span class="risk-none" [title]="element.sev_label">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                    <span class="risk-none-text">{{element.sev_none_label}}</span>
+                  </span>
+                }
+              </span>
+
+              <span class="row-when" [title]="element.age_title">{{element.age_label}}</span>
+
+              <div class="row-actions">
+                <button mat-icon-button class="menu-btn" [matMenuTriggerFor]="rowMenu"
+                  (click)="$event.stopPropagation()" [attr.aria-label]="'Actions for ' + element.report_name">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #rowMenu="matMenu">
+                  <a [routerLink]="[]" (click)="shareReport(element.report_id)" mat-menu-item>
+                    <mat-icon>cloud_download</mat-icon> Download report
+                  </a>
+                  @if (!element.api) {
+                    <a [routerLink]="[]" (click)="cloneReport(element)" mat-menu-item>
+                      <mat-icon>flip_to_front</mat-icon> Clone report
+                    </a>
+                  }
+                  @if (!element.api && keyfound) {
+                    <a [routerLink]="[]" [matMenuTriggerFor]="apiMenu" mat-menu-item>
+                      <mat-icon>public</mat-icon> Save on API
+                    </a>
+                  }
+                  @if (element.api) {
+                    <a [routerLink]="[]" (click)="fromAPIcloneReport(element)" mat-menu-item>
+                      <mat-icon>save_alt</mat-icon> Save locally
+                    </a>
+                  }
+                  <div class="menu-divider"></div>
+                  <a [routerLink]="[]" (click)="removeReport(element)" mat-menu-item class="menu-danger">
+                    <mat-icon>delete_forever</mat-icon> Remove report
+                  </a>
+                </mat-menu>
+                <mat-menu #apiMenu="matMenu">
+                  @for (apis of apilist; track apis) {
+                    <a [routerLink]="[]" (click)="toAPIcloneReport(element, apis.value, apis.apikey)"
+                      title="API: {{apis.value}}" mat-menu-item>
+                      <mat-icon>public</mat-icon> {{apis.viewValue}}
+                    </a>
+                  }
+                </mat-menu>
+              </div>
+
+            </div>
+          }
+        </div>
+      }
+
+      @if (displayItems.length > 0 && viewMode === 'card') {
+        <div class="cards-grid">
+          @for (element of displayItems; track element.report_id) {
+            <div [class]="'report-card sev-edge-' + element.top_sev"
+              [class.is-selected]="selection.isSelected(element)">
 
               <div class="card-top">
                 <div class="card-select">
                   <mat-checkbox (click)="$event.stopPropagation()"
                     (change)="$event ? selection.toggle(element) : null"
-                    [checked]="selection.isSelected(element)">
+                    [checked]="selection.isSelected(element)"
+                    [aria-label]="'Select ' + element.report_name">
                   </mat-checkbox>
                 </div>
                 <div class="card-badges">
@@ -97,13 +261,14 @@
                     </span>
                   }
                   @if (element.report_stats && element.report_stats.total > 0) {
-                    <span class="sev-total-circle" [title]="element.report_stats.total + ' finding' + (element.report_stats.total !== 1 ? 's' : '')">
+                    <span class="sev-total-circle" [title]="element.sev_label">
                       {{element.report_stats.total}}
                     </span>
                   }
                 </div>
                 <div class="card-actions">
-                  <button mat-icon-button class="menu-btn" [matMenuTriggerFor]="cardMenu">
+                  <button mat-icon-button class="menu-btn" [matMenuTriggerFor]="cardMenu"
+                    [attr.aria-label]="'Actions for ' + element.report_name">
                     <mat-icon>more_vert</mat-icon>
                   </button>
                   <mat-menu #cardMenu="matMenu">
@@ -116,7 +281,7 @@
                       </a>
                     }
                     @if (!element.api && keyfound) {
-                      <a [routerLink]="[]" [matMenuTriggerFor]="apiMenu" mat-menu-item>
+                      <a [routerLink]="[]" [matMenuTriggerFor]="cardApiMenu" mat-menu-item>
                         <mat-icon>public</mat-icon> Save on API
                       </a>
                     }
@@ -125,11 +290,12 @@
                         <mat-icon>save_alt</mat-icon> Save locally
                       </a>
                     }
-                    <a [routerLink]="[]" (click)="removeReport(element)" mat-menu-item>
+                    <div class="menu-divider"></div>
+                    <a [routerLink]="[]" (click)="removeReport(element)" mat-menu-item class="menu-danger">
                       <mat-icon>delete_forever</mat-icon> Remove report
                     </a>
                   </mat-menu>
-                  <mat-menu #apiMenu="matMenu">
+                  <mat-menu #cardApiMenu="matMenu">
                     @for (apis of apilist; track apis) {
                       <a [routerLink]="[]" (click)="toAPIcloneReport(element, apis.value, apis.apikey)"
                         title="API: {{apis.value}}" mat-menu-item>
@@ -146,43 +312,20 @@
                 </a>
 
                 @if (element.report_stats && element.report_stats.total > 0) {
-                  <div class="card-sev-strip">
-                    @if (element.report_stats.critical > 0) {
-                      <span class="sev-pill sev-critical">
-                        <span class="sev-pill-count">{{element.report_stats.critical}}</span>
-                        <span class="sev-pill-label">C</span>
-                      </span>
-                    }
-                    @if (element.report_stats.high > 0) {
-                      <span class="sev-pill sev-high">
-                        <span class="sev-pill-count">{{element.report_stats.high}}</span>
-                        <span class="sev-pill-label">H</span>
-                      </span>
-                    }
-                    @if (element.report_stats.medium > 0) {
-                      <span class="sev-pill sev-medium">
-                        <span class="sev-pill-count">{{element.report_stats.medium}}</span>
-                        <span class="sev-pill-label">M</span>
-                      </span>
-                    }
-                    @if (element.report_stats.low > 0) {
-                      <span class="sev-pill sev-low">
-                        <span class="sev-pill-count">{{element.report_stats.low}}</span>
-                        <span class="sev-pill-label">L</span>
-                      </span>
-                    }
-                    @if (element.report_stats.info > 0) {
-                      <span class="sev-pill sev-info">
-                        <span class="sev-pill-count">{{element.report_stats.info}}</span>
-                        <span class="sev-pill-label">I</span>
+                  <div class="sev-grid">
+                    @for (key of sevOrder; track key) {
+                      <span [class]="element.report_stats[key] > 0 ? 'sev-cell sev-' + key : 'sev-cell sev-zero'"
+                        [title]="element.report_stats[key] + ' ' + key">
+                        <span class="sev-cell-v">{{element.report_stats[key]}}</span>
+                        <span class="sev-cell-k">{{sevShort[key]}}</span>
                       </span>
                     }
                   </div>
                 }
                 @if (!element.report_stats || element.report_stats.total === 0) {
                   <div class="card-no-stats">
-                    <mat-icon>lock_outline</mat-icon>
-                    <span>Save report to see findings summary</span>
+                    <mat-icon>remove_circle_outline</mat-icon>
+                    <span>{{element.sev_label}}</span>
                   </div>
                 }
               </div>
@@ -211,16 +354,15 @@
         </div>
       }
 
-      @if (displayItems.length === 0 && dataSource.filter) {
-        <div class="empty-state" style="padding: 60px 24px;">
-          <p class="empty-title">No reports match "{{dataSource.filter}}"</p>
-        </div>
-      }
-
-      @if (selection.selected.length > 0) {
-        <div class="table-footer-actions">
-          <button mat-button color="warn" (click)="removeSelecteditems()" class="delete-selected-btn">
-            <mat-icon>delete_forever</mat-icon> Remove selected ({{selection.selected.length}})
+      @if (displayItems.length === 0 && filterActive) {
+        <div class="empty-state">
+          <div class="empty-icon-wrap">
+            <mat-icon class="empty-icon">search_off</mat-icon>
+          </div>
+          <p class="empty-title">No reports match the current filters</p>
+          <p class="empty-subtitle">{{emptyFilterHint}}</p>
+          <button class="bulk-btn reset-filter-btn" (click)="resetFilters()">
+            <mat-icon>filter_alt_off</mat-icon> Show all reports
           </button>
         </div>
       }
@@ -231,6 +373,13 @@
           <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </div>
       }
+
+      <div class="panel-footer">
+        <span class="footer-count">{{totalFilteredCount}} of {{counts.all}} reports</span>
+        <span class="footer-spacer"></span>
+        <mat-paginator class="compact-paginator" color="accent" [pageSizeOptions]="pageSizeOptions"
+          [pageSize]="pageSize" (page)="onPage($event)" showFirstLastButtons></mat-paginator>
+      </div>
     }
 
     @if (dataSource.data.length == 0) {
