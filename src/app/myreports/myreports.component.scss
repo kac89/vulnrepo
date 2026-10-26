@@ -137,7 +137,7 @@ $sev-info:     #60a5fa;
   overflow: hidden;
 }
 
-// ─── Sticky filter + paginator bar ───────────────────────────────────────────
+// ─── Sticky toolbar + selection bar ──────────────────────────────────────────
 
 .panel-sticky {
   position: sticky;
@@ -145,22 +145,20 @@ $sev-info:     #60a5fa;
   z-index: 99;
   background: $surface;
   border-bottom: 1px solid $border;
-  padding: 12px 16px;
 }
 
-.filter-bar {
+// Three zones: search, filter chips, display controls pushed right.
+.toolbar {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-
-  .filter-spacer {
-    flex: 1;
-  }
+  padding: 10px 14px;
 
   .filter-field {
-    width: 260px;
-    flex-shrink: 0;
+    width: 220px;
+    flex: 1 1 180px;
+    max-width: 280px;
 
     ::ng-deep .mat-mdc-text-field-wrapper {
       background: $surface-2 !important;
@@ -169,7 +167,7 @@ $sev-info:     #60a5fa;
     }
 
     ::ng-deep .mat-mdc-form-field-flex {
-      height: 36px;
+      height: 34px;
       align-items: center;
     }
 
@@ -193,7 +191,7 @@ $sev-info:     #60a5fa;
     }
 
     ::ng-deep input.mat-mdc-input-element {
-      font-size: 0.875rem;
+      font-size: 0.8125rem;
       color: $text;
     }
 
@@ -206,34 +204,120 @@ $sev-info:     #60a5fa;
     }
   }
 
-  .compact-paginator {
-    background: transparent;
-    color: $text-muted;
-    min-height: unset;
-
-    ::ng-deep .mat-mdc-paginator-range-label {
-      font-size: 0.75rem;
-      color: $text-muted;
-    }
-
-    ::ng-deep .mat-mdc-icon-button {
-      color: $text-muted;
-    }
-
-    ::ng-deep .mat-mdc-select-value {
-      font-size: 0.75rem;
-      color: $text-muted;
-    }
-  }
-
   ::ng-deep .mat-mdc-form-field-subscript-wrapper {
     display: none;
   }
 }
 
-// ─── View toggle ─────────────────────────────────────────────────────────────
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
 
-.view-toggle {
+// ─── Filter chips ────────────────────────────────────────────────────────────
+
+.chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 11px;
+  border: 1px solid $border;
+  border-radius: 14px;
+  background: transparent;
+  color: $text-dim;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+
+  .chip-n {
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.65;
+  }
+
+  .chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sev-critical);
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: $text;
+  }
+
+  &[aria-pressed='true'] {
+    background: rgba($accent, 0.11);
+    color: $accent;
+    border-color: rgba($accent, 0.3);
+  }
+
+  &.chip-crit[aria-pressed='true'] {
+    background: rgba(var(--sev-critical-rgb), 0.12);
+    color: var(--sev-critical);
+    border-color: rgba(var(--sev-critical-rgb), 0.34);
+  }
+}
+
+// ─── Sort control ────────────────────────────────────────────────────────────
+
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 9px;
+  border: 1px solid $border;
+  border-radius: 6px;
+  background: transparent;
+  color: $text-dim;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  .dir-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    opacity: 0.7;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: $text;
+  }
+}
+
+// ─── Segmented toggles (density, view) ───────────────────────────────────────
+
+.seg-group {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -241,12 +325,13 @@ $sev-info:     #60a5fa;
   border: 1px solid $border;
   border-radius: 6px;
   padding: 2px;
+  flex-shrink: 0;
 }
 
-.view-btn {
-  --mdc-icon-button-state-layer-size: 28px;
-  width: 28px !important;
-  height: 28px !important;
+.seg-btn {
+  --mdc-icon-button-state-layer-size: 26px;
+  width: 26px !important;
+  height: 24px !important;
   padding: 0 !important;
   border-radius: 4px !important;
   color: $icon !important;
@@ -258,171 +343,411 @@ $sev-info:     #60a5fa;
   }
 
   &.active {
-    background: rgba($accent, 0.12) !important;
+    background: rgba($accent, 0.13) !important;
     color: $accent !important;
   }
 
   .mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
   }
 }
 
-// ─── Sort controls ───────────────────────────────────────────────────────────
+// ─── Selection bar (sits under the toolbar, never below the list) ─────────────
 
-.sort-group {
+.selection-bar {
   display: flex;
   align-items: center;
-  gap: 3px;
-  flex-shrink: 0;
-  margin-right: 6px;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 9px 14px;
+  background: rgba($accent, 0.07);
+  border-top: 1px solid rgba($accent, 0.18);
+
+  .selection-count {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: $accent;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .selection-spacer {
+    flex: 1;
+  }
+
+  .select-all-box {
+    flex-shrink: 0;
+  }
 }
 
-.sort-label {
-  font-size: 0.7rem;
-  color: $text-muted;
-  margin-right: 2px;
-  white-space: nowrap;
-}
-
-.sort-btn {
+.bulk-btn {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 6px;
   height: 28px;
-  padding: 0 8px;
-  border: 1px solid $border;
-  border-radius: 4px;
+  padding: 0 11px;
+  border: 1px solid $border-strong;
+  border-radius: 6px;
   background: transparent;
-  color: $text-muted;
-  font-size: 0.72rem;
-  font-weight: 500;
+  color: $text-dim;
   font-family: inherit;
-  cursor: pointer;
-  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+  font-size: 0.75rem;
+  font-weight: 500;
   white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 
   mat-icon {
-    font-size: 12px;
-    width: 12px;
-    height: 12px;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: $text-dim;
+    background: rgba(255, 255, 255, 0.07);
+    color: $text;
   }
 
-  &.active {
-    background: rgba($accent, 0.1);
-    color: $accent;
-    border-color: rgba($accent, 0.25);
+  &.danger {
+    color: $destructive;
+    border-color: rgba($destructive, 0.26);
+    background: rgba($destructive, 0.08);
+
+    &:hover {
+      background: rgba($destructive, 0.16);
+      border-color: rgba($destructive, 0.4);
+      color: $destructive;
+    }
+  }
+
+  &.quiet {
+    border-color: transparent;
+    color: $text-muted;
   }
 }
 
-// ─── Bulk delete ─────────────────────────────────────────────────────────────
+// ─── List view rows ──────────────────────────────────────────────────────────
 
-.table-footer-actions {
+.report-rows {
   display: flex;
-  justify-content: flex-end;
-  padding: 12px 16px;
-  border-top: 1px solid $border;
-  background: $surface;
+  flex-direction: column;
 }
 
-.delete-selected-btn {
+.report-row {
+  display: grid;
+  align-items: center;
+  gap: 12px;
+  grid-template-columns: 3px 24px minmax(0, 1fr) 124px 78px 28px;
+  min-height: 46px;
+  padding: 0 12px 0 0;
+  position: relative;
+  background: $surface;
+  border-bottom: 1px solid $border;
+  transition: background 0.12s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: $surface-2;
+
+    .row-title-link {
+      color: $accent !important;
+      text-decoration: underline;
+      text-decoration-color: rgba($accent, 0.4);
+      text-underline-offset: 3px;
+    }
+  }
+
+  &.is-selected {
+    background: rgba($accent, 0.05);
+  }
+
+  &:focus-within {
+    outline: 1px solid rgba($accent, 0.5);
+    outline-offset: -1px;
+  }
+}
+
+.report-rows.dense .report-row {
+  min-height: 36px;
+}
+
+// Highest severity present, so a column of red marks what needs attention.
+.sev-stripe {
+  align-self: stretch;
+  background: $border;
+
+  &.sev-stripe-critical { background: var(--sev-critical); }
+  &.sev-stripe-high     { background: var(--sev-high); }
+  &.sev-stripe-medium   { background: var(--sev-medium); }
+  &.sev-stripe-low      { background: var(--sev-low); }
+  &.sev-stripe-info     { background: var(--sev-info); }
+  &.sev-stripe-none     { background: rgba(255, 255, 255, 0.07); }
+}
+
+// Controls sit above the row's stretched link overlay.
+.row-select,
+.risk-cell,
+.row-actions {
+  position: relative;
+  z-index: 2;
+}
+
+// A row checkbox at Material's default 40px touch target would dominate the
+// row, so it is compacted to 24px — the smallest target WCAG 2.2 allows.
+.row-select,
+.select-all-box {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  flex-shrink: 0;
+
+  ::ng-deep .mdc-checkbox {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+  }
+
+  ::ng-deep .mdc-checkbox__native-control {
+    top: 0 !important;
+    left: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  ::ng-deep .mdc-checkbox__background {
+    top: 4px;
+    left: 4px;
+    width: 16px;
+    height: 16px;
+  }
+
+  ::ng-deep .mat-mdc-checkbox-touch-target,
+  ::ng-deep .mat-mdc-checkbox-ripple,
+  ::ng-deep .mdc-checkbox__ripple {
+    display: none;
+  }
+
+  ::ng-deep .mdc-label {
+    display: none;
+  }
+}
+
+.row-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.row-title-link {
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba($text, 0.93) !important;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.1s ease;
+
+  // the whole row opens the report; the link stays the single focusable target
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+}
+
+// ─── Risk bar (replaces the per-row severity pill strip) ─────────────────────
+
+.risk-cell {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.risk {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  position: relative;
+}
+
+.risk-track {
+  display: flex;
+  gap: 1px;
+  width: 84px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.risk-seg {
+  display: block;
+  min-width: 3px;
+
+  &.sev-critical { background: var(--sev-critical); }
+  &.sev-high     { background: var(--sev-high); }
+  &.sev-medium   { background: var(--sev-medium); }
+  &.sev-low      { background: var(--sev-low); }
+  &.sev-info     { background: var(--sev-info); }
+}
+
+.risk-total {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: $text-dim;
+  line-height: 1;
+}
+
+// Full breakdown on demand, so it stops competing for attention at rest.
+// Anchored below the bar: above it would pass under the sticky toolbar,
+// which sits at a higher z-index.
+.risk-pop {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 7px);
+  z-index: 15;
+  display: flex;
+  gap: 10px;
+  padding: 6px 10px;
+  white-space: nowrap;
+  border: 1px solid $border-strong;
+  border-radius: 6px;
+  background: $surface-3;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.13s ease;
+}
+
+.risk:hover .risk-pop,
+.risk:focus-within .risk-pop {
+  opacity: 1;
+}
+
+.pop-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  &.sev-critical { color: var(--sev-critical); }
+  &.sev-high     { color: var(--sev-high); }
+  &.sev-medium   { color: var(--sev-medium); }
+  &.sev-low      { color: var(--sev-low); }
+  &.sev-info     { color: var(--sev-info); }
+}
+
+.risk-none {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border-radius: 6px !important;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0 12px !important;
-  height: 32px;
-  background: rgba($destructive, 0.1) !important;
-  color: $destructive !important;
-  border: 1px solid rgba($destructive, 0.2) !important;
-  transition: background 0.1s ease, border-color 0.1s ease;
-
-  &:hover {
-    background: rgba($destructive, 0.18) !important;
-    border-color: rgba($destructive, 0.32) !important;
-  }
+  min-width: 0;
+  color: rgba($text-muted, 0.85);
+  font-size: 0.7rem;
 
   mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .risk-none-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// ─── Row age + actions ───────────────────────────────────────────────────────
+
+.row-when {
+  font-size: 0.72rem;
+  color: $text-muted;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.row-actions {
+  flex-shrink: 0;
+}
+
+// ─── Panel footer (pagination lives here, not in the sticky header) ──────────
+
+.panel-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 6px 14px;
+  border-top: 1px solid $border;
+  background: $surface;
+
+  .footer-count {
+    font-size: 0.72rem;
+    color: $text-muted;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .footer-spacer {
+    flex: 1;
+  }
+
+  .compact-paginator {
+    background: transparent;
+    color: $text-muted;
+    min-height: unset;
+
+    ::ng-deep .mat-mdc-paginator-range-label {
+      font-size: 0.72rem;
+      color: $text-muted;
+    }
+
+    ::ng-deep .mat-mdc-icon-button {
+      color: $text-muted;
+    }
+
+    ::ng-deep .mat-mdc-select-value {
+      font-size: 0.72rem;
+      color: $text-muted;
+    }
   }
 }
 
 // ─── Cards grid ───────────────────────────────────────────────────────────────
 
+// Hairlines live on the cards themselves rather than in a 1px gap, so a part-
+// filled last row leaves plain surface instead of a block of divider colour.
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: $border;
-}
-
-// ─── List view overrides ──────────────────────────────────────────────────────
-
-.cards-grid.list-view {
-  grid-template-columns: 1fr;
-
-  .report-card {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 16px;
-    padding-right: 52px;
-    min-height: 52px;
-    position: relative;
-
-    .card-top {
-      margin-bottom: 0;
-      flex-shrink: 0;
-
-      .card-actions {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
-
-    .card-title-col {
-      justify-content: center;
-    }
-
-    .card-title-link {
-      margin-bottom: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-sev-strip {
-      margin-bottom: 0;
-      flex-wrap: nowrap;
-    }
-
-    .card-no-stats {
-      margin-bottom: 0;
-    }
-
-    .card-footer {
-      border-top: none;
-      padding-top: 0;
-      margin-top: 0;
-      flex-shrink: 0;
-      gap: 12px;
-    }
-
-    .card-no-stats span { display: none; }
-  }
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 0;
+  background: $surface;
 }
 
 // ─── Individual report card ───────────────────────────────────────────────────
@@ -435,11 +760,19 @@ $sev-info:     #60a5fa;
   padding: 16px;
   transition: background 0.12s ease;
   cursor: default;
-  border-left: 2px solid transparent;
+  border-left: 3px solid transparent;
+  border-right: 1px solid $border;
+  border-bottom: 1px solid $border;
+
+  &.sev-edge-critical { border-left-color: var(--sev-critical); }
+  &.sev-edge-high     { border-left-color: var(--sev-high); }
+  &.sev-edge-medium   { border-left-color: var(--sev-medium); }
+  &.sev-edge-low      { border-left-color: var(--sev-low); }
+  &.sev-edge-info     { border-left-color: var(--sev-info); }
+  &.sev-edge-none     { border-left-color: rgba(255, 255, 255, 0.07); }
 
   &:hover {
     background: $surface-2;
-    border-left-color: $accent;
 
     .card-title-link {
       color: $accent !important;
@@ -447,21 +780,10 @@ $sev-info:     #60a5fa;
       text-decoration-color: rgba($accent, 0.4);
       text-underline-offset: 3px;
     }
-
-    .card-select {
-      opacity: 1;
-      pointer-events: auto;
-    }
   }
 
   &.is-selected {
-    background: rgba($accent, 0.04);
-    border-left-color: rgba($accent, 0.6);
-
-    .card-select {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    background: rgba($accent, 0.05);
 
     .storage-badge.local {
       background: rgba(255, 255, 255, 0.10);
@@ -482,10 +804,8 @@ $sev-info:     #60a5fa;
   margin-bottom: 10px;
 }
 
+// always present: hover-only selection is undiscoverable and invisible on touch
 .card-select {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.1s ease;
   flex-shrink: 0;
 }
 
@@ -536,6 +856,13 @@ $sev-info:     #60a5fa;
   }
 }
 
+// list rows use a slightly tighter badge
+.row-name .storage-badge {
+  width: 19px;
+  height: 19px;
+  border-radius: 4px;
+}
+
 .menu-btn {
   --mdc-icon-button-state-layer-size: 28px;
   width: 28px !important;
@@ -579,45 +906,45 @@ $sev-info:     #60a5fa;
   margin-bottom: 12px;
 }
 
-// ─── Severity strip ───────────────────────────────────────────────────────────
+// ─── Card severity grid (card view keeps the explicit numbers) ───────────────
 
-.card-sev-strip {
+.sev-grid {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   margin-bottom: 14px;
 }
 
-.sev-pill {
-  display: inline-flex;
+.sev-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 2px 7px 2px 6px;
-  border-radius: 20px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  gap: 1px;
+  padding: 5px 2px;
+  border-radius: 4px;
   border: 1px solid;
-  white-space: nowrap;
 
-  .sev-pill-count {
-    font-size: 0.7rem;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .sev-pill-label {
-    font-size: 0.6rem;
-    opacity: 0.75;
+  .sev-cell-v {
+    font-size: 0.8rem;
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
   }
 
-  &.sev-critical { color: var(--sev-critical); border-color: rgba(var(--sev-critical-rgb), 0.32); background: rgba(var(--sev-critical-rgb), 0.1); }
-  &.sev-high     { color: var(--sev-high);     border-color: rgba(var(--sev-high-rgb), 0.32);     background: rgba(var(--sev-high-rgb), 0.1); }
-  &.sev-medium   { color: var(--sev-medium);   border-color: rgba(var(--sev-medium-rgb), 0.28);   background: rgba(var(--sev-medium-rgb), 0.08); }
-  &.sev-low      { color: var(--sev-low);      border-color: rgba(var(--sev-low-rgb), 0.28);      background: rgba(var(--sev-low-rgb), 0.08); }
-  &.sev-info     { color: var(--sev-info);     border-color: rgba(var(--sev-info-rgb), 0.3);      background: rgba(var(--sev-info-rgb), 0.09); }
+  .sev-cell-k {
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+
+  &.sev-critical { color: var(--sev-critical); border-color: rgba(var(--sev-critical-rgb), 0.28); background: rgba(var(--sev-critical-rgb), 0.09); }
+  &.sev-high     { color: var(--sev-high);     border-color: rgba(var(--sev-high-rgb), 0.28);     background: rgba(var(--sev-high-rgb), 0.09); }
+  &.sev-medium   { color: var(--sev-medium);   border-color: rgba(var(--sev-medium-rgb), 0.24);   background: rgba(var(--sev-medium-rgb), 0.07); }
+  &.sev-low      { color: var(--sev-low);      border-color: rgba(var(--sev-low-rgb), 0.24);      background: rgba(var(--sev-low-rgb), 0.07); }
+  &.sev-info     { color: var(--sev-info);     border-color: rgba(var(--sev-info-rgb), 0.26);     background: rgba(var(--sev-info-rgb), 0.08); }
+  &.sev-zero     { color: $icon;               border-color: $border;                             background: transparent; }
 }
 
 .sev-total-circle {
@@ -651,7 +978,7 @@ $sev-info:     #60a5fa;
   align-items: center;
   gap: 5px;
   margin-bottom: 14px;
-  color: rgba($text-muted, 0.55);
+  color: rgba($text-muted, 0.8);
   font-size: 0.7rem;
 
   mat-icon {
@@ -769,8 +1096,12 @@ $sev-info:     #60a5fa;
     margin: 0;
     font-size: 0.8125rem;
     color: $text-muted;
-    max-width: 300px;
+    max-width: 320px;
     line-height: 1.7;
+  }
+
+  .reset-filter-btn {
+    margin-top: 18px;
   }
 }
 
@@ -778,11 +1109,12 @@ $sev-info:     #60a5fa;
 
 @media (max-width: 959px) {
   .page-title h1 { font-size: 1.3rem; }
-  .filter-bar .filter-field { width: 200px; }
-  .panel-sticky { padding: 10px 14px; }
+  .panel-sticky .toolbar { padding: 10px 12px; }
+  .toolbar .filter-field { max-width: 200px; }
 
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .report-row {
+    grid-template-columns: 3px 24px minmax(0, 1fr) 110px 70px 28px;
+    gap: 10px;
   }
 }
 
@@ -801,15 +1133,45 @@ $sev-info:     #60a5fa;
   }
 
   .reports-panel { border-radius: 6px; }
-  .panel-sticky { padding: 8px 12px; }
 
-  .filter-bar {
-    flex-direction: column;
-    align-items: stretch;
+  .toolbar {
+    padding: 8px 12px;
 
-    .filter-field { width: 100%; }
+    .filter-field {
+      width: 100%;
+      flex: 1 1 100%;
+      max-width: none;
+    }
+  }
+
+  .toolbar-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  // two lines: title above, risk below — the bar stays, the age drops
+  .report-row {
+    grid-template-columns: 3px 24px minmax(0, 1fr) 28px;
+    grid-template-areas:
+      'stripe select name   menu'
+      'stripe select risk   risk';
+    row-gap: 3px;
+    padding: 8px 10px 8px 0;
+  }
+
+  .sev-stripe  { grid-area: stripe; }
+  .row-select  { grid-area: select; align-self: center; }
+  .row-name    { grid-area: name; }
+  .risk-cell   { grid-area: risk; }
+  .row-actions { grid-area: menu; align-self: center; }
+  .row-when    { display: none; }
+
+  .selection-bar { padding: 8px 12px; }
+
+  .panel-footer {
+    padding: 6px 10px;
     .compact-paginator { width: 100%; }
-    .sort-group { flex-wrap: wrap; }
   }
 
   .cards-grid {
