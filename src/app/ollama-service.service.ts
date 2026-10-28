@@ -24,8 +24,33 @@ export class OllamaServiceService {
       });
   }
 
+  // LiteLLM (and any OpenAI-compatible gateway) lists its models at GET /v1/models.
+  // The result is normalised to the {models:[{model,name}]} shape checktags returns,
+  // so the settings and chat dialogs read model lists the same way for either backend.
+  checkmodels_litellm(url, apikey): Promise<any> {
+    const headers = apikey ? new HttpHeaders({ 'Authorization': 'Bearer ' + apikey }) : new HttpHeaders();
+    return this.http.get<any>(url+'/v1/models', { headers })
+      .toPromise()
+      .then(response => {
+        const list = (response && response.data) ? response.data : [];
+        return { models: list.map(m => ({ model: m.id, name: m.id })) };
+      })
+      .catch(error => {
+        console.log('litellm api error: ', error);
+        this.snackBar.open('Can\'t connect to LiteLLM API', 'OK', {
+          duration: 5000,
+          panelClass: ['notify-snackbar-fail']
+        });
+      });
+  }
 
-  chatStream(url,msg,model,imgs,files,defaultprompt) {
+  // Dispatch model discovery to the backend the user picked.
+  checkmodels(url, apitype, apikey): Promise<any> {
+    return apitype === 'litellm' ? this.checkmodels_litellm(url, apikey) : this.checktags(url);
+  }
+
+
+  chatStream(url,msg,model,imgs,files,defaultprompt,apitype='ollama',apikey='') {
 
     const localchat = this.sessionsub.getSessionStorageItem('VULNREPO-OLLAMA-CHAT-MSG-H');
     let tarr = [];
@@ -59,7 +84,11 @@ export class OllamaServiceService {
         
     });
     }
-    
+
+    if (apitype === 'litellm') {
+      return this.chatStream_litellm(url, msg+addfile, model, imgs, defaultprompt, tarr, temperature, apikey);
+    }
+
     return new Observable<string>(observer => {
       fetch(url+'/api/chat', {
         method: 'POST',
@@ -103,6 +132,93 @@ export class OllamaServiceService {
               }
             }
             observer.next(content);
+            push();
+          });
+        }
+
+        push();
+      }).catch((err: Error) => {
+        observer.error();
+      });
+    });
+  }
+
+  // Chat through a LiteLLM proxy (or any OpenAI-compatible gateway) at
+  // POST /v1/chat/completions. LiteLLM routes the model prefix (openai/..., vertex_ai/...,
+  // bedrock/..., anthropic/...) to the real provider and streams back Server-Sent Events,
+  // each a `data: {choices:[{delta:{content}}]}` line ending with `data: [DONE]`. Images are
+  // sent as OpenAI content parts. An optional Bearer key authenticates to the proxy.
+  chatStream_litellm(url, msg, model, imgs, defaultprompt, history, temperature, apikey) {
+
+    let usercontent: any = msg;
+    if (imgs && imgs.length > 0) {
+      usercontent = [{ "type": "text", "text": msg }];
+      imgs.forEach(function (value) {
+        usercontent.push({ "type": "image_url", "image_url": { "url": "data:image/png;base64," + value } });
+      });
+    }
+
+    const body = {
+      "model": model,
+      "messages": [
+        { "role": "system", "content": defaultprompt },
+        ...history,
+        { "role": "user", "content": usercontent }
+      ],
+      "stream": true,
+      "temperature": temperature
+    };
+
+    const headers: any = { 'Content-Type': 'application/json' };
+    if (apikey) {
+      headers['Authorization'] = 'Bearer ' + apikey;
+    }
+
+    return new Observable<string>(observer => {
+      fetch(url+'/v1/chat/completions', {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: headers,
+      }).then(response => {
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        if (!response.ok) {
+           observer.error();
+        }
+
+        let buffer = '';
+
+        function push() {
+          return reader?.read().then(({ done, value }) => {
+            if (done) {
+              observer.complete();
+              return;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            // SSE events are separated by a blank line; keep any partial tail in the buffer.
+            const events = buffer.split('\n');
+            buffer = events.pop() || '';
+            let content = '';
+            for (let i = 0; i < events.length; i++) {
+              const line = events[i].trim();
+              if (!line || line.indexOf('data:') !== 0) {
+                continue;
+              }
+              const payload = line.slice(5).trim();
+              if (payload === '[DONE]') {
+                continue;
+              }
+              try {
+                const data = JSON.parse(payload);
+                content += (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) || '';
+              } catch (e) {
+                // a split JSON chunk: it will be completed on the next read
+              }
+            }
+            if (content) {
+              observer.next(content);
+            }
             push();
           });
         }

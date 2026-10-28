@@ -19,6 +19,34 @@
   <!-- Content -->
   <mat-dialog-content class="settings-body">
 
+    <!-- Backend section -->
+    <div class="settings-section">
+      <div class="section-label">
+        <mat-icon class="section-icon">hub</mat-icon>
+        <span>Backend</span>
+      </div>
+      <mat-form-field color="accent" class="settings-field">
+        <mat-label>API type</mat-label>
+        <mat-select [(ngModel)]="apitype" name="apitype" (selectionChange)="reconnect()">
+          <mat-option value="ollama">Ollama</mat-option>
+          <mat-option value="litellm">LiteLLM (OpenAI-compatible gateway)</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field color="accent" class="settings-field">
+        <mat-label>Endpoint URL</mat-label>
+        <input matInput [(ngModel)]="ollamaurl" name="endpointurl" (change)="reconnect()"
+          [placeholder]="apitype === 'litellm' ? 'http://localhost:4000' : 'http://localhost:11434'">
+      </mat-form-field>
+      @if (apitype === 'litellm') {
+        <mat-form-field color="accent" class="settings-field">
+          <mat-label>API key (optional)</mat-label>
+          <input matInput type="password" [(ngModel)]="apikey" name="apikey" (change)="reconnect()"
+            placeholder="LiteLLM proxy key, if the gateway requires one">
+        </mat-form-field>
+        <p class="section-hint">LiteLLM routes the model's provider prefix (openai/..., vertex_ai/..., bedrock/..., anthropic/...) to the real provider. The proxy holds the provider credentials.</p>
+      }
+    </div>
+
     <!-- Model section -->
     <div class="settings-section">
       <div class="section-label">

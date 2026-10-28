@@ -35,6 +35,8 @@ export class DialogOllamaComponent implements OnInit {
   models: any;
   aiconnected = false;
   ollamaurl = "http://localhost:11434";
+  apitype = "ollama";
+  apikey = "";
   temperature = 0.7;
   attachedIMG: any = [];
   attachedIMG_b64: any = [];
@@ -64,22 +66,24 @@ export class DialogOllamaComponent implements OnInit {
 
         this.aiselectedValue = this.models.model;
         this.ollamaurl = this.models.ollama_url;
+        this.apitype = this.models.apitype || 'ollama';
+        this.apikey = this.models.api_key || '';
         this.temperature = this.models.temperature;
         this.defaultprompt = this.models.defaultprompt;
 
+        this.ollamaService.checkmodels(this.ollamaurl, this.apitype, this.apikey).then(resp => {
+
+          if (resp && resp.models) {
+            this.ai_tags = resp.models;
+            this.aiconnected = true;
+          } else {
+            this.router.navigate(['/settings']);
+            this.dialogRef.close();
+          }
+        });
+
       } else {
 
-        this.router.navigate(['/settings']);
-        this.dialogRef.close();
-      }
-    });
-
-    this.ollamaService.checktags(this.ollamaurl).then(resp => {
-
-      if (resp) {
-        this.ai_tags = resp.models;
-        this.aiconnected = true;
-      } else {
         this.router.navigate(['/settings']);
         this.dialogRef.close();
       }
@@ -163,7 +167,7 @@ export class DialogOllamaComponent implements OnInit {
       let temps = "";
       let start = performance.now();
       //this.updatemsg('user', inputmsg);
-      this.ollamaService.chatStream(this.ollamaurl, inputmsg, this.aiselectedValue, attarr_b64, attfiles, this.defaultprompt).subscribe({
+      this.ollamaService.chatStream(this.ollamaurl, inputmsg, this.aiselectedValue, attarr_b64, attfiles, this.defaultprompt, this.apitype, this.apikey).subscribe({
         next: (text) => {
           this.chatmsg[this.chatmsg.length - 1].response += text;
           temps += text;
@@ -329,6 +333,8 @@ export class DialogOllamaComponent implements OnInit {
 
           this.aiselectedValue = this.models.model;
           this.ollamaurl = this.models.ollama_url;
+          this.apitype = this.models.apitype || 'ollama';
+          this.apikey = this.models.api_key || '';
           this.temperature = this.models.temperature;
           this.defaultprompt = this.models.defaultprompt;
 

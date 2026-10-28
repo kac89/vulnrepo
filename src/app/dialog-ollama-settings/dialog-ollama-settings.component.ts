@@ -19,6 +19,8 @@ export class DialogOllamaSettingsComponent {
   temperature = 0.1;
   ai_tags:any = [];
   ollamaurl = "http://localhost:11434";
+  apitype = "ollama";
+  apikey = "";
   models:any;
   defaultprompt = new UntypedFormControl();
   // @ts-ignore
@@ -39,9 +41,13 @@ export class DialogOllamaSettingsComponent {
 
         this.aiselectedValue = this.models.model;
         this.ollamaurl = this.models.ollama_url || 'http://localhost:11434';
+        this.apitype = this.models.apitype || 'ollama';
+        this.apikey = this.models.api_key || '';
         this.temperature = this.models.temperature;
         this.defaultprompt.setValue(this.models.defaultprompt);
-        
+
+        this.loadmodels();
+
       } else {
         //console.log('first time');
 
@@ -50,23 +56,48 @@ export class DialogOllamaSettingsComponent {
       }
      });
 
-    if(this.models) {
-      this.aiselectedValue = this.models.model;
-      this.ollamaurl = this.models.ollama_url || 'http://localhost:11434';
-    }
-  
+  }
 
-    this.ollamaService.checktags(this.ollamaurl).then(resp => {
-      if (resp) {
-       this.ai_tags = resp.models;
-       this.aiselectedValue = this.ai_tags[0].model;
+  // Record shared by the settings and chat dialogs. apitype selects the backend
+  // (ollama native API, or a LiteLLM / OpenAI-compatible gateway) and api_key is the
+  // optional proxy key.
+  private record() {
+    return {
+      "model": this.aiselectedValue,
+      "ollama_url": this.ollamaurl,
+      "apitype": this.apitype,
+      "api_key": this.apikey,
+      "temperature": this.temperature,
+      "defaultprompt": this.defaultprompt.value
+    };
+  }
+
+  loadmodels() {
+    this.ollamaService.checkmodels(this.ollamaurl, this.apitype, this.apikey).then(resp => {
+      if (resp && resp.models && resp.models.length > 0) {
+        this.ai_tags = resp.models;
+        if (!this.aiselectedValue) {
+          this.aiselectedValue = this.ai_tags[0].model;
+        }
       }
     });
+  }
 
+  // Re-discover models and persist when the backend, endpoint or key changes.
+  reconnect() {
+    this.aiselectedValue = "";
+    this.ai_tags = [];
+    this.ollamaService.checkmodels(this.ollamaurl, this.apitype, this.apikey).then(resp => {
+      if (resp && resp.models && resp.models.length > 0) {
+        this.ai_tags = resp.models;
+        this.aiselectedValue = this.ai_tags[0].model;
+      }
+      this.indexeddbService.updateAiintegration(this.record(), 0).then(ret => { });
+    });
   }
 
   savetemp() {
-    this.indexeddbService.updateAiintegration({"model":this.aiselectedValue, "ollama_url":this.ollamaurl, "temperature": this.temperature, "defaultprompt": this.defaultprompt.value}, 0).then(ret => { });
+    this.indexeddbService.updateAiintegration(this.record(), 0).then(ret => { });
     this.sessionsub.setSessionStorageItem('VULNREPO-OLLAMA-CHAT-SET-TEMP', this.temperature);
   }
 
@@ -74,22 +105,22 @@ export class DialogOllamaSettingsComponent {
   selectcmodel(event){
 
     if(event.value) {
-      this.indexeddbService.updateAiintegration({"model":event.value, "ollama_url":this.ollamaurl, "temperature": this.temperature, "defaultprompt": this.defaultprompt.value}, 0).then(ret => { });
       this.aiselectedValue = event.value;
+      this.indexeddbService.updateAiintegration(this.record(), 0).then(ret => { });
     }
 
   }
 
   savedef(){
-    this.indexeddbService.updateAiintegration({"model":this.aiselectedValue, "ollama_url":this.ollamaurl, "temperature": this.temperature, "defaultprompt": this.defaultprompt.value}, 0).then(ret => { });
+    this.indexeddbService.updateAiintegration(this.record(), 0).then(ret => { });
   }
 
   firstime() {
-    this.ollamaService.checktags(this.ollamaurl).then(resp => {
-      if (resp) {
+    this.ollamaService.checkmodels(this.ollamaurl, this.apitype, this.apikey).then(resp => {
+      if (resp && resp.models && resp.models.length > 0) {
        this.ai_tags = resp.models;
        this.aiselectedValue = this.ai_tags[0].model;
-       this.indexeddbService.updateAiintegration({"model":this.aiselectedValue, "ollama_url":this.ollamaurl, "temperature": this.temperature, "defaultprompt": this.defaultprompt.value}, 0).then(ret => { });
+       this.indexeddbService.updateAiintegration(this.record(), 0).then(ret => { });
       }
     });
   }
