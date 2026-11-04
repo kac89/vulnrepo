@@ -4,10 +4,24 @@
   <!-- Replaces the old tagline strip: live vault state instead of adjectives. -->
   <div class="vr-status">
     <div class="vr-status__item">
-      <span class="vr-led" [class.vr-led--locked]="!vaultUnlocked"></span>
+      <span class="vr-led" [class.vr-led--locked]="!vaultUnlocked" aria-hidden="true"></span>
       @if (vaultUnlocked) {
         <strong>Vault unlocked</strong>
         <span class="vr-status__hint">{{unlockedCount}} key{{unlockedCount === 1 ? '' : 's'}} in memory</span>
+        <!-- aria-hidden: this ticks once a second, and a live countdown inside
+             an announced region is unusable noise. The button's title carries
+             the same information in a form a screen reader can ask for. -->
+        @if (lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
+          <span class="vr-status__tick" aria-hidden="true"
+            [class.vr-status__tick--soon]="lockSecondsRemaining < 120">
+            · locks in {{formatLockTimer(lockSecondsRemaining)}}
+          </span>
+        }
+        <button type="button" class="vr-lock-now" (click)="lockNow()"
+          [title]="'Forget all ' + unlockedCount + ' key' + (unlockedCount === 1 ? '' : 's') + ' held this session'">
+          <mat-icon>lock</mat-icon>
+          Lock now
+        </button>
       } @else {
         <strong>Vault locked</strong>
         <span class="vr-status__hint">keys are never stored</span>
@@ -25,13 +39,25 @@
       <strong>{{findingCount}}</strong>
     </div>
     @if (storageUsedBytes > 0) {
+      <!-- "Browser storage", not "Storage": navigator.storage.estimate()
+           measures the whole origin — service-worker cache and assets
+           included — so labelling it as report data overstated it badly. -->
       <div class="vr-status__item">
-        <span class="vr-status__label">Storage</span>
+        <span class="vr-status__label">Browser storage</span>
         <strong>{{storageUsedBytes | filesize}}</strong>
+        @if (storageQuotaBytes > 0) {
+          <span class="vr-status__hint" [class.vr-status__hint--warn]="storagePressure !== 'ok'">
+            of {{storageQuotaBytes | filesize}} · {{storagePercent}}%
+          </span>
+        }
       </div>
     }
     <div class="vr-status__item vr-status__item--end">
-      @if (apiVaultOpen && remoteCount > 0) {
+      @if (apiLoading) {
+        <span class="vr-status__hint vr-status__hint--busy">
+          listing {{apiEndpointCount}} server{{apiEndpointCount === 1 ? '' : 's'}}…
+        </span>
+      } @else if (apiVaultOpen && remoteCount > 0) {
         <span class="vr-accent">local + API</span>
       } @else {
         <span class="vr-accent">local only</span>
@@ -74,6 +100,29 @@
         <mat-icon>refresh</mat-icon>
         Retry
       </button>
+    </section>
+  }
+
+  <!-- ── A3 · STORAGE PRESSURE ──────────────────────────────────── -->
+  <!-- With no backend, a browser evicting this origin is the one way reports
+       are lost outright, and nothing in the app said so. Sits in the same slot
+       as the vault call-outs because it is the same kind of message: something
+       that needs a decision before the work continues. -->
+  @if (storagePressure !== 'ok') {
+    <section class="vr-vault-call vr-vault-call--warn">
+      <mat-icon class="vr-vault-call__icon">storage</mat-icon>
+      <div class="vr-vault-call__text">
+        <strong>This browser's storage is {{storagePercent}}% full</strong>
+        <span>
+          Reports live in IndexedDB on this device only. When the origin runs out of
+          room the browser is free to evict it — export anything you cannot lose, and
+          purge old report history to reclaim space.
+        </span>
+      </div>
+      <a class="vr-btn vr-btn--outline vr-vault-call__btn" routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        Manage storage
+      </a>
     </section>
   }
 
@@ -240,32 +289,44 @@
           <mat-icon>insights</mat-icon>
           Your activity
 
-          <span class="vr-win" role="group" aria-label="Activity window">
+          <!-- The range chip selects; the caret discloses. One control no
+               longer answers to both aria-pressed and aria-expanded. -->
+          <span class="vr-win" role="group" [attr.aria-label]="'Activity window — ' + windowLabel()">
             @for (p of windowPresets; track p.value) {
               <button type="button" class="vr-win__btn" [attr.aria-label]="p.aria"
                 [attr.aria-pressed]="windowPreset === p.value" (click)="setWindow(p.value)">
                 {{p.label}}
               </button>
             }
-            <button type="button" class="vr-win__btn vr-win__btn--custom" aria-haspopup="dialog"
-              [attr.aria-expanded]="pickerOpen" [attr.aria-pressed]="windowPreset === 'custom'"
-              (click)="setWindow('custom')">
-              {{windowPreset === 'custom' ? rangeLabel() : 'custom…'}}
+            <button type="button" class="vr-win__btn vr-win__btn--range"
+              [attr.aria-pressed]="windowPreset === 'custom'"
+              [attr.aria-label]="windowPreset === 'custom' ? 'Custom window, ' + rangeLabel() : 'Custom window'"
+              (click)="useCustomWindow()">
+              {{windowPreset === 'custom' ? rangeLabel() : 'custom'}}
+            </button>
+            <button type="button" #winCaret class="vr-win__btn vr-win__btn--caret"
+              aria-haspopup="dialog" aria-label="Edit custom range"
+              [attr.aria-expanded]="pickerOpen" (click)="toggleCustomPicker()">
               <mat-icon>expand_more</mat-icon>
             </button>
           </span>
 
-          <span class="vr-win__meta">{{rangeLabel()}} · {{activity.reportsTouched}} of {{reportCount}} touched</span>
+          <!-- The chip states the range whenever it is the active window, so
+               repeating it here would print the same dates twice. -->
+          <span class="vr-win__meta">
+            @if (windowPreset !== 'custom') { {{rangeLabel()}} · }{{activity.reportsTouched}} of {{reportCount}} touched
+          </span>
         </h2>
 
         <!-- Custom range. The presets live in the control above, so this pane
              only holds what they cannot express. -->
         @if (pickerOpen) {
-          <div class="vr-win-pop" role="dialog" aria-label="Custom activity window">
+          <div class="vr-win-pop" role="dialog" aria-label="Custom activity window"
+            (keydown.escape)="closeCustomPicker()">
             <div class="vr-win-pop__fields">
               <div class="vr-fld">
                 <label for="vr-win-from">From</label>
-                <input id="vr-win-from" type="date" [value]="customFrom" [max]="todayInput()"
+                <input #winFrom id="vr-win-from" type="date" [value]="customFrom" [max]="todayInput()"
                   (change)="onCustomFrom($any($event.target).value)">
               </div>
               <div class="vr-fld">
@@ -291,6 +352,7 @@
             <div class="vr-win-pop__actions">
               <button type="button" class="vr-btn vr-btn--primary" (click)="applyCustomWindow()">Apply window</button>
               <button type="button" class="vr-btn vr-btn--outline" (click)="resetWindow()">Back to 30 days</button>
+              <span class="vr-win-pop__esc">Esc to close</span>
             </div>
           </div>
         }
@@ -392,12 +454,55 @@
 
   }
 
+  @if (state === 'WORKSPACE') {
+
+  <!-- ── E2 · TOOL RAIL (workspace) ─────────────────────────────── -->
+  <!-- The capability tracks below sell nine features to someone who has
+       already bought. A returning user needs the doorways, so this carries
+       every routed destination they held, as one row, and drops the bullets
+       that were unclickable feature copy. The tracks stay intact on first run,
+       where the pitch is the point. -->
+  <section class="vr-section vr-section--tight">
+    <h2 class="vr-section__title">
+      <mat-icon>bolt</mat-icon>
+      Tools
+    </h2>
+
+    <nav class="vr-rail">
+      @for (t of tools; track t.route) {
+        <a [routerLink]="t.route">
+          <mat-icon>{{t.icon}}</mat-icon>
+          {{t.label}}
+        </a>
+      }
+    </nav>
+  </section>
+
+  <!-- ── F2 · PROOF, FOLDED (workspace) ─────────────────────────── -->
+  <!-- Same three claims, one line. <details> rather than a custom toggle: it
+       is keyboard-operable and announced as a disclosure for free. -->
+  <section class="vr-section vr-section--tight">
+    <details class="vr-fold">
+      <summary>
+        <mat-icon class="vr-fold__icon">verified_user</mat-icon>
+        <span class="vr-fold__label">How your data is protected</span>
+        <span class="vr-fold__facts">
+          AES-256-GCM · PBKDF2 {{pbkdf2Iterations | number}} · {{isHostedBuild ? app_ver_short : 'self-hosted'}}
+        </span>
+        <mat-icon class="vr-fold__caret">expand_more</mat-icon>
+      </summary>
+      <ng-container [ngTemplateOutlet]="proofFacts"></ng-container>
+    </details>
+  </section>
+
+  } @else {
+
   <!-- ── E · CAPABILITY TRACKS ──────────────────────────────────── -->
   <!-- Four jobs, not nine feature names. Every bullet is a destination. -->
   <section class="vr-section">
     <h2 class="vr-section__title">
       <mat-icon>grid_view</mat-icon>
-      @if (state === 'WORKSPACE') { Jump into a track } @else { Everything it does }
+      Everything it does
     </h2>
 
     <div class="vr-tracks">
@@ -453,6 +558,15 @@
       Don't take our word for it
     </h2>
 
+    <ng-container [ngTemplateOutlet]="proofFacts"></ng-container>
+  </section>
+
+  }
+
+  <!-- The figures themselves, rendered by both states: full-height under the
+       first-run heading above, and inside the workspace fold. One copy, so the
+       two can never drift apart. -->
+  <ng-template #proofFacts>
     <dl class="vr-proof">
       <div class="vr-proof__item">
         <dt>Encryption</dt>
@@ -479,7 +593,7 @@
         </dd>
       </div>
     </dl>
-  </section>
+  </ng-template>
 
   <!-- ── G · FOOTER ROW ─────────────────────────────────────────── -->
   <!-- Resources + Community merged: four unique destinations, social once. -->

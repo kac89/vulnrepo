@@ -110,6 +110,42 @@ export class KeyVaultService implements OnDestroy {
   }
 
   /**
+   * Explicit, user-initiated lock — the home status bar's "Lock now".
+   *
+   * Deliberately NOT clearAll(): in session mode that path flushes only the
+   * in-memory cache and leaves sessionStorage readable for the rest of the tab
+   * lifetime, which is right for an idle timeout (the tab is still the user's)
+   * and wrong for a button labelled "Lock now" — the next get() would silently
+   * restore every key and the button would be a lie. A user asking for the
+   * keys to be gone gets them gone in both modes.
+   */
+  lockNow(): void {
+    this.cancelTimers();
+    this.dismissWarning();
+    if (this.keys.size === 0 && this.apiVault === null) return;
+
+    // Same contract as the idle path: holders of decrypted data get one last
+    // synchronous chance to re-encrypt, and a throwing handler must never be
+    // able to keep the vault unlocked.
+    for (const handler of this.prelockHandlers) {
+      try {
+        handler();
+      } catch (err) {
+        console.log('pre-lock handler failed', err);
+      }
+    }
+
+    this.keys.clear();
+    this.apiVault = null;
+    this.wipeSessionStorage();
+    // A handler's get()/getApiVault() runs through resetIdle() and re-arms the
+    // timers; drop them again now that there is nothing left to lock.
+    this.cancelTimers();
+    this.changeSubject.next(null);
+    this.idleResetAtSubject.next(null);
+  }
+
+  /**
    * Register a callback run synchronously immediately *before* the vault wipes
    * its keys, so a holder of decrypted data gets one last chance to stash it.
    *
