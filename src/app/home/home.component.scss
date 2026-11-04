@@ -65,6 +65,56 @@
 .vr-status__hint {
   color: var(--vr-text-muted);
 }
+/* B5 · the origin is filling up. Amber, not red: this is "act soon", and the
+   severity-high hue is what the rest of the app already spends on that. */
+.vr-status__hint--warn {
+  color: rgb(var(--sev-high-rgb));
+}
+/* A3 · endpoints still answering. Dimmer than a result, so a settled bar never
+   looks like it is still working. */
+.vr-status__hint--busy {
+  color: var(--vr-text-dim);
+}
+
+/* B4 · the auto-lock countdown. Tabular so the seconds digit doesn't shift the
+   whole strip once a second. */
+.vr-status__tick {
+  font-variant-numeric: tabular-nums;
+  color: var(--vr-text-muted);
+}
+.vr-status__tick--soon {
+  color: rgb(var(--sev-high-rgb));
+}
+
+/* B4 · Lock now. Quieter than .vr-vault-btn — that one is an invitation to
+   unlock, this one is a control you should be able to find without being
+   sold on it. */
+.vr-lock-now {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 2px;
+  padding: 2px 8px;
+  border: 1px solid var(--vr-border-strong);
+  border-radius: var(--vr-radius-sm);
+  background: transparent;
+  color: var(--vr-text-muted);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.vr-lock-now:hover {
+  color: var(--vr-accent);
+  border-color: rgba(var(--vr-accent-rgb), 0.45);
+  background: rgba(var(--vr-accent-rgb), 0.08);
+}
+.vr-lock-now mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
 
 .vr-led {
   width: 7px;
@@ -380,15 +430,31 @@
   color: var(--vr-accent);
 }
 
-.vr-win__btn--custom {
+/* B6 · the range chip. Holds a date span rather than the word "custom", so it
+   needs to stop being squeezed by the preset buttons' tracking. */
+.vr-win__btn--range {
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* B6 · the caret. Icon only, and narrower than a labelled button — but still a
+   36px-tall hit target, since it is the only way into the panel. */
+.vr-win__btn--caret {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  padding: 9px 7px;
 }
-.vr-win__btn--custom mat-icon {
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
+.vr-win__btn--caret mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s ease;
+}
+.vr-win__btn--caret[aria-expanded="true"] {
+  color: var(--vr-accent);
+}
+.vr-win__btn--caret[aria-expanded="true"] mat-icon {
+  transform: rotate(180deg);
 }
 
 .vr-win__meta {
@@ -480,12 +546,24 @@
 
 .vr-win-pop__actions {
   display: flex;
+  align-items: center;
   gap: 10px;
   margin-top: 16px;
+  flex-wrap: wrap;
 }
 .vr-win-pop__actions .vr-btn {
   padding: 10px 16px;
   font-size: 0.75rem;
+}
+/* B6 · the panel claims role="dialog" and now behaves like one, so say that
+   Escape works instead of leaving the user to guess. */
+.vr-win-pop__esc {
+  margin-left: auto;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vr-text-disabled);
 }
 
 /* Headline figures: one hero (the figure the panel exists to show) and four
@@ -918,6 +996,100 @@
   color: var(--vr-text-muted);
 }
 
+/* ── E2 · Tool rail (workspace) ───────────────────────────────── */
+/* Pills, not cards: a card says "separate object worth reading", and these are
+   eight doorways to scan in one pass. Border and fill only — no radius-plus-
+   shadow treatment that would make a row of links read as eight panels. */
+.vr-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.vr-rail a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: var(--vr-text);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.vr-rail a:hover {
+  background: var(--vr-bg-card-2);
+  border-color: var(--vr-border-hover);
+}
+.vr-rail a mat-icon {
+  color: var(--vr-accent);
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* ── F2 · Folded proof (workspace) ────────────────────────────── */
+.vr-fold {
+  background: var(--vr-bg-card);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius);
+}
+.vr-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.83rem;
+  color: var(--vr-text);
+}
+/* The default marker would sit before our own caret — two disclosure
+   indicators pointing opposite ways. */
+.vr-fold > summary::-webkit-details-marker { display: none; }
+.vr-fold > summary::marker { content: ''; }
+.vr-fold > summary:hover { color: var(--vr-accent); }
+
+.vr-fold__icon {
+  color: var(--vr-accent);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+.vr-fold__label { font-weight: 500; }
+.vr-fold__facts {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  color: var(--vr-text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vr-fold__caret {
+  margin-left: auto;
+  flex: none;
+  color: var(--vr-text-muted);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+.vr-fold[open] .vr-fold__caret { transform: rotate(180deg); }
+
+/* The panel keeps its own border inside the fold, so drop the duplicate edge
+   and the glow that would stack with the summary's card. */
+.vr-fold .vr-proof {
+  border: 0;
+  border-top: 1px solid var(--vr-border);
+  border-radius: 0 0 var(--vr-radius) var(--vr-radius);
+  background: transparent;
+}
+
 /* ── E · Capability tracks ────────────────────────────────────── */
 .vr-tracks {
   display: grid;
@@ -1129,6 +1301,19 @@
   }
   .vr-btn { justify-content: center; }
   .vr-status__item--end { margin-left: 0; }
+  /* The vault item carries four things at this width (LED, state, countdown,
+     Lock now); let them wrap rather than push the strip into a scrollbar. */
+  .vr-status__item {
+    flex-wrap: wrap;
+    gap: 6px 8px;
+  }
+  /* The summary line still names what the fold holds; the figures are one tap
+     away and do not survive 360px intact. */
+  .vr-fold__facts { display: none; }
+  .vr-win-pop__esc {
+    margin-left: 0;
+    width: 100%;
+  }
   .vr-foot__social { margin-left: 0; }
   .vr-win { flex-wrap: wrap; }
   .vr-win-pop__fields { flex-direction: column; }

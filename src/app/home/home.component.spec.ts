@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 import { HomeComponent } from './home.component';
 import { FilesizePipe } from '../filesize.pipe';
@@ -18,10 +18,15 @@ class IndexeddbServiceStub {
 
 class KeyVaultServiceStub {
   change$ = new Subject<string | null>();
+  // null = nothing held, so the component's countdown never starts an
+  // interval. A test that wants the timer emits a reset point on this.
+  idleResetAt$ = new BehaviorSubject<number | null>(null);
+  lockNowCalls = 0;
   openReportIds() { return []; }
   has() { return false; }
   hasApiVault() { return false; }
   getApiVault() { return null; }
+  lockNow() { this.lockNowCalls++; }
 }
 
 const DAY = 86400000;
@@ -265,6 +270,147 @@ describe('HomeComponent', () => {
       expect(c.activity?.days).toBe(7);
       expect(c.activity?.saves).toBe(1);
       expect(localStorage.getItem('VULNREPO-home-window')).toBe('7');
+    });
+
+    // B6 · the range chip and the caret used to be one button that answered to
+    // both aria-pressed and aria-expanded, and selecting 'custom' only toggled
+    // the panel. Each now does exactly one thing.
+    describe('custom range control', () => {
+      const day = (daysAgo: number) => {
+        const d = new Date(Date.now() - daysAgo * DAY);
+        const p = (n: number) => (n < 10 ? '0' + n : String(n));
+        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+      };
+
+      it('selects the stored custom window without opening the panel', async () => {
+        db.reports = [report('a', 1)];
+        const c = await build();
+        c.customFrom = day(10);
+        c.customTo = day(0);
+
+        c.useCustomWindow();
+
+        expect(c.windowPreset).toBe('custom');
+        expect(c.pickerOpen).toBeFalse();
+        expect(c.activity?.days).toBe(11);
+      });
+
+      it('falls through to the panel when there is no range to select', async () => {
+        db.reports = [report('a', 1)];
+        const c = await build();
+        c.customFrom = '';
+        c.customTo = '';
+
+        c.useCustomWindow();
+
+        expect(c.pickerOpen).toBeTrue();
+        expect(c.windowPreset).toBe('30');
+      });
+
+      it('discloses and dismisses from the caret alone', async () => {
+        db.reports = [report('a', 1)];
+        const c = await build();
+
+        c.toggleCustomPicker();
+        expect(c.pickerOpen).toBeTrue();
+        // Disclosing must not change which window is active.
+        expect(c.windowPreset).toBe('30');
+
+        c.toggleCustomPicker();
+        expect(c.pickerOpen).toBeFalse();
+      });
+
+      it('dismisses on escape and on a click outside the control', async () => {
+        db.reports = [report('a', 1)];
+        const c = await build();
+
+        c.toggleCustomPicker();
+        c.closeCustomPicker();
+        expect(c.pickerOpen).toBeFalse();
+
+        c.toggleCustomPicker();
+        c.onDocumentClick({ target: document.body } as unknown as MouseEvent);
+        expect(c.pickerOpen).toBeFalse();
+      });
+
+      it('leaves the panel open for a click inside it', async () => {
+        db.reports = [report('a', 1)];
+        const c = await build();
+        c.toggleCustomPicker();
+
+        const inside = document.createElement('div');
+        inside.className = 'vr-win-pop';
+        const child = document.createElement('input');
+        inside.appendChild(child);
+
+        c.onDocumentClick({ target: child } as unknown as MouseEvent);
+
+        expect(c.pickerOpen).toBeTrue();
+      });
+
+      it('closes the panel when a preset is chosen', async () => {
+        db.reports = [report('a', 1)];
+        const c = await build();
+        c.toggleCustomPicker();
+
+        c.setWindow('90');
+
+        expect(c.pickerOpen).toBeFalse();
+        expect(c.windowPreset).toBe('90');
+      });
+    });
+  });
+
+  // B5 · the figure is whole-origin usage, so the ratio is what carries the
+  // warning. A browser that declines to report a quota must not produce one.
+  describe('storage pressure', () => {
+    it('stays quiet without a quota to compare against', () => {
+      component.storageUsedBytes = 214_000_000;
+      component.storageQuotaBytes = 0;
+
+      expect(component.storagePercent).toBe(0);
+      expect(component.storagePressure).toBe('ok');
+    });
+
+    it('grades usage against the quota', () => {
+      component.storageQuotaBytes = 1000;
+
+      component.storageUsedBytes = 100;
+      expect(component.storagePercent).toBe(10);
+      expect(component.storagePressure).toBe('ok');
+
+      component.storageUsedBytes = 820;
+      expect(component.storagePercent).toBe(82);
+      expect(component.storagePressure).toBe('warn');
+
+      component.storageUsedBytes = 950;
+      expect(component.storagePercent).toBe(95);
+      expect(component.storagePressure).toBe('critical');
+    });
+
+    it('never reports more than a full origin', () => {
+      component.storageQuotaBytes = 1000;
+      component.storageUsedBytes = 1400;
+
+      expect(component.storagePercent).toBe(100);
+    });
+  });
+
+  // B4 · the status bar now offers the lock it only used to report.
+  describe('lock now', () => {
+    it('delegates to the vault rather than wiping keys itself', () => {
+      const vault = TestBed.inject(KeyVaultService) as unknown as KeyVaultServiceStub;
+
+      component.lockNow();
+
+      expect(vault.lockNowCalls).toBe(1);
+    });
+
+    it('formats the countdown with a padded seconds field', () => {
+      expect(component.formatLockTimer(702)).toBe('11:42');
+      expect(component.formatLockTimer(65)).toBe('1:05');
+      expect(component.formatLockTimer(9)).toBe('0:09');
+      expect(component.formatLockTimer(0)).toBe('0:00');
     });
   });
 });

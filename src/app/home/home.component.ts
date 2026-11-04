@@ -1,6 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostListener,
+         ViewChild, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { Subscription, interval, of } from 'rxjs';
+import { startWith, map, switchMap } from 'rxjs/operators';
 import { version } from "../../version";
 import { IndexeddbService, HistoryActivityEntry } from '../indexeddb.service';
 import { KeyVaultService } from '../key-vault.service';
@@ -85,6 +87,11 @@ const MAX_WINDOW_DAYS = 731;
 // Deliberately NOT the chart window: on a 7-day window almost every report
 // would count as idle, which is noise, not a nudge.
 const IDLE_DAYS = 30;
+// Origin-usage thresholds for the storage warning. Browsers start evicting
+// well before 100%, and the whole point of the strip is to be read before the
+// reports are already gone — so warn with room to act, not at the cliff.
+const STORAGE_WARN_PCT = 80;
+const STORAGE_CRITICAL_PCT = 90;
 
 @Component({
   standalone: false,
@@ -110,11 +117,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   reportCount = 0;
   localCount = 0;
   findingCount = 0;
-  storageUsedBytes = 0;
   recent: HomeRecentReport[] = [];
+
+  // Whole-origin figures, not report payload — see storagePercent().
+  storageUsedBytes = 0;
+  storageQuotaBytes = 0;
 
   vaultUnlocked = false;
   unlockedCount = 0;
+  // Seconds until the idle auto-lock wipes the keys, or null when nothing is
+  // held (or the idle lock is switched off). Same source the header timer uses.
+  lockSecondsRemaining: number | null = null;
 
   // ── Remote (self-hosted vulnrepo server) ──────────────────────────────────
   apiVaultStored = false;   // an encrypted API vault exists in IndexedDB
@@ -148,12 +161,34 @@ export class HomeComponent implements OnInit, OnDestroy {
   readonly sevOrder: (keyof HomeReportStats)[] = ['critical', 'high', 'medium', 'low', 'info'];
   readonly pbkdf2Iterations = 600000;
 
+  // WORKSPACE replacement for the four capability tracks. The tracks sell
+  // nine features to someone who has already bought; a returning user needs
+  // the doorways, so this carries every routed destination they held (and
+  // nothing that was unclickable feature copy). Routes verified against
+  // app-routing.module.ts — a chip that 404s is worse than a bullet.
+  readonly tools: { route: string; icon: string; label: string }[] = [
+    { route: '/templates-list',  icon: 'bug_report',            label: 'Templates' },
+    { route: '/cve-search',      icon: 'search',                label: 'CVE search' },
+    { route: '/asvs',            icon: 'description',           label: 'ASVS' },
+    { route: '/tbhm',            icon: 'library_books',         label: 'TBHM' },
+    { route: '/pcidss4',         icon: 'verified',              label: 'PCI DSS 4' },
+    { route: '/bugbounty-list',  icon: 'format_list_bulleted',  label: 'Bug bounty' },
+    { route: '/import-report',   icon: 'input',                 label: 'Import' },
+    { route: '/settings',        icon: 'settings',              label: 'Settings' }
+  ];
+
+  // The custom-range panel declares role="dialog", so it has to behave like
+  // one: focus moves in on open and back to the control that opened it.
+  @ViewChild('winFrom') private winFromInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('winCaret') private winCaretBtn?: ElementRef<HTMLButtonElement>;
+
   private history: HistoryActivityEntry[] = [];
   private allRows: HomeRecentReport[] = [];
   private localReports: HomeRecentReport[] = [];
   private remoteReports: HomeRecentReport[] = [];
   private encryptedApiVault: string | null = null;
   private vaultSub: Subscription | undefined;
+  private lockTimerSub: Subscription | undefined;
 
   constructor(private indexeddbService: IndexeddbService, private keyVault: KeyVaultService,
               private apiService: ApiService, public dialog: MatDialog) { }
@@ -172,6 +207,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refreshVaultState();
     this.vaultSub = this.keyVault.change$.subscribe(() => this.onVaultChange());
 
+    // Same shape as the header's timer (app.component.ts): one interval that
+    // only exists while something is actually held, driven off the reset point
+    // rather than counted down independently — so an extendSession() anywhere
+    // in the app corrects this display too.
+    this.lockTimerSub = this.keyVault.idleResetAt$.pipe(
+      switchMap(resetAt => {
+        if (resetAt === null) return of(null);
+        return interval(1000).pipe(
+          startWith(0),
+          map(() => Math.max(0, Math.floor((resetAt - Date.now()) / 1000)))
+        );
+      })
+    ).subscribe(secs => { this.lockSecondsRemaining = secs; });
+
     this.loadWindowPref();
     this.loadVault();
     this.loadHistory();
@@ -182,6 +231,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.vaultSub?.unsubscribe();
+    this.lockTimerSub?.unsubscribe();
   }
 
   // ── Vault ────────────────────────────────────────────────────────────────
@@ -340,6 +390,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadRemoteReports();
   }
 
+  // The status bar reported lock state but offered no way to reach it, so the
+  // only route to "forget my keys" was waiting out the idle timer or closing
+  // the tab. change$ fires from lockNow(), and onVaultChange() drops the
+  // remote rows those credentials produced — no reload needed.
+  lockNow() {
+    this.keyVault.lockNow();
+  }
+
+  formatLockTimer(secs: number): string {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return m + ':' + s.toString().padStart(2, '0');
+  }
+
   private sortKey(r: HomeRecentReport): number {
     return r.report_lastupdate || r.report_createdate || 0;
   }
@@ -349,8 +413,30 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (navigator.storage?.estimate) {
         const est = await navigator.storage.estimate();
         this.storageUsedBytes = est.usage ?? 0;
+        this.storageQuotaBytes = est.quota ?? 0;
       }
     } catch { /* silent — storage estimate is a nicety, not a requirement */ }
+  }
+
+  // navigator.storage.estimate() reports the WHOLE ORIGIN: the service-worker
+  // cache and every asset, not just the reports store. Hence the "Browser
+  // storage" label — reading it as report payload overstates it badly.
+  //
+  // The ratio is what earns the space. With no backend, a browser evicting
+  // this origin is the one way a user loses reports outright, and nothing in
+  // the app warned about it before. A quota of 0 means the browser declined to
+  // say, so the figure is suppressed rather than guessed at.
+  get storagePercent(): number {
+    if (this.storageQuotaBytes <= 0) { return 0; }
+    return Math.min(100, Math.round((this.storageUsedBytes / this.storageQuotaBytes) * 100));
+  }
+
+  get storagePressure(): 'ok' | 'warn' | 'critical' {
+    if (this.storageQuotaBytes <= 0) { return 'ok'; }
+    const pct = this.storagePercent;
+    if (pct >= STORAGE_CRITICAL_PCT) { return 'critical'; }
+    if (pct >= STORAGE_WARN_PCT) { return 'warn'; }
+    return 'ok';
   }
 
   // Two different secrets, two different indicators. The first status item is
@@ -436,16 +522,73 @@ export class HomeComponent implements OnInit, OnDestroy {
     } catch { /* silent — the window still applies for this session */ }
   }
 
-  setWindow(preset: HomeWindowPreset) {
-    if (preset === 'custom') {
-      this.pickerOpen = !this.pickerOpen;
-      return;
-    }
+  // Presets only. 'custom' used to come through here and merely toggle the
+  // panel without changing the window, which is why one button ended up
+  // carrying both aria-pressed (toggle-group member) and aria-expanded
+  // (disclosure) — two different interaction contracts on one control. The
+  // range chip and the caret are now separate buttons with one job each.
+  setWindow(preset: Exclude<HomeWindowPreset, 'custom'>) {
     this.windowPreset = preset;
     this.pickerOpen = false;
     this.customError = '';
     this.persistWindow();
     this.recomputeActivity();
+  }
+
+  // The chip: selects the custom window the same way '30d' selects thirty
+  // days. With no usable range stored yet there is nothing to select, so it
+  // falls through to the panel that would produce one.
+  useCustomWindow() {
+    if (this.parseDay(this.customFrom) === null || this.parseDay(this.customTo) === null) {
+      this.openCustomPicker();
+      return;
+    }
+    this.windowPreset = 'custom';
+    this.pickerOpen = false;
+    this.customError = '';
+    this.persistWindow();
+    this.recomputeActivity();
+  }
+
+  // The caret: discloses the panel, nothing else.
+  toggleCustomPicker() {
+    if (this.pickerOpen) {
+      this.pickerOpen = false;
+      return;
+    }
+    this.openCustomPicker();
+  }
+
+  private openCustomPicker() {
+    this.pickerOpen = true;
+    this.customError = '';
+    // setTimeout, not queueMicrotask: the input does not exist until the @if
+    // block renders, which happens in the change detection pass after this
+    // handler returns.
+    setTimeout(() => this.winFromInput?.nativeElement.focus(), 0);
+  }
+
+  // Escape and outside-click both dismiss, and focus goes back to the control
+  // that opened the panel rather than to the top of the document.
+  closeCustomPicker(returnFocus = true) {
+    if (!this.pickerOpen) { return; }
+    this.pickerOpen = false;
+    if (returnFocus) {
+      setTimeout(() => this.winCaretBtn?.nativeElement.focus(), 0);
+    }
+  }
+
+  // A click inside the control or the panel is the handlers' own business;
+  // anything else is a dismissal. Runs on bubble, so the caret's own click has
+  // already toggled by the time this sees it — and lands inside .vr-win, so
+  // it is left alone rather than immediately undone.
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.pickerOpen) { return; }
+    const target = event.target as HTMLElement | null;
+    if (!target) { return; }
+    if (target.closest('.vr-win') || target.closest('.vr-win-pop')) { return; }
+    this.closeCustomPicker(false);
   }
 
   applyCustomWindow() {
@@ -467,7 +610,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.customError = '';
     this.windowPreset = 'custom';
-    this.pickerOpen = false;
+    this.closeCustomPicker();
     this.persistWindow();
     this.recomputeActivity();
   }
