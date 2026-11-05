@@ -13,13 +13,15 @@
 
     <!-- Status badge — single element, animated between states -->
     @if (show_status) {
-      <div class="title-center" @statusSlide>
+      <div class="title-center" animate.enter="status-slide-enter" animate.leave="status-slide-leave">
         <div class="status-badge status-badge--compact"
-          [@statusBadge]="enc_status ? 'decrypted' : 'encrypted'"
-          [class.is-decrypted]="enc_status">
+          [class.is-decrypted]="enc_status"
+          [class.status-pulse-decrypted]="statusPulse === 'decrypted'"
+          [class.status-pulse-encrypted]="statusPulse === 'encrypted'"
+          (animationend)="onStatusPulseEnd($event)">
 
           @if (enc_status) {
-            <span class="status-content" @statusIcon>
+            <span class="status-content" animate.enter="status-icon-enter">
               <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
                 <mat-icon class="status-icon">no_encryption</mat-icon>
               </a>
@@ -36,7 +38,7 @@
             }
           }
           @if (!enc_status) {
-            <span class="status-content" @statusIcon>
+            <span class="status-content" animate.enter="status-icon-enter">
               <mat-icon class="status-icon">lock</mat-icon>
               <span>Report encrypted</span>
             </span>

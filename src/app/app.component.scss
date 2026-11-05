@@ -85,12 +85,26 @@ mat-toolbar.app-navbar {
   cursor: default;
   white-space: nowrap;
   background: linear-gradient(135deg, rgba(22, 191, 110, 0.12), rgba(22, 191, 110, 0.04));
+  border-color: rgba(22, 191, 110, 0.45);
+  color: #16bf6e;
   transform-origin: center;
   transition: border-color 320ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 320ms cubic-bezier(0.4, 0, 0.2, 1),
               background 320ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* one-shot pulses, applied for the length of the flip between states */
+  &.status-pulse-decrypted {
+    animation: status-pulse-decrypted 620ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  &.status-pulse-encrypted {
+    animation: status-pulse-encrypted 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
 
   &.is-decrypted {
     background: linear-gradient(135deg, rgba(255, 82, 82, 0.16), rgba(255, 82, 82, 0.04));
+    border-color: rgba(255, 82, 82, 0.55);
+    color: #ff5252;
 
     .status-icon { color: #ff5252; filter: drop-shadow(0 0 4px rgba(255, 82, 82, 0.55)); }
 
@@ -171,6 +185,47 @@ mat-toolbar.app-navbar {
 @keyframes status-breathe {
   0%, 100% { opacity: 0.55; }
   50%      { opacity: 1; }
+}
+
+@keyframes status-pulse-decrypted {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.55); }
+  55%  { transform: scale(1.10); box-shadow: 0 0 0 14px rgba(255, 82, 82, 0); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); }
+}
+
+@keyframes status-pulse-encrypted {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(22, 191, 110, 0.5); }
+  50%  { transform: scale(0.93); box-shadow: 0 0 0 12px rgba(22, 191, 110, 0); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(22, 191, 110, 0); }
+}
+
+/* animate.enter / animate.leave classes replacing the old `statusSlide` trigger */
+.status-slide-enter {
+  animation: status-slide-in 160ms ease-out both;
+}
+
+.status-slide-leave {
+  animation: status-slide-out 120ms ease-out both;
+}
+
+@keyframes status-slide-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes status-slide-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* animate.enter class replacing the old `statusIcon` trigger */
+.status-icon-enter {
+  animation: status-icon-in 320ms 60ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes status-icon-in {
+  from { opacity: 0; transform: rotate(-30deg) scale(0.55); }
+  to   { opacity: 1; transform: rotate(0) scale(1); }
 }
 
 /* ── Auto-lock timer ──────────────────────────────────────── */
