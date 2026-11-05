@@ -90,6 +90,7 @@ export class NewreportComponent implements OnInit {
   private localProfiles: any[] = [];
   private remoteProfiles: any[] = [];
   private failedEndpoints: string[] = [];
+  private profileAutoSelected = false;
 
   form = new UntypedFormGroup({
     title: new UntypedFormControl('', [Validators.required]),
@@ -129,7 +130,7 @@ export class NewreportComponent implements OnInit {
     this.indexeddbService.retrieveReportProfile().then(ret => {
       if (ret) {
         this.localProfiles = ret;
-        this.profiles = [...this.localProfiles, ...this.remoteProfiles];
+        this.syncProfiles();
       }
       this.loadRemoteProfiles();
     });
@@ -402,12 +403,30 @@ export class NewreportComponent implements OnInit {
         .catch(() => { this.failedEndpoints.push(ep.viewValue || ep.value); })
     )).then(() => {
       this.profilesLoading = false;
-      this.profiles = [...this.localProfiles, ...this.remoteProfiles];
+      this.syncProfiles();
       if (this.failedEndpoints.length) {
         this.profilesError = 'No templates from ' + this.failedEndpoints.join(', ') + '.';
       }
     });
 
+  }
+
+  // With exactly one template on offer the select is a formality, so fill it
+  // in instead of making them open it. Only while the control is untouched: a
+  // deliberate "No profile" must survive the remote load landing afterwards.
+  // And if more templates do arrive, the shortcut no longer holds - drop it
+  // rather than leave an arbitrary one preselected.
+  private syncProfiles() {
+    this.profiles = [...this.localProfiles, ...this.remoteProfiles];
+    const ctrl = this.form.get('profile')!;
+    if (ctrl.dirty || ctrl.touched) { return; }
+    if (this.profiles.length === 1) {
+      ctrl.setValue(this.profiles[0]);
+      this.profileAutoSelected = true;
+    } else if (this.profileAutoSelected) {
+      ctrl.setValue(null);
+      this.profileAutoSelected = false;
+    }
   }
 
   retryProfiles() {
