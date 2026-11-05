@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, HostListener, ChangeDetectionStrategy } from '@angular/core';
-import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 import { IndexeddbService } from './indexeddb.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -19,55 +18,13 @@ import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material
   styleUrls: ['./app.component.scss'],
   standalone: false,
   changeDetection: ChangeDetectionStrategy.Eager,
-  animations: [
-    trigger('statusBadge', [
-      state('encrypted', style({
-        backgroundColor: 'rgba(22, 191, 110, 0.12)',
-        borderColor: 'rgba(22, 191, 110, 0.45)',
-        color: '#16bf6e',
-      })),
-      state('decrypted', style({
-        backgroundColor: 'rgba(255, 82, 82, 0.14)',
-        borderColor: 'rgba(255, 82, 82, 0.55)',
-        color: '#ff5252',
-      })),
-      transition('encrypted => decrypted', [
-        animate('620ms cubic-bezier(0.34, 1.56, 0.64, 1)', keyframes([
-          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(255, 82, 82, 0.55)', offset: 0    }),
-          style({ transform: 'scale(1.10)', boxShadow: '0 0 0 14px rgba(255, 82, 82, 0)', offset: 0.55 }),
-          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(255, 82, 82, 0)',    offset: 1    }),
-        ])),
-      ]),
-      transition('decrypted => encrypted', [
-        animate('520ms cubic-bezier(0.34, 1.56, 0.64, 1)', keyframes([
-          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(22, 191, 110, 0.5)',  offset: 0    }),
-          style({ transform: 'scale(0.93)', boxShadow: '0 0 0 12px rgba(22, 191, 110, 0)', offset: 0.5  }),
-          style({ transform: 'scale(1)',    boxShadow: '0 0 0 0 rgba(22, 191, 110, 0)',    offset: 1    }),
-        ])),
-      ]),
-    ]),
-    trigger('statusIcon', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'rotate(-30deg) scale(0.55)' }),
-        animate('320ms 60ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-          style({ opacity: 1, transform: 'rotate(0) scale(1)' })),
-      ]),
-    ]),
-    trigger('statusSlide', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('160ms ease-out', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('120ms ease-out', style({ opacity: 0 }))
-      ])
-    ])
-  ]
 })
 
 export class AppComponent implements OnInit, OnDestroy {
   show_status: any;
   enc_status: any;
+  /** transient class driving the one-shot badge pulse on an encryption state flip */
+  statusPulse: 'decrypted' | 'encrypted' | null = null;
   status_unsaved = false;
   report_id: any;
   subscription: Subscription;
@@ -164,6 +121,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     this.subscription = this.indexeddbService.getstatusencryption().subscribe(value => {
+      if (!!this.enc_status !== !!value) {
+        this.statusPulse = value ? 'decrypted' : 'encrypted';
+      }
       this.enc_status = value;
     });
 
@@ -185,6 +145,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
 
+
+  // the badge pulse is a one-shot CSS animation; drop the class once it has played
+  // so the next state flip can re-trigger it (the persistent `status-breathe` halo
+  // loops forever and so never reports animationend)
+  onStatusPulseEnd(event: AnimationEvent) {
+    if (event.animationName.startsWith('status-pulse')) {
+      this.statusPulse = null;
+    }
+  }
 
   closeReport() {
     console.log('close report');

@@ -3,11 +3,11 @@
   <div class="reset-header">
     <div class="reset-header-left">
       <div class="warning-icon-wrap">
-        <mat-icon class="warning-icon">restart_alt</mat-icon>
+        <mat-icon class="warning-icon">{{icon}}</mat-icon>
       </div>
       <div class="reset-header-text">
         <span class="reset-title">{{title}}</span>
-        <span class="reset-subtitle">This action cannot be undone</span>
+        <span class="reset-subtitle">{{subtitle}}</span>
       </div>
     </div>
     <button mat-icon-button mat-dialog-close class="tool-btn close-btn" aria-label="Close">
@@ -22,8 +22,8 @@
   <div class="reset-actions">
     <button class="btn-cancel" (click)="cancel()">Cancel</button>
     <button class="btn-confirm" (click)="confirm()">
-      <mat-icon class="btn-icon">restart_alt</mat-icon>
-      Reset
+      <mat-icon class="btn-icon">{{icon}}</mat-icon>
+      {{confirmLabel}}
     </button>
   </div>
 

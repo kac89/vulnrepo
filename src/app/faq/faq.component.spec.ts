@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -15,7 +14,6 @@ describe('FaqComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ FaqComponent ],
       imports: [
-        NoopAnimationsModule,
         RouterModule.forRoot([]),
         MatIconModule,
         MatSnackBarModule,
