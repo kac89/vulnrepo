@@ -17,6 +17,7 @@ import {OllamaServiceService} from '../ollama-service.service';
 import { UntypedFormControl } from '@angular/forms';
 import {DialogOllamaSettingsComponent} from '../dialog-ollama-settings/dialog-ollama-settings.component';
 import { ImportVectorService, ImportVector } from '../import-vector.service';
+import { DialogAsvsResetComponent } from '../dialog-asvs-reset/dialog-asvs-reset.component';
 
 export interface ApiList {
   apikey: string;
@@ -793,33 +794,75 @@ export class SettingsComponent implements OnInit {
 
   }
 
+  private escapeHtml(value: any): string {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[c]);
+  }
+
+  private confirmRemove(title: string, bodyHtml: string): Promise<boolean> {
+    const dialogRef = this.dialog.open(DialogAsvsResetComponent, {
+      width: '420px',
+      disableClose: false,
+      data: {
+        title: title,
+        bodyHtml: bodyHtml,
+        subtitle: 'This action cannot be undone',
+        icon: 'delete_forever',
+        confirmLabel: 'Remove'
+      }
+    });
+
+    return dialogRef.afterClosed().toPromise().then(result => result === true);
+  }
+
   removeTemplate(item: any): void {
-    const index: number = this.reportTemplateList.indexOf(item);
-    if (index !== -1) {
+    this.confirmRemove(
+      'Remove report template',
+      'Are you sure you want to remove the template <strong class="highlight">'
+        + this.escapeHtml(item?.title) + '</strong>?'
+    ).then(confirmed => {
+      if (!confirmed) {
+        return;
+      }
 
-      this.reportTemplateList.splice(index, 1);
-      this.ReportTemplatesdataSource.data = this.reportTemplateList;
+      const index: number = this.reportTemplateList.indexOf(item);
+      if (index !== -1) {
 
-      this.indexeddbService.deleteTemplate(item).then(ret => {
-        this.getTemplates();
-      });
+        this.reportTemplateList.splice(index, 1);
+        this.ReportTemplatesdataSource.data = this.reportTemplateList;
 
-    }
+        this.indexeddbService.deleteTemplate(item).then(ret => {
+          this.getTemplates();
+        });
+
+      }
+    });
 
   }
 
   removeProfileItem(item: any): void {
-    const index: number = this.reportProfileList.indexOf(item as never);
+    this.confirmRemove(
+      'Remove report profile',
+      'Are you sure you want to remove the profile <strong class="highlight">'
+        + this.escapeHtml(item?.profile_name) + '</strong>?'
+    ).then(confirmed => {
+      if (!confirmed) {
+        return;
+      }
 
-    if (index !== -1) {
-      this.reportProfileList.splice(index, 1);
-      this.ReportProfilesdataSource.data = this.reportProfileList;
+      const index: number = this.reportProfileList.indexOf(item as never);
 
-      this.indexeddbService.deleteProfile(item).then(ret => {
-        this.getProfiles();
-      });
+      if (index !== -1) {
+        this.reportProfileList.splice(index, 1);
+        this.ReportProfilesdataSource.data = this.reportProfileList;
 
-    }
+        this.indexeddbService.deleteProfile(item).then(ret => {
+          this.getProfiles();
+        });
+
+      }
+    });
   }
 
   editProfileItem(item: any): void {
@@ -1196,11 +1239,32 @@ export class SettingsComponent implements OnInit {
   }
 
   async deleteSingleVector(id: string) {
+    const vector = this.vectorList.find(v => v.id === id);
+    const confirmed = await this.confirmRemove(
+      'Remove import vector',
+      'Are you sure you want to remove the import vector <strong class="highlight">'
+        + this.escapeHtml(vector?.name) + '</strong>?'
+    );
+    if (!confirmed) {
+      return;
+    }
+
     await this.vectorService.delete(id);
+    this.selectedVectorIds.delete(id);
     await this.loadVectors();
   }
 
   async deleteSelectedVectors() {
+    const count = this.selectedVectorIds.size;
+    const confirmed = await this.confirmRemove(
+      'Remove import vectors',
+      'Are you sure you want to remove <strong class="highlight">' + count
+        + '</strong> selected import vector' + (count === 1 ? '' : 's') + '?'
+    );
+    if (!confirmed) {
+      return;
+    }
+
     for (const id of Array.from(this.selectedVectorIds)) {
       await this.vectorService.delete(id);
     }
