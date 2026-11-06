@@ -12,6 +12,15 @@ import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
+/** the two captions the status badge resolves between — same length, so the pill never reflows */
+const STATUS_ENCRYPTED = 'Report encrypted';
+const STATUS_DECRYPTED = 'Report decrypted';
+/** alphabet the caption churns through while it is still ciphertext */
+const CIPHER_GLYPHS = '01ABCDEF#$%&/\\<>[]{}*+=~^!?';
+const SCRAMBLE_TICK_MS = 24;
+/** frames each character churns before it locks into place */
+const SCRAMBLE_FRAMES_PER_CHAR = 2;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,6 +34,11 @@ export class AppComponent implements OnInit, OnDestroy {
   enc_status: any;
   /** transient class driving the one-shot badge pulse on an encryption state flip */
   statusPulse: 'decrypted' | 'encrypted' | null = null;
+  /** badge caption, churned through the cipher alphabet by scrambleStatus() */
+  statusLabel = STATUS_ENCRYPTED;
+  /** true while the caption is mid-churn; lights it up via .status-churn */
+  statusChurn = false;
+  private scrambleTimer: any = null;
   status_unsaved = false;
   report_id: any;
   subscription: Subscription;
@@ -123,6 +137,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription = this.indexeddbService.getstatusencryption().subscribe(value => {
       if (!!this.enc_status !== !!value) {
         this.statusPulse = value ? 'decrypted' : 'encrypted';
+        this.scrambleStatus(value ? STATUS_DECRYPTED : STATUS_ENCRYPTED);
       }
       this.enc_status = value;
     });
@@ -135,6 +150,8 @@ export class AppComponent implements OnInit, OnDestroy {
         } else {
           this.show_status = false;
           this.enc_status = false;
+          this.stopScramble();
+          this.statusLabel = STATUS_ENCRYPTED;
         }
       }
     });
@@ -153,6 +170,49 @@ export class AppComponent implements OnInit, OnDestroy {
     if (event.animationName.startsWith('status-pulse')) {
       this.statusPulse = null;
     }
+  }
+
+  // The caption is the ciphertext: every character churns through CIPHER_GLYPHS and the
+  // string resolves left to right, one more character locking every
+  // SCRAMBLE_FRAMES_PER_CHAR frames. Both captions are 16 characters and the label is set
+  // in a monospace face, so the pill holds its width for the whole run (~790ms).
+  private scrambleStatus(target: string) {
+    this.stopScramble();
+
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.statusLabel = target;
+      return;
+    }
+
+    this.statusChurn = true;
+    let frame = 0;
+    const lastFrame = target.length * SCRAMBLE_FRAMES_PER_CHAR;
+
+    this.scrambleTimer = setInterval(() => {
+      const locked = Math.floor(frame / SCRAMBLE_FRAMES_PER_CHAR);
+      let out = '';
+      for (let i = 0; i < target.length; i++) {
+        if (i < locked || target[i] === ' ') {
+          out += target[i];
+        } else {
+          out += CIPHER_GLYPHS[(Math.random() * CIPHER_GLYPHS.length) | 0];
+        }
+      }
+      this.statusLabel = out;
+
+      if (++frame > lastFrame) {
+        this.stopScramble();
+        this.statusLabel = target;
+      }
+    }, SCRAMBLE_TICK_MS);
+  }
+
+  private stopScramble() {
+    if (this.scrambleTimer !== null) {
+      clearInterval(this.scrambleTimer);
+      this.scrambleTimer = null;
+    }
+    this.statusChurn = false;
   }
 
   closeReport() {
@@ -187,6 +247,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.keyVaultSub) this.keyVaultSub.unsubscribe();
     if (this.lockTimerSub) this.lockTimerSub.unsubscribe();
     if (this.lockWarningSub) this.lockWarningSub.unsubscribe();
+    this.stopScramble();
     this.dismissLockWarning();
   }
 
