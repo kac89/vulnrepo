@@ -517,12 +517,22 @@ export class MyreportsComponent implements OnInit, OnDestroy {
     return (this.sevOrder.find(key => (stats as any)[key] > 0) as string) || 'none';
   }
 
+  // Same granularity as the home page's "Continue where you left off" rows:
+  // a report saved minutes ago read as a flat "today" here, which is the one
+  // case where the exact recency actually matters.
   relativeAge(timestamp: number): string {
     if (!timestamp) {
       return '—';
     }
-    const days = Math.floor((Date.now() - timestamp) / 86400000);
-    if (days <= 0) { return 'today'; }
+
+    const min = Math.floor((Date.now() - timestamp) / 60000);
+    if (min < 1) { return 'just now'; }
+    if (min < 60) { return min + ' min ago'; }
+
+    const hrs = Math.floor(min / 60);
+    if (hrs < 24) { return hrs + (hrs === 1 ? ' hour ago' : ' hours ago'); }
+
+    const days = Math.floor(hrs / 24);
     if (days === 1) { return 'yesterday'; }
     if (days < 30) { return days + 'd ago'; }
     if (days < 365) { return Math.round(days / 30) + 'mo ago'; }
