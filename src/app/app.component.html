@@ -16,31 +16,31 @@
       <div class="title-center" animate.enter="status-slide-enter" animate.leave="status-slide-leave">
         <div class="status-badge status-badge--compact"
           [class.is-decrypted]="enc_status"
+          [class.status-churn]="statusChurn"
           [class.status-pulse-decrypted]="statusPulse === 'decrypted'"
           [class.status-pulse-encrypted]="statusPulse === 'encrypted'"
           (animationend)="onStatusPulseEnd($event)">
 
-          @if (enc_status) {
-            <span class="status-content" animate.enter="status-icon-enter">
+          <!-- the caption is one persistent element so it can be scrambled in place;
+               only the glyph swaps between states -->
+          <span class="status-content">
+            @if (enc_status) {
               <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
-                <mat-icon class="status-icon">no_encryption</mat-icon>
+                <mat-icon class="status-icon" animate.enter="status-icon-enter">no_encryption</mat-icon>
               </a>
-              <span>Report decrypted</span>
-            </span>
-            @if (lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
-              <span class="lock-timer"
-                [class.lock-warning]="lockSecondsRemaining < 120"
-                [class.lock-critical]="lockSecondsRemaining < 30"
-                [title]="'Auto-lock in ' + formatLockTimer(lockSecondsRemaining)">
-                <mat-icon class="timer-icon">timer</mat-icon>
-                {{ formatLockTimer(lockSecondsRemaining) }}
-              </span>
+            } @else {
+              <mat-icon class="status-icon" animate.enter="status-icon-enter">lock</mat-icon>
             }
-          }
-          @if (!enc_status) {
-            <span class="status-content" animate.enter="status-icon-enter">
-              <mat-icon class="status-icon">lock</mat-icon>
-              <span>Report encrypted</span>
+            <span class="status-label">{{ statusLabel }}</span>
+          </span>
+
+          @if (enc_status && lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
+            <span class="lock-timer"
+              [class.lock-warning]="lockSecondsRemaining < 120"
+              [class.lock-critical]="lockSecondsRemaining < 30"
+              [title]="'Auto-lock in ' + formatLockTimer(lockSecondsRemaining)">
+              <mat-icon class="timer-icon">timer</mat-icon>
+              {{ formatLockTimer(lockSecondsRemaining) }}
             </span>
           }
         </div>

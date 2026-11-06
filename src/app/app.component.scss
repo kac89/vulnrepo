@@ -128,6 +128,21 @@ mat-toolbar.app-navbar {
     gap: 6px;
   }
 
+  /* the caption churns through a cipher alphabet on every state flip, so it is set in a
+     monospace face — both captions are 16 characters and the pill holds its width */
+  .status-label {
+    font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+    font-weight: 500;
+    font-variant-ligatures: none;
+    transition: color 180ms linear, text-shadow 180ms linear;
+  }
+
+  /* while the ciphertext is still resolving the caption runs hot and unresolved */
+  &.status-churn .status-label {
+    color: #eafff3;
+    text-shadow: 0 0 7px currentColor;
+  }
+
   .status-icon {
     font-size: 18px;
     height: 18px;
@@ -167,6 +182,11 @@ mat-toolbar.app-navbar {
   }
 
   .status-content { gap: 4px; }
+
+  .status-label {
+    font-size: 10.5px;
+    letter-spacing: 0;
+  }
 
   .lock-timer {
     font-size: 10px;
@@ -265,6 +285,24 @@ mat-toolbar.app-navbar {
 @keyframes timer-pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.35; }
+}
+
+/* the scramble is skipped in TS under prefers-reduced-motion; drop the transition
+   flourishes that go with it too */
+@media (prefers-reduced-motion: reduce) {
+  .status-badge {
+    /* collapsed rather than removed: onStatusPulseEnd needs the animationend event
+       to clear the one-shot class */
+    &.status-pulse-decrypted,
+    &.status-pulse-encrypted {
+      animation-duration: 1ms;
+    }
+
+    &.is-decrypted::before {
+      animation: none;
+      opacity: 0.8;
+    }
+  }
 }
 
 /* ── Desktop nav ──────────────────────────────────────────── */

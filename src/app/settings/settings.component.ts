@@ -485,13 +485,29 @@ export class SettingsComponent implements OnInit {
   }
 
   removeapikey() {
+    this.confirmRemove(
+      'Remove API Vault',
+      'Are you sure you want to remove the <strong class="highlight">VULNRΞPO API Vault</strong>? '
+        + 'All stored API credentials will be permanently deleted from this browser.'
+    ).then(confirmed => {
+      if (!confirmed) {
+        return;
+      }
 
-    indexedDB.deleteDatabase('vulnrepo-api');
-    this.showregapi = true;
-    this.foundvault(false);
-    this.apiconneted = false;
-    this.tryconnectdb = false;
-    this.status = 'Not connected!';
+      // Wipe the decrypted copies too, not just the encrypted DB: the vault
+      // service holds the plaintext JSON and dataSource holds each entry's
+      // apikey, so without this the credentials stay readable until a
+      // lock/reload despite the UI reporting the vault as gone.
+      this.keyVault.removeApiVault();
+      this.dataSource.data = [];
+
+      indexedDB.deleteDatabase('vulnrepo-api');
+      this.showregapi = true;
+      this.foundvault(false);
+      this.apiconneted = false;
+      this.tryconnectdb = false;
+      this.status = 'Not connected!';
+    });
   }
 
   apidisconnect() {
