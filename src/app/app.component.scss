@@ -500,3 +500,55 @@ mat-toolbar.app-navbar {
     opacity: 1;
   }
 }
+
+/* ── Offline / update chip ────────────────────────────────── */
+/* Rendered only when it has something to report, so the toolbar
+   carries no extra weight in the normal online-and-current case. */
+.pwa-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: none;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-family: inherit;
+
+  .pwa-chip-icon {
+    font-size: 13px;
+    height: 13px;
+    width: 13px;
+    line-height: 13px;
+  }
+}
+
+.pwa-chip--offline {
+  color: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: default;
+}
+
+.pwa-chip--update {
+  color: #6ee7a8;
+  border-color: rgba(110, 231, 168, 0.35);
+  background: rgba(110, 231, 168, 0.12);
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
+
+  &:hover {
+    background: rgba(110, 231, 168, 0.22);
+    border-color: rgba(110, 231, 168, 0.6);
+  }
+}
+
+@media (max-width: 1100px) {
+  .pwa-chip-label { display: none; }
+  .pwa-chip { padding: 3px 6px; }
+}

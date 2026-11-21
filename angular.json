@@ -63,6 +63,7 @@
               "namedChunks": false,
               "extractLicenses": true,
               "subresourceIntegrity": true,
+              "serviceWorker": "ngsw-config.json",
               "budgets": [
                 {
                   "type": "initial",

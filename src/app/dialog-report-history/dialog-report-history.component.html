@@ -3,12 +3,22 @@
   <!-- Header -->
   <div class="history-header">
     <div class="history-header-left">
+      @if (mode === 'diff') {
+        <button mat-icon-button class="tool-btn" (click)="backToList()" title="Back to versions">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      }
       <div class="history-avatar">
-        <mat-icon class="history-avatar-icon">history</mat-icon>
+        <mat-icon class="history-avatar-icon">{{ mode === 'diff' ? 'difference' : 'history' }}</mat-icon>
       </div>
       <div class="history-header-text">
-        <span class="history-title">Report History</span>
-        <span class="history-subtitle">Restore a previous version from local history</span>
+        @if (mode === 'list') {
+          <span class="history-title">Report History</span>
+          <span class="history-subtitle">Compare versions, restore single findings, or roll the whole report back</span>
+        } @else {
+          <span class="history-title">Version diff</span>
+          <span class="history-subtitle">{{ leftLabel }} → {{ rightLabel }}</span>
+        }
       </div>
     </div>
     <div class="history-header-right">
@@ -28,7 +38,7 @@
       </div>
     }
 
-    @if (!loading && !anyreports) {
+    @if (!loading && !anyreports && mode === 'list') {
       <div class="empty-state">
         <mat-icon class="empty-icon">history_toggle_off</mat-icon>
         <p class="empty-title">No saved versions</p>
@@ -36,8 +46,63 @@
       </div>
     }
 
-    @if (!loading && anyreports) {
+    <!-- ══════════════ VERSION LIST ══════════════ -->
+    @if (!loading && anyreports && mode === 'list') {
+
+      <!-- Full-rollback confirmation. Destructive and unrecoverable, so it is
+           never one click from a menu. -->
+      @if (confirmReplace) {
+        <div class="replace-confirm">
+          <mat-icon class="replace-confirm-icon">warning</mat-icon>
+          <div class="replace-confirm-body">
+            <span class="replace-confirm-title">Roll the whole report back to {{ labelOf(confirmReplace) }}?</span>
+            <span class="replace-confirm-sub">
+              The report is deleted and re-created from this snapshot. Every issue, asset and
+              setting changed since then is lost, and there is no undo. To recover only part of
+              this version, compare it instead and restore the rows you want.
+            </span>
+          </div>
+          <div class="replace-confirm-actions">
+            <button mat-stroked-button (click)="compareWithCurrent(confirmReplace)">Compare first</button>
+            <button mat-stroked-button (click)="cancelReplace()">Cancel</button>
+            <button mat-flat-button class="danger-btn" (click)="replacereport(confirmReplace)">Roll back</button>
+          </div>
+        </div>
+      }
+
+      <div class="compare-bar">
+        <div class="compare-bar-text">
+          @if (!pickA) {
+            <mat-icon class="compare-bar-icon">rule</mat-icon>
+            <span>Pick an <strong>older</strong> version with <span class="pick-chip pick-chip--a">A</span> to compare it against the current report.</span>
+          } @else {
+            <mat-icon class="compare-bar-icon">rule</mat-icon>
+            <span>
+              <span class="pick-chip pick-chip--a">A</span> {{ labelOf(pickA) }}
+              <mat-icon class="compare-arrow">arrow_forward</mat-icon>
+              <span class="pick-chip pick-chip--b">B</span>
+              {{ pickB === undefined ? (hasCurrent ? 'Current (unsaved)' : 'pick a second version') : labelOf(pickB) }}
+            </span>
+          }
+        </div>
+        <button mat-flat-button color="primary" class="compare-btn" [disabled]="!canCompare" (click)="compare()">
+          <mat-icon>difference</mat-icon> Compare
+        </button>
+      </div>
+
       <table mat-table [dataSource]="dataSource" matSort matSortActive="report_lastupdate" matSortDirection="desc" class="history-table">
+
+        <ng-container matColumnDef="compare">
+          <th mat-header-cell *matHeaderCellDef class="col-header col-compare">Diff</th>
+          <td mat-cell *matCellDef="let element" class="col-compare">
+            <button type="button" class="pick-btn pick-btn--a" [class.is-picked]="isA(element)"
+              (click)="selectA(element)" [attr.aria-pressed]="isA(element)"
+              title="Use as the older side (A)">A</button>
+            <button type="button" class="pick-btn pick-btn--b" [class.is-picked]="isB(element)"
+              (click)="selectB(element)" [attr.aria-pressed]="isB(element)"
+              title="Use as the newer side (B). Leave unset to compare against the current report.">B</button>
+          </td>
+        </ng-container>
 
         <ng-container matColumnDef="report_name">
           <th mat-header-cell *matHeaderCellDef class="col-header">Name</th>
@@ -60,15 +125,19 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu" class="history-menu">
-              <button mat-menu-item (click)="replacereport(element)">
-                <mat-icon>autorenew</mat-icon>
-                <span>Replace with current version</span>
+              <button mat-menu-item (click)="compareWithCurrent(element)" [disabled]="!hasCurrent">
+                <mat-icon>difference</mat-icon>
+                <span>Compare with current</span>
               </button>
               <button mat-menu-item (click)="downloadhistoryreport(element)">
                 <mat-icon>file_download</mat-icon>
                 <span>Download report</span>
               </button>
               <mat-divider></mat-divider>
+              <button mat-menu-item class="menu-item-danger" (click)="askReplace(element)">
+                <mat-icon>autorenew</mat-icon>
+                <span>Roll whole report back…</span>
+              </button>
               <button mat-menu-item class="menu-item-danger" (click)="removereporthistory(element)">
                 <mat-icon>delete_forever</mat-icon>
                 <span>Remove version</span>
@@ -78,7 +147,8 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="history-row"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="history-row"
+          [class.row-picked-a]="isA(row)" [class.row-picked-b]="isB(row)"></tr>
       </table>
 
       <mat-paginator
@@ -90,6 +160,254 @@
       </mat-paginator>
 
       <div cdkFocusInitial></div>
+    }
+
+    <!-- ══════════════ DIFF VIEW ══════════════ -->
+    @if (mode === 'diff') {
+
+      @if (diffLoading) {
+        <div class="loading-state">
+          <mat-progress-spinner mode="indeterminate" diameter="48" color="accent"></mat-progress-spinner>
+          <p class="loading-text">Decrypting and comparing…</p>
+        </div>
+      }
+
+      @if (!diffLoading && diffError) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">lock</mat-icon>
+          <p class="empty-title">Cannot compare</p>
+          <p class="empty-sub">{{ diffError }}</p>
+        </div>
+      }
+
+      @if (!diffLoading && !diffError && diff) {
+
+        @if (diff.summary.total === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">check_circle</mat-icon>
+            <p class="empty-title">Identical</p>
+            <p class="empty-sub">These two versions have no differences in issues, assets or report fields.</p>
+          </div>
+        } @else {
+
+          <!-- Summary counters -->
+          <div class="diff-summary">
+            @if (diff.summary.issuesAdded) {
+              <span class="diff-pill diff-pill--add">+{{ diff.summary.issuesAdded }} issue{{ diff.summary.issuesAdded > 1 ? 's' : '' }}</span>
+            }
+            @if (diff.summary.issuesRemoved) {
+              <span class="diff-pill diff-pill--del">−{{ diff.summary.issuesRemoved }} issue{{ diff.summary.issuesRemoved > 1 ? 's' : '' }}</span>
+            }
+            @if (diff.summary.issuesChanged) {
+              <span class="diff-pill diff-pill--mod">{{ diff.summary.issuesChanged }} issue{{ diff.summary.issuesChanged > 1 ? 's' : '' }} changed</span>
+            }
+            @if (diff.summary.assetsAdded || diff.summary.assetsRemoved || diff.summary.assetsChanged) {
+              <span class="diff-pill diff-pill--neutral">
+                assets +{{ diff.summary.assetsAdded }} / −{{ diff.summary.assetsRemoved }} / ~{{ diff.summary.assetsChanged }}
+              </span>
+            }
+            @if (diff.summary.fieldsChanged) {
+              <span class="diff-pill diff-pill--neutral">{{ diff.summary.fieldsChanged }} field{{ diff.summary.fieldsChanged > 1 ? 's' : '' }}</span>
+            }
+            @if (diff.summary.changelogDelta > 0) {
+              <span class="diff-pill diff-pill--neutral">{{ diff.summary.changelogDelta }} changelog entr{{ diff.summary.changelogDelta > 1 ? 'ies' : 'y' }}</span>
+            }
+          </div>
+
+          <!-- Restore tray -->
+          <div class="restore-bar">
+            <div class="restore-bar-text">
+              @if (selectedCount) {
+                <mat-icon class="restore-bar-icon">restore</mat-icon>
+                <span><strong>{{ selectedCount }}</strong> selected — restored into the open report as unsaved changes.</span>
+              } @else {
+                <mat-icon class="restore-bar-icon">info</mat-icon>
+                <span>Tick rows to pull them back from <strong>{{ leftLabel }}</strong>. Nothing is saved until you save the report.</span>
+              }
+            </div>
+            <div class="restore-bar-actions">
+              <button mat-stroked-button class="restore-link-btn" (click)="selectAllRestorable()">Select all</button>
+              @if (selectedCount) {
+                <button mat-stroked-button class="restore-link-btn" (click)="clearSelection()">Clear</button>
+              }
+              <button mat-flat-button color="primary" [disabled]="!selectedCount" (click)="restoreSelected()">
+                <mat-icon>restore</mat-icon> Restore selected
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Issues ── -->
+          @if (diff.issues.length) {
+            <div class="diff-section-title">
+              <mat-icon>bug_report</mat-icon> Issues <span class="diff-section-count">{{ diff.issues.length }}</span>
+            </div>
+
+            @for (d of diff.issues; track issueRowKey(d)) {
+              <div class="diff-row" [class.diff-row--add]="d.kind === 'added'"
+                [class.diff-row--del]="d.kind === 'removed'" [class.diff-row--mod]="d.kind === 'changed'">
+
+                <div class="diff-row-head" (click)="toggleExpanded(issueRowKey(d))">
+                  @if (canRestoreIssue(d)) {
+                    <mat-checkbox class="diff-row-check" [checked]="isSelected(issueRowKey(d))"
+                      (click)="toggleSelected(issueRowKey(d), $event)"
+                      [attr.aria-label]="'Restore ' + d.title"></mat-checkbox>
+                  } @else {
+                    <span class="diff-row-check diff-row-check--empty"
+                      title="Added since this version — there is no earlier copy to restore"></span>
+                  }
+
+                  <span class="diff-kind diff-kind--{{ d.kind }}">
+                    {{ d.kind === 'added' ? 'new' : d.kind === 'removed' ? 'gone' : 'changed' }}
+                  </span>
+
+                  <span class="sev-dot sev-{{ severityClass(d.severity) }}" [title]="d.severity"></span>
+
+                  <span class="diff-row-title">{{ d.title || '(untitled issue)' }}</span>
+
+                  @if (d.kind === 'changed') {
+                    <span class="diff-row-fields">{{ d.fields.length }} field{{ d.fields.length > 1 ? 's' : '' }}</span>
+                  }
+
+                  @if (d.kind === 'changed') {
+                    <mat-icon class="diff-row-chevron">{{ isExpanded(issueRowKey(d)) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  }
+                </div>
+
+                @if (d.kind === 'changed' && isExpanded(issueRowKey(d))) {
+                  <div class="diff-row-detail">
+                    @for (f of d.fields; track f.path) {
+                      <div class="field-change">
+                        <div class="field-change-label">{{ f.label }}</div>
+                        @if (f.lines) {
+                          <div class="line-diff">
+                            @for (l of collapsedLines(f); track $index) {
+                              <div class="line line--{{ l.kind }}">
+                                <span class="line-sign">{{ l.kind === 'add' ? '+' : l.kind === 'del' ? '−' : ' ' }}</span>
+                                <span class="line-text">{{ l.text }}</span>
+                              </div>
+                            }
+                          </div>
+                        } @else {
+                          <div class="value-change">
+                            <span class="value value--before">{{ f.before || '—' }}</span>
+                            <mat-icon class="value-arrow">arrow_forward</mat-icon>
+                            <span class="value value--after">{{ f.after || '—' }}</span>
+                          </div>
+                        }
+                      </div>
+                    }
+                    <button mat-stroked-button class="restore-row-btn" (click)="restoreOne(issueRowKey(d))">
+                      <mat-icon>restore</mat-icon> Restore this issue
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          }
+
+          <!-- ── Assets ── -->
+          @if (diff.assets.length) {
+            <div class="diff-section-title">
+              <mat-icon>dns</mat-icon> Assets <span class="diff-section-count">{{ diff.assets.length }}</span>
+            </div>
+
+            @for (d of diff.assets; track assetRowKey(d)) {
+              <div class="diff-row" [class.diff-row--add]="d.kind === 'added'"
+                [class.diff-row--del]="d.kind === 'removed'" [class.diff-row--mod]="d.kind === 'changed'">
+
+                <div class="diff-row-head" (click)="toggleExpanded(assetRowKey(d))">
+                  @if (canRestoreAsset(d)) {
+                    <mat-checkbox class="diff-row-check" [checked]="isSelected(assetRowKey(d))"
+                      (click)="toggleSelected(assetRowKey(d), $event)"
+                      [attr.aria-label]="'Restore asset ' + d.name"></mat-checkbox>
+                  } @else {
+                    <span class="diff-row-check diff-row-check--empty"></span>
+                  }
+
+                  <span class="diff-kind diff-kind--{{ d.kind }}">
+                    {{ d.kind === 'added' ? 'new' : d.kind === 'removed' ? 'gone' : 'changed' }}
+                  </span>
+
+                  <span class="diff-row-title">{{ d.name || '(unnamed)' }}</span>
+                  <span class="diff-row-sub">{{ d.target }}</span>
+
+                  @if (d.kind === 'changed') {
+                    <mat-icon class="diff-row-chevron">{{ isExpanded(assetRowKey(d)) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  }
+                </div>
+
+                @if (d.kind === 'changed' && isExpanded(assetRowKey(d))) {
+                  <div class="diff-row-detail">
+                    @for (f of d.fields; track f.path) {
+                      <div class="field-change">
+                        <div class="field-change-label">{{ f.label }}</div>
+                        <div class="value-change">
+                          <span class="value value--before">{{ f.before || '—' }}</span>
+                          <mat-icon class="value-arrow">arrow_forward</mat-icon>
+                          <span class="value value--after">{{ f.after || '—' }}</span>
+                        </div>
+                      </div>
+                    }
+                    <button mat-stroked-button class="restore-row-btn" (click)="restoreOne(assetRowKey(d))">
+                      <mat-icon>restore</mat-icon> Restore this asset
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          }
+
+          <!-- ── Report fields ── -->
+          @if (diff.fields.length) {
+            <div class="diff-section-title">
+              <mat-icon>article</mat-icon> Report fields <span class="diff-section-count">{{ diff.fields.length }}</span>
+            </div>
+
+            @for (f of diff.fields; track f.path) {
+              <div class="diff-row diff-row--mod">
+                <div class="diff-row-head" (click)="toggleExpanded(fieldRowKey(f))">
+                  <mat-checkbox class="diff-row-check" [checked]="isSelected(fieldRowKey(f))"
+                    (click)="toggleSelected(fieldRowKey(f), $event)"
+                    [attr.aria-label]="'Restore ' + f.label"></mat-checkbox>
+                  <span class="diff-kind diff-kind--changed">changed</span>
+                  <span class="diff-row-title">{{ f.label }}</span>
+                  @if (f.opaque) {
+                    <span class="diff-row-sub">{{ f.before || '—' }} → {{ f.after || '—' }}</span>
+                  }
+                  @if (!f.opaque) {
+                    <mat-icon class="diff-row-chevron">{{ isExpanded(fieldRowKey(f)) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  }
+                </div>
+
+                @if (!f.opaque && isExpanded(fieldRowKey(f))) {
+                  <div class="diff-row-detail">
+                    @if (f.lines) {
+                      <div class="line-diff">
+                        @for (l of collapsedLines(f); track $index) {
+                          <div class="line line--{{ l.kind }}">
+                            <span class="line-sign">{{ l.kind === 'add' ? '+' : l.kind === 'del' ? '−' : ' ' }}</span>
+                            <span class="line-text">{{ l.text }}</span>
+                          </div>
+                        }
+                      </div>
+                    } @else {
+                      <div class="value-change">
+                        <span class="value value--before">{{ f.before || '—' }}</span>
+                        <mat-icon class="value-arrow">arrow_forward</mat-icon>
+                        <span class="value value--after">{{ f.after || '—' }}</span>
+                      </div>
+                    }
+                    <button mat-stroked-button class="restore-row-btn" (click)="restoreOne(fieldRowKey(f))">
+                      <mat-icon>restore</mat-icon> Restore this field
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          }
+
+        }
+      }
     }
 
   </mat-dialog-content>

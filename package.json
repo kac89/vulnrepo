@@ -24,6 +24,7 @@
     "@angular/material": "^22.2.6",
     "@angular/platform-browser": "^22.2.4",
     "@angular/router": "^22.2.4",
+    "@angular/service-worker": "^22.2.4",
     "buffer": "^6.0.3",
     "crypto-js": "^4.1.1",
     "docx": "^8.5.0",
