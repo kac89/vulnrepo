@@ -64,12 +64,40 @@ mat-toolbar.app-navbar {
 }
 
 /* ── Status badge ─────────────────────────────────────────── */
+/* ── Toolbar columns ──────────────────────────────── */
+/* The centre has to sit on the toolbar's true centre line, not in the middle of
+   whatever the nav leaves over — the right-hand nav is far wider than the logo, so
+   a flex:1 centre slot drifts the cluster ~90px left, and further still once a
+   report is open and the cluster grows. Equal-weight side columns fix the centre
+   in place; the right column survives the 959px nav hide so the centre does not
+   jump sideways on mobile. */
+.nav-side {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.nav-side--right {
+  justify-content: flex-end;
+}
+
 .title-center {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 0;
+  padding: 0 10px;
+}
+
+/* Below the nav's own breakpoint there is no right-hand column to unbalance the
+   bar, and the wordmark leaves too little room for a hard centre — forcing one
+   there drives the cluster straight over the logo. Fall back to filling the space
+   the logo leaves, which on a phone reads as centred anyway. */
+@media (max-width: 959px) {
+  .nav-side { flex: 0 0 auto; }
+  .title-center { flex: 1 1 auto; }
 }
 
 /* ── Centre cluster ───────────────────────────────────── */
