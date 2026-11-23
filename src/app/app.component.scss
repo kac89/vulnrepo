@@ -69,6 +69,34 @@ mat-toolbar.app-navbar {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 0;
+}
+
+/* ── Centre cluster ───────────────────────────────────── */
+/* Report security and app/network state are two different kinds of fact, so each
+   segment keeps its own colour; collapsing the two borders into one hairline makes
+   them read as a single object instead of two pills competing for the centre. */
+.status-cluster {
+  display: inline-flex;
+  align-items: stretch;
+  min-width: 0;
+
+  &.has-both {
+    .status-badge {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    /* pulled 1px left so the two 1px borders collapse into a single divider, and
+       lifted above the badge so the decrypted halo does not bleed over the seam */
+    .pwa-chip {
+      position: relative;
+      z-index: 1;
+      margin-left: -1px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
 }
 
 .status-badge {
@@ -502,13 +530,13 @@ mat-toolbar.app-navbar {
 }
 
 /* ── Offline / update chip ────────────────────────────────── */
-/* Rendered only when it has something to report, so the toolbar
-   carries no extra weight in the normal online-and-current case. */
+/* The right segment of the centre cluster. Rendered only when it has something to
+   report, so the toolbar carries no extra weight in the normal online-and-current
+   case — and it stands alone as a full pill when no report is open. */
 .pwa-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-left: 6px;
   padding: 3px 9px;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -548,7 +576,16 @@ mat-toolbar.app-navbar {
   }
 }
 
+/* Joined to the badge, the label is the first thing to give — and on small screens
+   it goes either way. The tooltip carries the full sentence in both cases. */
 @media (max-width: 1100px) {
+  .status-cluster.has-both {
+    .pwa-chip-label { display: none; }
+    .pwa-chip { padding: 3px 7px; }
+  }
+}
+
+@media (max-width: 599px) {
   .pwa-chip-label { display: none; }
-  .pwa-chip { padding: 3px 6px; }
+  .pwa-chip { padding: 3px 7px; }
 }

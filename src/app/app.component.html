@@ -11,59 +11,65 @@
       <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
     </a>
 
-    <!-- Status badge — single element, animated between states -->
-    @if (show_status) {
+    <!-- Centre cluster — report security on the left, app/network state on the right,
+         hairline-joined into one capsule so the toolbar keeps a single centre of gravity
+         instead of two competing ones. Rendered only when a segment has something to say. -->
+    @if (show_status || update_ready || is_offline) {
       <div class="title-center" animate.enter="status-slide-enter" animate.leave="status-slide-leave">
-        <div class="status-badge status-badge--compact"
-          [class.is-decrypted]="enc_status"
-          [class.status-churn]="statusChurn"
-          [class.status-pulse-decrypted]="statusPulse === 'decrypted'"
-          [class.status-pulse-encrypted]="statusPulse === 'encrypted'"
-          (animationend)="onStatusPulseEnd($event)">
+        <div class="status-cluster" [class.has-both]="show_status && (update_ready || is_offline)">
 
-          <!-- the caption is one persistent element so it can be scrambled in place;
-               only the glyph swaps between states -->
-          <span class="status-content">
-            @if (enc_status) {
-              <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
-                <mat-icon class="status-icon" animate.enter="status-icon-enter">no_encryption</mat-icon>
-              </a>
-            } @else {
-              <mat-icon class="status-icon" animate.enter="status-icon-enter">lock</mat-icon>
-            }
-            <span class="status-label">{{ statusLabel }}</span>
-          </span>
+          <!-- Status badge — single element, animated between states -->
+          @if (show_status) {
+            <div class="status-badge status-badge--compact"
+              [class.is-decrypted]="enc_status"
+              [class.status-churn]="statusChurn"
+              [class.status-pulse-decrypted]="statusPulse === 'decrypted'"
+              [class.status-pulse-encrypted]="statusPulse === 'encrypted'"
+              (animationend)="onStatusPulseEnd($event)">
 
-          @if (enc_status && lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
-            <span class="lock-timer"
-              [class.lock-warning]="lockSecondsRemaining < 120"
-              [class.lock-critical]="lockSecondsRemaining < 30"
-              [title]="'Auto-lock in ' + formatLockTimer(lockSecondsRemaining)">
-              <mat-icon class="timer-icon">timer</mat-icon>
-              {{ formatLockTimer(lockSecondsRemaining) }}
+              <!-- the caption is one persistent element so it can be scrambled in place;
+                   only the glyph swaps between states -->
+              <span class="status-content">
+                @if (enc_status) {
+                  <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
+                    <mat-icon class="status-icon" animate.enter="status-icon-enter">no_encryption</mat-icon>
+                  </a>
+                } @else {
+                  <mat-icon class="status-icon" animate.enter="status-icon-enter">lock</mat-icon>
+                }
+                <span class="status-label">{{ statusLabel }}</span>
+              </span>
+
+              @if (enc_status && lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
+                <span class="lock-timer"
+                  [class.lock-warning]="lockSecondsRemaining < 120"
+                  [class.lock-critical]="lockSecondsRemaining < 30"
+                  [title]="'Auto-lock in ' + formatLockTimer(lockSecondsRemaining)">
+                  <mat-icon class="timer-icon">timer</mat-icon>
+                  {{ formatLockTimer(lockSecondsRemaining) }}
+                </span>
+              }
+            </div>
+          }
+
+          <!-- Offline / update segment — the right half of the capsule. -->
+          @if (update_ready) {
+            <button class="pwa-chip pwa-chip--update" (click)="applyAppUpdate()"
+              title="A new version is cached and ready. Reloads the app.">
+              <mat-icon class="pwa-chip-icon">system_update_alt</mat-icon>
+              <span class="pwa-chip-label">Update ready</span>
+            </button>
+          } @else if (is_offline) {
+            <span class="pwa-chip pwa-chip--offline"
+              [title]="offline_ready ? 'No network — running from the cached app shell. Reports are local, so everything still works.' : 'No network'">
+              <mat-icon class="pwa-chip-icon">cloud_off</mat-icon>
+              <span class="pwa-chip-label">Offline</span>
             </span>
           }
+
         </div>
       </div>
-    }
-
-      <!-- Offline / update chip. Only rendered when it has something to say, so
-           the toolbar stays quiet in the normal online-and-current case. -->
-      @if (update_ready) {
-        <button class="pwa-chip pwa-chip--update" (click)="applyAppUpdate()"
-          title="A new version is cached and ready. Reloads the app.">
-          <mat-icon class="pwa-chip-icon">system_update_alt</mat-icon>
-          <span class="pwa-chip-label">Update ready</span>
-        </button>
-      } @else if (is_offline) {
-        <span class="pwa-chip pwa-chip--offline"
-          [title]="offline_ready ? 'No network — running from the cached app shell. Reports are local, so everything still works.' : 'No network'">
-          <mat-icon class="pwa-chip-icon">cloud_off</mat-icon>
-          <span class="pwa-chip-label">Offline</span>
-        </span>
-      }
-
-    @if (!show_status) {
+    } @else {
       <span class="example-fill-remaining-space"></span>
     }
 
