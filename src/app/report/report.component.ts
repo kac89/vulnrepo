@@ -4158,8 +4158,39 @@ Info       | ${sevCounts.Info}\n\n`;
 
   }
 
+  /**
+   * Open a bug-bounty program page.
+   *
+   * `bounty[]` is report data, not just the bundled chaos-bugbounty-list: it is
+   * persisted inside the report and an imported file brings its own, so `url`
+   * is attacker-controlled. This is the app's only navigation sink that does
+   * not go through Angular's URL sanitiser (every [href]/[src] binding gets
+   * that for free), which makes the scheme check below the thing standing
+   * between a crafted import and a 'javascript:' URL running in this origin —
+   * with the decrypted report and the key vault in reach.
+   *
+   * 'noopener' matters for the ordinary http(s) case too: without it the opened
+   * page keeps a window.opener handle on the app.
+   */
   redirectBounty(url) {
-    window.open(url, "_blank");
+    let parsed: URL;
+    try {
+      parsed = new URL(String(url ?? ''));
+    } catch {
+      parsed = null;
+    }
+
+    // Allowlist, not a denylist: anything that is not plainly http(s) is a
+    // program link this app did not write and will not follow.
+    if (!parsed || (parsed.protocol !== 'http:' && parsed.protocol !== 'https:')) {
+      this.snackBar.open('Blocked a bug-bounty link that is not a http(s) address.', 'OK', {
+        duration: 4000,
+        panelClass: ['notify-snackbar-fail']
+      });
+      return;
+    }
+
+    window.open(parsed.href, '_blank', 'noopener,noreferrer');
   }
 
   changePoC(poc) {
