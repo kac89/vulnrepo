@@ -47,6 +47,22 @@
       </div>
     }
 
+      <!-- Offline / update chip. Only rendered when it has something to say, so
+           the toolbar stays quiet in the normal online-and-current case. -->
+      @if (update_ready) {
+        <button class="pwa-chip pwa-chip--update" (click)="applyAppUpdate()"
+          title="A new version is cached and ready. Reloads the app.">
+          <mat-icon class="pwa-chip-icon">system_update_alt</mat-icon>
+          <span class="pwa-chip-label">Update ready</span>
+        </button>
+      } @else if (is_offline) {
+        <span class="pwa-chip pwa-chip--offline"
+          [title]="offline_ready ? 'No network — running from the cached app shell. Reports are local, so everything still works.' : 'No network'">
+          <mat-icon class="pwa-chip-icon">cloud_off</mat-icon>
+          <span class="pwa-chip-label">Offline</span>
+        </span>
+      }
+
     @if (!show_status) {
       <span class="example-fill-remaining-space"></span>
     }
@@ -92,22 +108,6 @@
             </a>
           }
         </mat-menu>
-      }
-
-      <!-- Offline / update chip. Only rendered when it has something to say, so
-           the toolbar stays quiet in the normal online-and-current case. -->
-      @if (update_ready) {
-        <button class="pwa-chip pwa-chip--update" (click)="applyAppUpdate()"
-          title="A new version is cached and ready. Reloads the app.">
-          <mat-icon class="pwa-chip-icon">system_update_alt</mat-icon>
-          <span class="pwa-chip-label">Update ready</span>
-        </button>
-      } @else if (is_offline) {
-        <span class="pwa-chip pwa-chip--offline"
-          [title]="offline_ready ? 'No network — running from the cached app shell. Reports are local, so everything still works.' : 'No network'">
-          <mat-icon class="pwa-chip-icon">cloud_off</mat-icon>
-          <span class="pwa-chip-label">Offline</span>
-        </span>
       }
 
       <button mat-icon-button class="nav-more-btn" [matMenuTriggerFor]="menu" title="More">
