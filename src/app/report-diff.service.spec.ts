@@ -347,6 +347,39 @@ describe('ReportDiffService', () => {
       });
     });
 
+    // applyPath defines properties instead of assigning them, so the shape of a
+    // written property is worth pinning: a report is round-tripped through
+    // JSON.stringify on every save and draft stash.
+    describe('written properties behave like plain assignment', () => {
+      it('writes enumerable, writable, configurable properties that survive JSON', () => {
+        const target: any = {};
+        svc.applyPath(target, 'report_settings.report_theme', 'white');
+        const d = Object.getOwnPropertyDescriptor(target.report_settings, 'report_theme');
+        expect(d).toEqual({ value: 'white', writable: true, enumerable: true, configurable: true });
+        expect(JSON.parse(JSON.stringify(target))).toEqual({ report_settings: { report_theme: 'white' } });
+      });
+
+      it('overwrites an existing value and can be written twice', () => {
+        const target: any = { report_settings: { report_theme: 'dark' } };
+        expect(svc.applyPath(target, 'report_settings.report_theme', 'white')).toBeTrue();
+        expect(svc.applyPath(target, 'report_settings.report_theme', 'grey')).toBeTrue();
+        expect(target.report_settings.report_theme).toBe('grey');
+      });
+
+      it('keeps array length correct when creating indexed branches', () => {
+        const target: any = {};
+        svc.applyPath(target, 'researcher.0.reportername', 'K');
+        expect(target.researcher.length).toBe(1);
+        expect(JSON.stringify(target)).toBe('{"researcher":[{"reportername":"K"}]}');
+      });
+
+      it('refuses rather than throwing when the target cannot be written', () => {
+        const target: any = { report_settings: Object.freeze({ report_theme: 'dark' }) };
+        expect(svc.applyPath(target, 'report_settings.report_theme', 'white')).toBeFalse();
+        expect(target.report_settings.report_theme).toBe('dark');
+      });
+    });
+
     it('round-trips every path the diff produces', () => {
       const left = report({
         report_scope: 'old scope',

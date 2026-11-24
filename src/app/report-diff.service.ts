@@ -518,33 +518,67 @@ export class ReportDiffService {
    * the target's prototype chain instead of setting a field, so lookups of
    * report settings that were never set start resolving to attacker values.
    */
-  private static readonly BLOCKED_PATH_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
-
   private static blockedKey(part: string): boolean {
-    return ReportDiffService.BLOCKED_PATH_KEYS.has(part);
+    // Three literal comparisons rather than a Set lookup: this is the barrier
+    // that static analysis has to be able to see, and an abstracted membership
+    // test is not one it can follow.
+    return part === '__proto__' || part === 'prototype' || part === 'constructor';
+  }
+
+  /**
+   * Defines an own, plain data property — never an assignment.
+   *
+   * `node[key] = value` goes through the prototype chain: an inherited setter
+   * runs instead of a property being created, and for the key '__proto__' that
+   * setter re-points the object's prototype. defineProperty has no such path —
+   * it always creates an own property on `node` and nothing else — so the
+   * dangerous operation is absent rather than merely guarded.
+   *
+   * The descriptor restores what plain assignment would have produced, so the
+   * result still serialises through JSON.stringify and stays editable.
+   */
+  private static defineOwn(node: any, key: string, value: any): boolean {
+    try {
+      Object.defineProperty(node, key, {
+        value, writable: true, enumerable: true, configurable: true
+      });
+      return true;
+    } catch {
+      // A frozen or non-configurable target: refuse rather than half-apply.
+      return false;
+    }
   }
 
   /** Writes `value` at a dotted path (`report_settings.report_theme`) into `target`. */
   applyPath(target: any, path: string, value: any): boolean {
     if (!target || !path) return false;
     const parts = path.split('.');
-    // Checked up front, every segment: refusing the whole write is the only
-    // safe answer, since bailing out part-way would leave the report half
-    // patched with the intermediate objects this loop creates.
-    if (parts.some(ReportDiffService.blockedKey)) return false;
+
+    // Every segment is checked before anything is written: refusing the whole
+    // path is the only safe answer, since bailing out part-way would leave the
+    // report half patched with the intermediate objects the loop creates.
+    for (const part of parts) {
+      if (part === '__proto__' || part === 'prototype' || part === 'constructor') return false;
+    }
+
     let node = target;
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
+      if (part === '__proto__' || part === 'prototype' || part === 'constructor') return false;
       const nextIsIndex = /^\d+$/.test(parts[i + 1]);
       if (!Object.prototype.hasOwnProperty.call(node, part) ||
           node[part] === undefined || node[part] === null) {
-        node[part] = nextIsIndex ? [] : {};
+        // Shadow rather than descend into an inherited object, so a polluted
+        // prototype cannot be reached and mutated through this walk.
+        if (!ReportDiffService.defineOwn(node, part, nextIsIndex ? [] : {})) return false;
       }
       node = node[part];
-      if (typeof node !== 'object') return false;
+      if (typeof node !== 'object' || node === null) return false;
     }
-    node[parts[parts.length - 1]] = value;
-    return true;
+
+    const last = parts[parts.length - 1];
+    if (last === '__proto__' || last === 'prototype' || last === 'constructor') return false;
+    return ReportDiffService.defineOwn(node, last, value);
   }
 
   /** Reads a dotted path out of a snapshot. */
@@ -553,7 +587,9 @@ export class ReportDiffService {
     const parts = path.split('.');
     // Same guard as applyPath, so a blocked path cannot read Object.prototype
     // out of one snapshot and hand it to applyPath as a "restored" value.
-    if (parts.some(ReportDiffService.blockedKey)) return undefined;
+    for (const part of parts) {
+      if (part === '__proto__' || part === 'prototype' || part === 'constructor') return undefined;
+    }
     return parts.reduce((node, part) => (node === undefined || node === null) ? undefined : node[part], source);
   }
 }
