@@ -290,6 +290,63 @@ describe('ReportDiffService', () => {
       expect(svc.readPath(src, 'nope.deeper')).toBeUndefined();
     });
 
+    // report_settings paths are built from the keys of decrypted report data,
+    // which an imported file controls — so a path segment can be '__proto__'.
+    describe('prototype pollution', () => {
+      afterEach(() => {
+        delete (Object.prototype as any).polluted;
+        delete (Object.prototype as any).report_theme;
+      });
+
+      it('refuses a write that would walk through __proto__', () => {
+        const target: any = { report_settings: {} };
+        expect(svc.applyPath(target, 'report_settings.__proto__.polluted', 'x')).toBeFalse();
+        expect(({} as any).polluted).toBeUndefined();
+        expect((Object.prototype as any).polluted).toBeUndefined();
+      });
+
+      it('refuses __proto__ as the final segment, so the target keeps its own chain', () => {
+        const target: any = { report_settings: { report_theme: 'dark' } };
+        expect(svc.applyPath(target, 'report_settings.__proto__', { report_theme: 'evil' })).toBeFalse();
+        expect(Object.getPrototypeOf(target.report_settings)).toBe(Object.prototype);
+        expect(target.report_settings.report_theme).toBe('dark');
+      });
+
+      it('refuses constructor and prototype segments', () => {
+        const target: any = { report_settings: {} };
+        expect(svc.applyPath(target, 'constructor.prototype.polluted', 'x')).toBeFalse();
+        expect(svc.applyPath(target, 'report_settings.constructor.prototype.polluted', 'x')).toBeFalse();
+        expect(svc.applyPath(target, 'report_settings.prototype', 'x')).toBeFalse();
+        expect(({} as any).polluted).toBeUndefined();
+      });
+
+      it('does not read a blocked path back out of a snapshot', () => {
+        const src = JSON.parse('{"report_settings":{"__proto__":{"report_theme":"evil"}}}');
+        expect(svc.readPath(src, 'report_settings.__proto__')).toBeUndefined();
+        expect(svc.readPath(src, 'report_settings.__proto__.report_theme')).toBeUndefined();
+      });
+
+      it('never offers a blocked key as a restorable field', () => {
+        // JSON.parse defines __proto__ as an own property, so Object.keys lists it
+        const settings = JSON.parse('{"report_theme":"white","__proto__":{"x":1}}');
+        expect(Object.keys(settings)).toContain('__proto__');
+
+        const d = svc.diff(report({ report_settings: settings }),
+                           report({ report_settings: { report_theme: 'dark' } }));
+        expect(d.fields.some(f => f.path.split('.').includes('__proto__'))).toBeFalse();
+        // the legitimate sibling key is still diffed
+        expect(d.fields.some(f => f.path === 'report_settings.report_theme')).toBeTrue();
+      });
+
+      it('writes an own property rather than mutating an inherited one', () => {
+        const shared = { report_theme: 'inherited' };
+        const target: any = { report_settings: Object.create({ report_logo: shared }) };
+        expect(svc.applyPath(target, 'report_settings.report_logo.width', 42)).toBeTrue();
+        expect(shared).toEqual({ report_theme: 'inherited' });
+        expect(target.report_settings.report_logo.width).toBe(42);
+      });
+    });
+
     it('round-trips every path the diff produces', () => {
       const left = report({
         report_scope: 'old scope',

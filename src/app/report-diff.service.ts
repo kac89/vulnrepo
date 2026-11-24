@@ -296,6 +296,11 @@ export class ReportDiffService {
     const keys = new Set<string>([...Object.keys(left || {}), ...Object.keys(right || {})]);
 
     for (const key of keys) {
+      // This loop is where an untrusted key becomes a path segment, so drop the
+      // dangerous ones here too: applyPath() would refuse them anyway, but the
+      // restore UI should not offer a row that silently does nothing.
+      if (ReportDiffService.blockedKey(key)) continue;
+
       const l = left ? left[key] : undefined;
       const r = right ? right[key] : undefined;
 
@@ -498,15 +503,41 @@ export class ReportDiffService {
     return out;
   }
 
+  /**
+   * Path segments that must never be walked or written.
+   *
+   * A path is not a constant in this service: `diffSettings()` builds one from
+   * the keys it finds in `report_settings`, and that object is decrypted report
+   * data — an imported file or a report pulled from a configured API server can
+   * carry any key it likes, `__proto__` included (JSON.parse defines it as an
+   * own property rather than invoking the setter, so Object.keys lists it).
+   *
+   * Walking '__proto__' lands `node` on Object.prototype, and the write that
+   * follows is then global: every object in the app inherits the value. Writing
+   * '__proto__' as the final segment is milder but still wrong — it re-points
+   * the target's prototype chain instead of setting a field, so lookups of
+   * report settings that were never set start resolving to attacker values.
+   */
+  private static readonly BLOCKED_PATH_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
+
+  private static blockedKey(part: string): boolean {
+    return ReportDiffService.BLOCKED_PATH_KEYS.has(part);
+  }
+
   /** Writes `value` at a dotted path (`report_settings.report_theme`) into `target`. */
   applyPath(target: any, path: string, value: any): boolean {
     if (!target || !path) return false;
     const parts = path.split('.');
+    // Checked up front, every segment: refusing the whole write is the only
+    // safe answer, since bailing out part-way would leave the report half
+    // patched with the intermediate objects this loop creates.
+    if (parts.some(ReportDiffService.blockedKey)) return false;
     let node = target;
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
       const nextIsIndex = /^\d+$/.test(parts[i + 1]);
-      if (node[part] === undefined || node[part] === null) {
+      if (!Object.prototype.hasOwnProperty.call(node, part) ||
+          node[part] === undefined || node[part] === null) {
         node[part] = nextIsIndex ? [] : {};
       }
       node = node[part];
@@ -519,6 +550,10 @@ export class ReportDiffService {
   /** Reads a dotted path out of a snapshot. */
   readPath(source: any, path: string): any {
     if (!source || !path) return undefined;
-    return path.split('.').reduce((node, part) => (node === undefined || node === null) ? undefined : node[part], source);
+    const parts = path.split('.');
+    // Same guard as applyPath, so a blocked path cannot read Object.prototype
+    // out of one snapshot and hand it to applyPath as a "restored" value.
+    if (parts.some(ReportDiffService.blockedKey)) return undefined;
+    return parts.reduce((node, part) => (node === undefined || node === null) ? undefined : node[part], source);
   }
 }
