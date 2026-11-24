@@ -39,6 +39,7 @@ import { DialogAddCustomTemplateComponent } from '../dialog-add-custom-template/
 import { DialogEncryptReportComponent } from '../dialog-encrypt-report/dialog-encrypt-report.component';
 import { DialogRestoreDraftComponent } from '../dialog-restore-draft/dialog-restore-draft.component';
 import { DraftService, DraftRecord } from '../draft.service';
+import { ReportDiffService } from '../report-diff.service';
 import { PageEvent } from '@angular/material/paginator';
 import { DialogEditorFullscreenComponent } from '../dialog-editor-fullscreen/dialog-editor-fullscreen.component';
 import { DialogAttachPreviewComponent } from '../dialog-attach-preview/dialog-attach-preview.component';
@@ -698,6 +699,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     private issueFilterService: IssueFilterService,
     private cryptoUtils: CryptoUtilsService,
     private draftService: DraftService,
+    private reportDiffService: ReportDiffService,
     private keyVault: KeyVaultService) {
 
     // Stash unsaved work before the vault wipes the key it is encrypted with.
@@ -4156,8 +4158,39 @@ Info       | ${sevCounts.Info}\n\n`;
 
   }
 
+  /**
+   * Open a bug-bounty program page.
+   *
+   * `bounty[]` is report data, not just the bundled chaos-bugbounty-list: it is
+   * persisted inside the report and an imported file brings its own, so `url`
+   * is attacker-controlled. This is the app's only navigation sink that does
+   * not go through Angular's URL sanitiser (every [href]/[src] binding gets
+   * that for free), which makes the scheme check below the thing standing
+   * between a crafted import and a 'javascript:' URL running in this origin —
+   * with the decrypted report and the key vault in reach.
+   *
+   * 'noopener' matters for the ordinary http(s) case too: without it the opened
+   * page keeps a window.opener handle on the app.
+   */
   redirectBounty(url) {
-    window.open(url, "_blank");
+    let parsed: URL;
+    try {
+      parsed = new URL(String(url ?? ''));
+    } catch {
+      parsed = null;
+    }
+
+    // Allowlist, not a denylist: anything that is not plainly http(s) is a
+    // program link this app did not write and will not follow.
+    if (!parsed || (parsed.protocol !== 'http:' && parsed.protocol !== 'https:')) {
+      this.snackBar.open('Blocked a bug-bounty link that is not a http(s) address.', 'OK', {
+        duration: 4000,
+        panelClass: ['notify-snackbar-fail']
+      });
+      return;
+    }
+
+    window.open(parsed.href, '_blank', 'noopener,noreferrer');
   }
 
   changePoC(poc) {
@@ -4416,18 +4449,105 @@ Info       | ${sevCounts.Info}\n\n`;
   showHistory(report_id): void {
 
     const dialogRef = this.dialog.open(DialogReportHistoryComponent, {
-      width: '600px',
-      maxHeight: '80vh',
+      width: '900px',
+      maxWidth: '96vw',
+      maxHeight: '85vh',
       panelClass: 'history-dialog-panel',
       backdropClass: 'vr-blur-backdrop',
       disableClose: false,
-      data: report_id
+      // The live report goes in so a snapshot can be diffed against what is on
+      // screen right now, unsaved edits included.
+      data: { report_id, current: this.decryptedReportDataChanged }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The report history dialog was closed');
+      if (result?.action === 'restore-selection') {
+        this.applyRestoreSelection(result);
+      }
     });
 
+  }
+
+  /**
+   * Writes selected pieces of an older snapshot back into the open report.
+   *
+   * Deliberately not saved: the report is left dirty so the restore shows up in
+   * the normal unsaved-changes flow and "Discard changes" undoes it. The old
+   * whole-report rollback had no such escape hatch.
+   */
+  private applyRestoreSelection(selection: any): void {
+    if (!this.decryptedReportDataChanged) return;
+
+    let restoredIssues = 0;
+    let restoredAssets = 0;
+    let restoredFields = 0;
+
+    // Issues carry no stable id, so an existing copy is found by the same
+    // normalised title the diff matched on; no match means it was deleted and
+    // the snapshot copy is appended.
+    for (const issue of (selection.issues || [])) {
+      if (!issue) continue;
+      const restored = JSON.parse(JSON.stringify(issue));
+      // ngDoCheck builds a differ per issue over `files`, and the issue views
+      // iterate `tags`/`bounty`; a snapshot old enough to predate one of those
+      // fields would otherwise break change detection on restore.
+      if (!Array.isArray(restored.files)) restored.files = [];
+      if (!Array.isArray(restored.tags)) restored.tags = [];
+      if (!Array.isArray(restored.bounty)) restored.bounty = [];
+
+      const key = this.reportDiffService.issueKey(issue);
+      const idx = this.decryptedReportDataChanged.report_vulns
+        .findIndex(v => this.reportDiffService.issueKey(v) === key);
+      if (idx >= 0) {
+        this.decryptedReportDataChanged.report_vulns[idx] = restored;
+      } else {
+        this.decryptedReportDataChanged.report_vulns.push(restored);
+      }
+      restoredIssues++;
+    }
+
+    if ((selection.assets || []).length) {
+      if (!Array.isArray(this.decryptedReportDataChanged.report_assets)) {
+        this.decryptedReportDataChanged.report_assets = [];
+      }
+      for (const asset of selection.assets) {
+        if (!asset) continue;
+        const idx = this.decryptedReportDataChanged.report_assets
+          .findIndex(a => (asset.id && a?.id === asset.id) ||
+            (!asset.id && a?.name === asset.name && a?.target === asset.target));
+        if (idx >= 0) {
+          this.decryptedReportDataChanged.report_assets[idx] = JSON.parse(JSON.stringify(asset));
+        } else {
+          this.decryptedReportDataChanged.report_assets.push(JSON.parse(JSON.stringify(asset)));
+        }
+        restoredAssets++;
+      }
+    }
+
+    for (const field of (selection.fields || [])) {
+      if (!field?.path) continue;
+      if (this.reportDiffService.applyPath(this.decryptedReportDataChanged, field.path, field.value)) {
+        restoredFields++;
+      }
+    }
+
+    if (!restoredIssues && !restoredAssets && !restoredFields) return;
+
+    const parts: string[] = [];
+    if (restoredIssues) parts.push(restoredIssues + ' issue' + (restoredIssues > 1 ? 's' : ''));
+    if (restoredAssets) parts.push(restoredAssets + ' asset' + (restoredAssets > 1 ? 's' : ''));
+    if (restoredFields) parts.push(restoredFields + ' field' + (restoredFields > 1 ? 's' : ''));
+
+    this.addtochangelog('Restored ' + parts.join(', ') + ' from version ' + selection.sourceLabel);
+    // afterDetectionNow() re-bases every differ over the patched report and ends
+    // in sureYouWanttoLeave(), which is what marks the report unsaved and arms
+    // the draft save — the same path mergeissue() takes.
+    this.afterDetectionNow();
+    this.doStats();
+
+    this.snackBar.open('Restored ' + parts.join(', ') + ' — review and save the report', 'OK', {
+      duration: 6000
+    });
   }
 
 

@@ -1,164 +1,201 @@
 ﻿<mat-toolbar class="app-navbar">
   <mat-toolbar-row>
-    <!-- Hamburger (mobile) -->
-    <button mat-icon-button class="menu-toggle" (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
+    <!-- Left column — equal weight to the right one, so the centre cluster lands
+         on the toolbar's true centre line rather than the middle of the leftovers. -->
+    <div class="nav-side nav-side--left">
+      <!-- Hamburger (mobile) -->
+      <button mat-icon-button class="menu-toggle" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-    <!-- Logo -->
-    <a routerLink="/home" class="logo-link">
-      <img width="26px" src="assets/logo/vulnrepo_logo.png" alt="logo">
-      <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
-    </a>
+      <!-- Logo -->
+      <a routerLink="/home" class="logo-link">
+        <img width="26px" src="assets/logo/vulnrepo_logo.png" alt="logo">
+        <span class="neon flash">VULNRΞPO<span>VULNRΞPO</span></span>
+      </a>
+    </div>
 
-    <!-- Status badge — single element, animated between states -->
-    @if (show_status) {
+    <!-- Centre cluster — report security on the left, app/network state on the right,
+         hairline-joined into one capsule so the toolbar keeps a single centre of gravity
+         instead of two competing ones. Rendered only when a segment has something to say. -->
+    @if (show_status || update_ready || is_offline) {
       <div class="title-center" animate.enter="status-slide-enter" animate.leave="status-slide-leave">
-        <div class="status-badge status-badge--compact"
-          [class.is-decrypted]="enc_status"
-          [class.status-churn]="statusChurn"
-          [class.status-pulse-decrypted]="statusPulse === 'decrypted'"
-          [class.status-pulse-encrypted]="statusPulse === 'encrypted'"
-          (animationend)="onStatusPulseEnd($event)">
+        <div class="status-cluster" [class.has-both]="show_status && (update_ready || is_offline)">
 
-          <!-- the caption is one persistent element so it can be scrambled in place;
-               only the glyph swaps between states -->
-          <span class="status-content">
-            @if (enc_status) {
-              <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
-                <mat-icon class="status-icon" animate.enter="status-icon-enter">no_encryption</mat-icon>
-              </a>
-            } @else {
-              <mat-icon class="status-icon" animate.enter="status-icon-enter">lock</mat-icon>
-            }
-            <span class="status-label">{{ statusLabel }}</span>
-          </span>
+          <!-- Status badge — single element, animated between states -->
+          @if (show_status) {
+            <div class="status-badge status-badge--compact"
+              [class.is-decrypted]="enc_status"
+              [class.status-churn]="statusChurn"
+              [class.status-pulse-decrypted]="statusPulse === 'decrypted'"
+              [class.status-pulse-encrypted]="statusPulse === 'encrypted'"
+              (animationend)="onStatusPulseEnd($event)">
 
-          @if (enc_status && lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
-            <span class="lock-timer"
-              [class.lock-warning]="lockSecondsRemaining < 120"
-              [class.lock-critical]="lockSecondsRemaining < 30"
-              [title]="'Auto-lock in ' + formatLockTimer(lockSecondsRemaining)">
-              <mat-icon class="timer-icon">timer</mat-icon>
-              {{ formatLockTimer(lockSecondsRemaining) }}
+              <!-- the caption is one persistent element so it can be scrambled in place;
+                   only the glyph swaps between states -->
+              <span class="status-content">
+                @if (enc_status) {
+                  <a [routerLink]="[]" (click)="closeReport()" class="status-close" title="Close report">
+                    <mat-icon class="status-icon" animate.enter="status-icon-enter">no_encryption</mat-icon>
+                  </a>
+                } @else {
+                  <mat-icon class="status-icon" animate.enter="status-icon-enter">lock</mat-icon>
+                }
+                <span class="status-label">{{ statusLabel }}</span>
+              </span>
+
+              @if (enc_status && lockSecondsRemaining !== null && lockSecondsRemaining > 0) {
+                <span class="lock-timer"
+                  [class.lock-warning]="lockSecondsRemaining < 120"
+                  [class.lock-critical]="lockSecondsRemaining < 30"
+                  [title]="'Auto-lock in ' + formatLockTimer(lockSecondsRemaining)">
+                  <mat-icon class="timer-icon">timer</mat-icon>
+                  {{ formatLockTimer(lockSecondsRemaining) }}
+                </span>
+              }
+            </div>
+          }
+
+          <!-- Offline / update segment — the right half of the capsule. -->
+          @if (update_ready) {
+            <button class="pwa-chip pwa-chip--update" (click)="applyAppUpdate()"
+              title="A new version is cached and ready. Reloads the app.">
+              <mat-icon class="pwa-chip-icon">system_update_alt</mat-icon>
+              <span class="pwa-chip-label">Update ready</span>
+            </button>
+          } @else if (is_offline) {
+            <span class="pwa-chip pwa-chip--offline"
+              [title]="offline_ready ? 'No network — running from the cached app shell. Reports are local, so everything still works.' : 'No network'">
+              <mat-icon class="pwa-chip-icon">cloud_off</mat-icon>
+              <span class="pwa-chip-label">Offline</span>
             </span>
           }
+
         </div>
       </div>
     }
 
-    @if (!show_status) {
-      <span class="example-fill-remaining-space"></span>
-    }
+    <div class="nav-side nav-side--right">
+      <!-- Desktop nav -->
+      <nav class="desktop-nav" >
+        <a routerLink="/home" routerLinkActive="active-link" mat-button class="nav-link">
+          <mat-icon>home</mat-icon>
+          Home
+        </a>
 
-    <!-- Desktop nav -->
-    <nav class="desktop-nav" >
-      <a routerLink="/home" routerLinkActive="active-link" mat-button class="nav-link">
-        <mat-icon>home</mat-icon>
-        Home
-      </a>
+        <a routerLink="/my-reports" routerLinkActive="active-link" mat-button class="nav-link">
+          <mat-icon>list_alt</mat-icon>
+          My Reports
+        </a>
 
-      <a routerLink="/my-reports" routerLinkActive="active-link" mat-button class="nav-link">
-        <mat-icon>list_alt</mat-icon>
-        My Reports
-      </a>
-
-      @if (show_active_reports) {
-        <button mat-button class="open-reports-btn"
-          [class.has-unsaved]="status_unsaved"
-          [matMenuTriggerFor]="openReportsMenu"
-          [title]="status_unsaved ? 'Open reports — unsaved changes' : 'Open reports'">
-          <mat-icon>lock_open</mat-icon>
-          <span class="open-reports-btn-count">{{ arr_oreports.length }}</span>
-        </button>
-
-        <mat-menu #openReportsMenu="matMenu" class="open-reports-menu">
-          <div class="open-reports-menu-title" (click)="$event.stopPropagation()">
+        @if (show_active_reports) {
+          <button mat-button class="open-reports-btn"
+            [class.has-unsaved]="status_unsaved"
+            [matMenuTriggerFor]="openReportsMenu"
+            [title]="status_unsaved ? 'Open reports — unsaved changes' : 'Open reports'">
             <mat-icon>lock_open</mat-icon>
-            <span>Open reports ({{ arr_oreports.length }})</span>
-            @if (status_unsaved) {
-              <span class="open-reports-unsaved-pill" title="Current report has unsaved changes">
-                Unsaved
-              </span>
-            }
-          </div>
-          @for (activreport of arr_oreports; track activreport) {
-            <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
-              <mat-icon>description</mat-icon>
-              @if (activreport.report_source == 'api') {
-                <mat-icon color="accent">public</mat-icon>
+            <span class="open-reports-btn-count">{{ arr_oreports.length }}</span>
+          </button>
+
+          <mat-menu #openReportsMenu="matMenu" class="open-reports-menu">
+            <div class="open-reports-menu-title" (click)="$event.stopPropagation()">
+              <mat-icon>lock_open</mat-icon>
+              <span>Open reports ({{ arr_oreports.length }})</span>
+              @if (status_unsaved) {
+                <span class="open-reports-unsaved-pill" title="Current report has unsaved changes">
+                  Unsaved
+                </span>
               }
-              {{activreport.report_name}}
-            </a>
+            </div>
+            @for (activreport of arr_oreports; track activreport) {
+              <a [routerLink]="['/report', activreport.report_id]" routerLinkActive="active-link" mat-menu-item>
+                <mat-icon>description</mat-icon>
+                @if (activreport.report_source == 'api') {
+                  <mat-icon color="accent">public</mat-icon>
+                }
+                {{activreport.report_name}}
+              </a>
+            }
+          </mat-menu>
+        }
+
+        <button mat-icon-button class="nav-more-btn" [matMenuTriggerFor]="menu" title="More">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #menu="matMenu">
+          <a routerLink="/new-report" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>add_circle_outline</mat-icon> New report
+          </a>
+          <a routerLink="/import-report" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>playlist_add</mat-icon> Import report
+          </a>
+          <a routerLink="/templates-list" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>bug_report</mat-icon> Templates List
+          </a>
+          <a routerLink="/settings" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>settings</mat-icon> Settings
+          </a>
+          <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="tools">
+            <mat-icon>search</mat-icon> Tools
+          </a>
+          <a routerLink="/faq" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>live_help</mat-icon> FAQ
+          </a>
+          @if (can_install) {
+            <button mat-menu-item (click)="installApp()">
+              <mat-icon>install_desktop</mat-icon> Install app
+            </button>
           }
+          @if (update_ready) {
+            <button mat-menu-item (click)="applyAppUpdate()">
+              <mat-icon>system_update_alt</mat-icon> Update &amp; reload
+            </button>
+          }
+          <button mat-menu-item (click)="goAbout()">
+            <mat-icon>info</mat-icon> About
+          </button>
         </mat-menu>
-      }
 
-      <button mat-icon-button class="nav-more-btn" [matMenuTriggerFor]="menu" title="More">
-        <mat-icon>more_vert</mat-icon>
-      </button>
+        <mat-menu #tools="matMenu" xPosition="after" yPosition="above">
+          <button mat-menu-item (click)="goAI()">
+            <mat-icon>photo_filter</mat-icon> AI assistant
+          </button>
+          <a routerLink="/cve-search" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>search</mat-icon> CVE Search
+          </a>
+          <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
+            <mat-icon>library_books</mat-icon> Checklists
+          </a>
+          <a routerLink="/bugbounty-list" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>format_list_bulleted</mat-icon> Bug Bounty List
+          </a>
+        </mat-menu>
 
-      <mat-menu #menu="matMenu">
-        <a routerLink="/new-report" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>add_circle_outline</mat-icon> New report
-        </a>
-        <a routerLink="/import-report" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>playlist_add</mat-icon> Import report
-        </a>
-        <a routerLink="/templates-list" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>bug_report</mat-icon> Templates List
-        </a>
-        <a routerLink="/settings" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>settings</mat-icon> Settings
-        </a>
-        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="tools">
-          <mat-icon>search</mat-icon> Tools
-        </a>
-        <a routerLink="/faq" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>live_help</mat-icon> FAQ
-        </a>
-        <button mat-menu-item (click)="goAbout()">
-          <mat-icon>info</mat-icon> About
-        </button>
-      </mat-menu>
+        <mat-menu #methods="matMenu" xPosition="after" yPosition="above">
+          <a routerLink="/asvs" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>description</mat-icon> ASVS 5.0.0
+          </a>
+          <a routerLink="/pcidss4" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>description</mat-icon> PCI DSS v4.0 Auditor
+          </a>
+          <a routerLink="/tbhm" routerLinkActive="active-link" mat-menu-item>
+            <mat-icon>description</mat-icon> The Bug Hunter's Methodology
+          </a>
+        </mat-menu>
 
-      <mat-menu #tools="matMenu" xPosition="after" yPosition="above">
-        <button mat-menu-item (click)="goAI()">
-          <mat-icon>photo_filter</mat-icon> AI assistant
-        </button>
-        <a routerLink="/cve-search" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>search</mat-icon> CVE Search
-        </a>
-        <a routerLinkActive="active-link" mat-menu-item [matMenuTriggerFor]="methods">
-          <mat-icon>library_books</mat-icon> Checklists
-        </a>
-        <a routerLink="/bugbounty-list" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>format_list_bulleted</mat-icon> Bug Bounty List
-        </a>
-      </mat-menu>
+        <!-- Social links -->
+        <div class="social-links">
+          <a target="_blank" href="https://github.com/kac89/vulnrepo" title="GitHub" class="social-icon">
+            <img src="./assets/github.png" style="height: 18px; width: 18px;">
+          </a>
+          <a target="_blank" href="https://x.com/vulnrepo" title="X / Twitter" class="social-icon">
+            <img src="./assets/twitter-x-48.ico" style="height: 18px; width: 18px;">
+          </a>
+        </div>
+      </nav>
+    </div>
 
-      <mat-menu #methods="matMenu" xPosition="after" yPosition="above">
-        <a routerLink="/asvs" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>description</mat-icon> ASVS 5.0.0
-        </a>
-        <a routerLink="/pcidss4" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>description</mat-icon> PCI DSS v4.0 Auditor
-        </a>
-        <a routerLink="/tbhm" routerLinkActive="active-link" mat-menu-item>
-          <mat-icon>description</mat-icon> The Bug Hunter's Methodology
-        </a>
-      </mat-menu>
-
-      <!-- Social links -->
-      <div class="social-links">
-        <a target="_blank" href="https://github.com/kac89/vulnrepo" title="GitHub" class="social-icon">
-          <img src="./assets/github.png" style="height: 18px; width: 18px;">
-        </a>
-        <a target="_blank" href="https://x.com/vulnrepo" title="X / Twitter" class="social-icon">
-          <img src="./assets/twitter-x-48.ico" style="height: 18px; width: 18px;">
-        </a>
-      </div>
-    </nav>
   </mat-toolbar-row>
 </mat-toolbar>
 
@@ -195,6 +232,16 @@
       <button mat-menu-item routerLink="/faq" routerLinkActive="active-link">
         <mat-icon>live_help</mat-icon> FAQ
       </button>
+      @if (can_install) {
+        <button mat-menu-item (click)="installApp()">
+          <mat-icon>install_mobile</mat-icon> Install app
+        </button>
+      }
+      @if (update_ready) {
+        <button mat-menu-item (click)="applyAppUpdate()">
+          <mat-icon>system_update_alt</mat-icon> Update &amp; reload
+        </button>
+      }
       <button mat-menu-item (click)="goAbout()">
         <mat-icon>info</mat-icon> About
       </button>

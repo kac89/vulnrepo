@@ -98,6 +98,8 @@ import { DialogImportAdvancedComponent } from './dialog-import-advanced/dialog-i
 import { DialogFilterHelpComponent } from './dialog-filter-help/dialog-filter-help.component';
 import { DialogExportIntegrityComponent } from './dialog-export-integrity/dialog-export-integrity.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -188,7 +190,16 @@ import { MatStepperModule } from '@angular/material/stepper';
         MatTooltipModule,
         MatSliderModule,
         MatStepperModule,
-        CdkAccordionModule], providers: [MessageService, IndexeddbService, DatePipe, provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        CdkAccordionModule,
+        // Precaches the app shell so VULNRΞPO boots with no network at all
+        // (air-gapped labs, client jumpboxes with no egress) and pins the running
+        // bundle to one known build. Only static assets are cached — see
+        // ngsw-config.json and PwaService. Registration waits for app stability
+        // so it never competes with the first paint or the crypto worker.
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production,
+            registrationStrategy: 'registerWhenStable:30000'
+        })], providers: [MessageService, IndexeddbService, DatePipe, provideHttpClient(withXhr(), withInterceptorsFromDi()),
         // Dialog default scroll strategy: noop instead of block.
         // Block adds `position: fixed; top: -scrollY` to <html>, which drags the
         // sticky navbar off-screen each time a dialog opens.

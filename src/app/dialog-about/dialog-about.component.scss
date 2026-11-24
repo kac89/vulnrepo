@@ -209,3 +209,25 @@
 }
 
 .close-btn:hover { color: #ef5350 !important; }
+
+.badge--offline {
+  background: rgba(110, 231, 168, 0.12);
+  color: #6ee7a8;
+  border: 1px solid rgba(110, 231, 168, 0.3);
+}
+
+/* the offline row is an action, not a link — reset the button chrome so it
+   matches the <a class="about-row"> siblings exactly */
+.about-row-btn {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+}

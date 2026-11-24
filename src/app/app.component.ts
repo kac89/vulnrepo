@@ -11,6 +11,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogOllamaComponent } from './dialog-ollama/dialog-ollama.component';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
+import { PwaService } from './pwa.service';
 
 /** the two captions the status badge resolves between — same length, so the pill never reflows */
 const STATUS_ENCRYPTED = 'Report encrypted';
@@ -52,6 +53,20 @@ export class AppComponent implements OnInit, OnDestroy {
   private lockWarningSub: Subscription;
   private lockWarningSnackRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
 
+  // ── offline / install state (see PwaService) ──────────────────────────────
+  /** app shell is cached: the app can be opened with no network */
+  offline_ready = false;
+  /** the network is currently unreachable */
+  is_offline = false;
+  /** a newer build is cached and waiting for an explicit reload */
+  update_ready = false;
+  /** the browser offered an install prompt we can replay */
+  can_install = false;
+  /** running as an installed PWA rather than a browser tab */
+  is_installed = false;
+  private pwaSubs = new Subscription();
+  private updateSnackRef: MatSnackBarRef<TextOnlySnackBar> | null = null;
+
   @HostListener('window:keydown.control.shift.y', ['$event'])
   GoToNewReport(event: KeyboardEvent) {
     event.preventDefault();
@@ -64,10 +79,27 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.navigate(['/my-reports']);
   }
 
-  constructor(public route: ActivatedRoute, private snackBar: MatSnackBar, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService, public dialog: MatDialog, private keyVault: KeyVaultService) {
+  constructor(public route: ActivatedRoute, private snackBar: MatSnackBar, public router: Router, public sessionsub: SessionstorageserviceService, private indexeddbService: IndexeddbService, public dialog: MatDialog, private keyVault: KeyVaultService, public pwa: PwaService) {
     this.keyVaultSub = this.keyVault.change$.subscribe(() => {
       this.getopenreports();
     });
+
+    this.pwaSubs.add(this.pwa.offlineReady$.subscribe(v => {
+      queueMicrotask(() => { this.offline_ready = v; });
+    }));
+    this.pwaSubs.add(this.pwa.online$.subscribe(online => {
+      queueMicrotask(() => { this.is_offline = !online; });
+    }));
+    this.pwaSubs.add(this.pwa.installable$.subscribe(v => {
+      queueMicrotask(() => { this.can_install = v; });
+    }));
+    this.pwaSubs.add(this.pwa.installed$.subscribe(v => {
+      queueMicrotask(() => { this.is_installed = v; });
+    }));
+    this.pwaSubs.add(this.pwa.updateReady$.subscribe(ready => {
+      queueMicrotask(() => { this.update_ready = ready; });
+      if (ready) this.showUpdateAvailable();
+    }));
 
     this.lockTimerSub = this.keyVault.idleResetAt$.pipe(
       switchMap(resetAt => {
@@ -116,6 +148,41 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.lockWarningSnackRef) {
       this.lockWarningSnackRef.dismiss();
       this.lockWarningSnackRef = null;
+    }
+  }
+
+  /**
+   * A newer build finished downloading. Announce it, never apply it: activating
+   * swaps the bundle and reloads, which would throw away unsaved report edits.
+   * The badge in the toolbar keeps the offer available after the snackbar goes.
+   */
+  private showUpdateAvailable(): void {
+    if (this.updateSnackRef) return;
+    this.updateSnackRef = this.snackBar.open(
+      'A new version of VULNRΞPO is ready',
+      'Reload',
+      { duration: 12000 }
+    );
+    this.updateSnackRef.onAction().subscribe(() => { this.applyAppUpdate(); });
+    this.updateSnackRef.afterDismissed().subscribe(() => { this.updateSnackRef = null; });
+  }
+
+  /** Reload onto the new build — refused while a report has unsaved changes. */
+  applyAppUpdate(): void {
+    if (this.status_unsaved) {
+      this.snackBar.open('Save or discard your changes before updating', 'OK', {
+        duration: 4000,
+        panelClass: ['notify-snackbar-fail']
+      });
+      return;
+    }
+    this.pwa.applyUpdate();
+  }
+
+  async installApp(): Promise<void> {
+    const accepted = await this.pwa.promptInstall();
+    if (accepted) {
+      this.snackBar.open('VULNRΞPO installed — it now opens without a network', 'OK', { duration: 4000 });
     }
   }
 
@@ -247,6 +314,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.keyVaultSub) this.keyVaultSub.unsubscribe();
     if (this.lockTimerSub) this.lockTimerSub.unsubscribe();
     if (this.lockWarningSub) this.lockWarningSub.unsubscribe();
+    this.pwaSubs.unsubscribe();
     this.stopScramble();
     this.dismissLockWarning();
   }

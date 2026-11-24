@@ -26,10 +26,27 @@
         <mat-icon class="badge-icon">commit</mat-icon>
         {{ app_ver_short }}
       </a>
+      @if (offline_ready) {
+        <span class="badge badge--offline" title="The app shell is cached: VULNRΞPO opens with no network. Report data is in IndexedDB and is never cached by the service worker.">
+          <mat-icon class="badge-icon">offline_bolt</mat-icon>
+          offline ready
+        </span>
+      }
     </div>
 
     <!-- Info rows -->
     <div class="about-rows">
+
+      <button type="button" class="about-row about-row-btn" (click)="checkUpdate()" [disabled]="checking">
+        <div class="about-row-icon"><mat-icon>{{ offline_ready ? 'offline_bolt' : 'cloud_off' }}</mat-icon></div>
+        <div class="about-row-body">
+          <span class="about-row-label">Offline</span>
+          <span class="about-row-value">{{ offlineStatus }}</span>
+        </div>
+        @if (offline_ready) {
+          <mat-icon class="about-row-arrow">refresh</mat-icon>
+        }
+      </button>
 
       <a class="about-row" href="https://vulnrepo.com/" target="_blank">
         <div class="about-row-icon"><mat-icon>language</mat-icon></div>

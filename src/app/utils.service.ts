@@ -5,26 +5,35 @@ import { DialogExportIntegrityComponent } from './dialog-export-integrity/dialog
 interface SeverityEntry { readonly name: string; readonly value: number; }
 interface IssueStatusEntry { readonly status: string; readonly value: number; }
 
+/**
+ * Module-level so pure services can read the labels without pulling in
+ * UtilsService (and with it MatDialog). ReportDiffService is the current
+ * consumer — it renders `status` as text in a version diff.
+ */
+export const ISSUE_STATUS_TABLE: readonly IssueStatusEntry[] = [
+  { status: 'Open (Waiting for review)', value: 1 },
+  { status: 'Fix In Progress', value: 2 },
+  { status: 'Fixed', value: 3 },
+  { status: 'Won\'t Fix', value: 4 }
+];
+
+export const SEVERITY_TABLE: readonly SeverityEntry[] = [
+  { name: 'Critical', value: 1 },
+  { name: 'High', value: 2 },
+  { name: 'Medium', value: 3 },
+  { name: 'Low', value: 4 },
+  { name: 'Info', value: 5 }
+];
+
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
 
-  readonly issueStatustable: readonly IssueStatusEntry[] = [
-    { status: 'Open (Waiting for review)', value: 1 },
-    { status: 'Fix In Progress', value: 2 },
-    { status: 'Fixed', value: 3 },
-    { status: 'Won\'t Fix', value: 4 }
-  ];
+  readonly issueStatustable = ISSUE_STATUS_TABLE;
 
-  readonly severitytable: readonly SeverityEntry[] = [
-    { name: 'Critical', value: 1 },
-    { name: 'High', value: 2 },
-    { name: 'Medium', value: 3 },
-    { name: 'Low', value: 4 },
-    { name: 'Info', value: 5 }
-  ];
+  readonly severitytable = SEVERITY_TABLE;
 
   constructor(private dialog: MatDialog) { }
 

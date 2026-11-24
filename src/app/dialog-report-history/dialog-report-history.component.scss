@@ -291,3 +291,477 @@
   color: #ef5350 !important;
   mat-icon { color: #ef5350 !important; }
 }
+
+// ── Compare picker column ─────────────────────────────────────────────────────
+// The two existing min-width rules assumed a 3-column table; the diff column
+// needs room, so the proportions are restated here rather than left to drift.
+.mat-column-compare {
+  width: 84px;
+  max-width: 84px;
+}
+
+.mat-column-report_name {
+  min-width: 20%;
+}
+
+.mat-column-report_lastupdate {
+  min-width: 45%;
+}
+
+.col-compare {
+  padding: 8px 8px 8px 16px !important;
+  white-space: nowrap;
+}
+
+.pick-btn {
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: #757575;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+  &:hover { color: #e0e0e0; border-color: rgba(255, 255, 255, 0.3); }
+}
+
+.pick-btn--a.is-picked {
+  background: rgba(255, 154, 60, 0.18);
+  border-color: rgba(255, 154, 60, 0.6);
+  color: #ff9a3c;
+}
+
+.pick-btn--b.is-picked {
+  background: rgba(96, 165, 250, 0.18);
+  border-color: rgba(96, 165, 250, 0.6);
+  color: #60a5fa;
+}
+
+.history-row.row-picked-a { background: rgba(255, 154, 60, 0.06) !important; }
+.history-row.row-picked-b { background: rgba(96, 165, 250, 0.06) !important; }
+
+// ── Compare bar ───────────────────────────────────────────────────────────────
+.compare-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: #1e1e1e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.compare-bar-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9e9e9e;
+
+  strong { color: #e0e0e0; font-weight: 600; }
+}
+
+.compare-bar-icon,
+.compare-arrow {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: #616161;
+  vertical-align: middle;
+}
+
+.pick-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  margin: 0 2px;
+}
+
+.pick-chip--a { background: rgba(255, 154, 60, 0.2); color: #ff9a3c; }
+.pick-chip--b { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+
+.compare-btn {
+  font-size: 12px !important;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 4px;
+  }
+}
+
+// ── Rollback confirmation ─────────────────────────────────────────────────────
+.replace-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 12px 16px 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: rgba(239, 83, 80, 0.08);
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  flex-wrap: wrap;
+}
+
+.replace-confirm-icon {
+  color: #ef5350;
+  flex-shrink: 0;
+}
+
+.replace-confirm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 220px;
+}
+
+.replace-confirm-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f5f5f5;
+}
+
+.replace-confirm-sub {
+  font-size: 12px;
+  color: #9e9e9e;
+  line-height: 1.5;
+}
+
+.replace-confirm-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  button { font-size: 12px !important; }
+}
+
+.danger-btn {
+  background: #ef5350 !important;
+  color: #fff !important;
+}
+
+// ── Diff summary ──────────────────────────────────────────────────────────────
+.diff-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.diff-pill {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+}
+
+.diff-pill--add     { background: rgba(105, 240, 174, 0.12); color: #69f0ae; border-color: rgba(105, 240, 174, 0.3); }
+.diff-pill--del     { background: rgba(255, 77, 109, 0.12);  color: #ff4d6d; border-color: rgba(255, 77, 109, 0.3); }
+.diff-pill--mod     { background: rgba(245, 208, 32, 0.12);  color: #f5d020; border-color: rgba(245, 208, 32, 0.3); }
+.diff-pill--neutral { background: rgba(255, 255, 255, 0.05); color: #9e9e9e; border-color: rgba(255, 255, 255, 0.12); }
+
+// ── Restore tray ──────────────────────────────────────────────────────────────
+.restore-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: #1e1e1e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.restore-bar-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9e9e9e;
+
+  strong { color: #e0e0e0; font-weight: 600; }
+}
+
+.restore-bar-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: #616161;
+}
+
+.restore-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  button { font-size: 12px !important; }
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 4px;
+  }
+}
+
+.restore-link-btn {
+  color: #9e9e9e !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+// ── Diff sections ─────────────────────────────────────────────────────────────
+.diff-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #757575;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: #616161;
+  }
+}
+
+.diff-section-count {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #9e9e9e;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.diff-row {
+  margin: 0 16px 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left-width: 3px;
+  overflow: hidden;
+}
+
+.diff-row--add { border-left-color: #69f0ae; }
+.diff-row--del { border-left-color: #ff4d6d; }
+.diff-row--mod { border-left-color: #f5d020; }
+
+.diff-row-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+
+  &:hover { background: rgba(255, 255, 255, 0.03); }
+}
+
+// Every internal of a mat-checkbox is derived from one token: the .mdc-checkbox
+// padding `(size - 18px) / 2`, the absolutely-positioned native input (width and
+// height both `size`), and the top/left offset of the box graphic. Overriding the
+// internals piecemeal — zeroing .mdc-checkbox padding, say — shrinks the host to
+// 18px but leaves the input at 40px and the graphic offset at 11px, so the input's
+// hit area and focus ring spill past the host onto the badge beside it and the tick
+// sits off-centre. Setting the token keeps all three in agreement.
+.diff-row-check {
+  --mat-checkbox-state-layer-size: 24px;
+  // The invisible touch target is sized independently and defaults to 48px, which
+  // reaches 12px past the control on each side and swallows clicks aimed at the
+  // badge next to it — and the row head has its own expand handler. 24px matches
+  // the control and still meets the WCAG 2.2 24×24 target minimum.
+  --mat-checkbox-touch-target-size: 24px;
+
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  // the host defaults to `vertical-align: bottom` for inline use, which drops it a
+  // couple of pixels below the badge in a flex row
+  align-self: center;
+}
+
+// Placeholder for rows with nothing to restore; matches the checkbox host width
+// (18px box + 2 × 3px padding) so every row's badge starts at the same x.
+.diff-row-check--empty {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 24px;
+}
+
+.diff-kind {
+  flex-shrink: 0;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.diff-kind--added   { background: rgba(105, 240, 174, 0.14); color: #69f0ae; }
+.diff-kind--removed { background: rgba(255, 77, 109, 0.14);  color: #ff4d6d; }
+.diff-kind--changed { background: rgba(245, 208, 32, 0.14);  color: #f5d020; }
+
+.sev-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sev-c { background: var(--sev-critical); }
+.sev-h { background: var(--sev-high); }
+.sev-m { background: var(--sev-medium); }
+.sev-l { background: var(--sev-low); }
+.sev-i { background: var(--sev-info); }
+
+.diff-row-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.diff-row-sub,
+.diff-row-fields {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #757575;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.diff-row-chevron {
+  flex-shrink: 0;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: #616161;
+}
+
+// ── Field-level detail ────────────────────────────────────────────────────────
+.diff-row-detail {
+  padding: 4px 10px 10px 36px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.field-change {
+  padding: 8px 0;
+
+  & + .field-change { border-top: 1px dashed rgba(255, 255, 255, 0.06); }
+}
+
+.field-change-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #757575;
+  margin-bottom: 5px;
+}
+
+.value-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.value {
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  word-break: break-word;
+}
+
+.value--before { background: rgba(255, 77, 109, 0.1);  color: #ff8fa3; text-decoration: line-through; }
+.value--after  { background: rgba(105, 240, 174, 0.1); color: #8ef5c2; }
+
+.value-arrow {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  color: #616161;
+}
+
+// ── Line diff ─────────────────────────────────────────────────────────────────
+.line-diff {
+  border-radius: 6px;
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-x: auto;
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 transparent;
+
+  &::-webkit-scrollbar { width: 4px; height: 4px; }
+  &::-webkit-scrollbar-thumb { background: #424242; border-radius: 2px; }
+}
+
+.line {
+  display: flex;
+  gap: 6px;
+  padding: 1px 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.line--add     { background: rgba(105, 240, 174, 0.08); color: #8ef5c2; }
+.line--del     { background: rgba(255, 77, 109, 0.08);  color: #ff8fa3; }
+.line--context { color: #616161; }
+
+.line-sign {
+  flex-shrink: 0;
+  width: 10px;
+  user-select: none;
+  opacity: 0.8;
+}
+
+.line-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.restore-row-btn {
+  margin-top: 10px;
+  font-size: 12px !important;
+  color: #9e9e9e !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 4px;
+  }
+}

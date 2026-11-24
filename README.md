@@ -23,6 +23,8 @@ A client-side, privacy-first vulnerability report manager for security professio
 - [Security Model](#security-model)
 - [Supported Import Sources](#supported-import-sources)
 - [Report Export Formats](#report-export-formats)
+- [Report History & Version Diff](#report-history--version-diff)
+- [Offline & Install](#offline--install)
 - [Methodology Tools](#methodology-tools)
 - [AI / LLM Integration](#ai--llm-integration)
 - [Getting Started](#getting-started)
@@ -53,12 +55,13 @@ A client-side, privacy-first vulnerability report manager for security professio
 - **Template customization** — edit the HTML report template and CSS directly in the app
 - **Methodology tools** — built-in checklists for OWASP ASVS 4, PCI DSS 4, and The Bug Hunter's Methodology (TBHM)
 - **CVE search** — query the NIST NVD database and pull CVE details into your report
-- **Report history** — automatic versioned snapshots of every save
+- **Report history** — automatic versioned snapshots of every save, with a version diff and selective restore (see [Report History & Version Diff](#report-history--version-diff))
 - **Issue merge** — merge duplicate or related issues
 - **Advanced filter** — filter and search issues by severity, status, tags, CVE, CVSS, and more
 - **Bug bounty list** — reference list of bug bounty programs
 - **AI / LLM integration** — connect a local Ollama model for AI-assisted report writing (see [AI / LLM Integration](#ai--llm-integration))
 - **Optional backend** — store encrypted reports on your own server via the REST API (see [API Integration](#api-integration))
+- **Offline / installable** — the app shell is precached, so VULNRΞPO runs with no network at all and can be installed as a desktop or mobile app (see [Offline & Install](#offline--install))
 
 ---
 
@@ -124,6 +127,56 @@ Reports encrypted with older versions of the app (legacy CryptoJS AES format) ar
 | DOCX | Microsoft Word compatible |
 | TXT | Plain text |
 | PDF | Use browser Print to PDF (Ctrl+P) on the HTML export; or use the [LaTeX generator](https://github.com/kac89/vulnrepo-json-to-latex-pdf) for full customization |
+
+---
+
+## Report History & Version Diff
+
+Every save writes an encrypted snapshot to local history. Open **History** from the report header (next to the version badge) to work with them.
+
+**Compare two versions.** Pick a snapshot as side **A** (the older side) and press **Compare**. Leave **B** unset to compare against the report currently on screen, unsaved edits included — the usual "what changed since the draft I sent the client?" question. Picking a second snapshot as **B** compares two points in the past. If you pick them the wrong way round, the sides are swapped for you so additions always read as additions.
+
+The diff covers:
+
+| Section | What is compared |
+|---|---|
+| Issues | added / removed / changed, with per-field detail: severity, status, CVSS, CVE, date, description, PoC, references, tags, attachments, bounty |
+| Assets | added / removed / changed, matched on asset id (name + target for older reports) |
+| Report fields | scope, executive summary, test window, researcher details, and every report-template setting |
+
+Prose fields (description, PoC, scope, summary, HTML template) get a line-by-line diff with long unchanged runs collapsed. Attachments are summarised as name plus a checksum stub, so a file replaced under the same name still shows as a change without the base64 payload being rendered. Issues are matched on their normalised title, since report issues carry no stable identifier; two findings sharing a title are paired off in document order.
+
+**Restore selectively.** Tick any row that exists on the older side — a deleted finding, a changed field, a removed asset — and press **Restore selected**, or use the per-row button. The pieces are written back into the open report as *unsaved changes*, logged to the changelog, and nothing is persisted until you save. **Discard** undoes the whole thing.
+
+**Whole-report rollback** is still available under a row's **⋯ → Roll whole report back**, but it is now behind an explicit confirmation: it deletes the report and re-creates it from the snapshot, so every edit made since is lost with no undo. Prefer the selective restore above.
+
+> Snapshots are decrypted with the report's current security key. A snapshot taken before a key change cannot be read, and the dialog says so rather than reporting an empty diff.
+
+---
+
+## Offline & Install
+
+VULNRΞPO has always *run* without a network — reports live in IndexedDB and all crypto is browser-native — but it used to need connectivity to *load*. A service worker now precaches the app shell, so the app opens with no network at all: air-gapped labs, client jumpboxes with no egress, a plane, a basement.
+
+- **Install it.** Where the browser supports it, **⋯ → Install app** installs VULNRΞPO as a standalone desktop or mobile app with its own window and launcher icon. The manifest also exposes shortcuts to *New report*, *My reports* and *Import report*.
+- **Offline indicator.** When the network drops, an `Offline` chip appears in the toolbar. Nothing in the app stops working; only the optional API backend, NVD CVE search and Ollama need connectivity.
+- **Controlled updates.** A new build is downloaded in the background and then *announced*, never applied on its own — an unattended reload would discard unsaved report edits. Press **Update ready** in the toolbar (or **⋯ → Update & reload**) when you are ready; it refuses while a report has unsaved changes. **About** shows the build hash and a manual *check for updates*.
+
+**What is and is not cached.** `ngsw-config.json` declares three asset groups and deliberately **no `dataGroups`**:
+
+| Group | Mode | Contents |
+|---|---|---|
+| `app` | prefetch | app shell — `index.html`, JS bundles, stylesheet, icons, manifest |
+| `reference-data` | prefetch | everything the app fetches at runtime: the CWE / MITRE ATT&CK / OWASP / PCI DSS reference JSON, the HTML report template, `bootstrap.min.css`, the report CSS gallery and the inline web fonts |
+| `assets` | lazy | images, logos and vendor icons — cached on first use |
+
+`reference-data` is prefetched because without it the checklists, the issue-template library and **HTML/DOCX export** would all fail offline, which would make "offline" a false promise. It sets `ignoreSearch`, since the report template is requested with a cache-busting query string.
+
+Report ciphertext stays in IndexedDB exactly as before. API responses, NVD CVE lookups and Ollama traffic are never written to the cache. A side benefit for a browser-based crypto tool: the code that decrypts your reports is pinned to one verified build instead of being re-fetched on every load.
+
+The service worker is enabled in production builds only — `ng serve` registers nothing, so development is unaffected.
+
+> **Hosting note:** serve `ngsw-worker.js` and `ngsw.json` with `Cache-Control: no-cache`, otherwise clients detect new builds only after the CDN's TTL expires. A secure origin (HTTPS, or `localhost`) is required; the app still works over plain HTTP, just without offline support.
 
 ---
 
@@ -225,10 +278,15 @@ vulnrepo-master/
 │   │   ├── indexeddb.service.ts      # Local storage (IndexedDB) service
 │   │   ├── api.service.ts            # Optional backend API service
 │   │   ├── ollama-service.service.ts # Ollama LLM integration service
+│   │   ├── report-diff.service.ts    # Version diff engine (history compare / restore)
+│   │   ├── pwa.service.ts            # Offline-ready, install and update state
 │   │   └── dialog-*/                 # Modal dialogs (add issue, import, export, …)
 │   ├── assets/                       # Static assets, vendor logos
+│   ├── site.webmanifest              # PWA manifest (install, icons, shortcuts)
 │   └── environments/                 # Environment configurations
+├── tests/e2e/                        # Playwright end-to-end specs
 ├── dist/                             # Production build output
+├── ngsw-config.json                  # Service worker precache config (app shell only)
 ├── API-INTEGRATION.md                # Backend API reference
 ├── SECURITY.md                       # Vulnerability reporting policy
 ├── angular.json
@@ -250,6 +308,8 @@ An example server implementation is available at: https://github.com/kac89/vulnr
 ## Browser Support
 
 VULNRΞPO requires a modern browser with IndexedDB and Web Crypto API support. It does **not** work in private/incognito browsing mode (IndexedDB is blocked by most browsers in that mode).
+
+Offline support and installation additionally need service worker support on a secure origin; where that is unavailable the app behaves exactly as before, minus offline loading. Installation prompts are Chromium-only — Firefox and desktop Safari can still use the app offline once the shell is cached, but will not offer to install it.
 
 Tested and supported:
 
